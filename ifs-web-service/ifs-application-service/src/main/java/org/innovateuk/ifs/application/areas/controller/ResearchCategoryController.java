@@ -81,7 +81,7 @@ public class ResearchCategoryController {
         checkIfAllowed(questionId, applicationResource);
 
         model.addAttribute("researchCategoryModel", researchCategoryModelPopulator.populate(
-                applicationResource, loggedInUser.getId(), questionId, false));
+                applicationResource, loggedInUser.getId(), questionId, applicationResource.isUseNewApplicantMenu()));
         researchCategoryFormPopulator.populate(applicationResource, researchCategoryForm);
 
         return "application/research-categories";

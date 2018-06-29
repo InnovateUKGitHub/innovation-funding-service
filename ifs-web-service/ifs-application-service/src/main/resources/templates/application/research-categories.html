@@ -24,6 +24,16 @@
           th:action="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}"
           novalidate="novalidate">
         <th:block th:insert="fragments/research-category :: research_category(${model})" />
+
+        <th:block th:if="${model.useNewApplicantMenu}">
+            <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
+               class="button-secondary" th:if="${model.readonly}">Return to application overview</a>
+            <button id="application-question-save"
+                    type="submit" class="button app-submit-btn"
+                    name="save-research-category"
+                    th:unless="${model.readonly}">Save and return to application overview
+            </button>
+        </th:block>
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
