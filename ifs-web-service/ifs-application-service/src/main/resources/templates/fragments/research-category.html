@@ -53,6 +53,7 @@
            th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}">Cancel
         </a>
     </div>
+    <input type="hidden" name="save-research-category" value="" th:if="${model.useNewApplicantMenu}" />
 
     <div class="extra-margin" th:if="${model.useNewApplicantMenu and model.canMarkAsComplete}">
         <!--/* 'Mark as complete' / 'Edit' links */-->
