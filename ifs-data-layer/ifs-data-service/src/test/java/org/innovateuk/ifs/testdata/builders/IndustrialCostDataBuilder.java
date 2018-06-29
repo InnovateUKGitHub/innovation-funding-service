@@ -119,7 +119,20 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
             applicationFinance.setOrganisationSize(organsationSize);
 
-            financeRowCostsService.updateCost(applicationFinance.getId(), applicationFinance);
+            financeRowCostsService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
+
+    public IndustrialCostDataBuilder withWorkPostcode(String workPostcode) {
+        return with(data -> {
+
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+
+            applicationFinance.setWorkPostcode(workPostcode);
+
+            financeRowCostsService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
 
