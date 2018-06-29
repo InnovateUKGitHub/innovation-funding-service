@@ -46,13 +46,13 @@
 
             <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
                 <th:block
-                    th:insert="fragments/application-team :: application_team(${applicationSummaryViewModel.applicationTeamViewModel},${question})" />
+                    th:insert="fragments/application-team :: application_team(${model.applicationTeamViewModel},${question})" />
             </th:block>
 
             <th:block
               th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY}">
               <th:block
-                  th:insert="fragments/research-category :: research_category_summary(${applicationSummaryViewModel.researchCategorySummaryViewModel})" />
+                  th:insert="fragments/research-category :: research_category_summary(${model.researchCategorySummaryViewModel})" />
             </th:block>
 
             <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
