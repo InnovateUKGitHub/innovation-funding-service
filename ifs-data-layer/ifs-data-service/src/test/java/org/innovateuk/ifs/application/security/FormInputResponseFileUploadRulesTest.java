@@ -49,7 +49,6 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     private static final long formInputId = 123L;
     private static final long applicationId = 456L;
     private static final long processRoleId = 789L;
-    //TODO: Implement tests for lead applicant and collaborator type users as well and not just applicant.
 
     @Test
     public void applicantCanUploadFilesInResponsesForOwnApplication() {
