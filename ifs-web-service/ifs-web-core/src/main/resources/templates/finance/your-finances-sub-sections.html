@@ -131,24 +131,20 @@
         </th:block>
         <th:block th:unless="${model.showSectionAsNotRequired(childSection)}">
             <li>
-
-                    <div class="task">
-                        <h3 class="heading-small">
-                            <th:block th:unless="${model.allReadOnly}">
-                                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id},sectionId=${childSection.section.id})}"
-                                   th:text="${childSection.section.name}"></a>
-                            </th:block>
-                            <th:block th:if="${model.allReadOnly}">
-                                <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})}"
-                                   th:text="${childSection.section.name}"></a>
-                            </th:block>
-                        </h3>
-                    </div>
-
-                <th:block th:if="${model.showSectionStatus(childSection)}">
-                    <div th:if="${model.completedSectionIds.contains(childSection.section.id)}" class="task-status-complete"><span>Complete</span></div>
-                    <div th:unless="${model.completedSectionIds.contains(childSection.section.id)}" class="task-status-incomplete"><span>Incomplete</span></div>
-                </th:block>
+                <div class="task">
+                    <h3 class="heading-small">
+                        <th:block th:unless="${model.allReadOnly}">
+                            <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id},sectionId=${childSection.section.id})}"
+                               th:text="${childSection.section.name}"></a>
+                        </th:block>
+                        <th:block th:if="${model.allReadOnly}">
+                            <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})}"
+                               th:text="${childSection.section.name}"></a>
+                        </th:block>
+                    </h3>
+                </div>
+                <div th:if="${model.completedSectionIds.contains(childSection.section.id)}" class="task-status-complete"><span>Complete</span></div>
+                <div th:unless="${model.completedSectionIds.contains(childSection.section.id)}" class="task-status-incomplete"><span>Incomplete</span></div>
             </li>
         </th:block>
     </th:block>
