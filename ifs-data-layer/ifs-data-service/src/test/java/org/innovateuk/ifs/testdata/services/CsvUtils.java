@@ -215,7 +215,7 @@ public class CsvUtils {
 
                 String categoryCell = currentLine.get(1);
 
-                if (asList("Working days per year", "Grant claim", "Organisation size").contains(categoryCell)) {
+                if (asList("Working days per year", "Grant claim", "Organisation size", "Work postcode").contains(categoryCell)) {
                     organisationCosts.addRow(new ApplicationFinanceRow(categoryCell, singletonList(currentLine.get(2))));
                 } else {
 
