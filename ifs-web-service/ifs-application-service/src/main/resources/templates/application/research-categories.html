@@ -14,12 +14,7 @@
     <th:block th:insert="fragments/layout :: page-title"
               th:with="pageTitle='Research category',subTitle=${model.currentCompetitionName},size='heading-xlarge'" />
 
-    <form method="post"
-          th:object="${form}"
-          th:action="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}"
-          novalidate="novalidate">
-        <th:block th:insert="fragments/research-category :: research_category(${model})" />
-    </form>
+    <th:block th:insert="fragments/research-category :: research_category(${model})" />
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
