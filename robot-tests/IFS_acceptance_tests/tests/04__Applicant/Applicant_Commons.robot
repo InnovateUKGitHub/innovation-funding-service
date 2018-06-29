@@ -66,21 +66,6 @@ the user fills in the Application details
     the user enters text to a text field  css=#application_details-startdate_year  ${nextyear}
     the user enters text to a text field  css=[id="application.durationInMonths"]  24
     the user clicks the button twice      css=label[for="application.resubmission-no"]
-    the user selects Research category    ${res_category}
-    the user should not see the element   link=Choose your innovation area
-    The user clicks the button/link       css=button[name="mark_as_complete"]
-    the user clicks the button/link       link=Application overview
-    the user should see the element       jQuery=li:contains("Application details") > .task-status-complete
-
-the user fills in the Application details new
-    [Arguments]  ${appTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
-    the user should see the element       jQuery=h1:contains("Application details")
-    the user enters text to a text field  css=[id="application.name"]  ${appTitle}
-    the user enters text to a text field  css=#application_details-startdate_day  ${tomorrowday}
-    the user enters text to a text field  css=#application_details-startdate_month  ${month}
-    the user enters text to a text field  css=#application_details-startdate_year  ${nextyear}
-    the user enters text to a text field  css=[id="application.durationInMonths"]  24
-    the user clicks the button twice      css=label[for="application.resubmission-no"]
     the user should not see the element   link=Choose your innovation area
     The user clicks the button/link       css=button[name="mark_as_complete"]
     the user clicks the button/link       link=Application overview
@@ -88,13 +73,7 @@ the user fills in the Application details new
 
 the user selects Research category
     [Arguments]  ${res_category}
-    the user clicks the button/link   jQuery=label:contains("Research category")
-    the user clicks the button twice  jQuery=label[for^="researchCategoryChoice"]:contains("${res_category}")
-    the user clicks the button/link   ijQuery=button:contains("Save")
-
-the user selects Research category new
-    [Arguments]  ${res_category}
-    the user clicks the button/link   link=Research category
+    the user clicks the button/link   jQuery=a:contains("research")
     then the user selects the radio button  researchCategory  researchCategory1
     the user clicks the button/link   id=application-question-complete
 
@@ -273,7 +252,7 @@ the user checks Your Funding section
 
 the user selects research area
     [Arguments]  ${Application}
-    the applicant completes the application details  ${Application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the user selects Research category               Feasibility studies
     the user fills in the funding information        ${Application}
 
 the user fills in the funding information

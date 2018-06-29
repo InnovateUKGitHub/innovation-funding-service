@@ -34,13 +34,6 @@ create new account for submitting
     the user marks every section but one as complete  ${application_name}
 
 the user marks every section but one as complete
-    [Arguments]  ${application_name}
-    the user navigates to the page    ${server}
-    the user clicks the button/link    link=${application_name}
-    the applicant completes Application Team
-    the lead applicant fills all the questions and marks as complete(programme)
-
-the user marks every section but one as complete new
     [Arguments]  ${application_name}  ${rescat}
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}

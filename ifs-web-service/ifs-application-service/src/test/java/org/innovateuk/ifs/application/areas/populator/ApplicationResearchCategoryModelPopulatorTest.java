@@ -62,7 +62,8 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         long loggedInUserId = 1L;
 
         CompetitionResource competitionResource = newCompetitionResource().build();
-        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().withId(1L, 2L, 3L).build(3);
+        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource()
+                .build(3);
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competitionResource.getId())
                 .withCompetitionName(competitionResource.getName())
@@ -91,20 +92,24 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, loggedInUserId,
                 questionResource.getId(), true);
 
+        assertEquals(competitionResource.getName(), researchCategoryViewModel.getCurrentCompetitionName());
+        assertEquals(researchCategories, researchCategoryViewModel.getAvailableResearchCategories());
+        assertTrue(researchCategoryViewModel.getHasApplicationFinances());
+        assertTrue(researchCategoryViewModel.isUseNewApplicantMenu());
+        assertEquals(researchCategories.get(0).getName(), researchCategoryViewModel.getResearchCategory());
         assertEquals(questionResource.getId(), researchCategoryViewModel.getQuestionId());
         assertEquals(applicationResource.getId(), researchCategoryViewModel.getApplicationId());
-        assertEquals(researchCategoryViewModel.getCurrentCompetitionName(), competitionResource.getName());
-        assertEquals(researchCategoryViewModel.getAvailableResearchCategories().size(), 3L);
-        assertTrue(researchCategoryViewModel.getHasApplicationFinances());
+        assertTrue(researchCategoryViewModel.isClosed());
+        assertTrue(researchCategoryViewModel.isComplete());
         assertTrue(researchCategoryViewModel.isCanMarkAsComplete());
     }
 
     @Test
-    public void populateWithoutApplicationFinancesAndResearchCategorySelected() throws Exception {
+    public void populateWithoutApplicationFinancesAndResearchCategorySelected() {
         long loggedInUserId = 1L;
 
         CompetitionResource competitionResource = newCompetitionResource().build();
-        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().withId(1L, 2L, 3L).build(3);
+        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competitionResource.getId())
                 .withCompetitionName(competitionResource.getName())
@@ -133,11 +138,15 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, loggedInUserId,
                 questionResource.getId(), true);
 
+        assertEquals(competitionResource.getName(), researchCategoryViewModel.getCurrentCompetitionName());
+        assertEquals(researchCategories, researchCategoryViewModel.getAvailableResearchCategories());
+        assertFalse(researchCategoryViewModel.getHasApplicationFinances());
+        assertTrue(researchCategoryViewModel.isUseNewApplicantMenu());
+        assertEquals(researchCategories.get(0).getName(), researchCategoryViewModel.getResearchCategory());
         assertEquals(questionResource.getId(), researchCategoryViewModel.getQuestionId());
         assertEquals(applicationResource.getId(), researchCategoryViewModel.getApplicationId());
-        assertEquals(researchCategoryViewModel.getCurrentCompetitionName(), competitionResource.getName());
-        assertEquals(researchCategoryViewModel.getAvailableResearchCategories().size(), 3L);
-        assertFalse(researchCategoryViewModel.getHasApplicationFinances());
+        assertTrue(researchCategoryViewModel.isClosed());
+        assertTrue(researchCategoryViewModel.isComplete());
         assertTrue(researchCategoryViewModel.isCanMarkAsComplete());
     }
 }

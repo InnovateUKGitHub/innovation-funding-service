@@ -75,6 +75,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 newResearchCategoryResource().build(2),
                 false,
                 false,
+                "Industrial research",
                 false,
                 false,
                 false);
@@ -113,11 +114,12 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,
                 applicationResource)).thenReturn(true);
-        when(applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationResource.getId(),
+        when(applicationResearchCategoryRestService.setResearchCategory(applicationResource.getId(),
                 researchCategoryId)).thenReturn(restSuccess(newApplicationResource().build()));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
                 applicationResource.getId(), questionId)
+                .param("save-research-category", "")
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(redirectedUrl(format("/application/%s/form/question/%s", applicationResource.getId(),
                         questionId)))
@@ -129,8 +131,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(applicationDetailsEditableValidator).questionAndApplicationHaveAllowedState(questionId,
                 applicationResource);
-        inOrder.verify(applicationResearchCategoryRestService).saveApplicationResearchCategoryChoice
-                (applicationResource.getId(), researchCategoryId);
+        inOrder.verify(applicationResearchCategoryRestService).setResearchCategory(applicationResource.getId(),
+                researchCategoryId);
         inOrder.verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class),
                 same(APPLICATION_SAVED_MESSAGE));
         inOrder.verifyNoMoreInteractions();
@@ -151,6 +153,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 newResearchCategoryResource().build(2),
                 false,
                 false,
+                "Industrial research",
                 false,
                 false,
                 false);
@@ -161,13 +164,14 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,
                 applicationResource)).thenReturn(true);
-        when(applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationResource.getId(),
+        when(applicationResearchCategoryRestService.setResearchCategory(applicationResource.getId(),
                 researchCategoryId)).thenReturn(restFailure(new Error("", HttpStatus.NOT_FOUND)));
         when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId(), false))
                 .thenReturn(researchCategoryViewModel);
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}", applicationResource
                 .getId(), questionId)
+                .param("save-research-category", "")
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
                 .andExpect(view().name("application/research-categories"))
@@ -179,8 +183,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(applicationDetailsEditableValidator).questionAndApplicationHaveAllowedState(questionId,
                 applicationResource);
-        inOrder.verify(applicationResearchCategoryRestService).saveApplicationResearchCategoryChoice
-                (applicationResource.getId(), researchCategoryId);
+        inOrder.verify(applicationResearchCategoryRestService).setResearchCategory(applicationResource.getId(),
+                researchCategoryId);
         inOrder.verify(researchCategoryModelPopulator).populate(applicationResource, loggedInUser.getId(),
                 questionId, false);
         inOrder.verify(researchCategoryFormPopulator).populate(applicationResource, researchCategoryForm);
@@ -200,6 +204,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 newResearchCategoryResource().build(2),
                 false,
                 false,
+                "Industrial research",
                 false,
                 false,
                 false);
@@ -212,7 +217,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
                 applicationResource.getId(), questionId)
-                .param("researchCategory", ""))
+                .param("save-research-category", ""))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
                 .andExpect(view().name("application/research-categories"))
                 .andExpect(status().isOk())
@@ -243,6 +248,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
                 applicationResource.getId(), questionId)
+                .param("save-research-category", "")
                 .param("researchCategory", "1"))
                 .andExpect(view().name("forbidden"))
                 .andExpect(status().is4xxClientError());
@@ -269,11 +275,12 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(researchCategoryEditableValidator.questionAndApplicationHaveAllowedState(questionId,
                 applicationResource)).thenReturn(true);
-        when(applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationResource.getId(),
+        when(applicationResearchCategoryRestService.setResearchCategory(applicationResource.getId(),
                 researchCategoryId)).thenReturn(restSuccess(newApplicationResource().build()));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
                 applicationResource.getId(), questionId)
+                .param("save-research-category", "")
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())))
                 .andExpect(status().is3xxRedirection());
@@ -284,8 +291,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(researchCategoryEditableValidator).questionAndApplicationHaveAllowedState(questionId,
                 applicationResource);
-        inOrder.verify(applicationResearchCategoryRestService).saveApplicationResearchCategoryChoice
-                (applicationResource.getId(), researchCategoryId);
+        inOrder.verify(applicationResearchCategoryRestService).setResearchCategory(applicationResource.getId(),
+                researchCategoryId);
         inOrder.verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class),
                 same(APPLICATION_SAVED_MESSAGE));
         inOrder.verifyNoMoreInteractions();
@@ -308,6 +315,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 newResearchCategoryResource().build(2),
                 false,
                 false,
+                "Industrial research",
                 false,
                 false,
                 false);
@@ -318,13 +326,14 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(researchCategoryEditableValidator.questionAndApplicationHaveAllowedState(questionId,
                 applicationResource)).thenReturn(true);
-        when(applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationResource.getId(),
+        when(applicationResearchCategoryRestService.setResearchCategory(applicationResource.getId(),
                 researchCategoryId)).thenReturn(restFailure(new Error("", HttpStatus.NOT_FOUND)));
         when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId(), false))
                 .thenReturn(researchCategoryViewModel);
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}", applicationResource
                 .getId(), questionId)
+                .param("save-research-category", "")
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
                 .andExpect(view().name("application/research-categories"))
@@ -336,8 +345,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(researchCategoryEditableValidator).questionAndApplicationHaveAllowedState(questionId,
                 applicationResource);
-        inOrder.verify(applicationResearchCategoryRestService).saveApplicationResearchCategoryChoice
-                (applicationResource.getId(), researchCategoryId);
+        inOrder.verify(applicationResearchCategoryRestService).setResearchCategory(applicationResource.getId(),
+                researchCategoryId);
         inOrder.verify(researchCategoryModelPopulator).populate(applicationResource, loggedInUser.getId(),
                 questionId, false);
         inOrder.verify(researchCategoryFormPopulator).populate(applicationResource, researchCategoryForm);
@@ -359,6 +368,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 newResearchCategoryResource().build(2),
                 false,
                 false,
+                "Industrial research",
                 false,
                 false,
                 false);
@@ -371,7 +381,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
                 applicationResource.getId(), questionId)
-                .param("researchCategory", ""))
+                .param("save-research-category", ""))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
                 .andExpect(view().name("application/research-categories"))
                 .andExpect(status().isOk())
@@ -404,6 +414,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
                 applicationResource.getId(), questionId)
+                .param("save-research-category", "")
                 .param("researchCategory", "1"))
                 .andExpect(view().name("forbidden"))
                 .andExpect(status().is4xxClientError());

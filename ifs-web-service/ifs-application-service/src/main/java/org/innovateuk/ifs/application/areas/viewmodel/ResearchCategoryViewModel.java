@@ -15,6 +15,7 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
     private boolean hasApplicationFinances;
     private boolean useNewApplicantMenu;
     private boolean readonly;
+    private String researchCategory;
 
     public ResearchCategoryViewModel(String currentCompetitionName,
                                      Long applicationId,
@@ -22,6 +23,7 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
                                      List<ResearchCategoryResource> availableResearchCategories,
                                      boolean hasApplicationFinances,
                                      boolean useNewApplicantMenu,
+                                     String researchCategory,
                                      boolean closed,
                                      boolean complete,
                                      boolean canMarkAsComplete,
@@ -32,6 +34,7 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
         this.hasApplicationFinances = hasApplicationFinances;
         this.useNewApplicantMenu = useNewApplicantMenu;
         this.readonly = readonly;
+        this.researchCategory = researchCategory;
     }
 
     public String getCurrentCompetitionName() {
@@ -52,6 +55,10 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
     public boolean isReadonly() {
         return readonly;
+    }
+
+    public String getResearchCategory() {
+        return researchCategory;
     }
 
     @Override
