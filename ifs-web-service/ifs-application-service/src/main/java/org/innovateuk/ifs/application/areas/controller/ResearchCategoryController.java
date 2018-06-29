@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.forms.validator.ResearchCategoryEditableVa
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -66,6 +67,9 @@ public class ResearchCategoryController {
     private ProcessRoleService processRoleService;
 
     @Autowired
+    private QuestionService questionService;
+
+    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     private static final String FORM_ATTR_NAME = "form";
@@ -85,6 +89,17 @@ public class ResearchCategoryController {
         researchCategoryFormPopulator.populate(applicationResource, researchCategoryForm);
 
         return "application/research-categories";
+    }
+
+    @PostMapping(params = {"save-research-category", "mark_as_incomplete"})
+    public String markAsIncomplete(Model model,
+                                   UserResource loggedInUser,
+                                   @ModelAttribute(FORM_ATTR_NAME) ResearchCategoryForm researchCategoryForm,
+                                   @PathVariable long applicationId,
+                                   @PathVariable long questionId) {
+        questionService.markAsIncomplete(questionId, applicationId, getProcessRoleId(loggedInUser.getId(),
+                applicationId));
+        return getResearchCategories(model, loggedInUser, researchCategoryForm, applicationId, questionId);
     }
 
     @PostMapping(params = {"save-research-category"})
@@ -128,7 +143,7 @@ public class ResearchCategoryController {
                 applicationResearchCategoryRestService.setResearchCategoryAndMarkAsComplete(applicationId,
                         getProcessRoleId(loggedInUserId, applicationId), researchCategory) :
                 applicationResearchCategoryRestService.setResearchCategory(applicationId,
-                researchCategory);
+                        researchCategory);
 
         return result.toServiceResult();
     }
