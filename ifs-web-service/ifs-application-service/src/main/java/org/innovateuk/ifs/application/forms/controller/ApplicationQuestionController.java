@@ -5,6 +5,7 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.areas.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryFormPopulator;
 import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryModelPopulator;
+import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
@@ -230,11 +231,12 @@ public class ApplicationQuestionController {
             model.addAttribute("applicationTeamModel",applicationTeamViewModel);
         } else if(question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
-            model.addAttribute("researchCategoryModel", researchCategoryPopulator.populate(
-                    applicationResource, user.getId(), questionId, true));
+            ResearchCategoryViewModel researchCategoryModel = researchCategoryPopulator.populate(
+                    applicationResource, user.getId(), questionId, true);
+            model.addAttribute("researchCategoryModel", researchCategoryModel);
             model.addAttribute("form", researchCategoryFormPopulator.populate(applicationResource,
                     new ResearchCategoryForm()));
-            questionViewModel.setAllReadOnly(!question.getCurrentApplicant().isLead());
+            questionViewModel.setAllReadOnly(!question.getCurrentApplicant().isLead() || researchCategoryModel.isComplete());
         }
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
 
