@@ -7,6 +7,11 @@ apply from: rootProject.file("gradle-support/openshift-util.gradle")
 
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
+
 def apply(profiles) {
     profiles.each { profile ->
         if (file("${profile}-build.gradle").exists()) {
@@ -36,6 +41,7 @@ tagDockerLocal.tag = alertServiceVersion
 osStageLocal.tag = alertServiceVersion
 
 ext.dockerDir = "$project.parent.projectDir/docker/"
+ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 buildDocker.dependsOn prepareDockerInput
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"

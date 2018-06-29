@@ -4,6 +4,12 @@ import com.bmuschko.gradle.docker.tasks.container.extras.*
 import com.bmuschko.gradle.docker.tasks.network.*
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
+apply plugin: 'idea'
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
 
 buildscript {
 

@@ -1,5 +1,11 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 import com.bmuschko.gradle.docker.tasks.container.*
+apply from: rootProject.file("gradle-support/auth-support.gradle")
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
 
 def String ldapCertsVolume = 'src/main/docker/certs'
 
@@ -8,9 +14,12 @@ def String ldapEncryptionCertificateFile = "${ldapCertsVolume}/ldap-encryption.c
 
 def String ldapPassword = project.properties['auth.ldap.password'] ?: "default"
 
+buildscript {
+    repositories { jcenter() }
+}
+
 task prepareDockerFile {
     def inputDir = file("${project.buildDir}/docker")
-
 
     doFirst {
 

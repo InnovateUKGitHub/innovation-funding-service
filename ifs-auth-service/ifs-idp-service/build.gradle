@@ -1,4 +1,10 @@
 import org.apache.tools.ant.filters.ReplaceTokens
+apply from: rootProject.file("gradle-support/auth-support.gradle")
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
 
 def String idpCertsVolume = 'src/main/docker/certs'
 
@@ -18,12 +24,13 @@ def String javaKeystorePassword = project.properties['java.keystore.password'] ?
 
 apply from: rootProject.file("gradle-support/new-relic.gradle")
 
+buildscript {
+    repositories { jcenter() }
+}
 
 task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'
     dependsOn getNewRelicAgent
-
-
 
     def inputDir = project.file("$project.buildDir/docker")
 

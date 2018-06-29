@@ -1,5 +1,10 @@
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
+
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile "commons-beanutils:commons-beanutils:1.9.3"

@@ -1,4 +1,10 @@
 import org.apache.tools.ant.filters.ReplaceTokens
+apply from: rootProject.file("gradle-support/auth-support.gradle")
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
 
 def String spCertsVolume = 'src/main/docker/certs'
 
@@ -8,6 +14,10 @@ def String spProxyCacertificateFile = "${spCertsVolume}/sp_proxy_cacertificate.p
 
 def String idpSigningCertificateFile = "${spCertsVolume}/idp-signing.crt"
 def String idpEncryptionCertificateFile = "${spCertsVolume}/idp-encryption.crt"
+
+buildscript {
+    repositories { jcenter() }
+}
 
 task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'

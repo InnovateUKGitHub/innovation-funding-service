@@ -1,6 +1,11 @@
+apply from: rootProject.file("gradle-support/mysql-support.gradle")
+
 ext.sqlContainer = "ifs-finance-database"
 ext.testSchema = "ifs_finance_test"
 
+buildscript {
+    repositories { jcenter() }
+}
 
 createContainer.containerName = "ifs-finance-database"
 createContainer.containerId = "ifs-finance-database"

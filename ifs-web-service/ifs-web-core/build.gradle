@@ -1,3 +1,10 @@
+apply from: rootProject.file("gradle-support/web-support.gradle")
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
+
 bootRepackage {
     enabled = false
 }
@@ -12,7 +19,6 @@ task testJar (type: Jar) {
 artifacts {
     testArtifacts testJar
 }
-
 
 dependencies {
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"

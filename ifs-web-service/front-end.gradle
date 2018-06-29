@@ -1,6 +1,22 @@
 apply plugin: "java"
-apply plugin: "com.moowork.node"
-apply plugin: 'com.moowork.gulp'
+apply plugin: com.moowork.gradle.node.NodePlugin
+apply plugin: com.moowork.gradle.gulp.GulpPlugin
+
+apply from: rootProject.file("gradle-support/web-support.gradle")
+
+
+buildscript {
+
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath "com.moowork.gradle:gradle-node-plugin:1.2.0"
+    }
+}
 
 // Download and install a local node/npm version.
 gulp_default.dependsOn 'nodeSetup'

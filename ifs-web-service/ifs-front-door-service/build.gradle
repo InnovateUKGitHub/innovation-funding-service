@@ -1,6 +1,13 @@
+apply from: rootProject.file("gradle-support/web-support.gradle")
+
 bootRun {
     addResources = false
 }
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
 
 project.version = frontDoorServiceVersion
 tagDocker.tag = frontDoorServiceVersion

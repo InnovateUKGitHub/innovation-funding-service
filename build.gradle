@@ -2,7 +2,8 @@ apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
 apply from: "gradle-support/release.gradle"
 apply from: "gradle-support/taurus.gradle"
-
+apply from: "gradle-support/gradle-versions.gradle"
+apply from: "gradle-support/dependency-check.gradle"
 
 if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
     apply from: "gradle-support/zipkin.gradle"
@@ -10,16 +11,6 @@ if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.ena
 
 if (project.hasProperty('ifs.admin.enabled') ? project.property('ifs.admin.enabled').toBoolean() : false) {
     apply from: "gradle-support/spring-boot-admin.gradle"
-}
-
-allprojects {
-    group 'innovateuk'
-    version project.version
-
-    apply plugin: 'idea'
-    apply plugin: 'com.github.ben-manes.versions'
-    apply plugin: 'org.owasp.dependencycheck'
-
 }
 
 ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance-totals.enabled'] ?: true
@@ -37,17 +28,10 @@ def isSysIntEnv() {
 }
 
 apply from: "gradle-support/openshift-support.gradle"
-apply from: "gradle-support/zipkin-support.gradle"
+//apply from: "gradle-support/zipkin-support.gradle"
 
 if (!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
-}
-
-
-configure(subprojects - project(":ifs-auth-service")) {
-
-    apply plugin: 'io.spring.dependency-management'
-
 }
 
 buildscript {
@@ -57,7 +41,6 @@ buildscript {
     }
 
     repositories {
-        jcenter()
         maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
         maven { url "http://repo.spring.io/milestone" }
         maven { url "https://plugins.gradle.org/m2/" }
@@ -65,13 +48,11 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
 
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
-        classpath 'org.owasp:dependency-check-gradle:3.1.0'
         classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 

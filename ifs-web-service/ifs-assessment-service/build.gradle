@@ -1,3 +1,9 @@
+apply from: rootProject.file("gradle-support/web-support.gradle")
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
 
 project.version = assessmentServiceVersion
 tagDocker.tag = assessmentServiceVersion

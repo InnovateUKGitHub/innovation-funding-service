@@ -5,7 +5,10 @@ apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
+group 'innovateuk'
+version project.version
 
+apply plugin: 'idea'
 
 dependencies {
     compile project(":ifs-commons")
