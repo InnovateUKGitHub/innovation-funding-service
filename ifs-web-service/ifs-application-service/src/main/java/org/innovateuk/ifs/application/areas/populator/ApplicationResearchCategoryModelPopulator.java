@@ -40,6 +40,9 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
                                               boolean useNewApplicantMenu) {
         boolean hasApplicationFinances = hasApplicationFinances(applicationResource);
         List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
+        boolean canMarkAsComplete = userService.isLeadApplicant(loggedInUserId, applicationResource);
+        boolean complete = isComplete(applicationResource, loggedInUserId);
+        boolean readonly = !(canMarkAsComplete && !complete);
 
         return new ResearchCategoryViewModel(applicationResource.getCompetitionName(),
                 applicationResource.getId(),
@@ -48,8 +51,9 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
                 hasApplicationFinances,
                 useNewApplicantMenu,
                 !isCompetitionOpen(applicationResource),
-                isComplete(applicationResource, loggedInUserId),
-                userService.isLeadApplicant(loggedInUserId, applicationResource));
+                complete,
+                canMarkAsComplete,
+                readonly);
     }
 
     private boolean hasApplicationFinances(ApplicationResource applicationResource) {

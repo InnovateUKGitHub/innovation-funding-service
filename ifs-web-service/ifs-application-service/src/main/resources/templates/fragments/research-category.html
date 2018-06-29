@@ -14,14 +14,14 @@
             </p>
         </div>
 
-        <th:block th:if="${model.complete}">
+        <th:block th:if="${model.readonly}">
             <div class="success-alert assignee extra-margin-bottom">
                 <p>Research category is marked as complete</p>
             </div>
             <h2 class="heading-medium">Selected research category</h2>
             <th:block th:text="${form.researchCategory}">Experimental development</th:block>
         </th:block>
-        <th:block th:if="${!model.complete}">
+        <th:block th:if="${!model.readonly}">
             <fieldset>
                 <legend class="extra-margin-bottom">
                     <h2 class="heading-medium">Select your research category</h2>
@@ -54,7 +54,7 @@
         </a>
     </div>
 
-    <div class="extra-margin" th:if="${model.useNewApplicantMenu}">
+    <div class="extra-margin" th:if="${model.useNewApplicantMenu and model.canMarkAsComplete}">
         <!--/* 'Mark as complete' / 'Edit' links */-->
         <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
     </div>
