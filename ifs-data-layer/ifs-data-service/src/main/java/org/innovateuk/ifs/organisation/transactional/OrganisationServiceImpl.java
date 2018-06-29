@@ -10,13 +10,13 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Academic;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.AcademicRepository;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -77,6 +77,15 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
             return serviceFailure(CommonErrors.notFoundError(Organisation.class));
         }
         return serviceSuccess(organisationMapper.mapToResource(organisations.get(0)));
+    }
+
+    @Override
+    public ServiceResult<List<OrganisationResource>> getAllForUser(Long userId) {
+        List<Organisation> organisations = organisationRepository.findByUsersId(userId);
+        if (organisations.isEmpty()) {
+            return serviceFailure(CommonErrors.notFoundError(Organisation.class));
+        }
+        return serviceSuccess(organisationsToResources(organisations));
     }
 
     @Override
@@ -163,5 +172,9 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
             organisationNameDecoded = encodedName;
         }
         return organisationNameDecoded;
+    }
+
+    private List<OrganisationResource> organisationsToResources(List<Organisation> organisations) {
+        return simpleMap(organisations, organisation -> organisationMapper.mapToResource(organisation));
     }
 }

@@ -5,13 +5,13 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.sil.crm.resource.SilAddress;
 import org.innovateuk.ifs.sil.crm.resource.SilContact;
 import org.innovateuk.ifs.sil.crm.resource.SilOrganisation;
 import org.innovateuk.ifs.sil.crm.service.SilCrmEndpoint;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
@@ -42,10 +42,17 @@ public class CrmServiceImpl implements CrmService {
     public ServiceResult<Void> syncCrmContact(long userId) {
          return find(userService.getUserById(userId), notFoundError(User.class, userId)).andOnSuccess(user -> {
             if (!user.getSuccess().isInternalUser()) {
-                return find(organisationService.getPrimaryForUser(userId), notFoundError(OrganisationResource.class)).andOnSuccess(organisation -> {
-                    SilContact silContact = toSilContact(user.getSuccess(), organisation.getSuccess());
-                    LOG.info("Updating CRM contact " + silContact.getEmail());
-                    return silCrmEndpoint.updateContact(silContact);
+                return organisationService.getAllForUser(userId).andOnSuccess(organisations -> {
+                    ServiceResult<Void> result = serviceSuccess();
+                    for (OrganisationResource organisation : organisations) {
+                        result = result.andOnSuccess(() -> {
+                            SilContact silContact = toSilContact(user.getSuccess(), organisation);
+                            LOG.info(String.format("Updating CRM contact %s and organisation %s",
+                                    silContact.getEmail(), silContact.getOrganisation().getName()))
+                            return silCrmEndpoint.updateContact(silContact);
+                        });
+                    }
+                    return result;
                 });
             }
             return serviceSuccess();
