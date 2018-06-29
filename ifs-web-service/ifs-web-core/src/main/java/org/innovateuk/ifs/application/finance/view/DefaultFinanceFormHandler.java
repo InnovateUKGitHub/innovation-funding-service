@@ -113,7 +113,6 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
         }
     }
 
-    // TODO DW - INFUND-1555 - handle rest results
     private void storeFinancePosition(HttpServletRequest request, @NotNull Long applicationFinanceId, Long competitionId, Long userId) {
         List<String> financePositionKeys = simpleFilter(request.getParameterMap().keySet(), k -> k.contains("financePosition-"));
         if (!financePositionKeys.isEmpty()) {
