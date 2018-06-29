@@ -45,7 +45,7 @@
 
     <!--/* Application Form for a Question. */-->
     <th:block th:if="${model.isQuestion()}">
-        <div class="question" th:with="question=${model.applicantResource.question}">
+        <th:block th:with="question=${model.applicantResource.question}">
             <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS}">
                 <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
                     <th:block th:insert="fragments/application-details :: application_details(${model},${formInputViewModel})" />
@@ -55,20 +55,8 @@
                 <th:block th:insert="fragments/application-team :: application_team(${model},${applicationTeamModel},${question})" />
             </th:block>
             <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY}">
-                <th:block th:insert="fragments/research-category :: research_category(${researchCategoryModel})" />
+                <th:block th:insert="fragments/research-category :: research_category(${model},${researchCategoryModel})" />
             </th:block>
-        </div>
-        <th:block th:if="${model.allReadOnly}">
-            <a th:href="${backURL}" class="button-secondary"
-               th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
-        </th:block>
-        <th:block th:unless="${model.allReadOnly}">
-            <button th:unless="${model.isSection()}"
-                    id="application-question-save"
-                    type="submit"
-                    class="button app-submit-btn"
-                    name="submit-section">Save and return to application overview
-            </button>
         </th:block>
     </th:block>
 
