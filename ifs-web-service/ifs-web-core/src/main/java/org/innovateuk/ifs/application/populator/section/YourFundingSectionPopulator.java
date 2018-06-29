@@ -4,9 +4,11 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.YourFundingSectionViewModel;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.RESEARCH_CATEGORY;
+
 /**
  * Your funding populator section view models.
  */
@@ -31,6 +35,9 @@ public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourFu
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
 
     @Autowired
     private FormInputViewModelGenerator formInputViewModelGenerator;
@@ -65,31 +72,24 @@ public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourFu
         return questionStatus != null && questionStatus.getMarkedAsComplete();
     }
 
-    boolean isSectionComplete(long sectionId, List<Long> completedSectionIds) {
-
-        return completedSectionIds.contains(sectionId);
-    }
-
     long getResearchCategoryQuestionId(ApplicantSectionResource section) {
 
-        if (isNewResearchCategoryView(section)) {
-            // TODO - get the research category page id
-            return 222L;
+        QuestionResource question;
+        RestResult<QuestionResource> researchCategoryResult = questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(section.getCompetition().getId(), RESEARCH_CATEGORY);
+
+        if (researchCategoryResult.isSuccess()) {
+            question = researchCategoryResult.getSuccess();
         } else {
             // If it's an old-style competition, use the application details page
-            QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(section.getCompetition().getId(), FormInputType.APPLICATION_DETAILS).getSuccess();
-            return applicationDetailsQuestion.getId();
+            // TODO: IFS-3753 Can remove this case once all old applications are closed.
+            question = questionService.getQuestionByCompetitionIdAndFormInputType(section.getCompetition().getId(), FormInputType.APPLICATION_DETAILS).getSuccess();
         }
+        return question.getId();
     }
 
     long getYourOrganisationSectionId(ApplicantSectionResource section) {
         SectionResource yourOrganisationSection = sectionService.getOrganisationFinanceSection(section.getCompetition().getId());
         return yourOrganisationSection.getId();
-    }
-
-    private boolean isNewResearchCategoryView(ApplicantSectionResource section) {
-        // TODO: get this info from the competition
-        return false;
     }
 
     @Override

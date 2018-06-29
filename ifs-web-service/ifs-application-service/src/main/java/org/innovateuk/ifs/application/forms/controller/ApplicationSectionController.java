@@ -115,20 +115,6 @@ public class ApplicationSectionController {
         return APPLICATION_FORM;
     }
 
-    private boolean hitsSpeedBump(ApplicantSectionResource applicantSection) {
-        switch (applicantSection.getSection().getType()) {
-            case FUNDING_FINANCES:
-                if (isFundingLocked(applicantSection)) return true;
-            default:
-                return false;
-        }
-    }
-
-    private boolean isFundingLocked(ApplicantSectionResource applicantSection) {
-        // TODO: IFS-2122 - work in progress on this story
-        return true;
-    }
-
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('support', 'innovation_lead')")
     @GetMapping(SECTION_URL + "{sectionId}/{applicantOrganisationId}")
