@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.sql.*;
 import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 /**
@@ -26,14 +27,14 @@ public class DatabaseTestHelper {
     public void assertingNoDatabaseChangesOccur(Runnable runnable) {
 
         try {
-            int startingHash = getDatabaseHash();
+            String startingContent = getDatabaseContents();
 
             try {
                 runnable.run();
             } catch (Exception e) {
-                int endingHash = getDatabaseHash();
+                String endingContent = getDatabaseContents();
 
-                assertThat(startingHash).isEqualTo(endingHash);
+                assertThat(startingContent).isEqualTo(endingContent);
             }
 
         } catch (SQLException e) {
@@ -42,42 +43,42 @@ public class DatabaseTestHelper {
 
     }
 
-    private int getDatabaseHash() throws SQLException {
+    private String getDatabaseContents() throws SQLException {
 
-        Connection conn = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
-        DatabaseMetaData md = conn.getMetaData();
-        ResultSet rs = md.getTables(null, null, "%", null);
+        Connection connection = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
+        DatabaseMetaData schemaMetadata = connection.getMetaData();
+        ResultSet schemaResults = schemaMetadata.getTables(null, null, "%", null);
 
-        int dbHash = 0;
+        String schemaAsString = "";
 
-        while (rs.next()) {
-            String tableName = rs.getString(3);
-            CallableStatement selectAll = conn.prepareCall("SELECT * FROM " + tableName);
-            ResultSet resultsFromTable = selectAll.executeQuery();
+        while (schemaResults.next()) {
 
-            int tableHash = 0;
+            String tableName = schemaResults.getString(3);
+            CallableStatement tableResultsQuery = connection.prepareCall("SELECT * FROM " + tableName);
+            ResultSet tableResults = tableResultsQuery.executeQuery();
 
-            while (resultsFromTable.next()) {
-                ResultSetMetaData tableMetadata = resultsFromTable.getMetaData();
+            String tableAsString = "";
+
+            while (tableResults.next()) {
+
+                ResultSetMetaData tableMetadata = tableResults.getMetaData();
                 int columnCount = tableMetadata.getColumnCount();
 
-                int rowHash = IntStream.range(1, columnCount + 1).mapToObj(i -> {
+                String rowAsString = IntStream.range(1, columnCount + 1).mapToObj(i -> {
                     try {
-                        Object cell = resultsFromTable.getObject(i);
+                        Object cell = tableResults.getObject(i);
                         return cell != null ? cell.toString() : "null";
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
-                }).mapToInt(String::hashCode).sum();
+                }).collect(joining(","));
 
-                tableHash += rowHash;
+                tableAsString += rowAsString + "\n";
             }
 
-            dbHash += tableHash;
+            schemaAsString += tableAsString;
         }
 
-        long after = System.currentTimeMillis();
-
-        return dbHash;
+        return schemaAsString;
     }
 }
