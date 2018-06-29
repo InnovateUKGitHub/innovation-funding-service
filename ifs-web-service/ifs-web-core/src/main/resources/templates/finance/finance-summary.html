@@ -138,7 +138,7 @@
                                th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}' th:style="'font-weight: normal;'">
                                 View finances
                             </a>
-                            <a th:if="${showDetailedFinanceLinkForAllApplicationStates != null && showDetailedFinanceLinkForAllApplicationStates.get(applicationOrganisation.id)} or ${showDetailedFinanceLinkForAllStatesExcludingOpenAndCreated != null && showDetailedFinanceLinkForAllStatesExcludingOpenAndCreated.get(applicationOrganisation.id)}"
+                            <a th:if="${showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id)}"
                                th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}' th:style="'font-weight: normal;'">
                                 View finances
                             </a>

@@ -34,6 +34,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
@@ -98,28 +99,26 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         Map<Long, Boolean> isAcademicOrganisation = (Map<Long, Boolean>) model.asMap().get("applicantOrganisationIsAcademic");
         List<OrganisationResource> organisations = (List<OrganisationResource>) model.asMap().get("applicationOrganisations");
         Map<Long, BaseFinanceResource> organisationFinances = (Map<Long, BaseFinanceResource>) model.asMap().get("organisationFinances");
-        Map<Long, Boolean> detailedFinanceLinkForAllApplicationStates = organisations.stream().collect(Collectors.toMap(o -> o.getId(),
-                o -> (user.hasRole(IFS_ADMINISTRATOR) || user.hasRole(SUPPORT)) &&
-                        ((organisationFinances != null &&
-                                organisationFinances.containsKey(o.getId()) &&
-                                organisationFinances.get(o.getId()).getOrganisationSize() != null) ||
-                                isAcademicOrganisation.get(o.getId()))
-                        ? Boolean.TRUE : Boolean.FALSE));
 
-        Map<Long, Boolean> detailedFinanceLinkForAllStatesExcludingOpenAndCreated = organisations.stream().collect(Collectors.toMap(o -> o.getId(),
-                o -> (user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN)) || user.hasRole(INNOVATION_LEAD) &&
-                        ((organisationFinances != null &&
-                                organisationFinances.containsKey(o.getId()) &&
-                                organisationFinances.get(o.getId()).getOrganisationSize() != null) &&
-                                    application.getApplicationState() != ApplicationState.OPEN &&
-                                    application.getApplicationState() != ApplicationState.CREATED ||
-                                isAcademicOrganisation.get(o.getId())) &&
-                                    application.getApplicationState() != ApplicationState.OPEN &&
-                                    application.getApplicationState() != ApplicationState.CREATED
-                        ? Boolean.TRUE : Boolean.FALSE));
+        Map<Long, Boolean> showDetailedFinanceLink = organisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
+                organisation -> {
+                    boolean canSeeUnsubmitted = user.hasRole(IFS_ADMINISTRATOR) || user.hasRole(SUPPORT);
+                    boolean canSeeSubmitted = user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN) || user.hasRole(INNOVATION_LEAD);
+                    boolean isSubmitted = application.getApplicationState() != ApplicationState.OPEN &&  application.getApplicationState() != ApplicationState.CREATED;
+                    boolean visibleToUser = canSeeUnsubmitted || (canSeeSubmitted && isSubmitted);
 
-        model.addAttribute("showDetailedFinanceLinkForAllApplicationStates", detailedFinanceLinkForAllApplicationStates);
-        model.addAttribute("showDetailedFinanceLinkForAllStatesExcludingOpenAndCreated", detailedFinanceLinkForAllStatesExcludingOpenAndCreated);
+                    boolean orgFinancesExist = ofNullable(organisationFinances)
+                            .map(finances -> organisationFinances.get(organisation.getId()))
+                            .map(BaseFinanceResource::getOrganisationSize)
+                            .isPresent();
+                    boolean academicFinancesExist = isAcademicOrganisation.get(organisation.getId());
+                    boolean financesExist = orgFinancesExist || academicFinancesExist;
+
+                    return visibleToUser && financesExist;
+                })
+        );
+
+        model.addAttribute("showDetailedFinanceLink", showDetailedFinanceLink);
         model.addAttribute("readOnly", user.hasRole(SUPPORT));
         model.addAttribute("canReinstate", !(user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD)));
         model.addAttribute("form", form);
