@@ -81,7 +81,7 @@ Changing application details sets funding level to incomplete
     When the user changes the research category
     And the user clicks the button/link    name=mark_as_complete
     And the user navigates to Your-finances page  ${applicationName}
-    Then the user should see the element    css=.task-list li:nth-of-type(3) .task-status-incomplete
+    Then the user should see the element    css=.task-list li:nth-of-type(4) .task-status-incomplete
 
 Funding level has been reset
     [Documentation]    INFUND-6895
