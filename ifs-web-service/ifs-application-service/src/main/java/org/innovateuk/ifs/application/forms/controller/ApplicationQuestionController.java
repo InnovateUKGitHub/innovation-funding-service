@@ -234,6 +234,7 @@ public class ApplicationQuestionController {
                     applicationResource, user.getId(), questionId, true));
             model.addAttribute("form", researchCategoryFormPopulator.populate(applicationResource,
                     new ResearchCategoryForm()));
+            questionViewModel.setAllReadOnly(!question.getCurrentApplicant().isLead());
         }
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
 
