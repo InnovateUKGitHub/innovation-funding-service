@@ -31,7 +31,7 @@ Applicant submits his application
     [Documentation]  IFS-2688
     [Tags]
     Given the user clicks the button/link               link=Application details
-    When the user fills in the Application details new     ${application_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    When the user fills in the Application details      ${application_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     and the lead applicant fills all the questions and marks as complete(Prince's Trust comp type)
     and the user should not see the element             jQuery=h2:contains("Finances")
     Then the applicant submits the application
