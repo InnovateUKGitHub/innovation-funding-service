@@ -37,7 +37,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
             when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
 
             switch (competitionStatus) {
-                case ASSESSOR_FEEDBACK: case PROJECT_SETUP:
+                case COMPETITION_SETUP: case ASSESSOR_FEEDBACK: case PROJECT_SETUP:
                     assertFalse("With status " + competitionStatus.toString(),
                             rules.assessment(CompetitionCompositeId.id(competition.getId()), loggedInUser));
                     break;

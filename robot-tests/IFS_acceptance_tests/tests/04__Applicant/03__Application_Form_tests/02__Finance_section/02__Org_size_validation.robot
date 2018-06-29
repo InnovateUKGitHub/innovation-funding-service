@@ -63,7 +63,7 @@ Medium org can be selected
 Funding section shows as incomplete
     [Documentation]    INFUND-6394
     [Tags]
-    When the user should see the element    css=.task-list li:nth-of-type(3) .task-status-incomplete
+    When the user should see the element    css=.task-list li:nth-of-type(4) .task-status-incomplete
 
 Funding section has been reset
     [Documentation]    INFUND-6894
@@ -101,7 +101,7 @@ Large organisation can be selected
 Funding section shows as incomplete again
     [Documentation]    INFUND-6394
     [Tags]
-    When the user should see the element    css=.task-list li:nth-of-type(3) .task-status-incomplete
+    When the user should see the element    css=.task-list li:nth-of-type(4) .task-status-incomplete
 
 
 Funding section has been reset again

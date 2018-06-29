@@ -116,7 +116,7 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
             if(isAcademic(organisationType)){   // Academic organisations will always be funded.
                 return serviceSuccess(true);
             } else {
-                //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setFinanceDetails.  We should find a better way to handle this.
+                //TODO: IFS-3822 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setFinanceDetails.  We should find a better way to handle this.
                 ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
                 setFinanceDetails(organisationType, applicationFinanceResource, applicationFinance.getApplication().getCompetition());
                 return serviceSuccess(applicationFinanceResource.getGrantClaimPercentage() != null && applicationFinanceResource.getGrantClaimPercentage() > 0);

@@ -45,7 +45,6 @@ public class PublicContentStatusDeterminerTest {
         assertEquals(PublicContentStatusText.OPEN_NOW, result);
     }
 
-    //TODO IFS-948: Fix this test - intermittently fails
     @Ignore
     @Test
     public void getApplicablePublicContentStatusText_openDateInPastAndClosingDateInLessThanTwoWeeksAwayReturnsClosingSoon() throws Exception {
