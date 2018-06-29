@@ -164,9 +164,9 @@
             <th:block th:if="${model.showSectionAsLockedFunding(childSection)}">
                 <div class="task full-width">
                     <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
-                    <p>
-                        <!-- TODO: IFS-3753 remove old message -->
-                        <th:block th:if="${!model.competition.useNewApplicantMenu}">
+                    <!-- TODO: IFS-3753 remove old message -->
+                    <th:block th:if="${!model.competition.useNewApplicantMenu}">
+                        <p>
                             <th:block th:if="${model.userIsLeadApplicant}">
                                 You must select a research category in
                                 <th:block th:unless="${model.allReadOnly}">
@@ -191,10 +191,12 @@
                                 <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId},applicantOrganisationId=${model.applicantOrganisationId})}">your
                                     organisation</a> section.
                             </th:block>
-                        </th:block>
+                        </p>
+                    </th:block>
 
-                        <th:block th:if="${model.competition.useNewApplicantMenu}">
-                            <th:block th:if="${model.userIsLeadApplicant}">
+                    <th:block th:if="${model.competition.useNewApplicantMenu}">
+                        <th:block th:if="${model.userIsLeadApplicant}">
+                            <p>
                                 You must select a
                                 <th:block th:unless="${model.allReadOnly}">
                                     <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.researchCategoryQuestionId})}">research category</a>
@@ -212,21 +214,27 @@
                                         size</a>
                                 </th:block>
                                 before you can tell us your funding information.
-                            </th:block>
-
-                            <th:block th:unless="${model.userIsLeadApplicant}">
-                                Before you can tell us your funding information:
-                                You must state your organisation size in the
-                                <th:block th:unless="${model.allReadOnly}">
-                                    <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.
-                                </th:block>
-                                <th:block th:if="${model.allReadOnly}">
-                                    <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId},applicantOrganisationId=${model.applicantOrganisationId})}">your organisation</a> section.
-                                </th:block>
-                                The lead applicant must select a research category
-                            </th:block>
+                            </p>
                         </th:block>
-                    </p>
+
+                        <th:block th:unless="${model.userIsLeadApplicant}">
+                            <p>Before you can tell us your funding information:</p>
+                            <ul class="list list-bullet">
+                                <li>
+                                    You must state your organisation size in the
+                                    <th:block th:unless="${model.allReadOnly}">
+                                        <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.
+                                    </th:block>
+                                    <th:block th:if="${model.allReadOnly}">
+                                        <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId},applicantOrganisationId=${model.applicantOrganisationId})}">your organisation</a> section.
+                                    </th:block>
+                                </li>
+                                <li>
+                                    The lead applicant must select a research category
+                                </li>
+                            </ul>
+                        </th:block>
+                    </th:block>
                 </div>
             </th:block>
             <th:block th:if="${model.showSectionStatus(childSection)}">
