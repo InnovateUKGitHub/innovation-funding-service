@@ -15,15 +15,19 @@ public abstract class AbstractSilAvailabilityIntegrationTest extends BaseAuthent
     @Autowired
     private SilAvailabilityHelper silAvailabilityHelper;
 
-    public void setupServiceUnavailableResponseExpectationsFromSendEmailCall(AbstractRestTemplateAdaptor mockEmailSilRestTemplate) {
+    protected void setupServiceUnavailableResponseExpectationsFromSendEmailCall(AbstractRestTemplateAdaptor mockEmailSilRestTemplate) {
         silAvailabilityHelper.setupServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+    }
+
+    protected void verifyServiceUnavailableResponseExpectationsFromSendEmailCall(AbstractRestTemplateAdaptor mockEmailSilRestTemplate) {
+        silAvailabilityHelper.verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
     }
 
     /**
      * Temporarily swaps out the SIL Email Service's Rest Template out for a mock one during a test run, and restores the
      * original afterwards
      */
-    public void doWithMockSilEmailRestTemplate(Consumer<AbstractRestTemplateAdaptor> testCode) {
-        silAvailabilityHelper.doWithMockSilEmailRestTemplate(testCode);
+    public void withMockSilEmailRestTemplate(Consumer<AbstractRestTemplateAdaptor> testCode) {
+        silAvailabilityHelper.withMockSilEmailRestTemplate(testCode);
     }
 }

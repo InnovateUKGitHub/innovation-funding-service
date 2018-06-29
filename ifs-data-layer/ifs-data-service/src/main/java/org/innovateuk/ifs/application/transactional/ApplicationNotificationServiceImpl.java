@@ -69,7 +69,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                                                 ApplicationIneligibleSendResource applicationIneligibleSendResource) {
 
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).
-                andOnSuccess(application -> markApplicationAsIneligible(application)).
+                andOnSuccess(this::markApplicationAsIneligible).
                 andOnSuccess(markedApplication -> sendApplicationIneligibleNotification(markedApplication, applicationIneligibleSendResource));
     }
 

@@ -9,6 +9,7 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.sil.AbstractSilAvailabilityIntegrationTest;
 import org.innovateuk.ifs.testdata.services.TestService;
+import org.innovateuk.ifs.testutil.DatabaseTestHelper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.Title;
@@ -41,16 +42,17 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends Abstr
     @Autowired
     private TestService testService;
 
+    @Autowired
+    private DatabaseTestHelper databaseTestHelper;
+
     @Test
     public void createOrganisationUserWithEmailServiceUnavailableDoesntLeavePartialDataInDatabase() {
 
-        regApiHelper.doWithMockIdpRestTemplate(mockIdpRestTemplate -> {
+        regApiHelper.withMockIdpRestTemplate(mockIdpRestTemplate -> {
 
-            doWithMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
+            withMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
 
                 Organisation organisation = getOrganisationForTest();
-                int originalUserCount = organisation.getUsers().size();
-                int originalProcessRoleCount = organisation.getProcessRoles().size();
 
                 regApiHelper.setupSuccessfulResponseExpectationsFromCreateUserCall(mockIdpRestTemplate);
 
@@ -67,21 +69,15 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends Abstr
                         withPassword("thebspig").
                         build();
 
-                // assert that we got a failure indicating that the Registration API was not available
-                ServiceResult<UserResource> result = registrationService.createOrganisationUser(organisation.getId(), registrationInfo);
-                assertThat(result.isFailure()).isTrue();
-                assertThat(result.getFailure().is(new Error(EMAILS_NOT_SENT_MULTIPLE, SERVICE_UNAVAILABLE))).isTrue();
+                databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
 
-                // assert that no partial user data remains in the database
-                assertThat(userRepository.findByEmail("thebspig@example.com")).isEmpty();
+                    // assert that we got a failure indicating that the Registration API was not available
+                    ServiceResult<UserResource> result = registrationService.createOrganisationUser(organisation.getId(), registrationInfo);
+                    assertThat(result.isFailure()).isTrue();
+                    verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
 
-                Organisation freshOrganisation = getOrganisationForTest();
-
-                // assert no association data is changed for this organisation
-                int freshUserCount = freshOrganisation.getUsers().size();
-                int freshProcessRoleCount = freshOrganisation.getProcessRoles().size();
-                assertThat(freshUserCount).isEqualTo(originalUserCount);
-                assertThat(freshProcessRoleCount).isEqualTo(originalProcessRoleCount);
+                    assertThat(result.getFailure().is(new Error(EMAILS_NOT_SENT_MULTIPLE, SERVICE_UNAVAILABLE))).isTrue();
+                });
             });
         });
     }
@@ -89,15 +85,13 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends Abstr
     @Test
     public void createOrganisationUserWithCompetitionContextWithEmailServiceUnavailableDoesntLeavePartialDataInDatabase() {
 
-        regApiHelper.doWithMockIdpRestTemplate(mockIdpRestTemplate -> {
+        regApiHelper.withMockIdpRestTemplate(mockIdpRestTemplate -> {
 
-            doWithMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
+            withMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
 
                 Competition competition = competitionRepository.findByName("Connected digital additive manufacturing").get(0);
 
                 Organisation organisation = getOrganisationForTest();
-                int originalUserCount = organisation.getUsers().size();
-                int originalProcessRoleCount = organisation.getProcessRoles().size();
 
                 regApiHelper.setupSuccessfulResponseExpectationsFromCreateUserCall(mockIdpRestTemplate);
 
@@ -114,21 +108,13 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends Abstr
                         withPassword("thebspig").
                         build();
 
-                // assert that we got a failure indicating that the Registration API was not available
-                ServiceResult<UserResource> result = registrationService.createOrganisationUserWithCompetitionContext(organisation.getId(), competition.getId(), registrationInfo);
-                assertThat(result.isFailure()).isTrue();
-                assertThat(result.getFailure().is(new Error(EMAILS_NOT_SENT_MULTIPLE, SERVICE_UNAVAILABLE))).isTrue();
+                databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
 
-                // assert that no partial user data remains in the database
-                assertThat(userRepository.findByEmail("thebspig@example.com")).isEmpty();
-
-                Organisation freshOrganisation = getOrganisationForTest();
-
-                // assert no association data is changed for this organisation
-                int freshUserCount = freshOrganisation.getUsers().size();
-                int freshProcessRoleCount = freshOrganisation.getProcessRoles().size();
-                assertThat(freshUserCount).isEqualTo(originalUserCount);
-                assertThat(freshProcessRoleCount).isEqualTo(originalProcessRoleCount);
+                    // assert that we got a failure indicating that the Registration API was not available
+                    ServiceResult<UserResource> result = registrationService.createOrganisationUserWithCompetitionContext(organisation.getId(), competition.getId(), registrationInfo);
+                    assertThat(result.isFailure()).isTrue();
+                    assertThat(result.getFailure().is(new Error(EMAILS_NOT_SENT_MULTIPLE, SERVICE_UNAVAILABLE))).isTrue();
+                });
             });
         });
     }
