@@ -2,10 +2,6 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="research_category(model)">
-    <th:block th:if="${#fields.hasErrors('researchCategory')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('researchCategory')}"
-                          th:text="${err}"></span>
-    </th:block>
     <div class="form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'form-group-error'">
         <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
             <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
@@ -23,12 +19,16 @@
         </th:block>
         <th:block th:if="${!model.readonly}">
             <fieldset>
-                <legend class="extra-margin-bottom">
+                <legend class="extra-margin-bottom" id="researchCategory">
                     <h2 class="heading-medium">Select your research category</h2>
 
                     <span class="form-hint">More <a
                         href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
                         target="_blank">guidance on research categories.</a></span>
+                    <th:block th:if="${#fields.hasErrors('researchCategory')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('researchCategory')}"
+                          th:text="${err}"></span>
+                    </th:block>
                 </legend>
                 <th:block th:each="item : ${model.availableResearchCategories}">
                     <div class="multiple-choice">
