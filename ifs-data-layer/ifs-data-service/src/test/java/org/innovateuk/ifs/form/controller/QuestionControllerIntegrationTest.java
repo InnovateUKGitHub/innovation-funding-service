@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.builder.FormInputBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
@@ -90,12 +90,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertTrue(questionResource.getFormInputs().contains(activeFormInput.getId()));
     }
 
-    @Ignore
-    @Test
-    public void testAssignMultiple() throws Exception {
-        //Todo: don't know how to implement this, can we assign questions that are in the finance form for example?
-    }
-
     @Test
     public void testFindByCompetition() throws Exception {
         List<QuestionResource> questions = controller.findByCompetition(competitionId).getSuccess();
@@ -157,11 +151,11 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void getQuestionByCompetitionIdAndCompetitionSetupQuestionType() {
+    public void getQuestionByCompetitionIdAndQuestionSetupType() {
         long competitionId = 1L;
-        CompetitionSetupQuestionType type = CompetitionSetupQuestionType.APPLICATION_DETAILS;
+        QuestionSetupType type = QuestionSetupType.APPLICATION_DETAILS;
 
-        QuestionResource question = questionService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType
+        QuestionResource question = questionService.getQuestionByCompetitionIdAndQuestionSetupType
                 (competitionId, type).getSuccess();
 
         assertEquals(9L, question.getId().longValue());

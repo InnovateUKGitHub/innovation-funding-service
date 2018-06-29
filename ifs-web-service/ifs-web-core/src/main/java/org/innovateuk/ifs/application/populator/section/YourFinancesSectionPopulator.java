@@ -45,8 +45,8 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
         ApplicantSectionResource yourFunding = findChildSectionByType(section, SectionType.FUNDING_FINANCES);
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
 
-        boolean yourOrganisationComplete = completedSectionIds.contains(yourOrganisation.getSection().getId());
         boolean yourFundingComplete = completedSectionIds.contains(yourFunding.getSection().getId());
+        boolean yourOrganisationComplete = completedSectionIds.contains(yourOrganisation.getSection().getId());
 
         initializeApplicantFinances(section);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, section.getApplication().getId());
@@ -59,7 +59,7 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
 
     private void initializeApplicantFinances(ApplicantSectionResource section) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(section.getCurrentUser().getId(), section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
-        if(applicationFinanceResource == null) {
+        if (applicationFinanceResource == null) {
             financeService.addApplicationFinance(section.getCurrentUser().getId(), section.getApplication().getId());
         }
     }

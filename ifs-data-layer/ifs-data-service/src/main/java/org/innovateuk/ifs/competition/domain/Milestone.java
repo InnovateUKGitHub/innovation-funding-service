@@ -24,14 +24,12 @@ public class Milestone {
     @JoinColumn(name="competition_id", referencedColumnName="id")
     private Competition competition;
 
-    // TODO INFUND-5908 make this package protected
-    public Milestone() {
+    private Milestone() {
     }
 
     public Milestone(MilestoneType type, Competition competition) {
         if (type == null) { throw new NullPointerException("type cannot be null"); }
         if (competition == null) { throw new NullPointerException("competition cannot be null"); }
-        if (type.isPresetDate()) { throw new NullPointerException("MilestoneType '" + type.getMilestoneDescription() + "' must have a date"); }
 
         this.type = type;
         this.competition = competition;

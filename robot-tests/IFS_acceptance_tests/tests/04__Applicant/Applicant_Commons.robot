@@ -66,7 +66,6 @@ the user fills in the Application details
     the user enters text to a text field  css=#application_details-startdate_year  ${nextyear}
     the user enters text to a text field  css=[id="application.durationInMonths"]  24
     the user clicks the button twice      css=label[for="application.resubmission-no"]
-    the user selects Research category    ${res_category}
     the user should not see the element   link=Choose your innovation area
     The user clicks the button/link       css=button[name="mark_as_complete"]
     the user clicks the button/link       link=Application overview
@@ -74,13 +73,14 @@ the user fills in the Application details
 
 the user selects Research category
     [Arguments]  ${res_category}
-    the user clicks the button/link   jQuery=label:contains("Research category")
-    the user clicks the button twice  jQuery=label[for^="researchCategoryChoice"]:contains("${res_category}")
-    the user clicks the button/link   jQuery=button:contains("Save")
+    the user clicks the button/link   link=Research category
+    then the user clicks the button/link  jQuery=label:contains("${res_category}")
+    the user clicks the button/link   id=application-question-complete
 
 the user marks the finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
     the user fills in the project costs  ${overheadsCost}  ${totalCosts}
+    the user enters the project location
     Run Keyword if  '${Project_growth_table}'=='no'    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
     Run Keyword if  '${Project_growth_table}'=='yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
@@ -217,6 +217,11 @@ the academic fills in the project costs
     the user selects the checkbox         termsAgreed
     the user clicks the button/link       css=#mark-all-as-complete[type="submit"]
 
+the user enters the project location
+    the user clicks the button/link         link = Your project location
+    the user enters text to a text field    projectLocation   BS1 4NT
+    the user clicks the button/link         jQuery = button:contains("Mark as complete")
+
 the user fills the organisation details with Project growth table
     [Arguments]   ${Application}  ${org_size}
     the user navigates to Your-finances page                ${Application}
@@ -253,7 +258,7 @@ the user checks Your Funding section
 
 the user selects research area
     [Arguments]  ${Application}
-    the applicant completes the application details  ${Application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the user selects Research category               Feasibility studies
     the user fills in the funding information        ${Application}
 
 the user fills in the funding information
@@ -269,9 +274,10 @@ the user fills in the funding information
     the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
-    the user should see the element  css=li:nth-of-type(1) .task-status-complete
-    the user should see the element  css=li:nth-of-type(2) .task-status-complete
-    the user should see the element  css=li:nth-of-type(3) .task-status-complete
+    the user should see the element  css = li:nth-of-type(1) .task-status-complete
+    the user should see the element  css = li:nth-of-type(2) .task-status-complete
+    the user should see the element  css = li:nth-of-type(3) .task-status-complete
+    the user should see the element  css = li:nth-of-type(4) .task-status-complete
 
 the user should see all finance subsections incomplete
     the user should see the element  css=li:nth-of-type(1) .task-status-incomplete

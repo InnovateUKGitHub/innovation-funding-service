@@ -5,6 +5,7 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.areas.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryFormPopulator;
 import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryModelPopulator;
+import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
@@ -19,7 +20,7 @@ import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulat
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -44,8 +45,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
  * This controller will handle all question requests that are related to the application form.
@@ -230,10 +231,12 @@ public class ApplicationQuestionController {
             model.addAttribute("applicationTeamModel",applicationTeamViewModel);
         } else if(question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
-            model.addAttribute("researchCategoryModel", researchCategoryPopulator.populate(
-                    applicationResource, user.getId(), questionId, true));
+            ResearchCategoryViewModel researchCategoryModel = researchCategoryPopulator.populate(
+                    applicationResource, user.getId(), questionId, true);
+            model.addAttribute("researchCategoryModel", researchCategoryModel);
             model.addAttribute("form", researchCategoryFormPopulator.populate(applicationResource,
                     new ResearchCategoryForm()));
+            questionViewModel.setAllReadOnly(!question.getCurrentApplicant().isLead() || researchCategoryModel.isComplete());
         }
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
 
@@ -281,13 +284,13 @@ public class ApplicationQuestionController {
                 );
     }
 
-    private CompetitionSetupQuestionType getQuestionType(Model model) {
+    private QuestionSetupType getQuestionType(Model model) {
         QuestionViewModel questionViewModel = (QuestionViewModel) model.asMap().get(MODEL_ATTRIBUTE_MODEL);
         return questionViewModel.getApplicantResource().getQuestion().getQuestionSetupType();
     }
 
     private String getQuestionViewForModel(Model model) {
-        CompetitionSetupQuestionType questionType = getQuestionType(model);
+        QuestionSetupType questionType = getQuestionType(model);
         if (questionType == null) {
             return APPLICATION_FORM;
         }

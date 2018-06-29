@@ -46,6 +46,7 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.jsoup.helper.StringUtil.isBlank;
 
 /**
  * This controller will handle all submit requests that are related to the application form.
@@ -53,6 +54,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 public class ApplicationSectionController {
+    private static final int MINIMUM_POSTCODE_LENGTH = 6;
+    private static final int MAXIMUM_POSTCODE_LENGTH = 8;
 
     private static final Log LOG = LogFactory.getLog(ApplicationSectionController.class);
 
@@ -228,6 +231,9 @@ public class ApplicationSectionController {
             case ORGANISATION_FINANCES:
                 return validateOrganisationSizeSelected(params, userId, bindingResult);
 
+            case PROJECT_LOCATION:
+                return validateProjectLocation(params, bindingResult);
+
             default:
                 return true;
         }
@@ -274,6 +280,22 @@ public class ApplicationSectionController {
             return true;
         }
         bindingResult.rejectValue(ORGANISATION_SIZE_KEY, "APPLICATION_ORGANISATION_SIZE_REQUIRED");
+        return false;
+    }
+
+    private boolean validateProjectLocation(
+            Map<String, String[]> params,
+            BindingResult bindingResult
+    ) {
+        List<String> financePositionKeys = simpleFilter(params.keySet(), k -> k.contains("financePosition-"));
+        if (!financePositionKeys.isEmpty()) {
+            String projectLocation = params.get(financePositionKeys.get(0))[0];
+            if (!isBlank(projectLocation) && projectLocation.length() >= MINIMUM_POSTCODE_LENGTH &&
+                    projectLocation.length() <= MAXIMUM_POSTCODE_LENGTH) {
+                return true;
+            }
+        }
+        bindingResult.rejectValue(PROJECT_LOCATION_KEY, "APPLICATION_PROJECT_LOCATION_REQUIRED");
         return false;
     }
 }

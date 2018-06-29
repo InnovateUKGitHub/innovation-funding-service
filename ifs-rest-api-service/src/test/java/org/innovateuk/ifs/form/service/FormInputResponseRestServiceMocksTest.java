@@ -6,7 +6,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.PROJECT_SUMMARY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUMMARY;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
@@ -75,7 +75,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
     @Test
     public void getByApplicationIdAndQuestionSetupType() {
         long applicationId = 1L;
-        CompetitionSetupQuestionType questionSetupType = PROJECT_SUMMARY;
+        QuestionSetupType questionSetupType = PROJECT_SUMMARY;
 
         FormInputResponseResource expected = newFormInputResponseResource().build();
         setupGetWithRestResultExpectations(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionSetupType", applicationId, questionSetupType), FormInputResponseResource.class, expected);

@@ -17,8 +17,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 
@@ -336,9 +336,7 @@ public class Competition implements ProcessActivity {
 
     private void setMilestoneDate(MilestoneType milestoneType, ZonedDateTime dateTime) {
         Milestone milestone = milestones.stream().filter(m -> m.getType() == milestoneType).findAny().orElseGet(() -> {
-            Milestone m = new Milestone();
-            m.setType(milestoneType);
-            m.setCompetition(this);
+            Milestone m = new Milestone(milestoneType,this);
             milestones.add(m);
             return m;
         });

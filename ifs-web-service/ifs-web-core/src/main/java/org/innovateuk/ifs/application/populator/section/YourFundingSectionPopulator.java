@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
  * Your funding populator section view models.
@@ -74,7 +74,7 @@ public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourFu
     long getResearchCategoryQuestionId(ApplicantSectionResource section) {
 
         QuestionResource question;
-        RestResult<QuestionResource> researchCategoryResult = questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(section.getCompetition().getId(), RESEARCH_CATEGORY);
+        RestResult<QuestionResource> researchCategoryResult = questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(section.getCompetition().getId(), RESEARCH_CATEGORY);
 
         if (researchCategoryResult.isSuccess()) {
             question = researchCategoryResult.getSuccess();

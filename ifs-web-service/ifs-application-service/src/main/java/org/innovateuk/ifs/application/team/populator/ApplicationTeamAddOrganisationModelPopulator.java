@@ -7,7 +7,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 
 /**
  * Builds the model for the Add Organisation view.
@@ -25,7 +25,7 @@ public class ApplicationTeamAddOrganisationModelPopulator {
     }
 
     private Long getApplicationTeamQuestion(long competitionId) {
-        return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+        return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
                 APPLICATION_TEAM).handleSuccessOrFailure(failure -> null, QuestionResource::getId);
     }
 

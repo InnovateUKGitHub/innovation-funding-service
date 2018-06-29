@@ -100,7 +100,7 @@ public class CompetitionResource {
     private boolean locationPerPartner = true;
     private Boolean stateAid;
 
-    // IFS-3088 & IFS-2123: This is temporary until all competitions with the old menu view are complete
+    // IFS-3088 & IFS-2123 & IFS-3753: This is temporary until all competitions with the old menu view are complete
     private boolean useNewApplicantMenu;
 
     public CompetitionResource() {

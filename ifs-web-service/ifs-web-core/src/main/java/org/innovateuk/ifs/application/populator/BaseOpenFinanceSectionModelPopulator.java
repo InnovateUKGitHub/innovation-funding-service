@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
+
 /**
  * Class for populating the model for the "Your Finances" section
  */
@@ -31,8 +33,8 @@ public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionMo
             yourFundingComplete = viewModel.getSectionsMarkedAsComplete().contains(allSections.stream().filter(filterSection -> SectionType.FUNDING_FINANCES.equals(filterSection.getType())).map(SectionResource::getId).findFirst().orElse(-1L));
         }
         viewModel.setNotRequestingFunding(yourFundingComplete && organisationSizeComplete && organisationGrantClaimPercentage != null && organisationGrantClaimPercentage == 0);
-    }
 
+    }
 
     protected Boolean isSubFinanceSection(SectionResource section) {
         return SectionType.FINANCE.equals(section.getType().getParent().orElse(null));
@@ -62,7 +64,7 @@ public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionMo
     private void addCompletedDetails(SectionApplicationViewModel sectionApplicationViewModel, ApplicantSectionResource applicantSection) {
         Set<Long> markedAsComplete = applicantSection.allCompleteQuestionStatuses()
                 .filter(status -> status.getMarkedAsCompleteBy().hasSameOrganisation(applicantSection.getCurrentApplicant())
-                 && status.getStatus().getMarkedAsComplete())
+                        && status.getStatus().getMarkedAsComplete())
                 .map(status -> status.getStatus().getQuestion())
                 .collect(Collectors.toSet());
         sectionApplicationViewModel.setMarkedAsComplete(markedAsComplete);

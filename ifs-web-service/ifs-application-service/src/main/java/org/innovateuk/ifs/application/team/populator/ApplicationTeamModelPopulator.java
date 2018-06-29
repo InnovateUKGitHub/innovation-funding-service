@@ -31,7 +31,7 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -75,7 +75,7 @@ public class ApplicationTeamModelPopulator {
     }
 
     private Long getApplicationTeamQuestion(long competitionId) {
-        return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+        return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
                 APPLICATION_TEAM).handleSuccessOrFailure(failure -> null, QuestionResource::getId);
     }
 

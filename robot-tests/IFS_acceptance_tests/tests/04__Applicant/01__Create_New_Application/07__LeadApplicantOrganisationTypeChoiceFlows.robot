@@ -10,6 +10,8 @@ Resource            ../../../resources/defaultResources.robot
 
 
 *** Test Cases ***
+
+
 User should see RTO guidance when choosing RTO as a business type
     [Documentation]    INFUND-669 INFUND-1904 INFUND-1785
     [Tags]    HappyPath    SmokeTest

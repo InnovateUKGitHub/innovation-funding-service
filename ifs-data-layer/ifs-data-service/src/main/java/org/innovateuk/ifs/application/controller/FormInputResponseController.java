@@ -12,7 +12,7 @@ import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -46,16 +46,9 @@ public class FormInputResponseController {
         return formInputResponseService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-3597", description = "Do not find based on name, but based on questionSetupType. Remove in cleanup")
-    @GetMapping("/findByApplicationIdAndQuestionName/{applicationId}/{questionName}")
-    public RestResult<FormInputResponseResource> findByApplicationIdAndQuestionName(@PathVariable long applicationId,
-                                                                                    @PathVariable String questionName) {
-        return formInputResponseService.findResponseByApplicationIdAndQuestionName(applicationId, questionName).toGetResponse();
-    }
-
     @GetMapping("/findByApplicationIdAndQuestionSetupType/{applicationId}/{questionSetupType}")
     public RestResult<FormInputResponseResource> findByApplicationIdAndQuestionSetupType(@PathVariable long applicationId,
-                                                                                         @PathVariable CompetitionSetupQuestionType questionSetupType) {
+                                                                                         @PathVariable QuestionSetupType questionSetupType) {
         return formInputResponseService.findResponseByApplicationIdAndQuestionSetupType(applicationId, questionSetupType).toGetResponse();
     }
 
