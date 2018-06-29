@@ -71,7 +71,6 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return null;
     }
 
-    // TODO DW - INFUND-1555 - handle rest result
     private Question getQuestionByCostType(Long competitionId, FinanceRowType costType) {
         return questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, costType.getFormInputType()).getSuccess();
     }

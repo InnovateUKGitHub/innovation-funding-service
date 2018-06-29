@@ -63,7 +63,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return serviceSuccess(questionsToResources(questionRepository.findByCompetitionId(competitionId)));
     }
 
-    // TODO DW - INFUND-1555 - in situation where next / prev question not found, should this be a 404?
     @Override
     public ServiceResult<QuestionResource> getNextQuestion(final Long questionId) {
 

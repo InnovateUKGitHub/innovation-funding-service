@@ -40,7 +40,7 @@ public class FormInputResponseFileUploadLookupStrategies {
             formInputResponse =
                     formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(id.getApplicationId(), id.getProcessRoleId(), id.getFormInputId());
         } else {                            // If question has single status then whoever has question assinged to them can edit/read files associated with the question
-            // TODO: Secure this by checking it is the assinged user when editing
+
             List<FormInputResponse> formInputResponses = formInputResponseRepository.findByApplicationIdAndFormInputId(id.getApplicationId(), id.getFormInputId());
             if(formInputResponses != null && !formInputResponses.isEmpty()){ // Question with single status will only have one form input response
                 formInputResponse = formInputResponses.get(0);

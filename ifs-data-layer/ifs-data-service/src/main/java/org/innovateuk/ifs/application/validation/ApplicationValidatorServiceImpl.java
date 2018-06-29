@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 
 /**
  * Class to validate several objects
- * TODO: INFUND-9548 adding unit tests for this class
  */
 @Service
 public class ApplicationValidatorServiceImpl extends BaseTransactionalService implements ApplicationValidatorService {

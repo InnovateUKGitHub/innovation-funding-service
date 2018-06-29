@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
-import org.apache.commons.io.FileUtils;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -23,10 +22,12 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.math.BigDecimal.ROUND_UP;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static java.util.function.Function.identity;
@@ -44,6 +45,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  */
 @Component
 public class AssessmentOverviewModelPopulator {
+
+    public static final BigDecimal ONE_KB = BigDecimal.valueOf(1024L);
 
     @Autowired
     private CompetitionService competitionService;
@@ -185,11 +188,13 @@ public class AssessmentOverviewModelPopulator {
                                                             Map<Long, QuestionResource> questions) {
         QuestionResource question = questions.get(formInputResponse.getQuestion());
 
+        String size = String.valueOf(BigDecimal.valueOf(formInputResponse.getFilesizeBytes()).divide(ONE_KB, 0, ROUND_UP)) + " KB";
+
         return new AssessmentOverviewAppendixViewModel(
                 formInputResponse.getFormInput(),
                 ofNullable(question.getShortName()).orElse(question.getName()),
                 formInputResponse.getFilename(),
-                FileUtils.byteCountToDisplaySize(formInputResponse.getFilesizeBytes())
+                size
         );
     }
 }

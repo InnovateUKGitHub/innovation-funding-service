@@ -91,7 +91,7 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
         Application application = applicationFinanceRepository.findById(applicationFinanceResource.getId()).get().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app -> {
             applicationFinanceResource.setFinanceFileEntry(null);
-            return financeRowCostsService.updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
+            return financeRowCostsService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource);
         });
     }
 
@@ -102,7 +102,7 @@ public class FinanceFileEntryServiceImpl extends BaseTransactionalService implem
 
         if (applicationFinanceResource != null) {
             applicationFinanceResource.setFinanceFileEntry(fileEntry.getId());
-            financeRowCostsService.updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
+            financeRowCostsService.updateApplicationFinance(applicationFinanceResource.getId(), applicationFinanceResource);
         }
 
         return fileEntryMapper.mapToResource(fileEntry);

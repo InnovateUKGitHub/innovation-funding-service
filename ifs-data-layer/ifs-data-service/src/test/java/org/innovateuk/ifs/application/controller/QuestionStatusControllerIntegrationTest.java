@@ -105,12 +105,6 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
         );
     }
 
-    @Ignore
-    @Test
-    public void testAssignMultiple() throws Exception {
-        //Todo: don't know how to implement this, can we assign questions that are in the finance form for example?
-    }
-
     @Test
     public void testGetMarkedAsComplete() throws Exception {
         // Start with zero completed

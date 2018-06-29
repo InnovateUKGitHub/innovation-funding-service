@@ -239,7 +239,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<CompetitionCountResource> countCompetitions() {
-        //TODO INFUND-3833 populate complete count
         return serviceSuccess(
                 new CompetitionCountResource(
                         getLiveCount(),

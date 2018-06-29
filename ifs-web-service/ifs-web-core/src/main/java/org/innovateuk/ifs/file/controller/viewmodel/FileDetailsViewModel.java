@@ -6,14 +6,14 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 import java.math.BigDecimal;
 
-import static java.math.BigDecimal.ROUND_HALF_EVEN;
+import static java.math.BigDecimal.ROUND_UP;
 
 /**
  * Small view model holding attributes around files
  */
 public class FileDetailsViewModel {
 
-    public static final BigDecimal ONE_THOUSAND = BigDecimal.valueOf(1000L);
+    public static final BigDecimal ONE_KB = BigDecimal.valueOf(1024L);
 
     private long formInputId;
     private String filename;
@@ -25,7 +25,7 @@ public class FileDetailsViewModel {
 
     public FileDetailsViewModel(String filename, long filesizeBytes) {
         this.filename = filename;
-        this.filesizeKbytes = BigDecimal.valueOf(filesizeBytes).divide(ONE_THOUSAND, 2, ROUND_HALF_EVEN);
+        this.filesizeKbytes = BigDecimal.valueOf(filesizeBytes).divide(ONE_KB, 0, ROUND_UP);;
     }
 
     public FileDetailsViewModel(long formInputId, String filename, long filesizeBytes) {

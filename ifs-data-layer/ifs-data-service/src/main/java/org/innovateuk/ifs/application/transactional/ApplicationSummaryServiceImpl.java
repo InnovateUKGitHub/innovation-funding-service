@@ -79,7 +79,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     // TODO These comparators are used to sort application after loading them in memory.
     // TODO The code currently is retrieving to many of them and this sorting should be done in the database query.
-    // TODO Ideally they should all be replaced
+    // TODO Ideally they should all be replaced - IFS-3759
     private static final Map<String, Comparator<ApplicationSummaryResource>> SUMMARY_COMPARATORS =
             new HashMap<String, Comparator<ApplicationSummaryResource>>() {{
         put("lead", new ApplicationSummaryResourceLeadComparator());

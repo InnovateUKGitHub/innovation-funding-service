@@ -22,6 +22,8 @@ public abstract class Finance {
     @JoinColumn(name="organisationSizeId", referencedColumnName="id")
     private OrganisationSize organisationSize;
 
+    private String workPostcode;
+
     public Finance(Organisation organisation, OrganisationSize organisationSize) {
         this.organisation = organisation;
         this.organisationSize = organisationSize;
@@ -61,5 +63,13 @@ public abstract class Finance {
 
     public void setOrganisationSize(OrganisationSize organisationSize) {
         this.organisationSize = organisationSize;
+    }
+
+    public String getWorkPostcode() {
+        return workPostcode;
+    }
+
+    public void setWorkPostcode(String workPostcode) {
+        this.workPostcode = workPostcode;
     }
 }
