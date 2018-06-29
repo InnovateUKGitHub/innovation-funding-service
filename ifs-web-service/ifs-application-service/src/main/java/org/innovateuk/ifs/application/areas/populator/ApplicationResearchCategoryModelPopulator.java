@@ -12,6 +12,7 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Populates the research category selection viewmodel.
@@ -41,12 +42,16 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
         boolean hasApplicationFinances = hasApplicationFinances(applicationResource);
         List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
 
+        String researchCategoryName = Optional.of(applicationResource.getResearchCategory())
+                .map(ResearchCategoryResource::getName).orElse(null);
+
         return new ResearchCategoryViewModel(applicationResource.getCompetitionName(),
                 applicationResource.getId(),
                 questionId,
                 researchCategories,
                 hasApplicationFinances,
                 useNewApplicantMenu,
+                researchCategoryName,
                 !isCompetitionOpen(applicationResource),
                 isComplete(applicationResource, loggedInUserId),
                 userService.isLeadApplicant(loggedInUserId, applicationResource));

@@ -87,7 +87,7 @@ public class ResearchCategoryController {
         return "application/research-categories";
     }
 
-    @PostMapping(params = {"researchCategory"})
+    @PostMapping(params = {"save-research-category"})
     public String submitResearchCategoryChoice(@ModelAttribute(FORM_ATTR_NAME) @Valid ResearchCategoryForm
                                                        researchCategoryForm,
                                                @SuppressWarnings("unused") BindingResult bindingResult,
