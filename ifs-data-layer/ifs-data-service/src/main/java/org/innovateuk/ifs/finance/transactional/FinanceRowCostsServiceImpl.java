@@ -214,12 +214,15 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationFinanceResource> updateCost(Long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
+    public ServiceResult<ApplicationFinanceResource> updateApplicationFinance(Long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
         Application application = applicationRepository.findOne(applicationFinance.getApplication());
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
                     if (applicationFinance.getOrganisationSize() != null) {
                         dbFinance.setOrganisationSize(organisationSizeRepository.findOne(applicationFinance.getOrganisationSize()));
+                    }
+                    if (applicationFinance.getWorkPostcode() != null) {
+                        dbFinance.setWorkPostcode(applicationFinance.getWorkPostcode());
                     }
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
