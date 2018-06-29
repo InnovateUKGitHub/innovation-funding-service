@@ -30,6 +30,7 @@ import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
@@ -63,6 +64,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -241,9 +243,10 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Transactional
     public ServiceResult<Void> updateProjectDuration(long projectId, long durationInMonths) {
         return validateProjectDuration(durationInMonths).
-                andOnSuccess(() -> validateIfProjectDurationCanBeChanged(projectId)).
                 andOnSuccess(() -> getProject(projectId)).
-                andOnSuccessReturnVoid(project -> project.setDurationInMonths(durationInMonths));
+                andOnSuccess(project -> validateIfProjectDurationCanBeChanged(project).
+                            andOnSuccessReturnVoid(() -> project.setDurationInMonths(durationInMonths))
+                            );
     }
 
     private ServiceResult<Void> validateProjectDuration(long durationInMonths) {
@@ -255,13 +258,22 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateIfProjectDurationCanBeChanged(long projectId) {
+    private ServiceResult<Void> validateIfProjectDurationCanBeChanged(Project project) {
 
-        if (isSpendProfileIsGenerated(projectId)) {
+        if (isSpendProfileIsGenerated(project.getId())) {
             return serviceFailure(PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
         }
 
+        if (isProjectWithdrawn(project)) {
+            return serviceFailure(GENERAL_FORBIDDEN);
+        }
+
         return serviceSuccess();
+    }
+
+    private boolean isProjectWithdrawn(Project project) {
+        ProjectState projectState = projectWorkflowHandler.getState(project);
+        return WITHDRAWN.equals(projectState);
     }
 
     @Override
