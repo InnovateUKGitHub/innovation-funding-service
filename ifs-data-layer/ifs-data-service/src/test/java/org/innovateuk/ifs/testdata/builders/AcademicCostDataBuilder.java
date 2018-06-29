@@ -86,6 +86,20 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
         });
     }
 
+    public AcademicCostDataBuilder withWorkPostcode(String workPostcode) {
+        return with(data -> {
+
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+
+            applicationFinance.setWorkPostcode(workPostcode);
+
+            financeRowCostsService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
+
+
     private AcademicCostDataBuilder addCostItem(String financeRowName, Supplier<FinanceRowItem> cost) {
         return with(data -> {
 

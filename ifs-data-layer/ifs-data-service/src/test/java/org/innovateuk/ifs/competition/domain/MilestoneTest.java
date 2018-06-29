@@ -41,7 +41,7 @@ public class MilestoneTest {
         new Milestone(milestoneType, ZonedDateTime.now(), newCompetition().build());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void create_presetMilestoneWithNoDate() {
         MilestoneType milestoneType = Stream.of(MilestoneType.presetValues()).findFirst().get();
         new Milestone(milestoneType, newCompetition().build());
