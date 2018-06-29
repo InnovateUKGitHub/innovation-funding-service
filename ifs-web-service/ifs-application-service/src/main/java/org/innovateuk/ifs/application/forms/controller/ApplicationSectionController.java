@@ -112,9 +112,6 @@ public class ApplicationSectionController {
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
         populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false);
 
-        if (hitsSpeedBump(applicantSection)) {
-            return "locked-section";
-        }
         return APPLICATION_FORM;
     }
 

@@ -189,6 +189,39 @@
     </th:block>
 
     <th:block th:fragment="funding_finances(model, internalView)">
+
+        <th:block th:if="${model.fundingSectionLocked}">
+
+            The following steps must be completed before you can supply funding details:
+            <ul class="list list-bullet">
+
+                <th:block th:unless="${model.researchCategoryComplete}">
+
+                    <th:block th:if="${model.leadApplicant}">
+                        <li>you must select a
+                            <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.researchCategoryQuestionId})}">
+                                research category
+                            </a>
+                        </li>
+                    </th:block>
+
+                    <th:block th:unless="${model.leadApplicant}">
+                        <li>the lead applicant must select a research category</li>
+                    </th:block>
+
+                </th:block>
+
+                <th:block th:unless="${model.yourOrganisationComplete}">
+                    <li>you must state
+                        <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">
+                            your organisation size
+                        </a>
+                    </li>
+                </th:block>
+            </ul>
+
+        </th:block>
+        <th:block th:unless="${model.fundingSectionLocked}">
         <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
             <div class="question" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
                 <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel}, internalView=${internalView})" />
@@ -196,6 +229,7 @@
         </th:block>
         <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:unless="${model.allReadOnly}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
+        </th:block>
     </th:block>
 
     <th:block th:fragment="overview_finances(model, internalView)">
