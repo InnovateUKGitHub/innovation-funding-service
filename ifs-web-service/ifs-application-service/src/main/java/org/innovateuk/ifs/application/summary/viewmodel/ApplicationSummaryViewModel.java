@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.summary.viewmodel;
 
 import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategorySummaryViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;

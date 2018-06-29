@@ -53,12 +53,6 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<FormInputResponseResource> findResponseByApplicationIdAndQuestionName(long applicationId, String questionName) {
-        return find(formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionName(applicationId, questionName),
-                notFoundError(FormInputResponse.class, applicationId, questionName)).andOnSuccessReturn(formInputResponseMapper::mapToResource);
-    }
-
-    @Override
     public ServiceResult<FormInputResponseResource> findResponseByApplicationIdAndQuestionSetupType(long applicationId,
                                                                                                     QuestionSetupType questionSetupType){
         return find(formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionQuestionSetupType(applicationId, questionSetupType),

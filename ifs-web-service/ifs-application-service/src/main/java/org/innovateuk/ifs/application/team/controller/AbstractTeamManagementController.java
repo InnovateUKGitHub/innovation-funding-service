@@ -186,9 +186,6 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
             return supplier.get();
         }
 
-        // TODO: IFS-2598 - the above validation currently fails when the team update page is redrawn
-        //       after the last active user is removed from the team and pending users are still remaining.
-        // For now we will redirect to the team page, until this is fixed under IFS-2598.
         return redirectToApplicationTeamPage(applicationId);
     }
 
