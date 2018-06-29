@@ -78,6 +78,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 "Industrial research",
                 false,
                 false,
+                false,
                 false);
 
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
@@ -156,6 +157,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 "Industrial research",
                 false,
                 false,
+                false,
                 false);
 
         ResearchCategoryForm researchCategoryForm = new ResearchCategoryForm();
@@ -205,6 +207,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 false,
                 "Industrial research",
+                false,
                 false,
                 false,
                 false);
@@ -318,6 +321,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 "Industrial research",
                 false,
                 false,
+                false,
                 false);
 
         ResearchCategoryForm researchCategoryForm = new ResearchCategoryForm();
@@ -369,6 +373,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 false,
                 "Industrial research",
+                false,
                 false,
                 false,
                 false);
