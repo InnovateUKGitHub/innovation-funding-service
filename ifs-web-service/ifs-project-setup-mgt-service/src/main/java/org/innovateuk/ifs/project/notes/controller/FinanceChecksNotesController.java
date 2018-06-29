@@ -379,4 +379,8 @@ public class FinanceChecksNotesController {
     private String formView(final Long projectId, final Long organisationId, Long noteId) {
         return String.format(FINANCE_CHECKS_NOTES_COMMENT_BASE_URL, projectId, organisationId, noteId);
     }
+
+    protected void setThreadViewModelPopulator(ThreadViewModelPopulator threadViewModelPopulator) {
+        this.threadViewModelPopulator = threadViewModelPopulator;
+    }
 }

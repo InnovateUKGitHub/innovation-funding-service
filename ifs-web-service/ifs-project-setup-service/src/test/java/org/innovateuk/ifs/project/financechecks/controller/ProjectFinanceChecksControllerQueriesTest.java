@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financechecks;
+package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +14,6 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
-import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksController;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryResponseForm;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
@@ -41,6 +40,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
@@ -64,6 +64,7 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -130,10 +131,17 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Mock
     private FinanceUtil financeUtil;
 
+    private ThreadViewModelPopulator threadViewModelPopulator;
+
     @Before
     public void setup() {
         super.setUp();
         setupCookieUtil(cookieUtil);
+
+        threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
+        spy(threadViewModelPopulator);
+        controller.setThreadViewModelPopulator(threadViewModelPopulator);
+
         when(userService.findById(financeTeamUser.getId())).thenReturn(financeTeamUser);
         when(organisationService.getOrganisationForUser(financeTeamUser.getId())).thenReturn(innovateOrganisationResource);
         when(userService.findById(financeContactUser.getId())).thenReturn(financeContactUser);

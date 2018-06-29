@@ -520,4 +520,8 @@ public class ProjectFinanceChecksController {
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";
     }
+
+    protected void setThreadViewModelPopulator(ThreadViewModelPopulator threadViewModelPopulator) {
+        this.threadViewModelPopulator = threadViewModelPopulator;
+    }
 }

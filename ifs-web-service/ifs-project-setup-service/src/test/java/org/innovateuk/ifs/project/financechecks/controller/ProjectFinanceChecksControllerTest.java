@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financechecks;
+package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
@@ -26,7 +26,6 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
-import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksController;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -68,6 +67,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -129,9 +129,15 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
     private FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
 
+    private ThreadViewModelPopulator threadViewModelPopulator;
+
     @Before
     public void setUp() {
         super.setUp();
+
+        threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
+        spy(threadViewModelPopulator);
+        controller.setThreadViewModelPopulator(threadViewModelPopulator);
 
         this.setupCompetition();
         this.setupApplicationWithRoles();

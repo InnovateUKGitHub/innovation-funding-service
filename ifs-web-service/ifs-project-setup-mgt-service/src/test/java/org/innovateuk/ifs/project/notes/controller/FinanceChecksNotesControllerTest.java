@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.notes;
+package org.innovateuk.ifs.project.notes.controller;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +55,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -107,10 +108,17 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private FinanceCheckService financeCheckServiceMock;
 
+    private ThreadViewModelPopulator threadViewModelPopulator;
+
     @Before
     public void setup() {
         super.setUp();
         setupCookieUtil(cookieUtil);
+
+        threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
+        spy(threadViewModelPopulator);
+        controller.setThreadViewModelPopulator(threadViewModelPopulator);
+
         when(organisationService.getOrganisationForUser(financeTeamUser.getId())).thenReturn(innovateOrganisationResource);
         when(organisationService.getOrganisationForUser(financeContactUser.getId())).thenReturn(leadOrganisationResource);
         when(projectService.getPartnerOrganisation(projectId, financeContactUser.getId())).thenReturn(partnerOrg);

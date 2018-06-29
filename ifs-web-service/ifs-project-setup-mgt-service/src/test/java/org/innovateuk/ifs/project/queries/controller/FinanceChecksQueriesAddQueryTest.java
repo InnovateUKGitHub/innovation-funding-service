@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.queries;
+package org.innovateuk.ifs.project.queries.controller;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;

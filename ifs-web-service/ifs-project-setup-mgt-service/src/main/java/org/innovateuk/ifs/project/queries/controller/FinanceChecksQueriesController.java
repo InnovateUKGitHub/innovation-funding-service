@@ -389,4 +389,8 @@ public class FinanceChecksQueriesController {
         cookieUtil.removeCookie(response, getFormCookieName(projectId,
                 organisationId, queryId));
     }
+
+    protected void setThreadViewModelPopulator(ThreadViewModelPopulator threadViewModelPopulator) {
+        this.threadViewModelPopulator = threadViewModelPopulator;
+    }
 }

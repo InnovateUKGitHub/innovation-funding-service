@@ -1,8 +1,7 @@
-package org.innovateuk.ifs.project.financechecks;
+package org.innovateuk.ifs.project.financechecks.controller;
 
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
-import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksController;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.UserResource;

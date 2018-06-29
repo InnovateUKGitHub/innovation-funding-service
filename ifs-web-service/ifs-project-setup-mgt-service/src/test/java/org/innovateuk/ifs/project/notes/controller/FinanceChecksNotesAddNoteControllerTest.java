@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.notes;
+package org.innovateuk.ifs.project.notes.controller;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
