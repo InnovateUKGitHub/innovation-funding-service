@@ -1,13 +1,13 @@
 .column-three-quarters{
-  @include grid-column( 9/12 );
+  //@include grid-column( 9/12 );
 }
 
 .column-one-quarter{
-  @include grid-column( 3/12 );
+  //@include grid-column( 3/12 );
 }
 
 .column-one{
-  @include grid-column( 12/12 );
+  //@include grid-column( 12/12 );
 }
 
 .no-pad{
@@ -214,17 +214,11 @@ table {
 }
 
 .hint {
-  color: $grey-1;
+  color: govuk-colour("grey-1");
 }
 
 .button-warning{
-  @include button(#c00000);
-}
-
-.button-block{
-  display: block;
-  text-align: center;
-  width: 100%;
+  background-color: $ifs-warning-button-colour;
 }
 
 hr,

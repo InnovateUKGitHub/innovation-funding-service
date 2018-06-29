@@ -318,8 +318,8 @@ ol {
 
   .status {
     display:block;
-    color: $secondary-text-colour;
-    background: $panel-colour;
+    color: $govuk-secondary-text-colour;
+    background: govuk-colour("grey-3");
     padding: 12px;
     text-align: center;
     margin-top: 1.2em;

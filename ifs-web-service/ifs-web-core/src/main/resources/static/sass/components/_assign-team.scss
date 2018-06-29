@@ -28,13 +28,13 @@
 
   .assign-team {
     @include border-radius(2px);
-    @include core-16;
+    @include govuk-font(16);
     @include media-down(mobile) {
       left: 0;
       width: 90%;
     }
     background-color: #fff;
-    border: 1px solid $grey-3;
+    border: 1px solid govuk-colour("grey-3");
     margin-top: 10px;
     padding: 10px 15px;
     position: absolute;
@@ -130,11 +130,11 @@
     margin-bottom: 1em;
 
     .assign-team {
-      background: $grey-4;
+      background: govuk-colour("grey-4");
     }
 
     .assign-button {
-      @extend .visuallyhidden;
+      @extend .govuk-visually-hidden;
     }
   }
 

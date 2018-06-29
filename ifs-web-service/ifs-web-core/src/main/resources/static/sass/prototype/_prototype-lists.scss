@@ -63,7 +63,7 @@ ol.list-style-type-roman{
 
   .assigned-to-me{
     .grid-row{
-      //border-left: 5px solid $light-blue;
+      //border-left: 5px solid govuk-colour("light-blue");
       //@extend %icon-assigned;
     }
   }
@@ -260,8 +260,8 @@ dl.standard-definition-list{
 
 .comp-timeline-status{
   li{
-    border-top: 1px solid $secondary-text-colour;
-    color: $secondary-text-colour;
+    border-top: 1px solid $govuk-secondary-text-colour;
+    color: $govuk-secondary-text-colour;
 
     h3{
       margin: 10px 0 0 0;
@@ -276,8 +276,8 @@ dl.standard-definition-list{
     }
 
     &.done{
-      border-top: 1px solid $text-colour;
-      color: $text-colour;
+      border-top: 1px solid $govuk-text-colour;
+      color: $govuk-text-colour;
       @extend %icon-tick;
       background-position: right 1em;
 
@@ -307,7 +307,7 @@ dl.standard-definition-list{
     span{
       margin-left: 100px;
       padding: 20px;
-      border: 3px solid $grey-2;
+      border: 3px solid govuk-colour("grey-2");
       border-radius: 5px;
       display: block;
       margin-bottom: 10px;
@@ -321,7 +321,7 @@ dl.standard-definition-list{
         position: absolute;
         margin-left: -56px;
         border: 18px solid transparent;
-        border-right: 18px solid $grey-2;
+        border-right: 18px solid govuk-colour("grey-2");
       }
     }
 
@@ -333,7 +333,7 @@ dl.standard-definition-list{
       }
 
       span{
-        background: $grey-4;
+        background: govuk-colour("grey-4");
       }
     }
 
@@ -353,11 +353,11 @@ dl.standard-definition-list{
       }
 
       span{
-        background: $link-colour;
-        color: $white;
+        background: $govuk-link-colour;
+        color: govuk-colour("white");
 
         a{
-          color: $white;
+          color: govuk-colour("white");
         }
       }
     }
@@ -370,11 +370,11 @@ dl.standard-definition-list{
       }
 
       span{
-        background: $link-colour;
-        color: $white;
+        background: $govuk-link-colour;
+        color: govuk-colour("white");
 
         a{
-          color: $white;
+          color: govuk-colour("white");
         }
       }
     }

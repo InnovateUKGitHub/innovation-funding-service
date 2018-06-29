@@ -85,25 +85,25 @@ table {
 /*----- Competition admin status' ----*/
 
 .comp-status {
-    background: $button-colour;
+    background: $govuk-button-colour;
     text-align: center;
     padding: 20px;
-    color: $white;
+    color: govuk-colour("white");
 
     &.closed {
         background: $govuk-error-colour;
     }
 
     &.funders-panel {
-        background: $light-blue;
+        background: govuk-colour("light-blue");
     }
 
     &.in-assessment {
-        background: $orange;
+        background: govuk-colour("orange");
     }
 
     &.prep {
-        background: $grey-1;
+        background: govuk-colour("grey-1");
     }
 
     h2 {

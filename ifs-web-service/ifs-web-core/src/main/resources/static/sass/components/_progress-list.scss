@@ -2,12 +2,12 @@
 @import "govuk-frontend/settings/all";
 
 .progress-list{
-  background-color: $panel-colour;
+  background-color: govuk-colour("grey-3");
   margin: 20px 0 50px;
   padding: 15px;
 
   &--individual-blocks{
-    background-color: $white;
+    background-color: govuk-colour("white");
     margin: 30px 0 50px;
     padding: 0;
   }
@@ -23,7 +23,7 @@
 
     margin-top: 10px;
     padding: 15px 0 15px 30px;
-    background-color: $white;
+    background-color: govuk-colour("white");
     border: 1px solid $govuk-border-colour;
     overflow: auto;
     display: flex; // Using flex as a progressive enhancement for vertical alignment of dashboard elements. Container heights are varaiable depending on length of application titles.
@@ -33,7 +33,7 @@
    }
 
   .task{
-    @include core-16;
+    @include govuk-font(16);
     @include media-down(tablet) {
       margin-bottom: 15px;
     }
@@ -98,7 +98,7 @@
   }
 
   .status-msg {
-    @include core-14;
+    @include govuk-font(14);
     display: block;
     text-align: center;
     font-weight: bold;
@@ -115,15 +115,15 @@
       }
 
       &-waiting{
-        color: $secondary-text-colour;
+        color: $govuk-secondary-text-colour;
         padding: 1em 0;
       }
 
     }
 
     &.msg-progress{
-      @include core-16;
-      color: $text-colour;
+      @include govuk-font(16);
+      color: $govuk-text-colour;
       font-weight: bold;
       float: right;
     }
@@ -131,11 +131,11 @@
 
   .awaiting {
     @extend .deadline;
-    color: $secondary-text-colour;
+    color: $govuk-secondary-text-colour;
   }
 
   > span {
-    @include core-16;
+    @include govuk-font(16);
     @include media-down(mobile) {
       margin-top: 0;
     }
@@ -155,22 +155,22 @@
     flex: 1 0 120px;
 
     dl {
-      @include core-14;
+      @include govuk-font(14);
     }
   }
 
   .status-complete {
     @extend %icon-tick;
-    @include bold-16;
+    @include govuk-font(16, $weight: bold);
     padding-left: 20px;
     background-size: 14px;
     background-position: left center;
-    color: $button-colour;
+    color: $govuk-button-colour;
   }
 
   .status-reject {
     @extend %icon-cross;
-    @include bold-16;
+    @include govuk-font(16, $weight: bold);
     padding-left: 20px;
     background-size: 14px;
     background-position: left center;
@@ -179,33 +179,33 @@
   .status-action-required {
     @extend %action-required;
     padding-left: 20px;
-    color: $text-colour;
+    color: $govuk-text-colour;
   }
 
   .status-warning {
     @extend %icon-incomplete;
     background-size: 17px;
     padding-left: 25px;
-    color: $text-colour;
+    color: $govuk-text-colour;
   }
 
   .positive {
     strong {
-      color: $button-colour;
+      color: $govuk-button-colour;
     }
 
     .score > strong {
-      color: $button-colour;
+      color: $govuk-button-colour;
     }
 
     .score {
       .percent{
-        color: $text-colour
+        color: $govuk-text-colour
       }
     }
 
     .msg-progress{
-      color: $green;
+      color: govuk-colour("green");
     }
 
   }
@@ -216,7 +216,7 @@
     }
 
     .percent{
-      color: $text-colour
+      color: $govuk-text-colour
     }
 
     .msg-progress{
@@ -227,11 +227,11 @@
 
   .read-only,
   .waiting{
-    background-color: $highlight-colour;
-    color: $secondary-text-colour;
+    background-color: govuk-colour("grey-4");
+    color: $govuk-secondary-text-colour;
 
     .msg-progress{
-      color: $secondary-text-colour;
+      color: $govuk-secondary-text-colour;
       font-weight: normal;
     }
 

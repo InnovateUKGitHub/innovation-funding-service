@@ -5,7 +5,7 @@
   line-height: 1.2em;
   font-size: 14px;
   float: right;
-  color: $secondary-text-colour;
+  color: $govuk-secondary-text-colour;
   margin: 0;
 }
 
@@ -32,7 +32,7 @@
     margin:0;
   }
 
-  @include media(tablet) {
+  @include govuk-media-query(tablet) {
     .my-applications {
       .in-progress {
         .grid-row {

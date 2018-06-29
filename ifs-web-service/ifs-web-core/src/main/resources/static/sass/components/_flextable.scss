@@ -1,9 +1,9 @@
 %fix-right {
-  background: $grey-3;
+  background: govuk-colour("grey-3");
   font-weight:bold;
 
   + .fix-right {
-    background: $grey-4;
+    background: govuk-colour("grey-4");
     white-space: normal;
   }
 
@@ -133,7 +133,7 @@
         left: 0;
         position: absolute;
         width: 310px;
-        border-right: 1px solid $grey-2;
+        border-right: 1px solid govuk-colour("grey-2");
         background-color: #fff;
 
         + td {

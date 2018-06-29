@@ -10,7 +10,7 @@
       line-height: 2.2em;
 
       &.disabled {
-        color: $grey-1;
+        color: govuk-colour("grey-1");
         text-decoration: none;
         cursor: default;
       }

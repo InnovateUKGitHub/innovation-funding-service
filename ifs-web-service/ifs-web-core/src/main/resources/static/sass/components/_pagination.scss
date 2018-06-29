@@ -19,7 +19,7 @@
   a,
   button {
     border: 0;
-    color: $govuk-blue;
+    color: govuk-colour("blue");
     display: block;
     font-size: 16px;
     outline: none;
@@ -27,7 +27,7 @@
     text-decoration: none;
 
     &:hover {
-      background: $grey-4;
+      background: govuk-colour("grey-4");
     }
   }
 

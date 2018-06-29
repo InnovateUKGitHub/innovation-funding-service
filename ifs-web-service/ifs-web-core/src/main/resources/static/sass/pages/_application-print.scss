@@ -6,7 +6,7 @@
   z-index: 999;
   background-color: #fff;
   background-color: rgba(255,255,255,0.5);
-  border-top:1px solid $grey-2;
+  border-top:1px solid govuk-colour("grey-2");
   padding:15px 0;
 
   button {

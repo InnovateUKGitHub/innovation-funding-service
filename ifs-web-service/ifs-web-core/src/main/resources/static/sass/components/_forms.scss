@@ -1,6 +1,10 @@
+@import "govuk-frontend/settings/all";
+@import "govuk-frontend/tools/all";
+@import "govuk-frontend/helpers/all";
+
 %read-only {
-  color: $black;
-  background: $grey-4;
+  color: govuk-colour("black");
+  background: govuk-colour("grey-4");
   border-color: $govuk-border-colour;
   cursor: default;
 }
@@ -30,7 +34,7 @@ div {
 
     &.form-control-error {
       @include box-shadow(none);
-      border: 4px solid $error-colour;
+      border: 4px solid $govuk-error-colour;
     }
   }
 }
@@ -95,7 +99,7 @@ tr {
 
 .form-control-error {
   @include box-shadow(none);
-  border: 4px solid $error-colour;
+  border: 4px solid $govuk-error-colour;
 }
 
 table {
@@ -186,7 +190,7 @@ select {
   &.form-control {
     + button {
       &.button {
-        @include media (mobile) {
+        @include govuk-media-query(mobile) {
           margin-top:15px;
         }
 
@@ -205,7 +209,7 @@ select {
 }
 
 .date-group {
-  @include media (tablet) {
+  @include govuk-media-query(tablet) {
     margin-right: 5%;
   }
 
@@ -228,7 +232,7 @@ tr {
         vertical-align: bottom;
 
         &:first-child {
-          border-left: 5px solid $error-colour;
+          border-left: 5px solid $govuk-error-colour;
           padding-left: 15px;
         }
       }
@@ -241,12 +245,12 @@ tr {
       background-position: 4px 50%;
 
       .error-message {
-        @extend .visually-hidden
+        @extend .govuk-visually-hidden
       }
 
       > * {
         &:first-child {
-          background: $grey-4 url('../images/ifs-images/icons/icon-alert.png') no-repeat;
+          background: govuk-colour("grey-4") url('../images/ifs-images/icons/icon-alert.png') no-repeat;
           background-position: 10px 50%;
           background-size: 16px;
           padding-left: 40px;
@@ -261,7 +265,7 @@ tr {
 
       td,
       th {
-        background: $highlight-colour;
+        background: govuk-colour("grey-4");
       }
     }
   }
@@ -298,7 +302,7 @@ tr {
     font-size: 14px;
     border: 2px solid $govuk-border-colour;
     border-bottom: none;
-    background: $grey-4 0 0 no-repeat;
+    background: govuk-colour("grey-4") 0 0 no-repeat;
     min-height:60px;
 
     + textarea,
@@ -349,19 +353,19 @@ tr {
   [contenteditable="true"] {
     &.editor {
       @include box-shadow(none);
-      border: 4px solid $error-colour;
+      border: 4px solid $govuk-error-colour;
     }
   }
 
   select {
     @include box-shadow(none);
-    border: 4px solid $error-colour;
+    border: 4px solid $govuk-error-colour;
   }
 }
 
 td {
   &.autosave-info {
-    color: $grey-1;
+    color: govuk-colour("grey-1");
     font-size:14px;
     min-width:70px;
   }
@@ -372,20 +376,20 @@ td {
   .autosave-info {
     padding:2px 0;
     float:right;
-    color: $grey-1;
+    color: govuk-colour("grey-1");
     clear:right;
   }
 }
 
 .count-label {
   .negative {
-    color: $orange;
+    color: govuk-colour("orange");
     font-weight: 700;
   }
 
   .word-count-reached {
     .count-down{
-      color: $orange;
+      color: govuk-colour("orange");
       font-weight: 700;
     }
   }
@@ -403,7 +407,7 @@ td {
 
 .upload-section {
   overflow: hidden;
-  background: $grey-4;
+  background: govuk-colour("grey-4");
   padding: 16px 16px 8px 16px;
   margin: 16px 0;
 
@@ -476,7 +480,7 @@ td {
 // ------- progressive group select -------- //
 
 .js-progressive-group-select {
-  @include media (tablet) {
+  @include govuk-media-query(tablet) {
     display: inline-block;
     margin: 0 1em 0 0;
   }
@@ -486,14 +490,14 @@ td {
 }
 
 .js-progressive-group-select {
-  @include media (tablet) {
+  @include govuk-media-query(tablet) {
     max-width: 40%;
   }
 }
 
 .js-enabled {
   [data-progressive-group-select] {
-    @include media (tablet) {
+    @include govuk-media-query(tablet) {
       max-width: 40%;
     }
   }
@@ -507,8 +511,8 @@ td {
 .form-footer {
   @extend %contain-floats;
   clear: both;
-  color: $text-colour;
-  background: $grey-4;
+  color: $govuk-text-colour;
+  background: govuk-colour("grey-4");
   padding: 0.8em;
   margin: 0;
 
@@ -518,7 +522,7 @@ td {
   }
 
   &__info {
-    @include core-16;
+    @include govuk-font(16);
     min-height: 1em;
     float: right;
   }
@@ -538,7 +542,7 @@ td {
   }
 
   .autosave-info {
-    color: $text-colour;
+    color: $govuk-text-colour;
     padding: 0;
     float: none;
     font-weight: bold;

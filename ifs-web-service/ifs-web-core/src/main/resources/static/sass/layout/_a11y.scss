@@ -14,12 +14,11 @@ body [aria-hidden="true"]{
 }
 
 .buttonlink {
-  @include inline-block;
   background:none;
   border:none;
   font: inherit;
   cursor: pointer;
-  color: $govuk-blue;
+  color: govuk-colour("blue");
   line-height:1.25;
   margin: 0px 15px 15px 0px;
   text-decoration:underline;
@@ -27,7 +26,7 @@ body [aria-hidden="true"]{
 
   &.disabled{
     text-decoration: none;
-    color: $secondary-text-colour;
+    color: $govuk-secondary-text-colour;
  	}
 
 }

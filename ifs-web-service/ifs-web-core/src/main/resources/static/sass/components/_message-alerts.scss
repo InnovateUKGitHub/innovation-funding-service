@@ -15,7 +15,7 @@
   border-style: solid;
   border-width: 0 0 0 5px;
   margin: 10px 0;
-  background-color: $grey-4;
+  background-color: govuk-colour("grey-4");
   background-repeat: no-repeat;
   background-position: 20px 50%;
   background-size: 20px 20px;
@@ -34,8 +34,8 @@
   @extend %alert-panel;
   background-image: url('../images/ifs-images/icons/icon-tick.png');
   background-size: 20px 17px;
-  color: $button-colour;
-  border-color: $button-colour;
+  color: $govuk-button-colour;
+  border-color: $govuk-button-colour;
 }
 
 .fail-alert {
@@ -56,23 +56,23 @@
 .icon-info {
   @extend %alert-panel;
   background-image: url('../images/ifs-images/icons/icon-info.png');
-  border-color: $link-colour;
+  border-color: $govuk-link-colour;
 }
 
 .assign-alert {
   @extend %alert-panel;
   background-image: url('../images/ifs-images/icons/icon-edit.png');
-  border-color: $text-colour;
+  border-color: $govuk-text-colour;
 }
 
 .assigned-alert {
   @extend %alert-panel;
-  border-color: $text-colour;
+  border-color: $govuk-text-colour;
   padding-left: 30px;
 }
 
 .declare-alert {
   @extend %alert-panel;
   background-image: url('../images/ifs-images/icons/icon-declare.png');
-  border-color: $text-colour;
+  border-color: $govuk-text-colour;
 }

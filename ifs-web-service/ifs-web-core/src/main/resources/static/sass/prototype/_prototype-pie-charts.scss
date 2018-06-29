@@ -22,7 +22,7 @@
   color:transparent;
 
   svg {
-    background:$grey-3;
+    background:govuk-colour("grey-3");
     border-radius: 50%;
   }
   &[aria-hidden="true"]{
@@ -32,7 +32,7 @@
 
   circle {
     fill:$govuk-error-colour;
-    stroke: $grey-3;
+    stroke: govuk-colour("grey-3");
     stroke-width: 32;
     transform: rotate(-90deg);
     transform-origin: 50%;
@@ -90,7 +90,7 @@
     display: none;
   }
   .pie-overlay {
-    border: 2px solid $grey-3;
+    border: 2px solid govuk-colour("grey-3");
     position: static;
   }
 }
@@ -102,7 +102,7 @@
     display: none;
   }
   .pie-overlay {
-    border: 2px solid $grey-3;
+    border: 2px solid govuk-colour("grey-3");
     position: static;
   }
 }

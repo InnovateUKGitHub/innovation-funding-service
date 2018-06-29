@@ -19,7 +19,7 @@
   left: 0;
   top: 0;
   width: 100%;
-  background-color: $grey-3;
+  background-color: govuk-colour("grey-3");
   font-size: 19px;
   text-align: center;
   z-index: 100;
@@ -27,7 +27,7 @@
   overflow: hidden;
 
   p {
-    border-top: 10px solid $govuk-blue;
+    border-top: 10px solid govuk-colour("blue");
     margin: 0;
     padding: 0 10px;
 
@@ -66,7 +66,7 @@
 
   &.event-error {
     p {
-      border-top: 10px solid $error-colour;
+      border-top: 10px solid $govuk-error-colour;
 
       span {
         background-image: url(/images/icon-important.png);

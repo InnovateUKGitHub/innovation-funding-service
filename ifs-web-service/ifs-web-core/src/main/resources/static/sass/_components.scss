@@ -1,6 +1,37 @@
 //variables
 
 $is-ie: false !default;
+// mising govuk variable TODO remove this when govuk fixes the bug
+$govuk-button-colour: #00823B;
+$ifs-warning-button-colour: #c00000;
+
+// IFS mixins
+// ===========================================
+@mixin box-sizing($box-model) {
+  -webkit-box-sizing: $box-model; // Safari <= 5
+  -moz-box-sizing: $box-model; // Firefox <= 19
+  box-sizing: $box-model;
+}
+
+@mixin transition-property($property...) {
+  -moz-transition-property:    $property;
+  -o-transition-property:      $property;
+  -webkit-transition-property: $property;
+  transition-property:         $property;
+}
+
+@mixin transition-duration($duration...) {
+  -moz-transition-property:    $duration;
+  -o-transition-property:      $duration;
+  -webkit-transition-property: $duration;
+  transition-property:         $duration;
+}
+
+@mixin box-shadow($property...) {
+  -webkit-box-shadow: $property;
+  -moz-box-shadow: $property;
+  box-shadow: $property;
+}
 
 @mixin media-down($size: false, $max-width: false, $min-width: false) {
   @if $is-ie == false {
@@ -30,16 +61,16 @@ $is-ie: false !default;
 @import 'components/boxed-list';
 @import 'components/list-overview';
 @import 'components/progress-list';
-//@import 'components/task-list';
-//@import 'components/link-list';
+@import 'components/task-list';
+@import 'components/link-list';
 
 //Modals
-//@import 'components/modal';
+@import 'components/modal';
 
 //Modifiers
-//@import 'layout/a11y';
-//@import 'components/modifiers';
-//@import 'components/forms';
+@import 'layout/a11y';
+@import 'components/modifiers';
+@import 'components/forms';
 
 //Custom components
 //@import 'components/collapsible-sections';
@@ -50,7 +81,7 @@ $is-ie: false !default;
 //@import 'components/message-alerts';
 //@import 'components/pagination';
 //@import 'components/assign-team';
-//@import 'components/statusses';
+@import 'components/statusses';
 //@import 'components/search-filters';
 //@import 'components/timeline-status';
 //@import "components/tabs";

@@ -31,7 +31,7 @@
 /*--- Text colour ---*/
 
 .standard-text-colour{
-  color: $text-colour;
+  color: $govuk-text-colour;
 }
 
 /*--- Extra margins ---*/
@@ -98,7 +98,7 @@ $columns: 20;
 /*--- Dark headers ---*/
 
 .dark-view{
-  background: $secondary-text-colour;
+  background: $govuk-secondary-text-colour;
   color: white;
 }
 
@@ -155,27 +155,27 @@ h2.dark-view{
 /*--- Table modifications ---*/
 
 .cell-border-right{
-  border-right: 1px solid $grey-2;
+  border-right: 1px solid govuk-colour("grey-2");
 }
 
 tr.cell-border-right{
   td,
   th{
-    border-right: 1px solid $grey-2;
+    border-right: 1px solid govuk-colour("grey-2");
  	}
 }
 
 .cell-border-top-divide{
   th,
   td{
-    border-top: 1px solid $black;
+    border-top: 1px solid govuk-colour("black");
   }
 }
 
 .cell-border-bottom-divide{
   th,
   td{
-    border-bottom: 1px solid $black;
+    border-bottom: 1px solid govuk-colour("black");
   }
 }
 
@@ -197,7 +197,7 @@ td{
 
 table{
   tfoot{
-    border-top: 3px solid $black;
+    border-top: 3px solid govuk-colour("black");
   }
 }
 
@@ -297,7 +297,7 @@ table{
 /*--- highlight content ---*/
 
 .highlight-panel{
-  background: $highlight-colour;
+  background: govuk-colour("grey-4");
   //padding: 20px 0;
 
   .button{
@@ -361,19 +361,19 @@ table{
 
 .heading-large{
   &.underline{
-    border-bottom: 4px solid $black;
+    border-bottom: 4px solid govuk-colour("black");
   }
 }
 
 .heading-medium{
   &.underline{
-    border-bottom: 1px solid $black;
+    border-bottom: 1px solid govuk-colour("black");
   }
 }
 
 ul.underline{
   li{
-    border-top: 1px solid $black;
+    border-top: 1px solid govuk-colour("black");
 
     &:first-child{
       border-top: none;
@@ -475,7 +475,7 @@ ul.underline{
   border-left: none;
   border-top: 10px solid $govuk-error-colour;
   background-position: 20px 2.2em;
-  color: $text-colour;
+  color: $govuk-text-colour;
   padding-left: 60px;
  }
 }

@@ -40,12 +40,12 @@
 
         &[aria-selected='true'] {
           height: 1.2em;
-          background-color: $white;
+          background-color: govuk-colour("white");
           border: 1px solid $govuk-border-colour;
-          border-bottom: 1px solid $white;
+          border-bottom: 1px solid govuk-colour("white");
           transition: none 0s ease 0s;
           z-index: 2;
-          color: $text-colour;
+          color: $govuk-text-colour;
           cursor: default;
           text-decoration: none;
         }
@@ -170,7 +170,7 @@ ol {
           }
 
           border: 1px solid $govuk-border-colour;
-          border-bottom: 1px solid $white;
+          border-bottom: 1px solid govuk-colour("white");
           z-index:1;
           margin: 0;
           border-radius: 0;

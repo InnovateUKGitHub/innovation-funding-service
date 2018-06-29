@@ -10,7 +10,7 @@
 }
 
 .related-items {
-  border-top:10px solid $link-colour;
+  border-top:10px solid $govuk-link-colour;
 
   h2 {
     margin: 0.3em 0  0.5em;
@@ -45,7 +45,7 @@
 
 .grid-container {
   &.phase-banner{
-    border-top: 10px solid $link-colour;
+    border-top: 10px solid $govuk-link-colour;
   }
 }
 
@@ -63,8 +63,8 @@
 
   a {
     @include inline-block;
-    border-bottom: 1px solid $black;
-    color: $black;
+    border-bottom: 1px solid govuk-colour("black");
+    color: govuk-colour("black");
     line-height: 1.25;
     margin-bottom: $gutter-half;
     margin-top: $gutter-half;

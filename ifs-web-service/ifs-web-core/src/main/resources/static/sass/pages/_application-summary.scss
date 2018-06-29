@@ -81,12 +81,12 @@
 
     button {
       &[aria-expanded] {
-        background-color: $grey-3;
+        background-color: govuk-colour("grey-3");
         border: 0;
         border-radius: 0;
         box-shadow: 0 2px 0 #b5babe;
         box-sizing: border-box;
-        color: $black;
+        color: govuk-colour("black");
         cursor: pointer;
         display: inline-block;
         font-size: 1em;

@@ -1,6 +1,6 @@
 
 .button-secondary{
-  @include button($panel-colour);
+  @include button(govuk-colour("grey-3"));
   @include box-sizing (border-box);
   margin: 0 $gutter-half $gutter-half 0;
   padding: em(10) em(15) em(5) em(15);
@@ -10,14 +10,14 @@
     margin: 0;
   }
 
-  @include media (mobile) {
+  @include govuk-media-query(mobile) {
     width: 100%;
     text-align: center;
   }
 
   // Disabled buttons
   &[disabled="disabled"] {
-    background: $highlight-colour;
+    background: govuk-colour("grey-4");
   }
 }
 
@@ -35,11 +35,11 @@
   text-decoration: none;
 
   &:hover{
-    background: $highlight-colour;
+    background: govuk-colour("grey-4");
   }
 
   &.highlight{
-    background: $button-colour;
+    background: $govuk-button-colour;
     color: white;
   }
 

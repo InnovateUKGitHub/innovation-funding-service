@@ -1,6 +1,6 @@
 
 .greentext {
-  color:$green;
+  color:govuk-colour("green");
 }
 
 .uppercase {
@@ -42,7 +42,7 @@ small {
     display:block;
   }
 
-  background: $govuk-blue;
+  background: govuk-colour("blue");
   color:#fff;
   text-align: center;
   padding:20px;
@@ -67,7 +67,7 @@ table {
 
 .grey-box {
   padding: 15px;
-  background: $grey-4;
+  background: govuk-colour("grey-4");
 }
 
 .border-top {
@@ -170,7 +170,7 @@ button,
   &.button-clear {
     background-color: transparent;
     box-shadow: none;
-    color: $govuk-blue;
+    color: govuk-colour("blue");
     text-decoration: underline;
 
     &:hover,
@@ -230,7 +230,7 @@ hr {
     font-size:16px;
   }
 
-  color: $grey-1;
+  color: govuk-colour("grey-1");
   font-size: 24px;
   font-weight: 400;
   line-height: 1.25;
@@ -273,7 +273,7 @@ col {
 }
 
 .button-secondary{
-  @include button($panel-colour);
+  @include button(govuk-colour("grey-3"));
   @include box-sizing (border-box);
   margin: 0 $gutter-half $gutter-half 0;
   padding: em(10) em(15) em(5) em(15);
@@ -282,7 +282,7 @@ col {
 
 .button,
 .button-secondary{
-  @include media (mobile) {
+  @include govuk-media-query(mobile) {
     width: 100%;
     text-align: center;
   }

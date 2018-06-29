@@ -14,7 +14,7 @@
 
   padding: 50px;
   background-color: $turquoise;
-  color: $white;
+  color: govuk-colour("white");
   text-align: center;
 
   li {
@@ -34,7 +34,7 @@
       &:link,
       &:hover,
       &:visited {
-        color: $white;
+        color: govuk-colour("white");
       }
     }
   }
