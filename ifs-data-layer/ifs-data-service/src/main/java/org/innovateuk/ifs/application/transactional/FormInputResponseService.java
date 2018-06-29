@@ -24,10 +24,6 @@ public interface FormInputResponseService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(long formInputId, long applicationId);
 
-    @ZeroDowntime(reference = "IFS-3597", description = "Do not find via name but via questionSetupType. Remove in cleanup")
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<FormInputResponseResource> findResponseByApplicationIdAndQuestionName(long applicationId, String questionName);
-
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<FormInputResponseResource> findResponseByApplicationIdAndQuestionSetupType(long applicationId,
                                                                                              CompetitionSetupQuestionType questionSetupType);

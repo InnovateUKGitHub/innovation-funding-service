@@ -192,6 +192,7 @@ Lead marks finances as complete
     And the user should see the element                  link=Your organisation
     And the user should see the element                  jQuery=h3:contains("Your funding")
     When the user fills in the project costs             labour costs  n/a
+    And the user enters the project location
     And the user navigates to Your-finances page         Assign test
     Then the user fills in the organisation information  Assign test  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the funding information        Assign test
