@@ -211,7 +211,6 @@ public class RegistrationController {
 
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
 
-        // TODO : INFUND-3691
         return validationHandler.failNowOrSucceedWith(
                 () -> registerForm(registrationForm, model, user, request, response),
                 () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request)).handleSuccessOrFailure(

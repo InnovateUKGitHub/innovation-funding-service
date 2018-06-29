@@ -70,10 +70,6 @@ public class InitialDetailsSectionSaverTest {
     @Mock
     private CompetitionSetupService competitionSetupService;
 
-    //TODO INFUND-9493: Create tests for situations surrounding Milestone saving
-    //TODO INFUND-9493: Create test for invalid date handling
-    //TODO INFUND-9493: Create test for situations surrounding retrieval of innovation sector
-
     @Before
     public void setup(){
         when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(false);

@@ -20,8 +20,7 @@ public interface FormInputResponseRepository extends PagingAndSortingRepository<
     List<FormInputResponse> findByApplicationIdAndFormInputQuestionId(long applicationId, long questionId);
     List<FormInputResponse> findByApplicationId(@Param("applicationId") Long applicationId);
     FormInputResponse findByApplicationIdAndUpdatedByIdAndFormInputId(@Param("applicationId") Long applicationId, @Param("updatedById") Long updatedById, @Param("formInputId") Long formInputId);
-    // TODO: Implement this to fix permission issue with file upload - INFUND-2059
-    //FormInputResponse findByApplicationIdAndAssignedToIdAndFormInputId(@Param("applicationId") Long applicationId, @Param("assignedToId") Long assignedToId, @Param("formInputId") Long formInputId);
+
     @Override
     List<FormInputResponse> findAll();
 }
