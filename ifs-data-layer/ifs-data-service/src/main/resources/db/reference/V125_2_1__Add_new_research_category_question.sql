@@ -24,7 +24,7 @@ SET @apc_project_details_section_id = (SELECT id FROM section WHERE competition_
 SET @ati_project_details_section_id = (SELECT id FROM section WHERE competition_id=@ati_template_id AND name="Project details");
 SET @princes_project_details_section_id = (SELECT id FROM section WHERE competition_id=@princes_template_id AND name="Project details");
 
--- Add research category question with priority 1 for each of the template competitions
+-- Add research category question with priority 3 for each of the template competitions
 INSERT INTO question (assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name, priority, competition_id, section_id, question_type, question_setup_type)
     VALUES
     (false, 'Description not used', true, false, 'Research category', 'Research category', '3',

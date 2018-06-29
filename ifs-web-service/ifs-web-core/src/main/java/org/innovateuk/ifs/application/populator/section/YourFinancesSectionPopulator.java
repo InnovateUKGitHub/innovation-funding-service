@@ -111,8 +111,8 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
 
     private boolean questionIsComplete(Long applicationId, Long userOrganisationId, QuestionResource question) {
         Map<Long, QuestionStatusResource> questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(applicationId, userOrganisationId);
-        QuestionStatusResource applicationDetailsStatus = questionStatuses.get(question.getId());
-        return applicationDetailsStatus != null && applicationDetailsStatus.getMarkedAsComplete();
+        QuestionStatusResource questionStatus = questionStatuses.get(question.getId());
+        return questionStatus != null && questionStatus.getMarkedAsComplete();
     }
 
     private Long determineUserOrganisationId(YourFinancesSectionViewModel viewModel,

@@ -23,6 +23,7 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
@@ -104,6 +105,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     @Mock
     private ApplicationResearchCategorySummaryModelPopulator researchCategorySummaryModelPopulator;
 
+    @Mock
+    private ProjectService projectService;
+
     @Override
     protected ApplicationSummaryController supplyControllerUnderTest() {
         return new ApplicationSummaryController();
@@ -136,9 +140,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(false));
 
-        mockMvc.perform(get("/application/" + app.getId() + "/summary"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-feedback-summary"));
+        mockMvc.perform(get("/application/{applicationId}/summary", app.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/application/" + app.getId() + "/feedback"));
     }
 
     @Test
@@ -166,7 +170,6 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
         MvcResult result = mockMvc.perform(get("/application/" + app.getId() + "/summary"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("applicationSummaryViewModel"))
                 .andExpect(view().name("application-summary"))
                 .andReturn();
 
