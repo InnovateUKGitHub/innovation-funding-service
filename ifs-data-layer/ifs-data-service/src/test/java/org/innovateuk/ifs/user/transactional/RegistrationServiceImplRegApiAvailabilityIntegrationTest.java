@@ -11,7 +11,6 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.testutil.DatabaseTestHelper;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -30,9 +29,6 @@ public class RegistrationServiceImplRegApiAvailabilityIntegrationTest extends Ba
 
     @Autowired
     private RegistrationServiceImpl registrationService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private OrganisationRepository organisationRepository;

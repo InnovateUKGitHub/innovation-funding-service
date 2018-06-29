@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.sil.AbstractSilAvailabilityIntegrationTest;
 import org.innovateuk.ifs.testdata.services.TestService;
@@ -17,6 +18,8 @@ import java.util.function.Consumer;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
 /**
  * TODO DW - document this class
@@ -56,6 +59,7 @@ public class ApplicationNotificationServiceImplSilAvailabilityIntegrationTest ex
                     ServiceResult<Void> result = applicationNotificationService.informIneligible(ineligibleApplication.getId(), ineligibleReason);
 
                     assertThat(result.isFailure()).isTrue();
+                    assertThat(result.getFailure().is(new Error(EMAILS_NOT_SENT_MULTIPLE, SERVICE_UNAVAILABLE))).isTrue();
 
                     verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
                 });

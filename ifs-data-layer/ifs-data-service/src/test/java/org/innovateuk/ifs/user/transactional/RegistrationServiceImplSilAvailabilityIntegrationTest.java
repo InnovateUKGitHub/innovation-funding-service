@@ -10,7 +10,6 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.sil.AbstractSilAvailabilityIntegrationTest;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.testutil.DatabaseTestHelper;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -26,9 +25,6 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends Abstr
 
     @Autowired
     private RegistrationServiceImpl registrationService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private OrganisationRepository organisationRepository;
@@ -74,9 +70,9 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends Abstr
                     // assert that we got a failure indicating that the Registration API was not available
                     ServiceResult<UserResource> result = registrationService.createOrganisationUser(organisation.getId(), registrationInfo);
                     assertThat(result.isFailure()).isTrue();
-                    verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
-
                     assertThat(result.getFailure().is(new Error(EMAILS_NOT_SENT_MULTIPLE, SERVICE_UNAVAILABLE))).isTrue();
+
+                    verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
                 });
             });
         });
@@ -114,6 +110,8 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends Abstr
                     ServiceResult<UserResource> result = registrationService.createOrganisationUserWithCompetitionContext(organisation.getId(), competition.getId(), registrationInfo);
                     assertThat(result.isFailure()).isTrue();
                     assertThat(result.getFailure().is(new Error(EMAILS_NOT_SENT_MULTIPLE, SERVICE_UNAVAILABLE))).isTrue();
+
+                    verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
                 });
             });
         });
