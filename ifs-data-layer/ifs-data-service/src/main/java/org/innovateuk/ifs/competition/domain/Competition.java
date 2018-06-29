@@ -336,9 +336,7 @@ public class Competition implements ProcessActivity {
 
     private void setMilestoneDate(MilestoneType milestoneType, ZonedDateTime dateTime) {
         Milestone milestone = milestones.stream().filter(m -> m.getType() == milestoneType).findAny().orElseGet(() -> {
-            Milestone m = new Milestone();
-            m.setType(milestoneType);
-            m.setCompetition(this);
+            Milestone m = new Milestone(milestoneType,this);
             milestones.add(m);
             return m;
         });

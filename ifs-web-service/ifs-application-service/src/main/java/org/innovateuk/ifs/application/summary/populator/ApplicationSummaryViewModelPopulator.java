@@ -2,12 +2,13 @@ package org.innovateuk.ifs.application.summary.populator;
 
 import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategorySummaryModelPopulator;
 import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategorySummaryViewModel;
+import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator;
+import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;

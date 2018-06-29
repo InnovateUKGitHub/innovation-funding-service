@@ -5,36 +5,26 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategorySummaryModelPopulator;
 import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategorySummaryViewModel;
-import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.forms.populator.InterviewFeedbackViewModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.summary.controller.ApplicationSummaryController;
+import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
-import org.innovateuk.ifs.application.summary.controller.ApplicationSummaryController;
-import org.innovateuk.ifs.application.summary.populator.*;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationFeedbackSummaryViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationInterviewFeedbackViewModel;
-import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
-import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,47 +32,30 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
-import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
-import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
-@TestPropertySource(locations = "classpath:application.properties")
 public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVCTest<ApplicationSummaryController> {
-
-    @Spy
-    @InjectMocks
-    private ApplicationModelPopulator applicationModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private ApplicationInterviewFeedbackViewModelPopulator applicationInterviewFeedbackViewModelPopulator;
 
     @Spy
     @InjectMocks
@@ -102,26 +75,10 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
     @Spy
     @InjectMocks
-    private ApplicationFeedbackSummaryViewModelPopulator applicationFeedbackSummaryViewModelPopulator;
-
-    @Spy
-    @InjectMocks
     private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
 
-    @Spy
-    @InjectMocks
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
-
     @Mock
-    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
-
-    @Spy
-    @InjectMocks
-    private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @Mock
     private ApplicantRestService applicantRestService;
@@ -143,15 +100,6 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
     @Mock
     private InterviewAssignmentRestService interviewAssignmentRestService;
-
-    @Mock
-    private ProjectService projectService;
-
-    @Mock
-    private InterviewResponseRestService interviewResponseRestService;
-
-    @Mock
-    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @Mock
     private ApplicationResearchCategorySummaryModelPopulator researchCategorySummaryModelPopulator;
@@ -182,32 +130,10 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         CompetitionResource competition = competitionResources.get(0);
         competition.setCompetitionStatus(PROJECT_SETUP);
 
-        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
-                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
-
         ApplicationResource app = applications.get(0);
         app.setCompetition(competition.getId());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
-        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(
-                organisations.get(0).getId()).build();
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(
-                userApplicationRole));
-
-        when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
-                .thenReturn(restSuccess(aggregateResource));
-
-        ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
-                .withFeedback(asList("Feedback 1", "Feedback 2"))
-                .build();
-
-        when(assessmentRestService.getApplicationFeedback(app.getId())).thenReturn(restSuccess(expectedFeedback));
-
-        ProjectResource project = newProjectResource().withProjectState(ProjectState.WITHDRAWN).build();
-        when(projectService.getByApplicationId(app.getId())).thenReturn(project);
-
         when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(get("/application/" + app.getId() + "/summary"))
@@ -240,11 +166,11 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
         MvcResult result = mockMvc.perform(get("/application/" + app.getId() + "/summary"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application-summary"))
                 .andExpect(model().attributeExists("applicationSummaryViewModel"))
+                .andExpect(view().name("application-summary"))
                 .andReturn();
 
-        ApplicationSummaryViewModel model = (ApplicationSummaryViewModel) result.getModelAndView().getModel().get("applicationSummaryViewModel");
+        ApplicationSummaryViewModel model = (ApplicationSummaryViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(app, model.getCurrentApplication());
         assertEquals(app.getCompetition(), model.getCurrentCompetition().getId());
@@ -253,160 +179,6 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         assertEquals(applicationTeamViewModel, model.getApplicationTeamViewModel());
         assertEquals(researchCategorySummaryViewModel, model.getResearchCategorySummaryViewModel());
         assertTrue(model.isUserIsLeadApplicant());
-    }
-
-    @Test
-    public void testApplicationInterviewFeedback() throws Exception {
-        CompetitionResource competition = competitionResources.get(0);
-        competition.setCompetitionStatus(ASSESSOR_FEEDBACK);
-
-        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
-                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
-
-        ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
-                .withFeedback(asList("Feedback 1", "Feedback 2"))
-                .build();
-
-        ApplicationResource app = applications.get(0);
-        app.setCompetition(competition.getId());
-
-        FileEntryResource interviewFeedback = newFileEntryResource().withName("interviewFeedback").build();
-        FileEntryResource interviewResponse = newFileEntryResource().withName("interviewResponse").build();
-
-        when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(true));
-        when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId())).thenReturn(restSuccess(aggregateResource));
-        when(assessmentRestService.getApplicationFeedback(app.getId())).thenReturn(restSuccess(expectedFeedback));
-        when(interviewAssignmentRestService.findFeedback(app.getId())).thenReturn(restSuccess(interviewFeedback));
-        when(interviewResponseRestService.findResponse(app.getId())).thenReturn(restSuccess(interviewResponse));
-
-        MvcResult result = mockMvc.perform(get("/application/" + app.getId() + "/summary"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-interview-feedback"))
-                .andReturn();
-
-        ApplicationInterviewFeedbackViewModel model = (ApplicationInterviewFeedbackViewModel) result.getModelAndView().getModel().get("interviewFeedbackViewModel");
-        assertEquals(model.getCurrentApplication(), app);
-        assertEquals(model.getCurrentCompetition().getId(), app.getCompetition());
-        assertEquals(model.getFeedback(), expectedFeedback.getFeedback());
-        assertEquals(model.getFeedbackFilename(), interviewFeedback.getName());
-        assertEquals(model.getResponseFilename(), interviewResponse.getName());
-        assertEquals(model.getScores(), aggregateResource);
-
-    }
-
-    @Test
-    public void testApplicationSummaryWithProjectSetupStatus() throws Exception {
-        CompetitionResource competition = competitionResources.get(0);
-        competition.setCompetitionStatus(PROJECT_SETUP);
-
-        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
-                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
-
-        ApplicationResource app = applications.get(0);
-        app.setCompetition(competition.getId());
-
-        when(applicationService.getById(app.getId())).thenReturn(app);
-        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
-        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
-
-        when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
-                .thenReturn(restSuccess(aggregateResource));
-
-        ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
-                .withFeedback(asList("Feedback 1", "Feedback 2"))
-                .build();
-
-        when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(false));
-
-        when(assessmentRestService.getApplicationFeedback(app.getId())).thenReturn(restSuccess(expectedFeedback));
-
-        MvcResult result = mockMvc.perform(get("/application/" + app.getId() + "/summary"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-feedback-summary"))
-                .andReturn();
-
-        ApplicationFeedbackSummaryViewModel model = (ApplicationFeedbackSummaryViewModel) result.getModelAndView().getModel().get("applicationFeedbackSummaryViewModel");
-
-        assertEquals(model.getApplication(), app);
-        assertEquals(model.getCompetition().getId(), app.getCompetition());
-        assertEquals(model.getScores(), aggregateResource);
-        assertEquals(model.getFeedback(), expectedFeedback.getFeedback());
-    }
-
-    @Test
-    public void testUpload() throws Exception {
-        CompetitionResource competition = competitionResources.get(0);
-        competition.setCompetitionStatus(ASSESSOR_FEEDBACK);
-        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
-                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
-        ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
-                .withFeedback(asList("Feedback 1", "Feedback 2"))
-                .build();
-        ApplicationResource app = applications.get(0);
-        app.setCompetition(competition.getId());
-        setupMocksForGet(app, aggregateResource, expectedFeedback);
-
-        when(interviewResponseRestService.uploadResponse(app.getId(),"application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
-                .thenReturn(restSuccess());
-
-        MockMultipartFile file = new MockMultipartFile("response", "testFile.pdf", "application/pdf", "My content!".getBytes());
-
-
-        mockMvc.perform(
-                fileUpload("/application/" + app.getId() + "/summary")
-                        .file(file)
-                        .param("uploadResponse", "1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-interview-feedback"));
-
-        verify(interviewResponseRestService).uploadResponse(app.getId(),"application/pdf", 11, "testFile.pdf", "My content!".getBytes());
-    }
-
-    @Test
-    public void testRemove() throws Exception {
-        CompetitionResource competition = competitionResources.get(0);
-        competition.setCompetitionStatus(ASSESSOR_FEEDBACK);
-        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
-                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
-        ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
-                .withFeedback(asList("Feedback 1", "Feedback 2"))
-                .build();
-        ApplicationResource app = applications.get(0);
-        app.setCompetition(competition.getId());
-        setupMocksForGet(app, aggregateResource, expectedFeedback);
-
-        when(interviewResponseRestService.deleteResponse(app.getId()))
-                .thenReturn(restSuccess());
-
-        mockMvc.perform(
-                post("/application/" + app.getId() + "/summary")
-                        .param("removeResponse", "1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-interview-feedback"));
-
-        verify(interviewResponseRestService).deleteResponse(app.getId());
-    }
-
-
-    private void setupMocksForGet(ApplicationResource app, ApplicationAssessmentAggregateResource aggregateResource,
-                                  ApplicationAssessmentFeedbackResource expectedFeedback) {
-        when(applicationService.getById(app.getId())).thenReturn(app);
-        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
-        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).withRole(Role.LEADAPPLICANT).build();
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
-
-        when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
-                .thenReturn(restSuccess(aggregateResource));
-
-        when(assessmentRestService.getApplicationFeedback(app.getId())).thenReturn(restSuccess(expectedFeedback));
-
-        when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(true));
-
-        when(interviewResponseRestService.findResponse(app.getId())).thenReturn(restSuccess(newFileEntryResource().withName("Name").build()));
-        when(interviewAssignmentRestService.findFeedback(app.getId())).thenReturn(restSuccess(newFileEntryResource().withName("Name").build()));
     }
 
     private ApplicationTeamViewModel setupApplicationTeamViewModel() {

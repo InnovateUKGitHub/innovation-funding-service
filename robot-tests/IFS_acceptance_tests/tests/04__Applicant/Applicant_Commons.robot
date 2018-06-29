@@ -80,6 +80,7 @@ the user selects Research category
 the user marks the finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
     the user fills in the project costs  ${overheadsCost}  ${totalCosts}
+    the user enters the project location
     Run Keyword if  '${Project_growth_table}'=='no'    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
     Run Keyword if  '${Project_growth_table}'=='yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
@@ -216,6 +217,11 @@ the academic fills in the project costs
     the user selects the checkbox         termsAgreed
     the user clicks the button/link       css=#mark-all-as-complete[type="submit"]
 
+the user enters the project location
+    the user clicks the button/link         link = Your project location
+    the user enters text to a text field    projectLocation   BS1 4NT
+    the user clicks the button/link         jQuery = button:contains("Mark as complete")
+
 the user fills the organisation details with Project growth table
     [Arguments]   ${Application}  ${org_size}
     the user navigates to Your-finances page                ${Application}
@@ -268,9 +274,10 @@ the user fills in the funding information
     the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
-    the user should see the element  css=li:nth-of-type(1) .task-status-complete
-    the user should see the element  css=li:nth-of-type(2) .task-status-complete
-    the user should see the element  css=li:nth-of-type(3) .task-status-complete
+    the user should see the element  css = li:nth-of-type(1) .task-status-complete
+    the user should see the element  css = li:nth-of-type(2) .task-status-complete
+    the user should see the element  css = li:nth-of-type(3) .task-status-complete
+    the user should see the element  css = li:nth-of-type(4) .task-status-complete
 
 the user should see all finance subsections incomplete
     the user should see the element  css=li:nth-of-type(1) .task-status-incomplete

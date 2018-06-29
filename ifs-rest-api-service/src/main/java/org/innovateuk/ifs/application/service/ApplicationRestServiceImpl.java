@@ -90,7 +90,6 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Override
     public RestResult<ApplicationResource> createApplication(Long competitionId, Long userId, String applicationName) {
 
-        // TODO DW - INFUND-1555 - heavy way to send just a single string...
         ApplicationResource application = new ApplicationResource();
         application.setName(applicationName);
         String url = applicationRestURL + "/createApplicationByName/" + competitionId + "/" + userId;
