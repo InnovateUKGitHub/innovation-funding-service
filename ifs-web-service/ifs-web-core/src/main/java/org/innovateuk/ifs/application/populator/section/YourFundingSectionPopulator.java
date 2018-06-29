@@ -47,7 +47,6 @@ public class YourFundingSectionPopulator extends AbstractSectionPopulator<YourFu
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
         viewModel.setComplete(completedSectionIds.contains(section.getSection().getId()));
 
-        // Values needed for speedbump page
         long researchCategoryQuestionId = getResearchCategoryQuestionId(section);
         viewModel.setResearchCategoryQuestionId(researchCategoryQuestionId);
         viewModel.setResearchCategoryComplete(isResearchCategoryComplete(section, researchCategoryQuestionId));

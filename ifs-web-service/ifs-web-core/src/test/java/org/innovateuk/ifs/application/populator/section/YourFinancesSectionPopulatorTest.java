@@ -97,10 +97,6 @@ public class YourFinancesSectionPopulatorTest {
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isNotRequestingFunding(), equalTo(true));
-        assertThat(viewModel.isFundingSectionLocked(), equalTo(false));
-        assertThat(viewModel.getApplicationDetailsQuestionId(), equalTo(applicationDetails.getId()));
         assertThat(viewModel.getOrganisationFinance(), equalTo(financeResource));
-        assertThat(viewModel.getYourOrganisationSectionId(), equalTo(yourOrganisation.getSection().getId()));
-
     }
 }
