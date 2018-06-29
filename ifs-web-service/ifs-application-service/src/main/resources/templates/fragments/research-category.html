@@ -72,7 +72,7 @@
         <!--/* 'Mark as complete' / 'Edit' links */-->
         <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
         <!--/* 'Return and edit' link */-->
-        <th:block
+        <th:block th:if="${model.canMarkAsComplete}"
             th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
     </div>
 </th:block>
