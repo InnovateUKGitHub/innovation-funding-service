@@ -59,8 +59,8 @@ Server side validation for invite new internal user
 The user must use an Innovate UK email
     [Documentation]  IFS-1944
     [Tags]
-    Given the user enters text to a text field            id=firstName  Support
-    And the user enters text to a text field              id=lastName  User
+    Given the user enters text to a text field            id = firstName  Support
+    And the user enters text to a text field              id = lastName  User
     When the user enters text to a text field             id = emailAddress  ${invalidEmail}
     And the user clicks the button/link                   jQuery = button:contains("Send invite")
     Then the user should see a field and summary error    Users cannot be registered without an Innovate UK email address.
