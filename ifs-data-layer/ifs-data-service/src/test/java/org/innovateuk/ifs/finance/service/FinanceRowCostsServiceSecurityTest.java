@@ -151,7 +151,7 @@ public class FinanceRowCostsServiceSecurityTest extends BaseServiceSecurityTest<
         final ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource();
         when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
-                () -> classUnderTest.updateCost(applicationFinanceId, applicationFinanceResource),
+                () -> classUnderTest.updateApplicationFinance(applicationFinanceId, applicationFinanceResource),
                 () -> verify(applicationFinanceRules)
                         .consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class))
         );

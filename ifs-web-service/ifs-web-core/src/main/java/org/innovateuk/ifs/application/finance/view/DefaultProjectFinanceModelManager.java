@@ -51,7 +51,6 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
     @Autowired
     private FinanceCheckService financeCheckService;
 
-    //TODO: INFUND-7849 - make sure this function is not going to be used anymore
     @Override
     public void addOrganisationFinanceDetails(Model model, Long projectId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
 
