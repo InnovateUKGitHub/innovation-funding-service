@@ -48,7 +48,7 @@ public class CrmServiceImpl implements CrmService {
                         result = result.andOnSuccess(() -> {
                             SilContact silContact = toSilContact(user.getSuccess(), organisation);
                             LOG.info(String.format("Updating CRM contact %s and organisation %s",
-                                    silContact.getEmail(), silContact.getOrganisation().getName()))
+                                    silContact.getEmail(), silContact.getOrganisation().getName()));
                             return silCrmEndpoint.updateContact(silContact);
                         });
                     }

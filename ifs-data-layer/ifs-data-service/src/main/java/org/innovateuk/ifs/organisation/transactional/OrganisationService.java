@@ -25,8 +25,8 @@ public interface OrganisationService {
     ServiceResult<OrganisationResource> findById(Long organisationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<OrganisationResource> getPrimaryForUser(Long userId)
-            ;
+    ServiceResult<OrganisationResource> getPrimaryForUser(Long userId);
+    
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<OrganisationResource>> getAllForUser(Long userId);
 
