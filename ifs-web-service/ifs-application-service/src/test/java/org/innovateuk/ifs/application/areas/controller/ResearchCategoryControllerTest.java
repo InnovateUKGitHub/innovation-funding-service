@@ -317,7 +317,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 questionId,
                 newResearchCategoryResource().build(2),
                 false,
-                false,
+                true,
                 "Industrial research",
                 false,
                 false,
@@ -332,7 +332,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 applicationResource)).thenReturn(true);
         when(applicationResearchCategoryRestService.setResearchCategory(applicationResource.getId(),
                 researchCategoryId)).thenReturn(restFailure(new Error("", HttpStatus.NOT_FOUND)));
-        when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId(), false))
+        when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId(), true))
                 .thenReturn(researchCategoryViewModel);
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}", applicationResource
@@ -352,7 +352,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         inOrder.verify(applicationResearchCategoryRestService).setResearchCategory(applicationResource.getId(),
                 researchCategoryId);
         inOrder.verify(researchCategoryModelPopulator).populate(applicationResource, loggedInUser.getId(),
-                questionId, false);
+                questionId, true);
         inOrder.verify(researchCategoryFormPopulator).populate(applicationResource, researchCategoryForm);
         inOrder.verifyNoMoreInteractions();
     }
@@ -371,7 +371,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 questionId,
                 newResearchCategoryResource().build(2),
                 false,
-                false,
+                true,
                 "Industrial research",
                 false,
                 false,
@@ -381,7 +381,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(researchCategoryEditableValidator.questionAndApplicationHaveAllowedState(questionId,
                 applicationResource)).thenReturn(true);
-        when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId(), false))
+        when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId(), true))
                 .thenReturn(researchCategoryViewModel);
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
@@ -400,7 +400,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         inOrder.verify(researchCategoryEditableValidator).questionAndApplicationHaveAllowedState(questionId,
                 applicationResource);
         inOrder.verify(researchCategoryModelPopulator).populate(applicationResource, loggedInUser.getId(),
-                questionId, false);
+                questionId, true);
         inOrder.verify(researchCategoryFormPopulator).populate(applicationResource, new ResearchCategoryForm());
         inOrder.verifyNoMoreInteractions();
     }
