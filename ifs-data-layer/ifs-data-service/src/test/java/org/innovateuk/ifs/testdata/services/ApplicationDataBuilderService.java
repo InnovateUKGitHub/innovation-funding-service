@@ -383,6 +383,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 return builder.withGrantClaim(Integer.valueOf(financeRow.metadata.get(0)));
             case "Organisation size":
                 return builder.withOrganisationSize(Long.valueOf(financeRow.metadata.get(0)));
+            case "Work postcode":
+                return builder.withWorkPostcode(financeRow.metadata.get(0));
             case "Labour":
                 return builder.withLabourEntry(
                         financeRow.metadata.get(0),
@@ -493,7 +495,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withSubcontractingCost("Developers", "UK", "To develop stuff", bd("90000")).
                         withTravelAndSubsistence("To visit colleagues", 15, bd("398")).
                         withOtherCosts("Some more costs", bd("1100")).
-                        withOrganisationSize(1L));
+                        withOrganisationSize(1L).
+                        withWorkPostcode("AB12 3CD"));
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinances(
@@ -518,7 +521,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withIndirectCosts(bd("154")).
                         withExceptionsStaff(bd("176")).
                         withExceptionsOtherCosts(bd("198")).
-                        withUploadedJesForm());
+                        withUploadedJesForm().
+                        withWorkPostcode("AB12 3CD"));
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinancesFromSuppliedData(
