@@ -41,15 +41,11 @@
         </div>
 
         <div class="column-half">
-            <th:block th:unless="${model.currentCompetition.useNewApplicantMenu}">
-                <ul class="list list-bullet">
-                    <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.currentApplication.id})}">view and manage contributors and collaborators</a></li>
-                    <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}">view the grant terms and conditions</a></li>
-                </ul>
-            </th:block>
-            <th:block th:if="${model.currentCompetition.useNewApplicantMenu}">
-                <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}">View the grant terms and conditions</a>
-            </th:block>
+            <ul class="list list-bullet" th:unless="${model.currentCompetition.useNewApplicantMenu}">
+                <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.currentApplication.id})}">view and manage contributors and collaborators</a></li>
+                <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}">view the grant terms and conditions</a></li>
+            </ul>
+            <a th:if="${model.currentCompetition.useNewApplicantMenu}" th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}">View the grant terms and conditions</a>
         </div>
 
         <div class="column-one extra-margin-bottom">
