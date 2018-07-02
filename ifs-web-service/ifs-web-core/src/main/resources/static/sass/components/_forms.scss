@@ -354,8 +354,8 @@ tr {
   }
 
   .textarea-wrapped {
-    &[contenteditable="true"] {
-      textarea {
+    textarea {
+      &.field-group-error {
         @include box-shadow(none);
         border: 4px solid $error-colour;
       }
