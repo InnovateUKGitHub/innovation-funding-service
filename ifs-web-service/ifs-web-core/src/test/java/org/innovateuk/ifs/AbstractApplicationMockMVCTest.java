@@ -464,7 +464,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
-        applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), 1L);
+        applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), 1L, "ABC 123");
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
         FinanceRowCostCategory costCategory = new GrantClaimCategory();
         costCategory.addCost(new GrantClaim(1L, 50));
