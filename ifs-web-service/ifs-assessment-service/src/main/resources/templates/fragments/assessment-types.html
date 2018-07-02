@@ -9,7 +9,7 @@
             <span class="form-label-bold">Please select the research category for this project</span>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
         </label>
-        <span class="form-hint">More <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development" target="_blank">guidance on research categories</a></span>
+        <span class="form-hint">More <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development" target="_blank">guidance on research categories</a> (this link will open in a new window).</span>
         <select class="form-control research-category" th:id="formInput[__${field.id}__]" th:field="*{formInput[__${field.id}__]}"
                 th:attr="data-required-errormessage=#{validation.application.research.category.required}"
                 required="required">
