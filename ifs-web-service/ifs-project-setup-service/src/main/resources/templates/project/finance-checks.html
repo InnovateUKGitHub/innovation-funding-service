@@ -104,12 +104,12 @@
                                             <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
                                         </th:block>
                                     </label>
-                                    <div class="textarea-wrapped word-count" contenteditable="true">
+                                    <div class="textarea-wrapped word-count">
                                         <textarea data-editor="md"
                                                   required = "required"
                                                   th:field="*{response}"
                                                   class="form-control"
-                                                  th:errorclass="form-control-error"
+                                                  th:errorclass="field-group-error"
                                                   id="response-1"
                                                   name="response"
                                                   th:attr="maxlength=${model.maxQueryCharacters},
