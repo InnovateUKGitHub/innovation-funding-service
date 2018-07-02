@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class GrantOfferLetterIndustrialFinanceTable {
+public class GrantOfferLetterIndustrialFinanceTable implements GrantOfferLetterFinanceTable {
 
     private Map<String, BigDecimal> labour;
     private Map<String, BigDecimal> materials;
@@ -24,6 +24,7 @@ public class GrantOfferLetterIndustrialFinanceTable {
 
     }
 
+    @Override
     public void populate(Map<String,List<ProjectFinanceRow>> financials) {
         labour = sumByFinancialType(financials, FinanceRowType.LABOUR);
         materials = sumByFinancialType(financials, FinanceRowType.MATERIALS);
@@ -34,16 +35,12 @@ public class GrantOfferLetterIndustrialFinanceTable {
         otherCosts = sumByFinancialType(financials, FinanceRowType.OTHER_COSTS);
     }
 
-
-
-
-
     private Map<String, BigDecimal> sumByFinancialType(Map<String, List<ProjectFinanceRow>> financials, FinanceRowType type) {
         Map<String, BigDecimal> financeMap = new HashMap<>();
         financials.forEach( (orgName, finances) -> {
             BigDecimal financeSum = finances
                     .stream()
-                    .filter(pfr -> type.getName().equals(pfr.getName()))
+                    .filter(pfr -> type.getType().equals(pfr.getName()))
                     .map(ProjectFinanceRow::getCost)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
             financeMap.put(orgName, financeSum);

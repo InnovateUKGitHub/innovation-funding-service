@@ -26,11 +26,14 @@ import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterAcademicFinanceTable;
 import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterIndustrialFinanceTable;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
@@ -123,6 +126,9 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private GrantOfferLetterIndustrialFinanceTable grantOfferLetterIndustrialFinanceTable;
+
+    @Autowired
+    private GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -246,17 +252,23 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
 
-        Map<String, List<ProjectFinanceRow>> financesForOrgs = new HashMap<>();
+        Map<String, List<ProjectFinanceRow>> financesForIndustrialOrgs = new HashMap<>();
+        Map<String, List<ProjectFinanceRow>> financesForAcademicOrgs = new HashMap<>();
 
 
         project.getOrganisations()
                 .forEach(org -> {
                     ProjectFinance orgFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(project.getId(), org.getId());
                     List<ProjectFinanceRow> rows = projectFinanceRowRepository.findByTargetId(orgFinance.getId());
-                    financesForOrgs.put(org.getName(), rows);
+                    if(isAcademic(org.getOrganisationType())) {
+                        financesForAcademicOrgs.put(org.getName(), rows);
+                    } else {
+                        financesForIndustrialOrgs.put(org.getName(), rows);
+                    }
                 });
 
-        grantOfferLetterIndustrialFinanceTable.populate(financesForOrgs);
+        grantOfferLetterIndustrialFinanceTable.populate(financesForIndustrialOrgs);
+        grantOfferLetterAcademicFinanceTable.populate(financesForAcademicOrgs);
 
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
@@ -276,8 +288,13 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
 
 
-        templateReplacements.put("financeTable", grantOfferLetterIndustrialFinanceTable);
+        templateReplacements.put("industrialFinanceTable", grantOfferLetterIndustrialFinanceTable);
+        templateReplacements.put("academicFinanceTable", grantOfferLetterAcademicFinanceTable);
         return templateReplacements;
+    }
+
+    private boolean isAcademic(OrganisationType type) {
+        return OrganisationTypeEnum.RESEARCH.getId().equals(type.getId());
     }
 
     private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource) {
