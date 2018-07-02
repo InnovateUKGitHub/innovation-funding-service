@@ -91,7 +91,7 @@ public class ResearchCategoryController {
         return "application/research-categories";
     }
 
-    @PostMapping(params = {"save-research-category", "mark_as_incomplete"})
+    @PostMapping(params = {"mark_as_incomplete"})
     public String markAsIncomplete(Model model,
                                    UserResource loggedInUser,
                                    @ModelAttribute(FORM_ATTR_NAME) ResearchCategoryForm researchCategoryForm,
