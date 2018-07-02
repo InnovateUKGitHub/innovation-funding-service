@@ -11,8 +11,11 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -27,6 +30,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -53,6 +57,12 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
 
     @Mock
     private ApplicationService applicationService;
+
+    @Mock
+    private ProcessRoleService processRoleService;
+
+    @Mock
+    private QuestionService questionService;
 
     @Mock
     private ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
@@ -431,5 +441,52 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         inOrder.verifyNoMoreInteractions();
         verifyZeroInteractions(applicationResearchCategoryRestService, researchCategoryModelPopulator,
                 researchCategoryFormPopulator, cookieFlashMessageFilter);
+    }
+
+    @Test
+    public void markAsIncomplete() throws Exception {
+        long questionId = 1L;
+
+        ApplicationResource applicationResource = newApplicationResource().build();
+        ProcessRoleResource processRole = newProcessRoleResource().build();
+
+        ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel(
+                "test competition",
+                applicationResource.getId(),
+                questionId,
+                newResearchCategoryResource().build(2),
+                false,
+                false,
+                "Industrial research",
+                false,
+                false,
+                false,
+                false);
+
+        when(processRoleService.findProcessRole(loggedInUser.getId(), applicationResource.getId())).thenReturn(processRole);
+        when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
+        when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,
+                applicationResource)).thenReturn(true);
+        when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId(), false))
+                .thenReturn(researchCategoryViewModel);
+
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
+                applicationResource.getId(), questionId)
+                .param("mark_as_incomplete", ""))
+                .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
+                .andExpect(view().name("application/research-categories"))
+                .andExpect(status().isOk());
+
+        InOrder inOrder = inOrder(processRoleService, questionService, applicationService, applicationDetailsEditableValidator,
+                researchCategoryModelPopulator, researchCategoryFormPopulator, applicationResearchCategoryRestService);
+        inOrder.verify(processRoleService).findProcessRole(loggedInUser.getId(), applicationResource.getId());
+        inOrder.verify(questionService).markAsIncomplete(questionId, applicationResource.getId(), processRole.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(applicationDetailsEditableValidator).questionAndApplicationHaveAllowedState(questionId,
+                applicationResource);
+        inOrder.verify(researchCategoryModelPopulator).populate(applicationResource, loggedInUser.getId(),
+                questionId, false);
+        inOrder.verify(researchCategoryFormPopulator).populate(applicationResource, new ResearchCategoryForm());
+        inOrder.verifyNoMoreInteractions();
     }
 }
