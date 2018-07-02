@@ -64,7 +64,7 @@
                 </div>
 
 
-                <th:block th:insert="fragments/addresses :: address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
+                <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
 
                 <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
                     <label class="form-label" for="phoneNumber">
