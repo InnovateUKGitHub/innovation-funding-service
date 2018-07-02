@@ -79,9 +79,12 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         ApplicationProcess that = (ApplicationProcess) o;
 

@@ -8,7 +8,6 @@ import org.innovateuk.ifs.user.resource.Role;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.joining;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 
 /**
@@ -54,9 +53,11 @@ public class GoogleAnalyticsDataLayer {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o)
+            return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         GoogleAnalyticsDataLayer that = (GoogleAnalyticsDataLayer) o;
 

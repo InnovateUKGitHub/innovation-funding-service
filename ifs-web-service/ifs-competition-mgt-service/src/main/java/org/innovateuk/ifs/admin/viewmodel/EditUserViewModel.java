@@ -4,8 +4,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import java.time.ZonedDateTime;
-
 /**
  * A view model for serving page listing users to be managed by IFS Administrators
  */
@@ -27,9 +25,11 @@ public class EditUserViewModel {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o)
+            return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         EditUserViewModel that = (EditUserViewModel) o;
 

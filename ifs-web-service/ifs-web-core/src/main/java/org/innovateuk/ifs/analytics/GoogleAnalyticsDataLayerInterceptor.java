@@ -37,7 +37,10 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-        if (modelAndView == null) return;
+
+        if (modelAndView == null)
+            return;
+
         final GoogleAnalyticsDataLayer dl = getOrCreateDataLayer(modelAndView);
 
         setCompetitionName(dl, request);
