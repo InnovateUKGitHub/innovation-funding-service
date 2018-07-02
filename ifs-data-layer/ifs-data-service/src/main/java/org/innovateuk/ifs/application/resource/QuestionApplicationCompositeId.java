@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application.resource;
 
-import java.io.Serializable;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.io.Serializable;
 /**Composite ID consisting of a questionID and an applicationId. for doing permission lookups based on the contained ids where both id's are needed*/
 public class QuestionApplicationCompositeId implements Serializable {
     public final Long questionId;

@@ -128,9 +128,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationResearchCategoryRestService.setResearchCategory(applicationResource.getId(),
                 researchCategoryId)).thenReturn(restSuccess(newApplicationResource().build()));
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
                 applicationResource.getId(), questionId)
-                .param("save-research-category", "")
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(redirectedUrl(format("/application/%s/form/question/%s", applicationResource.getId(),
                         questionId)))
@@ -181,9 +180,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId(), false))
                 .thenReturn(researchCategoryViewModel);
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}", applicationResource
-                .getId(), questionId)
-                .param("save-research-category", "")
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
+                applicationResource.getId(), questionId)
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
                 .andExpect(view().name("application/research-categories"))
@@ -228,9 +226,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId(), false))
                 .thenReturn(researchCategoryViewModel);
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
-                applicationResource.getId(), questionId)
-                .param("save-research-category", ""))
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
+                applicationResource.getId(), questionId))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
                 .andExpect(view().name("application/research-categories"))
                 .andExpect(status().isOk())
@@ -259,9 +256,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,
                 applicationResource)).thenReturn(false);
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
                 applicationResource.getId(), questionId)
-                .param("save-research-category", "")
                 .param("researchCategory", "1"))
                 .andExpect(view().name("forbidden"))
                 .andExpect(status().is4xxClientError());
@@ -291,9 +287,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(applicationResearchCategoryRestService.setResearchCategory(applicationResource.getId(),
                 researchCategoryId)).thenReturn(restSuccess(newApplicationResource().build()));
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
                 applicationResource.getId(), questionId)
-                .param("save-research-category", "")
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())))
                 .andExpect(status().is3xxRedirection());
@@ -345,9 +340,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId(), true))
                 .thenReturn(researchCategoryViewModel);
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}", applicationResource
-                .getId(), questionId)
-                .param("save-research-category", "")
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
+                applicationResource.getId(), questionId)
                 .param("researchCategory", String.valueOf(researchCategoryId)))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
                 .andExpect(view().name("application/research-categories"))
@@ -394,9 +388,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId(), true))
                 .thenReturn(researchCategoryViewModel);
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
-                applicationResource.getId(), questionId)
-                .param("save-research-category", ""))
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
+                applicationResource.getId(), questionId))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))
                 .andExpect(view().name("application/research-categories"))
                 .andExpect(status().isOk())
@@ -427,9 +420,8 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(researchCategoryEditableValidator.questionAndApplicationHaveAllowedState(questionId,
                 applicationResource)).thenReturn(false);
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
                 applicationResource.getId(), questionId)
-                .param("save-research-category", "")
                 .param("researchCategory", "1"))
                 .andExpect(view().name("forbidden"))
                 .andExpect(status().is4xxClientError());
@@ -470,7 +462,7 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
         when(researchCategoryModelPopulator.populate(applicationResource, questionId, loggedInUser.getId(), false))
                 .thenReturn(researchCategoryViewModel);
 
-        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}",
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
                 applicationResource.getId(), questionId)
                 .param("mark_as_incomplete", ""))
                 .andExpect(model().attribute("researchCategoryModel", researchCategoryViewModel))

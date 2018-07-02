@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.mapper;
 
-import org.innovateuk.ifs.domain.Alert;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
+import org.innovateuk.ifs.domain.Alert;
 import org.mapstruct.Mapper;
 
 /**

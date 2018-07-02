@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.finance.mapper;
 
-import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.FinanceRowResource;
+import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.financechecks.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.innovateuk.ifs.project.finance.resource.CostGroupResource;
+import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.mapstruct.Mapper;
 
 @Mapper(

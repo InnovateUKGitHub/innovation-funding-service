@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.assessment.review.populator;
 
-import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
-import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewViewModel;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

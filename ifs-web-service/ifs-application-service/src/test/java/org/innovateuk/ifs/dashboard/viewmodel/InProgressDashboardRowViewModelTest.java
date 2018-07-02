@@ -8,7 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)

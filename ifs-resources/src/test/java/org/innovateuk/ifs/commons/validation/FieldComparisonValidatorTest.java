@@ -18,12 +18,12 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.function.BiPredicate;
 
+import static org.innovateuk.ifs.commons.validation.matchers.ExtendedMockMvcResultMatchers.model;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-import static org.innovateuk.ifs.commons.validation.matchers.ExtendedMockMvcResultMatchers.*;
 
 public class FieldComparisonValidatorTest {
 

@@ -1,16 +1,15 @@
 package org.innovateuk.ifs.organisation.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.springframework.util.StringUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.util.StringUtils;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.innovateuk.ifs.address.resource.AddressResource;
 
 /**
  * Resource object to store the company details, from the company house api.

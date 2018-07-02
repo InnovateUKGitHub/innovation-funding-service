@@ -9,8 +9,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 
 public class AddressResource {
     private Long id;

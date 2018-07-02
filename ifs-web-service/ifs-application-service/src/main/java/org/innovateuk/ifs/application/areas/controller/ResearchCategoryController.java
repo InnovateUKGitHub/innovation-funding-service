@@ -39,7 +39,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  * This controller handles requests by Applicants to change the research category choice for an Application.
  */
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ResearchCategoryController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ResearchCategoryController {
@@ -74,7 +74,7 @@ public class ResearchCategoryController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    @GetMapping("/research-category")
+    @GetMapping
     public String getResearchCategories(Model model,
                                         UserResource loggedInUser,
                                         @ModelAttribute(FORM_ATTR_NAME) ResearchCategoryForm researchCategoryForm,
@@ -102,7 +102,7 @@ public class ResearchCategoryController {
         return getResearchCategories(model, loggedInUser, researchCategoryForm, applicationId, questionId);
     }
 
-    @PostMapping(params = {"save-research-category"})
+    @PostMapping
     public String submitResearchCategoryChoice(@ModelAttribute(FORM_ATTR_NAME) @Valid ResearchCategoryForm
                                                        researchCategoryForm,
                                                @SuppressWarnings("unused") BindingResult bindingResult,

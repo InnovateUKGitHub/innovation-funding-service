@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.financeRowMetaFieldResourceListType;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
