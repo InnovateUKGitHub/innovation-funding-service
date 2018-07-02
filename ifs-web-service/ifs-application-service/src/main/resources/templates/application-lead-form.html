@@ -43,60 +43,42 @@
                   th:with="pageTitle=${model.title},subTitle=${model.application.name},size='heading-xlarge'"/>
     </th:block>
 
-    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
-          data-autosave="application" enctype="multipart/form-data"
-          th:with="appIsClosed=${model.applicationIsClosed}, readonly=${model.applicationIsReadOnly}"
-          novalidate="novalidate">
-        <!--/* To disable submission on pressing return (INFUND-6892) */-->
-        <th:block th:unless="${model.allReadOnly}">
-            <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the
-                form
-            </button>
-        </th:block>
-
-        <!--/* Application Form for a Question. */-->
-        <th:block th:if="${model.isQuestion()}">
-            <div class="question" th:with="question=${model.applicantResource.question}">
-                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS}">
-                    <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
-                        <th:block th:insert="fragments/application-details :: application_details(${formInputViewModel})" />
-                    </th:block>
+    <!--/* Application Form for a Question. */-->
+    <th:block th:if="${model.isQuestion()}">
+        <th:block th:with="question=${model.applicantResource.question}">
+            <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS}">
+                <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
+                    <th:block th:insert="fragments/application-details :: application_details(${model},${formInputViewModel})" />
                 </th:block>
-                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
-                    <th:block th:insert="fragments/application-team :: application_team(${applicationTeamModel},${question})" />
-                </th:block>
-                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY}">
-                    <th:block
-                        th:insert="fragments/research-category :: research_category(${researchCategoryModel})" />
-                </th:block>
-            </div>
-            <th:block th:if="${model.allReadOnly}">
-                <a th:href="${backURL}" class="button-secondary"
-                   th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
             </th:block>
+            <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
+                <th:block th:insert="fragments/application-team :: application_team(${model},${applicationTeamModel},${question})" />
+            </th:block>
+            <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY}">
+                <th:block th:insert="fragments/research-category :: research_category(${researchCategoryModel})" />
+            </th:block>
+        </th:block>
+    </th:block>
+
+    <!--/* Application Form for a Section. */-->
+    <th:block th:if="${model.isSection()}">
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
+              data-autosave="application" enctype="multipart/form-data"
+              th:with="appIsClosed=${model.applicationIsClosed}, readonly=${model.applicationIsReadOnly}"
+              novalidate="novalidate">
+            <!--/* To disable submission on pressing return (INFUND-6892) */-->
             <th:block th:unless="${model.allReadOnly}">
-                <button th:unless="${model.isSection()}"
-                        id="application-question-save"
-                        type="submit"
-                        class="button app-submit-btn"
-                        name="submit-section">Save and return to application overview
-                </button>
+                <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
             </th:block>
-        </th:block>
-
-        <!--/* Application Form for a Section. */-->
-        <th:block th:if="${model.isSection()}">
             <p class="subtitle" th:if="${model.section.description}" th:text="${model.section.description}"/>
             <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (${model})"/>
-        </th:block>
+            <input type="hidden" id="application_id" th:value="${model.application.id}"/>
+            <input type="hidden" id="competition_id" th:value="${model.competition.id}"/>
+            <input type="hidden" id="cacheTest" value=""/>
+        </form>
+    </th:block>
 
-        <input type="hidden" id="application_id" th:value="${model.application.id}"/>
-        <input type="hidden" id="competition_id" th:value="${model.competition.id}"/>
-
-        <input type="hidden" id="cacheTest" value=""/>
-
-        <th:block th:insert="fragments/layout :: main-content-end"/>
-    </form>
+    <th:block th:insert="fragments/layout :: main-content-end"/>
 </main>
 
 <th:block th:insert="fragments/layout :: footer"/>

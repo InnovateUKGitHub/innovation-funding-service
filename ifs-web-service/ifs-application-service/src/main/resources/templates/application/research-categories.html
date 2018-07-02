@@ -11,30 +11,10 @@
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Application details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
 
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">There is a problem on this page.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
-
     <th:block th:insert="fragments/layout :: page-title"
               th:with="pageTitle='Research category',subTitle=${model.currentCompetitionName},size='heading-xlarge'" />
 
-    <form method="post"
-          th:object="${form}"
-          th:action="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}"
-          novalidate="novalidate">
-        <th:block th:insert="fragments/research-category :: research_category(${model})" />
-
-        <th:block th:if="${model.useNewApplicantMenu}">
-            <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}"
-               class="button-secondary" th:if="${model.readonly}">Return to application overview</a>
-            <button id="application-question-save"
-                    type="submit" class="button app-submit-btn"
-                    name="save-research-category"
-                    th:unless="${model.readonly}">Save and return to application overview
-            </button>
-        </th:block>
-    </form>
+    <th:block th:insert="fragments/research-category :: research_category(${model})" />
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
