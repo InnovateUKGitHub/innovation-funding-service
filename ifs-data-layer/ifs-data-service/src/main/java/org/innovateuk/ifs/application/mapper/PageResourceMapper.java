@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.application.mapper;
 
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+import org.innovateuk.ifs.commons.resource.PageResource;
 import org.springframework.data.domain.Page;
 
-import org.innovateuk.ifs.commons.resource.PageResource;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class PageResourceMapper<V, T> {
 

@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.commons.validation;
 
-import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIfOptionIs;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIfOptionIs;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

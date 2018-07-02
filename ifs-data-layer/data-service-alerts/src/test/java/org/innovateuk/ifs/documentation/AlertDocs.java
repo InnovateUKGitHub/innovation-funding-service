@@ -3,8 +3,6 @@ package org.innovateuk.ifs.documentation;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-
 /**
  * Helper for Spring REST Docs, specifically for alerts.
  */

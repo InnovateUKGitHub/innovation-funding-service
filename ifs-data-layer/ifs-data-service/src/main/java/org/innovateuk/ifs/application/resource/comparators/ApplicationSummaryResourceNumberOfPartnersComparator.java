@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.resource.comparators;
 
-import java.util.Comparator;
-
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+
+import java.util.Comparator;
 
 /**
  * Comparator, handling nulls, and using id if number of partners is equal.

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.areas.populator;
 
+import org.innovateuk.ifs.application.areas.viewmodel.InnovationAreaViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
-import org.innovateuk.ifs.application.areas.viewmodel.InnovationAreaViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

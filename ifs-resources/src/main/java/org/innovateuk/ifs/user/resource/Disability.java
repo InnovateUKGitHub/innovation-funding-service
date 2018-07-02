@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.user.resource;
 
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * The disabilities of an User.

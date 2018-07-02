@@ -3,8 +3,8 @@ package org.innovateuk.ifs.project.spendprofile.repository;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This interface is used to generate Spring Data Repositories.

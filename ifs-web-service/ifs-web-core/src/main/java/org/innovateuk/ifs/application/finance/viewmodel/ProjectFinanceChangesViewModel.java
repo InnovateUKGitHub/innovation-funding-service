@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.finance.viewmodel;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceOverviewViewModel;
 import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
