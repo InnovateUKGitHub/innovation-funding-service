@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.file.transactional;
 
 import com.google.common.io.Files;
+import org.apache.commons.io.FileUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.apache.commons.io.FileUtils;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 
@@ -11,14 +11,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static java.nio.charset.Charset.defaultCharset;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.FileFunctions.pathElementsToFile;
-import static java.nio.charset.Charset.defaultCharset;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Test the storage strategy of ByFileIdFileStorageStrategy

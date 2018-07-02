@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application.resource.comparators;
 
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+
 import java.math.BigDecimal;
 import java.util.Comparator;
-
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 
 /**
  * Comparator, handling nulls, and using id if total project cost is equal.

@@ -3,9 +3,9 @@ package org.innovateuk.ifs.management.application.populator;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.management.application.viewmodel.SubmittedApplicationsRowViewModel;
 import org.innovateuk.ifs.management.application.viewmodel.SubmittedApplicationsViewModel;
+import org.innovateuk.ifs.management.navigation.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

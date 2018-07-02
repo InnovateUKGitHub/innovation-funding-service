@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.file.transactional;
 
-import org.innovateuk.ifs.file.domain.FileEntry;
 import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.junit.Test;
 
 import java.io.IOException;

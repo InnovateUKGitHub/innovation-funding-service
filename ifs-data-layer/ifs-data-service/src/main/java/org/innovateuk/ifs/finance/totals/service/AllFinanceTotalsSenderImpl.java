@@ -2,7 +2,6 @@ package org.innovateuk.ifs.finance.totals.service;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.submittedStates;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Service sends cost totals for all submitted {@link Application}s.

@@ -2,9 +2,6 @@ package org.innovateuk.ifs.question.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-
-import java.util.Map;
 
 
 /**

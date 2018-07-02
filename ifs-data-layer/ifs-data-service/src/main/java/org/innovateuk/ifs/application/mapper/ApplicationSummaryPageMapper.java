@@ -1,15 +1,14 @@
 package org.innovateuk.ifs.application.mapper;
 
-import java.util.function.Function;
-
-import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
+import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+
+import java.util.function.Function;
 
 @Mapper(
     config = GlobalMapperConfig.class

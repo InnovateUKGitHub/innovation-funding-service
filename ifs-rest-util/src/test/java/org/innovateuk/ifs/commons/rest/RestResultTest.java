@@ -8,12 +8,11 @@ import org.springframework.http.HttpStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.junit.Assert.*;
 
 public class RestResultTest {
 

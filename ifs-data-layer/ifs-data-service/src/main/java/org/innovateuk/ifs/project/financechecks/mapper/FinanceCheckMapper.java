@@ -3,9 +3,9 @@ package org.innovateuk.ifs.project.financechecks.mapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
-import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
+import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.mapstruct.Mapper;
 
 @Mapper(
