@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
-<th:block th:fragment="application_details(model, formInputViewModel)" th:with="formInput=${formInputViewModel.formInput}, question=${formInputViewModel.question}, competition=${formInputViewModel.competition}">
+<th:block th:fragment="application_details(formInputViewModel)" th:with="formInput=${formInputViewModel.formInput}, question=${formInputViewModel.question}, competition=${formInputViewModel.competition}">
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
           data-autosave="application" enctype="multipart/form-data"
-          th:with="appIsClosed=${model.applicationIsClosed}, readonly=${model.applicationIsReadOnly}"
+          th:with="appIsClosed=${applicationIsClosed}, readonly=${applicationIsReadOnly}"
           novalidate="novalidate">
         <div class="question">
             <!--/* To disable submission on pressing return (INFUND-6892) */-->
-            <th:block th:unless="${model.allReadOnly}">
+            <th:block th:unless="${formInputViewModel.readonly}">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the
                     form
                 </button>
@@ -174,23 +174,24 @@
                       th:insert="question-type/form-elements :: form-edit-question-button (${formInputViewModel},${formInputViewModel.question})"/>
 
             <!--/* Hidden fields */-->
-            <input type="hidden" id="application_id" th:value="${model.application.id}"/>
-            <input type="hidden" id="competition_id" th:value="${model.competition.id}"/>
+            <input type="hidden" id="application_id" th:value="${applicationId}"/>
+            <input type="hidden" id="competition_id" th:value="${competitionId}"/>
 
             <input type="hidden" id="cacheTest" value=""/>
         </div>
 
-        <th:block th:if="${model.allReadOnly}">
-            <a th:href="${backURL}" class="button-secondary"
-               th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
-        </th:block>
-        <th:block th:unless="${model.allReadOnly}">
-            <button th:unless="${model.isSection()}"
-                    id="application-question-save"
-                    type="submit"
-                    class="button app-submit-btn"
-                    name="submit-section">Save and return to application overview
-            </button>
+        <th:block th:unless="${formInputViewModel.summary}">
+            <th:block th:if="${formInputViewModel.readonly}">
+                <a th:href="${backURL}" class="button-secondary"
+                   th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
+            </th:block>
+            <th:block th:unless="${formInputViewModel.readonly}">
+                <button id="application-question-save"
+                        type="submit"
+                        class="button app-submit-btn"
+                        name="submit-section">Save and return to application overview
+                </button>
+            </th:block>
         </th:block>
     </form>
 </th:block>

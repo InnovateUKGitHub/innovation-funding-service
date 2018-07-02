@@ -16,14 +16,14 @@
                     </p>
                 </div>
 
-                <th:block th:if="${model.readonly}">
+                <th:block th:if="${model.allReadOnly}">
                     <div th:if="${model.complete}" class="success-alert assignee extra-margin-bottom">
                         <p>Research category is marked as complete</p>
                     </div>
                     <h2 class="heading-medium">Selected research category</h2>
                     <p><th:block th:text="${model.researchCategory}">Experimental development</th:block></p>
                 </th:block>
-                <th:block th:if="${!model.readonly}">
+                <th:block th:if="${!model.allReadOnly}">
                     <fieldset>
                         <legend class="extra-margin-bottom" id="researchCategory">
                             <h2 class="heading-medium">Select your research category</h2>
@@ -70,9 +70,9 @@
         </div>
 
         <th:block th:if="${model.useNewApplicantMenu}">
-            <a th:href="${backURL}" class="button-secondary" th:if="${model.readonly}"
+            <a th:href="${backURL}" class="button-secondary" th:if="${model.allReadOnly}"
                th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
-            <button th:unless="${model.readonly}"
+            <button th:unless="${model.allReadOnly}"
                     id="application-question-save"
                     type="submit"
                     class="button app-submit-btn"

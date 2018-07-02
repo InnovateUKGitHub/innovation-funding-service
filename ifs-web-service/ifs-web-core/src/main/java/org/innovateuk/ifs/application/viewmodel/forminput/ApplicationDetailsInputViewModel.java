@@ -94,4 +94,13 @@ public class ApplicationDetailsInputViewModel extends AbstractFormInputViewModel
     public boolean isCanMarkAsComplete() {
         return assignButtonsViewModel != null && assignButtonsViewModel.isAssignedToCurrentUser();
     }
+
+    public boolean getApplicationIsClosed() {
+        return !competition.isOpen() || !application.isOpen();
+    }
+
+    public boolean getApplicationIsReadOnly() {
+        return !competition.isOpen() || !application.isOpen();
+    }
+
 }

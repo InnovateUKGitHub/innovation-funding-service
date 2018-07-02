@@ -13,8 +13,9 @@ public class ResearchCategorySummaryViewModel extends AbstractLeadOnlyViewModel 
                                             String researchCategory,
                                             boolean closed,
                                             boolean complete,
-                                            boolean canMarkAsComplete) {
-        super(questionId, applicationId, closed, complete, canMarkAsComplete);
+                                            boolean canMarkAsComplete,
+                                            boolean allReadonly) {
+        super(questionId, applicationId, closed, complete, canMarkAsComplete, allReadonly);
         this.researchCategory = researchCategory;
     }
 

@@ -33,12 +33,15 @@ public class ApplicationResearchCategorySummaryModelPopulator extends AbstractLe
         String researchCategoryName = Optional.of(applicationResource.getResearchCategory())
                 .map(ResearchCategoryResource::getName).orElse(null);
 
+        boolean isComplete = isComplete(applicationResource, loggedInUserId);
+
         return new ResearchCategorySummaryViewModel(applicationResource.getId(),
                 getResearchCategoryQuestion(applicationResource.getCompetition()),
                 researchCategoryName,
                 !isCompetitionOpen(applicationResource),
-                isComplete(applicationResource, loggedInUserId),
-                userIsLeadApplicant
+                isComplete,
+                userIsLeadApplicant,
+                (!userIsLeadApplicant || isComplete)
         );
     }
 

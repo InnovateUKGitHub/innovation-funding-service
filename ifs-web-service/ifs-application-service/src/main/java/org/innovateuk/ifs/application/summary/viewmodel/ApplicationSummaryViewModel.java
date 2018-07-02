@@ -66,4 +66,13 @@ public class ApplicationSummaryViewModel {
     public boolean isProjectWithdrawn() {
         return projectWithdrawn;
     }
+
+    public boolean getApplicationIsClosed() {
+        return !currentCompetition.isOpen() || !currentApplication.isOpen();
+    }
+
+    public boolean getApplicationIsReadOnly() {
+        return !currentCompetition.isOpen() || !currentApplication.isOpen();
+    }
+
 }

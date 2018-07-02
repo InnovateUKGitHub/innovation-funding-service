@@ -25,8 +25,9 @@ public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
                                     boolean applicationCanBegin,
                                     boolean closed,
                                     boolean complete,
-                                    boolean canMarkAsComplete) {
-        super(questionId, applicationId, closed, complete, canMarkAsComplete);
+                                    boolean canMarkAsComplete,
+                                    boolean allReadonly) {
+        super(questionId, applicationId, closed, complete, canMarkAsComplete, allReadonly);
         this.applicationName = applicationName;
         this.organisations = organisations;
         this.userLeadApplicant = userLeadApplicant;

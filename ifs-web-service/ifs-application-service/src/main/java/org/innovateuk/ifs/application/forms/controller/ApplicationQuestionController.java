@@ -225,18 +225,14 @@ public class ApplicationQuestionController {
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
 
         if (question.getQuestion().getQuestionSetupType() == APPLICATION_TEAM) {
-            ApplicationTeamViewModel applicationTeamViewModel =
-                    applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId);
-            questionViewModel.setAllReadOnly(applicationTeamViewModel.isComplete());
-            model.addAttribute("applicationTeamModel",applicationTeamViewModel);
+            model.addAttribute("applicationTeamModel",
+                    applicationTeamModelPopulator.populateModel(applicationId, user.getId(), questionId));
         } else if(question.getQuestion().getQuestionSetupType() == RESEARCH_CATEGORY) {
             ApplicationResource applicationResource = applicationService.getById(applicationId);
-            ResearchCategoryViewModel researchCategoryModel = researchCategoryPopulator.populate(
-                    applicationResource, user.getId(), questionId, true);
-            model.addAttribute("researchCategoryModel", researchCategoryModel);
+            model.addAttribute("researchCategoryModel", researchCategoryPopulator.populate(
+                    applicationResource, user.getId(), questionId, true));
             model.addAttribute("form", researchCategoryFormPopulator.populate(applicationResource,
                     new ResearchCategoryForm()));
-            questionViewModel.setAllReadOnly(!question.getCurrentApplicant().isLead() || researchCategoryModel.isComplete());
         }
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
 
