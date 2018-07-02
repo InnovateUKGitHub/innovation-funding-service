@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.address.resource.AddressResource;
 
 import javax.validation.Valid;
 import java.io.Serializable;

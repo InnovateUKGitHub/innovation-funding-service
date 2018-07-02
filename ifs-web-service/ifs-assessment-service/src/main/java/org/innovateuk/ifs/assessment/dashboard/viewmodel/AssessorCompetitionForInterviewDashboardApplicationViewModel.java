@@ -2,10 +2,6 @@ package org.innovateuk.ifs.assessment.dashboard.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.review.resource.ReviewState;
-
-import static org.innovateuk.ifs.review.resource.ReviewState.ACCEPTED;
-import static org.innovateuk.ifs.review.resource.ReviewState.PENDING;
 
 /**
  * Holder of model attributes for the applications shown on the Assessor Competition for interview Dashboard.

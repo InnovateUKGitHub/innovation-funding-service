@@ -1,21 +1,21 @@
 package org.innovateuk.ifs.commons.rest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.error.ErrorTemplate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.error.ErrorTemplate;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.springframework.http.HttpStatus;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static org.innovateuk.ifs.util.MapFunctions.getSortedGroupingCounts;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.MapFunctions.getSortedGroupingCounts;
 
 /**
  * A standard error transport mechanism for any errors that we wish to report over REST.

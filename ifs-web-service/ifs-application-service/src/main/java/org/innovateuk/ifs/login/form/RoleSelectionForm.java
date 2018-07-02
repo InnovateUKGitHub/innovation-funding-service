@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.login.form;
 
-import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.user.resource.Role;
 
 import javax.validation.constraints.NotNull;

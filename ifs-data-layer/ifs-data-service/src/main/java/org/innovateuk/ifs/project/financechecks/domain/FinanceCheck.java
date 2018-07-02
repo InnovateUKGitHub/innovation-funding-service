@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.domain;
 
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.core.domain.Project;
 
 import javax.persistence.*;
 

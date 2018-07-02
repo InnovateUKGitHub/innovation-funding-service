@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class ApplicationCountSummaryResource extends AssessmentCountSummaryResource {
     private String name;
     private String leadOrganisation;
-    private long assessors; // TODO IFS-319 rename to assigned (or similar) to be consistent with AssessmentCountSummaryResource
+    private long assessors; // TODO: rename to assigned (or similar) to be consistent with AssessmentCountSummaryResource - IFS-3757
     private long accepted;
     private long submitted;
 

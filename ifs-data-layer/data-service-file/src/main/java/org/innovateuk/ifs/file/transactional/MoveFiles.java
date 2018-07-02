@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.file.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT;
 import static org.innovateuk.ifs.commons.service.BaseEitherBackedResult.filterErrors;
 import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.util.FileFunctions.pathElementsToFile;
-import static java.util.stream.Collectors.toList;
 
 
 /**
