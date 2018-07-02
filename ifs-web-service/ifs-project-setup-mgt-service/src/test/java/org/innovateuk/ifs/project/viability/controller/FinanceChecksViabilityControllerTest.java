@@ -294,6 +294,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/viability", projectId, organisationId).
                         param("save-and-continue", "").
                         param("creditReportConfirmed", "false").
+                        param("confirmViabilityChecked", "false").
                         param("ragStatus", "UNSET")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
