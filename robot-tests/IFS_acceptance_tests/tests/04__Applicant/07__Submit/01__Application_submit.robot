@@ -131,6 +131,7 @@ RTO lead has read only view after submission
     And the user clicks the button/link                    link=${application_rto_name}
     When the applicant completes the application details   ${application_rto_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Then the user clicks the button/link                   link=Your finances
+    And the user enters the project location
     When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  css=.extra-margin-bottom [aria-expanded="false"]
     Then the user clicks the button/link                   jQuery=button:contains("Not requesting funding")
     And the user puts zero project costs
