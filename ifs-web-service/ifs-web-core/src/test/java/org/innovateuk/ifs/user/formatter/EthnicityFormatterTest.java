@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.Locale;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.junit.Assert.assertEquals;
 

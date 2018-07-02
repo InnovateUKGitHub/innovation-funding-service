@@ -11,8 +11,8 @@ import org.springframework.validation.Validator;
 
 import java.math.BigDecimal;
 
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

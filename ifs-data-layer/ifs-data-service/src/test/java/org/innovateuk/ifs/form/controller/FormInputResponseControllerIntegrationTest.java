@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.controller.FormInputResponseController;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

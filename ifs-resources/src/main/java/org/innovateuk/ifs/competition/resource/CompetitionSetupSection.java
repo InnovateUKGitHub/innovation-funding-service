@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
 
 /**
  * This enum defines all sections of competition setup.

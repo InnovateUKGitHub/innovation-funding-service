@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.validator;
 
-import org.innovateuk.ifs.validator.constraints.FieldMatch;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.validator.constraints.FieldMatch;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

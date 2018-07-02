@@ -8,7 +8,6 @@ import org.innovateuk.ifs.user.resource.Role;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.joining;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 
 /**

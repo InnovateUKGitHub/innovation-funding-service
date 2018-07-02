@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.financechecks.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.mapstruct.Mapper;
 
 @Mapper(

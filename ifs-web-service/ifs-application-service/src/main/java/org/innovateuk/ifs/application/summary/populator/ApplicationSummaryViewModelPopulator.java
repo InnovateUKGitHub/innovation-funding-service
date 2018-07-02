@@ -6,17 +6,20 @@ import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
+import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
-import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
+
+import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 
 @Component
 public class ApplicationSummaryViewModelPopulator {
