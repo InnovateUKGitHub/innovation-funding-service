@@ -2,11 +2,10 @@ package org.innovateuk.ifs.commons.validation;
 
 import org.innovateuk.ifs.commons.validation.constraints.EnumValidator;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, String> {
 

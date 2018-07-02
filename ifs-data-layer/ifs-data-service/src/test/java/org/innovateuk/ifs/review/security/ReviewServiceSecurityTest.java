@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.review.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.transactional.ReviewService;
@@ -10,13 +9,12 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuilder.newReviewRejectOutcomeResource;
 import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Mockito.*;
 
 public class ReviewServiceSecurityTest extends BaseServiceSecurityTest<ReviewService> {

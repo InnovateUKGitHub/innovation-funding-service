@@ -10,9 +10,9 @@ import org.springframework.test.annotation.Rollback;
 
 import java.math.BigDecimal;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.DAY;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.YEAR;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
 /**

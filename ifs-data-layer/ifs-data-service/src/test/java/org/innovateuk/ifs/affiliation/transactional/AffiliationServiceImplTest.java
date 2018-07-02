@@ -2,13 +2,13 @@ package org.innovateuk.ifs.affiliation.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.Ethnicity;
-import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -29,8 +29,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationServiceImpl> {
 

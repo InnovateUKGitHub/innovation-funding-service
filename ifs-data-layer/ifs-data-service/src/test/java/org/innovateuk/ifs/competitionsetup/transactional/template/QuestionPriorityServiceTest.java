@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.competitionsetup.transactional.template;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.question.transactional.template.QuestionNumberOrderService;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
@@ -11,10 +11,10 @@ import org.mockito.Mock;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.setup.resource.QuestionSection.*;
 import static org.mockito.ArgumentMatchers.refEq;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
 import static org.mockito.Mockito.*;
 
 

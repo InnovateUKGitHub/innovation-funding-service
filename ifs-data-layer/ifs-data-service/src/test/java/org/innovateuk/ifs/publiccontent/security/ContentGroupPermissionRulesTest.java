@@ -12,7 +12,8 @@ import java.util.Optional;
 import static org.innovateuk.ifs.publiccontent.builder.ContentGroupBuilder.newContentGroup;
 import static org.innovateuk.ifs.publiccontent.builder.ContentSectionBuilder.newContentSection;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class ContentGroupPermissionRulesTest extends BasePermissionRulesTest<ContentGroupPermissionRules> {

@@ -8,8 +8,8 @@ import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.finance.validator;
 
+import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +16,6 @@ import org.springframework.validation.ObjectError;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
-import static org.innovateuk.ifs.application.validator.ValidatorTestUtil.getBindingResult;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

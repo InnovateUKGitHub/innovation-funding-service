@@ -2,8 +2,8 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,8 @@ import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<QuestionStatusRepository> {
 

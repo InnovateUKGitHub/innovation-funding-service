@@ -3,7 +3,6 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.*;
-import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,8 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 
 /**
  * Generates Assessments for Applications so that Assessors may start assessing them

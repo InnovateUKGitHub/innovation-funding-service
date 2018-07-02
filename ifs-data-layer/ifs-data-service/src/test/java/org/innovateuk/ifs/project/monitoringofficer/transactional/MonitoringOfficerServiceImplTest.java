@@ -3,10 +3,10 @@ package org.innovateuk.ifs.project.monitoringofficer.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoringofficer.builder.MonitoringOfficerBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
+
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE;
 import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;

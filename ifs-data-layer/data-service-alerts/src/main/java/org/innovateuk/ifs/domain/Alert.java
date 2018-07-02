@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.domain;
 
-import org.innovateuk.ifs.alert.resource.AlertType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.alert.resource.AlertType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;

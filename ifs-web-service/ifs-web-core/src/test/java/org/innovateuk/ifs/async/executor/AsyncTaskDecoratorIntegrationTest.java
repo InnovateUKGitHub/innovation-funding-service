@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.async.executor;
 
 import org.innovateuk.ifs.async.AsyncExecutionTestHelper;
-import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.async.controller.AwaitModelFuturesCompletionMethodInterceptor;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
+import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

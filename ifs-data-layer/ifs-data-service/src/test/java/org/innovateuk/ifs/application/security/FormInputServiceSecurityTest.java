@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.application.transactional.FormInputResponseServiceImpl;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;

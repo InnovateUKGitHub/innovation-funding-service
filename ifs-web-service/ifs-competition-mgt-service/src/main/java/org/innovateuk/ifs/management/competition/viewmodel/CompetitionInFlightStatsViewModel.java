@@ -4,7 +4,10 @@ import org.innovateuk.ifs.assessment.resource.CompetitionClosedKeyAssessmentStat
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionOpenKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionReadyToOpenKeyAssessmentStatisticsResource;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 /**
  * Holder of key statistics for the in-flight dashboard

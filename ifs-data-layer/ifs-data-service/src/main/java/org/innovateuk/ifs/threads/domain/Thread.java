@@ -8,13 +8,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static java.util.Optional.ofNullable;
+import static java.util.Optional.*;
+
+;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

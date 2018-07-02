@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.application.finance.view.item;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.finance.resource.cost.CapitalUsage;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.util.NumberUtils;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 import static org.innovateuk.ifs.util.NullCheckFunctions.allNull;
 

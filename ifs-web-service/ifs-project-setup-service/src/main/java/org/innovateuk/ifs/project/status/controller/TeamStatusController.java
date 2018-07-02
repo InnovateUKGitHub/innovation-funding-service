@@ -10,8 +10,8 @@ import org.innovateuk.ifs.project.consortiumoverview.viewmodel.ProjectConsortium
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.StatusService;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_STARTED;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 
 /**
  * This controller will handle display of project activity status for all partners

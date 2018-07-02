@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
+import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.domain.Alert;
 import org.innovateuk.ifs.mapper.AlertMapper;
 import org.innovateuk.ifs.repository.AlertRepository;
-import org.innovateuk.ifs.alert.resource.AlertResource;
-import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
-import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupFinanceServiceImpl;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Test;

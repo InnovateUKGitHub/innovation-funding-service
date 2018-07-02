@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.authentication.validator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
+import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator.ExclusionRulePatternGenerator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator.ExclusionRulePatternGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -20,12 +19,12 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator.PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME;
+import static org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator.PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator.PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME;
-import static org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator.PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 

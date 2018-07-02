@@ -9,9 +9,7 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.InviteProjectDocs.inviteProjectFields;
-import static org.innovateuk.ifs.documentation.InviteProjectDocs.inviteProjectFieldsList;
-import static org.innovateuk.ifs.documentation.InviteProjectDocs.inviteProjectResourceBuilder;
+import static org.innovateuk.ifs.documentation.InviteProjectDocs.*;
 import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
