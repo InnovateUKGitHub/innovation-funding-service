@@ -5,7 +5,6 @@ ext.activeProfile="environment"
 ext.ifsDatasourceUrl=""
 ext.ifsDatasourceUsername=""
 ext.ifsDatasourcePassword=""
-ext.ifsFlywayLocations=""
 
 ext.testIfsDatasourceUrl="jdbc:mysql://127.0.0.1:3306/ifs_finance_test"
 ext.testIfsDatasourceUsername="ifs"
