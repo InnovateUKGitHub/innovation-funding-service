@@ -50,6 +50,15 @@ public class ApplicationForm extends Form {
     public void setOrganisationSize(String organisationSize) {
     }
 
+    /** Placeholder function for mapping errors to field in Thymeleaf */
+    public String getProjectLocation() {
+        return "";
+    }
+
+    /** Placeholder function for mapping errors to field in Thymeleaf */
+    public void setProjectLocation(String organisationSize) {
+    }
+
     public boolean isAdminMode() {
         return adminMode;
     }
