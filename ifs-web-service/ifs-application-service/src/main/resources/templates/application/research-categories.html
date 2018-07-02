@@ -8,8 +8,11 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content" th:with="model=${researchCategoryModel}">
-    <th:block th:insert="fragments/layout :: header-sub"
+    <th:block th:unless="${model.useNewApplicantMenu}" th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Application details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
+
+    <th:block th:if="${model.useNewApplicantMenu}" th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}" />
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">There is a problem on this page.</h2>
