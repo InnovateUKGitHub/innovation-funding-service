@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
@@ -70,7 +70,7 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends Abstr
                     // assert that we got a failure indicating that the Registration API was not available
                     ServiceResult<UserResource> result = registrationService.createOrganisationUser(organisation.getId(), registrationInfo);
                     assertThat(result.isFailure()).isTrue();
-                    assertThat(result.getFailure().is(new Error(EMAILS_NOT_SENT_MULTIPLE, SERVICE_UNAVAILABLE))).isTrue();
+                    assertThat(result.getFailure().is(new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, SERVICE_UNAVAILABLE))).isTrue();
 
                     verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
                 });
@@ -109,7 +109,7 @@ public class RegistrationServiceImplSilAvailabilityIntegrationTest extends Abstr
                     // assert that we got a failure indicating that the Registration API was not available
                     ServiceResult<UserResource> result = registrationService.createOrganisationUserWithCompetitionContext(organisation.getId(), competition.getId(), registrationInfo);
                     assertThat(result.isFailure()).isTrue();
-                    assertThat(result.getFailure().is(new Error(EMAILS_NOT_SENT_MULTIPLE, SERVICE_UNAVAILABLE))).isTrue();
+                    assertThat(result.getFailure().is(new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, SERVICE_UNAVAILABLE))).isTrue();
 
                     verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
                 });

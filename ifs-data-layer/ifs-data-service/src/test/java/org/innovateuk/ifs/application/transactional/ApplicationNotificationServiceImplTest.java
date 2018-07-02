@@ -413,17 +413,10 @@ public class ApplicationNotificationServiceImplTest {
         inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
         inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(0), EMAIL);
 
-        inOrder.verify(applicationRepositoryMock).findOne(applicationTwoId);
-        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(1), EMAIL);
-
-        inOrder.verify(applicationRepositoryMock).findOne(applicationThreeId);
-        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(2), EMAIL);
-
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(result.isFailure());
-        assertEquals(3, result.getErrors().size());
-        assertTrue(result.getFailure().is(internalServerErrorError(), internalServerErrorError(), internalServerErrorError()));
+        assertTrue(result.getFailure().is(internalServerErrorError()));
     }
 
     @Test

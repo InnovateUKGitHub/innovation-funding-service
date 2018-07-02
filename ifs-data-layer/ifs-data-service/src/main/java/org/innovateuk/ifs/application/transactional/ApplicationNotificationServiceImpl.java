@@ -22,9 +22,9 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_INELIGIBLE;
-import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
@@ -51,6 +51,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     private String webBaseUrl;
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
 
         List<ProcessRole> applicants = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId,
@@ -60,7 +61,16 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 .filter(ProcessRole::isLeadApplicantOrCollaborator)
                 .collect(toList());
 
-        return processAnyFailuresOrSucceed(simpleMap(applicants, this::sendAssessorFeedbackPublishedNotification));
+        for (ProcessRole applicant : applicants) {
+
+            ServiceResult<Void> notificationResult = sendAssessorFeedbackPublishedNotification(applicant);
+
+            if (notificationResult.isFailure()) {
+                return notificationResult;
+            }
+        }
+
+        return serviceSuccess();
     }
 
     @Override
@@ -69,11 +79,11 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                                                 ApplicationIneligibleSendResource applicationIneligibleSendResource) {
 
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).
-                andOnSuccess(this::markApplicationAsIneligible).
+                andOnSuccess(this::markApplicationAsIneligibleInformed).
                 andOnSuccess(markedApplication -> sendApplicationIneligibleNotification(markedApplication, applicationIneligibleSendResource));
     }
 
-    private ServiceResult<Application> markApplicationAsIneligible(Application application) {
+    private ServiceResult<Application> markApplicationAsIneligibleInformed(Application application) {
 
         if (!applicationWorkflowHandler.informIneligible(application)) {
             return serviceFailure(APPLICATION_MUST_BE_INELIGIBLE);

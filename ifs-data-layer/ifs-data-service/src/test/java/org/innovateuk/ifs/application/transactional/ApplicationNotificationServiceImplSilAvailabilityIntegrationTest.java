@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
 /**
@@ -59,10 +59,36 @@ public class ApplicationNotificationServiceImplSilAvailabilityIntegrationTest ex
                     ServiceResult<Void> result = applicationNotificationService.informIneligible(ineligibleApplication.getId(), ineligibleReason);
 
                     assertThat(result.isFailure()).isTrue();
-                    assertThat(result.getFailure().is(new Error(EMAILS_NOT_SENT_MULTIPLE, SERVICE_UNAVAILABLE))).isTrue();
+                    assertThat(result.getFailure().is(new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, SERVICE_UNAVAILABLE))).isTrue();
 
                     verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
                 });
+            });
+        });
+    }
+
+    @Test
+    public void notifyApplicantsByCompetition() throws SQLException {
+
+        long fundingDecisionApplicationCompetition = testService.doWithinTransaction(() -> {
+            Application submittedApplication = applicationRepository.findByApplicationProcessActivityStateIn(singleton(ApplicationState.APPROVED)).findFirst().get();
+            return submittedApplication.getCompetition().getId();
+        });
+
+        withMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
+
+            setupServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+
+            testService.doWithinTransaction(this::loginCompAdmin);
+
+            databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
+
+                ServiceResult<Void> result = applicationNotificationService.notifyApplicantsByCompetition(fundingDecisionApplicationCompetition);
+
+                assertThat(result.isFailure()).isTrue();
+                assertThat(result.getFailure().is(new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, SERVICE_UNAVAILABLE))).isTrue();
+
+                verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
             });
         });
     }

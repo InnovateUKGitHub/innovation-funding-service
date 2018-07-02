@@ -10,7 +10,6 @@ import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -19,11 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.EMAIL_NOTIFICATION_TEMPLATES_PATH;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -57,7 +55,10 @@ class EmailNotificationSender implements NotificationSender {
             List<ServiceResult<List<EmailAddress>>> results = simpleMap(templates, (target, content) ->
                     sendEmailWithContent(notification, target, content));
 
-            return processAnyFailuresOrSucceed(results, failures -> serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE, findStatusCode(failures))), serviceSuccess(notification));
+            return processAnyFailuresOrSucceed(results, failures -> {
+                Error error = new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, findStatusCode(failures));
+                return serviceFailure(error);
+            }, serviceSuccess(notification));
         });
     }
 
@@ -116,14 +117,5 @@ class EmailNotificationSender implements NotificationSender {
 
     private String getTemplatePath(Notification notification, String suffix) {
         return EMAIL_NOTIFICATION_TEMPLATES_PATH + notification.getMessageKey().name().toLowerCase() + "_" + suffix;
-    }
-
-    private HttpStatus findStatusCode(List<ServiceResult<List<EmailAddress>>> failures) {
-
-        List<Error> aggregateErrors = aggregate(failures).getFailure().getErrors();
-
-        return simpleFindFirst(aggregateErrors, error -> error.getStatusCode() != null).
-                map(Error::getStatusCode).
-                orElse(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

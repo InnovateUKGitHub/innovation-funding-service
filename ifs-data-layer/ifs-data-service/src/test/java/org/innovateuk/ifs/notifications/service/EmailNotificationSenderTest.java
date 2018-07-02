@@ -17,6 +17,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_RENDER_TEMPLATE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
@@ -103,7 +104,7 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isFailure());
-        assertTrue(results.getFailure().is(EMAILS_NOT_SENT_MULTIPLE));
+        assertTrue(results.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
 
         verify(emailServiceMock).sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body");
         verify(emailServiceMock).sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2");
@@ -120,12 +121,12 @@ public class EmailNotificationSenderTest extends BaseUnitTestMocksTest {
         when(notificationTemplateRendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_plain.txt", notification.getGlobalArguments())).thenReturn(serviceSuccess("Plain text body 2"));
         when(notificationTemplateRendererMock.renderTemplate(sender, recipient2, EMAIL_NOTIFICATION_TEMPLATES_PATH + "dummy_message_key_text_html.html", notification.getGlobalArguments())).thenReturn(serviceSuccess("HTML body 2"));
 
-        when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE, INTERNAL_SERVER_ERROR)));
+        when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body")).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, INTERNAL_SERVER_ERROR)));
         when(emailServiceMock.sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2")).thenReturn(serviceSuccess(singletonList(recipient2Email)));
 
         ServiceResult<Notification> results = notificationSender.sendNotification(notification);
         assertTrue(results.isFailure());
-        assertTrue(results.getFailure().is(EMAILS_NOT_SENT_MULTIPLE));
+        assertTrue(results.getFailure().is(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
 
         verify(emailServiceMock).sendEmail(senderEmail, singletonList(recipient1Email), "My subject", "Plain text body", "HTML body");
         verify(emailServiceMock).sendEmail(senderEmail, singletonList(recipient2Email), "My subject 2", "Plain text body 2", "HTML body 2");

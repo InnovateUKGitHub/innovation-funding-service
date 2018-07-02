@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorTemplate;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.util.Either;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -425,5 +426,12 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
                 Map.Entry::getKey, q -> aggregate(q.getValue()).getSuccess()));
     }
 
+    public static <T> HttpStatus findStatusCode(List<ServiceResult<T>> failures) {
 
+        List<Error> aggregateErrors = aggregate(failures).getFailure().getErrors();
+
+        return simpleFindFirst(aggregateErrors, error -> error.getStatusCode() != null).
+                map(Error::getStatusCode).
+                orElse(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
