@@ -8,8 +8,6 @@ version project.version
 
 apply plugin: 'idea'
 
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
-
 buildscript {
 
     ext['thymeleaf.version'] = '3.0.3.RELEASE'
