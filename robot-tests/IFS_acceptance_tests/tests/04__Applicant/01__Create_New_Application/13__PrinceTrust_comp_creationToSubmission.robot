@@ -62,6 +62,7 @@ The competition admin creates The Prince's Trust Comp
 
 the lead applicant fills all the questions and marks as complete(Prince's Trust comp type)
     the applicant completes application team
+    then the user selects research category  Feasibility studies
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 

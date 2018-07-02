@@ -71,11 +71,19 @@ the user fills in the Application details
     the user clicks the button/link       link=Application overview
     the user should see the element       jQuery=li:contains("Application details") > .task-status-complete
 
+the user selects research category from funding
+    [Arguments]  ${res_category}
+    the user clicks the button/link   link=research category
+    the user clicks the button twice  jQuery=label:contains("${res_category}")
+    the user clicks the button/link   id=application-question-complete
+    the user should see the element   jQuery=li:contains("Research category") > .task-status-complete
+
 the user selects Research category
     [Arguments]  ${res_category}
     the user clicks the button/link   link=Research category
-    then the user clicks the button/link  jQuery=label:contains("${res_category}")
+    the user clicks the button twice  jQuery=label:contains("${res_category}")
     the user clicks the button/link   id=application-question-complete
+    the user should see the element   jQuery=li:contains("Research category") > .task-status-complete
 
 the user marks the finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
@@ -258,7 +266,7 @@ the user checks Your Funding section
 
 the user selects research area
     [Arguments]  ${Application}
-    the user selects Research category               Feasibility studies
+    the user selects Research category from funding  Feasibility studies
     the user fills in the funding information        ${Application}
 
 the user fills in the funding information
