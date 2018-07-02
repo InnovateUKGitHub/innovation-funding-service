@@ -436,6 +436,45 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
     }
 
     @Test
+    public void submitResearchCategoryChoice_newApplicantMenu_markAsComplete()
+            throws Exception {
+        long questionId = 1L;
+        long researchCategoryId = 2L;
+
+        ApplicationResource applicationResource = newApplicationResource()
+                .withUseNewApplicantMenu(true)
+                .build();
+        ProcessRoleResource processRole = newProcessRoleResource().build();
+
+        when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
+        when(researchCategoryEditableValidator.questionAndApplicationHaveAllowedState(questionId,
+                applicationResource)).thenReturn(true);
+        when(processRoleService.findProcessRole(loggedInUser.getId(), applicationResource.getId())).thenReturn(processRole);
+        when(applicationResearchCategoryRestService.setResearchCategoryAndMarkAsComplete(applicationResource.getId(),
+                researchCategoryId, processRole.getId())).thenReturn(restSuccess(newApplicationResource().build()));
+
+        mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category",
+                applicationResource.getId(), questionId)
+                .param("researchCategory", String.valueOf(researchCategoryId))
+                .param("mark_as_complete", ""))
+                .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())))
+                .andExpect(status().is3xxRedirection());
+
+        InOrder inOrder = inOrder(processRoleService, applicationService, researchCategoryEditableValidator,
+                researchCategoryModelPopulator, researchCategoryFormPopulator, cookieFlashMessageFilter,
+                applicationResearchCategoryRestService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(researchCategoryEditableValidator).questionAndApplicationHaveAllowedState(questionId,
+                applicationResource);
+        inOrder.verify(processRoleService).findProcessRole(loggedInUser.getId(), applicationResource.getId());
+        inOrder.verify(applicationResearchCategoryRestService).setResearchCategoryAndMarkAsComplete(applicationResource.getId(),
+                researchCategoryId, processRole.getId());
+        inOrder.verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class),
+                same(APPLICATION_SAVED_MESSAGE));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void markAsIncomplete() throws Exception {
         long questionId = 1L;
 
