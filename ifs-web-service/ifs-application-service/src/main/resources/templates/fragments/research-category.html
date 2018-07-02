@@ -11,7 +11,7 @@
         </div>
 
         <th:block th:if="${model.readonly}">
-            <div class="success-alert assignee extra-margin-bottom">
+            <div th:if="${model.complete}" class="success-alert assignee extra-margin-bottom">
                 <p>Research category is marked as complete</p>
             </div>
             <h2 class="heading-medium">Selected research category</h2>
