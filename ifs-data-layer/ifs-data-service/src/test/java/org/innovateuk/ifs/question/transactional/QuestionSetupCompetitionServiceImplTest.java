@@ -23,6 +23,7 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Arrays.asList;
