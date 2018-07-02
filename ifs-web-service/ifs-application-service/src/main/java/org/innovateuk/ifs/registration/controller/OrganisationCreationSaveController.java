@@ -2,13 +2,18 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -26,8 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 
 /**
  * Provides methods for confirming and saving the organisation as an intermediate step in the registration flow.
@@ -42,6 +49,12 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
     @Autowired
     private OrganisationService organisationService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
 
     @GetMapping("/" + CONFIRM_ORGANISATION)
     public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
@@ -59,6 +72,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     @PostMapping("/save-organisation")
     public String saveOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                    Model model,
+                                   UserResource user,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
@@ -97,8 +111,12 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         }
 
         organisationResource = createOrRetrieveOrganisation(organisationResource, request);
-        registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
-        return "redirect:" + RegistrationController.BASE_URL;
+        if (user != null) {
+            return createApplicationAndShowInvitees(user, registrationCookieService.getCompetitionIdCookieValue(request).get(), organisationResource.getId());
+        } else {
+            registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
+            return "redirect:" + RegistrationController.BASE_URL;
+        }
     }
 
     private OrganisationResource createOrRetrieveOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
@@ -108,5 +126,24 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         }
 
         return organisationService.createOrMatch(organisationResource);
+    }
+
+    private String createApplicationAndShowInvitees(UserResource user, long competitionId, long organistionId) {
+        ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), organistionId, "");
+        if (application != null) {
+            return questionRestService
+                    .getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM)
+                    .handleSuccessOrFailure(
+                            failure ->  format("redirect:/application/%s/team", application.getId()),
+                            question -> format("redirect:/application/%s/form/question/%s", application.getId(),
+                                    question.getId())
+                    );
+        } else {
+            // Application not created, throw exception
+            List<Object> args = new ArrayList<>();
+            args.add(competitionId);
+            args.add(user.getId());
+            throw new ObjectNotFoundException("Could not create a new application", args);
+        }
     }
 }
