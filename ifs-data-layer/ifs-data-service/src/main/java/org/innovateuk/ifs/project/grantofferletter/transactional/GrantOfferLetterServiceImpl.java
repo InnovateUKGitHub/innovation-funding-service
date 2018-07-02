@@ -31,7 +31,6 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTable;
 import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterIndustrialFinanceTable;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
@@ -63,7 +62,6 @@ import java.util.*;
 import java.util.function.Supplier;
 
 import static java.io.File.separator;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
