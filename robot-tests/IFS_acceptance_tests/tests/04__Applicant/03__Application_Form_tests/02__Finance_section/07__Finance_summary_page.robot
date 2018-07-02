@@ -238,11 +238,11 @@ IFS Admin views the finance summary
     When the user clicks the button/link    link = View finances
     Then the finance summary table in Your Finances has correct values for lead    £200,903  30%  57,803  2,468  140,632
 
-#A user other than an CSS or IFS Admin cannot view the finances of an application that has not yet been submitted
-#    [Documentation]  IFS-3609
-#    Given the user navigates to the finances of the application    &{internal_finance_credentials}
-#    Then the user should not see the element    jQuery = a:contains("View finances")
-#TODO When the fix has been made so other internal users apart from CSS and IFS Admins cannot view not yet submitted applications.
+A user other than an CSS or IFS Admin cannot view the finances of an application that has not yet been submitted
+    [Documentation]  IFS-3609
+    [Setup]  log in as a different user         &{internal_finance_credentials}
+    Given the user navigates to the finances of the application
+    Then the user should not see the element    jQuery = a:contains("View finances")
 
 *** Keywords ***
 Custom suite setup
