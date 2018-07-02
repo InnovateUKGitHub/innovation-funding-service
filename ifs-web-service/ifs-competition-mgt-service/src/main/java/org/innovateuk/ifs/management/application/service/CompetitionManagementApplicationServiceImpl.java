@@ -102,10 +102,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
 
         Map<Long, Boolean> showDetailedFinanceLink = organisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
                 organisation -> {
-                    boolean canSeeUnsubmitted = user.hasRole(IFS_ADMINISTRATOR) || user.hasRole(SUPPORT);
-                    boolean canSeeSubmitted = user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN) || user.hasRole(INNOVATION_LEAD);
-                    boolean isSubmitted = application.getApplicationState() != ApplicationState.OPEN &&  application.getApplicationState() != ApplicationState.CREATED;
-                    boolean visibleToUser = canSeeUnsubmitted || (canSeeSubmitted && isSubmitted);
 
                     boolean orgFinancesExist = ofNullable(organisationFinances)
                             .map(finances -> organisationFinances.get(organisation.getId()))
@@ -114,7 +110,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                     boolean academicFinancesExist = isAcademicOrganisation.get(organisation.getId());
                     boolean financesExist = orgFinancesExist || academicFinancesExist;
 
-                    return visibleToUser && financesExist;
+                    return isApplicationVisibleToUser(application, user) && financesExist;
                 })
         );
 
@@ -146,6 +142,14 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("fromApplicationService", false);
 
         return "competition-mgt-application-overview";
+    }
+
+    private boolean isApplicationVisibleToUser(ApplicationResource application, UserResource user) {
+        boolean canSeeUnsubmitted = user.hasRole(IFS_ADMINISTRATOR) || user.hasRole(SUPPORT);
+        boolean canSeeSubmitted = user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN) || user.hasRole(INNOVATION_LEAD);
+        boolean isSubmitted = application.getApplicationState() != ApplicationState.OPEN &&  application.getApplicationState() != ApplicationState.CREATED;
+
+        return canSeeUnsubmitted || (canSeeSubmitted && isSubmitted);
     }
 
     @Override
