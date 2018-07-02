@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="research_category(model)">
-    <form th:action="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}"
+    <form
+        th:action="@{/application/{applicationId}/form/question/{questionId}/research-category(applicationId=${model.applicationId},questionId=${model.questionId})}"
           method="post"
           th:object="${form}"
           novalidate="novalidate">
@@ -63,7 +64,7 @@
 
             <div class="extra-margin" th:if="${model.useNewApplicantMenu and model.canMarkAsComplete}">
                 <!--/* 'Mark as complete' / 'Edit' links */-->
-                <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${researchCategoryModel})"/>
+                <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
             </div>
 
             <input type="hidden" id="cacheTest" value=""/>
