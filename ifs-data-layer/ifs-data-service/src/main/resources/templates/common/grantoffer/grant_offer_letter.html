@@ -21,7 +21,60 @@
           <#if Address3?has_content>${Address3}<br/></#if>
           <#if TownCity?has_content>${TownCity}<br/></#if>
           <#if PostCode?has_content>${PostCode}<br/></#if>
+
+
+
+          <#list financeTable.labour?keys as key>
+          ${key} | ${financeTable.labour[key]}
+          </#list>
+
+          <#list financeTable.materials?keys as key>
+          ${key} | ${financeTable.materials[key]}
+          </#list>
+
+          <#list financeTable.overheads?keys as key>
+          ${key} | ${financeTable.overheads[key]}
+          </#list>
+
+          <#list financeTable.capitalUsage?keys as key>
+          ${key} | ${financeTable.capitalUsage[key]}
+          </#list>
+
+          <#list financeTable.subcontract?keys as key>
+          ${key} | ${financeTable.subcontract[key]}
+          </#list>
+
+          <#list financeTable.travel?keys as key>
+          ${key} | ${financeTable.travel[key]}
+          </#list>
+
+
+          <#list financeTable.otherCosts?keys as key>
+          ${key} | ${financeTable.otherCosts[key]}
+          </#list>
+</p>
+
+      <p class="bold">
+          Application number: ${ApplicationNumber}<br/>
+
+          <#assign sendDate = .now>
+              Date: ${sendDate?string["d MMMM yyyy"]}
       </p>
+      <p class="bold">
+          Dear ${LeadContact},
+      </p>
+
+      <p class="bold">Grant Offer Letter</p>
+      <p class="bold">
+          Competition: ${CompetitionName}<br/>
+          Project Title: ${ProjectTitle}
+      </p>
+      <p>We are pleased to confirm your grant, subject to our terms and conditions.</p>
+      <p>Your individual grant allocations are detailed in the Annexes. These allocations are final and not subject to further negotiation or amendment.</p>
+      <p>Any additional terms or conditions of this award are included with this grant offer letter. </p>
+
+      <p class="bold">Acceptance: Start and end dates</p>
+>>>>>>> Stashed changes
       <p>
           <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
           <span class="bold">Project title:</span> ${ProjectTitle}<br/>

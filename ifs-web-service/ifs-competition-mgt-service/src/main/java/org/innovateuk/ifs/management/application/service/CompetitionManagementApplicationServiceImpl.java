@@ -119,9 +119,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                 .queryParam("origin", origin)
                 .queryParams(queryParams);
 
-        if (assessorId.isPresent()) {
-            builder.queryParam("assessorId", assessorId.get());
-        }
+        assessorId.ifPresent(id -> builder.queryParam("assessorId", id));
 
         model.addAttribute("queryParams", builder
                 .build()

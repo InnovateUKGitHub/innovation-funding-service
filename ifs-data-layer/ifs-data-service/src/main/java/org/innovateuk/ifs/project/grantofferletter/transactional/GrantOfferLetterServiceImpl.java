@@ -20,6 +20,10 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -27,6 +31,8 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTable;
+import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterIndustrialFinanceTable;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -57,6 +63,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 import static java.io.File.separator;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -109,6 +116,15 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private EmailService projectEmailService;
+
+    @Autowired
+    private ProjectFinanceRepository projectFinanceRepository;
+
+    @Autowired
+    private ProjectFinanceRowRepository projectFinanceRowRepository;
+
+    @Autowired
+    private GrantOfferLetterIndustrialFinanceTable grantOfferLetterIndustrialFinanceTable;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -231,6 +247,19 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+
+        Map<String, List<ProjectFinanceRow>> financesForOrgs = new HashMap<>();
+
+
+        project.getOrganisations()
+                .forEach(org -> {
+                    ProjectFinance orgFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(project.getId(), org.getId());
+                    List<ProjectFinanceRow> rows = projectFinanceRowRepository.findByTargetId(orgFinance.getId());
+                    financesForOrgs.put(org.getName(), rows);
+                });
+
+        grantOfferLetterIndustrialFinanceTable.populate(financesForOrgs);
+
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
@@ -247,6 +276,9 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)) : "");
         templateReplacements.put("ProjectLength", project.getDurationInMonths());
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
+
+
+        templateReplacements.put("financeTable", grantOfferLetterIndustrialFinanceTable);
         return templateReplacements;
     }
 
