@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
-<th:block th:fragment="research_category(model,researchCategoryModel)">
-    <form th:action="@{/application/{applicationId}/form/question/{questionId}(applicationId=${researchCategoryModel.applicationId},questionId=${researchCategoryModel.questionId})}"
+<th:block th:fragment="research_category(model)">
+    <form th:action="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}"
           method="post"
           th:object="${form}"
           novalidate="novalidate">
@@ -14,21 +14,21 @@
                       th:text="${err}"></span>
             </th:block>
             <div class="form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'form-group-error'">
-                <div class="message-alert extra-margin-bottom" th:if="${researchCategoryModel.hasApplicationFinances}">
+                <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
                     <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
                     <p>The type of research affects the level of funding a business can receive under UK state aid rules.
                         Changing the research category will reset the funding level for all business participants.
                     </p>
                 </div>
 
-                <th:block th:if="${researchCategoryModel.readonly}">
+                <th:block th:if="${model.readonly}">
                     <div class="success-alert assignee extra-margin-bottom">
                         <p>Research category is marked as complete</p>
                     </div>
                     <h2 class="heading-medium">Selected research category</h2>
-                    <th:block th:text="${researchCategoryModel.researchCategory}">Experimental development</th:block>
+                    <th:block th:text="${model.researchCategory}">Experimental development</th:block>
                 </th:block>
-                <th:block th:if="${!researchCategoryModel.readonly}">
+                <th:block th:if="${!model.readonly}">
                     <fieldset>
                         <legend class="extra-margin-bottom">
                             <h2 class="heading-medium">Select your research category</h2>
@@ -37,7 +37,7 @@
                                 href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
                                 target="_blank">guidance on research categories.</a></span>
                         </legend>
-                        <th:block th:each="item : ${researchCategoryModel.availableResearchCategories}">
+                        <th:block th:each="item : ${model.availableResearchCategories}">
                             <div class="multiple-choice">
                                 <input type="radio"
                                        th:field="*{researchCategory}"
@@ -54,14 +54,14 @@
                 </th:block>
             </div>
 
-            <div class="extra-margin" th:unless="${researchCategoryModel.useNewApplicantMenu}">
+            <div class="extra-margin" th:unless="${model.useNewApplicantMenu}">
                 <button class="button" name="save-research-category">Save</button>
                 <a class="button button-clear"
-                   th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${researchCategoryModel.applicationId},questionId=${researchCategoryModel.questionId})}">Cancel
+                   th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}">Cancel
                 </a>
             </div>
 
-            <div class="extra-margin" th:if="${researchCategoryModel.useNewApplicantMenu and researchCategoryModel.canMarkAsComplete}">
+            <div class="extra-margin" th:if="${model.useNewApplicantMenu and model.canMarkAsComplete}">
                 <!--/* 'Mark as complete' / 'Edit' links */-->
                 <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${researchCategoryModel})"/>
             </div>
@@ -69,12 +69,10 @@
             <input type="hidden" id="cacheTest" value=""/>
         </div>
 
-        <th:block th:if="${model.allReadOnly}">
-            <a th:href="${backURL}" class="button-secondary"
+        <th:block th:if="${model.useNewApplicantMenu}">
+            <a th:href="${backURL}" class="button-secondary" th:if="${model.readonly}"
                th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
-        </th:block>
-        <th:block th:unless="${model.allReadOnly}">
-            <button th:unless="${model.isSection()}"
+            <button th:unless="${model.readonly}"
                     id="application-question-save"
                     type="submit"
                     class="button app-submit-btn"
