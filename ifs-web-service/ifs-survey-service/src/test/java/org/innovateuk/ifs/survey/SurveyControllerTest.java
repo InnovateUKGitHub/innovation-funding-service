@@ -28,7 +28,7 @@ public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyContro
     }
 
     @Test
-    public void test_view_feedback() throws Exception {
+    public void viewFeedback() throws Exception {
 
         long competitionId = 1L;
 
@@ -38,7 +38,7 @@ public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyContro
     }
 
     @Test
-    public void test_submit_feedback_invalid() throws Exception {
+    public void submitFeedbackInvalid() throws Exception {
 
         long competitionId = 1L;
 
@@ -60,7 +60,7 @@ public class SurveyControllerTest extends BaseControllerMockMVCTest<SurveyContro
     }
 
     @Test
-    public void test_submit_feedback_valid() throws Exception {
+    public void submitFeedbackValid() throws Exception {
 
         long competitionId = 1L;
 
