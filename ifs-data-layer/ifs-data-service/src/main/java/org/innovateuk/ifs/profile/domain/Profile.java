@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Entity
 public class Profile extends AuditableEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(targetEntity = Address.class, cascade = CascadeType.ALL)

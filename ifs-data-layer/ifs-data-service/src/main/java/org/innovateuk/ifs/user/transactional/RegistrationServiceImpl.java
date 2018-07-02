@@ -114,6 +114,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
+    private RandomNumberGenerator randomNumberGenerator = new RandomNumberGenerator();
+
     @Override
     @Transactional
     public ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userRegistrationResource) {
@@ -306,7 +308,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private String getEmailVerificationHash(final UserResource user) {
-        final int random = (int) Math.ceil(Math.random() * 1000); // random number from 1 to 1000
+        final int random = randomNumberGenerator.generateRandomNumber(); // random number from 1 to 1000
         final String hash = format("%s==%s==%s", user.getId(), user.getEmail(), random);
         return encoder.encode(hash);
     }
@@ -392,5 +394,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         return Role.internalRoles().contains(userRoleType) ?
                 serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
+    }
+
+    static class RandomNumberGenerator {
+        public int generateRandomNumber() {
+            return (int) Math.ceil(Math.random() * 1000);
+        }
     }
 }

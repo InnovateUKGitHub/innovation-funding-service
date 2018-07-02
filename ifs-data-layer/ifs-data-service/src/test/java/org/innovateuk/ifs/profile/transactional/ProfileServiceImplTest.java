@@ -50,8 +50,8 @@ import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.n
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
 public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceImpl> {

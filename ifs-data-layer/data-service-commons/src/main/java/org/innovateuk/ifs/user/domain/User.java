@@ -25,7 +25,7 @@ import static javax.persistence.EnumType.STRING;
 public class User extends AuditableEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(STRING)

@@ -12,7 +12,7 @@ public class FinanceCheck {
     public static final String FINANCE_CHECK_COSTS_DESCRIPTION = "Finance check costs for partner for a project";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

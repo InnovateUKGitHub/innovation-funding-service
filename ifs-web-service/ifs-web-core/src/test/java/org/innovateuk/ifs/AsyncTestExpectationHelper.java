@@ -6,7 +6,7 @@ import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.handler.*;
 import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
 import org.innovateuk.ifs.util.*;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.stubbing.Answer;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.function.Function;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -225,8 +225,8 @@ public class AsyncTestExpectationHelper {
             return createTupleNHandlerMockFromFutureList(futures);
         };
 
-        when(futuresGeneratorMock.awaitAll(isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), Matchers.<CompletableFuture> anyVararg())).thenAnswer(tupleNFromVarargsAnswer);
-        when(futuresGeneratorMock.awaitAll(isA(String.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), Matchers.<CompletableFuture> anyVararg())).thenAnswer(tupleNFromVarargsAnswer);
+        when(futuresGeneratorMock.awaitAll(isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), ArgumentMatchers.<CompletableFuture> anyVararg())).thenAnswer(tupleNFromVarargsAnswer);
+        when(futuresGeneratorMock.awaitAll(isA(String.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), isA(CompletableFuture.class), ArgumentMatchers.<CompletableFuture> anyVararg())).thenAnswer(tupleNFromVarargsAnswer);
 
         // expectations for when awaitAll() is called with n futures with a List
         Answer<Object> tupleNFromListAnswer = invocation -> {

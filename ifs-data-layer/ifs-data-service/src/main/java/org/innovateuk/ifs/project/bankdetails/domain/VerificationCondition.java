@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 public class VerificationCondition {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String severity;
     private Integer code;

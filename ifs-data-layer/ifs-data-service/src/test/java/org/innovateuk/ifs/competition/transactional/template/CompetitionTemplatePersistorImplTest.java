@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.mockito.Matchers.refEq;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

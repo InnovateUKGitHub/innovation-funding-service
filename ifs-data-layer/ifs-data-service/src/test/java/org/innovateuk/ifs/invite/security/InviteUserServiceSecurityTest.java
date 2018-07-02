@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<InviteUserService> {

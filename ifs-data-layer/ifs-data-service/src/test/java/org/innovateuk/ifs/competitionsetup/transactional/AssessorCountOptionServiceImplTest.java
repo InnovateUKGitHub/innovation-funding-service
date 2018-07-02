@@ -15,8 +15,8 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.same;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.*;
 
 public class AssessorCountOptionServiceImplTest extends BaseUnitTestMocksTest {

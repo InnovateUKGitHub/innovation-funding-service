@@ -17,7 +17,7 @@ import java.util.Optional;
  * {@link org.innovateuk.ifs.user.domain.User} as the auditor.
  */
 @Configuration
-@EnableJpaAuditing
+@EnableJpaAuditing(dateTimeProviderRef = "dateTimeProvider")
 public class AuditConfig {
 
     @Autowired

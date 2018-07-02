@@ -39,7 +39,7 @@ import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.A
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Matchers.same;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.*;
 
 public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest {

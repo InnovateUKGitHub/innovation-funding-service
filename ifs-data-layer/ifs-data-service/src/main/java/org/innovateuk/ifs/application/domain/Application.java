@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
 public class Application implements ProcessActivity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

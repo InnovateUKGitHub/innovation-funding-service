@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGui
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.refEq;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.when;
 
 public class GuidanceRowTemplatePersistorImplTest extends BaseServiceUnitTest<GuidanceRowTemplatePersistorImpl> {

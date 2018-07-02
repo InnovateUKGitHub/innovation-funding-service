@@ -21,7 +21,7 @@ import java.util.List;
 @DiscriminatorColumn(name = "process_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Process<ParticipantType, TargetType, StatesType extends ProcessState> {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String event;
 

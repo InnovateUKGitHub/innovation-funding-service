@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class MonitoringOfficer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String firstName;

@@ -53,7 +53,7 @@ public class FormValidatorRepositoryIntegrationTest extends BaseRepositoryIntegr
 
     @Test
     public void test_findById_nonExistentInput() {
-        assertEquals(null, repository.findById(Long.MAX_VALUE));
+        assertFalse(repository.findById(Long.MAX_VALUE).isPresent());
     }
 
 

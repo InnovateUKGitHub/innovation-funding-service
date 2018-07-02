@@ -21,7 +21,7 @@ import static java.util.Optional.ofNullable;
 @DiscriminatorColumn(name = "thread_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Thread {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
     private Long classPk;

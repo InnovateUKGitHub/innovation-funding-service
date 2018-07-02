@@ -14,7 +14,7 @@ import static javax.persistence.CascadeType.ALL;
 public class CostCategoryGroup {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToMany(cascade = ALL, mappedBy = "costCategoryGroup", orphanRemoval = true)

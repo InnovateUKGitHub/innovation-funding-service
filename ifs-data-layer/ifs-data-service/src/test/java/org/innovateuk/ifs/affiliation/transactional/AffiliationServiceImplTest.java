@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffi
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verifyZeroInteractions;

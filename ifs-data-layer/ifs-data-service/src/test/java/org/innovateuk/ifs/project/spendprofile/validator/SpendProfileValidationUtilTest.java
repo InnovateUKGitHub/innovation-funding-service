@@ -5,7 +5,7 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResourc
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -26,10 +26,10 @@ public class SpendProfileValidationUtilTest {
 
         SpendProfileTableResource tableResource = new SpendProfileTableResource();
 
-        when(spendProfileCostValidator.supports(Matchers.eq(SpendProfileTableResource.class))).thenReturn(Boolean.TRUE);
+        when(spendProfileCostValidator.supports(ArgumentMatchers.eq(SpendProfileTableResource.class))).thenReturn(Boolean.TRUE);
 
         validationUtil.validateSpendProfileTableResource(tableResource);
 
-        Mockito.verify(spendProfileCostValidator).validate(Matchers.eq(tableResource), Matchers.anyObject());
+        Mockito.verify(spendProfileCostValidator).validate(ArgumentMatchers.eq(tableResource), ArgumentMatchers.anyObject());
     }
 }

@@ -17,7 +17,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.isA;
 
 public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<FinanceChecksQueriesAddQueryController> {
 

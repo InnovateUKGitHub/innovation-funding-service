@@ -61,10 +61,10 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
     }
 
     protected UserResource getByEmail(String email) {
-        return userMapper.mapToResource(userRepository.findByEmail(email).get());
+        return userMapper.mapToResource(userRepository.findByEmail(email).orElse(null));
     }
 
-    protected User getUserByEmail(String email) {return userRepository.findByEmail(email).get();}
+    protected User getUserByEmail(String email) {return userRepository.findByEmail(email).orElse(null);}
 
     protected void loginSteveSmith() {
         setLoggedInUser(getSteveSmith());

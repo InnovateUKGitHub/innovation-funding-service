@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.transactional.UserSurveyServiceImpl.UserSurveyNotificationType.DIVERSITY_SURVEY_APPLICANT;
 import static org.innovateuk.ifs.user.transactional.UserSurveyServiceImpl.UserSurveyNotificationType.DIVERSITY_SURVEY_ASSESSOR;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 

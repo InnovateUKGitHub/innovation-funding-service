@@ -14,6 +14,7 @@ import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
@@ -76,10 +77,11 @@ public class MockMvcConfigurer {
                         converter -> !(converter instanceof MappingJackson2HttpMessageConverter)
                 );
 
-        messageConverters.add(new RestResultHandlingHttpMessageConverter());
+        HttpMessageConverter[] newMessageConverters = Stream.concat(Stream.of(new RestResultHandlingHttpMessageConverter()), messageConverters.stream())
+                .toArray(size -> new HttpMessageConverter[size]);
 
         StandaloneMockMvcBuilder builder = MockMvcBuilders.standaloneSetup(controller)
-                .setMessageConverters(messageConverters.toArray(new HttpMessageConverter[]{}))
+                .setMessageConverters(newMessageConverters)
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .setControllerAdvice(new ErrorControllerAdvice());
 

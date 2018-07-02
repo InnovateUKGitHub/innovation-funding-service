@@ -16,7 +16,7 @@ public class Cost {
     public static final byte COST_SCALE = 2;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(precision = 14, scale = COST_SCALE)

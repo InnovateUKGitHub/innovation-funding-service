@@ -94,6 +94,6 @@ public class ServiceFailureExceptionHandlingAdviceTest extends BaseIntegrationTe
     }
 
     private User getUser() {
-        return userRepository.findByEmail("steve.smith@empire.com").get();
+        return userRepository.findByEmail("steve.smith@empire.com").orElse(null);
     }
 }

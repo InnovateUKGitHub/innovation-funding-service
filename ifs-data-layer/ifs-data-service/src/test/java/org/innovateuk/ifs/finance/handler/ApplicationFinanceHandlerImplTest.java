@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMateria
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {

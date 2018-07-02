@@ -22,7 +22,7 @@ public class SpendProfile {
     private static final String SPEND_PROFILE_DESCRIPTION = "Spend Profile figures for Partner Organisation";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false)

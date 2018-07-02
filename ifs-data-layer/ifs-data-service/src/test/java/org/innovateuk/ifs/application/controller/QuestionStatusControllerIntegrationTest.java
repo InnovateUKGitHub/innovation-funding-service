@@ -57,7 +57,7 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
 
     @Before
     public void setup(){
-        question = questionRepository.findById(questionId).get();
+        question = questionRepository.findById(questionId).orElse(null);
         questionResource = questionMapper.mapToResource(question);
 
         addBasicSecurityUser();

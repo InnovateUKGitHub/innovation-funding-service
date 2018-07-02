@@ -14,7 +14,7 @@ import javax.validation.Valid;
 @Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "organisation_id", "address_id" } ) } )
 public class OrganisationAddress {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

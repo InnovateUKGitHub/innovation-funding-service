@@ -37,7 +37,7 @@ import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuil
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
 import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSetupStatusResource;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicContentServiceImpl> {

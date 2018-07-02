@@ -7,7 +7,7 @@ import javax.persistence.Id;
 //@Entity
 public class FinanceType {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     String description;

@@ -35,11 +35,7 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -79,7 +75,7 @@ import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -87,8 +83,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 /**
  * Tests around Registration Service
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({RegistrationServiceImpl.class, StandardPasswordEncoder.class})
 public class RegistrationServiceImplTest extends BaseServiceUnitTest<RegistrationServiceImpl> {
 
     private static final String webBaseUrl = "http://ifs-local-dev";
@@ -145,6 +139,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
     @Mock
     private RoleInviteRepository roleInviteRepositoryMock;
+
+    @Mock
+    private RegistrationServiceImpl.RandomNumberGenerator randomNumberGenerator;
 
     @Override
     protected RegistrationServiceImpl supplyServiceUnderTest() {
@@ -313,7 +310,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         });
 
         when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
+        when(userMapperMock.mapToResource(nullable(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
         UserResource result = service.createOrganisationUser(123L, userToCreate).getSuccess();
@@ -397,10 +394,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .build();
 
         // mock the random number that will be used to create the hash
-        final double random = 0.6996293870272714;
-        PowerMockito.mockStatic(Math.class);
-        when(Math.random()).thenReturn(random);
-        when(Math.ceil(random * 1000)).thenReturn(700d);
+        when(randomNumberGenerator.generateRandomNumber()).thenReturn(700);
 
         final String hash = "1e627a59879066b44781ca584a23be742d3197dff291245150e62f3d4d3d303e1a87d34fc8a3a2e0";
         ReflectionTestUtils.setField(service, "encoder", standardPasswordEncoder);
@@ -432,10 +426,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .build();
 
         // mock the random number that will be used to create the hash
-        final double random = 0.6996293870272714;
-        PowerMockito.mockStatic(Math.class);
-        when(Math.random()).thenReturn(random);
-        when(Math.ceil(random * 1000)).thenReturn(700d);
+        when(randomNumberGenerator.generateRandomNumber()).thenReturn(700);
 
         final String hash = "1e627a59879066b44781ca584a23be742d3197dff291245150e62f3d4d3d303e1a87d34fc8a3a2e0";
         ReflectionTestUtils.setField(service, "encoder", standardPasswordEncoder);
@@ -684,7 +675,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         });
 
         when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
+        when(userMapperMock.mapToResource(nullable(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
         UserResource result = service.createOrganisationUser(123L, userToCreate).getSuccess();

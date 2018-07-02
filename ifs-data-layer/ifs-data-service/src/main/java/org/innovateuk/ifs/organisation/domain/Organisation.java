@@ -18,7 +18,7 @@ import java.util.List;
 public class Organisation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String companyHouseNumber; // might start with zero, so use a string.

@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 @Entity
 public class ProjectUser extends Participant<Project, ProjectInvite, ProjectParticipantRole> {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

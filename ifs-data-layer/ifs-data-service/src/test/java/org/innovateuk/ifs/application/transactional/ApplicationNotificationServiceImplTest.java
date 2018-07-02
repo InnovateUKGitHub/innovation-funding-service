@@ -23,7 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -50,8 +50,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -193,29 +193,29 @@ public class ApplicationNotificationServiceImplTest {
         when(applicationRepositoryMock.findById(applicationTwoId)).thenReturn(Optional.of(applications.get(1)));
         when(applicationRepositoryMock.findById(applicationThreeId)).thenReturn(Optional.of(applications.get(2)));
 
-        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(0))))
+        when(notificationSenderMock.renderTemplates(ArgumentMatchers.eq(notifications.get(0))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(0), emailContents.get(0))));
-        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(1))))
+        when(notificationSenderMock.renderTemplates(ArgumentMatchers.eq(notifications.get(1))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(1), emailContents.get(1))));
-        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(2))))
+        when(notificationSenderMock.renderTemplates(ArgumentMatchers.eq(notifications.get(2))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(2), emailContents.get(2))));
 
         when(notificationSenderMock.sendEmailWithContent(
-                Matchers.eq(notifications.get(0)),
-                Matchers.eq(notificationTargets.get(0)),
-                Matchers.eq(emailContents.get(0))))
+                ArgumentMatchers.eq(notifications.get(0)),
+                ArgumentMatchers.eq(notificationTargets.get(0)),
+                ArgumentMatchers.eq(emailContents.get(0))))
                 .thenReturn(serviceSuccess(
                         singletonList(new EmailAddress(users.get(0).getEmail(), users.get(0).getName()))));
         when(notificationSenderMock.sendEmailWithContent(
-                Matchers.eq(notifications.get(1)),
-                Matchers.eq(notificationTargets.get(1)),
-                Matchers.eq(emailContents.get(1))))
+                ArgumentMatchers.eq(notifications.get(1)),
+                ArgumentMatchers.eq(notificationTargets.get(1)),
+                ArgumentMatchers.eq(emailContents.get(1))))
                 .thenReturn(serviceSuccess(
                         singletonList(new EmailAddress(users.get(1).getEmail(), users.get(1).getName()))));
         when(notificationSenderMock.sendEmailWithContent(
-                Matchers.eq(notifications.get(2)),
-                Matchers.eq(notificationTargets.get(2)),
-                Matchers.eq(emailContents.get(2))))
+                ArgumentMatchers.eq(notifications.get(2)),
+                ArgumentMatchers.eq(notificationTargets.get(2)),
+                ArgumentMatchers.eq(emailContents.get(2))))
                 .thenReturn(serviceSuccess(
                         singletonList(new EmailAddress(users.get(2).getEmail(), users.get(2).getName()))));
 
@@ -328,29 +328,29 @@ public class ApplicationNotificationServiceImplTest {
         when(applicationRepositoryMock.findById(applicationTwoId)).thenReturn(Optional.of(applications.get(1)));
         when(applicationRepositoryMock.findById(applicationThreeId)).thenReturn(Optional.of(applications.get(2)));
 
-        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(0))))
+        when(notificationSenderMock.renderTemplates(ArgumentMatchers.eq(notifications.get(0))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(0), emailContents.get(0))));
-        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(1))))
+        when(notificationSenderMock.renderTemplates(ArgumentMatchers.eq(notifications.get(1))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(1), emailContents.get(1))));
-        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(2))))
+        when(notificationSenderMock.renderTemplates(ArgumentMatchers.eq(notifications.get(2))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(2), emailContents.get(2))));
 
         when(notificationSenderMock.sendEmailWithContent(
-                Matchers.eq(notifications.get(0)),
-                Matchers.eq(notificationTargets.get(0)),
-                Matchers.eq(emailContents.get(0))))
+                ArgumentMatchers.eq(notifications.get(0)),
+                ArgumentMatchers.eq(notificationTargets.get(0)),
+                ArgumentMatchers.eq(emailContents.get(0))))
                 .thenReturn(serviceSuccess(
                         singletonList(new EmailAddress(users.get(0).getEmail(), users.get(0).getName()))));
         when(notificationSenderMock.sendEmailWithContent(
-                Matchers.eq(notifications.get(1)),
-                Matchers.eq(notificationTargets.get(1)),
-                Matchers.eq(emailContents.get(1))))
+                ArgumentMatchers.eq(notifications.get(1)),
+                ArgumentMatchers.eq(notificationTargets.get(1)),
+                ArgumentMatchers.eq(emailContents.get(1))))
                 .thenReturn(serviceSuccess(
                         singletonList(new EmailAddress(users.get(1).getEmail(), users.get(1).getName()))));
         when(notificationSenderMock.sendEmailWithContent(
-                Matchers.eq(notifications.get(2)),
-                Matchers.eq(notificationTargets.get(2)),
-                Matchers.eq(emailContents.get(2))))
+                ArgumentMatchers.eq(notifications.get(2)),
+                ArgumentMatchers.eq(notificationTargets.get(2)),
+                ArgumentMatchers.eq(emailContents.get(2))))
                 .thenReturn(serviceFailure(new Error("error", INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
@@ -465,27 +465,27 @@ public class ApplicationNotificationServiceImplTest {
         when(applicationRepositoryMock.findById(applicationTwoId)).thenReturn(Optional.of(applications.get(1)));
         when(applicationRepositoryMock.findById(applicationThreeId)).thenReturn(Optional.of(applications.get(2)));
 
-        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(0))))
+        when(notificationSenderMock.renderTemplates(ArgumentMatchers.eq(notifications.get(0))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(0), emailContents.get(0))));
-        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(1))))
+        when(notificationSenderMock.renderTemplates(ArgumentMatchers.eq(notifications.get(1))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(1), emailContents.get(1))));
-        when(notificationSenderMock.renderTemplates(Matchers.eq(notifications.get(2))))
+        when(notificationSenderMock.renderTemplates(ArgumentMatchers.eq(notifications.get(2))))
                 .thenReturn(serviceSuccess(asMap(notificationTargets.get(2), emailContents.get(2))));
 
         when(notificationSenderMock.sendEmailWithContent(
-                Matchers.eq(notifications.get(0)),
-                Matchers.eq(notificationTargets.get(0)),
-                Matchers.eq(emailContents.get(0))))
+                ArgumentMatchers.eq(notifications.get(0)),
+                ArgumentMatchers.eq(notificationTargets.get(0)),
+                ArgumentMatchers.eq(emailContents.get(0))))
                 .thenReturn(serviceFailure(new Error("error", INTERNAL_SERVER_ERROR)));
         when(notificationSenderMock.sendEmailWithContent(
-                Matchers.eq(notifications.get(1)),
-                Matchers.eq(notificationTargets.get(1)),
-                Matchers.eq(emailContents.get(1))))
+                ArgumentMatchers.eq(notifications.get(1)),
+                ArgumentMatchers.eq(notificationTargets.get(1)),
+                ArgumentMatchers.eq(emailContents.get(1))))
                 .thenReturn(serviceFailure(new Error("error", INTERNAL_SERVER_ERROR)));
         when(notificationSenderMock.sendEmailWithContent(
-                Matchers.eq(notifications.get(2)),
-                Matchers.eq(notificationTargets.get(2)),
-                Matchers.eq(emailContents.get(2))))
+                ArgumentMatchers.eq(notifications.get(2)),
+                ArgumentMatchers.eq(notificationTargets.get(2)),
+                ArgumentMatchers.eq(emailContents.get(2))))
                 .thenReturn(serviceFailure(new Error("error", INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);

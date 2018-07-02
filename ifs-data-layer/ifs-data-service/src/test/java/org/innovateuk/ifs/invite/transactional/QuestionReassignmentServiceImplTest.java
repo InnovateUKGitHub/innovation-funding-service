@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.ne
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
-import static org.mockito.Matchers.anyCollectionOf;
+import static org.mockito.ArgumentMatchers.anyCollectionOf;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
