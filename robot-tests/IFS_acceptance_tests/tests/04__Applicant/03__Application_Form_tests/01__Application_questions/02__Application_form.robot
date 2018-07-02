@@ -38,27 +38,6 @@ Application details: Previous submission
     When the user clicks the button/link                css=label[for="application.resubmission-no"]
     Then The user should not see the element            css=[id="application.previousApplicationNumber"]
 
-Application details: Research category
-    [Documentation]    INFUND-6823
-    Given The user clicks the button/link    jQuery=button:contains("Choose your research category")
-    and the user should not see the text in the page    Changing the research category will reset the funding level for all business participants.
-    Then the user should see the element    jQuery=label:contains("Industrial research")
-    And the user should see the element    jQuery=label:contains("Feasibility studies")
-    And the user should see the element    jQuery=label:contains("Experimental development")
-    and the user clicks the button/link    jQuery=button:contains(Save)
-    Then the user should see an error    This field cannot be left blank
-    and the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
-    and the user clicks the button/link    jQuery=button:contains(Save)
-    and the user should see the element    jQuery=div:contains("Chosen research category: Feasibility studies")
-
-Research Category : Autosave not applicable
-    [Documentation]    INFUND-6823, INFUND-8251
-    When the user clicks the button/link   jQuery=button:contains("Change your research category")
-    Then the user clicks the button twice  jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
-    And the user clicks the button/link    jQuery=a:contains("Application details")
-    And the user should see the element    jQuery=div:contains("Chosen research category: Feasibility studies")
-    And the finance summary page should show a warning
-
 Application details: Innovation area section is visible
     [Documentation]  INFUND-8115 INFUND-9154
     [Tags]
@@ -180,11 +159,6 @@ the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
     the user should see the element    css=li:nth-child(2) .task-status-incomplete
     the user should not see the element    jQuery=li:nth-child(2) span:contains("Complete")
-
-the finance summary page should show a warning
-    The user clicks the button/link    link=Application overview
-    The user clicks the button/link    link=Your finances
-    the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")
 
 Log in and create a new application for the Aerospace competition
     The user logs-in in new browser  &{lead_applicant_credentials}
