@@ -2,8 +2,8 @@ package org.innovateuk.ifs.fundingdecision.validator;
 
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.springframework.stereotype.Component;
 
 @Component

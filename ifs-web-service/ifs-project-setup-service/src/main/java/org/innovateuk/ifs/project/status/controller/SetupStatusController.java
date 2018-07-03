@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.status.controller;
 
-import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.RedirectUtils;

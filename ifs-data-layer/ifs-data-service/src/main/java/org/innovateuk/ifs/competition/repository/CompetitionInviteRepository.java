@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.repository;
 
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.competition.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

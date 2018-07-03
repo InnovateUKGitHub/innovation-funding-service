@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static java.lang.Boolean.TRUE;
+import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.junit.Assert.assertEquals;
 
 public class RejectionReasonControllerIntegrationTest extends BaseControllerIntegrationTest<RejectionReasonController> {

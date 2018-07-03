@@ -1,17 +1,16 @@
 package org.innovateuk.ifs.assessment.validator;
 
 import org.innovateuk.ifs.application.domain.FormInputResponse;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
-import static org.innovateuk.ifs.application.validator.ValidatorTestUtil.getBindingResult;
+import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.junit.Assert.*;
 
 public class AssessorScoreValidatorTest {

@@ -1,15 +1,13 @@
 package org.innovateuk.ifs.application.validator;
 
-import static org.innovateuk.ifs.application.validator.ValidatorTestUtil.getBindingResult;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import org.innovateuk.ifs.application.domain.FormInputResponse;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class NotEmptyValidatorTest {
 	
