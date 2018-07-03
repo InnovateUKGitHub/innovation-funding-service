@@ -171,7 +171,7 @@ public class IdentityServices implements CreateIdentityService, FindIdentityServ
 
 
     private LdapQueryBuilder queryIdentity() {
-        return LdapQueryBuilder.query().attributes(Identity.Constants.ATTRIBUTES);
+        return LdapQueryBuilder.query().attributes(Identity.Constants.allAttributes());
     }
 
     /**

@@ -18,9 +18,9 @@ public class TravelCostHandler extends FinanceRowHandler {
         String item = null;
         Integer quantity = null;
 
-        for(FinanceFormField financeFormField : financeFormFields) {
+        for (FinanceFormField financeFormField : financeFormFields) {
             String fieldValue = financeFormField.getValue();
-            if(fieldValue != null) {
+            if (fieldValue != null) {
                 switch (financeFormField.getCostName()) {
                     case "item":
                         item = fieldValue;
@@ -37,9 +37,9 @@ public class TravelCostHandler extends FinanceRowHandler {
                 }
             }
         }
-        
-        if(allNull(id, costPerItem, item, quantity)) {
-        	return null;
+
+        if (allNull(id, costPerItem, item, quantity)) {
+            return null;
         }
         return new TravelCost(id, item, costPerItem, quantity);
     }

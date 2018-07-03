@@ -66,7 +66,7 @@ public class InterviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
                 .thenReturn(applicationsInCompetition);
 
         when(interviewAssignmentRepositoryMock.countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
-                asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES)))
+                asLinkedSet(InterviewAssignmentState.assignedStates())))
                 .thenReturn(applicationsAssigned);
 
         InterviewAssignmentKeyStatisticsResource keyStatisticsResource = interviewStatisticsService.getInterviewAssignmentPanelKeyStatistics(COMPETITION_ID).getSuccess();
@@ -76,7 +76,7 @@ public class InterviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
         InOrder inOrder = inOrder(applicationRepositoryMock, interviewAssignmentRepositoryMock);
         inOrder.verify(applicationRepositoryMock).countByCompetitionIdAndApplicationProcessActivityState(COMPETITION_ID, ApplicationState.SUBMITTED);
         inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
-                asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES));
+                asLinkedSet(InterviewAssignmentState.assignedStates()));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -132,7 +132,7 @@ public class InterviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
                 competitionId, CompetitionParticipantRole.INTERVIEW_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds))
                 .thenReturn(expectedInviteStatisticsResource.getAssessorsAccepted());
         when(interviewAssignmentRepositoryMock.countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
-                asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES)))
+                asLinkedSet(InterviewAssignmentState.assignedStates())))
                 .thenReturn(expectedInviteStatisticsResource.getApplicationsAssigned());
         when(interviewAssignmentRepositoryMock.countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
                 asLinkedSet(InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE)))
@@ -145,7 +145,7 @@ public class InterviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
         InOrder inOrder = inOrder(interviewInviteRepositoryMock, interviewParticipantRepositoryMock, interviewAssignmentRepositoryMock);
         inOrder.verify(interviewInviteRepositoryMock).getByCompetitionId(competitionId);
         inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
-                asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES));
+                asLinkedSet(InterviewAssignmentState.assignedStates()));
         inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateIn(COMPETITION_ID,
                 asLinkedSet(InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE));
         inOrder.verify(interviewParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.INTERVIEW_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);

@@ -13,7 +13,7 @@ public class ValidatedResponse {
     private int errorCount;
 
     public ValidatedResponse() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public ValidatedResponse(BindingResult result, FormInputResponse response) {

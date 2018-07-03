@@ -24,7 +24,7 @@ public class CapitalUsageHandler extends FinanceRowHandler {
         BigDecimal residualValue = null;
         Integer utilisation = null;
 
-        for(FinanceFormField financeFormField : financeFormFields) {
+        for (FinanceFormField financeFormField : financeFormFields) {
             final String costFormValue = financeFormField.getValue();
             switch (financeFormField.getCostName()) {
                 case "description":
@@ -51,26 +51,25 @@ public class CapitalUsageHandler extends FinanceRowHandler {
             }
         }
 
-        if(allNull(id, deprecation, description, existing, npv, residualValue, utilisation)) {
-        	return null;
+        if (allNull(id, deprecation, description, existing, npv, residualValue, utilisation)) {
+            return null;
         }
-        
-        if(id == null || Long.valueOf(0L).equals(id)) {
-	        if(npv == null) {
-	        	npv = BigDecimal.ZERO;
-	        }
-	        
-	        if(residualValue == null) {
-	       	residualValue = BigDecimal.ZERO;
-	        }
-	        
-	        if(utilisation == null) {
-	        	utilisation = 0;
-	        }
+
+        if (id == null || Long.valueOf(0L).equals(id)) {
+            if (npv == null) {
+                npv = BigDecimal.ZERO;
+            }
+
+            if (residualValue == null) {
+                residualValue = BigDecimal.ZERO;
+            }
+
+            if (utilisation == null) {
+                utilisation = 0;
+            }
         }
-        
+
         return new CapitalUsage(id, deprecation, description, existing,
                 npv, residualValue, utilisation);
     }
-
 }

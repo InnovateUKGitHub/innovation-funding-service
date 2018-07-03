@@ -43,9 +43,8 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_AS_INELIGIBLE')")
     ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason);
 
-
     @PreAuthorize("hasAuthority('ifs_administrator')")
-    @SecuredBySpring(value="WITHDRAW", description = "Only the IFS administrators have permission to withdraw an application")
+    @SecuredBySpring(value = "WITHDRAW", description = "Only the IFS administrators have permission to withdraw an application")
     ServiceResult<Void> withdrawApplication(long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
@@ -64,7 +63,7 @@ public interface ApplicationService {
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the applications")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates);
+    ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findAll();
@@ -84,5 +83,4 @@ public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_UNSUCCESSFUL_APPLICATIONS')")
     ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageIndex, int pageSize, String sortField, String filter);
-
 }
