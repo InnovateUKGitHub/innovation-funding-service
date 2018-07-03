@@ -8,6 +8,7 @@ import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -211,6 +212,13 @@ public class UserPermissionRules {
     @PermissionRule(value = "AGREE_TERMS", description = "A user can accept the site terms and conditions")
     public boolean usersCanAgreeSiteTermsAndConditions(UserResource userToUpdate, UserResource user) {
         return userToUpdate.getId().equals(user.getId());
+    }
+
+    @PermissionRule(value = "GRANT_ROLE", description = "An assessor can request applicant role")
+    public boolean assessorCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
+        return roleCommand.getTargetRole().equals(APPLICANT) &&
+                user.getId().equals(roleCommand.getUserId()) &&
+                user.hasRole(ASSESSOR);
     }
 
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {

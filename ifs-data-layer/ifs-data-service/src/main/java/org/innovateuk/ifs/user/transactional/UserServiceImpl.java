@@ -14,6 +14,7 @@ import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.transactional.UserTransactionalService;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
@@ -267,6 +268,12 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                     userRepository.save(user);
                     return serviceSuccess();
                 }));
+    }
+
+    @Override
+    public ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand) {
+        return getUser(grantRoleCommand.getUserId())
+                .andOnSuccessReturnVoid(user -> user.getRoles().add(grantRoleCommand.getTargetRole()));
     }
 
     private ServiceResult<Void> validateSearchString(String searchString) {

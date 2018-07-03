@@ -9,11 +9,14 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +59,12 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
     @Autowired
     private QuestionRestService questionRestService;
+
+    @Autowired
+    private UserRestService userRestService;
+
+    @Autowired
+    private CookieUtil cookieUtil;
 
     @GetMapping("/" + CONFIRM_ORGANISATION)
     public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
@@ -112,7 +122,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
         organisationResource = createOrRetrieveOrganisation(organisationResource, request);
         if (user != null) {
-            return createApplicationAndShowInvitees(user, registrationCookieService.getCompetitionIdCookieValue(request).get(), organisationResource.getId());
+            return createApplicationAndShowInvitees(user, registrationCookieService.getCompetitionIdCookieValue(request).get(), organisationResource.getId(), response);
         } else {
             registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
             return "redirect:" + RegistrationController.BASE_URL;
@@ -128,8 +138,13 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         return organisationService.createOrMatch(organisationResource);
     }
 
-    private String createApplicationAndShowInvitees(UserResource user, long competitionId, long organistionId) {
-        ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), organistionId, "");
+    private String createApplicationAndShowInvitees(UserResource user, long competitionId, long organisationId, HttpServletResponse response) {
+        if (!user.hasRole(Role.APPLICANT)) {
+            userRestService.grantRole(user.getId(), Role.APPLICANT).getSuccess();
+            cookieUtil.saveToCookie(response, "role", Role.APPLICANT.getName());
+        }
+
+        ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), organisationId, "");
         if (application != null) {
             return questionRestService
                     .getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM)
@@ -139,11 +154,8 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
                                     question.getId())
                     );
         } else {
-            // Application not created, throw exception
-            List<Object> args = new ArrayList<>();
-            args.add(competitionId);
-            args.add(user.getId());
-            throw new ObjectNotFoundException("Could not create a new application", args);
+            throw new ObjectNotFoundException("Could not create a new application",
+                    Arrays.asList(String.valueOf(competitionId), String.valueOf(user.getId())));
         }
     }
 }
