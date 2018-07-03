@@ -17,7 +17,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.finance.builder.OrganisationSizeResourceBuilder.newOrganisationSizeResource;
 import static org.innovateuk.ifs.finance.domain.builder.OrganisationSizeBuilder.newOrganisationSize;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 public class OrganisationSizeServiceImplTest extends BaseServiceUnitTest<OrganisationSizeServiceImpl> {

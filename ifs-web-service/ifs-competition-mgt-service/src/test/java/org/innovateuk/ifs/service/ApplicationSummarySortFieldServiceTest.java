@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.service;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Arrays;
-
+import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
 
 public class ApplicationSummarySortFieldServiceTest {
 	private ApplicationSummarySortFieldService service;

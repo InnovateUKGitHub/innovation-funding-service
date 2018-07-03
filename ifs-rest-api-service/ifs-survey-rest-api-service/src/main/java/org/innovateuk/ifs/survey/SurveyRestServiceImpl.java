@@ -6,14 +6,10 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 @Service
 public class SurveyRestServiceImpl extends BaseRestService implements SurveyRestService {
-
-    private static final Log LOG = LogFactory.getLog(SurveyRestServiceImpl.class);
 
     @Value("${ifs.survey.data.service.baseURL}")
     public void setServiceUrl(String serviceUrl) {
@@ -27,7 +23,6 @@ public class SurveyRestServiceImpl extends BaseRestService implements SurveyRest
     }
 
     public RestResult<Void> saveFallback(SurveyResource surveyResource, Throwable e) {
-        LOG.info("Calling Alerts Fallback:", e);
         throw new ServiceUnavailableException();
     }
 }

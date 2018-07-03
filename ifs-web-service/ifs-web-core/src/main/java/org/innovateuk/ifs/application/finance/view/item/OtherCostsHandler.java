@@ -35,9 +35,9 @@ public class OtherCostsHandler extends FinanceRowHandler {
                 }
             }
         }
-        
-        if(allNull(id, description, cost)) {
-        	return null;
+
+        if (allNull(id, description, cost)) {
+            return null;
         }
         return new OtherCost(id, description, cost);
     }

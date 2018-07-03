@@ -12,9 +12,9 @@ import java.util.Optional;
  */
 public interface ApplicationFundingDecisionService {
 
-	ServiceResult<Void> saveApplicationFundingDecisionData(Long competitionId, FundingDecision fundingDecision, List<Long> applicationIds);
+    ServiceResult<Void> saveApplicationFundingDecisionData(Long competitionId, FundingDecision fundingDecision, List<Long> applicationIds);
 
-	Optional<FundingDecision> getFundingDecisionForString(String fundingDecisionName);
+    Optional<FundingDecision> getFundingDecisionForString(String fundingDecisionName);
 
-	ServiceResult<Void> sendFundingNotifications(FundingNotificationResource fundingNotificationResource);
+    ServiceResult<Void> sendFundingNotifications(FundingNotificationResource fundingNotificationResource);
 }

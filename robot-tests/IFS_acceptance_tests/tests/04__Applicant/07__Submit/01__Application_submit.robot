@@ -85,16 +85,18 @@ Submit flow business lead (complete application)
     # TODO add check here once IFS-270 done
 
 Satisfaction survey:validations
+    #The survey needs to be set to enabled in gradle.properties
     [Documentation]  IFS-3603
-    [Tags]
+    [Tags]  survey
     When the user clicks the button/link                  link=Finished
     And the user clicks the button/link                   css=.button[type="submit"]  #Send feedback
     Then the user should see a field and summary error    Please select a level of satisfaction.
-    And the user should see a field and summary error     This field can not be left blank.
+    And the user should see a field and summary error     This field cannot be left blank.
 
 Applicant submit satisfaction survey after submitting application
+    #The survey needs to be set to enabled in gradle.properties
     [Documentation]  IFS-3603
-    [Tags]
+    [Tags]  survey
     Given the user selects the radio button      satisfaction  5
     When the user enters text to a text field    name=comments  Very satisfied
     Then the user clicks the button/link         css=.button[type="submit"]  #Send feedback

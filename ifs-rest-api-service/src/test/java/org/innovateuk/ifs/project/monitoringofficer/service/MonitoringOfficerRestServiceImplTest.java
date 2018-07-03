@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.monitoringofficer.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.junit.Assert;

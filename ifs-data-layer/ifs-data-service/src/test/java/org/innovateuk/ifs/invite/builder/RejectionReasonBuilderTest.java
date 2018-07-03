@@ -5,9 +5,9 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.junit.Assert.assertEquals;
 
 public class RejectionReasonBuilderTest {

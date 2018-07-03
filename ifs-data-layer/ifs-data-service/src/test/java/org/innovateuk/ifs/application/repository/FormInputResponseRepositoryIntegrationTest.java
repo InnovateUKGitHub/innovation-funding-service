@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

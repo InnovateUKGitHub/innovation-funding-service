@@ -3,12 +3,9 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.commons.AbstractDocumentingServiceSecurityAnnotationsTest;
 import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluator;
 import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
