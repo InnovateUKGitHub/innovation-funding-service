@@ -6,14 +6,10 @@
           th:with="appIsClosed=${applicationIsClosed}, readonly=${applicationIsReadOnly}"
           novalidate="novalidate">
         <div class="question">
-            <!--/* To disable submission on pressing return (INFUND-6892) */-->
-            <th:block th:unless="${formInputViewModel.readonly}">
-                <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the
-                    form
-                </button>
-            </th:block>
 
             <th:block th:unless="${formInputViewModel.readonly}">
+                <!--/* To disable submission on pressing return (INFUND-6892) */-->
+                <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
                 <!--/* start of edit template */-->
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'form-group-error'">
                     <label for="application.name">
@@ -175,7 +171,7 @@
 
             <!--/* Hidden fields */-->
             <input type="hidden" id="application_id" th:value="${applicationId}"/>
-            <input type="hidden" id="competition_id" th:value="${competitionId}"/>
+            <input type="hidden" id="competition_id" th:value="${competition.id}"/>
 
             <input type="hidden" id="cacheTest" value=""/>
         </div>
