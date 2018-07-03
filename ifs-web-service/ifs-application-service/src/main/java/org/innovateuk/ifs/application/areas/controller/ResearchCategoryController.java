@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ResearchCategoryController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ResearchCategoryController {
-    private static final String APPLICATION_SAVED_MESSAGE = "applicationSaved";
+    static final String APPLICATION_SAVED_MESSAGE = "applicationSaved";
 
     @Autowired
     private ApplicationResearchCategoryModelPopulator researchCategoryModelPopulator;
