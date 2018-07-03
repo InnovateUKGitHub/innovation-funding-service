@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 public abstract class CompetitionParticipant<I extends Invite<Competition,I>> extends Participant<Competition, I, CompetitionParticipantRole> {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

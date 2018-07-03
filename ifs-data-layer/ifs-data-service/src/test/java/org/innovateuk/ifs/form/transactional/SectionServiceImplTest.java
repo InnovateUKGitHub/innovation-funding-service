@@ -42,7 +42,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         SectionResource nextSectionResource = newSectionResource().build();
         when(sectionRepositoryMock.findById(anyLong())).thenReturn(Optional.of(section));
         when(sectionRepositoryMock.findFirstByCompetitionIdAndPriorityGreaterThanAndParentSectionIsNullOrderByPriorityAsc(
-                anyLong(), anyInt()
+                nullable(Long.class), nullable(Integer.class)
         )).thenReturn(nextSection);
         when(sectionMapper.mapToResource(any(Section.class))).thenReturn(nextSectionResource);
 
@@ -57,7 +57,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         SectionResource previousSectionResource = newSectionResource().build();
         when(sectionRepositoryMock.findById(anyLong())).thenReturn(Optional.of(section));
         when(sectionRepositoryMock.findFirstByCompetitionIdAndPriorityLessThanAndParentSectionIsNullOrderByPriorityDesc(
-                anyLong(), anyInt()
+                nullable(Long.class), nullable(Integer.class)
         )).thenReturn(previousSection);
         when(sectionMapper.mapToResource(any(Section.class))).thenReturn(previousSectionResource);
 

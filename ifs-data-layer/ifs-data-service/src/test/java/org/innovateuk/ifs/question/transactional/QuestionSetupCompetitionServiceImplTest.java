@@ -470,7 +470,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     @Test
     public void test_createByCompetitionIdWithNonExistentCompId() {
         Long competitionId = 22L;
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(null);
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.empty());
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
         assertTrue(result.isFailure());

@@ -321,7 +321,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
     public void testByCompetitionIdFailure() {
         Long competitionId = 4L;
 
-        when(competitionRepository.findById(competitionId)).thenReturn(null);
+        when(competitionRepository.findById(competitionId)).thenReturn(Optional.empty());
         when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(null);
 
         ServiceResult<PublicContentItemResource> result = service.byCompetitionId(competitionId);

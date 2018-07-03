@@ -175,6 +175,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         UserResource createdUserResource = newUserResource().build();
         User createdUser = newUser()
                 .withEmailAddress(email)
+                .withProfileId(8L)
                 .build();
 
         List<AssessmentParticipant> participantsForOtherInvites = Stream.generate(

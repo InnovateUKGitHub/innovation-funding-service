@@ -156,7 +156,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
         formInputResponse.setValue(response.getValue());
         formInputResponse.setApplication(assessmentRepository.findById(response.getAssessment()).get().getTarget());
-        formInputResponse.setFormInput(formInputRepository.findById(response.getFormInput()).get());
+        formInputResponse.setFormInput(formInputRepository.findById(response.getFormInput()).orElse(null));
         formInputResponse.setUpdateDate(response.getUpdatedDate());
 
         return formInputResponse;

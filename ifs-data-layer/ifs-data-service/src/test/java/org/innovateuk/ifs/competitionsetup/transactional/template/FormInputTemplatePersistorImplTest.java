@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.transactional.template;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -10,6 +12,7 @@ import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
@@ -82,8 +85,15 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
                 .withActive(true)
                 .build(2);
 
-        assertThat(result.get(0), (Matcher<Object>) new ReflectionEquals(expectedFormInputs.get(0)));
-        assertThat(result.get(1), (Matcher<Object>) new ReflectionEquals(expectedFormInputs.get(1)));
+        assertThat(result, new BaseMatcher<List<FormInput>>() {
+            @Override
+            public boolean matches(Object item) {
+                return new ReflectionEquals(expectedFormInputs).matches(item);
+            }
+            @Override
+            public void describeTo(Description description) {
+            }
+        });
     }
 
     @Test
@@ -124,7 +134,15 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
                 .withActive(false)
                 .build(2);
 
-        assertThat(result.get(0), (Matcher<Object>) new ReflectionEquals(expectedFormInputs.get(0)));
+        assertThat(result, new BaseMatcher<List<FormInput>>() {
+            @Override
+            public boolean matches(Object item) {
+                return new ReflectionEquals(expectedFormInputs).matches(item);
+            }
+            @Override
+            public void describeTo(Description description) {
+            }
+        });
     }
 
     @Test

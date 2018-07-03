@@ -448,7 +448,7 @@ public class ApplicationFormInputUploadServiceImplTest {
     public void deleteFormInputResponseFileUploadButUnableToFindFormInputResponse() {
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(456L, 123L)).thenReturn(singletonList
                 (existingFormInputResponse));
-        when(formInputRepositoryMock.findById(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(null);
+        when(formInputRepositoryMock.findById(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(Optional.empty());
         ServiceResult<FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(formInputResponseFileEntryResource.getCompoundId());
 
