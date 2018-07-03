@@ -119,7 +119,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 false,
-                true
+                true,
+                false
         );
 
         when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
@@ -133,9 +134,9 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
-        inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -181,6 +182,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 false,
+                false,
                 false
         );
 
@@ -195,9 +197,9 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(applicantRestService).getQuestion(userId, applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
-        inOrder.verify(applicantRestService).getQuestion(userId, applicationResource.getId(), questionId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -243,6 +245,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 false,
+                false,
                 false
         );
 
@@ -257,9 +260,9 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(applicantRestService).getQuestion(userId, applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
-        inOrder.verify(applicantRestService).getQuestion(userId, applicationResource.getId(), questionId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -305,7 +308,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 false,
-                true
+                true,
+                false
         );
 
         when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
@@ -319,9 +323,9 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
-        inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -349,9 +353,9 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
-        inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -378,9 +382,9 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(applicantRestService).getQuestion(userId, applicationResource.getId(), questionId);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
-        inOrder.verify(applicantRestService).getQuestion(userId, applicationResource.getId(), questionId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -427,7 +431,8 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
                 false,
                 false,
                 false,
-                true
+                true,
+                false
         );
 
         expectedViewModel.setSummary(true);
@@ -446,9 +451,9 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), question.getId());
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
-        inOrder.verify(applicantRestService).getQuestion(leadApplicant.getId(), applicationResource.getId(), question.getId());
         inOrder.verifyNoMoreInteractions();
     }
 

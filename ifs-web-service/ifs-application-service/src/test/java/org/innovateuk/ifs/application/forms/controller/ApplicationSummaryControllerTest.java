@@ -194,6 +194,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
                 false,
                 false,
                 false,
+                false,
                 false);
         applicationTeamViewModel.setSummary(true);
 
@@ -204,6 +205,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         return new ResearchCategorySummaryViewModel(1L,
                 1L,
                 "Research category",
+                false,
                 false,
                 false,
                 false);
