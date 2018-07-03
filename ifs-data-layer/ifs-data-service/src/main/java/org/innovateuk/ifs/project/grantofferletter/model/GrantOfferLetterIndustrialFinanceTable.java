@@ -79,4 +79,47 @@ public class GrantOfferLetterIndustrialFinanceTable extends GrantOfferLetterFina
         return otherCosts.get(organisation);
     }
 
+    public BigDecimal getLabourTotal() {
+        return labour
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    }
+    public BigDecimal getMaterialsTotal() {
+        return materials
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getOverheadsTotal() {
+        return overheads
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getCapitalUsageTotal() {
+        return capitalUsage
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getSubcontractTotal() {
+        return subcontract
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getTravelTotal() {
+        return travel
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getOtherCostsTotal() {
+        return otherCosts
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

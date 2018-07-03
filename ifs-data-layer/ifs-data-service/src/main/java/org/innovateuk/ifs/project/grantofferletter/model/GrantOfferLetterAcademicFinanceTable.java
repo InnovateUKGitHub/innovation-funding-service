@@ -71,5 +71,60 @@ public class GrantOfferLetterAcademicFinanceTable extends GrantOfferLetterFinanc
         return exceptionsOtherCosts.get(org);
     }
 
+    public BigDecimal getIncurredStaffTotal() {
+        return incurredStaff
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getIncurredTravelSubsistenceTotal() {
+        return incurredTravelSubsistence
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getIncurredOtherCostsTotal() {
+        return incurredOtherCosts
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getAllocatedInvestigatorsTotal() {
+        return allocatedInvestigators
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getAllocatedEstateCostsTotal() {
+        return allocatedEstateCosts
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getAllocatedOtherCostsTotal() {
+        return allocatedOtherCosts
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getIndirectCostsTotal() {
+        return indirectCosts
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getExceptionsStaffTotal() {
+        return exceptionsStaff
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    public BigDecimal getExceptionsOtherCostsTotal() {
+        return exceptionsOtherCosts
+                .values()
+                .stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
 
 }
