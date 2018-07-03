@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.address.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.address.domain.Address;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class AddressBuilder extends BaseBuilder<Address, AddressBuilder> {
 

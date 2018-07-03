@@ -13,7 +13,6 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -88,12 +87,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
         assertFalse(questionResource.getFormInputs().contains(inactiveFormInput.getId()));
         assertTrue(questionResource.getFormInputs().contains(activeFormInput.getId()));
-    }
-
-    @Ignore
-    @Test
-    public void testAssignMultiple() throws Exception {
-        //Todo: don't know how to implement this, can we assign questions that are in the finance form for example?
     }
 
     @Test

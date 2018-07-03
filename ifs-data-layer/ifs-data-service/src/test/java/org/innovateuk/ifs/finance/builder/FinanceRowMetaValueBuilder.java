@@ -7,8 +7,8 @@ import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
  * Builder for {@link FinanceRowMetaValue} entities.

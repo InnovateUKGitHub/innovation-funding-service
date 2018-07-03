@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * A collection of helpful methods for dealing with Files and Filesystem concerns
