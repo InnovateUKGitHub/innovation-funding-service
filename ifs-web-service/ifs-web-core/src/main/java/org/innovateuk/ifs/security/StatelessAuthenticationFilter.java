@@ -37,7 +37,7 @@ public class StatelessAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CookieUtil cookieUtil;
 
-    @Value("management.contextPath")
+    @Value("management.server.servlet.context-path")
     private String monitoringEndpoint;
 
     @Value("${logout.url}")

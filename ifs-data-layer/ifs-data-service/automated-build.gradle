@@ -7,12 +7,12 @@ ext.testIfsDatasourceUrl="jdbc:mysql://127.0.0.1:3306/ifs_test"
 ext.testIfsDatasourceUsername="ifs"
 ext.testIfsDatasourcePassword="ifs"
 
-project.ext['flyway.url']='jdbc:mysql://127.0.0.1:3306?characterEncoding=utf8'
-project.ext['flyway.schemas']='ifs,ifs_test'
-project.ext['flyway.user']="ifs"
-project.ext['flyway.password']="ifs"
+project.ext['spring.flyway.url']='jdbc:mysql://127.0.0.1:3306?characterEncoding=utf8'
+project.ext['spring.flyway.schemas']='ifs,ifs_test'
+project.ext['spring.flyway.user']="ifs"
+project.ext['spring.flyway.password']="ifs"
 
-project.ext['flyway.placeholders.ifs.system.user.uuid']='c0d02979-e66e-11e7-ac43-0242ac120002'
+project.ext['spring.flyway.placeholders.ifs.system.user.uuid']='c0d02979-e66e-11e7-ac43-0242ac120002'
 
 ext.ifsFinanceTotalsEnabled=false
 ext.ifsFinanceTotalsAuthSecretKey="supersecretkey"

@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private StatelessAuthenticationFilter statelessAuthenticationFilter;
 
-    @Value("${management.contextPath}")
+    @Value("${management.server.servlet.context-path}")
     private String monitoringEndpoint;
 
     public SecurityConfig() {

@@ -38,8 +38,8 @@ public class CookieFlashMessageFilter extends OncePerRequestFilter {
 
     private static String monitoringEndpoint;
 
-    @Value("${management.contextPath}")
-    public static void setMonitoringEndpoint(String monitoringEndpoint) {
+    @Value("${management.server.servlet.context-path}")
+    public void setMonitoringEndpoint(String monitoringEndpoint) {
         CookieFlashMessageFilter.monitoringEndpoint = monitoringEndpoint;
     }
 
@@ -55,10 +55,10 @@ public class CookieFlashMessageFilter extends OncePerRequestFilter {
 
     private TextEncryptor encryptor;
 
-    @Value("${server.session.cookie.secure}")
+    @Value("${server.servlet.session.cookie.secure}")
     private boolean cookieSecure;
 
-    @Value("${server.session.cookie.http-only}")
+    @Value("${server.servlet.session.cookie.http-only}")
     private boolean cookieHttpOnly;
 
     @Value("${ifs.web.security.csrf.encryption.password}")

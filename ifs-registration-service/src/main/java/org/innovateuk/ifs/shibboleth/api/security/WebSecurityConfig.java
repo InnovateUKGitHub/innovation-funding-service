@@ -26,7 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
 
-    @Value("management.contextPath")
+    @Value("management.server.servlet.context-path")
     private String monitoringEndpoint;
 
     @Autowired

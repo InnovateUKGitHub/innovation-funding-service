@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${management.contextPath}")
+    @Value("${management.server.servlet.context-path}")
     private String monitoringEndpoint;
 
     @Autowired

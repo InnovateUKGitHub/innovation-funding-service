@@ -117,19 +117,19 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Value("${ifs.generate.test.data.competition.filter:BY_NAME}")
     private CompetitionFilter competitionFilter;
 
-    @Value("${flyway.url}")
+    @Value("${spring.flyway.url}")
     private String databaseUrl;
 
-    @Value("${flyway.user}")
+    @Value("${spring.flyway.user}")
     private String databaseUser;
 
-    @Value("${flyway.password}")
+    @Value("${spring.flyway.password}")
     private String databasePassword;
 
-    @Value("${flyway.locations}")
+    @Value("${spring.flyway.locations}")
     private String locations;
 
-    @Value("${flyway.placeholders.ifs.system.user.uuid}")
+    @Value("${spring.flyway.placeholders.ifs.system.user.uuid}")
     private String systemUserUUID;
 
     @Autowired
