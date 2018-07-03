@@ -94,6 +94,7 @@ Satisfaction survey:validations
     And the user should see a field and summary error     This field cannot be left blank.
 
 Applicant submit satisfaction survey after submitting application
+    #The survey needs to be set to enabled in gradle.properties
     [Documentation]  IFS-3603
     [Tags]  survey
     Given the user selects the radio button      satisfaction  5
