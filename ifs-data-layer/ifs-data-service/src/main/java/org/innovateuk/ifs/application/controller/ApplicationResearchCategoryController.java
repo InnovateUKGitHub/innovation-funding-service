@@ -27,6 +27,10 @@ public class ApplicationResearchCategoryController {
     private QuestionService questionService;
     private QuestionStatusService questionStatusService;
 
+    public ApplicationResearchCategoryController() {
+
+    }
+
     public ApplicationResearchCategoryController(final ApplicationResearchCategoryService
                                                          applicationResearchCategoryService,
                                                  final QuestionService questionService,
