@@ -27,8 +27,8 @@
                         <p>Research category is marked as complete</p>
                     </div>
                     <h2 class="heading-medium">Selected research category</h2>
-                    <p th:text="${model.researchCategory} ?: 'This field has not been completed.'">
-                        Experimental development</p>
+                    <p th:text="${model.researchCategory} ?: 'This field has not been completed.'"
+                       th:classappend="${#strings.isEmpty(model.researchCategory)}? 'form-hint'">Experimental development</p>
                 </th:block>
                 <th:block th:if="${!model.allReadOnly}">
                     <fieldset>

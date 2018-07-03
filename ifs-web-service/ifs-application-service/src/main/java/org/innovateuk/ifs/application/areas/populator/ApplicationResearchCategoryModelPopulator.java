@@ -45,7 +45,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
         List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
         boolean userIsLeadApplicant = userService.isLeadApplicant(loggedInUserId, applicationResource);
         boolean complete = isComplete(applicationResource, loggedInUserId);
-        boolean allReadonly = !(userIsLeadApplicant && !complete);
+        boolean allReadonly = !userIsLeadApplicant || complete;
 
         String researchCategoryName = Optional.of(applicationResource.getResearchCategory())
                 .map(ResearchCategoryResource::getName).orElse(null);
