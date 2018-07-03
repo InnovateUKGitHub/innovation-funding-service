@@ -37,7 +37,7 @@ public class ApplicationResearchCategoryPopulator {
         return researchCategoryViewModel;
     }
 
-    private void setResearchCategoryChoice(ApplicationResource applicationResource, ResearchCategoryViewModel researchCategoryViewModel) {
+    private static void setResearchCategoryChoice(ApplicationResource applicationResource, ResearchCategoryViewModel researchCategoryViewModel) {
 
         if (applicationResource.getResearchCategory() != null && applicationResource.getResearchCategory().getId() != null) {
             researchCategoryViewModel.setSelectedResearchCategoryId(applicationResource.getResearchCategory().getId());

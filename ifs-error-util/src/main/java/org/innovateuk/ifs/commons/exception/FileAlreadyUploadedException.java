@@ -9,7 +9,7 @@ import java.util.List;
 public class FileAlreadyUploadedException extends IFSRuntimeException {
 
     public FileAlreadyUploadedException() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public FileAlreadyUploadedException(List<Object> arguments) {

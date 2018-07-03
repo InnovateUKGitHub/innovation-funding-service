@@ -23,9 +23,8 @@ public class OrganisationProjectFinanceOverviewImpl implements OrganisationFinan
     @Autowired
     private ProjectFinanceService financeService;
 
-
     public OrganisationProjectFinanceOverviewImpl() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public OrganisationProjectFinanceOverviewImpl(ProjectFinanceService financeService, Long projectId) {
@@ -38,7 +37,7 @@ public class OrganisationProjectFinanceOverviewImpl implements OrganisationFinan
         projectFinances = financeService.getProjectFinanceTotals(projectId);
     }
 
-    public Map<Long, BaseFinanceResource> getFinancesByOrganisation(){
+    public Map<Long, BaseFinanceResource> getFinancesByOrganisation() {
         return projectFinances
                 .stream()
                 .collect(Collectors.toMap(ProjectFinanceResource::getOrganisation, f -> f));
@@ -46,7 +45,7 @@ public class OrganisationProjectFinanceOverviewImpl implements OrganisationFinan
 
     public Map<FinanceRowType, BigDecimal> getTotalPerType() {
         Map<FinanceRowType, BigDecimal> totalPerType = new EnumMap<>(FinanceRowType.class);
-        for(FinanceRowType costType : FinanceRowType.values()) {
+        for (FinanceRowType costType : FinanceRowType.values()) {
             BigDecimal typeTotal = projectFinances.stream()
                     .filter(o -> o.getFinanceOrganisationDetails(costType) != null)
                     .map(o -> o.getFinanceOrganisationDetails(costType).getTotal())

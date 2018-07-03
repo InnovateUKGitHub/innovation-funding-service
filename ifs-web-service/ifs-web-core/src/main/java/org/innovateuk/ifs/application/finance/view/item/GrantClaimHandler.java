@@ -24,8 +24,8 @@ public class GrantClaimHandler extends FinanceRowHandler {
                 map(field -> convertFieldValueToInteger(field)).
                 orElse(0);
 
-        if(allNull(id, grantClaimPercentage)) {
-        	return null;
+        if (allNull(id, grantClaimPercentage)) {
+            return null;
         }
         return new GrantClaim(id, grantClaimPercentage);
     }
@@ -39,7 +39,6 @@ public class GrantClaimHandler extends FinanceRowHandler {
             String startOfNumber = bigValue.toPlainString().substring(0, 9);
             return Integer.parseInt(startOfNumber);
         }
-
         return bigValue.intValue();
     }
 }
