@@ -82,7 +82,7 @@ public class ApplicationResearchCategoryControllerTest extends
                 applicationResource.getId());
         when(questionStatusService.markAsComplete(ids, markedAsCompleteById)).thenReturn(serviceSuccess(emptyList()));
 
-        mockMvc.perform(post("/applicationResearchCategory/markResearchCategoryComplete/{applicationId}" +
+        mockMvc.perform(post("/applicationResearchCategory/mark-research-category-complete/{applicationId}" +
                         "/{markedAsCompleteById}",
                 applicationResource.getId(), markedAsCompleteById)
                 .contentType(MediaType.APPLICATION_JSON)

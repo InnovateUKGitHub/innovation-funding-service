@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.application.areas.controller;
+package org.innovateuk.ifs.application.forms.researchcategory.controller;
 
-import org.innovateuk.ifs.application.areas.form.ResearchCategoryForm;
-import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryFormPopulator;
-import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryModelPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.form.ResearchCategoryForm;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.forms.validator.QuestionEditableValidator;
 import org.innovateuk.ifs.application.forms.validator.ResearchCategoryEditableValidator;

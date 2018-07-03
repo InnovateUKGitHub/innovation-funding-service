@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.application.areas.controller;
+package org.innovateuk.ifs.application.forms.researchcategory.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.areas.form.ResearchCategoryForm;
-import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryFormPopulator;
-import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryModelPopulator;
-import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
+import org.innovateuk.ifs.application.forms.researchcategory.form.ResearchCategoryForm;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.forms.validator.ResearchCategoryEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -24,9 +24,9 @@ import org.springframework.http.HttpStatus;
 import javax.servlet.http.HttpServletResponse;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.application.areas.controller.ResearchCategoryController.APPLICATION_SAVED_MESSAGE;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.application.forms.researchcategory.controller.ResearchCategoryController.APPLICATION_SAVED_MESSAGE;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;

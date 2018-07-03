@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.application.areas.populator;
+package org.innovateuk.ifs.application.forms.researchcategory.populator;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
+import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.populator.AbstractLeadOnlyModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;

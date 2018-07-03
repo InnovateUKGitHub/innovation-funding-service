@@ -78,7 +78,7 @@ public class ApplicationResearchCategoryControllerDocumentation extends BaseCont
                 .thenReturn(serviceSuccess(null));
 
 
-        mockMvc.perform(post(baseUrl + "/markResearchCategoryComplete/{applicationId}/{markedAsCompleteById}", application.getId(), markedAsCompleteById)
+        mockMvc.perform(post(baseUrl + "/mark-research-category-complete/{applicationId}/{markedAsCompleteById}", application.getId(), markedAsCompleteById)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(researchCategoryId)))
                 .andExpect(status().isOk())
