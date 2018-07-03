@@ -15,6 +15,8 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
     private boolean hasApplicationFinances;
     private boolean useNewApplicantMenu;
     private String researchCategory;
+    private boolean userLeadApplicant;
+    private String leadApplicantName;
 
     public ResearchCategoryViewModel(String currentCompetitionName,
                                      Long applicationId,
@@ -26,13 +28,17 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
                                      boolean closed,
                                      boolean complete,
                                      boolean canMarkAsComplete,
-                                     boolean allReadonly) {
+                                     boolean allReadonly,
+                                     boolean userLeadApplicant,
+                                     String leadApplicantName) {
         super(questionId, applicationId, closed, complete, canMarkAsComplete, allReadonly);
         this.currentCompetitionName = currentCompetitionName;
         this.availableResearchCategories = availableResearchCategories;
         this.hasApplicationFinances = hasApplicationFinances;
         this.useNewApplicantMenu = useNewApplicantMenu;
         this.researchCategory = researchCategory;
+        this.userLeadApplicant = userLeadApplicant;
+        this.leadApplicantName = leadApplicantName;
     }
 
     public String getCurrentCompetitionName() {
@@ -53,6 +59,14 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
 
     public String getResearchCategory() {
         return researchCategory;
+    }
+
+    public boolean isUserLeadApplicant() {
+        return userLeadApplicant;
+    }
+
+    public String getLeadApplicantName() {
+        return leadApplicantName;
     }
 
     @Override
