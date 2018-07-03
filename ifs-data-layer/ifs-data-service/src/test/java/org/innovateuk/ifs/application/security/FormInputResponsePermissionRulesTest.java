@@ -41,6 +41,7 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
     private UserResource userNotOnApplication;
     private UserResource assessorForApplication;
     private UserResource panelAssessorForApplication;
+    private UserResource interviewAssessorForApplication;
 
     @Mock
     private FormInputRepository formInputRepositoryMock;
@@ -82,11 +83,12 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
 
         userNotOnApplication = UserResourceBuilder.newUserResource().build();
 
-       assessorForApplication = UserResourceBuilder.newUserResource().build();
+        assessorForApplication = UserResourceBuilder.newUserResource().build();
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(assessorForApplication.getId(), application.getId(), Role.ASSESSOR)).thenReturn(true);
         panelAssessorForApplication = UserResourceBuilder.newUserResource().build();
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(panelAssessorForApplication.getId(), application.getId(), Role.PANEL_ASSESSOR)).thenReturn(true);
-
+        interviewAssessorForApplication = UserResourceBuilder.newUserResource().build();
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(interviewAssessorForApplication.getId(), application.getId(), Role.INTERVIEW_ASSESSOR)).thenReturn(true);
 
     }
 
@@ -120,6 +122,7 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
         assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyAssess(formInputResponseUpdatedByLead, leadApplicantForApplicationOnOrganisation1));
         assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyAssess(formInputResponseUpdatedByLead, collaboratorForApplicationOnOrganisation2));
         assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyAssess(formInputResponseUpdatedByLead, userNotOnApplication));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyAssess(formInputResponseUpdatedByLead, interviewAssessorForApplication));
     }
 
     @Test
@@ -129,5 +132,16 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
         assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyReview(formInputResponseUpdatedByLead, leadApplicantForApplicationOnOrganisation1));
         assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyReview(formInputResponseUpdatedByLead, collaboratorForApplicationOnOrganisation2));
         assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyReview(formInputResponseUpdatedByLead, userNotOnApplication));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyReview(formInputResponseUpdatedByLead, interviewAssessorForApplication));
+    }
+
+    @Test
+    public void assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyInterview() {
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyInterview(formInputResponseUpdatedByLead, assessorForApplication));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyInterview(formInputResponseUpdatedByLead, panelAssessorForApplication));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyInterview(formInputResponseUpdatedByLead, leadApplicantForApplicationOnOrganisation1));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyInterview(formInputResponseUpdatedByLead, collaboratorForApplicationOnOrganisation2));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyInterview(formInputResponseUpdatedByLead, userNotOnApplication));
+        assertTrue(rules.assessorCanSeeTheInputResponsesInApplicationsTheyInterview(formInputResponseUpdatedByLead, interviewAssessorForApplication));
     }
 }
