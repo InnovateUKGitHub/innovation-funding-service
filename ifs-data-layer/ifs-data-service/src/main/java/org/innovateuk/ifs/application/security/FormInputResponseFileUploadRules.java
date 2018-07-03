@@ -60,7 +60,13 @@ public class FormInputResponseFileUploadRules {
         ProcessRole assessorProcessRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(),
                 Role.ASSESSOR,
                 fileEntry.getCompoundId().getApplicationId());
-        return assessorProcessRole != null;
+        ProcessRole panelAssessorProcessRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(),
+                Role.PANEL_ASSESSOR,
+                fileEntry.getCompoundId().getApplicationId());
+        ProcessRole interviewAssessorProcessRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(),
+                Role.INTERVIEW_ASSESSOR,
+                fileEntry.getCompoundId().getApplicationId());
+        return assessorProcessRole != null || panelAssessorProcessRole != null || interviewAssessorProcessRole != null;
     }
 
     private boolean userIsApplicantOnThisApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {

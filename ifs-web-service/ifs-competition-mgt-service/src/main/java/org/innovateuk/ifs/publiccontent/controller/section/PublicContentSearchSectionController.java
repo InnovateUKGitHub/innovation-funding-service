@@ -5,8 +5,8 @@ import org.innovateuk.ifs.publiccontent.controller.AbstractPublicContentSectionC
 import org.innovateuk.ifs.publiccontent.form.section.SearchInformationForm;
 import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
 import org.innovateuk.ifs.publiccontent.formpopulator.section.SearchInformationFormPopulator;
-import org.innovateuk.ifs.publiccontent.modelpopulator.section.SearchInformationViewModelPopulator;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentViewModelPopulator;
+import org.innovateuk.ifs.publiccontent.modelpopulator.section.SearchInformationViewModelPopulator;
 import org.innovateuk.ifs.publiccontent.saver.PublicContentFormSaver;
 import org.innovateuk.ifs.publiccontent.saver.section.SearchInformationFormSaver;
 import org.innovateuk.ifs.publiccontent.viewmodel.section.SearchInformationViewModel;

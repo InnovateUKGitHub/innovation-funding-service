@@ -51,7 +51,7 @@ public class PostcodeWebMapper {
         );
     }
 
-    private String getValue(JsonNode jsonNode, String key) {
+    private static String getValue(JsonNode jsonNode, String key) {
         if(jsonNode.hasNonNull(key)) {
             return jsonNode.get(key).asText();
         } else {

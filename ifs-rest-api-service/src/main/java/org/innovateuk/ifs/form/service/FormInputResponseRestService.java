@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.form.service;
 
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;

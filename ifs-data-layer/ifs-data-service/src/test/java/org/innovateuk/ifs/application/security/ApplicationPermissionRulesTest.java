@@ -64,6 +64,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource compAdmin;
     private UserResource projectFinance;
     private UserResource panelAssessor;
+    private UserResource interviewAssessor;
 
     private List<Role> applicantRoles = new ArrayList<>();
 
@@ -89,7 +90,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         compAdmin = compAdminUser();
         assessor = assessorUser();
         projectFinance = projectFinanceUser();
-        panelAssessor = newUserResource().withRolesGlobal(singletonList(Role.PANEL_ASSESSOR)).build();
+        panelAssessor = newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build();
+        interviewAssessor = newUserResource().withRolesGlobal(singletonList(Role.ASSESSOR)).build();
 
         processRole1 = newProcessRole().withRole(Role.LEADAPPLICANT).build();
         processRole2 = newProcessRole().withRole(Role.APPLICANT).build();
@@ -124,6 +126,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(processRoleRepositoryMock.existsByUserIdAndApplicationId(assessor.getId(), applicationResource2.getId())).thenReturn(false);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationResource1.getId(), Role.ASSESSOR)).thenReturn(true);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(panelAssessor.getId(), applicationResource1.getId(), Role.PANEL_ASSESSOR)).thenReturn(true);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(interviewAssessor.getId(), applicationResource1.getId(), Role.PANEL_ASSESSOR)).thenReturn(true);
 
         when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(Collections.singletonList
                 (innovationLead));
@@ -198,6 +201,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssessTest() {
         assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, assessor));
         assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, panelAssessor));
+        assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, interviewAssessor));
         assertFalse(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, compAdmin));
     }
 
@@ -205,6 +209,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void assessorCanSeeTheAssessmentScoresInApplicationsTheyAssessTest() {
         assertTrue(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, assessor));
         assertTrue(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, panelAssessor));
+        assertTrue(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, interviewAssessor));
         assertFalse(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, compAdmin));
     }
 

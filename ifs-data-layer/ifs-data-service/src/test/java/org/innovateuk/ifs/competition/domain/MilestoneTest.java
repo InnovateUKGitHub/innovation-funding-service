@@ -6,8 +6,8 @@ import org.junit.Test;
 import java.time.ZonedDateTime;
 import java.util.stream.Stream;
 
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static junit.framework.TestCase.assertFalse;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

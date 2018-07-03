@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.organisation.resource;
 
-import static org.junit.Assert.assertEquals;
-
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
+import static org.junit.Assert.assertEquals;
 
 public class OrganisationSearchResultTest {
 
