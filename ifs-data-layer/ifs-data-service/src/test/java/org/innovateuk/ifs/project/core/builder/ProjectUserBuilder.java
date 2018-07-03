@@ -4,18 +4,18 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 /**
  * Builder for {@link ProjectUser} entities.

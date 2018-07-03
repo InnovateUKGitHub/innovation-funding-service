@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.feedback.populator;
 
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;

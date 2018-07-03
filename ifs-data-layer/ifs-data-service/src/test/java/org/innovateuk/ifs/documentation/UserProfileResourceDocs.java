@@ -5,8 +5,8 @@ import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;

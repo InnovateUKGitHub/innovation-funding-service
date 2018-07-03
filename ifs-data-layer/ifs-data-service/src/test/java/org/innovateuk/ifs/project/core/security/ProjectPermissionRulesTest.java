@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.core.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
-import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -12,8 +11,8 @@ import org.mockito.Mock;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

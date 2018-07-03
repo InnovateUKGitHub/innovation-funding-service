@@ -4,7 +4,7 @@ import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
-import java.util.*;
+import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 

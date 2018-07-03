@@ -5,7 +5,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 
-import javax.persistence.*;
+import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Embeddable

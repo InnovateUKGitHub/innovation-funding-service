@@ -8,12 +8,10 @@ import org.mockito.Mock;
 
 import java.util.function.Consumer;
 
-import static org.innovateuk.ifs.project.sections.SectionAccess.*;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.project.sections.SectionAccess.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {

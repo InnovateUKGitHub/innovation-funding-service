@@ -12,8 +12,8 @@ import org.mockito.Mock;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

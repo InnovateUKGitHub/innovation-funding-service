@@ -2,12 +2,12 @@ package org.innovateuk.ifs.project.projectdetails.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
+import org.innovateuk.ifs.project.core.security.ProjectPermissionRules;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
-import org.innovateuk.ifs.project.core.security.ProjectPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.organisation.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.commons.security.NotSecured;
 
 public interface OrganisationAddressService {
 

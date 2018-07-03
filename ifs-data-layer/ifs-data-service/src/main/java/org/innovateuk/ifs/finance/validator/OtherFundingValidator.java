@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.validator;
 
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
@@ -9,7 +8,8 @@ import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
-import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

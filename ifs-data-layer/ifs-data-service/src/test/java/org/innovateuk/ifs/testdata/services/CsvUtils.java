@@ -14,10 +14,12 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.BusinessType;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Disability;
+import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.io.File;

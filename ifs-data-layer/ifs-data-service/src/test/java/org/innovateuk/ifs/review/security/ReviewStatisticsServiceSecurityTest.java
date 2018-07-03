@@ -5,7 +5,8 @@ import org.innovateuk.ifs.review.transactional.ReviewStatisticsService;
 import org.innovateuk.ifs.review.transactional.ReviewStatisticsServiceImpl;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 public class ReviewStatisticsServiceSecurityTest extends BaseServiceSecurityTest<ReviewStatisticsService> {
 

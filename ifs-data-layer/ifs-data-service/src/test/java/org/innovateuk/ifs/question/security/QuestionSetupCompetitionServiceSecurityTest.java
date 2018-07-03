@@ -8,9 +8,9 @@ import org.springframework.security.access.AccessDeniedException;
 
 import java.util.EnumSet;
 
+import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
-import static freemarker.template.utility.Collections12.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;

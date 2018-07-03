@@ -9,9 +9,9 @@ import org.mockito.Mock;
 
 import java.util.Arrays;
 
-import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;

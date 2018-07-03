@@ -3,10 +3,10 @@ package org.innovateuk.ifs.application.feedback.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 
 import java.util.List;
 

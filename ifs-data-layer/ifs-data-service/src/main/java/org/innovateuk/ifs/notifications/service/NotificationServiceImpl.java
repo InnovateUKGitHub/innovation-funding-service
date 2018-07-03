@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
