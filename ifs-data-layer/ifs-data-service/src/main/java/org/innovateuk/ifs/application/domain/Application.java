@@ -364,4 +364,6 @@ public class Application implements ProcessActivity {
     public void setInAssessmentReviewPanel(boolean inAssessmentReviewPanel) {
         this.inAssessmentReviewPanel = inAssessmentReviewPanel;
     }
+
+
 }

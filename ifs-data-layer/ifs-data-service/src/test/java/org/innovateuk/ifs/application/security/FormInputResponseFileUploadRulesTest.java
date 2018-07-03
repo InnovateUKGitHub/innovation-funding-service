@@ -128,6 +128,40 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     }
 
     @Test
+    public void panelAssessorCanDownloadFilesForApplicationTheyAreAssessing() {
+        UserResource assessor = newUserResource()
+                .withRolesGlobal(singletonList(Role.ASSESSOR))
+                .build();
+        FileEntryResource fileEntry = newFileEntryResource().build();
+        ProcessRole assessorProcessRole = newProcessRole().build();
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+
+        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.PANEL_ASSESSOR, applicationId))
+                .thenReturn(assessorProcessRole);
+
+        assertTrue(fileUploadRules.assessorCanDownloadFileForApplicationTheyAreAssessing(file, assessor));
+
+        verify(processRoleRepositoryMock).findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.PANEL_ASSESSOR, applicationId);
+    }
+
+    @Test
+    public void interviewAssessorCanDownloadFilesForApplicationTheyAreAssessing() {
+        UserResource assessor = newUserResource()
+                .withRolesGlobal(singletonList(Role.ASSESSOR))
+                .build();
+        FileEntryResource fileEntry = newFileEntryResource().build();
+        ProcessRole assessorProcessRole = newProcessRole().build();
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+
+        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.INTERVIEW_ASSESSOR, applicationId))
+                .thenReturn(assessorProcessRole);
+
+        assertTrue(fileUploadRules.assessorCanDownloadFileForApplicationTheyAreAssessing(file, assessor));
+
+        verify(processRoleRepositoryMock).findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.INTERVIEW_ASSESSOR, applicationId);
+    }
+
+    @Test
     public void assessorCanNotDownloadFilesForApplicationTheyAreNotAssessing() {
         UserResource assessor = newUserResource()
                 .withRolesGlobal(singletonList(Role.ASSESSOR))

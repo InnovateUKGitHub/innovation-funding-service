@@ -13,7 +13,6 @@ import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -103,8 +102,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private ProjectService projectService;
-    @Autowired
-    private OrganisationRepository organisationRepository;
     @Autowired
     private SpendProfileRepository spendProfileRepository;
     @Autowired
@@ -597,7 +594,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             BigDecimal actualTotalCost = monthlyCosts.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
-            if (actualTotalCost.compareTo(expectedTotalCost) == 1) {
+            if (actualTotalCost.compareTo(expectedTotalCost) > 0) {
                 String categoryName = categories.get(category).getName();
                 //TODO INFUND-7502 could come up with a better way to send the name to the frontend
                 categoriesWithIncorrectTotal.add(fieldError(String.valueOf(category), actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey(), categoryName));

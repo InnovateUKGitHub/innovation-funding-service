@@ -59,21 +59,22 @@ public class ApplicationDownloadController {
             ApplicationState.SUBMITTED);
 
     @GetMapping("/downloadByCompetition/{competitionId}")
-    public @ResponseBody ResponseEntity<ByteArrayResource> getDownloadByCompetitionId(@PathVariable("competitionId") Long competitionId) throws IOException {
+    public @ResponseBody
+    ResponseEntity<ByteArrayResource> getDownloadByCompetitionId(@PathVariable("competitionId") Long competitionId) throws IOException {
         ServiceResult<List<Application>> applicationsResult = applicationService.getApplicationsByCompetitionIdAndState(competitionId, SUBMITTED_STATUSES);
-        
+
         List<Application> applications;
-        if(applicationsResult.isSuccess()) {
-        	applications = applicationsResult.getSuccess();
+        if (applicationsResult.isSuccess()) {
+            applications = applicationsResult.getSuccess();
         } else {
-        	LOG.error("failed call to get application summaries by competition and status for the download");
-        	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            LOG.error("failed call to get application summaries by competition and status for the download");
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
+
         LOG.info(String.format("Generate download for %s applications with status ", applications.size()));
 
-        try(XSSFWorkbook wb = new XSSFWorkbook()) {
-        	populateExcelWorkbook(wb, applications);
+        try (XSSFWorkbook wb = new XSSFWorkbook()) {
+            populateExcelWorkbook(wb, applications);
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             wb.write(baos);
@@ -85,8 +86,8 @@ public class ApplicationDownloadController {
             httpHeaders.add("Expires", "0");
             return new ResponseEntity<>(new ByteArrayResource(baos.toByteArray()), httpHeaders, HttpStatus.OK);
         } catch (SummaryDataUnavailableException e) {
-        	LOG.error("unable to retrieve data required for the excel workbook", e);
-        	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            LOG.error("unable to retrieve data required for the excel workbook", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -127,23 +128,23 @@ public class ApplicationDownloadController {
 
         for (Application a : applications) {
             // PREPARE APPLICATION INFORMATION
-        	
+
             FormInputResponse projectSummary = formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionName(a.getId(), APPLICATION_SUMMARY_QUESTION_NAME);
             String projectSummaryString = projectSummary == null ? "" : projectSummary.getValue();
 
-        	ServiceResult<BigDecimal> totalResult = applicationSummarisationService.getTotalProjectCost(a);
-        	ServiceResult<BigDecimal> fundingSoughtResult = applicationSummarisationService.getFundingSought(a);
-        	
-        	BigDecimal total;
-        	BigDecimal fundingSought;
-        	
-        	if(totalResult.isSuccess() && fundingSoughtResult.isSuccess()) {
-        		total = totalResult.getSuccess();
-        		fundingSought = fundingSoughtResult.getSuccess();
-        	} else {
-        		throw new SummaryDataUnavailableException();
-        	}
-        	
+            ServiceResult<BigDecimal> totalResult = applicationSummarisationService.getTotalProjectCost(a);
+            ServiceResult<BigDecimal> fundingSoughtResult = applicationSummarisationService.getFundingSought(a);
+
+            BigDecimal total;
+            BigDecimal fundingSought;
+
+            if (totalResult.isSuccess() && fundingSoughtResult.isSuccess()) {
+                total = totalResult.getSuccess();
+                fundingSought = fundingSoughtResult.getSuccess();
+            } else {
+                throw new SummaryDataUnavailableException();
+            }
+
             String totalFormatted = NumberFormat.getCurrencyInstance(Locale.UK).format(total);
             String fundingSoughtFormatted = NumberFormat.getCurrencyInstance(Locale.UK).format(fundingSought);
 
@@ -166,7 +167,6 @@ public class ApplicationDownloadController {
             row = createCellWithValue(row, fundingSoughtFormatted);
         }
 
-
         for (int i = 0; i < headerCount; i++) {
             sheet.autoSizeColumn(i);
         }
@@ -174,15 +174,15 @@ public class ApplicationDownloadController {
         sheet.setColumnWidth(8, PROJECT_SUMMARY_COLUMN_WITH * 256);
     }
 
-    private XSSFRow createHeaderCellWithValue(XSSFRow row, String value){
+    private XSSFRow createHeaderCellWithValue(XSSFRow row, String value) {
         XSSFCell cell = row.createCell(headerCount++);
-        if(StringUtils.hasText(value)){
+        if (StringUtils.hasText(value)) {
             cell.setCellValue(value);
         }
         return row;
     }
 
-    private XSSFRow createCellWithValue(XSSFRow row, String value){
+    private XSSFRow createCellWithValue(XSSFRow row, String value) {
         XSSFCell cell = row.createCell(cellCount++);
         cell.setCellValue(value);
         return row;
