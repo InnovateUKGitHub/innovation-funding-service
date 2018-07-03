@@ -89,7 +89,9 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 false,
                 false,
-                false);
+                false,
+                false,
+                "Steve Smith");
 
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,
@@ -167,7 +169,9 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 false,
                 false,
-                false);
+                false,
+                false,
+                "Steve Smith");
 
         ResearchCategoryForm researchCategoryForm = new ResearchCategoryForm();
         researchCategoryForm.setResearchCategory(researchCategoryId);
@@ -218,7 +222,9 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 false,
                 false,
-                false);
+                false,
+                false,
+                "Steve Smith");
 
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId,
@@ -327,7 +333,9 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 false,
                 false,
-                false);
+                false,
+                false,
+                "Steve Smith");
 
         ResearchCategoryForm researchCategoryForm = new ResearchCategoryForm();
         researchCategoryForm.setResearchCategory(researchCategoryId);
@@ -380,7 +388,9 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 false,
                 false,
-                false);
+                false,
+                false,
+                "Steve Smith");
 
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
         when(researchCategoryEditableValidator.questionAndApplicationHaveAllowedState(questionId,
@@ -492,7 +502,9 @@ public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<Re
                 false,
                 false,
                 false,
-                false);
+                false,
+                false,
+                "Steve Smith");
 
         when(processRoleService.findProcessRole(loggedInUser.getId(), applicationResource.getId())).thenReturn(processRole);
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);

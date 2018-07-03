@@ -34,6 +34,7 @@ public class ApplicationResearchCategorySummaryModelPopulator extends AbstractLe
                 .map(ResearchCategoryResource::getName).orElse(null);
 
         boolean isComplete = isComplete(applicationResource, loggedInUserId);
+        boolean allReadOnly = (!userIsLeadApplicant || isComplete);
 
         return new ResearchCategorySummaryViewModel(applicationResource.getId(),
                 getResearchCategoryQuestion(applicationResource.getCompetition()),
@@ -41,7 +42,7 @@ public class ApplicationResearchCategorySummaryModelPopulator extends AbstractLe
                 !isCompetitionOpen(applicationResource),
                 isComplete,
                 userIsLeadApplicant,
-                (!userIsLeadApplicant || isComplete)
+                allReadOnly
         );
     }
 

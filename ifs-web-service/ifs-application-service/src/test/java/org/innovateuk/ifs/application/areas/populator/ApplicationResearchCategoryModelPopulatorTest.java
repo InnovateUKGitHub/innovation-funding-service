@@ -12,6 +12,8 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -32,6 +34,8 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuild
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -73,6 +77,11 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         QuestionResource questionResource = newQuestionResource().build();
         ApplicantResource applicantResource = newApplicantResource()
                 .withOrganisation(newOrganisationResource().build()).build();
+        ProcessRoleResource leadApplicantProcessRoleResource = newProcessRoleResource().build();
+        UserResource leadApplicant = newUserResource()
+                .withFirstName("Steve")
+                .withLastName("Smith")
+                .build();
 
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(financeService.getApplicationFinanceDetails(applicationResource.getId())).thenReturn
@@ -88,6 +97,9 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                                 .build(1))
                         .build());
         when(userService.isLeadApplicant(loggedInUserId, applicationResource)).thenReturn(true);
+        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
+                (leadApplicantProcessRoleResource);
+        when(userService.findById(leadApplicantProcessRoleResource.getUser())).thenReturn(leadApplicant);
 
         ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, loggedInUserId,
                 questionResource.getId(), true);
@@ -102,6 +114,9 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         assertTrue(researchCategoryViewModel.isClosed());
         assertTrue(researchCategoryViewModel.isComplete());
         assertTrue(researchCategoryViewModel.isCanMarkAsComplete());
+        assertTrue(researchCategoryViewModel.isAllReadOnly());
+        assertTrue(researchCategoryViewModel.isUserLeadApplicant());
+        assertEquals("Steve Smith", researchCategoryViewModel.getLeadApplicantName());
     }
 
     @Test
@@ -119,6 +134,11 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         QuestionResource questionResource = newQuestionResource().build();
         ApplicantResource applicantResource = newApplicantResource()
                 .withOrganisation(newOrganisationResource().build()).build();
+        ProcessRoleResource leadApplicantProcessRoleResource = newProcessRoleResource().build();
+        UserResource leadApplicant = newUserResource()
+                .withFirstName("Steve")
+                .withLastName("Smith")
+                .build();
 
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(financeService.getApplicationFinanceDetails(applicationResource.getId())).thenReturn
@@ -134,6 +154,9 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                                 .build(1))
                         .build());
         when(userService.isLeadApplicant(loggedInUserId, applicationResource)).thenReturn(true);
+        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn
+                (leadApplicantProcessRoleResource);
+        when(userService.findById(leadApplicantProcessRoleResource.getUser())).thenReturn(leadApplicant);
 
         ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, loggedInUserId,
                 questionResource.getId(), true);
@@ -148,5 +171,8 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         assertTrue(researchCategoryViewModel.isClosed());
         assertTrue(researchCategoryViewModel.isComplete());
         assertTrue(researchCategoryViewModel.isCanMarkAsComplete());
+        assertTrue(researchCategoryViewModel.isAllReadOnly());
+        assertTrue(researchCategoryViewModel.isUserLeadApplicant());
+        assertEquals("Steve Smith", researchCategoryViewModel.getLeadApplicantName());
     }
 }
