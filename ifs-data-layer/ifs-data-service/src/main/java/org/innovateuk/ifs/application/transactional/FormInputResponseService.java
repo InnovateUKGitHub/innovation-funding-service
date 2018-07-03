@@ -26,7 +26,6 @@ public interface FormInputResponseService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<FormInputResponseResource> findResponseByApplicationIdAndQuestionSetupType(long applicationId,
                                                                                              QuestionSetupType questionSetupType);
-
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponseByApplicationIdAndQuestionId(long applicationId, long questionId);
 
