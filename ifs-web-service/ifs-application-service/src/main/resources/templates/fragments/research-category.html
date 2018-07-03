@@ -18,7 +18,8 @@
                 </div>
 
                 <th:block th:if="${model.allReadOnly}">
-                    <div class="assign-container assigned-alert" th:unless="${model.userLeadApplicant}">
+                    <div class="assign-container assigned-alert"
+                         th:unless="${model.userLeadApplicant || model.complete}">
                         <span class="assignee" th:text="|This question is assigned to ${model.leadApplicantName}.|">
                             This question is assigned to Steve Smith.
                         </span>
