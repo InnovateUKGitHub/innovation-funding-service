@@ -44,7 +44,7 @@ public class InviteUserController {
         return viewInviteNewUser(model);
     }
 
-    private String viewInviteNewUser(Model model) {
+    private static String viewInviteNewUser(Model model) {
         InviteUserForm form = new InviteUserForm();
         model.addAttribute(FORM_ATTR_NAME, form);
 
@@ -81,8 +81,6 @@ public class InviteUserController {
         invitedUser.setLastName(form.getLastName());
         invitedUser.setEmail(form.getEmailAddress());
 
-        InviteUserResource inviteUserResource = new InviteUserResource(invitedUser, form.getRole());
-
-        return inviteUserResource;
+        return new InviteUserResource(invitedUser, form.getRole());
     }
 }

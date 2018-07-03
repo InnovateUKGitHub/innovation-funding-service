@@ -103,7 +103,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         results.trackResult(() -> mapFormInputs(results, questionId, applicationId, applicants), applicant::setApplicantFormInputs);
     }
 
-    private List<ApplicantQuestionStatusResource> mapToApplicantStatuses(List<QuestionStatusResource> questionStatusResources, List<ApplicantResource> applicants) {
+    private static List<ApplicantQuestionStatusResource> mapToApplicantStatuses(List<QuestionStatusResource> questionStatusResources, List<ApplicantResource> applicants) {
         return questionStatusResources.stream().map(questionStatusResource -> {
             ApplicantQuestionStatusResource questionStatus = new ApplicantQuestionStatusResource();
             questionStatus.setStatus(questionStatusResource);

@@ -23,8 +23,9 @@ public class FormInputResponseResource {
     private Long filesizeBytes;
 
     public FormInputResponseResource() {
-    	// no-arg constructor
+        // no-arg constructor
     }
+
     public FormInputResponseResource(ZonedDateTime updateDate, String value, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
         this.value = value;
@@ -32,7 +33,6 @@ public class FormInputResponseResource {
         this.formInput = formInput;
         this.application = application.getId();
     }
-
 
     public FormInputResponseResource(ZonedDateTime updateDate, FileEntryResource fileEntry, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
@@ -91,7 +91,6 @@ public class FormInputResponseResource {
         if (cleanInput.isEmpty()) {
             return 0;
         }
-
         return cleanInput.split("\\s+").length;
     }
 

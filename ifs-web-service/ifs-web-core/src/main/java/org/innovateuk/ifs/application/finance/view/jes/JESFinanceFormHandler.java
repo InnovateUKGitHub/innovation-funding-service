@@ -36,8 +36,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
 public class JESFinanceFormHandler implements FinanceFormHandler {
-	
-	private static final Log LOG = LogFactory.getLog(JESFinanceFormHandler.class);
+
+    private static final Log LOG = LogFactory.getLog(JESFinanceFormHandler.class);
 
     @Autowired
     private DefaultFinanceRowRestService financeRowRestService;
@@ -70,11 +70,11 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     private ValidationMessages storeFinanceRowItems(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
         ValidationMessages validationMessages = new ValidationMessages();
         Enumeration<String> parameterNames = request.getParameterNames();
-        while(parameterNames.hasMoreElements()) {
+        while (parameterNames.hasMoreElements()) {
             String parameter = parameterNames.nextElement();
             String[] parameterValues = request.getParameterValues(parameter);
 
-            if(parameterValues.length > 0) {
+            if (parameterValues.length > 0) {
                 validationMessages.addAll(storeCost(userId, applicationId, parameter, parameterValues[0], competitionId));
             }
         }
@@ -91,7 +91,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
     private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId, Long competitionId) {
         FinanceFormField financeFormField = getCostFormField(competitionId, fieldName, value);
-        if(financeFormField == null) {
+        if (financeFormField == null) {
             return null;
         }
 
@@ -102,8 +102,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
             costFormFieldId = Long.parseLong(financeFormField.getId());
         }
 
-        if(!financeFormField.getCostName().equals(NON_DECIMAL_FIELD) && !inputIsLong(financeFormField.getValue())) {
-            return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-cost]",
+        if (!financeFormField.getCostName().equals(NON_DECIMAL_FIELD) && !inputIsLong(financeFormField.getValue())) {
+            return new ValidationMessages(fieldError("formInput[cost-" + financeFormField.getId() + "-cost]",
                     financeFormField, NON_DECIMAL_MESSAGE));
         } else if(financeFormField.getCostName().equals(NON_DECIMAL_FIELD) && inputIsLong(financeFormField.getValue())) {
             return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-item]",
@@ -111,21 +111,21 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         }
 
         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(costFormFieldId, Arrays.asList(financeFormField));
-        if(costItem != null) {
-        	return storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+        if (costItem != null) {
+            return storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
         } else {
-        	return ValidationMessages.noErrors();
+            return ValidationMessages.noErrors();
         }
     }
 
     private boolean inputIsLong(String input) {
         // empty value is valid
-        if(StringUtils.isEmpty(input)) {
+        if (StringUtils.isEmpty(input)) {
             return true;
         }
         try {
             Long.parseLong(input);
-        } catch(NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             return false;
         }
         return true;
@@ -203,8 +203,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                 question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, OTHER_COSTS).getSuccess();
                 break;
             default:
-            	question = null;
-            	break;
+                question = null;
+                break;
         }
         if (question != null) {
             return question.getId();
@@ -220,12 +220,12 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         if (params.containsKey(REMOVE_FINANCE_DOCUMENT)) {
             ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
             financeService.removeFinanceDocument(applicationFinance.getId()).getSuccess();
-        } else if(params.containsKey(UPLOAD_FINANCE_DOCUMENT)) {
+        } else if (params.containsKey(UPLOAD_FINANCE_DOCUMENT)) {
             final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
             final MultipartFile file = fileMap.get("jesFileUpload");
 
             if (file != null && !file.isEmpty()) {
-            	ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
+                ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
                 try {
                     RestResult<FileEntryResource> result = financeService.addFinanceDocument(applicationFinance.getId(),
                             file.getContentType(),
@@ -241,12 +241,11 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
                         return new ValidationMessages(errors);
                     }
                 } catch (IOException e) {
-                	LOG.error(e);
+                    LOG.error(e);
                     throw new UnableToReadUploadedFile();
                 }
             }
         }
-
         return noErrors();
     }
 
@@ -280,9 +279,9 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         throw new NotImplementedException("Can't add extra rows of finance to the JES form");
     }
 
-	@Override
-	public FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
-		// not to be implemented, can't add extra rows of finance to the JES form
+    @Override
+    public FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
+        // not to be implemented, can't add extra rows of finance to the JES form
         throw new NotImplementedException("Can't add extra rows of finance to the JES form");
-	}
+    }
 }

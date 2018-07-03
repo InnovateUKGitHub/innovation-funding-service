@@ -27,7 +27,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Autowired
     private SectionStatusRestService sectionStatusRestService;
-    
+
     @Autowired
     private FormInputRestService formInputRestService;
 
@@ -79,6 +79,7 @@ public class SectionServiceImpl implements SectionService {
 
     /**
      * Get Sections that have no parent section.
+     *
      * @param sections
      * @return the list of sections without a parent section.
      */
@@ -86,10 +87,9 @@ public class SectionServiceImpl implements SectionService {
     public List<SectionResource> filterParentSections(List<SectionResource> sections) {
         List<SectionResource> childSections = getChildSections(sections, new ArrayList<>());
 
-        if(sections == null) {
+        if (sections == null) {
             return new ArrayList<>();
         }
-
         return sections.stream()
                 .filter(s -> !childSections.stream()
                         .anyMatch(c -> c.getId().equals(s.getId())))
@@ -102,15 +102,15 @@ public class SectionServiceImpl implements SectionService {
         return sectionRestService.getByCompetition(competitionId).getSuccess();
     }
 
-    private List<SectionResource> getChildSections(List<SectionResource> sections, List<SectionResource>children) {
-        if(sections!= null && !sections.isEmpty()) {
+    private List<SectionResource> getChildSections(List<SectionResource> sections, List<SectionResource> children) {
+        if (sections != null && !sections.isEmpty()) {
             List<SectionResource> allSections = this.getAllByCompetitionId(sections.get(0).getCompetition());
             getChildSectionsFromList(sections, children, allSections);
         }
         return children;
     }
 
-    private List<SectionResource> getChildSectionsFromList(List<SectionResource> sections, List<SectionResource>children, final List<SectionResource> all) {
+    private List<SectionResource> getChildSectionsFromList(List<SectionResource> sections, List<SectionResource> children, final List<SectionResource> all) {
         sections.stream().filter(section -> section.getChildSections() != null).forEach(section -> {
             List<SectionResource> childSections = findResourceByIdInList(section.getChildSections(), all);
             children.addAll(childSections);
@@ -119,7 +119,7 @@ public class SectionServiceImpl implements SectionService {
         return children;
     }
 
-    public List<SectionResource> findResourceByIdInList(final List<Long> ids, final List<SectionResource> list){
+    public List<SectionResource> findResourceByIdInList(final List<Long> ids, final List<SectionResource> list) {
         return simpleFilter(list, item -> ids.contains(item.getId()));
     }
 
@@ -130,23 +130,23 @@ public class SectionServiceImpl implements SectionService {
         List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(section.getCompetition(), APPLICATION).getSuccess();
         filterByIdList(section.getChildSections(), sections).stream()
                 .forEach(
-                s -> s.setQuestions(
-                        getQuestionsBySection(s.getQuestions(), questions)
-                        .stream()
-                        .filter(
-                                q -> q != null &&
-                                !q.getFormInputs().stream()
-                                    .anyMatch(
-                                        input -> type == simpleFilter(formInputResources, i -> input.equals(i.getId())).get(0).getType()
-                                    )
+                        s -> s.setQuestions(
+                                getQuestionsBySection(s.getQuestions(), questions)
+                                        .stream()
+                                        .filter(
+                                                q -> q != null &&
+                                                        !q.getFormInputs().stream()
+                                                                .anyMatch(
+                                                                        input -> type == simpleFilter(formInputResources, i -> input.equals(i.getId())).get(0).getType()
+                                                                )
+                                        )
+                                        .map(QuestionResource::getId)
+                                        .collect(toList())
                         )
-                        .map(QuestionResource::getId)
-                        .collect(toList())
-                )
-        );
+                );
     }
 
-    private List<SectionResource> filterByIdList(final List<Long> ids, final List<SectionResource> list){
+    private List<SectionResource> filterByIdList(final List<Long> ids, final List<SectionResource> list) {
         return simpleFilter(list, section -> ids.contains(section.getId()));
     }
 
@@ -165,31 +165,29 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-	public List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type) {
-		return sectionRestService.getSectionsByCompetitionIdAndType(competitionId, type).getSuccess();
-	}
-    
-    @Override
-	public SectionResource getFinanceSection(Long competitionId) {
-    	return getSingleSectionByType(competitionId, SectionType.FINANCE);
+    public List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type) {
+        return sectionRestService.getSectionsByCompetitionIdAndType(competitionId, type).getSuccess();
+    }
 
-	}
-    
     @Override
-	public SectionResource getOrganisationFinanceSection(Long competitionId) {
-    	return getSingleSectionByType(competitionId, SectionType.ORGANISATION_FINANCES);
-	}
-    
-	private SectionResource getSingleSectionByType(Long competitionId, SectionType type) {
-    	List<SectionResource> sections = getSectionsForCompetitionByType(competitionId, type);
-    	if(sections.isEmpty()) {
-    		LOG.error("no " + type + " section found for competition " + competitionId);
-    		return null;
-    	}
-    	if(sections.size() > 1) {
-    		LOG.warn("multiple " + type + " sections found for competition " + competitionId);
-    	}
-    	return sections.get(0);
-	}
+    public SectionResource getFinanceSection(Long competitionId) {
+        return getSingleSectionByType(competitionId, SectionType.FINANCE);
+    }
 
+    @Override
+    public SectionResource getOrganisationFinanceSection(Long competitionId) {
+        return getSingleSectionByType(competitionId, SectionType.ORGANISATION_FINANCES);
+    }
+
+    private SectionResource getSingleSectionByType(Long competitionId, SectionType type) {
+        List<SectionResource> sections = getSectionsForCompetitionByType(competitionId, type);
+        if (sections.isEmpty()) {
+            LOG.error("no " + type + " section found for competition " + competitionId);
+            return null;
+        }
+        if (sections.size() > 1) {
+            LOG.warn("multiple " + type + " sections found for competition " + competitionId);
+        }
+        return sections.get(0);
+    }
 }

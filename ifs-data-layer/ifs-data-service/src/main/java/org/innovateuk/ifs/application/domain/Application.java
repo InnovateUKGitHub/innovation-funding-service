@@ -369,7 +369,7 @@ public class Application implements ProcessActivity {
     public String getJesFileUpload() {
         return "";
     }
-    
+
     /** Placeholder function for mapping errors to field in Thymeleaf */
     public void setJesFileUpload(String jesFileUpload) {
     }
