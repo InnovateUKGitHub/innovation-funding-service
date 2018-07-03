@@ -39,7 +39,7 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
 
     @Test
     public void testGetById(){
-        AddressResource addressResource = new AddressResource();;
+        AddressResource addressResource = new AddressResource();
         String url = addressRestURL + "/" + addressResource.getId();
         setupGetWithRestResultExpectations(url, AddressResource.class, addressResource);
 

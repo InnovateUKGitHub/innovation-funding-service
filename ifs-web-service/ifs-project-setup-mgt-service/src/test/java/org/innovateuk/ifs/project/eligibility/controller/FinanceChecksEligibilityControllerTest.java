@@ -496,7 +496,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
         when(projectFinanceRowRestService.delete(projectId, organisationId, costId)).thenReturn(restSuccess());
         mockMvc.perform(
                 get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/remove_cost/{costId}", projectId, organisationId, costId)).
-                andExpect(status().isOk());;
+                andExpect(status().isOk());
     }
 
     @Test

@@ -49,8 +49,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-;
-
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
 

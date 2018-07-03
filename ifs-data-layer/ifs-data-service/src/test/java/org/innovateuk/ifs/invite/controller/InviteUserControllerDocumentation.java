@@ -94,7 +94,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                                 parameterWithName("inviteHash").description("hash of the invite being requested")
                         ),
                         responseFields(InviteUserResourceDocs.roleInviteResourceFields)
-                ));;
+                ));
 
         verify(inviteUserServiceMock).getInvite("SomeHashString");
 
@@ -124,7 +124,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
         mockMvc.perform(get(buildPaginationUri("/inviteUser/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
                 .andDo(document("inviteUser/internal/pending/{method-name}",
                         responseFields(PageResourceDocs.pageResourceFields)
-                ));;
+                ));
     }
 
     @Test

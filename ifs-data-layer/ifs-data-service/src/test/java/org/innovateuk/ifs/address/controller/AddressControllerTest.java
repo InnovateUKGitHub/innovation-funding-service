@@ -61,6 +61,6 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
         when(addressServiceMock.getById(addressResource.getId())).thenReturn(serviceSuccess(addressResource));
         mockMvc.perform(get("/address/{id}", addressResource.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(addressResource)));;
+                .andExpect(content().string(objectMapper.writeValueAsString(addressResource)));
     }
 }

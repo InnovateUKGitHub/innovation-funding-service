@@ -65,7 +65,7 @@ public class ApplicationModelPopulatorTest {
     protected SectionService sectionService;
 
     @Mock
-    protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;;
+    protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Mock
     protected OrganisationService organisationService;

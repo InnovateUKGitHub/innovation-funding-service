@@ -46,7 +46,7 @@ public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormI
 
     @Test
     public void findByCompetitionIdTest() {
-        List<FormInputResource> formInputResources = Arrays.asList(1,2,3).stream().map(i -> new FormInputResource()).collect(Collectors.toList());;
+        List<FormInputResource> formInputResources = Arrays.asList(1,2,3).stream().map(i -> new FormInputResource()).collect(Collectors.toList());
         setupGetWithRestResultExpectations(formInputRestURL + "/findByCompetitionId/1", formInputResourceListType(), formInputResources);
 
         List<FormInputResource> returnedFormInputResources = service.getByCompetitionId(1L).getSuccess();

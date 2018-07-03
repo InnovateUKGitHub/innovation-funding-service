@@ -24,7 +24,7 @@ public enum CompetitionSetupSubsection {
 		for(CompetitionSetupSubsection section: values()){
 			PATH_MAP.put(section.getPath(), section);
 		}
-	};
+	}
 
 	CompetitionSetupSubsection(Long id, String path, String name) {
 		this.id = id;
