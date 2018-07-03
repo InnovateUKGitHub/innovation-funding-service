@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.security;
 
-import org.assertj.core.util.Lists;
-
 import java.util.List;
 
 import static org.assertj.core.util.Lists.emptyList;

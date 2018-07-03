@@ -54,7 +54,7 @@ public class InterviewStatisticsServiceImpl implements InterviewStatisticsServic
     public ServiceResult<InterviewAssignmentKeyStatisticsResource> getInterviewAssignmentPanelKeyStatistics(long competitionId) {
         int applicationsInCompetition = applicationRepository.countByCompetitionIdAndApplicationProcessActivityState(competitionId, ApplicationState.SUBMITTED);
         int applicationsAssigned = interviewAssignmentRepository.
-                countByTargetCompetitionIdAndActivityStateIn(competitionId, asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES));
+                countByTargetCompetitionIdAndActivityStateIn(competitionId, asLinkedSet(InterviewAssignmentState.assignedStates()));
 
         return serviceSuccess(new InterviewAssignmentKeyStatisticsResource(applicationsInCompetition, applicationsAssigned));
     }
@@ -81,7 +81,7 @@ public class InterviewStatisticsServiceImpl implements InterviewStatisticsServic
         List<Long> interviewPanelInviteIds = simpleMap(interviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
 
         int applicationsAssigned = interviewAssignmentRepository.
-                countByTargetCompetitionIdAndActivityStateIn(competitionId, asLinkedSet(InterviewAssignmentState.ASSIGNED_STATES));
+                countByTargetCompetitionIdAndActivityStateIn(competitionId, asLinkedSet(InterviewAssignmentState.assignedStates()));
         int interviewResponses = interviewAssignmentRepository.
                 countByTargetCompetitionIdAndActivityStateIn(competitionId, asLinkedSet(InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE));
         int assessorsAccepted = getInterviewParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, interviewPanelInviteIds);

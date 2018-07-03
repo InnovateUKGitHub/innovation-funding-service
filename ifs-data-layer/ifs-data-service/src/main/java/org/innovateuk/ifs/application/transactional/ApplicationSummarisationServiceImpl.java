@@ -16,49 +16,49 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 @Service
 public class ApplicationSummarisationServiceImpl implements ApplicationSummarisationService {
 
-	@Autowired
-	private FinanceService financeService;
+    @Autowired
+    private FinanceService financeService;
 
-	@Override
-	public ServiceResult<BigDecimal> getTotalProjectCost(Application application) {
+    @Override
+    public ServiceResult<BigDecimal> getTotalProjectCost(Application application) {
 
-		if (application.getApplicationFinances() == null || application.getApplicationFinances().isEmpty()) {
-			return result(BigDecimal.ZERO);
-		}
+        if (application.getApplicationFinances() == null || application.getApplicationFinances().isEmpty()) {
+            return result(BigDecimal.ZERO);
+        }
 
-		ServiceResult<List<ApplicationFinanceResource>> financeTotalsResult = financeService.financeTotals(application.getId());
+        ServiceResult<List<ApplicationFinanceResource>> financeTotalsResult = financeService.financeTotals(application.getId());
 
-		BigDecimal total;
-		if (financeTotalsResult.isSuccess()) {
-			total = financeTotalsResult.getSuccess().stream().map(t -> t.getTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
-		} else {
-			total = BigDecimal.ZERO;
-		}
+        BigDecimal total;
+        if (financeTotalsResult.isSuccess()) {
+            total = financeTotalsResult.getSuccess().stream().map(t -> t.getTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        } else {
+            total = BigDecimal.ZERO;
+        }
 
-		return result(total);
-	}
+        return result(total);
+    }
 
-	@Override
-	public ServiceResult<BigDecimal> getFundingSought(Application application) {
+    @Override
+    public ServiceResult<BigDecimal> getFundingSought(Application application) {
 
-		if (application.getApplicationFinances() == null || application.getApplicationFinances().isEmpty()) {
-			return result(BigDecimal.ZERO);
-		}
+        if (application.getApplicationFinances() == null || application.getApplicationFinances().isEmpty()) {
+            return result(BigDecimal.ZERO);
+        }
 
-		ServiceResult<List<ApplicationFinanceResource>> financeTotalsResult = financeService.financeTotals(application.getId());
+        ServiceResult<List<ApplicationFinanceResource>> financeTotalsResult = financeService.financeTotals(application.getId());
 
-		BigDecimal fundingSought;
-		if (financeTotalsResult.isSuccess()) {
-			fundingSought = financeTotalsResult.getSuccess().stream()
-					.filter(of -> of != null && of.getGrantClaimPercentage() != null)
-					.map(of -> of.getTotalFundingSought()).reduce(BigDecimal.ZERO, BigDecimal::add);
-		} else {
-			fundingSought = BigDecimal.ZERO;
-		}
-		return result(fundingSought);
-	}
-	
-	private ServiceResult<BigDecimal> result(BigDecimal value) {
-		return serviceSuccess(value.setScale(2, RoundingMode.HALF_UP));
-	}
+        BigDecimal fundingSought;
+        if (financeTotalsResult.isSuccess()) {
+            fundingSought = financeTotalsResult.getSuccess().stream()
+                    .filter(of -> of != null && of.getGrantClaimPercentage() != null)
+                    .map(of -> of.getTotalFundingSought()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        } else {
+            fundingSought = BigDecimal.ZERO;
+        }
+        return result(fundingSought);
+    }
+
+    private ServiceResult<BigDecimal> result(BigDecimal value) {
+        return serviceSuccess(value.setScale(2, RoundingMode.HALF_UP));
+    }
 }

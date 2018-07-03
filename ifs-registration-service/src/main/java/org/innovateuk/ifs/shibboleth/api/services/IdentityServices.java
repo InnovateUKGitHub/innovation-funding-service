@@ -11,7 +11,9 @@ import org.innovateuk.ifs.shibboleth.api.models.validators.PasswordValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ldap.core.*;
+import org.springframework.ldap.core.ContextExecutor;
+import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.ldap.query.ContainerCriteria;
 import org.springframework.ldap.query.LdapQueryBuilder;
@@ -169,7 +171,7 @@ public class IdentityServices implements CreateIdentityService, FindIdentityServ
 
 
     private LdapQueryBuilder queryIdentity() {
-        return LdapQueryBuilder.query().attributes(Identity.Constants.ATTRIBUTES);
+        return LdapQueryBuilder.query().attributes(Identity.Constants.allAttributes());
     }
 
     /**

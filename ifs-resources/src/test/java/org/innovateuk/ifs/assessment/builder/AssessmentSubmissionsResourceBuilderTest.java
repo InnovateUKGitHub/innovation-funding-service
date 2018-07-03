@@ -5,9 +5,9 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
+import static org.junit.Assert.assertEquals;
 
 public class AssessmentSubmissionsResourceBuilderTest {
 

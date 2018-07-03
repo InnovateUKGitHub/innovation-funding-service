@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.service;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;

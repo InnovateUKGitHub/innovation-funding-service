@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.exception;
 
-import org.innovateuk.ifs.interceptors.MenuLinksHandlerInterceptor;
-import org.innovateuk.ifs.util.MessageUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.interceptors.MenuLinksHandlerInterceptor;
+import org.innovateuk.ifs.util.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
