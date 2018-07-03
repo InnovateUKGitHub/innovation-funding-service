@@ -68,7 +68,7 @@
 
 .section-divide{
   border-top: 1px solid $govuk-border-colour;
-  padding-top: $gutter-half;
+  padding-top: $govuk-gutter-half;
 }
 
 /*-- Hiding text - used for labels in tables where input uses aria-labelledby --*/
@@ -253,7 +253,7 @@ table{
     //.hgroup,
     .centralise{
       //@extend %site-width-container;
-      //@extend %contain-floats;
+      //@include govuk-clearfix;
       box-sizing: border-box;
     }
 

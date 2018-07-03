@@ -18,7 +18,7 @@
 .pie {
   width: 100px;
   height: 100px;
-  @include inline-block;
+  display: inline-block;
   color:transparent;
 
   svg {
@@ -40,7 +40,7 @@
 }
 .pie-container {
   position: relative;
-  @include inline-block;
+  display: inline-block;
   vertical-align:middle;
 }
 .pie-overlay {
@@ -95,7 +95,7 @@
   }
 }
 //same as no-js but @extends don't work within ie-lte :(
-@include ie-lte(8) {
+@include govuk-ie-lte(8) {
   .pie {
     width:auto;
     height: auto;

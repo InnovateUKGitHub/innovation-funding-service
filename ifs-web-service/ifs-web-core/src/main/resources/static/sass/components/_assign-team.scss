@@ -1,5 +1,5 @@
 .assign-container {
-  @include inline-block;
+  display: inline-block;
   position:relative;
 
   &.assigned-alert,
@@ -134,7 +134,7 @@
     }
 
     .assign-button {
-      @extend .govuk-visually-hidden;
+      @include govuk-visually-hidden;
     }
   }
 

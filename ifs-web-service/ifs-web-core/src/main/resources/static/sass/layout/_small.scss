@@ -1,11 +1,5 @@
-
-.greentext {
-  color:govuk-colour("green");
-}
-
-.uppercase {
-  text-transform: uppercase;
-}
+@import "govuk-frontend/settings/all";
+@import "govuk-frontend/components/all";
 
 strong {
   font-weight:700;
@@ -21,7 +15,7 @@ caption {
 }
 
 .icon {
-  @include inline-block;
+  display: inline-block;
   vertical-align: middle;
   margin-right:2px;
 }
@@ -37,11 +31,11 @@ small {
 }
 
 .blue-block {
-  @include inline-block;
   @include media-down(mobile){
     display:block;
   }
 
+  display: inline-block;
   background: govuk-colour("blue");
   color:#fff;
   text-align: center;
@@ -128,7 +122,7 @@ th {
 }
 
 .alignright-button {
-  @extend %contain-floats;
+  @include govuk-clearfix;
   text-align:right;
 
   a {
@@ -180,7 +174,7 @@ button,
       text-decoration: none;
     }
 
-    @include ie-lte(8) {
+    @include govuk-ie-lte(8) {
       border-bottom: none;
     }
   }
@@ -262,7 +256,7 @@ col {
 
 */
 .icon-print {
-  @include device-pixel-ratio() {
+  @include govuk-device-pixel-ratio() {
     background-image: file-url("ifs-images/icons/icon-print-2x.png");
     background-size: 100%;
   }
@@ -273,11 +267,9 @@ col {
 }
 
 .button-secondary{
-  @include button(govuk-colour("grey-3"));
-  @include box-sizing (border-box);
-  margin: 0 $gutter-half $gutter-half 0;
-  padding: em(10) em(15) em(5) em(15);
-  vertical-align: top;
+  @extend .govuk-button;
+  background-color: govuk-colour("grey-3");
+  color: $govuk-text-colour;
 }
 
 .button,

@@ -25,25 +25,9 @@
   }
 }
 
-.column-fifth {
-  @include grid-column(1/5);
-}
-
-.column-two-fifth {
-  @include grid-column(2/5);
-}
-
-.column-three-fifth {
-  @include grid-column(3/5);
-}
-
-.column-four-fifth {
-  @include grid-column(4/5);
-}
-
-.grid-container {
-  @extend %site-width-container;
-}
+//.column-fifth {
+//  @include grid-column(1/5);
+//}
 
 .constrain-width {
   max-width:1400px;
@@ -52,7 +36,7 @@
 
 #content {
   &.full-width {
-    @include ie-lte(8){
+    @include govuk-ie-lte(8){
       width: 95%;
     }
 
@@ -60,9 +44,9 @@
   }
 }
 
-.grid-container {
+.govuk-width-container {
   &.full-width {
-    @include ie-lte(8){
+    @include govuk-ie-lte(8){
       width: 95%;
     }
 

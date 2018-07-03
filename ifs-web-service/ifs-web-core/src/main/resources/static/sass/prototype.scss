@@ -1,21 +1,26 @@
-// Import all of the govuk-elements-sass files
+// Path to assets for use with the file-url function
+// in the govuk frontend url-helpers partial
+$govuk-images-path: "/images/";
+$govuk-fonts-path: "/fonts/";
+
+// Import all of the govuk-frontend files
 // ===========================================
-//@import "govuk-template";
-//@import "govuk-elements";
-//@import "components";
+@import "govuk-frontend/all";
+
+@import "components";
 
 /* Prototype css for testing */
 
-//@import "prototype/prototype-nav";
-//@import "prototype/prototype-modifiers";
-//@import "prototype/prototype-lists";
-//@import "prototype/prototype-forms";
-//@import "prototype/prototype-buttons";
-//@import "prototype/prototype-collapsible-sections";
-//@import "prototype/prototype-statusses";
-//@import "prototype/prototype-application-dashboard";
-//@import "prototype/prototype-comp-admin";
-//@import "prototype/prototype-internal-admin";
-//@import "prototype/prototype-comp-setup";
-//@import "prototype/prototype-pie-charts";
-//@import "prototype/prototype-tablesaw";
+@import "prototype/prototype-nav";
+@import "prototype/prototype-modifiers";
+@import "prototype/prototype-lists";
+@import "prototype/prototype-forms";
+@import "prototype/prototype-buttons";
+@import "prototype/prototype-collapsible-sections";
+@import "prototype/prototype-statusses";
+@import "prototype/prototype-application-dashboard";
+@import "prototype/prototype-comp-admin";
+@import "prototype/prototype-internal-admin";
+@import "prototype/prototype-comp-setup";
+@import "prototype/prototype-pie-charts";
+@import "prototype/prototype-tablesaw";

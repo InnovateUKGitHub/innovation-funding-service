@@ -11,7 +11,7 @@
 }
 
 .event-alert {
-  @include ie-lte(10) {
+  @include govuk-ie-lte(10) {
     position: relative; //because ie9 and lower don't have css animations we have the content at the top of the page all the time.
   }
 
@@ -55,7 +55,7 @@
 
   &.event-warning {
     p {
-      border-top: 10px solid $beta-colour;
+      border-top: 10px solid govuk-colour("blue");
 
       span {
         background-image: url(/images/icon-important.png);

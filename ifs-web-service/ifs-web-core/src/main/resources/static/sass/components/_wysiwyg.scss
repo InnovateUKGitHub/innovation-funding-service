@@ -1,6 +1,10 @@
 // //magic sprites in stead of fontAwesome as a font.
 // //Good ie7 support plus better performance, SVG would be even better but isn't supported
 // //font icons are blocking and this is just a couple of bytes of background images
+//@import "govuk-frontend/settings/all";
+//@import "govuk-frontend/tools/all";
+//@import "govuk-frontend/helpers/all";
+@import "govuk-frontend/core/lists";
 
 .hallotoolbar {
   .list {
@@ -14,7 +18,7 @@
 }
 
 .fa {
-  @include inline-block;
+  display: inline-block;
   height: 12px;
   width: 12px;
   background-image: url('/images/ifs-images/wysiwyg/editorControls.png');
@@ -65,7 +69,7 @@ button {
   }
 }
 
-@include device-pixel-ratio() {
+@include govuk-device-pixel-ratio() {
   .fa {
     &.fa {
       background-image: url('/images/ifs-images/wysiwyg/editorControls@2x.png');
@@ -98,15 +102,15 @@ button {
 
   ol,
   ul {
-    @extend .list;
+    @extend %govuk-list;
   }
 
   ol {
-    @extend .list-number;
+    @extend %govuk-list--number;
   }
 
   ul {
-    @extend .list-bullet;
+    @extend %govuk-list--bullet;
   }
 
   li {

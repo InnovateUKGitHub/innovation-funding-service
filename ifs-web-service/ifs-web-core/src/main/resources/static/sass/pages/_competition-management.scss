@@ -7,7 +7,7 @@ $wide-page-width: 1400px;
 
   #global-header{
     .header-wrapper{
-      max-width: $wide-page-width + $gutter;
+      max-width: $wide-page-width + $govuk-gutter;
     }
   }
 
@@ -22,32 +22,32 @@ $wide-page-width: 1400px;
       margin: 0;
     }
 
-    @media (min-width: $wide-page-width + ($gutter * 2)){
+    @media (min-width: $wide-page-width + ($govuk-gutter * 2)){
       padding-left: 0;
       padding-right: 0;
       margin: 0 auto;
     }
 
     max-width: $wide-page-width;
-    padding-left: $gutter;
-    padding-right: $gutter;
+    padding-left: $govuk-gutter;
+    padding-right: $govuk-gutter;
 
   }
 
   %wide-page-margins{
     @include media-down(mobile){
-      margin-left: $gutter-half;
-      margin-right: $gutter-half;
+      margin-left: $govuk-gutter-half;
+      margin-right: $govuk-gutter-half;
     }
 
-    @media (min-width: $wide-page-width + ($gutter * 2)){
+    @media (min-width: $wide-page-width + ($govuk-gutter * 2)){
       margin-left: auto;
       margin-right: auto;
     }
 
     max-width: $wide-page-width;
-    margin-left: $gutter;
-    margin-right: $gutter;
+    margin-left: $govuk-gutter;
+    margin-right: $govuk-gutter;
   }
 
   .phase-banner{
@@ -258,7 +258,7 @@ $wide-page-width: 1400px;
 }
 
 .contentGroup {
-  @extend %contain-floats;
+  @include govuk-clearfix;
   padding: 30px 0;
   border-top: 1px solid $govuk-border-colour;
   clear:both;

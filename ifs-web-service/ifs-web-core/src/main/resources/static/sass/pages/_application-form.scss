@@ -93,7 +93,7 @@
 }
 
 .form-row {
-  @extend %contain-floats;
+  @include govuk-clearfix;
   border-bottom: 1px solid $govuk-border-colour;
   padding: 20px 0;
 

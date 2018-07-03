@@ -538,7 +538,7 @@ ol.navigation-list {
   }
   //right aligned
   &.navigation-right {
-    @extend %contain-floats;
+    @include govuk-clearfix;
     float: right;
     li { margin: 0 0 0 10px;}
     li:first-child {

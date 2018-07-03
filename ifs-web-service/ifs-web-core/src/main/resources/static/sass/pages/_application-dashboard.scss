@@ -9,21 +9,21 @@
   margin: 0;
 }
 
-.column-assessment-details{
-  @include grid-column( 13/16 );
-
-  @include media-down(tablet) {
-    @include grid-column( 12/16 );
-  }
-}
-
-.column-assessment-status{
-  @include grid-column( 3/16 );
-
-  @include media-down(tablet) {
-    @include grid-column( 4/16 );
-  }
-}
+//.column-assessment-details{
+//  @include grid-column( 13/16 );
+//
+//  @include media-down(tablet) {
+//    @include grid-column( 12/16 );
+//  }
+//}
+//
+//.column-assessment-status{
+//  @include grid-column( 3/16 );
+//
+//  @include media-down(tablet) {
+//    @include grid-column( 4/16 );
+//  }
+//}
 
 .app-dashboard,
 .assessor-dashboard,
@@ -116,11 +116,11 @@
     }
   }
 
-  .grid-row {
-    .row {
-      @include grid-column(1);
-    }
-  }
+  //.grid-row {
+  //  .row {
+  //    @include grid-column(1);
+  //  }
+  //}
 
   .competition-details {
     .list-bullet {

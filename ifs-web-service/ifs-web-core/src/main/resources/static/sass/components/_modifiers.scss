@@ -197,19 +197,20 @@ table {
       }
     }
 
-    td,
-    td.form-group{
+    td {
+      &.form-group {
         width: 100%;
         float: left;
-        border:none;
+        border: none;
 
-        label{
+        label {
           .form-label {
             display: block;
             font-weight: 800;
           }
         }
       }
+    }
   }
 }
 

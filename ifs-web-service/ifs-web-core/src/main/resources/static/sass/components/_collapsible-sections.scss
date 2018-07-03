@@ -70,7 +70,7 @@
     }
 
     + [aria-hidden="false"] {
-      @extend %contain-floats;
+      @include govuk-clearfix;
       display: block;
       padding:0 0 3em;
     }
@@ -116,7 +116,7 @@
   }
 
   .collapsible-content {
-    @extend %contain-floats;
+    @include govuk-clearfix;
     padding:10px;
   }
 

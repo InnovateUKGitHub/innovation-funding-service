@@ -3,16 +3,16 @@ $is-ie: true;
 $ie-version: 8;
 
 // Path to assets for use with the file-url function
-// in the govuk frontend toolkit's url-helpers partial
-$path: "/images/";
+// in the govuk frontend url-helpers partial
+$govuk-images-path: "/images/";
+$govuk-fonts-path: "/fonts/";
 
-// Import all of the govuk-elements-sass files
+// Import all of the govuk-frontend files
 // ===========================================
-//@import "govuk-template-ie8";
-//@import "govuk-elements";
+@import "govuk-frontend/all";
 
 // Import all IFS files
 // ===========================================
 @import "components";
 @import "pages";
-@import "print";
+//@import "print";

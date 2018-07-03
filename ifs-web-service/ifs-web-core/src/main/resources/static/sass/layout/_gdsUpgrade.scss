@@ -20,7 +20,7 @@ summary > .arrow {
 [tabindex] {
   &:focus {
     outline-offset: 0;
-    outline: 3px solid $yellow;
+    outline: 3px solid $govuk-focus-colour;
   }
 }
 

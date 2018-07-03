@@ -1,7 +1,3 @@
-@import "govuk-frontend/settings/all";
-@import "govuk-frontend/tools/all";
-@import "govuk-frontend/helpers/all";
-
 %read-only {
   color: govuk-colour("black");
   background: govuk-colour("grey-4");
@@ -245,7 +241,7 @@ tr {
       background-position: 4px 50%;
 
       .error-message {
-        @extend .govuk-visually-hidden
+        @include govuk-visually-hidden
       }
 
       > * {
@@ -277,7 +273,7 @@ tr {
 }
 
 .question {
-  @extend %contain-floats;
+  @include govuk-clearfix;
   margin-bottom: 30px;
 
   .heading-medium {
@@ -504,12 +500,12 @@ td {
 }
 
 .agree-to-terms-container {
-  @extend %contain-floats;
+  @include govuk-clearfix;
   padding-left: 1em;
 }
 
 .form-footer {
-  @extend %contain-floats;
+  @include govuk-clearfix;
   clear: both;
   color: $govuk-text-colour;
   background: govuk-colour("grey-4");
