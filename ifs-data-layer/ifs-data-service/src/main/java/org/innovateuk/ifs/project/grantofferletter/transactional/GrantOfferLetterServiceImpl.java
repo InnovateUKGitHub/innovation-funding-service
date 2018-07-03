@@ -273,7 +273,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
         grantOfferLetterIndustrialFinanceTable.populate(financesForIndustrialOrgs);
         grantOfferLetterAcademicFinanceTable.populate(financesForAcademicOrgs);
-        grantOfferLetterFinanceTotalsTable.populate(financesForAcademicOrgs);
+        grantOfferLetterFinanceTotalsTable.populate(financesForIndustrialOrgs, financesForAcademicOrgs);
 
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
@@ -295,6 +295,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
         templateReplacements.put("industrialFinanceTable", grantOfferLetterIndustrialFinanceTable);
         templateReplacements.put("academicFinanceTable", grantOfferLetterAcademicFinanceTable);
+        templateReplacements.put("financeTotalsTable", grantOfferLetterFinanceTotalsTable);
         return templateReplacements;
     }
 

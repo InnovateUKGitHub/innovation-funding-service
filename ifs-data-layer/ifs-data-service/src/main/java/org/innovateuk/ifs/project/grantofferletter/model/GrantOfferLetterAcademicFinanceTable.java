@@ -43,88 +43,78 @@ public class GrantOfferLetterAcademicFinanceTable extends GrantOfferLetterFinanc
     public List<String> getOrganisations() {
         return organisations;
     }
+
     public BigDecimal getIncurredStaff(String org) {
         return incurredStaff.get(org);
     }
+
     public BigDecimal getIncurredTravelSubsistence(String org) {
         return incurredTravelSubsistence.get(org);
     }
+
     public BigDecimal getIncurredOtherCosts(String org) {
         return incurredOtherCosts.get(org);
     }
+
     public BigDecimal getAllocatedInvestigators(String org) {
         return allocatedInvestigators.get(org);
     }
+
     public BigDecimal getAllocatedEstateCosts(String org) {
         return allocatedEstateCosts.get(org);
     }
+
     public BigDecimal getAllocatedOtherCosts(String org) {
         return allocatedOtherCosts.get(org);
     }
+
     public BigDecimal getIndirectCosts(String org) {
         return indirectCosts.get(org);
     }
+
     public BigDecimal getExceptionsStaff(String org) {
         return exceptionsStaff.get(org);
     }
+
     public BigDecimal getExceptionsOtherCosts(String org) {
         return exceptionsOtherCosts.get(org);
     }
 
     public BigDecimal getIncurredStaffTotal() {
-        return incurredStaff
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-    public BigDecimal getIncurredTravelSubsistenceTotal() {
-        return incurredTravelSubsistence
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-    public BigDecimal getIncurredOtherCostsTotal() {
-        return incurredOtherCosts
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-    public BigDecimal getAllocatedInvestigatorsTotal() {
-        return allocatedInvestigators
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-    public BigDecimal getAllocatedEstateCostsTotal() {
-        return allocatedEstateCosts
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-    public BigDecimal getAllocatedOtherCostsTotal() {
-        return allocatedOtherCosts
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-    public BigDecimal getIndirectCostsTotal() {
-        return indirectCosts
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-    public BigDecimal getExceptionsStaffTotal() {
-        return exceptionsStaff
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-    public BigDecimal getExceptionsOtherCostsTotal() {
-        return exceptionsOtherCosts
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return sumTotals(incurredStaff);
+
     }
 
+    public BigDecimal getIncurredTravelSubsistenceTotal() {
+        return sumTotals(incurredTravelSubsistence);
+    }
+
+    public BigDecimal getIncurredOtherCostsTotal() {
+        return sumTotals(incurredOtherCosts);
+    }
+
+    public BigDecimal getAllocatedInvestigatorsTotal() {
+        return sumTotals(allocatedInvestigators);
+    }
+
+    public BigDecimal getAllocatedEstateCostsTotal() {
+        return sumTotals(allocatedEstateCosts);
+    }
+
+    public BigDecimal getAllocatedOtherCostsTotal() {
+        return sumTotals(allocatedOtherCosts);
+    }
+
+    public BigDecimal getIndirectCostsTotal() {
+        return sumTotals(indirectCosts);
+    }
+
+    public BigDecimal getExceptionsStaffTotal() {
+        return sumTotals(exceptionsStaff);
+    }
+
+    public BigDecimal getExceptionsOtherCostsTotal() {
+        return sumTotals(exceptionsOtherCosts);
+    }
 
 }

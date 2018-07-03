@@ -88,6 +88,19 @@
           ${org} | ${academicFinanceTable.getExceptionsOtherCosts(org)}
           </#list>
 
+
+
+          <#list financeTotalsTable.industrialOrgs as org>
+          ${org} | ${financeTotalsTable.getGrantClaim(org)}
+          </#list>
+
+          <#list financeTotalsTable.academicOrgs as org>
+          ${org} | ${financeTotalsTable.getTotalGrant(org)}
+          </#list>
+
+
+
+
 </p>
 
       <p class="bold">
