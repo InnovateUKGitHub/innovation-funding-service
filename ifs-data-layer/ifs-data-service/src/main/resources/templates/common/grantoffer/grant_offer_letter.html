@@ -24,34 +24,70 @@
 
 
 
-          <#list industrialFinanceTable.labour?keys as key>
-          ${key} | ${industrialFinanceTable.labour[key]}
+          <#list industrialFinanceTable.organisations as org>
+          ${org} | ${industrialFinanceTable.getLabour(org)}
           </#list>
 
-          <#list industrialFinanceTable.materials?keys as key>
-          ${key} | ${industrialFinanceTable.materials[key]}
+          <#list industrialFinanceTable.organisations as org>
+          ${org} | ${industrialFinanceTable.getMaterials(org)}
           </#list>
 
-          <#list industrialFinanceTable.overheads?keys as key>
-          ${key} | ${industrialFinanceTable.overheads[key]}
+          <#list industrialFinanceTable.organisations as org>
+          ${org} | ${industrialFinanceTable.getOverheads(org)}
           </#list>
 
-          <#list industrialFinanceTable.capitalUsage?keys as key>
-          ${key} | ${industrialFinanceTable.capitalUsage[key]}
+          <#list industrialFinanceTable.organisations as org>
+          ${org} | ${industrialFinanceTable.getCapitalUsage(org)}
           </#list>
 
-          <#list industrialFinanceTable.subcontract?keys as key>
-          ${key} | ${industrialFinanceTable.subcontract[key]}
+          <#list industrialFinanceTable.organisations as org>
+          ${org} | ${industrialFinanceTable.getSubcontract(org)}
           </#list>
 
-          <#list industrialFinanceTable.travel?keys as key>
-          ${key} | ${industrialFinanceTable.travel[key]}
+          <#list industrialFinanceTable.organisations as org>
+          ${org} | ${industrialFinanceTable.getTravel(org)}
           </#list>
 
-
-          <#list industrialFinanceTable.otherCosts?keys as key>
-          ${key} | ${industrialFinanceTable.otherCosts[key]}
+          <#list industrialFinanceTable.organisations as org>
+          ${org} | ${industrialFinanceTable.getOtherCosts(org)}
           </#list>
+
+          <#list academicFinanceTable.organisations as org>
+          ${org} | ${academicFinanceTable.getIncurredStaff(org)}
+          </#list>
+
+          <#list academicFinanceTable.organisations as org>
+          ${org} | ${academicFinanceTable.getIncurredTravelSubsistence(org)}
+          </#list>
+
+          <#list academicFinanceTable.organisations as org>
+          ${org} | ${academicFinanceTable.getIncurredOtherCosts(org)}
+          </#list>
+
+          <#list academicFinanceTable.organisations as org>
+          ${org} | ${academicFinanceTable.getAllocatedInvestigators(org)}
+          </#list>
+
+          <#list academicFinanceTable.organisations as org>
+          ${org} | ${academicFinanceTable.getAllocatedEstateCosts(org)}
+          </#list>
+
+          <#list academicFinanceTable.organisations as org>
+          ${org} | ${academicFinanceTable.getAllocatedOtherCosts(org)}
+          </#list>
+
+          <#list academicFinanceTable.organisations as org>
+          ${org} | ${academicFinanceTable.getIndirectCosts(org)}
+          </#list>
+
+          <#list academicFinanceTable.organisations as org>
+          ${org} | ${academicFinanceTable.getExceptionsStaff(org)}
+          </#list>
+
+          <#list academicFinanceTable.organisations as org>
+          ${org} | ${academicFinanceTable.getExceptionsOtherCosts(org)}
+          </#list>
+
 </p>
 
       <p class="bold">

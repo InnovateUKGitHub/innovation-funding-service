@@ -5,12 +5,16 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Creates the grant offer letter industrial finance table, used by the html renderer for the grant offer letter
+ */
 @Component
-public class GrantOfferLetterIndustrialFinanceTable implements GrantOfferLetterFinanceTable {
+public class GrantOfferLetterIndustrialFinanceTable extends GrantOfferLetterFinanceTable {
 
     private Map<String, BigDecimal> labour;
     private Map<String, BigDecimal> materials;
@@ -19,12 +23,12 @@ public class GrantOfferLetterIndustrialFinanceTable implements GrantOfferLetterF
     private Map<String, BigDecimal> subcontract;
     private Map<String, BigDecimal> travel;
     private Map<String, BigDecimal> otherCosts;
+    private List<String> organisations;
 
     public GrantOfferLetterIndustrialFinanceTable() {
 
     }
 
-    @Override
     public void populate(Map<String,List<ProjectFinanceRow>> financials) {
         labour = sumByFinancialType(financials, FinanceRowType.LABOUR);
         materials = sumByFinancialType(financials, FinanceRowType.MATERIALS);
@@ -33,6 +37,7 @@ public class GrantOfferLetterIndustrialFinanceTable implements GrantOfferLetterF
         subcontract = sumByFinancialType(financials, FinanceRowType.SUBCONTRACTING_COSTS);
         travel = sumByFinancialType(financials, FinanceRowType.TRAVEL);
         otherCosts = sumByFinancialType(financials, FinanceRowType.OTHER_COSTS);
+        organisations = new ArrayList<>(financials.keySet());
     }
 
     private Map<String, BigDecimal> sumByFinancialType(Map<String, List<ProjectFinanceRow>> financials, FinanceRowType type) {
@@ -48,35 +53,30 @@ public class GrantOfferLetterIndustrialFinanceTable implements GrantOfferLetterF
         return financeMap;
     }
 
-
-    public Map<String, BigDecimal> getMaterials() {
-        return materials;
+    public List<String> getOrganisations() {
+        return organisations;
     }
 
-    public Map<String, BigDecimal> getLabour() {
-        return labour;
+    public BigDecimal getLabour(String organisation) {
+        return labour.get(organisation);
     }
-
-    public Map<String, BigDecimal> getOverheads() {
-        return overheads;
+    public BigDecimal getMaterials(String organisation) {
+        return materials.get(organisation);
     }
-
-    public Map<String, BigDecimal> getCapitalUsage() {
-        return capitalUsage;
+    public BigDecimal getOverheads(String organisation) {
+        return overheads.get(organisation);
     }
-
-    public Map<String, BigDecimal> getSubcontract() {
-        return subcontract;
+    public BigDecimal getCapitalUsage(String organisation) {
+        return capitalUsage.get(organisation);
     }
-
-    public Map<String, BigDecimal> getTravel() {
-        return travel;
+    public BigDecimal getSubcontract(String organisation) {
+        return subcontract.get(organisation);
     }
-
-    public Map<String, BigDecimal> getOtherCosts() {
-        return otherCosts;
+    public BigDecimal getTravel(String organisation) {
+        return travel.get(organisation);
     }
-
-
+    public BigDecimal getOtherCosts(String organisation) {
+        return otherCosts.get(organisation);
+    }
 
 }

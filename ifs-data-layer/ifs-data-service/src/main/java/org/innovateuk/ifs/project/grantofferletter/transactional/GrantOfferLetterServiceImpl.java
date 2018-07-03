@@ -34,6 +34,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterAcademicFinanceTable;
+import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTotalsTable;
 import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterIndustrialFinanceTable;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
@@ -129,6 +130,9 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable;
+
+    @Autowired
+    private GrantOfferLetterFinanceTotalsTable grantOfferLetterFinanceTotalsTable;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -269,6 +273,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
         grantOfferLetterIndustrialFinanceTable.populate(financesForIndustrialOrgs);
         grantOfferLetterAcademicFinanceTable.populate(financesForAcademicOrgs);
+        grantOfferLetterFinanceTotalsTable.populate(financesForAcademicOrgs);
 
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
