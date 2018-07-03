@@ -61,8 +61,10 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
                 ),
                 responseFields(
                     fieldWithPath("[]").description("List of formInputs the user is allowed to see")
+                ).andWithPrefix(
+                    "[].", formInputResourceFields)
                 )
-            ));
+            );
     }
 
     @Test
@@ -77,8 +79,10 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
                 ),
                 responseFields(
                     fieldWithPath("[]").description("List of formInputs the user is allowed to see")
+                ).andWithPrefix(
+                    "[].", formInputResourceFields)
                 )
-            ));
+            );
     }
 
     @Test

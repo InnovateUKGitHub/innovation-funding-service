@@ -47,7 +47,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of organisations for the selected application")
-                        )
+                        ).andWithPrefix("[].", organisationResourceFields)
                 ));
     }
 
