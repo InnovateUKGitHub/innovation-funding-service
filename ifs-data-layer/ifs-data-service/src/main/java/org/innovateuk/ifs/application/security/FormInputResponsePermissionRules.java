@@ -63,6 +63,11 @@ public class FormInputResponsePermissionRules {
         return checkProcessRole(user, response.getApplication(), PANEL_ASSESSOR, processRoleRepository);
     }
 
+    @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they interview")
+    public boolean assessorCanSeeTheInputResponsesInApplicationsTheyInterview(final FormInputResponseResource response, final UserResource user) {
+        return checkProcessRole(user, response.getApplication(), INTERVIEW_ASSESSOR, processRoleRepository);
+    }
+
     @PermissionRule(value = "READ", description = "An internal user can see form input responses for applications")
     public boolean internalUserCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
         return isInternal(user);

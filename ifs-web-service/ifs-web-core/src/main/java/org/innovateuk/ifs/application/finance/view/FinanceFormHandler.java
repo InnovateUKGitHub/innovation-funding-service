@@ -14,5 +14,4 @@ public interface FinanceFormHandler {
     ValidationMessages addCost(Long applicationId, Long userId, Long questionId);
     FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId);
     RestResult<ByteArrayResource> getFile(Long applicationFinanceId);
-	
 }

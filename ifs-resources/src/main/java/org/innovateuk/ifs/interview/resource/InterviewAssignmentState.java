@@ -17,8 +17,9 @@ public enum InterviewAssignmentState implements ProcessState, IdentifiableEnum<I
     AWAITING_FEEDBACK_RESPONSE(46, State.PENDING),
     SUBMITTED_FEEDBACK_RESPONSE(47, State.SUBMITTED);
 
-    public static final InterviewAssignmentState[] ASSIGNED_STATES =
-            { AWAITING_FEEDBACK_RESPONSE, SUBMITTED_FEEDBACK_RESPONSE };
+    public static InterviewAssignmentState[] assignedStates() {
+        return new InterviewAssignmentState[] { AWAITING_FEEDBACK_RESPONSE, SUBMITTED_FEEDBACK_RESPONSE };
+    }
 
     private final long id;
     private final State backingState;
