@@ -26,9 +26,10 @@ function upgradeServices {
 
     # data-service
     oc apply -f $(getBuildLocation)/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
-    rolloutStatus "data-service"
-
+    # survey-data-service
     oc apply -f $(getBuildLocation)/survey-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+
+    rolloutStatus "data-service"
     rolloutStatus "survey-data-service"
 
     # services
