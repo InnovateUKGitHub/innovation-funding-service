@@ -85,13 +85,17 @@ public abstract class BaseFinanceFormHandler<FinanceRowRestServiceType extends F
         List<FinanceRowItem> validItems = costItems.stream().filter(Either::isLeft).map(Either::getLeft).collect(toList());
         Map<Long, ValidationMessages> storedItemErrors = storeFinanceRowItems(validItems, updatingFunction);
         storedItemErrors.forEach((costId, validationMessages) ->
-                validationMessages.getErrors().forEach(e -> {
-                    if (StringUtils.hasText(e.getErrorKey())) {
-                        errors.addError(fieldError("formInput[cost-" + costId + "-" + e.getFieldName() + "]",
-                                e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
+                validationMessages.getErrors().forEach(dataServiceError -> {
+                    if (StringUtils.hasText(dataServiceError.getErrorKey())) {
+                        if (dataServiceError.isFieldError() && dataServiceError.getFieldName().equals("calculationFile")) {
+                            errors.addError(fieldError("overheadfile", dataServiceError));
+                        } else {
+                            errors.addError(fieldError("formInput[cost-" + costId + "-" + dataServiceError.getFieldName() + "]",
+                                    dataServiceError.getFieldRejectedValue(), dataServiceError.getErrorKey(), dataServiceError.getArguments()));
+                        }
                     } else {
-                        errors.addError(fieldError("formInput[cost-" + costId + "]", e.getFieldRejectedValue(),
-                                e.getErrorKey(), e.getArguments()));
+                        errors.addError(fieldError("formInput[cost-" + costId + "]", dataServiceError.getFieldRejectedValue(),
+                                dataServiceError.getErrorKey(), dataServiceError.getArguments()));
                     }
                 })
         );
