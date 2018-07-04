@@ -10,7 +10,7 @@
 
         <div class="question">
             <div class="form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'form-group-error'">
-                <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
+                <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances and !model.complete}">
                     <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
                     <p>The type of research affects the level of funding a business can receive under UK state aid rules.
                         Changing the research category will reset the funding level for all business participants.
