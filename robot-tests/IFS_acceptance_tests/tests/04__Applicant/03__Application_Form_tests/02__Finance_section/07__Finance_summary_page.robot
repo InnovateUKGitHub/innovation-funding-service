@@ -18,6 +18,8 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               IFS-802 Enable Innovation Lead user profile matching CSS permissions
 ...
 ...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
+...
+...               IFS-3609 Extend internal view of application finances to other internal roles
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
@@ -100,9 +102,9 @@ Green check should show when the finances are complete
 Collaborator marks finances as complete
     [Documentation]    INFUND-8397  IFS-2879
     [Tags]  HappyPath
-    log in as a different user                     &{collaborator1_credentials}
+    Given log in as a different user                     &{collaborator1_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a  no
+    Then the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a  no
     [Teardown]  logout as user
 
 Alert shows If the academic research participation is too high
@@ -135,24 +137,19 @@ Alert should not show If research participation is below the maximum level
     And the user clicks the button/link            jquery=button:contains("Finances summary")
     Then the user should not see the element       jQuery=.warning-alert:contains("The participation levels of this project are not within the required range")
 
-Support User can see the read only summary link for each partner
+Support User can see the read only finance summary
     [Documentation]  IFS-401
     [Tags]  Support
-    Given the support user navigates to the finances of the application
-    Then the user should see the element    jQuery=.finance-summary tbody tr:nth-of-type(1) th:contains("View finances")
-
-Support User can see the read only summary of finances
-    [Documentation]  IFS-401
-    [Tags]  Support
-    [Setup]  The user clicks the button/link       link=View finances
-    The finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
+    [Setup]  log in as a different user       &{support_user_credentials}
+    Given the user navigates to the finances of the application
+    When the user should see the element      jQuery = .finance-summary tbody tr:nth-of-type(1) th:contains("View finances")
+    And The user clicks the button/link       link = View finances
+    Then The finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
 Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
     [Tags]  Support  HappyPath
-    Given the support user navigates to the finances of the application
-    When the user clicks the button/link  link=View finances
-    And the user clicks the button/link  link=Your project costs
+    Given the user clicks the button/link  link=Your project costs
     When the user verifies labour, overhead costs and materials
     Then the user verifies captial usage, subcontracting, travel and other costs
 
@@ -160,7 +157,7 @@ Support User can see the read only view of Your organisation
     [Documentation]  IFS-401
     [Tags]  Support
     When the user clicks the button/link           jQuery=a:contains("Your finances")
-    Then the user should see the text in the page  Please complete your project finances.
+    Then the user should see the element           css = .your-finances > p  # Please complete your project finances.
     When the user clicks the button/link           link=Your organisation
     Then the user should see the element           jQuery=dt:contains("Size") + dd:contains("Micro")
     And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("0")
@@ -234,6 +231,18 @@ Innovation lead can see read only view of Your funding
     Then the user should see the element           jQuery=dt:contains("Funding level") + dd:contains("30%")
     And the user should see the element            jQuery=th:contains("Lottery") ~ td:contains("£2,468")
 
+IFS Admin views the finance summary
+    [Documentation]  IFS-3609
+    [Setup]  log in as a different user     &{ifs_admin_user_credentials}
+    Given the user navigates to the finances of the application
+    When the user clicks the button/link    link = View finances
+    Then the finance summary table in Your Finances has correct values for lead    £200,903  30%  57,803  2,468  140,632
+
+A user other than an CSS or IFS Admin cannot view the finances of an application that has not yet been submitted
+    [Documentation]  IFS-3609
+    [Setup]  log in as a different user         &{internal_finance_credentials}
+    Given the user navigates to the finances of the application
+    Then the user should not see the element    jQuery = a:contains("View finances")
 
 *** Keywords ***
 Custom suite setup
@@ -381,8 +390,7 @@ The user verifies labour, overhead costs and materials
     the user should see the element  jQuery=#material-costs-table td:contains("Generator") + td:contains("10") + td:contains("10,020") + td:contains("£100,200")
     the user collapses the section   Materials
 
-the support user navigates to the finances of the application
-    log in as a different user       &{support_user_credentials}
+the user navigates to the finances of the application
     the user navigates to the page   ${allApplicationsForRTOComp}
     the user clicks the button/link  link=${application_ids["Networking home IOT devices"]}
     the user expands the section     Finances summary
