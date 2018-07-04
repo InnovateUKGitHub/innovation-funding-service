@@ -27,7 +27,7 @@ import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 /**
  * TODO DW - document this class
  */
-public class ApplicationNotificationServiceImplSilAvailabilityIntegrationTest extends AbstractSilAvailabilityIntegrationTest {
+public class ApplicationNotificationServiceImplSilAvailabilityTest extends AbstractSilAvailabilityIntegrationTest {
 
     @Autowired
     private ApplicationNotificationService applicationNotificationService;
@@ -128,6 +128,7 @@ public class ApplicationNotificationServiceImplSilAvailabilityIntegrationTest ex
             });
         });
     }
+
     private void withIneligibleApplication(Consumer<Application> consumer) {
         try {
 

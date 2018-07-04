@@ -481,11 +481,10 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Override
     public ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
-        return getParticipantByInviteId(inviteId)
-                .andOnSuccess(participant ->
-                        resendInviteNotification(participant.getInvite().sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()), assessorInviteSendResource)
-                )
-                .andOnSuccessReturnVoid();
+        return getParticipantByInviteId(inviteId).andOnSuccess(participant -> {
+            AssessmentInvite updatedInvite = participant.getInvite().sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now());
+            return resendInviteNotification(updatedInvite, assessorInviteSendResource);
+        }).andOnSuccessReturnVoid();
     }
 
     @Override

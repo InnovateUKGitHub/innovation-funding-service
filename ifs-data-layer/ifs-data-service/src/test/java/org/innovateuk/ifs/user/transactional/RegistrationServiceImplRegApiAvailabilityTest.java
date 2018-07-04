@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnic
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
-public class RegistrationServiceImplRegApiAvailabilityIntegrationTest extends BaseAuthenticationAwareIntegrationTest {
+public class RegistrationServiceImplRegApiAvailabilityTest extends BaseAuthenticationAwareIntegrationTest {
 
     @Autowired
     private RegistrationServiceImpl registrationService;

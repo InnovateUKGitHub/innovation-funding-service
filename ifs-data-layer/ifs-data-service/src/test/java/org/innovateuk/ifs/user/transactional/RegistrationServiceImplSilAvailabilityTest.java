@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_U
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
-public class RegistrationServiceImplSilAvailabilityIntegrationTest extends AbstractSilAvailabilityIntegrationTest {
+public class RegistrationServiceImplSilAvailabilityTest extends AbstractSilAvailabilityIntegrationTest {
 
     @Autowired
     private RegistrationServiceImpl registrationService;
