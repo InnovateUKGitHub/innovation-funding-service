@@ -2,8 +2,8 @@ package org.innovateuk.ifs.user.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.SecurityRuleUtil;
 
 /**
  * Permission rules that determines who can perform CRUD operations based around Agreements.

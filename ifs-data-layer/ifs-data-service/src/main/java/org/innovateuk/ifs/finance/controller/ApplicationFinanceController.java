@@ -87,7 +87,7 @@ public class ApplicationFinanceController {
 
     @PostMapping("/update/{applicationFinanceId}")
     public RestResult<ApplicationFinanceResource> update(@PathVariable("applicationFinanceId") final Long applicationFinanceId, @RequestBody final ApplicationFinanceResource applicationFinance) {
-        return financeRowCostsService.updateCost(applicationFinanceId, applicationFinance).toPutWithBodyResponse();
+        return financeRowCostsService.updateApplicationFinance(applicationFinanceId, applicationFinance).toPostWithBodyResponse();
     }
 
     @GetMapping("/financeDetails/{applicationId}/{organisationId}")

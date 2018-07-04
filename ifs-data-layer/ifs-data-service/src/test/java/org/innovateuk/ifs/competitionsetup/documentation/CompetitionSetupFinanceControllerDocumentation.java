@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.competitionsetup.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-
-import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupFinanceController;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
+import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupFinanceController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupFinanceService;
-
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -16,14 +14,11 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 
 public class CompetitionSetupFinanceControllerDocumentation extends BaseControllerMockMVCTest<CompetitionSetupFinanceController> {
 

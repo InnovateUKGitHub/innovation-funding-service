@@ -27,7 +27,7 @@ items:
             value: ${MAIL_ADDRESS}
           ports:
           - containerPort: 8025
-          - containerPort: 443
+          - containerPort: 4443
           - containerPort: 8143
           resources:
             requests:
@@ -48,9 +48,9 @@ items:
     - name: 8025-tcp
       port: 8025
       targetPort: 8025
-    - name: 443-tcp
+    - name: 4443-tcp
       port: 443
-      targetPort: 443
+      targetPort: 4443
     - name: 8143-tcp
       port: 8143
       targetPort: 8143
@@ -65,7 +65,7 @@ items:
   spec:
     host: ${MAIL_ADDRESS}
     port:
-      targetPort: 443-tcp
+      targetPort: 4443-tcp
     tls:
       termination: passthrough
       insecureEdgeTerminationPolicy: Redirect

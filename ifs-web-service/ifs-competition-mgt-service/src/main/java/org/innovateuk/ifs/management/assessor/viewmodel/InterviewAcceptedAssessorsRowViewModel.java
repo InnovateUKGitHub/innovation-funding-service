@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.assessor.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
 
 /**

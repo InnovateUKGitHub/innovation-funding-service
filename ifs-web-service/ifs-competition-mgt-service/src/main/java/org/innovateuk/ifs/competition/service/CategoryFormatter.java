@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.competition.service;
 
+import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
-import org.innovateuk.ifs.category.resource.CategoryResource;
 
 /**
  * Formats the set of categories associated with a competition, for display purposes.

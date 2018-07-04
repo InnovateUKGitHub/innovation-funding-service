@@ -2,12 +2,8 @@ package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceViewModel;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.Collections;

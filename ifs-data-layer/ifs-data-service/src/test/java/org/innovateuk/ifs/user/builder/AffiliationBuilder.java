@@ -2,16 +2,14 @@ package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.user.domain.Affiliation;
-import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.AffiliationType;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 
 /**
  * Builder for {@link Affiliation}s.

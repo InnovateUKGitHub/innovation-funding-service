@@ -7,9 +7,9 @@ import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.BuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.BuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 public class AssessorCountOptionBuilder extends BaseBuilder<AssessorCountOption, AssessorCountOptionBuilder> {
 
