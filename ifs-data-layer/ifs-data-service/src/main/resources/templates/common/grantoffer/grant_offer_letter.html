@@ -21,95 +21,7 @@
           <#if Address3?has_content>${Address3}<br/></#if>
           <#if TownCity?has_content>${TownCity}<br/></#if>
           <#if PostCode?has_content>${PostCode}<br/></#if>
-
-
-
-          <#list industrialFinanceTable.organisations as org>
-          ${org} | ${industrialFinanceTable.getLabour(org)}
-          </#list>
-
-          <#list industrialFinanceTable.organisations as org>
-          ${org} | ${industrialFinanceTable.getMaterials(org)}
-          </#list>
-
-          <#list industrialFinanceTable.organisations as org>
-          ${org} | ${industrialFinanceTable.getOverheads(org)}
-          </#list>
-
-          <#list industrialFinanceTable.organisations as org>
-          ${org} | ${industrialFinanceTable.getCapitalUsage(org)}
-          </#list>
-
-          <#list industrialFinanceTable.organisations as org>
-          ${org} | ${industrialFinanceTable.getSubcontract(org)}
-          </#list>
-
-          <#list industrialFinanceTable.organisations as org>
-          ${org} | ${industrialFinanceTable.getTravel(org)}
-          </#list>
-
-          <#list industrialFinanceTable.organisations as org>
-          ${org} | ${industrialFinanceTable.getOtherCosts(org)}
-          </#list>
-
-          <#list academicFinanceTable.organisations as org>
-          ${org} | ${academicFinanceTable.getIncurredStaff(org)}
-          </#list>
-
-          <#list academicFinanceTable.organisations as org>
-          ${org} | ${academicFinanceTable.getIncurredTravelSubsistence(org)}
-          </#list>
-
-          <#list academicFinanceTable.organisations as org>
-          ${org} | ${academicFinanceTable.getIncurredOtherCosts(org)}
-          </#list>
-
-          <#list academicFinanceTable.organisations as org>
-          ${org} | ${academicFinanceTable.getAllocatedInvestigators(org)}
-          </#list>
-
-          <#list academicFinanceTable.organisations as org>
-          ${org} | ${academicFinanceTable.getAllocatedEstateCosts(org)}
-          </#list>
-
-          <#list academicFinanceTable.organisations as org>
-          ${org} | ${academicFinanceTable.getAllocatedOtherCosts(org)}
-          </#list>
-
-          <#list academicFinanceTable.organisations as org>
-          ${org} | ${academicFinanceTable.getIndirectCosts(org)}
-          </#list>
-
-          <#list academicFinanceTable.organisations as org>
-          ${org} | ${academicFinanceTable.getExceptionsStaff(org)}
-          </#list>
-
-          <#list academicFinanceTable.organisations as org>
-          ${org} | ${academicFinanceTable.getExceptionsOtherCosts(org)}
-          </#list>
-
-</p>
-
-      <p class="bold">
-          Application number: ${ApplicationNumber}<br/>
-
-          <#assign sendDate = .now>
-              Date: ${sendDate?string["d MMMM yyyy"]}
       </p>
-      <p class="bold">
-          Dear ${LeadContact},
-      </p>
-
-      <p class="bold">Grant Offer Letter</p>
-      <p class="bold">
-          Competition: ${CompetitionName}<br/>
-          Project Title: ${ProjectTitle}
-      </p>
-      <p>We are pleased to confirm your grant, subject to our terms and conditions.</p>
-      <p>Your individual grant allocations are detailed in the Annexes. These allocations are final and not subject to further negotiation or amendment.</p>
-      <p>Any additional terms or conditions of this award are included with this grant offer letter. </p>
-
-      <p class="bold">Acceptance: Start and end dates</p>
       <p>
           <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
           <span class="bold">Project title:</span> ${ProjectTitle}<br/>
@@ -164,13 +76,13 @@
   </div>
   <div class="page">
         <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS</h2>
-        <p><span class="bold">Project finances:</span> Breakdown by organisation</p>
+        <p><span class="bold">Project finances:</span> ${ProjectTitle}</p>
         <p>
-          <span class="bold">Application number:</span> 121<br/>
-          <span class="bold">Project title:</span>High-speed rail and its effects on air quality<br/>
-          <span class="bold">Competition:</span> Rolling stock future developments
+          <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
+          <span class="bold">Project title:</span> ${ProjectTitle}<br/>
+          <span class="bold">Competition:</span> ${CompetitionName}
         </p>
-        <p><span class="bold">Date:</span> 8 May 2018</p>
+        <p><span class="bold">Date:</span> ${sendDate?string["d MMMM yyyy"]}</p>
         <table class="table-overview extra-margin-bottom">
             <col style="width:40%"/>
             <col style="width:20%"/>
@@ -249,14 +161,14 @@
         </table>
   </div>
   <div class="page landscape">
-        <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS #1</h2>
-        <p><span class="bold">Project finances:</span> Breakdown by organisation</p>
+        <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS</h2>
+        <p><span class="bold">Project finances:</span> ${ProjectTitle}</p>
         <p>
-          <span class="bold">Application number:</span> 121<br/>
-          <span class="bold">Project title:</span>High-speed rail and its effects on air quality<br/>
-          <span class="bold">Competition:</span> Rolling stock future developments
+          <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
+          <span class="bold">Project title:</span> ${ProjectTitle}<br/>
+          <span class="bold">Competition:</span> ${CompetitionName}
         </p>
-        <p><span class="bold">Date:</span> 8 May 2018</p>
+        <p><span class="bold">Date:</span> ${sendDate?string["d MMMM yyyy"]}</p>
         <table class="table-overview">
             <thead>
             <tr>
@@ -271,118 +183,40 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Ooba</td>
-                <td>£3,081,000</td>
-                <td>£0</td>
-                <td>£10,200,000</td>
-                <td>£552,000</td>
-                <td>£9,000,0003</td>
-                <td>£1,970,000</td>
-                <td>£1,100,000</td>
-            </tr>
-            <tr>
-                <td>Wordpedia</td>
-                <td>£3,081,000</td>
-                <td>£0</td>
-                <td>£10,200,000</td>
-                <td>£552,000</td>
-                <td>£9,000,0003</td>
-                <td>£1,970,000</td>
-                <td>£1,100,000</td>
-            </tr>
-            <tr>
-                <td>Ooba</td>
-                <td>£3,081,000</td>
-                <td>£0</td>
-                <td>£10,200,000</td>
-                <td>£552,000</td>
-                <td>£9,000,0003</td>
-                <td>£1,970,000</td>
-                <td>£1,100,000</td>
-            </tr>
-            <tr>
-                <td>Wordpedia</td>
-                <td>£3,081,000</td>
-                <td>£0</td>
-                <td>£10,200,000</td>
-                <td>£552,000</td>
-                <td>£9,000,0003</td>
-                <td>£1,970,000</td>
-                <td>£1,100,000</td>
-            </tr>
-            <tr>
-                <td>Ooba</td>
-                <td>£3,081,000</td>
-                <td>£0</td>
-                <td>£10,200,000</td>
-                <td>£552,000</td>
-                <td>£9,000,0003</td>
-                <td>£1,970,000</td>
-                <td>£1,100,000</td>
-            </tr>
-            <tr>
-                <td>Wordpedia</td>
-                <td>£3,081,000</td>
-                <td>£0</td>
-                <td>£10,200,000</td>
-                <td>£552,000</td>
-                <td>£9,000,0003</td>
-                <td>£1,970,000</td>
-                <td>£1,100,000</td>
-            </tr>
-            <tr>
-                <td>Ooba</td>
-                <td>£3,081,000</td>
-                <td>£0</td>
-                <td>£10,200,000</td>
-                <td>£552,000</td>
-                <td>£9,000,0003</td>
-                <td>£1,970,000</td>
-                <td>£1,100,000</td>
-            </tr>
-            <tr>
-                <td>Wordpedia</td>
-                <td>£3,081,000</td>
-                <td>£0</td>
-                <td>£10,200,000</td>
-                <td>£552,000</td>
-                <td>£9,000,0003</td>
-                <td>£1,970,000</td>
-                <td>£1,100,000</td>
-            </tr>
-            <tr>
-                <td>Ooba</td>
-                <td>£3,081,000</td>
-                <td>£0</td>
-                <td>£10,200,000</td>
-                <td>£552,000</td>
-                <td>£9,000,0003</td>
-                <td>£1,970,000</td>
-                <td>£1,100,000</td>
-            </tr>
+            <#list industrialFinanceTable.organisations as org>
+                <tr>
+                    <td>${org}</td>
+                    <td>${industrialFinanceTable.getLabour(org)}</td>
+                    <td>${industrialFinanceTable.getOverheads(org)}</td>
+                    <td>${industrialFinanceTable.getMaterials(org)}</td>
+                    <td>${industrialFinanceTable.getCapitalUsage(org)}</td>
+                    <td>${industrialFinanceTable.getSubcontract(org)}</td>
+                    <td>${industrialFinanceTable.getTravel(org)}</td>
+                    <td>${industrialFinanceTable.getOtherCosts(org)}</td>
+                </tr>
+            </#list>
             <tr>
                 <td class="bold">Total (industry)</td>
-                <td class="bold">£13,081,000</td>
-                <td class="bold">£0</td>
-                <td class="bold">£100,200,000</td>
-                <td class="bold">£1,552,000</td>
-                <td class="bold">£90,000,000</td>
-                <td class="bold">£5,970,000</td>
-                <td class="bold">£2,200,000</td>
+                <td class="bold">${industrialFinanceTable.getLabourTotal()}</td>
+                <td class="bold">${industrialFinanceTable.getOverheadsTotal()}</td>
+                <td class="bold">${industrialFinanceTable.getMaterialsTotal()}</td>
+                <td class="bold">${industrialFinanceTable.getCapitalUsageTotal()}</td>
+                <td class="bold">${industrialFinanceTable.getSubcontractTotal()}</td>
+                <td class="bold">${industrialFinanceTable.getTravelTotal()}</td>
+                <td class="bold">${industrialFinanceTable.getOtherCostsTotal()}</td>
             </tr>
             </tbody>
         </table>
   </div>
   <div class="page landscape">
         <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS #2</h2>
-        <p><span class="bold">Project finances:</span> Breakdown by organisation</p>
+        <p><span class="bold">Project finances:</span> ${ProjectTitle}</p>
         <p>
-          <span class="bold">Application number:</span> 121<br/>
-          <span class="bold">Project title:</span>High-speed rail and its effects on air quality<br/>
-          <span class="bold">Competition:</span> Rolling stock future developments
+          <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
+          <span class="bold">Project title:</span> ${ProjectTitle}<br/>
+          <span class="bold">Competition:</span> ${CompetitionName}
         </p>
-        <p><span class="bold">Date:</span> 8 May 2018</p>
+        <p><span class="bold">Date:</span> ${sendDate?string["d MMMM yyyy"]}</p>
         <table class="table-overview">
             <thead>
             <tr>
@@ -410,34 +244,36 @@
             </thead>
             <tbody>
             <tr>
-                <td>Jabbertype</td>
-                <td>£3,081,000</td>
-                <td>£0</td>
-                <td>£10,200</td>
-                <td>£552,000</td>
-                <td>£90,000,000</td>
-                <td>£5,970,000</td>
-                <td>£1,100,000</td>
-                <td>£3,081,000</td>
-                <td>£0</td>
-                <td>£1,200,000</td>
-                <td>£552,000</td>
-                <td>£900,000</td>
+                <#list academicFinanceTable.organisations as org>
+                    <td>${org}</td>
+                    <td>${academicFinanceTable.getIncurredStaff(org)}</td>
+                    <td>${academicFinanceTable.getIncurredTravelSubsistence(org)}</td>
+                    <td>${academicFinanceTable.getIncurredEquipment(org)}</td>
+                    <td>${academicFinanceTable.getIncurredOtherCosts(org)}</td>
+                    <td>${academicFinanceTable.getAllocatedInvestigators(org)}</td>
+                    <td>${academicFinanceTable.getAllocatedEstateCosts(org)}</td>
+                    <td>${academicFinanceTable.getAllocatedOtherCosts(org)}</td>
+                    <td>${academicFinanceTable.getIndirectCosts(org)}</td>
+                    <td>${academicFinanceTable.getExceptionsStaff(org)}</td>
+                    <td>${academicFinanceTable.getExceptionsTravelSubsistence(org)}</td>
+                    <td>${academicFinanceTable.getExceptionsEquipment(org)}</td>
+                    <td>${academicFinanceTable.getExceptionsOtherCosts(org)}</td>
+                </#list>
             </tr>
             <tr>
                 <td class="bold">Total (academic)</td>
-                <td class="bold">£3,081</td>
-                <td class="bold">£0</td>
-                <td class="bold">£100,200</td>
-                <td class="bold">£552</td>
-                <td class="bold">£90,000</td>
-                <td class="bold">£5,970</td>
-                <td class="bold">£1,100</td>
-                <td class="bold">£3,081</td>
-                <td class="bold">£0</td>
-                <td class="bold">£1,200,000</td>
-                <td class="bold">£552,000</td>
-                <td class="bold">£900,000</td>
+                <td class="bold">${academicFinanceTable.getIncurredStaffTotal()}</td>
+                <td class="bold">${academicFinanceTable.getIncurredTravelSubsistenceTotal()}</td>
+                <td class="bold">${academicFinanceTable.getIncurredEquipmentTotal()}</td>
+                <td class="bold">${academicFinanceTable.getIncurredOtherCostsTotal()}</td>
+                <td class="bold">${academicFinanceTable.getAllocatedInvestigatorsTotal()}</td>
+                <td class="bold">${academicFinanceTable.getAllocatedEstateCostsTotal()}</td>
+                <td class="bold">${academicFinanceTable.getAllocatedOtherCostsTotal()}</td>
+                <td class="bold">${academicFinanceTable.getIndirectCostsTotal()}</td>
+                <td class="bold">${academicFinanceTable.getExceptionsStaffTotal()}</td>
+                <td class="bold">${academicFinanceTable.getExceptionsTravelSubsistenceTotal()}</td>
+                <td class="bold">${academicFinanceTable.getExceptionsEquipmentTotal()}</td>
+                <td class="bold">${academicFinanceTable.getExceptionsOtherCostsTotal()}</td>
             </tr>
             </tbody>
         </table>
