@@ -8,9 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.ethnicityResourceListType;
-
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.ethnicityResourceListType;
 import static org.junit.Assert.assertSame;
 import static org.springframework.http.HttpStatus.OK;
 

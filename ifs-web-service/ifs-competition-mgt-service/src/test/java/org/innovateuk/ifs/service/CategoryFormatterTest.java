@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.service;
 
-import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.service.CategoryFormatter;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
+
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
+import static org.junit.Assert.assertEquals;
 
 public class CategoryFormatterTest {
 	private CategoryFormatter formatter;

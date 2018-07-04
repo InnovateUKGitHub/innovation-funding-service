@@ -73,7 +73,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             description = "The assessor can see the application finance totals in the applications they assess",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean assessorCanSeeTheApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
-        return isAssessor(applicationResource.getId(), user);
+        return isAssessor(applicationResource.getId(), user) || isPanelAssessor(applicationResource.getId(), user) || isInterviewAssessor(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",

@@ -28,6 +28,8 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
@@ -42,10 +44,8 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.util.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -273,7 +273,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
         grantOfferLetterIndustrialFinanceTable.populate(financesForIndustrialOrgs);
         grantOfferLetterAcademicFinanceTable.populate(financesForAcademicOrgs);
-        grantOfferLetterFinanceTotalsTable.populate(financesForAcademicOrgs);
+        grantOfferLetterFinanceTotalsTable.populate(financesForIndustrialOrgs, financesForAcademicOrgs);
 
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
@@ -295,6 +295,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
         templateReplacements.put("industrialFinanceTable", grantOfferLetterIndustrialFinanceTable);
         templateReplacements.put("academicFinanceTable", grantOfferLetterAcademicFinanceTable);
+        templateReplacements.put("financeTotalsTable", grantOfferLetterFinanceTotalsTable);
         return templateReplacements;
     }
 

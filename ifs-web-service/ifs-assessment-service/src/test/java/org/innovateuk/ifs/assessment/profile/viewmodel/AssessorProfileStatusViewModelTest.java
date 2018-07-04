@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.assessment.profile.viewmodel;
 
-import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class AssessorProfileStatusViewModelTest {
 

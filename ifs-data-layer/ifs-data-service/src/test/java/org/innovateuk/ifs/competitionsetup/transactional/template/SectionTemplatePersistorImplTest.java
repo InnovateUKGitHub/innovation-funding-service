@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.competitionsetup.transactional.template;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.question.transactional.template.QuestionTemplatePersistorImpl;
 import org.innovateuk.ifs.question.transactional.template.SectionTemplatePersistorImpl;
@@ -14,8 +14,8 @@ import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.inOrder;

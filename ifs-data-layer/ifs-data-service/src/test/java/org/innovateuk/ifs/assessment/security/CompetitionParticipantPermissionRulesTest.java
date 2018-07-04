@@ -5,11 +5,11 @@ import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
+import static freemarker.template.utility.Collections12.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static freemarker.template.utility.Collections12.singletonList;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

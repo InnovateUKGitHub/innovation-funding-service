@@ -2,8 +2,8 @@ package org.innovateuk.ifs.threads.attachments.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.mapstruct.Mapper;
 
 @Mapper(

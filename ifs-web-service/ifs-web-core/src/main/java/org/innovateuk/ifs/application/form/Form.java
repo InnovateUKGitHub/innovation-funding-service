@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.form;
 
-import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import java.time.LocalDate;
 import java.util.HashMap;

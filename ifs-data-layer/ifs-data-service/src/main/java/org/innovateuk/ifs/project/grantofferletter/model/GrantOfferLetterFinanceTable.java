@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A simple interface for a grant offer letter finance table
@@ -23,5 +24,13 @@ public class GrantOfferLetterFinanceTable {
             financeMap.put(orgName, financeSum);
         });
         return financeMap;
+    }
+
+    protected BigDecimal sumTotals(Map<String, BigDecimal> financials) {
+        return financials
+                .values()
+                .stream()
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

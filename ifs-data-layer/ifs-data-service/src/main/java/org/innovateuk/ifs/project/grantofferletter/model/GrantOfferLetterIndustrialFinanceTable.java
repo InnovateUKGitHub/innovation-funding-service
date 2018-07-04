@@ -75,51 +75,37 @@ public class GrantOfferLetterIndustrialFinanceTable extends GrantOfferLetterFina
     public BigDecimal getTravel(String organisation) {
         return travel.get(organisation);
     }
+
     public BigDecimal getOtherCosts(String organisation) {
         return otherCosts.get(organisation);
     }
 
     public BigDecimal getLabourTotal() {
-        return labour
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return sumTotals(labour);
+    }
+
+    public BigDecimal getMaterialsTotal() {
+        return sumTotals(materials);
 
     }
-    public BigDecimal getMaterialsTotal() {
-        return materials
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
+
     public BigDecimal getOverheadsTotal() {
-        return overheads
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return sumTotals(overheads);
     }
+
     public BigDecimal getCapitalUsageTotal() {
-        return capitalUsage
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return sumTotals(capitalUsage);
     }
+
     public BigDecimal getSubcontractTotal() {
-        return subcontract
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return sumTotals(subcontract);
     }
+
     public BigDecimal getTravelTotal() {
-        return travel
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return sumTotals(travel);
     }
+
     public BigDecimal getOtherCostsTotal() {
-        return otherCosts
-                .values()
-                .stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return sumTotals(otherCosts);
     }
 }

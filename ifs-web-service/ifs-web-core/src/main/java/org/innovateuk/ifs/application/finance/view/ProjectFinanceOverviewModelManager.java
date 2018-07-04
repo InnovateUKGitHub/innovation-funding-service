@@ -2,13 +2,13 @@ package org.innovateuk.ifs.application.finance.view;
 
 import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceOverviewViewModel;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,11 +55,11 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
     }
 
     private void addFinanceSections(Long competitionId, Model model) {
-    	SectionResource section = sectionService.getFinanceSection(competitionId);
+        SectionResource section = sectionService.getFinanceSection(competitionId);
 
-    	if(section == null) {
-    		return;
-    	}
+        if (section == null) {
+            return;
+        }
 
         sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
 
@@ -84,7 +84,6 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
         model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
     }
 
-
     public BaseFinanceOverviewViewModel getFinanceDetailsViewModel(Long competitionId, Long projectId) {
         ProjectFinanceOverviewViewModel viewModel = new ProjectFinanceOverviewViewModel();
 
@@ -104,7 +103,7 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
     private void addFinanceSections(Long competitionId, ProjectFinanceOverviewViewModel viewModel) {
         SectionResource section = sectionService.getFinanceSection(competitionId);
 
-        if(section == null) {
+        if (section == null) {
             return;
         }
 
@@ -146,11 +145,11 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
         return financeSubSectionChildren;
     }
 
-    private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list){
+    private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list) {
         return simpleFilter(list, question -> ids.contains(question.getId()));
     }
 
-    private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list){
+    private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list) {
         return simpleFilter(list, input -> id.equals(input.getQuestion()) && !FormInputType.EMPTY.equals(input.getType()));
     }
 }

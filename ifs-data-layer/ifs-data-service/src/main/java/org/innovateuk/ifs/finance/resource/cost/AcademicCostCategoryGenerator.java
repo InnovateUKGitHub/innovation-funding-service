@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * TODO INFUND-5192
