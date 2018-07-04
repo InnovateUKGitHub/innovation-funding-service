@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.file.transactional;
 
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.function.IntFunction;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
 import static org.apache.commons.lang3.StringUtils.leftPad;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * This class represents a file system storage strategy that, based upon the id of a file, will store that file in a

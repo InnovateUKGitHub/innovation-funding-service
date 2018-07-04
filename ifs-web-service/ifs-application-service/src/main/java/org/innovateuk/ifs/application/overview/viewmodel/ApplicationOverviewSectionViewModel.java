@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.overview.viewmodel;
 
+import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 
 import java.util.List;
 import java.util.Map;

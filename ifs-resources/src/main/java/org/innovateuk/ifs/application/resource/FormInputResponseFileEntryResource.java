@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.resource;
 
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 /**
  * Represents a File upload against a particular FormInputResponse

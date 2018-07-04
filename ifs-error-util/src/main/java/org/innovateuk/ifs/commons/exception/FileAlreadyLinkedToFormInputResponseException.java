@@ -5,7 +5,7 @@ import java.util.List;
 public class FileAlreadyLinkedToFormInputResponseException extends IFSRuntimeException {
 
     public FileAlreadyLinkedToFormInputResponseException() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public FileAlreadyLinkedToFormInputResponseException(List<Object> arguments) {

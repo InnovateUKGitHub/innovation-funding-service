@@ -1,6 +1,7 @@
 package org.innovateuk.ifs;
 
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -10,7 +11,6 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.tuple.Pair;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.security.core.context.SecurityContextHolder;

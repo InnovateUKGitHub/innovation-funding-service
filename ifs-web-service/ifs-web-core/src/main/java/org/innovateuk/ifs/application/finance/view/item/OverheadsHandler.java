@@ -23,18 +23,16 @@ public class OverheadsHandler extends FinanceRowHandler {
                 findFirst();
         Optional<FinanceFormField> rateValueField = determineRateValueField(rateTypeField, financeFormFields);
 
-        if(id == null && !rateTypeField.isPresent() && !rateValueField.isPresent()) {
-        	return null;
+        if (id == null && !rateTypeField.isPresent() && !rateValueField.isPresent()) {
+            return null;
         }
-        
         return createOverHead(id, rateTypeField, rateValueField);
     }
 
     private Optional<FinanceFormField> determineRateValueField(Optional<FinanceFormField> rateTypeField, List<FinanceFormField> financeFormFields) {
-        if(!rateTypeField.isPresent()) {
+        if (!rateTypeField.isPresent()) {
             return financeFormFields.stream().findFirst();
-        }
-        else {
+        } else {
             final String fieldNameFinal = getCorrespondingFieldNameForType(rateTypeField.get().getValue());
 
             return financeFormFields.stream().filter(
@@ -44,13 +42,11 @@ public class OverheadsHandler extends FinanceRowHandler {
     }
 
     private String getCorrespondingFieldNameForType(String rateTypeName) {
-        if(rateTypeName.equals(CUSTOM_RATE.name())) {
+        if (rateTypeName.equals(CUSTOM_RATE.name())) {
             return "customRate";
+        } else if (rateTypeName.equals(TOTAL.name())) {
+            return "total";
         }
-        else if(rateTypeName.equals(TOTAL.name())) {
-            return  "total";
-        }
-
         return null;
     }
 
@@ -58,22 +54,20 @@ public class OverheadsHandler extends FinanceRowHandler {
         OverheadRateType overheadRateType = null;
         Integer rate = null;
 
-        if(rateType.isPresent() && customRate.isPresent()) {
+        if (rateType.isPresent() && customRate.isPresent()) {
             overheadRateType = OverheadRateType.valueOf(rateType.get().getValue());
             rate = handleRate(overheadRateType, Integer.valueOf(customRate.get().getValue()));
-        }
-        else if(rateType.isPresent() && !customRate.isPresent()) {
+        } else if (rateType.isPresent() && !customRate.isPresent()) {
             overheadRateType = OverheadRateType.valueOf(rateType.get().getValue());
             rate = handleRate(overheadRateType, 0);
-        } else if(!rateType.isPresent() && customRate.isPresent()) {
+        } else if (!rateType.isPresent() && customRate.isPresent()) {
             rate = Integer.valueOf(customRate.get().getValue());
         }
-
         return new Overhead(id, overheadRateType, rate);
     }
 
     private Integer handleRate(OverheadRateType rateType, Integer customRate) {
-        switch(rateType) {
+        switch (rateType) {
             case DEFAULT_PERCENTAGE:
                 return OverheadRateType.DEFAULT_PERCENTAGE.getRate();
             case CUSTOM_RATE:

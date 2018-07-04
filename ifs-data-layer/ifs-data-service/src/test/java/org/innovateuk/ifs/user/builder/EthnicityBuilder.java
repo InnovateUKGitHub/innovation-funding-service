@@ -6,10 +6,9 @@ import org.innovateuk.ifs.user.domain.Ethnicity;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Collections.emptyList;
 
 public class EthnicityBuilder extends BaseBuilder<Ethnicity, EthnicityBuilder> {
 

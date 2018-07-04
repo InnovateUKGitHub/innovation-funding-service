@@ -12,8 +12,8 @@ import org.mockito.Mock;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -36,7 +36,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testInternalUsersCanViewMonitoringOfficersOnProjects() {
+    public void internalUsersCanViewMonitoringOfficersOnProjects() {
 
         ProjectResource project = newProjectResource().build();
 
@@ -50,7 +50,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testPartnersCanViewMonitoringOfficersOnTheirOwnProjects() {
+    public void partnersCanViewMonitoringOfficersOnTheirOwnProjects() {
 
         UserResource user = newUserResource().build();
         ProjectResource project = newProjectResource().build();
@@ -61,7 +61,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testPartnersCanViewMonitoringOfficersOnTheirOwnProjectsButUserNotPartner() {
+    public void partnersCanViewMonitoringOfficersOnTheirOwnProjectsButUserNotPartner() {
 
         UserResource user = newUserResource().build();
 
@@ -73,7 +73,7 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testInternalUsersCanEditMonitoringOfficersOnProjects() {
+    public void internalUsersCanEditMonitoringOfficersOnProjects() {
 
         ProjectResource project = newProjectResource()
                 .withProjectState(ProjectState.SETUP)

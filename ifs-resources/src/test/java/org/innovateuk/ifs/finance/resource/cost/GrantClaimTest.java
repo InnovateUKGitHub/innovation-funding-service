@@ -1,12 +1,7 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.math.BigDecimal;
-
-import static org.junit.Assert.assertEquals;
 
 public class GrantClaimTest {
     private Long id;
