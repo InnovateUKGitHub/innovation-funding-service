@@ -3,7 +3,6 @@ package org.innovateuk.ifs.question.transactional;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
@@ -11,7 +10,6 @@ import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.question.transactional.template.DefaultApplicationQuestionCreator;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.question.transactional.template.QuestionTemplatePersistorImpl;
-import org.innovateuk.ifs.setup.resource.QuestionSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +20,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
 import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;

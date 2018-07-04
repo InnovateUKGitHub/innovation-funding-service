@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.form.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormValidatorResource;
-import org.innovateuk.ifs.commons.security.NotSecured;
 
 public interface FormValidatorService {
 

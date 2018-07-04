@@ -15,12 +15,12 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
-import static org.innovateuk.ifs.token.resource.TokenType.RESET_PASSWORD;
-import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static java.time.ZonedDateTime.now;
 import static java.util.Optional.of;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
+import static org.innovateuk.ifs.token.resource.TokenType.RESET_PASSWORD;
+import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;

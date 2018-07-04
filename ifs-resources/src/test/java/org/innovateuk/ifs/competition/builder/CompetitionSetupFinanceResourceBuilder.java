@@ -2,18 +2,12 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
-import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class CompetitionSetupFinanceResourceBuilder extends BaseBuilder<CompetitionSetupFinanceResource, CompetitionSetupFinanceResourceBuilder> {
 

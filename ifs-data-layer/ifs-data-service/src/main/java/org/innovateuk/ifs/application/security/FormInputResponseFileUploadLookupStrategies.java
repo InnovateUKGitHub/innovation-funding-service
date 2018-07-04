@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.application.security;
 
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
+import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
-import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

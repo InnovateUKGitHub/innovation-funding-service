@@ -1,13 +1,14 @@
 package org.innovateuk.ifs.competitionsetup.fixtures;
 
-import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
+import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.innovateuk.ifs.competition.builder.AssessorCountOptionResourceBuilder.newAssessorCountOptionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competitionsetup.builder.AssessorCountOptionBuilder.newAssessorCountOption;
-import static org.innovateuk.ifs.competition.builder.AssessorCountOptionResourceBuilder.newAssessorCountOptionResource;
 
 /**
  * Class to used to generate fixture for the testing.

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.notes.viewmodel;
 
-import java.util.List;
 import java.util.Map;
 
 public class FinanceChecksNotesAddNoteViewModel {

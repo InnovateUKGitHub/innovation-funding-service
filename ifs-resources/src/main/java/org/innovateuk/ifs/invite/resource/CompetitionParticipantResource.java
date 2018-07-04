@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 import static java.time.temporal.ChronoUnit.DAYS;

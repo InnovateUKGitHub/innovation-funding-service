@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.monitoringofficer;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.monitoringofficer.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.service.MonitoringOfficerRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
