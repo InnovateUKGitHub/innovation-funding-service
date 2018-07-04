@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.dashboard.populator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -29,20 +30,23 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class AssessorCompetitionForPanelDashboardModelPopulator {
 
-    @Autowired
     private CompetitionService competitionService;
-
-    @Autowired
     private ApplicationService applicationService;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
     private ProcessRoleService processRoleService;
-
-    @Autowired
     private ReviewRestService reviewRestService;
+    private OrganisationService organisationService;
+
+    public AssessorCompetitionForPanelDashboardModelPopulator(CompetitionService competitionService,
+                                                              ApplicationService applicationService,
+                                                              ProcessRoleService processRoleService,
+                                                              ReviewRestService reviewRestService,
+                                                              OrganisationService organisationService) {
+        this.competitionService = competitionService;
+        this.applicationService = applicationService;
+        this.processRoleService = processRoleService;
+        this.reviewRestService = reviewRestService;
+        this.organisationService = organisationService;
+    }
 
     public AssessorCompetitionForPanelDashboardViewModel populateModel(Long competitionId, Long userId) {
         CompetitionResource competition = competitionService.getById(competitionId);
@@ -67,19 +71,12 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
     private AssessorCompetitionForPanelDashboardApplicationViewModel createApplicationViewModel(ReviewResource assessmentReview) {
         ApplicationResource application = applicationService.getById(assessmentReview.getApplication());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
+        Optional<OrganisationResource> leadOrganisation = organisationService.getApplicationLeadOrganisation(userApplicationRoles);
 
         return new AssessorCompetitionForPanelDashboardApplicationViewModel(application.getId(),
                 assessmentReview.getId(),
                 application.getName(),
                 leadOrganisation.map(OrganisationResource::getName).orElse(EMPTY),
                 assessmentReview.getReviewState());
-    }
-
-    private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
-        return userApplicationRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
-                .findFirst();
     }
 }

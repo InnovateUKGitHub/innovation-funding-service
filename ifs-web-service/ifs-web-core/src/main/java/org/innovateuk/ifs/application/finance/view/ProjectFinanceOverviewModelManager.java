@@ -130,12 +130,4 @@ public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopu
                 .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
         viewModel.setFinanceSectionChildrenQuestionFormInputs(financeSectionChildrenQuestionFormInputs);
     }
-
-    private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list) {
-        return simpleFilter(list, question -> ids.contains(question.getId()));
-    }
-
-    private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list) {
-        return simpleFilter(list, input -> id.equals(input.getQuestion()) && !FormInputType.EMPTY.equals(input.getType()));
-    }
 }

@@ -173,15 +173,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
     }
 
-    private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list) {
-        return simpleFilter(list, question -> ids.contains(question.getId()));
-    }
-
-    private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list) {
-        return simpleFilter(list,
-                input -> id.equals(input.getQuestion()) && !FormInputType.EMPTY.equals(input.getType()));
-    }
-
     private List<ApplicationInviteResource> pendingInvitations(final Long applicationId) {
         final RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(applicationId);
 

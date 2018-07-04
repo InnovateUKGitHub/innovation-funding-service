@@ -376,8 +376,16 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .withCompetition(competitionResource.getId())
                 .build();
 
+        ProcessRoleResource assessorRole = newProcessRoleResource().withUser(assessor).build();
+        Comparator<OrganisationResource> compareById = Comparator.comparingLong(OrganisationResource::getId);
+        SortedSet<OrganisationResource> collaborators = new TreeSet<>(compareById);
+        collaborators.add(newOrganisationResource().build());
+        collaborators.add(newOrganisationResource().build());
+
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
+        when(organisationService.getApplicationOrganisations(asList(assessorRole))).thenReturn(collaborators);
+        when(organisationService.getApplicationLeadOrganisation(asList(assessorRole))).thenReturn(Optional.ofNullable( newOrganisationResource().build()));
 
         SortedSet<OrganisationResource> orgSet = setupOrganisations();
         List<ApplicationFinanceResource> appFinanceList = setupFinances(applicationResource, orgSet);

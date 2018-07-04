@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.assignment.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.assessment.assignment.form.AssessmentAssignmentForm;
 import org.innovateuk.ifs.assessment.assignment.populator.AssessmentAssignmentModelPopulator;
 import org.innovateuk.ifs.assessment.assignment.viewmodel.AssessmentAssignmentViewModel;
@@ -26,14 +27,13 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
 import static java.util.Comparator.comparingLong;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
@@ -83,6 +83,9 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
     @Mock
     private OrganisationRestService organisationRestService;
 
+    @Mock
+    private OrganisationService organisationService;
+
     @Override
     protected AssessmentAssignmentController supplyControllerUnderTest() {
         return new AssessmentAssignmentController();
@@ -112,10 +115,14 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .withRole(COLLABORATOR, LEADAPPLICANT, COLLABORATOR, ASSESSOR)
                 .build(4);
 
+        Comparator<OrganisationResource> compareById = Comparator.comparingLong(OrganisationResource::getId);
+        SortedSet<OrganisationResource> collaborators = new TreeSet<>(compareById);
+        collaborators.add(collaboratorOrganisation1);
+        collaborators.add(collaboratorOrganisation2);
+
         when(processRoleService.findProcessRolesByApplicationId(APPLICATION_ID)).thenReturn(processRoleResources);
-        when(organisationRestService.getOrganisationById(collaboratorOrganisation1.getId())).thenReturn(restSuccess(collaboratorOrganisation1));
-        when(organisationRestService.getOrganisationById(collaboratorOrganisation2.getId())).thenReturn(restSuccess(collaboratorOrganisation2));
-        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
+        when(organisationService.getApplicationOrganisations(processRoleResources)).thenReturn(collaborators);
+        when(organisationService.getApplicationLeadOrganisation(processRoleResources)).thenReturn(Optional.ofNullable(leadOrganisation));
 
         partners = new TreeSet<>(comparingLong(OrganisationResource::getId));
         partners.add(collaboratorOrganisation1);

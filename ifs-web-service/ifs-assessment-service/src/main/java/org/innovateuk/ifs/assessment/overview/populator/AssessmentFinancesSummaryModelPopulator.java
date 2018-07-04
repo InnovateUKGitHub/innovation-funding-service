@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
@@ -20,22 +21,17 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceModelPopulator {
@@ -50,9 +46,6 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
     private FileEntryRestService fileEntryRestService;
 
     @Autowired
@@ -65,13 +58,16 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     private SectionService sectionService;
+    private OrganisationService organisationService;
 
     @Autowired
     private FinanceService financeService;
 
-    public AssessmentFinancesSummaryModelPopulator(SectionService sectionService) {
+    public AssessmentFinancesSummaryModelPopulator(SectionService sectionService,
+                                                   OrganisationService organisationService) {
         super(sectionService);
         this.sectionService = sectionService;
+        this.organisationService = organisationService;
     }
 
     public AssessmentFinancesSummaryViewModel populateModel(Long assessmentId, Model model) {
@@ -91,48 +87,17 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
     }
 
     private void addOrganisationDetails(Model model, List<ProcessRoleResource> userApplicationRoles, AssessorFinanceView financeVew) {
-        model.addAttribute("academicOrganisations", getAcademicOrganisations(getApplicationOrganisations(userApplicationRoles)));
-        model.addAttribute("applicationOrganisations", getApplicationOrganisations(userApplicationRoles));
+        SortedSet<OrganisationResource> applicationOrganisations = organisationService.getApplicationOrganisations(userApplicationRoles);
+        model.addAttribute("academicOrganisations", organisationService.getAcademicOrganisations(applicationOrganisations));
+        model.addAttribute("applicationOrganisations", applicationOrganisations);
 
-        Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
+        Optional<OrganisationResource> leadOrganisation = organisationService.getApplicationLeadOrganisation(userApplicationRoles);
         leadOrganisation.ifPresent(org ->
                 model.addAttribute("leadOrganisation", org)
         );
 
-        model.addAttribute("showAssessorDetailedFinanceLink", financeVew.equals(DETAILED) ? true : false);
+        model.addAttribute("showAssessorDetailedFinanceLink", financeVew.equals(DETAILED));
     }
-
-    private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
-
-        return userApplicationRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
-                .findFirst();
-    }
-
-    private SortedSet<OrganisationResource> getApplicationOrganisations(List<ProcessRoleResource> userApplicationRoles) {
-        Comparator<OrganisationResource> compareById =
-                Comparator.comparingLong(OrganisationResource::getId);
-        Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
-
-        return userApplicationRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
-                        || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
-                .collect(Collectors.toCollection(supplier));
-    }
-
-    private SortedSet<OrganisationResource> getAcademicOrganisations(SortedSet<OrganisationResource> organisations) {
-        Comparator<OrganisationResource> compareById =
-                Comparator.comparingLong(OrganisationResource::getId);
-        Supplier<TreeSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
-        ArrayList<OrganisationResource> organisationList = new ArrayList<>(organisations);
-
-        return organisationList.stream()
-                .filter(o -> OrganisationTypeEnum.RESEARCH.getId().equals(o.getOrganisationType()))
-                .collect(Collectors.toCollection(supplier));
-    }
-
 
     public void addFinanceDetails(Model model, Long competitionId, Long applicationId) {
         addFinanceSections(competitionId, model);
@@ -187,14 +152,6 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
 
         model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
         model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
-    }
-
-    private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list) {
-        return simpleFilter(list, question -> ids.contains(question.getId()));
-    }
-
-    private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list) {
-        return simpleFilter(list, input -> id.equals(input.getQuestion()) && !FormInputType.EMPTY.equals(input.getType()));
     }
 }
 
