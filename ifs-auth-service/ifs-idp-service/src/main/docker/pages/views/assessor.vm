@@ -1,5 +1,5 @@
-        <h2 class="heading-small">My email and/or password isn't working</h2>
-        <p>If you applied previously using the old service, you will need to create a new account.</p>
+        <h2 class="govuk-heading-s">My email and/or password isn't working</h2>
+        <p class="govuk-body">If you applied previously using the old service, you will need to create a new account.</p>
         #if ($passwordEnabled)
-          <p><a href="$resourcesDomain/login/reset-password">Forgotten your password?</a></p>
+          <p class="govuk-body"><a class="govuk-link" href="$resourcesDomain/login/reset-password">Forgotten your password?</a></p>
         #end

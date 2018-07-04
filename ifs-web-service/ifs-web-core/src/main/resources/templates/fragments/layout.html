@@ -192,8 +192,8 @@
 
 <!-- =========================== Element : page-title =========================== -->
 <th:block th:fragment="page-title">
-    <h1 th:class="${#strings.isEmpty(size)} ? 'govuk-heading-xl' : ${size}">
-        <span class="govuk-caption-xl" th:unless="${#strings.isEmpty(subTitle)}" th:text="${subTitle}"></span>
+    <h1 th:class="${#strings.isEmpty(size)} ? 'govuk-heading-l' : ${size}">
+        <span class="govuk-caption-l" th:unless="${#strings.isEmpty(subTitle)}" th:text="${subTitle}"></span>
         <th:block th:text="${pageTitle}" />
         <small th:unless="${#strings.isEmpty(smallText)}" th:text="${smallText}"></small>
     </h1>
