@@ -13,10 +13,7 @@ public final class SecurityRuleUtil {
     }
 
     public static boolean isInternal(UserResource user) {
-        return user.hasRole(COMP_ADMIN) ||
-                user.hasRole(PROJECT_FINANCE) ||
-                user.hasRole(SUPPORT) ||
-                user.hasRole(INNOVATION_LEAD);
+        return user.isInternalUser();
     }
 
     public static boolean isInternalAdmin(UserResource user) {
@@ -40,9 +37,13 @@ public final class SecurityRuleUtil {
         return user.hasRole(ASSESSOR);
     }
 
-    public static boolean isSupport(UserResource user) { return user.hasRole(SUPPORT); }
+    public static boolean isSupport(UserResource user) {
+        return user.hasRole(SUPPORT); }
 
-    public static boolean isInnovationLead(UserResource user) { return user.hasRole(INNOVATION_LEAD); }
+    public static boolean isInnovationLead(UserResource user) {
+        return user.hasRole(INNOVATION_LEAD); }
 
-    public static boolean isIFSAdmin(UserResource user) { return user.hasRole(IFS_ADMINISTRATOR); }
+    public static boolean isIFSAdmin(UserResource user) {
+        return user.hasRole(IFS_ADMINISTRATOR);
+    }
 }

@@ -34,7 +34,7 @@ public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<O
     }
 
     @Test
-    public void testInternalUsersCanAcceptOrRejectDocuments() {
+    public void internalUsersCanAcceptOrRejectDocuments() {
 
         ProjectResource project = newProjectResource()
                 .withProjectState(ProjectState.SETUP)
@@ -52,7 +52,7 @@ public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<O
     }
 
     @Test
-    public void testLeadPartnersCanCreateOtherDocuments() {
+    public void leadPartnersCanCreateOtherDocuments() {
 
         ProjectResource project = newProjectResource()
                 .withProjectState(ProjectState.SETUP)
@@ -67,7 +67,7 @@ public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<O
     }
 
     @Test
-    public void testNonLeadPartnersCannotCreateOtherDocuments() {
+    public void nonLeadPartnersCannotCreateOtherDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -78,7 +78,7 @@ public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<O
     }
 
     @Test
-    public void testPartnersCanViewOtherDocumentsDetails() {
+    public void partnersCanViewOtherDocumentsDetails() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -89,7 +89,7 @@ public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<O
     }
 
     @Test
-    public void testNonPartnersCannotViewOtherDocumentsDetails() {
+    public void nonPartnersCannotViewOtherDocumentsDetails() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -100,7 +100,7 @@ public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<O
     }
 
     @Test
-    public void testInternalUserCanViewOtherDocumentsDetails() {
+    public void internalUserCanViewOtherDocumentsDetails() {
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
@@ -113,7 +113,7 @@ public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<O
     }
 
     @Test
-    public void testPartnersCanDownloadOtherDocuments() {
+    public void partnersCanDownloadOtherDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -124,7 +124,7 @@ public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<O
     }
 
     @Test
-    public void testNonPartnersCannotDownloadOtherDocuments() {
+    public void nonPartnersCannotDownloadOtherDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -135,7 +135,7 @@ public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<O
     }
 
     @Test
-    public void testInternalUserCanDownloadOtherDocuments() {
+    public void internalUserCanDownloadOtherDocuments() {
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
@@ -148,7 +148,7 @@ public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<O
     }
 
     @Test
-    public void testLeadPartnersCanDeleteOtherDocuments() {
+    public void leadPartnersCanDeleteOtherDocuments() {
 
         ProjectResource project = newProjectResource()
                 .withProjectState(ProjectState.SETUP)
@@ -162,7 +162,7 @@ public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<O
     }
 
     @Test
-    public void testNonLeadPartnersCannotDeleteOtherDocuments() {
+    public void nonLeadPartnersCannotDeleteOtherDocuments() {
 
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -173,7 +173,7 @@ public class OtherDocumentsPermissionRulesTest extends BasePermissionRulesTest<O
     }
 
     @Test
-    public void testOnlyProjectManagerCanSubmitDocuments() {
+    public void onlyProjectManagerCanSubmitDocuments() {
         ProjectResource project = newProjectResource()
                 .withProjectState(ProjectState.SETUP)
                 .build();
