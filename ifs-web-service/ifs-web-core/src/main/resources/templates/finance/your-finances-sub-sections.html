@@ -17,9 +17,7 @@
                 <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or
                     funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
                 <button th:unless="${model.notRequestingFunding}" class="button" name="not_requesting_funding">Not requesting funding</button>
-                <button th:if="${model.notRequestingFunding}" class="button" name="requesting_funding">Requesting
-                    funding
-                </button>
+                <button th:if="${model.notRequestingFunding}" class="button" name="requesting_funding">Requesting funding</button>
             </div>
         </details>
         <ul class="task-list">
@@ -329,8 +327,7 @@
             </div>
         </th:block>
     </th:block>
-    <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return
-        to application overview</a>
+    <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return to application overview</a>
 </th:block>
 
 
