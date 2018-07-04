@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation       IFS-338 Update 'Funding level' calculated maximum values and validation
-Suite Setup         Custom suite setup
+Suite Setup         The guest user opens the browser
 Suite Teardown      the user closes the browser
 Force Tags          Applicant
 Resource          ../../../../resources/defaultResources.robot
@@ -134,10 +134,6 @@ Research participation is correct for RTO lead application
     And the user should not see an error in the page
 
 *** Keywords ***
-Custom suite setup
-    the guest user opens the browser
-    Set predefined date variables
-
 the user navigates to the competition overview
     the user navigates to the page    ${frontDoor}
 
