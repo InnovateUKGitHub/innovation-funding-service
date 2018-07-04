@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.user.command;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.Role;
 
 public class GrantRoleCommand {
@@ -18,5 +20,27 @@ public class GrantRoleCommand {
 
     public Role getTargetRole() {
         return targetRole;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GrantRoleCommand that = (GrantRoleCommand) o;
+
+        return new EqualsBuilder()
+                .append(userId, that.userId)
+                .append(targetRole, that.targetRole)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(userId)
+                .append(targetRole)
+                .toHashCode();
     }
 }

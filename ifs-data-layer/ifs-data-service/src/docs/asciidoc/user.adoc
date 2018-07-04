@@ -163,3 +163,14 @@ include::{snippets}/user/agree-new-site-terms-and-conditions/http-response.adoc[
 
 ==== Curl Example
 include::{snippets}/user/agree-new-site-terms-and-conditions/curl-request.adoc[]
+
+=== Grant user role ===
+==== Request
+include::{snippets}/user/grant-role/http-request.adoc[]
+include::{snippets}/user/grant-role/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/grant-role/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/user/grant-role/curl-request.adoc[]
