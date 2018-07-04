@@ -1,13 +1,15 @@
-package org.innovateuk.ifs.application.areas.populator;
+package org.innovateuk.ifs.application.forms.researchcategory.populator;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategoryViewModel;
+import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.populator.AbstractLeadOnlyModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -41,9 +43,9 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
                                               boolean useNewApplicantMenu) {
         boolean hasApplicationFinances = hasApplicationFinances(applicationResource);
         List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
-        boolean canMarkAsComplete = userService.isLeadApplicant(loggedInUserId, applicationResource);
+        boolean userIsLeadApplicant = userService.isLeadApplicant(loggedInUserId, applicationResource);
         boolean complete = isComplete(applicationResource, loggedInUserId);
-        boolean readonly = !(canMarkAsComplete && !complete);
+        boolean allReadonly = !userIsLeadApplicant || complete;
 
         String researchCategoryName = Optional.of(applicationResource.getResearchCategory())
                 .map(ResearchCategoryResource::getName).orElse(null);
@@ -57,8 +59,10 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
                 researchCategoryName,
                 !isCompetitionOpen(applicationResource),
                 complete,
-                canMarkAsComplete,
-                readonly);
+                userIsLeadApplicant,
+                allReadonly,
+                userIsLeadApplicant,
+                getLeadApplicantName(applicationResource.getId()));
     }
 
     private boolean hasApplicationFinances(ApplicationResource applicationResource) {
@@ -70,5 +74,11 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
                     .anyMatch(applicationFinanceResource -> applicationFinanceResource.getOrganisationSize() != null);
         }
         return false;
+    }
+
+    private String getLeadApplicantName(long applicationId) {
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationId);
+        UserResource user = userService.findById(leadApplicantProcessRole.getUser());
+        return user.getName();
     }
 }

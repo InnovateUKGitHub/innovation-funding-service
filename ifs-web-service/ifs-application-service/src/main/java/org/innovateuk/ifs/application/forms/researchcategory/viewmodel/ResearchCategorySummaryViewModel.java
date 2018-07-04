@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.areas.viewmodel;
+package org.innovateuk.ifs.application.forms.researchcategory.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -13,8 +13,9 @@ public class ResearchCategorySummaryViewModel extends AbstractLeadOnlyViewModel 
                                             String researchCategory,
                                             boolean closed,
                                             boolean complete,
-                                            boolean canMarkAsComplete) {
-        super(questionId, applicationId, closed, complete, canMarkAsComplete);
+                                            boolean canMarkAsComplete,
+                                            boolean allReadonly) {
+        super(questionId, applicationId, closed, complete, canMarkAsComplete, allReadonly);
         this.researchCategory = researchCategory;
     }
 

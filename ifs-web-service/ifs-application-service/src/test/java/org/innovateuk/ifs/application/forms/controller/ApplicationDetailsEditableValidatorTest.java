@@ -4,10 +4,10 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,8 +15,8 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_DETAILS;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -39,7 +39,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
 
         QuestionResource questionResource = newQuestionResource()
                 .withShortName(APPLICATION_DETAILS.getShortName())
-                .withQuestionSetupType(QuestionSetupType.APPLICATION_DETAILS)
+                .withQuestionSetupType(APPLICATION_DETAILS)
                 .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(false).build(2);
 
@@ -60,7 +60,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
 
         QuestionResource questionResource = newQuestionResource()
                 .withShortName(APPLICATION_DETAILS.getShortName())
-                .withQuestionSetupType(QuestionSetupType.APPLICATION_DETAILS)
+                .withQuestionSetupType(APPLICATION_DETAILS)
                 .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(false).build(2);
 
@@ -81,7 +81,7 @@ public class ApplicationDetailsEditableValidatorTest extends BaseUnitTest {
 
         QuestionResource questionResource = newQuestionResource()
                 .withShortName(APPLICATION_DETAILS.getShortName())
-                .withQuestionSetupType(QuestionSetupType.APPLICATION_DETAILS)
+                .withQuestionSetupType(APPLICATION_DETAILS)
                 .build();
         List<QuestionStatusResource> questionStatusResources = newQuestionStatusResource().withMarkedAsComplete(true).build(2);
 

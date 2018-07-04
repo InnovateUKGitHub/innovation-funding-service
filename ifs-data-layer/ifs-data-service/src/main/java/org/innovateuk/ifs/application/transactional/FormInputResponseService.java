@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.security.access.method.P;
@@ -27,7 +26,6 @@ public interface FormInputResponseService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<FormInputResponseResource> findResponseByApplicationIdAndQuestionSetupType(long applicationId,
                                                                                              QuestionSetupType questionSetupType);
-
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponseByApplicationIdAndQuestionId(long applicationId, long questionId);
 

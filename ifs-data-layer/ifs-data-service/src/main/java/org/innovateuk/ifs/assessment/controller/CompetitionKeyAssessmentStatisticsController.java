@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.assessment.resource.CompetitionClosedKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionOpenKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.CompetitionReadyToOpenKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.transactional.CompetitionKeyAssessmentStatisticsService;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

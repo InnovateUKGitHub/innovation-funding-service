@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
-
 /**
  * Class for populating the model for the "Your Finances" section
  */

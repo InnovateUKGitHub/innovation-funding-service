@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class AssessmentCreateResourceBuilderTest {
 

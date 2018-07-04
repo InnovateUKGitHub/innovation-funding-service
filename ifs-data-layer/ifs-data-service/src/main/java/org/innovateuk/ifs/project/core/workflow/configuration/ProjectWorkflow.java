@@ -13,12 +13,8 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import java.util.LinkedHashSet;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.project.resource.ProjectEvent.GOL_APPROVED;
-import static org.innovateuk.ifs.project.resource.ProjectEvent.PROJECT_CREATED;
-import static org.innovateuk.ifs.project.resource.ProjectEvent.PROJECT_WITHDRAWN;
-import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
-import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
-import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
+import static org.innovateuk.ifs.project.resource.ProjectEvent.*;
+import static org.innovateuk.ifs.project.resource.ProjectState.*;
 
 /**
  * Describes the workflow for Project Setup.

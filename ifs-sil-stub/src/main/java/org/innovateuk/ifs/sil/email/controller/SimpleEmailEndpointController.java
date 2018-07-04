@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.sil.email.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.email.resource.SilEmailAddress;
 import org.innovateuk.ifs.sil.email.resource.SilEmailBody;
 import org.innovateuk.ifs.sil.email.resource.SilEmailMessage;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

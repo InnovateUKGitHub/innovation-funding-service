@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * This asserts that all mandatory Project Details have been included prior to allowing them to be submitted.

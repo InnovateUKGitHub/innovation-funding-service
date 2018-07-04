@@ -61,11 +61,13 @@ public class ApplicationTeamModelPopulator {
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         boolean applicationCanBegin = isApplicationStateCreated(applicationResource) && userIsLeadApplicant;
+        boolean isComplete = isComplete(applicationId, loggedInUserId, questionId);
+        boolean allReadonly = isComplete;
 
         return new ApplicationTeamViewModel(applicationResource.getId(), questionId, applicationResource.getName(),
                 getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
                 userIsLeadApplicant, applicationCanBegin, !isCompetitionOpen(applicationResource),
-                isComplete(applicationId, loggedInUserId, questionId), userIsLeadApplicant);
+                isComplete, userIsLeadApplicant, allReadonly);
     }
 
     public ApplicationTeamViewModel populateSummaryModel(long applicationId, long loggedInUserId, long competitionId) {

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -51,7 +52,10 @@ public class ApplicationDownloadController {
             @PathVariable(APPLICATION_ID) final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
             UserResource user) {
-        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource processRole = processRoleService.findProcessRolesByApplicationId(applicationId).stream()
+                .filter(role -> user.getId().equals(role.getUser()))
+                .findAny()
+                .orElseThrow(ObjectNotFoundException::new);
         final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccess();
         final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccess();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());

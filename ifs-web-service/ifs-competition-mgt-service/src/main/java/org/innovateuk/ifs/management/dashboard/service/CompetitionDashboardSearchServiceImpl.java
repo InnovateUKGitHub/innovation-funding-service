@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.dashboard.service;
 
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
@@ -12,7 +13,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;

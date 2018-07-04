@@ -56,11 +56,11 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
         return getWithRestResult(questionRestURL + "/getQuestionByCompetitionIdAndFormInputType/" + competitionId + "/" + formInputType.name(), QuestionResource.class);
     }
 
-	@Override
-	public RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(
+    @Override
+    public RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(
             long sectionId, QuestionType type) {
-		 return getWithRestResult(questionRestURL + "/getQuestionsBySectionIdAndType/" + sectionId + "/" + type.name(), ParameterizedTypeReferences.questionResourceListType());
-	}
+        return getWithRestResult(questionRestURL + "/getQuestionsBySectionIdAndType/" + sectionId + "/" + type.name(), ParameterizedTypeReferences.questionResourceListType());
+    }
 
     @Override
     public RestResult<QuestionResource> save(QuestionResource questionResource) {

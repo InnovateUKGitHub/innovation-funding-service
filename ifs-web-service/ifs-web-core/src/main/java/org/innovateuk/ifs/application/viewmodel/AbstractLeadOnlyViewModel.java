@@ -10,17 +10,20 @@ public abstract class AbstractLeadOnlyViewModel {
     private boolean closed;
     private boolean complete;
     private boolean canMarkAsComplete;
+    private boolean allReadOnly;
 
     protected AbstractLeadOnlyViewModel(Long questionId,
                                         Long applicationId,
                                         boolean closed,
                                         boolean complete,
-                                        boolean canMarkAsComplete) {
+                                        boolean canMarkAsComplete,
+                                        boolean allReadOnly) {
         this.questionId = questionId;
         this.applicationId = applicationId;
         this.closed = closed;
         this.complete = complete;
         this.canMarkAsComplete = canMarkAsComplete;
+        this.allReadOnly = allReadOnly;
     }
 
     public Long getQuestionId() {
@@ -41,6 +44,10 @@ public abstract class AbstractLeadOnlyViewModel {
 
     public boolean isComplete() {
         return complete;
+    }
+
+    public boolean isAllReadOnly() {
+        return allReadOnly;
     }
 
     public abstract boolean isSummary();

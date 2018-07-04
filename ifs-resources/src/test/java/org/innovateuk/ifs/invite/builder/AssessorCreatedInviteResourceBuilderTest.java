@@ -1,13 +1,10 @@
 package org.innovateuk.ifs.invite.builder;
 
-import com.google.common.collect.Sets;
-import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Set;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;

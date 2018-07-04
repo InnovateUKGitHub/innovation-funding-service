@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.rejectionReasonResourceListType;
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.rejectionReasonResourceListType;
 
 /**
  * RejectionReasonRestServiceImpl is a utility for CRUD operations on {@link RejectionReasonResource}.

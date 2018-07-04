@@ -3,8 +3,8 @@ package org.innovateuk.ifs.application.forms.controller;
 import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategorySummaryModelPopulator;
-import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategorySummaryViewModel;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategorySummaryModelPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
@@ -194,6 +194,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
                 false,
                 false,
                 false,
+                false,
                 false);
         applicationTeamViewModel.setSummary(true);
 
@@ -204,6 +205,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         return new ResearchCategorySummaryViewModel(1L,
                 1L,
                 "Research category",
+                false,
                 false,
                 false,
                 false);

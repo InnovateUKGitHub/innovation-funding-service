@@ -1,14 +1,15 @@
-package org.innovateuk.ifs.application.areas.controller;
+package org.innovateuk.ifs.application.forms.researchcategory.controller;
 
-import org.innovateuk.ifs.application.areas.form.ResearchCategoryForm;
-import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryFormPopulator;
-import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategoryModelPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.form.ResearchCategoryForm;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.forms.validator.QuestionEditableValidator;
 import org.innovateuk.ifs.application.forms.validator.ResearchCategoryEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -38,11 +39,11 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  * This controller handles requests by Applicants to change the research category choice for an Application.
  */
 @Controller
-@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}")
+@RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/research-category")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ResearchCategoryController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ResearchCategoryController {
-    static String APPLICATION_SAVED_MESSAGE = "applicationSaved";
+    static final String APPLICATION_SAVED_MESSAGE = "applicationSaved";
 
     @Autowired
     private ApplicationResearchCategoryModelPopulator researchCategoryModelPopulator;
@@ -66,11 +67,14 @@ public class ResearchCategoryController {
     private ProcessRoleService processRoleService;
 
     @Autowired
+    private QuestionService questionService;
+
+    @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     private static final String FORM_ATTR_NAME = "form";
 
-    @GetMapping("/research-category")
+    @GetMapping
     public String getResearchCategories(Model model,
                                         UserResource loggedInUser,
                                         @ModelAttribute(FORM_ATTR_NAME) ResearchCategoryForm researchCategoryForm,
@@ -87,7 +91,18 @@ public class ResearchCategoryController {
         return "application/research-categories";
     }
 
-    @PostMapping(params = {"save-research-category"})
+    @PostMapping(params = {"mark_as_incomplete"})
+    public String markAsIncomplete(Model model,
+                                   UserResource loggedInUser,
+                                   @ModelAttribute(FORM_ATTR_NAME) ResearchCategoryForm researchCategoryForm,
+                                   @PathVariable long applicationId,
+                                   @PathVariable long questionId) {
+        questionService.markAsIncomplete(questionId, applicationId, getProcessRoleId(loggedInUser.getId(),
+                applicationId));
+        return getResearchCategories(model, loggedInUser, researchCategoryForm, applicationId, questionId);
+    }
+
+    @PostMapping
     public String submitResearchCategoryChoice(@ModelAttribute(FORM_ATTR_NAME) @Valid ResearchCategoryForm
                                                        researchCategoryForm,
                                                @SuppressWarnings("unused") BindingResult bindingResult,
@@ -128,7 +143,7 @@ public class ResearchCategoryController {
                 applicationResearchCategoryRestService.setResearchCategoryAndMarkAsComplete(applicationId,
                         getProcessRoleId(loggedInUserId, applicationId), researchCategory) :
                 applicationResearchCategoryRestService.setResearchCategory(applicationId,
-                researchCategory);
+                        researchCategory);
 
         return result.toServiceResult();
     }

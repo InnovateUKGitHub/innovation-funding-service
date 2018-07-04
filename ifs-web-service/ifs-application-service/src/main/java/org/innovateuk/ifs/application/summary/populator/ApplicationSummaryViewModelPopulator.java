@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.summary.populator;
 
-import org.innovateuk.ifs.application.areas.populator.ApplicationResearchCategorySummaryModelPopulator;
-import org.innovateuk.ifs.application.areas.viewmodel.ResearchCategorySummaryViewModel;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategorySummaryModelPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;

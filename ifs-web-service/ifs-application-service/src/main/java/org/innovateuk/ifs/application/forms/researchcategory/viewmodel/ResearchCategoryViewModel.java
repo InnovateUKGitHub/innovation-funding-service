@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.areas.viewmodel;
+package org.innovateuk.ifs.application.forms.researchcategory.viewmodel;
 
 import org.innovateuk.ifs.application.viewmodel.AbstractLeadOnlyViewModel;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
@@ -14,8 +14,9 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
     private List<ResearchCategoryResource> availableResearchCategories;
     private boolean hasApplicationFinances;
     private boolean useNewApplicantMenu;
-    private boolean readonly;
     private String researchCategory;
+    private boolean userLeadApplicant;
+    private String leadApplicantName;
 
     public ResearchCategoryViewModel(String currentCompetitionName,
                                      Long applicationId,
@@ -27,14 +28,17 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
                                      boolean closed,
                                      boolean complete,
                                      boolean canMarkAsComplete,
-                                     boolean readonly) {
-        super(questionId, applicationId, closed, complete, canMarkAsComplete);
+                                     boolean allReadonly,
+                                     boolean userLeadApplicant,
+                                     String leadApplicantName) {
+        super(questionId, applicationId, closed, complete, canMarkAsComplete, allReadonly);
         this.currentCompetitionName = currentCompetitionName;
         this.availableResearchCategories = availableResearchCategories;
         this.hasApplicationFinances = hasApplicationFinances;
         this.useNewApplicantMenu = useNewApplicantMenu;
-        this.readonly = readonly;
         this.researchCategory = researchCategory;
+        this.userLeadApplicant = userLeadApplicant;
+        this.leadApplicantName = leadApplicantName;
     }
 
     public String getCurrentCompetitionName() {
@@ -53,12 +57,16 @@ public class ResearchCategoryViewModel extends AbstractLeadOnlyViewModel {
         return useNewApplicantMenu;
     }
 
-    public boolean isReadonly() {
-        return readonly;
-    }
-
     public String getResearchCategory() {
         return researchCategory;
+    }
+
+    public boolean isUserLeadApplicant() {
+        return userLeadApplicant;
+    }
+
+    public String getLeadApplicantName() {
+        return leadApplicantName;
     }
 
     @Override

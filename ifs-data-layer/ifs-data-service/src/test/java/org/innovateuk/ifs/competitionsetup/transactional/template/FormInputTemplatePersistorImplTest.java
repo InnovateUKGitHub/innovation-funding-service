@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.competitionsetup.transactional.template;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.form.domain.GuidanceRow;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
+import org.innovateuk.ifs.form.domain.GuidanceRow;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -19,14 +19,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
-import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
-import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.assessment.resource.AssessmentEvent.FEEDBACK;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormValidatorBuilder.newFormValidator;
+import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
