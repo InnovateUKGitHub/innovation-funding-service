@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class ApplicationFinanceOverviewModelManager implements FinanceOverviewModelManager {
+public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModelPopulator implements FinanceOverviewModelManager {
     private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
     private QuestionService questionService;
@@ -46,6 +46,7 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
             FileEntryRestService fileEntryRestService,
             FormInputRestService formInputRestService
     ) {
+        super(sectionService);
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
         this.financeService = financeService;
@@ -189,24 +190,6 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
 
         viewModel.setFinanceSectionChildrenQuestionsMap(financeSectionChildrenQuestionsMap);
         viewModel.setFinanceSectionChildrenQuestionFormInputs(financeSectionChildrenQuestionFormInputs);
-    }
-
-    private List<SectionResource> getFinanceSubSectionChildren(Long competitionId, SectionResource section) {
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
-        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(
-                section.getChildSections(),
-                allSections
-        );
-        List<SectionResource> financeSubSectionChildren = new ArrayList<>();
-        financeSectionChildren.stream().forEach(sectionResource -> {
-                    if (!sectionResource.getChildSections().isEmpty()) {
-                        financeSubSectionChildren.addAll(
-                                sectionService.findResourceByIdInList(sectionResource.getChildSections(), allSections)
-                        );
-                    }
-                }
-        );
-        return financeSubSectionChildren;
     }
 
     private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list) {

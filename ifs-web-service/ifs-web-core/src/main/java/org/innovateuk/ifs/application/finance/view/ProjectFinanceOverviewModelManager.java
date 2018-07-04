@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelManager {
+public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopulator implements FinanceOverviewModelManager {
     private SectionService sectionService;
     private QuestionService questionService;
     private FormInputRestService formInputRestService;
@@ -36,6 +36,7 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
                                               QuestionService questionService,
                                               FormInputRestService formInputRestService,
                                               ProjectFinanceService financeService) {
+        super(sectionService);
         this.sectionService = sectionService;
         this.questionService = questionService;
         this.formInputRestService = formInputRestService;
@@ -128,21 +129,6 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
                 .values().stream().flatMap(a -> a.stream())
                 .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
         viewModel.setFinanceSectionChildrenQuestionFormInputs(financeSectionChildrenQuestionFormInputs);
-    }
-
-    private List<SectionResource> getFinanceSubSectionChildren(Long competitionId, SectionResource section) {
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
-        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(section.getChildSections(), allSections);
-        List<SectionResource> financeSubSectionChildren = new ArrayList<>();
-        financeSectionChildren.stream().forEach(sectionResource -> {
-                    if (!sectionResource.getChildSections().isEmpty()) {
-                        financeSubSectionChildren.addAll(
-                                sectionService.findResourceByIdInList(sectionResource.getChildSections(), allSections)
-                        );
-                    }
-                }
-        );
-        return financeSubSectionChildren;
     }
 
     private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list) {

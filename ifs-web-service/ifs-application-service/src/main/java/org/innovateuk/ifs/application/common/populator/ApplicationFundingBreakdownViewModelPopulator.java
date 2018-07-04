@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.common.populator;
 
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
@@ -38,7 +39,7 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class ApplicationFundingBreakdownViewModelPopulator {
+public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinanceModelPopulator {
 
     private OrganisationRestService organisationRestService;
     private FinanceService financeService;
@@ -63,6 +64,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                                                          UserService userService,
                                                          OrganisationService organisationService,
                                                          InviteRestService inviteRestService) {
+        super(sectionService);
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
         this.organisationRestService = organisationRestService;
@@ -173,24 +175,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
     private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list) {
         return simpleFilter(list, question -> ids.contains(question.getId()));
-    }
-
-    private List<SectionResource> getFinanceSubSectionChildren(Long competitionId, SectionResource section) {
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
-        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(
-                section.getChildSections(),
-                allSections
-        );
-        List<SectionResource> financeSubSectionChildren = new ArrayList<>();
-        financeSectionChildren.stream().forEach(sectionResource -> {
-                    if (!sectionResource.getChildSections().isEmpty()) {
-                        financeSubSectionChildren.addAll(
-                                sectionService.findResourceByIdInList(sectionResource.getChildSections(), allSections)
-                        );
-                    }
-                }
-        );
-        return financeSubSectionChildren;
     }
 
     private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list) {

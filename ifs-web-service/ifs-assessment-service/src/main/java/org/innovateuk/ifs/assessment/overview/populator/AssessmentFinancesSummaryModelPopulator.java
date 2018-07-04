@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -37,7 +38,7 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class AssessmentFinancesSummaryModelPopulator {
+public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceModelPopulator {
 
     @Autowired
     private CompetitionService competitionService;
@@ -63,11 +64,15 @@ public class AssessmentFinancesSummaryModelPopulator {
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
-    @Autowired
     private SectionService sectionService;
 
     @Autowired
     private FinanceService financeService;
+
+    public AssessmentFinancesSummaryModelPopulator(SectionService sectionService) {
+        super(sectionService);
+        this.sectionService = sectionService;
+    }
 
     public AssessmentFinancesSummaryViewModel populateModel(Long assessmentId, Model model) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
@@ -182,21 +187,6 @@ public class AssessmentFinancesSummaryModelPopulator {
 
         model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
         model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
-    }
-
-    private List<SectionResource> getFinanceSubSectionChildren(Long competitionId, SectionResource section) {
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
-        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(section.getChildSections(), allSections);
-        List<SectionResource> financeSubSectionChildren = new ArrayList<>();
-        financeSectionChildren.forEach(sectionResource -> {
-                    if (!sectionResource.getChildSections().isEmpty()) {
-                        financeSubSectionChildren.addAll(
-                                sectionService.findResourceByIdInList(sectionResource.getChildSections(), allSections)
-                        );
-                    }
-                }
-        );
-        return financeSubSectionChildren;
     }
 
     private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list) {
