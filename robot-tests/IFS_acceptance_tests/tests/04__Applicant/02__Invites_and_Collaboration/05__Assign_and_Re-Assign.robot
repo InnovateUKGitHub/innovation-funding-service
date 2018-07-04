@@ -183,7 +183,7 @@ Lead marks finances as complete
     [Tags]
     Given the user navigates to the page                 ${DASHBOARD_URL}
     And the user clicks the button/link                  jQuery=.progress-list a:contains("Assign test")
-    Then the applicant completes the application details  Assign test  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
+    Then the applicant completes the application details  Assign test  ${tomorrowday}  ${month}  ${nextyear}
     When the user navigates to Your-finances page         Assign test
     Then the user should see the element                 link=Your project costs
     And the user should see the element                  link=Your organisation

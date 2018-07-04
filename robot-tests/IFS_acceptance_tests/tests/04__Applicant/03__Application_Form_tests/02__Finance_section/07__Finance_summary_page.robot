@@ -314,7 +314,8 @@ the user checks Your Funding section for the project
 
 the user selects research area via Your Funding section
     [Arguments]  ${Application}
-    the applicant completes the application details  ${Application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant completes the application details  ${Application}  ${tomorrowday}  ${month}  ${nextyear}
+    then the user selects research category          Feasibility studies
     the user fills in the funding information with bigger amount  ${Application}
 
 the user fills in the funding information with bigger amount
