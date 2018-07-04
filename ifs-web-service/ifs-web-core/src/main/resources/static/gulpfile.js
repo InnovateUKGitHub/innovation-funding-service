@@ -15,13 +15,20 @@ var nodeModulesRelativePath = '../../../../../node_modules/'
 var govukFrontendPath = nodeModulesPath + 'govuk-frontend/'
 var sassFiles = [
   './sass/**/*.scss',
-	govukFrontendPath + '**/*.scss'
+	govukFrontendPath + 'settings/**/*.scss',
+  govukFrontendPath + 'tools/**/*.scss',
+  govukFrontendPath + 'helpers/**/*.scss',
+  govukFrontendPath + 'core/**/*.scss',
+  govukFrontendPath + 'objects/**/*.scss',
+  govukFrontendPath + 'components/**/*.scss',
+  govukFrontendPath + 'utilities/**/*.scss',
+  govukFrontendPath + 'overrides/**/*.scss'
 ]
 var vendorJsFiles = [
   nodeModulesPath + 'js-cookie/src/js.cookie.js',
   nodeModulesPath + 'jquery/dist/jquery.js',
   nodeModulesPath + 'simplestatemanager/src/ssm.js',
-  'js/vendor/jquery-ui/jquery-ui.min.js',
+  nodeModulesPath + 'jquery-ui-dist/jquery-ui.js',
 	govukFrontendPath + 'all.js',
   'js/vendor/govuk/application.js',
   'js/vendor/wysiwyg-editor/*.js',
@@ -37,6 +44,11 @@ gulp.task('copy-fonts-govuk', function () {
 gulp.task('copy-images-govuk', function () {
   return gulp.src(filesExist(govukFrontendPath + 'assets/images/**/**'))
   .pipe(gulp.dest('images'))
+})
+//  copy over html5shiv javascript to the javascript folder
+gulp.task('copy-html5shiv', function () {
+  return gulp.src(filesExist(nodeModulesPath + 'html5shiv/dist/html5shiv.js'))
+  .pipe(gulp.dest('js/vendor/html5shiv'))
 })
 
 // concat and minify all the ifs files
@@ -67,7 +79,7 @@ gulp.task('vendor', function () {
 })
 
 // build all js
-gulp.task('js', gulp.parallel('vendor', 'ifs-js'))
+gulp.task('js', gulp.parallel('vendor', 'ifs-js', 'copy-html5shiv'))
 
 gulp.task('css', gulp.parallel('copy-images-govuk', 'copy-fonts-govuk', function () {
   return gulp.src(filesExist(sassFiles))

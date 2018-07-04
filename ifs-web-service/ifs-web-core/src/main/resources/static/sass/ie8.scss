@@ -1,6 +1,5 @@
 // for generating internet explorer 8 specific css
-$is-ie: true;
-$ie-version: 8;
+$govuk-is-ie8: true;
 
 // Path to assets for use with the file-url function
 // in the govuk frontend url-helpers partial
@@ -15,4 +14,3 @@ $govuk-fonts-path: "/fonts/";
 // ===========================================
 @import "components";
 @import "pages";
-//@import "print";

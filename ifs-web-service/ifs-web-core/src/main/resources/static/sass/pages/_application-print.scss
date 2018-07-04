@@ -135,7 +135,7 @@
           }
         }
 
-        @include govuk-ie-lte(8) {
+        @include is-ie8() {
           left:auto;
           top:auto;
           width:19cm;

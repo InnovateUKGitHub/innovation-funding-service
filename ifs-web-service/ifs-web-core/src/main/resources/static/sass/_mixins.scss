@@ -32,25 +32,14 @@
   border-radius: $radius;
 }
 
-// Missing govuk mixin TODO remove this when they fix the bug
-@mixin govuk-ie-lte($version) {
-  @if $is-ie {
-    @if $ie-version <= $version {
-      @content;
-    }
-  }
-}
-// Missing govuk mixin TODO remove this when they fix the bug
-@mixin govuk-ie($version) {
-  @if $is-ie {
-    @if $ie-version == $version {
-      @content;
-    }
+@mixin is-ie8() {
+  @if $govuk-is-ie8 {
+    @content;
   }
 }
 
 @mixin media-down($size: false, $max-width: false, $min-width: false) {
-  @if $is-ie == false {
+  @if $govuk-is-ie8 == false {
     @if $size == mobile {
       @media (max-width: 640px) {
         @content;

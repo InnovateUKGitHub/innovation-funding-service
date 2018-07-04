@@ -36,7 +36,7 @@
 
 #content {
   &.full-width {
-    @include govuk-ie-lte(8){
+    @include is-ie8() {
       width: 95%;
     }
 
@@ -46,7 +46,7 @@
 
 .govuk-width-container {
   &.full-width {
-    @include govuk-ie-lte(8){
+    @include is-ie8() {
       width: 95%;
     }
 

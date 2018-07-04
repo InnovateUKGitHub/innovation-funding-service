@@ -95,7 +95,7 @@
   }
 }
 //same as no-js but @extends don't work within ie-lte :(
-@include govuk-ie-lte(8) {
+@include is-ie8() {
   .pie {
     width:auto;
     height: auto;

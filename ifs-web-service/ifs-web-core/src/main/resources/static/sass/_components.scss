@@ -1,6 +1,5 @@
 //variables
-
-$is-ie: false !default;
+$govuk-is-ie8: false !default;
 // mising govuk variable TODO remove this when govuk fixes the bug
 $govuk-button-colour: #00823B;
 $ifs-warning-button-colour: #c00000;
@@ -45,6 +44,5 @@ $ifs-warning-button-colour: #c00000;
 @import "components/tabs";
 @import "components/password-toggle";
 @import 'components/wysiwyg';
-@import 'components/user-feedback';
 @import 'components/invites';
 @import "components/flextable";

@@ -174,7 +174,7 @@ button,
       text-decoration: none;
     }
 
-    @include govuk-ie-lte(8) {
+    @include is-ie8() {
       border-bottom: none;
     }
   }
