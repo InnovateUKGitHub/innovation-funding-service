@@ -44,7 +44,11 @@ IFS.core.autoSave = (function () {
       var promiseListName
       if (field.closest('[data-repeatable-row]').length) {
         // make sure repeating rows process sequential per row
-        promiseListName = field.closest('[data-repeatable-row]').prop('id')
+        var rowContainer = field.closest('[data-repeatable-row]')
+        if (rowContainer.attr('data-repeatable-row').startsWith('unsaved') && field.val() === '') {
+          return
+        }
+        promiseListName = rowContainer.prop('id')
       } else {
         promiseListName = field.prop('name')
       }
@@ -204,36 +208,36 @@ IFS.core.autoSave = (function () {
           },
           timeout: s.ajaxTimeOut
         })
-        .done(function (data) {
-          var doneAjaxTime = new Date().getTime()
-          var remainingWaitingTime = (IFS.core.autoSave.settings.minimumUpdateTime - (doneAjaxTime - startAjaxTime))
+          .done(function (data) {
+            var doneAjaxTime = new Date().getTime()
+            var remainingWaitingTime = (IFS.core.autoSave.settings.minimumUpdateTime - (doneAjaxTime - startAjaxTime))
 
-          // transform name of costrow for persisting to database
-          if (typeof (data.fieldId) !== 'undefined') {
-            jQuery('body').trigger('persistUnsavedRow', [name, data.fieldId])
-          }
-
-          // set the form-saved-state
-          jQuery('body').trigger('updateSerializedFormState')
-
-          // save message
-          setTimeout(function () {
-            autoSaveInfo.html('Saved!')
-          }, remainingWaitingTime)
-        }).fail(function (jqXHR, data) {
-          if (autoSaveInfo.length) {
-            // ignore incomplete requests, likely due to navigating away from the page
-            if (jqXHR.readyState < 4) {
-              return true
-            } else {
-              var errorMessage = IFS.core.autoSave.getErrorMessage(data)
-              autoSaveInfo.html('<span class="error-message">' + errorMessage + '</span>')
+            // transform name of costrow for persisting to database
+            if (typeof (data.fieldId) !== 'undefined') {
+              jQuery('body').trigger('persistUnsavedRow', [name, data.fieldId])
             }
-          }
-        }).always(function () {
-          form.attr('data-save-status', 'done')
-          defer.resolve()
-        })
+
+            // set the form-saved-state
+            jQuery('body').trigger('updateSerializedFormState')
+
+            // save message
+            setTimeout(function () {
+              autoSaveInfo.html('Saved!')
+            }, remainingWaitingTime)
+          }).fail(function (jqXHR, data) {
+            if (autoSaveInfo.length) {
+              // ignore incomplete requests, likely due to navigating away from the page
+              if (jqXHR.readyState < 4) {
+                return true
+              } else {
+                var errorMessage = IFS.core.autoSave.getErrorMessage(data)
+                autoSaveInfo.html('<span class="error-message">' + errorMessage + '</span>')
+              }
+            }
+          }).always(function () {
+            form.attr('data-save-status', 'done')
+            defer.resolve()
+          })
 
         return defer.promise()
       }

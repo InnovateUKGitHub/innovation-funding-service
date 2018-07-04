@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application.finance.viewmodel;
 
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 
 import java.math.BigDecimal;

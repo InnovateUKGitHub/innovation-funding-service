@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.commons.service;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorHolder;
 import org.innovateuk.ifs.commons.error.ErrorTemplate;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * This class represents a failure encountered during a service call and can additionally contain 0 or more error

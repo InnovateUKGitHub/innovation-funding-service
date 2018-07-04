@@ -5,9 +5,9 @@ import org.junit.Test;
 
 import java.util.Locale;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
-import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static java.lang.Boolean.TRUE;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.junit.Assert.assertEquals;
 
 public class RejectionReasonFormatterTest {

@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.status.populator;
 
-import org.innovateuk.ifs.project.status.security.SetupSectionInternalUser;
-import org.innovateuk.ifs.project.status.security.StatusPermission;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.status.security.SetupSectionInternalUser;
+import org.innovateuk.ifs.project.status.security.StatusPermission;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;

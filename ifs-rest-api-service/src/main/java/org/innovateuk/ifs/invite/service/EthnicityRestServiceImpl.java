@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.ethnicityResourceListType;
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.ethnicityResourceListType;
 
 /**
  * Service for CRUD operations on {@link EthnicityResource}s.

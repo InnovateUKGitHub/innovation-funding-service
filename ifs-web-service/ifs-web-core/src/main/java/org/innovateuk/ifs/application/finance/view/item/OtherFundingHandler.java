@@ -33,7 +33,7 @@ public class OtherFundingHandler extends FinanceRowHandler {
                         otherPublicFunding = fieldValue;
                         break;
                     case "fundingAmount":
-                        fundingAmount = (StringUtils.isEmpty(fieldValue))?
+                        fundingAmount = (StringUtils.isEmpty(fieldValue)) ?
                                 null :
                                 NumberUtils.getBigDecimalValue(fieldValue, 0d);
                         break;
@@ -50,8 +50,8 @@ public class OtherFundingHandler extends FinanceRowHandler {
             }
         }
 
-        if(allNull(id, otherPublicFunding, fundingSource, securedDate, fundingAmount)) {
-        	return null;
+        if (allNull(id, otherPublicFunding, fundingSource, securedDate, fundingAmount)) {
+            return null;
         }
 
         return new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount);

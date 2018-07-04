@@ -90,7 +90,6 @@ public class Application implements ProcessActivity {
         this.applicationProcess = new ApplicationProcess(this, null, ApplicationState.CREATED);
     }
 
-    // TODO can hopefully remove the activityState param here and just set to CREATED
     public Application(Competition competition, String name, List<ProcessRole> processRoles, ApplicationState activityState) {
         requireNonNull(activityState, "activityState cannot be null " + activityState);
         this.competition = competition;
@@ -365,4 +364,6 @@ public class Application implements ProcessActivity {
     public void setInAssessmentReviewPanel(boolean inAssessmentReviewPanel) {
         this.inAssessmentReviewPanel = inAssessmentReviewPanel;
     }
+
+
 }
