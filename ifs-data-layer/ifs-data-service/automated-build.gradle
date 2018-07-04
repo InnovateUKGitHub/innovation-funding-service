@@ -1,8 +1,3 @@
-ext.ifsDatasourceUrl=""
-ext.ifsDatasourceUsername=""
-ext.ifsDatasourcePassword=""
-ext.ifsFlywayLocations=""
-
 ext.testIfsDatasourceUrl="jdbc:mysql://127.0.0.1:3306/ifs_test"
 ext.testIfsDatasourceUsername="ifs"
 ext.testIfsDatasourcePassword="ifs"
@@ -12,17 +7,8 @@ project.ext['flyway.schemas']='ifs,ifs_test'
 project.ext['flyway.user']="ifs"
 project.ext['flyway.password']="ifs"
 
-project.ext['flyway.placeholders.ifs.system.user.uuid']='c0d02979-e66e-11e7-ac43-0242ac120002'
-
 ext.ifsFinanceTotalsEnabled=false
-ext.ifsFinanceTotalsAuthSecretKey="supersecretkey"
 
-ext.silRestBaseURL="http://sil-stub:8080/silstub"
-ext.silRestCrmBaseURL="http://sil-stub:8080/silstub"
-
-ext.idpRestBaseURL=""
-
-ext.postcodeLookupKey=""
 
 // Choose an appropriate location for a location to store uploaded files.
 // It is an OS-specific path, so choose the appropriate format depending on
@@ -32,8 +18,4 @@ ext.postcodeLookupKey=""
 // so they are retained in application.properties during the processResource task)
 ext.ifsFileStorageLocation="/tmp"
 
-ext.ifsWebBaseURL="http://localhost:8080"
-
 ext.activeProfile="environment"
-
-ext.internalUserEmailDomain="innovateuk.test"
