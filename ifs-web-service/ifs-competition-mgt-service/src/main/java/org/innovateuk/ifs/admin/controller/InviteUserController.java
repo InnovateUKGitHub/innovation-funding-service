@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.groups.Default;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID_EMAIL;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 
 /**
  * Controller for handling requests related to invitation of new users by the IFS Administrator
@@ -44,7 +44,7 @@ public class InviteUserController {
         return viewInviteNewUser(model);
     }
 
-    private String viewInviteNewUser(Model model) {
+    private static String viewInviteNewUser(Model model) {
         InviteUserForm form = new InviteUserForm();
         model.addAttribute(FORM_ATTR_NAME, form);
 
@@ -64,10 +64,14 @@ public class InviteUserController {
 
             ServiceResult<Void> saveResult = inviteUserService.saveUserInvite(inviteUserResource);
 
-            return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+            return handleSaveUserInviteErrors(saveResult, validationHandler).
                     failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/pending");
 
         });
+    }
+
+    private ValidationHandler handleSaveUserInviteErrors(ServiceResult<Void> saveResult, ValidationHandler validationHandler) {
+        return validationHandler.addAnyErrors(saveResult, mappingErrorKeyToField(USER_ROLE_INVITE_INVALID_EMAIL, "emailAddress"), fieldErrorsToFieldErrors(), asGlobalErrors());
     }
 
     private InviteUserResource constructInviteUserResource(InviteUserForm form) {
@@ -77,8 +81,6 @@ public class InviteUserController {
         invitedUser.setLastName(form.getLastName());
         invitedUser.setEmail(form.getEmailAddress());
 
-        InviteUserResource inviteUserResource = new InviteUserResource(invitedUser, form.getRole());
-
-        return inviteUserResource;
+        return new InviteUserResource(invitedUser, form.getRole());
     }
 }

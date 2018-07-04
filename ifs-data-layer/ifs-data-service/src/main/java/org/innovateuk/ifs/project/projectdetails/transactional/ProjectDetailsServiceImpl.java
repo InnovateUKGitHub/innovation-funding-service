@@ -32,11 +32,14 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
+import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -102,6 +105,9 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     @Autowired
+    private ProjectWorkflowHandler projectWorkflowHandler;
+
+    @Autowired
     private ProjectInviteRepository projectInviteRepository;
 
     @Autowired
@@ -112,6 +118,9 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private StatusService statusService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -258,7 +267,16 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
             return serviceFailure(PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
         }
 
+        if (isProjectWithdrawn(project)) {
+            return serviceFailure(GENERAL_FORBIDDEN);
+        }
+
         return serviceSuccess();
+    }
+
+    private boolean isProjectWithdrawn(Project project) {
+        ProjectState projectState = projectWorkflowHandler.getState(project);
+        return WITHDRAWN.equals(projectState);
     }
 
     @Override
@@ -447,7 +465,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceFailure(errors);
     }
 
-    // TODO DW - return true???
+    // TODO DW - return true?
     private boolean handleInviteSuccess(ProjectInvite projectInvite) {
         projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
         return true;

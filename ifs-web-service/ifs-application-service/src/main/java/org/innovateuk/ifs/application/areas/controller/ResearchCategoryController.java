@@ -35,7 +35,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @SecuredBySpring(value="Controller", description = "TODO", securedType = ResearchCategoryController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ResearchCategoryController {
-    private static String APPLICATION_SAVED_MESSAGE = "applicationSaved";
+    private static final String APPLICATION_SAVED_MESSAGE = "applicationSaved";
 
     @Autowired
     private ApplicationResearchCategoryPopulator researchCategoryPopulator;
@@ -103,7 +103,7 @@ public class ResearchCategoryController {
         return ServiceResult.serviceFailure(emptyList());
     }
 
-    private void checkIfAllowed(Long questionId, ApplicationResource applicationResource) throws ForbiddenActionException {
+    private void checkIfAllowed(Long questionId, ApplicationResource applicationResource) {
         if(!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
             throw new ForbiddenActionException();
         }

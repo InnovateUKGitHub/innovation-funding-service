@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.authentication.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.authentication.resource.CreateUserResource;
 import org.innovateuk.ifs.authentication.resource.CreateUserResponse;
 import org.innovateuk.ifs.authentication.resource.IdentityProviderError;
@@ -9,8 +11,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.util.Either;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,13 +21,13 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.Either.left;
 import static org.innovateuk.ifs.util.Either.right;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 

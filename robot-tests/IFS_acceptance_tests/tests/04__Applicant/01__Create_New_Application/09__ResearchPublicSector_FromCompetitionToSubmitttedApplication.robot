@@ -62,6 +62,7 @@ Applicant Applies to Research leading Competition
     Then the user fills in the Application details        ${researchLeadApp}  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${researchLeadApp}
     When the academic user fills in his finances          ${researchLeadApp}
+    And the user enters the project location
     Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                   link=Application overview
     And collaborating is required to submit the application if Research participation is not 100pc   ${openCompetitionResearch_name}  ${researchLeadApp}  antonio.jenkins@jabbertype.example.com

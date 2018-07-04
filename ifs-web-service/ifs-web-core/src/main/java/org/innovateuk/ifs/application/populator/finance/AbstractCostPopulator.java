@@ -3,12 +3,12 @@ package org.innovateuk.ifs.application.populator.finance;
 import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.populator.forminput.AbstractFormInputPopulator;
-import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.application.viewmodel.finance.AbstractCostViewModel;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

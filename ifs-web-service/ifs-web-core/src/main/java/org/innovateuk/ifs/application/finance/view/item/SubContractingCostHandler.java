@@ -22,7 +22,7 @@ public class SubContractingCostHandler extends FinanceRowHandler {
         String name = null;
         String role = null;
 
-        for(FinanceFormField financeFormField : financeFormFields) {
+        for (FinanceFormField financeFormField : financeFormFields) {
             String fieldValue = financeFormField.getValue();
             if (fieldValue != null) {
                 switch (financeFormField.getCostName()) {
@@ -45,14 +45,14 @@ public class SubContractingCostHandler extends FinanceRowHandler {
             }
         }
 
-        if(allNull(id, cost, country, name, role)) {
-        	return null;
+        if (allNull(id, cost, country, name, role)) {
+            return null;
         }
-        
-	    if((id == null || Long.valueOf(0L).equals(id)) && (cost == null)) {
-        	cost = BigDecimal.ZERO;
+
+        if ((id == null || Long.valueOf(0L).equals(id)) && (cost == null)) {
+            cost = BigDecimal.ZERO;
         }
-	    
+
         return new SubContractingCost(id, cost, country, name, role);
     }
 }

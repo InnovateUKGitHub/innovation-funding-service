@@ -10,7 +10,7 @@ public class PaginationLink {
     private String title;
 
     public PaginationLink(int page, int pageSize, long totalElements, String existingQuery) {
-        this.title = ((page * pageSize) + 1) + " to " + Math.min((page + 1) * pageSize, totalElements);
+        this.title = ((page * pageSize) + 1) + " to " + Math.min((page + 1) * ((long) pageSize), totalElements);
         this.path = UriComponentsBuilder.fromUriString(existingQuery).replaceQueryParam("page", page).toUriString();
     }
 

@@ -14,11 +14,11 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -211,7 +211,6 @@ public class RegistrationController {
 
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
 
-        // TODO : INFUND-3691
         return validationHandler.failNowOrSucceedWith(
                 () -> registerForm(registrationForm, model, user, request, response),
                 () -> createUser(registrationForm, getOrganisationId(request), getCompetitionId(request)).handleSuccessOrFailure(

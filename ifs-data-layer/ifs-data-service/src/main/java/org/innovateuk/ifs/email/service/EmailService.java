@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.email.service;
 
-import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.email.resource.EmailAddress;
 
 import java.util.List;
 

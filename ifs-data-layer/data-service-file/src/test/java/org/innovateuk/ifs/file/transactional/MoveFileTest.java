@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.file.transactional;
 
 import com.google.common.io.Files;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -15,12 +15,12 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.google.common.collect.Lists.reverse;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.FileFunctions.pathElementsToFile;
-import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

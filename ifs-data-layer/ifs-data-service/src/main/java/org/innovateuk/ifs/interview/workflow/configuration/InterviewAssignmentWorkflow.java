@@ -17,9 +17,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import java.util.LinkedHashSet;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.interview.resource.InterviewAssignmentEvent.NOTIFY;
-import static org.innovateuk.ifs.interview.resource.InterviewAssignmentEvent.RESPOND;
-import static org.innovateuk.ifs.interview.resource.InterviewAssignmentEvent.WITHDRAW_RESPONSE;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentEvent.*;
 import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.*;
 
 /**

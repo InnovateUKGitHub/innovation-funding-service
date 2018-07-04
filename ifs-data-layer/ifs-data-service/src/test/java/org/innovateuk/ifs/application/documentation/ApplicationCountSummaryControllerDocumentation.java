@@ -5,11 +5,8 @@ import org.innovateuk.ifs.application.controller.ApplicationCountSummaryControll
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.transactional.ApplicationCountSummaryService;
-import org.innovateuk.ifs.application.transactional.AssessorCountSummaryService;
 import org.junit.Test;
 import org.mockito.Mock;
-
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
@@ -21,9 +18,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationCountSummaryControllerDocumentation extends BaseControllerMockMVCTest<ApplicationCountSummaryController> {

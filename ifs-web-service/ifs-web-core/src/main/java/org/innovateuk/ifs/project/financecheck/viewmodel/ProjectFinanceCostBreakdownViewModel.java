@@ -2,11 +2,11 @@ package org.innovateuk.ifs.project.financecheck.viewmodel;
 
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * View model for the project cost breakdown table.
