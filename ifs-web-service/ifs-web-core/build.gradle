@@ -1,4 +1,18 @@
-apply from: rootProject.file("gradle-support/web-support.gradle")
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+
+buildscript {
+
+    ext['thymeleaf.version'] = '3.0.3.RELEASE'
+
+    ext {
+        thymeleafVersion = ext['thymeleaf.version']
+    }
+
+    repositories {
+        jcenter()
+    }
+
+}
 
 group 'innovateuk'
 version project.version

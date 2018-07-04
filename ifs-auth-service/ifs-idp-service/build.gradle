@@ -1,5 +1,17 @@
 import org.apache.tools.ant.filters.ReplaceTokens
-apply from: rootProject.file("gradle-support/auth-support.gradle")
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+
+buildDocker.tag="innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+buildDocker.inputDir=file("${project.buildDir}/docker")
+tagDocker.imageId="innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+
+def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+if (enabled) {
+    buildDocker.outputs.upToDateWhen { false }
+}
 
 group 'innovateuk'
 version project.version
