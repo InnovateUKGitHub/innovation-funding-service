@@ -37,7 +37,7 @@ public class ApplicationCreationAuthenticatedController {
     private OrganisationService organisationService;
 
     @Autowired
-    protected UserService userService;
+    private UserService userService;
 
     @GetMapping("/{competitionId}")
     public String view(Model model,
