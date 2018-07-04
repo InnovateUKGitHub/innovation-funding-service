@@ -45,7 +45,7 @@ public class ApplicationResearchCategoryRestServiceMocksTest extends
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
-        setupPostWithRestResultExpectations(format("%s/markResearchCategoryComplete/%s/%s",
+        setupPostWithRestResultExpectations(format("%s/mark-research-category-complete/%s/%s",
                 applicationResearchCategoryRestUrl, applicationResource.getId(), markedAsCompleteId),
                 ApplicationResource.class, researchCategoryId, applicationResource, HttpStatus.OK);
 

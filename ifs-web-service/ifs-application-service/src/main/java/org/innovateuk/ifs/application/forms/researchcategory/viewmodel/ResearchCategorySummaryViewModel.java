@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.areas.viewmodel;
+package org.innovateuk.ifs.application.forms.researchcategory.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

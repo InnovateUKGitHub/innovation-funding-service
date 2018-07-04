@@ -27,10 +27,6 @@ public class ApplicationResearchCategoryController {
     private QuestionService questionService;
     private QuestionStatusService questionStatusService;
 
-    public ApplicationResearchCategoryController() {
-
-    }
-
     public ApplicationResearchCategoryController(final ApplicationResearchCategoryService
                                                          applicationResearchCategoryService,
                                                  final QuestionService questionService,
@@ -47,7 +43,7 @@ public class ApplicationResearchCategoryController {
                 .toGetResponse();
     }
 
-    @PostMapping("/markResearchCategoryComplete/{applicationId}/{markedAsCompleteById}")
+    @PostMapping("/mark-research-category-complete/{applicationId}/{markedAsCompleteById}")
     public RestResult<ApplicationResource> setResearchCategoryAndMarkAsComplete(@PathVariable("applicationId") long
                                                                                         applicationId,
                                                                                 @PathVariable("markedAsCompleteById")
