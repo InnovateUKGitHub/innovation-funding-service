@@ -9,17 +9,20 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -47,17 +50,19 @@ public class AssessorCompetitionForInterviewDashboardModelPopulator {
         this.interviewAllocateRestService = interviewAllocateRestService;
     }
 
-    public AssessorCompetitionForInterviewDashboardViewModel populateModel(long competitionId, long userId) {
+    public AssessorCompetitionForInterviewDashboardViewModel populateModel(long competitionId, long userId, String origin, MultiValueMap<String, String> queryParams) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
         List<AssessorCompetitionForInterviewDashboardApplicationViewModel> applications = getApplications(userId, competitionId);
+
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
 
         return new AssessorCompetitionForInterviewDashboardViewModel(
                 competition.getId(),
                 competition.getName(),
                 competition.getLeadTechnologistName(),
-                applications
-        );
+                applications,
+                originQuery);
     }
 
     private List<AssessorCompetitionForInterviewDashboardApplicationViewModel> getApplications(long userId, long competitionId) {
