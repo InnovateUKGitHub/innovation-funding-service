@@ -87,6 +87,7 @@ import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.ne
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -225,7 +226,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testGetProjectManager() {
+    public void getProjectManager() {
         final Long projectId = 123L;
         final Project project = newProject().withId(projectId).build();
         final ProjectUser projectManager = newProjectUser().withProject(project).withRole(PROJECT_MANAGER).build();
@@ -241,7 +242,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testInvalidProjectManagerProvided() {
+    public void invalidProjectManagerProvided() {
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource()
                 .withSpendProfileStatus(ProjectActivityStates.PENDING)
                 .build()));
@@ -251,7 +252,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testSetProjectManagerWhenGOLAlreadyGenerated() {
+    public void setProjectManagerWhenGOLAlreadyGenerated() {
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
         Project existingProject = newProject().withId(projectId).withGrantOfferLetter(golFile).build();
@@ -271,7 +272,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testValidProjectManagerProvided() {
+    public void validProjectManagerProvided() {
 
         when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
@@ -296,7 +297,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testValidProjectManagerProvidedWithExistingProjectManager() {
+    public void validProjectManagerProvidedWithExistingProjectManager() {
 
         User differentUser = newUser().build();
         Organisation differentOrganisation = newOrganisation().build();
@@ -333,7 +334,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectStartDateButStartDateDoesntBeginOnFirstDayOfMonth() {
+    public void updateProjectStartDateButStartDateDoesntBeginOnFirstDayOfMonth() {
 
         LocalDate now = LocalDate.now();
         LocalDate dateNotOnFirstDayOfMonth = LocalDate.of(now.getYear(), now.getMonthValue(), 2).plusMonths(1);
@@ -352,7 +353,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectStartDateButStartDateNotInFuture() {
+    public void updateProjectStartDateButStartDateNotInFuture() {
 
         LocalDate now = LocalDate.now();
         LocalDate pastDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).minusMonths(1);
@@ -371,7 +372,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectStartDateWhenSpendProfileHasAlreadyBeenGenerated() {
+    public void updateProjectStartDateWhenSpendProfileHasAlreadyBeenGenerated() {
 
         LocalDate now = LocalDate.now();
         LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
@@ -394,7 +395,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectStartDateButProjectDoesntExist() {
+    public void updateProjectStartDateButProjectDoesntExist() {
 
         LocalDate now = LocalDate.now();
         LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
@@ -407,7 +408,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectStartDateSuccess() {
+    public void updateProjectStartDateSuccess() {
 
         LocalDate now = LocalDate.now();
         LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
@@ -425,7 +426,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectDurationWhenDurationLessThanAMonth() {
+    public void updateProjectDurationWhenDurationLessThanAMonth() {
 
         long projectId = 123L;
         ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 0L);
@@ -438,7 +439,18 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectDurationWhenSpendProfileAlreadyGenerated() {
+    public void updateProjectDurationWhenProjectDoesNotExist() {
+
+        long projectId = 123L;
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
+
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 36L);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
+    }
+
+    @Test
+    public void updateProjectDurationWhenSpendProfileAlreadyGenerated() {
 
         long projectId = 123L;
 
@@ -451,18 +463,20 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectDurationWhenProjectDoesNotExist() {
+    public void updateProjectDurationWhenProjectIsAlreadyWithdrawn() {
 
         long projectId = 123L;
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.empty());
+        Project existingProject = newProject().build();
+        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(existingProject));
+        when(projectWorkflowHandlerMock.getState(existingProject)).thenReturn(WITHDRAWN);
 
         ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 36L);
         assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
+        assertTrue(updateResult.getFailure().is(GENERAL_FORBIDDEN));
     }
 
     @Test
-    public void testUpdateProjectDurationSuccess() {
+    public void updateProjectDurationSuccess() {
 
         long projectId = 123L;
         long durationInMonths = 36L;
@@ -475,7 +489,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateFinanceContact() {
+    public void updateFinanceContact() {
 
         Project project = newProject().withId(123L).build();
         Organisation organisation = newOrganisation().withId(5L).build();
@@ -503,7 +517,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateFinanceContactWhenGOLAlreadyGenerated() {
+    public void updateFinanceContactWhenGOLAlreadyGenerated() {
 
         FileEntry golFileEntry = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
 
@@ -523,7 +537,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateFinanceContactButUserIsNotExistingPartner() {
+    public void updateFinanceContactButUserIsNotExistingPartner() {
 
         Project project = newProject().withId(123L).build();
         Organisation organisation = newOrganisation().withId(5L).build();
@@ -543,7 +557,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateFinanceContactWhenNotPresentOnTheProject() {
+    public void updateFinanceContactWhenNotPresentOnTheProject() {
 
         long userIdForUserNotOnProject = 6L;
 
@@ -566,7 +580,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateFinanceContactAllowedWhenFinanceContactAlreadySet() {
+    public void updateFinanceContactAllowedWhenFinanceContactAlreadySet() {
 
         User anotherUser = newUser().build();
         Project existingProject = newProject().build();
@@ -595,7 +609,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationWhenPostcodeIsNullOrEmpty() {
+    public void updatePartnerProjectLocationWhenPostcodeIsNullOrEmpty() {
 
         long projectId = 1L;
         long organisationId = 2L;
@@ -620,7 +634,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationWhenPostcodeEnteredExceedsMaxLength() {
+    public void updatePartnerProjectLocationWhenPostcodeEnteredExceedsMaxLength() {
 
         long projectId = 1L;
         long organisationId = 2L;
@@ -634,7 +648,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationWhenMonitoringOfficerAssigned() {
+    public void updatePartnerProjectLocationWhenMonitoringOfficerAssigned() {
 
         long projectId = 1L;
         long organisationId = 2L;
@@ -650,7 +664,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationWhenPartnerOrganisationDoesNotExist() {
+    public void updatePartnerProjectLocationWhenPartnerOrganisationDoesNotExist() {
 
         long projectId = 1L;
         long organisationId = 2L;
@@ -664,7 +678,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationEnsureLowerCasePostcodeIsSavedAsUpperCase() {
+    public void updatePartnerProjectLocationEnsureLowerCasePostcodeIsSavedAsUpperCase() {
 
         long projectId = 1L;
         long organisationId = 2L;
@@ -682,7 +696,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdatePartnerProjectLocationSuccess() {
+    public void updatePartnerProjectLocationSuccess() {
 
         long projectId = 1L;
         long organisationId = 2L;
@@ -700,7 +714,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testInviteProjectManagerWhenProjectNotInDB() {
+    public void inviteProjectManagerWhenProjectNotInDB() {
 
         Long projectId = 1L;
 
@@ -738,7 +752,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testInviteProjectManagerWhenGOLAlreadyGenerated() {
+    public void inviteProjectManagerWhenGOLAlreadyGenerated() {
 
         Long projectId = 1L;
 
@@ -762,7 +776,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testInviteProjectManagerWhenUnableToSendNotification() {
+    public void inviteProjectManagerWhenUnableToSendNotification() {
 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withCompetitionName("Competition 1")
@@ -810,7 +824,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testInviteProjectManagerSuccess() {
+    public void inviteProjectManagerSuccess() {
 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withCompetitionName("Competition 1")
@@ -849,7 +863,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testInviteFinanceContactWhenGOLAlreadyGenerated() {
+    public void inviteFinanceContactWhenGOLAlreadyGenerated() {
 
         Long projectId = 1L;
 
@@ -877,7 +891,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testInviteFinanceContactSuccess() {
+    public void inviteFinanceContactSuccess() {
 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withCompetitionName("Competition 1")
@@ -918,7 +932,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectAddressToBeRegisteredAddress() {
+    public void updateProjectAddressToBeRegisteredAddress() {
         AddressResource existingRegisteredAddressResource = newAddressResource().build();
         Address registeredAddress = newAddress().build();
 
@@ -939,7 +953,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectAddressToBeOperatingAddress() {
+    public void updateProjectAddressToBeOperatingAddress() {
         AddressResource existingOperatingAddressResource = newAddressResource().build();
         Address operatingAddress = newAddress().build();
 
@@ -960,7 +974,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectAddressToNewProjectAddress() {
+    public void updateProjectAddressToNewProjectAddress() {
 
         Organisation leadOrganisation = newOrganisation()
                 .withId(organisation.getId())
@@ -1001,7 +1015,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectAddressToNewProjectAddressAndExistingAddressAssociatedWithOrg() {
+    public void updateProjectAddressToNewProjectAddressAndExistingAddressAssociatedWithOrg() {
 
         Organisation leadOrganisation = newOrganisation().withId(organisation.getId()).build();
         AddressResource newAddressResource = newAddressResource().build();
@@ -1030,7 +1044,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testInviteProjectFinanceUser(){
+    public void inviteProjectFinanceUser(){
 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withCompetitionName("Competition 1")
