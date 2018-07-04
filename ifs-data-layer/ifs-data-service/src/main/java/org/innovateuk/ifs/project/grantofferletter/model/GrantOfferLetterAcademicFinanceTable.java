@@ -18,24 +18,30 @@ public class GrantOfferLetterAcademicFinanceTable extends GrantOfferLetterFinanc
 
     private Map<String, BigDecimal> incurredStaff;
     private Map<String, BigDecimal> incurredTravelSubsistence;
+    private Map<String, BigDecimal> incurredEquipment;
     private Map<String, BigDecimal> incurredOtherCosts;
     private Map<String, BigDecimal> allocatedInvestigators;
     private Map<String, BigDecimal> allocatedEstateCosts;
     private Map<String, BigDecimal> allocatedOtherCosts;
     private Map<String, BigDecimal> indirectCosts;
     private Map<String, BigDecimal> exceptionsStaff;
+    private Map<String, BigDecimal> exceptionsTravelSubsistence;
+    private Map<String, BigDecimal> exceptionsEquipment;
     private Map<String, BigDecimal> exceptionsOtherCosts;
     private List<String> organisations;
 
     public void populate(Map<String, List<ProjectFinanceRow>> financials) {
         incurredStaff = sumByFinancialType(financials, DIRECTLY_INCURRED_STAFF.getFinanceRowName());
         incurredTravelSubsistence = sumByFinancialType(financials, DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getFinanceRowName());
+        incurredEquipment = sumByFinancialType(financials, DIRECTLY_INCURRED_EQUIPMENT.getFinanceRowName());
         incurredOtherCosts = sumByFinancialType(financials, DIRECTLY_INCURRED_OTHER_COSTS.getFinanceRowName());
         allocatedInvestigators = sumByFinancialType(financials, DIRECTLY_ALLOCATED_INVESTIGATORS.getFinanceRowName());
         allocatedEstateCosts = sumByFinancialType(financials, DIRECTLY_ALLOCATED_ESTATES_COSTS.getFinanceRowName());
         allocatedOtherCosts = sumByFinancialType(financials, DIRECTLY_INCURRED_OTHER_COSTS.getFinanceRowName());
         indirectCosts = sumByFinancialType(financials, INDIRECT_COSTS_OTHER_COSTS.getFinanceRowName());
         exceptionsStaff = sumByFinancialType(financials, INDIRECT_COSTS_STAFF.getFinanceRowName());
+        exceptionsTravelSubsistence = sumByFinancialType(financials, INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getFinanceRowName());
+        exceptionsEquipment = sumByFinancialType(financials, INDIRECT_COSTS_EQUIPMENT.getFinanceRowName());
         exceptionsOtherCosts = sumByFinancialType(financials, INDIRECT_COSTS_OTHER_COSTS.getFinanceRowName());
         organisations = new ArrayList<>(financials.keySet());
     }
@@ -50,6 +56,10 @@ public class GrantOfferLetterAcademicFinanceTable extends GrantOfferLetterFinanc
 
     public BigDecimal getIncurredTravelSubsistence(String org) {
         return incurredTravelSubsistence.get(org);
+    }
+
+    public BigDecimal getIncurredEquipment(String org) {
+        return incurredEquipment.get(org);
     }
 
     public BigDecimal getIncurredOtherCosts(String org) {
@@ -76,6 +86,14 @@ public class GrantOfferLetterAcademicFinanceTable extends GrantOfferLetterFinanc
         return exceptionsStaff.get(org);
     }
 
+    public BigDecimal getExceptionsTravelSubsistence(String org) {
+        return exceptionsTravelSubsistence.get(org);
+    }
+
+    public BigDecimal getExceptionsEquipment(String org) {
+        return exceptionsEquipment.get(org);
+    }
+
     public BigDecimal getExceptionsOtherCosts(String org) {
         return exceptionsOtherCosts.get(org);
     }
@@ -87,6 +105,10 @@ public class GrantOfferLetterAcademicFinanceTable extends GrantOfferLetterFinanc
 
     public BigDecimal getIncurredTravelSubsistenceTotal() {
         return sumTotals(incurredTravelSubsistence);
+    }
+
+    public BigDecimal getIncurredEquipmentTotal() {
+        return sumTotals(incurredEquipment);
     }
 
     public BigDecimal getIncurredOtherCostsTotal() {
@@ -111,6 +133,14 @@ public class GrantOfferLetterAcademicFinanceTable extends GrantOfferLetterFinanc
 
     public BigDecimal getExceptionsStaffTotal() {
         return sumTotals(exceptionsStaff);
+    }
+
+    public BigDecimal getExceptionsTravelSubsistenceTotal() {
+        return sumTotals(exceptionsTravelSubsistence);
+    }
+
+    public BigDecimal getExceptionsEquipmentTotal() {
+        return sumTotals(exceptionsEquipment);
     }
 
     public BigDecimal getExceptionsOtherCostsTotal() {
