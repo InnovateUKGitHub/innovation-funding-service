@@ -32,7 +32,7 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void testInternalUsersCanViewCompetitionSummaryOtherThanInnovationLeads() {
+    public void internalUsersCanViewCompetitionSummaryOtherThanInnovationLeads() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         allGlobalRoleUsers.forEach(user -> {
             if (!user.hasRole(INNOVATION_LEAD) && allInternalUsers.contains(user)) {
@@ -44,7 +44,7 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void testInnovationLeadsCanViewCompetitionSummaryOnAssignedComps() {
+    public void innovationLeadsCanViewCompetitionSummaryOnAssignedComps() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         List<Role> innovationLeadRoles = singletonList(INNOVATION_LEAD);
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
