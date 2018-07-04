@@ -20,32 +20,32 @@ public class QuestionStatus {
     private Boolean markedAsComplete;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="markedAsCompleteById", referencedColumnName="id")
+    @JoinColumn(name = "markedAsCompleteById", referencedColumnName = "id")
     private ProcessRole markedAsCompleteBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="questionId", referencedColumnName="id")
+    @JoinColumn(name = "questionId", referencedColumnName = "id")
     private Question question;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="assigneeId", referencedColumnName="id")
+    @JoinColumn(name = "assigneeId", referencedColumnName = "id")
     private ProcessRole assignee;
     private ZonedDateTime assignedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="applicationId", referencedColumnName="id")
+    @JoinColumn(name = "applicationId", referencedColumnName = "id")
     private Application application;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="assignedById", referencedColumnName="id")
+    @JoinColumn(name = "assignedById", referencedColumnName = "id")
     private ProcessRole assignedBy;
     private Boolean notified;
 
     public QuestionStatus() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
-    public QuestionStatus(Question question,  Application application, ProcessRole markedAsCompleteBy, Boolean markedAsComplete) {
+    public QuestionStatus(Question question, Application application, ProcessRole markedAsCompleteBy, Boolean markedAsComplete) {
         this.application = application;
         this.markedAsComplete = markedAsComplete;
         this.markedAsCompleteBy = markedAsCompleteBy;

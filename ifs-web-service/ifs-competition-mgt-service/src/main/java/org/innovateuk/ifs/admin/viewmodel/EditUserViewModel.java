@@ -4,8 +4,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import java.time.ZonedDateTime;
-
 /**
  * A view model for serving page listing users to be managed by IFS Administrators
  */

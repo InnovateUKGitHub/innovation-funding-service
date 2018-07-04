@@ -6,9 +6,7 @@ import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
-
 import static org.innovateuk.ifs.invite.resource.InviteProjectConstants.*;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;

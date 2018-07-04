@@ -1,11 +1,11 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.application.domain.Application;
 
-import java.util.*;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.springframework.test.util.ReflectionTestUtils.getField;

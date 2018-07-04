@@ -1,23 +1,23 @@
 package org.innovateuk.ifs.project.financecheck.controller;
 
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.project.financechecks.controller.OverheadFileDownloaderController;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.finance.service.OverheadFileRestService;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.web.multipart.MultipartFile;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class OverheadFileDownloaderControllerTest extends BaseControllerMockMVCTest<OverheadFileDownloaderController>{
 

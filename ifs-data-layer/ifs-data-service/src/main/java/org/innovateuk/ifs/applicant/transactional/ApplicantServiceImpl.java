@@ -5,13 +5,13 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
-import org.innovateuk.ifs.form.transactional.QuestionService;
-import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.transactional.FormInputService;
+import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -103,7 +103,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
         results.trackResult(() -> mapFormInputs(results, questionId, applicationId, applicants), applicant::setApplicantFormInputs);
     }
 
-    private List<ApplicantQuestionStatusResource> mapToApplicantStatuses(List<QuestionStatusResource> questionStatusResources, List<ApplicantResource> applicants) {
+    private static List<ApplicantQuestionStatusResource> mapToApplicantStatuses(List<QuestionStatusResource> questionStatusResources, List<ApplicantResource> applicants) {
         return questionStatusResources.stream().map(questionStatusResource -> {
             ApplicantQuestionStatusResource questionStatus = new ApplicantQuestionStatusResource();
             questionStatus.setStatus(questionStatusResource);
@@ -112,7 +112,7 @@ public class ApplicantServiceImpl extends BaseTransactionalService implements Ap
                 questionStatus.setAssignedBy(applicants.stream().filter(applicantResource -> applicantResource.getProcessRole().getId().equals(questionStatusResource.getAssignedBy())).findAny().orElse(null));
             }
             if (questionStatusResource.getMarkedAsCompleteBy() != null) {
-                questionStatus.setMarkedAsCompleteBy(applicants.stream().filter(applicantResource -> applicantResource.getProcessRole().getId().equals(questionStatusResource.getMarkedAsCompleteBy())).findAny().orElse(null));;
+                questionStatus.setMarkedAsCompleteBy(applicants.stream().filter(applicantResource -> applicantResource.getProcessRole().getId().equals(questionStatusResource.getMarkedAsCompleteBy())).findAny().orElse(null));
             }
             return questionStatus;
         }).collect(Collectors.toList());

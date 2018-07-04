@@ -41,6 +41,7 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-web"
+    compile('org.springframework.cloud:spring-cloud-starter-hystrix')
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
     compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
 
@@ -73,14 +74,17 @@ processTestResources {
     }
 }
 
+ext.springCloudVersion = 'Edgware.SR3'
+
+
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
 
+
 repositories {
-    maven { url "https://repo.spring.io/milestone" }
     jcenter()
 }
 

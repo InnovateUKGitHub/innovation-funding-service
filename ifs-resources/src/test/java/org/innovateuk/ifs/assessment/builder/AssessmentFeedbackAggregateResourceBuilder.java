@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.invite.domain;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.core.domain.Project;
 
 import javax.persistence.*;
 

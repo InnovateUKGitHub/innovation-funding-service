@@ -24,9 +24,9 @@ public class LabourCostHandler extends FinanceRowHandler {
         String description = null;
         String key = null;
 
-        for(FinanceFormField financeFormField : financeFormFields) {
+        for (FinanceFormField financeFormField : financeFormFields) {
             String fieldValue = financeFormField.getValue();
-            if(fieldValue != null) {
+            if (fieldValue != null) {
                 switch (financeFormField.getCostName()) {
                     case "grossEmployeeCost":
                         grossEmployeeCost = NumberUtils.getBigDecimalValue(fieldValue, 0D);
@@ -48,9 +48,9 @@ public class LabourCostHandler extends FinanceRowHandler {
                 }
             }
         }
-        
-        if(allNull(id, grossEmployeeCost, role, labourDays, description, key)) {
-        	return null;
+
+        if (allNull(id, grossEmployeeCost, role, labourDays, description, key)) {
+            return null;
         }
         return new LabourCost(id, key, role, grossEmployeeCost, labourDays, description);
     }

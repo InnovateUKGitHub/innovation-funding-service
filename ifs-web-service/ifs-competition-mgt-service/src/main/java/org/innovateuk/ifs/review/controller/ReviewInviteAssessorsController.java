@@ -10,8 +10,8 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
+import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.review.form.ReviewSelectionForm;
 import org.innovateuk.ifs.review.model.ReviewInviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.review.model.ReviewInviteAssessorsFindModelPopulator;
@@ -34,7 +34,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 

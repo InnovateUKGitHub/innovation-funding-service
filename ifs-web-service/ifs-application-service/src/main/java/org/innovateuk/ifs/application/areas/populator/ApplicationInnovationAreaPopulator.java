@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.areas.populator;
 
+import org.innovateuk.ifs.application.areas.viewmodel.InnovationAreaViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
-import org.innovateuk.ifs.application.areas.viewmodel.InnovationAreaViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,6 @@ public class ApplicationInnovationAreaPopulator {
 
     public InnovationAreaViewModel populate(ApplicationResource applicationResource, Long questionId) {
 
-
         InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
         innovationAreaViewModel.setAvailableInnovationAreas(applicationInnovationAreaRestService.getAvailableInnovationAreasForApplication(applicationResource.getId()).getSuccess());
         innovationAreaViewModel.setQuestionId(questionId);
@@ -26,11 +25,10 @@ public class ApplicationInnovationAreaPopulator {
 
         setInnovationAreaChoice(applicationResource, innovationAreaViewModel);
 
-
         return innovationAreaViewModel;
     }
 
-    private void setInnovationAreaChoice(ApplicationResource applicationResource, InnovationAreaViewModel innovationAreaViewModel) {
+    private static void setInnovationAreaChoice(ApplicationResource applicationResource, InnovationAreaViewModel innovationAreaViewModel) {
 
         if(applicationResource.getNoInnovationAreaApplicable()) {
             innovationAreaViewModel.setNoInnovationAreaApplicable(true);

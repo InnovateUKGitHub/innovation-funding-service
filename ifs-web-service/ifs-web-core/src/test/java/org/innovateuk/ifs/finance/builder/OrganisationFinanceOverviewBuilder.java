@@ -8,9 +8,9 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class OrganisationFinanceOverviewBuilder extends BaseBuilder<OrganisationFinanceOverview, OrganisationFinanceOverviewBuilder> {
 

@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.navigation;
 
-public enum NavigationOrigin {
+import org.innovateuk.ifs.origin.BackLinkOrigin;
+
+public enum NavigationOrigin implements BackLinkOrigin {
 
     ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
     SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
@@ -24,13 +26,14 @@ public enum NavigationOrigin {
     INTERVIEW_PANEL_VIEW_INVITE("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view"),
     INTERVIEW_PANEL_EDIT_INVITE("/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit");
 
-    private String baseOriginUrl;
+    private String originUrl;
 
-    NavigationOrigin(String baseOriginUrl) {
-        this.baseOriginUrl = baseOriginUrl;
+    NavigationOrigin(String originUrl) {
+        this.originUrl = originUrl;
     }
 
-    public String getBaseOriginUrl() {
-        return baseOriginUrl;
+    @Override
+    public String getOriginUrl() {
+        return originUrl;
     }
 }
