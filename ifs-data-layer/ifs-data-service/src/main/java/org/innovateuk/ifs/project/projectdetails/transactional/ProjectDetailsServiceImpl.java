@@ -17,7 +17,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
-import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -39,7 +38,6 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
-import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -65,6 +63,7 @@ import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POST
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -108,9 +107,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
-    private ProjectInviteRepository projectInviteRepository;
-
-    @Autowired
     private InviteProjectMapper inviteProjectMapper;
 
     @Autowired
@@ -118,9 +114,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
-
-    @Autowired
-    private StatusService statusService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -246,10 +239,10 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Override
     @Transactional
     public ServiceResult<Void> updateProjectDuration(long projectId, long durationInMonths) {
-        return validateProjectDuration(durationInMonths).
-                andOnSuccess(() -> validateIfProjectDurationCanBeChanged(projectId)).
-                andOnSuccess(() -> getProject(projectId)).
-                andOnSuccessReturnVoid(project -> project.setDurationInMonths(durationInMonths));
+        return getProject(projectId).andOnSuccess(project ->
+            validateProjectDuration(durationInMonths).
+            andOnSuccess(() -> validateIfProjectDurationCanBeChanged(project)).
+            andOnSuccessReturnVoid(() -> project.setDurationInMonths(durationInMonths)));
     }
 
     private ServiceResult<Void> validateProjectDuration(long durationInMonths) {
@@ -261,9 +254,9 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateIfProjectDurationCanBeChanged(long projectId) {
+    private ServiceResult<Void> validateIfProjectDurationCanBeChanged(Project project) {
 
-        if (isSpendProfileIsGenerated(projectId)) {
+        if (isSpendProfileIsGenerated(project.getId())) {
             return serviceFailure(PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
         }
 
