@@ -38,7 +38,7 @@ public class CookieFlashMessageFilter extends OncePerRequestFilter {
 
     private static String monitoringEndpoint;
 
-    @Value("${management.server.servlet.context-path}")
+    @Value("${management.endpoints.web.base-path}")
     public void setMonitoringEndpoint(String monitoringEndpoint) {
         CookieFlashMessageFilter.monitoringEndpoint = monitoringEndpoint;
     }

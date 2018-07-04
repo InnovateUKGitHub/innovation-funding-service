@@ -24,7 +24,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private TokenAuthenticationService tokenAuthenticationService;
 
     @Autowired
-    public AuthenticationFilter(@Value("${management.server.servlet.context-path}") String monitoringEndpoint,
+    public AuthenticationFilter(@Value("${management.endpoints.web.base-path}") String monitoringEndpoint,
                                 TokenAuthenticationService tokenAuthenticationService) {
         this.monitoringEndpoint = monitoringEndpoint;
         this.tokenAuthenticationService = tokenAuthenticationService;

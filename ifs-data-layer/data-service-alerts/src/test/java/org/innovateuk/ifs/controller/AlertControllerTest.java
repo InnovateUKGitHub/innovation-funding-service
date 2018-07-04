@@ -66,7 +66,7 @@ public class AlertControllerTest extends BaseControllerMockMVCTest<AlertControll
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("An array of the alerts which are visible")
-                        ))
+                        ).andWithPrefix("[].", AlertDocs.alertResourceFields))
                 );
     }
 
@@ -93,7 +93,7 @@ public class AlertControllerTest extends BaseControllerMockMVCTest<AlertControll
                                 parameterWithName("type").description("Type of alert to find")
                         ),responseFields(
                                 fieldWithPath("[]").description("An array of the alerts of the specified type which are visible")
-                        ))
+                        ).andWithPrefix("[].", AlertDocs.alertResourceFields))
                 );
     }
 

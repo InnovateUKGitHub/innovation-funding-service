@@ -74,7 +74,7 @@ public class CostTotalControllerDocumentation extends MockMvcTest<CostTotalContr
                         "cost-totals/{method-name}",
                         requestFields(
                                 fieldWithPath("[]").description("List of cost total resources to add.")
-                        )
+                        ).andWithPrefix("[].", financeCostTotalResourceFields)
                 ));
     }
 }
