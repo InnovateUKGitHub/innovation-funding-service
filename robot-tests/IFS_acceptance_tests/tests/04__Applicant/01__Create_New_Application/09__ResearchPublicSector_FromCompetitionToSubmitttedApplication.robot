@@ -59,7 +59,7 @@ Applicant Applies to Research leading Competition
     # That is why we have 2 diferent test cases, where Research users apply to a Research leading competition.
     Given logged in user applies to competition           ${openCompetitionResearch_name}
     When the user clicks the button/link                  link=Application details
-    Then the user fills in the Application details        ${researchLeadApp}  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
+    Then the user fills in the Application details        ${researchLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${researchLeadApp}  Experimental development
     When the academic user fills in his finances          ${researchLeadApp}
     And the user enters the project location
@@ -74,7 +74,7 @@ Applicant Applies to Public content leading Competition
     # This application is for competition Photonics for Public, which is Web test data.
     Given logged in user applies to competition           ${openCompetitionPublicSector_name}
     When the user clicks the button/link                  link=Application details
-    Then the user fills in the Application details        ${publicLeadApp}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
+    Then the user fills in the Application details        ${publicLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${publicLeadApp}  Experimental development
     When the user navigates to Your-finances page         ${publicLeadApp}
     Then the user marks the finances as complete          ${publicLeadApp}  Calculate  52,214  no
