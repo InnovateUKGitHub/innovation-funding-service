@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class SummaryViewModelPopulator {
+public class SummaryViewModelFragmentPopulator {
 
     private ApplicationService applicationService;
     private CompetitionService competitionService;
@@ -64,24 +64,24 @@ public class SummaryViewModelPopulator {
     private FormInputViewModelGenerator formInputViewModelGenerator;
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
-    public SummaryViewModelPopulator(ApplicationService applicationService,
-                                     CompetitionService competitionService,
-                                     SectionService sectionService,
-                                     QuestionService questionService,
-                                     AssessorFormInputResponseRestService assessorFormInputResponseRestService,
-                                     ProcessRoleService processRoleService,
-                                     OrganisationService organisationService,
-                                     FormInputRestService formInputRestService,
-                                     FormInputResponseRestService formInputResponseRestService,
-                                     FormInputResponseService formInputResponseService,
-                                     AssessmentRestService assessmentRestService,
-                                     ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
-                                     ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
-                                     ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator,
-                                     UserService userService,
-                                     ApplicantRestService applicantRestService,
-                                     FormInputViewModelGenerator formInputViewModelGenerator,
-                                     ApplicationTeamModelPopulator applicationTeamModelPopulator) {
+    public SummaryViewModelFragmentPopulator(ApplicationService applicationService,
+                                             CompetitionService competitionService,
+                                             SectionService sectionService,
+                                             QuestionService questionService,
+                                             AssessorFormInputResponseRestService assessorFormInputResponseRestService,
+                                             ProcessRoleService processRoleService,
+                                             OrganisationService organisationService,
+                                             FormInputRestService formInputRestService,
+                                             FormInputResponseRestService formInputResponseRestService,
+                                             FormInputResponseService formInputResponseService,
+                                             AssessmentRestService assessmentRestService,
+                                             ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
+                                             ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
+                                             ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator,
+                                             UserService userService,
+                                             ApplicantRestService applicantRestService,
+                                             FormInputViewModelGenerator formInputViewModelGenerator,
+                                             ApplicationTeamModelPopulator applicationTeamModelPopulator) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.sectionService = sectionService;
@@ -137,8 +137,12 @@ public class SummaryViewModelPopulator {
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();
         Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
 
-        Map<Long, QuestionStatusResource> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.get().getId());
-
+        final Map<Long, QuestionStatusResource> questionAssignees;
+        if (userOrganisation.isPresent()) {
+            questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.get().getId());
+        } else {
+            questionAssignees = Collections.emptyMap();
+        }
         List<AssessmentResource> feedbackSummary = assessmentRestService
                 .getByUserAndApplication(user.getId(), applicationId)
                 .getSuccess();
@@ -209,7 +213,7 @@ public class SummaryViewModelPopulator {
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
         boolean allQuestionsCompleted = sectionService.allSectionsMarkedAsComplete(application.getId());
-        boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation.get(), completedSectionsByOrganisation);
+        boolean userFinanceSectionCompleted = userOrganisation.map(org -> isUserFinanceSectionCompleted(application, org, completedSectionsByOrganisation)).orElse(false);
 
         ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, allQuestionsCompleted, markedAsComplete, userFinanceSectionCompleted);
         userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));

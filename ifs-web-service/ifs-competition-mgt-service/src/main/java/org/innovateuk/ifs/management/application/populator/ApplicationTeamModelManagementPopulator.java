@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * Populator for {@link ApplicationTeamViewModel}
  */
 @Component
-public class ApplicationTeamModelPopulator {
+public class ApplicationTeamModelManagementPopulator {
 
     public ApplicationTeamViewModel populateModel(ApplicationResource application, ApplicationTeamResource team, String params) {
         ApplicationTeamViewModel applicationTeam = new ApplicationTeamViewModel();

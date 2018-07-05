@@ -22,7 +22,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.management.application.controller.CompetitionManagementApplicationController;
 import org.innovateuk.ifs.management.application.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.populator.ApplicationOverviewIneligibilityModelPopulator;
-import org.innovateuk.ifs.management.application.populator.ApplicationTeamModelPopulator;
+import org.innovateuk.ifs.management.application.populator.ApplicationTeamModelManagementPopulator;
 import org.innovateuk.ifs.management.application.populator.ReinstateIneligibleApplicationModelPopulator;
 import org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.application.viewmodel.ApplicationOverviewIneligibilityViewModel;
@@ -118,7 +118,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
 
     @Spy
     @InjectMocks
-    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
+    private ApplicationTeamModelManagementPopulator applicationTeamModelPopulator;
 
     @Mock
     private CategoryRestService categoryRestServiceMock;

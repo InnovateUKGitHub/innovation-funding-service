@@ -14,7 +14,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.management.application.form.ReinstateIneligibleApplicationForm;
-import org.innovateuk.ifs.management.application.populator.ApplicationTeamModelPopulator;
+import org.innovateuk.ifs.management.application.populator.ApplicationTeamModelManagementPopulator;
 import org.innovateuk.ifs.management.application.populator.ReinstateIneligibleApplicationModelPopulator;
 import org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -67,7 +67,7 @@ public class CompetitionManagementApplicationController {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
     @Autowired
-    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
+    private ApplicationTeamModelManagementPopulator applicationTeamModelPopulator;
 
     @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;

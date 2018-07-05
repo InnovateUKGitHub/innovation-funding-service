@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.summary.populator;
 
-import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -30,14 +30,14 @@ public class ApplicationSummaryViewModelPopulator {
     private CompetitionService competitionService;
     private SectionService sectionService;
     private UserService userService;
-    private SummaryViewModelPopulator summaryViewModelPopulator;
+    private SummaryViewModelFragmentPopulator summaryViewModelPopulator;
     private ProjectService projectService;
 
     public ApplicationSummaryViewModelPopulator(ApplicationService applicationService,
                                                 CompetitionService competitionService,
                                                 SectionService sectionService,
                                                 UserService userService,
-                                                SummaryViewModelPopulator summaryViewModelPopulator,
+                                                SummaryViewModelFragmentPopulator summaryViewModelPopulator,
                                                 ProjectService projectService) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;

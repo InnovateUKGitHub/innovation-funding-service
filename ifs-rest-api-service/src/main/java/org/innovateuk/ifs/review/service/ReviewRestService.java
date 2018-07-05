@@ -10,6 +10,7 @@ import java.util.List;
  *  * REST service for managing applications on an assessment panel.
  */
 public interface ReviewRestService {
+    RestResult<Boolean> isAssignedToPanel(long applicationId);
     RestResult<Void> assignToPanel(long applicationId);
     RestResult<Void> unassignFromPanel(long applicationId);
     RestResult<Void> notifyAssessors(long competitionId);
