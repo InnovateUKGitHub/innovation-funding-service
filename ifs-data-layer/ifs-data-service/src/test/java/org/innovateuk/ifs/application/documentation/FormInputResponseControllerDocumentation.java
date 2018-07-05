@@ -48,7 +48,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of formInputResponses")
-                        )
+                        ).andWithPrefix("[].", FormInputResponseResourceDocs.formInputResponseResourceFields)
                 ));
     }
 
@@ -69,7 +69,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of formInputResponses")
-                        )
+                        ).andWithPrefix("[].", FormInputResponseResourceDocs.formInputResponseResourceFields)
                 ));
     }
 
@@ -109,7 +109,7 @@ public class FormInputResponseControllerDocumentation extends BaseControllerMock
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of formInputResponses")
-                        )
+                        ).andWithPrefix("[].", FormInputResponseResourceDocs.formInputResponseResourceFields)
                 ));
     }
 

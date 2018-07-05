@@ -87,7 +87,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                                 responseFields(
                                         fieldWithPath("[]").description("List of applications the user is allowed to see")
                                 ).andWithPrefix("[].", applicationResourceFields)
-                        ));
+                                .andWithPrefix("[].researchCategory.", ResearchCategoryResourceDocs.researchCategoryResourceFields)
+                                .andWithPrefix("[].innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)));
     }
 
     @Test
@@ -107,7 +108,9 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of applications linked to the user id used in the request. Only contains applications the requesting user can see")
-                        ).andWithPrefix("[].", applicationResourceFields)));
+                        ).andWithPrefix("[].", applicationResourceFields)
+                         .andWithPrefix("[].researchCategory.", ResearchCategoryResourceDocs.researchCategoryResourceFields)
+                         .andWithPrefix("[].innovationArea.", InnovationAreaResourceDocs.innovationAreaResourceFields)));
     }
 
     @Test
@@ -130,9 +133,10 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                                         parameterWithName("searchString").description("The application id on which wildcard search will be performed"),
                                         parameterWithName("page").description("The page number to be retrieved"),
                                         parameterWithName("size").description("The page size")
-                                )
-                                ,
+                                ),
                                 responseFields(PageResourceDocs.pageResourceFields)
+                                        .andWithPrefix("content[].", ApplicationDocs.applicationResourceFields)
+
                 ));
     }
 

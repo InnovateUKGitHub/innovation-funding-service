@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.OverheadFileController;
+import org.innovateuk.ifs.documentation.FileEntryDocs;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
@@ -82,6 +83,6 @@ public class OverheadFileControllerDocumentation extends BaseControllerMockMVCTe
                         requestParameters(
                                 parameterWithName("overheadId").description("Id of overhead cost in project finances")
                         ),
-                        responseFields(fileAndContentsFields)));
+                        responseFields(fileAndContentsFields).andWithPrefix("fileEntry.", FileEntryDocs.fileEntryResourceFields)));
     }
 }

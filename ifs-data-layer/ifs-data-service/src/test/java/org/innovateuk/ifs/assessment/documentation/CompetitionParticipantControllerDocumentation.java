@@ -3,6 +3,9 @@ package org.innovateuk.ifs.assessment.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.CompetitionParticipantController;
 import org.innovateuk.ifs.assessment.transactional.CompetitionParticipantService;
+import org.innovateuk.ifs.documentation.CompetitionInviteDocs;
+import org.innovateuk.ifs.documentation.CompetitionParticipantResourceDocs;
+import org.innovateuk.ifs.documentation.RejectionReasonResourceDocs;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
@@ -50,6 +53,9 @@ public class CompetitionParticipantControllerDocumentation extends BaseControlle
                                 parameterWithName("role").description("Role of the user")
                         ),
                         responseFields(fieldWithPath("[]").description("List of competition participants the user is allowed to see"))
+                                .andWithPrefix("[].", CompetitionParticipantResourceDocs.competitionParticipantResourceFields)
+                                .andWithPrefix("[].invite.", CompetitionInviteDocs.competitionInviteFields)
+                                .andWithPrefix("[].rejectionReason.", RejectionReasonResourceDocs.rejectionReasonResourceFields)
                 ));
     }
 }
