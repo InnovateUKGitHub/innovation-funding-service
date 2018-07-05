@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorCompetitionForInterviewDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForInterviewDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForInterviewDashboardViewModel;
@@ -27,6 +28,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -66,6 +68,9 @@ public class AssessorCompetitionForInterviewDashboardControllerTest extends Base
     @Mock
     private OrganisationRestService organisationRestService;
 
+    @Mock
+    private OrganisationService organisationService;
+
     @Override
     protected AssessorCompetitionForInterviewDashboardController supplyControllerUnderTest() {
         return new AssessorCompetitionForInterviewDashboardController();
@@ -98,6 +103,10 @@ public class AssessorCompetitionForInterviewDashboardControllerTest extends Base
         when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
+        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(0)))).thenReturn(Optional.ofNullable(organisations.get(0)));
+        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(1)))).thenReturn(Optional.ofNullable(organisations.get(1)));
+        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(2)))).thenReturn(Optional.ofNullable(organisations.get(2)));
+        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(3)))).thenReturn(Optional.ofNullable(organisations.get(3)));
 
         organisations.forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
 
@@ -107,14 +116,14 @@ public class AssessorCompetitionForInterviewDashboardControllerTest extends Base
                 .andExpect(view().name("assessor-interview-applications"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, interviewAllocationRestService, applicationService, processRoleService, organisationRestService);
+        InOrder inOrder = inOrder(competitionService, interviewAllocationRestService, applicationService, processRoleService, organisationService);
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(interviewAllocationRestService).getAllocatedApplicationsByAssessorId(competition.getId(), userId);
 
         assessmentInterviews.forEach(assessmentInterview -> {
             inOrder.verify(applicationService).getById(assessmentInterview.getApplication());
             inOrder.verify(processRoleService).findProcessRolesByApplicationId(assessmentInterview.getApplication());
-            inOrder.verify(organisationRestService).getOrganisationById(isA(Long.class));
+            inOrder.verify(organisationService).getApplicationLeadOrganisation(anyList());
         });
 
         inOrder.verifyNoMoreInteractions();

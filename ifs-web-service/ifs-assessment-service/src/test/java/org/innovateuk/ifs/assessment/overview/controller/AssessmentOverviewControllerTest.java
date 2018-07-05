@@ -377,15 +377,6 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .build();
 
         ProcessRoleResource assessorRole = newProcessRoleResource().withUser(assessor).build();
-        Comparator<OrganisationResource> compareById = Comparator.comparingLong(OrganisationResource::getId);
-        SortedSet<OrganisationResource> collaborators = new TreeSet<>(compareById);
-        collaborators.add(newOrganisationResource().build());
-        collaborators.add(newOrganisationResource().build());
-
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
-        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
-        when(organisationService.getApplicationOrganisations(asList(assessorRole))).thenReturn(collaborators);
-        when(organisationService.getApplicationLeadOrganisation(asList(assessorRole))).thenReturn(Optional.ofNullable( newOrganisationResource().build()));
 
         SortedSet<OrganisationResource> orgSet = setupOrganisations();
         List<ApplicationFinanceResource> appFinanceList = setupFinances(applicationResource, orgSet);
@@ -393,6 +384,13 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .withApplicationId(applicationResource.getId())
                 .withOrganisationFinances(appFinanceList)
                 .build();
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
+        when(processRoleService.findProcessRolesByApplicationId(applicationResource.getId())).thenReturn(asList(assessorRole));
+        when(organisationService.getApplicationOrganisations(asList(assessorRole))).thenReturn(orgSet);
+        when(organisationService.getApplicationLeadOrganisation(asList(assessorRole))).thenReturn(Optional.ofNullable(newOrganisationResource().build()));
+
 
         AssessmentFinancesSummaryViewModel expectedViewModel = new AssessmentFinancesSummaryViewModel(
                 assessmentResource.getId(), applicationResource.getId(), "Application name", 3, 50);
