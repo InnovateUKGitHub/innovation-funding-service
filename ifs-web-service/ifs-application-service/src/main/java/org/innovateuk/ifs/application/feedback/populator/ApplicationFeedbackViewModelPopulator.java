@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.feedback.populator;
 
+import org.innovateuk.ifs.application.common.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
@@ -41,7 +42,7 @@ import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class ApplicationFeedbackViewModelPopulator {
+public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationModelPopulator {
 
     private OrganisationRestService organisationRestService;
     private OrganisationService organisationService;
@@ -76,6 +77,7 @@ public class ApplicationFeedbackViewModelPopulator {
                                                  InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
                                                  InterviewAssignmentRestService interviewAssignmentRestService,
                                                  ProjectService projectService) {
+        super(sectionService, questionService);
         this.organisationRestService = organisationRestService;
         this.applicationService = applicationService;
         this.competitionService = competitionService;
@@ -110,27 +112,10 @@ public class ApplicationFeedbackViewModelPopulator {
                 applicationId
         );
 
-        BigDecimal totalFundingSought = organisationFinanceOverview.getTotalFundingSought();
-
         List<String> feedback = assessmentRestService.getApplicationFeedback(applicationId).getSuccess().getFeedback();
 
         SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
         final boolean hasFinanceSection = financeSection != null;
-
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
-        List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
-
-        Map<Long, SectionResource> sections =
-                parentSections.stream().collect(CollectionFunctions.toLinkedMap(SectionResource::getId,
-                        Function.identity()));
-
-        List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
-
-        Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
-                .collect(Collectors.toMap(
-                        SectionResource::getId,
-                        s -> getQuestionsBySection(s.getQuestions(), questions)
-                ));
 
         ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
 
@@ -147,7 +132,6 @@ public class ApplicationFeedbackViewModelPopulator {
         ProjectResource project = projectService.getByApplicationId(applicationId);
         boolean projectWithdrawn = (project != null && project.isWithdrawn());
 
-
         queryParams.put("competitionId", asList(String.valueOf(application.getCompetition())));
         queryParams.put("applicationId", asList(String.valueOf(application.getId())));
 
@@ -156,11 +140,11 @@ public class ApplicationFeedbackViewModelPopulator {
                 competition,
                 leadOrganisation,
                 partners,
-                totalFundingSought,
+                organisationFinanceOverview.getTotalFundingSought(),
                 feedback,
                 hasFinanceSection,
-                sections,
-                sectionQuestions,
+                getSections(competition.getId()),
+                getSectionQuestions(competition.getId()),
                 scores,
                 applicationFinanceSummaryViewModel,
                 applicationFundingBreakdownViewModel,
@@ -170,9 +154,4 @@ public class ApplicationFeedbackViewModelPopulator {
                 buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "competitionId", "projectId")
         );
     }
-
-    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
-        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
-    }
-
 }

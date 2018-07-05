@@ -4,16 +4,18 @@ import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewComp
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.util.CollectionFunctions;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 public abstract class AbstractApplicationModelPopulator {
 
@@ -23,6 +25,27 @@ public abstract class AbstractApplicationModelPopulator {
     public AbstractApplicationModelPopulator(SectionService sectionService, QuestionService questionService) {
         this.sectionService = sectionService;
         this.questionService = questionService;
+    }
+
+    protected Map<Long, List<QuestionResource>> getSectionQuestions(Long competitionId) {
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
+        List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
+
+        List<QuestionResource> questions = questionService.findByCompetition(competitionId);
+
+        return parentSections.stream()
+                .collect(Collectors.toMap(
+                        SectionResource::getId,
+                        s -> getQuestionsBySection(s.getQuestions(), questions)
+                ));
+    }
+
+    protected Map<Long, SectionResource> getSections(Long competitionId) {
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
+        List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
+
+        return parentSections.stream().collect(CollectionFunctions.toLinkedMap(SectionResource::getId,
+                        Function.identity()));
     }
 
     protected ApplicationOverviewCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
@@ -62,5 +85,9 @@ public abstract class AbstractApplicationModelPopulator {
                 .filter(section -> section.getType().equals(FINANCE))
                 .map(SectionResource::getId)
                 .anyMatch(id -> completedSectionsByOrganisation.get(userOrganisation.getId()).contains(id));
+    }
+
+    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
+        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 }

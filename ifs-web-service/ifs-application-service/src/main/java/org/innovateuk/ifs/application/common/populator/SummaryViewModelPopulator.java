@@ -105,32 +105,11 @@ public class SummaryViewModelPopulator extends AbstractApplicationModelPopulator
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
-        List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
-
-        Map<Long, SectionResource> sections =
-                parentSections.stream().collect(CollectionFunctions.toLinkedMap(SectionResource::getId,
-                        Function.identity()));
-
-        List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
-
-        Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
-                .collect(Collectors.toMap(
-                        SectionResource::getId,
-                        s -> getQuestionsBySection(s.getQuestions(), questions)
-                ));
-
+        Map<Long, List<QuestionResource>> sectionQuestions = getSectionQuestions(competition.getId());
         ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
-
-        List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
-                competition.getId(), APPLICATION).getSuccess();
-
-        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
-                .flatMap(a -> a.stream())
-                .collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
 
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();
         Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
@@ -141,25 +120,50 @@ public class SummaryViewModelPopulator extends AbstractApplicationModelPopulator
                 .getByUserAndApplication(user.getId(), applicationId)
                 .getSuccess();
 
-        ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel = applicationFinanceSummaryViewModelPopulator.populate(applicationId, user);
-        ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModelPopulator.populate(applicationId);
-        ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel = applicationResearchParticipationViewModelPopulator.populate(applicationId);
-
         SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
-        final boolean hasFinanceSection;
-        final Long financeSectionId;
-        if (financeSection == null) {
-            hasFinanceSection = false;
-            financeSectionId = null;
-        } else {
-            hasFinanceSection = true;
+        final boolean hasFinanceSection = financeSection != null;
+        Long financeSectionId = null;
+        if (hasFinanceSection) {
             financeSectionId = financeSection.getId();
         }
 
-        ApplicationOverviewCompletedViewModel completedViewModel = getCompletedDetails(application, userOrganisation);
+        Map<String, String> values = form.getFormInput();
+        mappedResponses.forEach((k, v) ->
+                values.put(k.toString(), v.getValue())
+        );
+        form.setFormInput(values);
 
+        return new SummaryViewModel(
+                application,
+                getSections(competition.getId()),
+                sectionQuestions,
+                scores,
+                getQuestionFormInputs(sectionQuestions, competition.getId()),
+                mappedResponses,
+                questionAssignees,
+                feedbackSummary,
+                hasFinanceSection,
+                financeSectionId,
+                applicationFinanceSummaryViewModelPopulator.populate(applicationId, user),
+                applicationFundingBreakdownViewModelPopulator.populate(applicationId),
+                applicationResearchParticipationViewModelPopulator.populate(applicationId),
+                getCompletedDetails(application, userOrganisation),
+                getFormInputViewModel(sectionQuestions, user.getId(), application, competition),
+                true,
+                applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), competition.getId())
+        );
+    }
+
+    private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
+        return simpleFilter(list, input -> input.getQuestion().equals(id));
+    }
+
+    private Map<Long, AbstractFormInputViewModel> getFormInputViewModel(Map<Long, List<QuestionResource>> sectionQuestions,
+                                                                        Long userId,
+                                                                        ApplicationResource application,
+                                                                        CompetitionResource competition) {
         Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream)
-                .map(question -> applicantRestService.getQuestion(user.getId(), application.getId(), question.getId()))
+                .map(question -> applicantRestService.getQuestion(userId, application.getId(), question.getId()))
                 .map(applicationQuestion -> formInputViewModelGenerator.fromQuestion(applicationQuestion, new ApplicationForm()))
                 .flatMap(List::stream)
                 .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
@@ -170,39 +174,16 @@ public class SummaryViewModelPopulator extends AbstractApplicationModelPopulator
             viewModel.setSummary(true);
         });
 
-        Map<String, String> values = form.getFormInput();
-        mappedResponses.forEach((k, v) ->
-                values.put(k.toString(), v.getValue())
-        );
-        form.setFormInput(values);
-
-        return new SummaryViewModel(
-                application,
-                sections,
-                sectionQuestions,
-                scores,
-                questionFormInputs,
-                mappedResponses,
-                questionAssignees,
-                feedbackSummary,
-                hasFinanceSection,
-                financeSectionId,
-                applicationFinanceSummaryViewModel,
-                applicationFundingBreakdownViewModel,
-                applicationResearchParticipationViewModel,
-                completedViewModel,
-                formInputViewModels,
-                true,
-                applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), competition.getId())
-        );
+        return formInputViewModels;
     }
 
-    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
-        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
-    }
+    private Map<Long, List<FormInputResource>> getQuestionFormInputs(Map<Long, List<QuestionResource>> sectionQuestions,
+                                                                     Long competitionId) {
+        List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
+                competitionId, APPLICATION).getSuccess();
 
-    private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
-        return simpleFilter(list, input -> input.getQuestion().equals(id));
+        return sectionQuestions.values().stream()
+                .flatMap(a -> a.stream())
+                .collect(Collectors.toMap(q -> q.getId(), k -> findFormInputByQuestion(k.getId(), formInputResources)));
     }
-
 }
