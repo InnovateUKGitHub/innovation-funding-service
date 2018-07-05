@@ -31,7 +31,7 @@ create new account for submitting
     the user clicks the button/link                   link=Application details
     the user enters text to a text field              css=[id="application.name"]    ${application_name}
     the user clicks the button/link                   jQuery=button:contains("Save and return")
-    the user marks every section but one as complete  ${application_name}
+    the user marks every section but one as complete  ${application_name}  Experimental development
 
 the user marks every section but one as complete
     [Arguments]  ${application_name}  ${rescat}
