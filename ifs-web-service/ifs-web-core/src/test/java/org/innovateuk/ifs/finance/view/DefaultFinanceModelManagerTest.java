@@ -18,7 +18,6 @@ import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
-import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -35,7 +34,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,9 +68,6 @@ public class DefaultFinanceModelManagerTest {
 
     @Mock
     private OrganisationService organisationService;
-
-    @Mock
-	private OrganisationDetailsRestService organisationDetailsRestService;
 
     @Mock
     private FormInputRestService formInputRestService;
@@ -182,7 +177,5 @@ public class DefaultFinanceModelManagerTest {
 
 		OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(organisationTypeResource.getId()).withOrganisationTypeName(organisationTypeName).withOrganisationType().build();
 		when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
-
-		when(organisationDetailsRestService.getOrganisationSizes()).thenReturn(restSuccess(new ArrayList<>()));
 	}
 }

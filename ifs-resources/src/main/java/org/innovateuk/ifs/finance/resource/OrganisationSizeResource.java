@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.finance.resource;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
+
+@ZeroDowntime(reference = "IFS-3818", description = "To support instances of older REST clients before " +
+        "the OrganisationSize enum was introduced")
 public class OrganisationSizeResource {
 
     private Long id;
@@ -7,8 +11,9 @@ public class OrganisationSizeResource {
 
     public OrganisationSizeResource() {}
 
-    public OrganisationSizeResource(Long id) {
+    public OrganisationSizeResource(final Long id, final String description) {
         this.id = id;
+        this.description = description;
     }
 
     public Long getId() {

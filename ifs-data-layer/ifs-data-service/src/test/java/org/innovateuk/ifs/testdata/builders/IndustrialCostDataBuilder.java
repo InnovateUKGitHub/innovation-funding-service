@@ -3,6 +3,7 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -110,7 +111,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
                 new OtherCost(null, description, estimatedCost));
     }
 
-    public IndustrialCostDataBuilder withOrganisationSize(Long organsationSize) {
+    public IndustrialCostDataBuilder withOrganisationSize(OrganisationSize organsationSize) {
         return with(data -> {
 
             ApplicationFinanceResource applicationFinance =

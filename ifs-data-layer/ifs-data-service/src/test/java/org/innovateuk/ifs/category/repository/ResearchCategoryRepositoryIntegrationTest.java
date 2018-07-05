@@ -2,10 +2,12 @@ package org.innovateuk.ifs.category.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -17,6 +19,9 @@ public class ResearchCategoryRepositoryIntegrationTest
         extends BaseRepositoryIntegrationTest<ResearchCategoryRepository> {
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     @Override
     protected void setRepository(final ResearchCategoryRepository repository) {
         this.repository = repository;
@@ -24,6 +29,13 @@ public class ResearchCategoryRepositoryIntegrationTest
 
     @Autowired
     private GrantClaimMaximumRepository grantClaimMaximumRepository;
+
+    @ZeroDowntime(reference = "IFS-3818", description = "Data in the old grant_claim_maximum table has foreign key " +
+            "references to the categories. This can be removed when the table is removed.")
+    @Before
+    public void deleteFromOldGrantClaimMaximumTable() {
+        jdbcTemplate.execute("TRUNCATE TABLE grant_claim_maximum;");
+    }
 
     @Before
     public void setup() {

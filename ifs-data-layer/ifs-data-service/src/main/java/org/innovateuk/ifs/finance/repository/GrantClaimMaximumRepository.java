@@ -9,4 +9,5 @@ import org.springframework.data.repository.CrudRepository;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface GrantClaimMaximumRepository extends CrudRepository<GrantClaimMaximum, Long> {
+
 }

@@ -56,27 +56,33 @@ public class ApplicationFinance extends Finance {
     }
 
     public Integer getMaximumFundingLevel() {
-        return getOrganisation().getOrganisationType().getGrantClaimMaximums().stream()
+        return getApplication().getCompetition().getGrantClaimMaximums()
+                .stream()
                 .filter(this::isMatchingGrantClaimMaximum)
                 .findAny()
-                .map(GrantClaimMaximum::getMaximum)
-                .orElse(0);
+                .map(this::getMaximum).orElse(null);
+    }
+
+    private Integer getMaximum(GrantClaimMaximum grantClaimMaximum) {
+        switch (getOrganisationSize()) {
+            case SMALL:
+                return grantClaimMaximum.getSmall();
+            case MEDIUM:
+                return grantClaimMaximum.getMedium();
+            case LARGE:
+                return grantClaimMaximum.getLarge();
+            default:
+                return grantClaimMaximum.getDef();
+        }
     }
 
     private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum) {
-         return isMatchingCompetitionType(grantClaimMaximum)
-                && isMatchingOrganisationSize(grantClaimMaximum)
+         return isMatchingOrganisationType(grantClaimMaximum)
                 && isMatchingResearchCategory(grantClaimMaximum);
     }
 
-    private boolean isMatchingCompetitionType(GrantClaimMaximum grantClaimMaximum) {
-        return grantClaimMaximum.getCompetitionType().getId().equals(getApplication().getCompetition().getCompetitionType().getId());
-    }
-
-    private boolean isMatchingOrganisationSize(GrantClaimMaximum grantClaimMaximum) {
-        return (grantClaimMaximum.getOrganisationSize() == null && getOrganisationSize() == null)
-                || (getOrganisationSize() != null
-                && grantClaimMaximum.getOrganisationSize().getId().equals(getOrganisationSize().getId()));
+    private boolean isMatchingOrganisationType(GrantClaimMaximum grantClaimMaximum) {
+        return getOrganisation().getOrganisationType().getId().equals(grantClaimMaximum.getOrganisationType().getId());
     }
 
     private boolean isMatchingResearchCategory(GrantClaimMaximum grantClaimMaximum) {

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.finance.domain;
 
 import org.hibernate.annotations.Immutable;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 
 import javax.persistence.*;
@@ -10,7 +10,7 @@ import javax.persistence.*;
 /**
  * Reference data that describes the maximum funding level that can be applied for.
  */
-@Entity
+@Entity(name = "grant_claim_maximum_new")
 @Immutable
 public class GrantClaimMaximum {
 
@@ -19,45 +19,46 @@ public class GrantClaimMaximum {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="competitionTypeId", referencedColumnName="id")
-    private CompetitionType competitionType;
+    @JoinColumn(name = "competitionId", referencedColumnName = "id")
+    private Competition competition;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="categoryId", referencedColumnName="id")
+    @JoinColumn(name = "categoryId", referencedColumnName = "id")
     private ResearchCategory researchCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="organisationTypeId", referencedColumnName="id")
+    @JoinColumn(name = "organisationTypeId", referencedColumnName = "id")
     private OrganisationType organisationType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="organisationSizeId", referencedColumnName="id")
-    private OrganisationSize organisationSize;
+    private Integer def;
 
-    private Integer maximum;
+    private Integer small;
 
+    private Integer medium;
+
+    private Integer large;
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
-    public CompetitionType getCompetitionType() {
-        return competitionType;
+    public Competition getCompetition() {
+        return competition;
     }
 
-    public void setCompetitionType(CompetitionType competitionType) {
-        this.competitionType = competitionType;
+    public void setCompetition(final Competition competition) {
+        this.competition = competition;
     }
 
     public ResearchCategory getResearchCategory() {
         return researchCategory;
     }
 
-    public void setResearchCategory(ResearchCategory researchCategory) {
+    public void setResearchCategory(final ResearchCategory researchCategory) {
         this.researchCategory = researchCategory;
     }
 
@@ -65,23 +66,39 @@ public class GrantClaimMaximum {
         return organisationType;
     }
 
-    public void setOrganisationType(OrganisationType organisationType) {
+    public void setOrganisationType(final OrganisationType organisationType) {
         this.organisationType = organisationType;
     }
 
-    public OrganisationSize getOrganisationSize() {
-        return organisationSize;
+    public Integer getDef() {
+        return def;
     }
 
-    public void setOrganisationSize(OrganisationSize organisationSize) {
-        this.organisationSize = organisationSize;
+    public void setDef(final Integer def) {
+        this.def = def;
     }
 
-    public Integer getMaximum() {
-        return maximum;
+    public Integer getSmall() {
+        return small;
     }
 
-    public void setMaximum(Integer maximum) {
-        this.maximum = maximum;
+    public void setSmall(final Integer small) {
+        this.small = small;
+    }
+
+    public Integer getMedium() {
+        return medium;
+    }
+
+    public void setMedium(final Integer medium) {
+        this.medium = medium;
+    }
+
+    public Integer getLarge() {
+        return large;
+    }
+
+    public void setLarge(final Integer large) {
+        this.large = large;
     }
 }

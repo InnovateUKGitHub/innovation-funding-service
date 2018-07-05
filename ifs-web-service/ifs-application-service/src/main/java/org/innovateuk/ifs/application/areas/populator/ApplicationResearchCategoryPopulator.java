@@ -50,7 +50,7 @@ public class ApplicationResearchCategoryPopulator {
 
         if (researchCategoryViewModel.getSelectedResearchCategoryId() != null) {
             applicationFinanceDetailsEntered = financeService.getApplicationFinanceDetails(applicationId).stream()
-                    .filter(applicationFinanceResource -> applicationFinanceResource.getOrganisationSize() != null).findFirst().isPresent();
+                    .anyMatch(applicationFinanceResource -> applicationFinanceResource.getOrganisationSize() != null);
         }
         researchCategoryViewModel.setHasApplicationFinances(applicationFinanceDetailsEntered);
     }

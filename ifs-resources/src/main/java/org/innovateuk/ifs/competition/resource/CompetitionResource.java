@@ -698,7 +698,6 @@ public class CompetitionResource {
                 .append(assessorFinanceView, that.assessorFinanceView)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
-                .append(locationPerPartner, that.locationPerPartner)
                 .append(stateAid, that.stateAid)
                 .isEquals();
     }
@@ -757,6 +756,7 @@ public class CompetitionResource {
                 .append(termsAndConditions)
                 .append(locationPerPartner)
                 .append(stateAid)
+                .append(useNewApplicantMenu)
                 .toHashCode();
     }
 }

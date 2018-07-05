@@ -76,6 +76,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -780,8 +781,8 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {
         List<OrganisationResource> orgList = orgSet.stream().collect(Collectors.toList());
         List<ApplicationFinanceResource> appFinanceList = new ArrayList<>();
-        appFinanceList.add(new ApplicationFinanceResource(1L, orgList.get(0).getId(), app.getId(), 2L, ""));
-        appFinanceList.add(new ApplicationFinanceResource(2L, orgList.get(1).getId(), app.getId(), 2L, ""));
+        appFinanceList.add(new ApplicationFinanceResource(1L, orgList.get(0).getId(), app.getId(),MEDIUM, ""));
+        appFinanceList.add(new ApplicationFinanceResource(2L, orgList.get(1).getId(), app.getId(), MEDIUM, ""));
 
         when(financeService.getApplicationFinanceTotals(app.getId())).thenReturn(appFinanceList);
 

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
@@ -117,6 +118,9 @@ public class Competition implements ProcessActivity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
     private GrantTermsAndConditions termsAndConditions;
+
+    @OneToMany(mappedBy="competition")
+    private List<GrantClaimMaximum> grantClaimMaximums;
 
     private boolean locationPerPartner = true;
 
@@ -679,6 +683,14 @@ public class Competition implements ProcessActivity {
 
     public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
         this.assessorFinanceView = assessorFinanceView;
+    }
+
+    public List<GrantClaimMaximum> getGrantClaimMaximums() {
+        return grantClaimMaximums;
+    }
+
+    public void setGrantClaimMaximums(final List<GrantClaimMaximum> grantClaimMaximums) {
+        this.grantClaimMaximums = grantClaimMaximums;
     }
 
     public GrantTermsAndConditions getTermsAndConditions() {
