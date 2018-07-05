@@ -114,14 +114,15 @@ public class ApplicationSectionController {
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
         populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false);
-
         return APPLICATION_FORM;
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead')")
+    @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your Finances'")
+    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance')")
     @GetMapping(SECTION_URL + "{sectionId}/{applicantOrganisationId}")
-    public String applicationFormWithOpenSectionForApplicant(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
+    public String applicationFormWithOpenSectionForApplicant(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
+                                                             BindingResult bindingResult,
+                                                             Model model,
                                                              @PathVariable(APPLICATION_ID) final Long applicationId,
                                                              @PathVariable("sectionId") final Long sectionId,
                                                              @PathVariable("applicantOrganisationId") final Long applicantOrganisationId,

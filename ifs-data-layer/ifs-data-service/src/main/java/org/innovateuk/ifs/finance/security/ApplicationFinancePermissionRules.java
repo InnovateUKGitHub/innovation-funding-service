@@ -51,14 +51,9 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
         return isAConsortiumMemberOnApplicationOrIsLeadApplicant(applicationFinanceResource, user);
     }
 
-    @PermissionRule(value = "ADD_COST", description = "The CSS user can add a cost to the application finances")
-    public boolean supportCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isSupport(user);
-    }
-
-    @PermissionRule(value = "ADD_COST", description = "Innovation lead users can add a cost to the application finances")
-    public boolean innovationLeadCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isInnovationLead(user);
+    @PermissionRule(value = "ADD_COST", description = "Internal users can add a cost to the application finances")
+    public boolean internalUserCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isInternal(user);
     }
 
     @PermissionRule(value = "ADD_COST", description = "An assessor can add a cost to the application finances")

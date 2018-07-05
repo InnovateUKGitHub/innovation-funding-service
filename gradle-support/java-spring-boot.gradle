@@ -35,6 +35,10 @@ dependencies {
         compile "org.springframework.boot:spring-boot-devtools"
     }
 
+    if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
+        compile "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.4.1"
+    }
+
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-web"
     compile('org.springframework.cloud:spring-cloud-starter-hystrix')

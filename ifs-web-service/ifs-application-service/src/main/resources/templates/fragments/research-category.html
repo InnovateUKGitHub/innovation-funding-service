@@ -92,18 +92,20 @@
 
 <th:block th:fragment="research_category_summary(model)">
 
-    <dl class="font-xsmall">
-        <dt>Selected research category</dt>
-        <dd th:text="${model.researchCategory} ?: 'This field has not been completed.'"
-            th:classappend="${#strings.isEmpty(model.researchCategory)}? 'form-hint'">Experimental development
-        </dd>
-    </dl>
-    <div class="extra-margin">
-        <!--/* 'Mark as complete' / 'Edit' links */-->
-        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
-        <!--/* 'Return and edit' link */-->
-        <th:block th:if="${model.canMarkAsComplete}"
-            th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
+    <div class="question">
+        <dl class="font-xsmall">
+            <dt>Selected research category</dt>
+            <dd th:text="${model.researchCategory} ?: 'This field has not been completed.'"
+                th:classappend="${#strings.isEmpty(model.researchCategory)}? 'form-hint'">Experimental development
+            </dd>
+        </dl>
+        <div class="extra-margin">
+            <!--/* 'Mark as complete' / 'Edit' links */-->
+            <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})"/>
+            <!--/* 'Return and edit' link */-->
+            <th:block th:if="${model.canMarkAsComplete}"
+                th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})"/>
+        </div>
     </div>
 </th:block>
 </html>
