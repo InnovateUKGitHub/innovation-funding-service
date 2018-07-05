@@ -123,11 +123,10 @@ Funding section can be completed with under 50%
     Then the user should not see the element    jQuery=.error-message
     And the user marks the 'your funding' section as incomplete again
 
-
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
-    log in and create new application if there is not one already with complete application details  Robot test application  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
+    log in and create new application if there is not one already with complete application details  Robot test application  ${tomorrowday}  ${month}  ${nextyear}
 
 The user marks their organisation as
     [Arguments]    ${org_size}

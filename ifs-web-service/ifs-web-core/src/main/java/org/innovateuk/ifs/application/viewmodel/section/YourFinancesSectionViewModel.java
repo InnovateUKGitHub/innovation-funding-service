@@ -18,7 +18,9 @@ public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
     private boolean notRequestingFunding;
     private boolean fundingSectionLocked;
     private List<Long> completedSectionIds;
+    // TODO: IFS-3753 remove all things related to applicationDetailsQuestionId
     private Long applicationDetailsQuestionId;
+    private Long researchCategoryQuestionId;
     private Long yourOrganisationSectionId;
     private BaseFinanceResource organisationFinance;
 
@@ -56,6 +58,14 @@ public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
 
     public void setApplicationDetailsQuestionId(Long applicationDetailsQuestionId) {
         this.applicationDetailsQuestionId = applicationDetailsQuestionId;
+    }
+
+    public Long getResearchCategoryQuestionId() {
+        return researchCategoryQuestionId;
+    }
+
+    public void setResearchCategoryQuestionId(Long researchCategoryQuestionId) {
+        this.researchCategoryQuestionId = researchCategoryQuestionId;
     }
 
     public Long getYourOrganisationSectionId() {

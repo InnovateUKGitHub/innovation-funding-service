@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -27,7 +28,7 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 public class CompetitionSetupQuestionResource {
     private Long questionId;
 
-    private CompetitionSetupQuestionType type;
+    private QuestionSetupType type;
 
     private String number;
     @NotBlank
@@ -186,11 +187,11 @@ public class CompetitionSetupQuestionResource {
         this.shortTitle = shortTitle;
     }
 
-    public CompetitionSetupQuestionType getType() {
+    public QuestionSetupType getType() {
         return type;
     }
 
-    public void setType(CompetitionSetupQuestionType type) {
+    public void setType(QuestionSetupType type) {
         this.type = type;
     }
 
