@@ -1,24 +1,26 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
-import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -60,6 +62,12 @@ public class ApplicationModelPopulator {
 
     @Autowired
     protected OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
+
+    @Autowired
+    protected AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+    @Autowired
+    protected AssessmentRestService assessmentRestService;
 
     @Autowired
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
@@ -180,7 +188,6 @@ public class ApplicationModelPopulator {
                                                      ApplicationForm form,
                                                      Long organisationId) {
         model.addAttribute("currentUser", user);
-
         SectionResource financeSection = sectionService.getFinanceSection(competitionId);
         boolean hasFinanceSection = financeSection != null;
 
@@ -208,7 +215,15 @@ public class ApplicationModelPopulator {
     public void addApplicationInputs(ApplicationResource application, Model model) {
         model.addAttribute("applicationResearchCategory", application.getResearchCategory().getName());
         model.addAttribute("applicationTitle", application.getName());
-        model.addAttribute("applicationDuration", String.valueOf(application.getDurationInMonths()));
+        model.addAttribute("applicationDuration", application.getDurationInMonths());
+    }
+
+    public void addFeedbackAndScores(Model model, long applicationId) {
+        model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());
+        model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
+                .getSuccess()
+                .getFeedback()
+        );
     }
 
     public void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application,

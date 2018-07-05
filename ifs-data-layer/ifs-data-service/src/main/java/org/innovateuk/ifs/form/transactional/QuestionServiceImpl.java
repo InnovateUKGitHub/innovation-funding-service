@@ -3,6 +3,7 @@ package org.innovateuk.ifs.form.transactional;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
@@ -62,7 +63,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return serviceSuccess(questionsToResources(questionRepository.findByCompetitionId(competitionId)));
     }
 
-    // TODO DW - INFUND-1555 - in situation where next / prev question not found, should this be a 404?
     @Override
     public ServiceResult<QuestionResource> getNextQuestion(final Long questionId) {
 
@@ -167,6 +167,13 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         } else {
             return serviceFailure(notFoundError(Question.class, competitionId, formInputType));
         }
+    }
+
+    @Override
+    public ServiceResult<QuestionResource> getQuestionByCompetitionIdAndCompetitionSetupQuestionType(final long competitionId,
+                                                                                                     final CompetitionSetupQuestionType competitionSetupQuestionType) {
+        return find(questionRepository.findFirstByCompetitionIdAndQuestionSetupType(competitionId,
+                competitionSetupQuestionType), notFoundError(Question.class, competitionId, competitionSetupQuestionType)).andOnSuccessReturn(questionMapper::mapToResource);
     }
 
     @Override

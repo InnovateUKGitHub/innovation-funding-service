@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.team.controller;
 
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.service.AbstractTeamManagementService;
@@ -22,6 +24,7 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -35,6 +38,12 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
 
     @Autowired
     private TeamManagementServiceType teamManagementService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
 
     protected abstract String getMappingFormatString(long applicationId, long organisationId);
 
@@ -152,7 +161,13 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
     }
 
     protected String redirectToApplicationTeamPage(long applicationId) {
-        return format("redirect:/application/%s/team", applicationId);
+        long competitionId = applicationService.getById(applicationId).getCompetition();
+        return questionRestService
+                .getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM)
+                .handleSuccessOrFailure(
+                        failure -> format("redirect:/application/%s/team", applicationId),
+                        question -> format("redirect:/application/%s/form/question/%s", applicationId, question.getId())
+                );
     }
 
     protected String redirectToOrganisationTeamPage(long applicationId, long organisationId) {
@@ -171,9 +186,6 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
             return supplier.get();
         }
 
-        // TODO: IFS-2598 - the above validation currently fails when the team update page is redrawn
-        //       after the last active user is removed from the team and pending users are still remaining.
-        // For now we will redirect to the team page, until this is fixed under IFS-2598.
         return redirectToApplicationTeamPage(applicationId);
     }
 

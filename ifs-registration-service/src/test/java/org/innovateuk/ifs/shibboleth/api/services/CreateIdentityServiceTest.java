@@ -11,7 +11,8 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.isA;
+import static org.mockito.Mockito.verify;
 
 public class CreateIdentityServiceTest extends MockedService<CreateIdentityService> {
 
@@ -64,7 +65,7 @@ public class CreateIdentityServiceTest extends MockedService<CreateIdentityServi
 
             assertThat("Service failed to throw expected exception.", false);
         } catch (final Exception exception) {
-            assertThatExceptionIsInvalidPasswordOfType(exception, "blacklisted");
+            assertThatExceptionIsInvalidPasswordOfType(exception, InvalidPasswordException.ERROR_KEY);
         }
 
         verifyFindingIdentityByEmail();

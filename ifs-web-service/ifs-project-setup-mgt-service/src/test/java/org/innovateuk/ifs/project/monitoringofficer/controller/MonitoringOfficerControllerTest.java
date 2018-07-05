@@ -46,6 +46,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -53,7 +54,6 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.junit.Assert.*;
@@ -385,7 +385,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertEquals("", form.getPhoneNumber());
 
         BindingResult bindingResult = form.getBindingResult();
-        assertEquals(8, bindingResult.getFieldErrorCount());
+        assertEquals(7, bindingResult.getFieldErrorCount());
 
         assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
         assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotBlank")));
@@ -400,7 +400,6 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         assertEquals("NotBlank", phoneNumberErrors.get(0).getCode());
         assertEquals("Pattern", phoneNumberErrors.get(1).getCode());
-        assertEquals("Size", phoneNumberErrors.get(2).getCode());
 
         checkEditableFlagIsSetCorrectlyForSupportUser(url, true);
     }
@@ -565,7 +564,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         BindingResult bindingResult = form.getBindingResult();
 
-        assertEquals(7, bindingResult.getFieldErrorCount());
+        assertEquals(6, bindingResult.getFieldErrorCount());
 
         assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("Size")));
         assertTrue(bindingResult.getFieldErrors("firstName").stream().anyMatch(fieldError -> fieldError.getCode().equals("NotBlank")));
@@ -579,7 +578,6 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         phoneNumberErrors.sort((o1, o2) -> o1.getCode().compareTo(o2.getCode()));
 
         assertEquals("Pattern", phoneNumberErrors.get(0).getCode());
-        assertEquals("Size", phoneNumberErrors.get(1).getCode());
 
         checkEditableFlagIsSetCorrectlyForSupportUser(url, true);
     }

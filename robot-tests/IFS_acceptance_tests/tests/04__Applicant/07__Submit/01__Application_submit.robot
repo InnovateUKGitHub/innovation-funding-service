@@ -39,7 +39,7 @@ Submit button disabled when application is incomplete
     And the user clicks the button/link                jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
     When the user clicks the button/link               jQuery= button:contains("Application details")
-    Then the user should see the element               jQuery= div[id="collapsible-0"] button:contains("Mark as complete")+button:contains("Return and edit")
+    Then the user should see the element               jQuery= div[id="collapsible-1"] button:contains("Mark as complete")+button:contains("Return and edit")
     When the user clicks the button/link               jQuery=button:contains("Mark as complete")
     Then the user should see the element               jQuery=h1:contains("Application details")
     And the user should see a field and summary error  Please enter a future date
@@ -113,6 +113,7 @@ RTO lead has read only view after submission
     And the user clicks the button/link                    link=${application_rto_name}
     When the applicant completes the application details   ${application_rto_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Then the user clicks the button/link                   link=Your finances
+    And the user enters the project location
     When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  css=.extra-margin-bottom [aria-expanded="false"]
     Then the user clicks the button/link                   jQuery=button:contains("Not requesting funding")
     And the user puts zero project costs

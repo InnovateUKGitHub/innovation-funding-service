@@ -3,11 +3,12 @@ package org.innovateuk.ifs.form.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -99,9 +100,10 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<FormInputResponseResource> getByApplicationIdAndQuestionName(long applicationId, String questionName) {
-        return getWithRestResult(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionName",
-                applicationId, questionName), FormInputResponseResource.class);
+    public RestResult<FormInputResponseResource> getByApplicationIdAndQuestionSetupType(long applicationId,
+                                                                                        CompetitionSetupQuestionType questionSetupType) {
+        return getWithRestResult(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionSetupType",
+                applicationId, questionSetupType), FormInputResponseResource.class);
     }
 
     @Override

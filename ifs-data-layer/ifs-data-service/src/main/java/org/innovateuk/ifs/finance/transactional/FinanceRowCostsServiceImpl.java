@@ -3,7 +3,6 @@ package org.innovateuk.ifs.finance.transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
@@ -20,6 +19,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -214,12 +214,15 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationFinanceResource> updateCost(Long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
+    public ServiceResult<ApplicationFinanceResource> updateApplicationFinance(Long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
         Application application = applicationRepository.findOne(applicationFinance.getApplication());
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
                     if (applicationFinance.getOrganisationSize() != null) {
                         dbFinance.setOrganisationSize(organisationSizeRepository.findOne(applicationFinance.getOrganisationSize()));
+                    }
+                    if (applicationFinance.getWorkPostcode() != null) {
+                        dbFinance.setWorkPostcode(applicationFinance.getWorkPostcode());
                     }
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
@@ -263,7 +266,7 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
     }
 
     private ApplicationFinanceRow mapCost(ApplicationFinanceRow currentCost, ApplicationFinanceRow newCost) {
-        if (newCost.getCost() != null) {
+        if (newCost.getCost() != null ||  costIsForOtherFunding(newCost)) {
             currentCost.setCost(newCost.getCost());
         }
         if (newCost.getDescription() != null) {
@@ -277,6 +280,12 @@ public class FinanceRowCostsServiceImpl extends BaseTransactionalService impleme
         }
 
         return currentCost;
+    }
+
+    private boolean costIsForOtherFunding(ApplicationFinanceRow cost) {
+        // respect null values for other funding costs, in order to produce correct validation messages
+        return cost.getName() != null &&
+                cost.getName().equals("other-funding");
     }
 
     private void updateOrCreateCostValue(FinanceRowMetaValue newMetaValue, FinanceRow savedCost) {

@@ -4,14 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
-import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +27,6 @@ import java.util.List;
 public class FormInputResponseController {
 
     @Autowired
-    private FormInputResponseRepository formInputResponseRepository;
-
-    @Autowired
     private FormInputResponseService formInputResponseService;
 
     @Autowired
@@ -43,14 +40,15 @@ public class FormInputResponseController {
     }
 
     @GetMapping("/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}")
-    public RestResult<List<FormInputResponseResource>> findByFormInputIdAndApplication(@PathVariable("formInputId") final long formInputId, @PathVariable("applicationId") final long applicationId) {
+    public RestResult<List<FormInputResponseResource>> findByFormInputIdAndApplication(@PathVariable("formInputId") final long formInputId,
+                                                                                       @PathVariable("applicationId") final long applicationId) {
         return formInputResponseService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId).toGetResponse();
     }
 
-    @GetMapping("/findByApplicationIdAndQuestionName/{applicationId}/{questionName}")
-    public RestResult<FormInputResponseResource> findByApplicationIdAndQuestionName(@PathVariable long applicationId,
-                                                                                    @PathVariable String questionName) {
-        return formInputResponseService.findResponseByApplicationIdAndQuestionName(applicationId, questionName).toGetResponse();
+    @GetMapping("/findByApplicationIdAndQuestionSetupType/{applicationId}/{questionSetupType}")
+    public RestResult<FormInputResponseResource> findByApplicationIdAndQuestionSetupType(@PathVariable long applicationId,
+                                                                                         @PathVariable CompetitionSetupQuestionType questionSetupType) {
+        return formInputResponseService.findResponseByApplicationIdAndQuestionSetupType(applicationId, questionSetupType).toGetResponse();
     }
 
     @GetMapping("/findByApplicationIdAndQuestionId/{applicationId}/{questionId}")

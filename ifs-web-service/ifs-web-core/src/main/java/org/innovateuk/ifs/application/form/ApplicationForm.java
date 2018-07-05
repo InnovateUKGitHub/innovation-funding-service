@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.springframework.validation.FieldError;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * This class is used to setup and submit the form input values. On submit the values are converted into an Form object.
@@ -25,6 +26,8 @@ public class ApplicationForm extends Form {
     @WordCount(max = 400, message = "{validation.field.max.word.count}")
     private String ineligibleReason;
 
+    private MultipartFile overheadfile;
+
     public ApplicationForm() {
         super();
     }
@@ -44,6 +47,15 @@ public class ApplicationForm extends Form {
 
     /** Placeholder function for mapping errors to field in Thymeleaf */
     public void setOrganisationSize(String organisationSize) {
+    }
+
+    /** Placeholder function for mapping errors to field in Thymeleaf */
+    public String getProjectLocation() {
+        return "";
+    }
+
+    /** Placeholder function for mapping errors to field in Thymeleaf */
+    public void setProjectLocation(String organisationSize) {
     }
 
     public boolean isAdminMode() {
@@ -90,5 +102,13 @@ public class ApplicationForm extends Form {
 
     public void setIneligibleReason(String ineligibleReason) {
         this.ineligibleReason = ineligibleReason;
+    }
+
+    public MultipartFile getOverheadfile() {
+        return overheadfile;
+    }
+
+    public void setOverheadfile(MultipartFile overheadfile) {
+        this.overheadfile = overheadfile;
     }
 }

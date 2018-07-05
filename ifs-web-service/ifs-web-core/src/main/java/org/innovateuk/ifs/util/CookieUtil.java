@@ -75,6 +75,7 @@ public class CookieUtil {
         if (StringUtils.hasText(fieldName)) {
             String content = getCompressedString(fieldValue);
             Cookie cookie = new Cookie(fieldName, content);
+            cookie.setSecure(cookieSecure);
             cookie.setHttpOnly(true);
             cookie.setPath("/");
             cookie.setMaxAge(COOKIE_LIFETIME);
@@ -120,7 +121,7 @@ public class CookieUtil {
     public <T> Optional<T> getCookieAs(HttpServletRequest request, String cookieName, TypeReference<T> cookieType) {
         String jsonValue = getCookieValue(request, cookieName);
 
-        if (jsonValue != null && !"".equals(jsonValue)) {
+        if (StringUtils.hasText(jsonValue)) {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 return Optional.of(mapper.readValue(jsonValue, cookieType));

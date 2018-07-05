@@ -8,6 +8,7 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-983: Manage users: Pending registration tab
 ...               IFS-2412: Internal users resend invites
 ...               IFS-2842: Add modals to the resending of invites to internal users
+...               IFS-1944: Internal - Invite internal user - error field is missing
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -18,6 +19,7 @@ Resource          ../../resources/defaultResources.robot
 *** Variables ***
 ${localEmailInvtedUser}   ifs.innovationLead@innovateuk.test
 ${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.gov.uk
+${invalidEmail}           test@test.com
 
 *** Test Cases ***
 Administrator can navigate to manage users page
@@ -43,23 +45,26 @@ Project finance user cannot navigate to manage users page
     User cannot see manage users page   &{Comp_admin1_credentials}
     User cannot see manage users page   &{internal_finance_credentials}
 
-Administrator can invite a new Internal User
-    [Documentation]  IFS-27, IFS-803
-    [Tags]  HappyPath
-    [Setup]  Log in as a different user   &{ifs_admin_user_credentials}
-    Given the user navigates to the page  ${server}/management/admin/users/active
-    And the user clicks the button/link   link=Invite a new internal user
-    Then the user should see the element  jQuery=h1:contains("Invite a new internal user")
-    And the user should see the element   jQuery=option:contains("Innovation Lead")
-
 Server side validation for invite new internal user
     [Documentation]  IFS-27
     [Tags]
-    Given the user clicks the button/link               jQuery=button:contains("Send invite")
+    [Setup]  Log in as a different user                 &{ifs_admin_user_credentials}
+    Given the user navigates to the page                ${server}/management/admin/users/active
+    And the user clicks the button/link                 link = Invite a new internal user
+    And the user clicks the button/link                 jQuery = button:contains("Send invite")
     Then The user should see a field and summary error  Please enter a first name.
     And The user should see a field and summary error   Please enter a last name.
     And The user should see a field and summary error   Please enter an email address.
-    [Teardown]  the user clicks the button/link         link=Cancel
+
+The user must use an Innovate UK email
+    [Documentation]  IFS-1944
+    [Tags]
+    Given the user enters text to a text field            id = firstName  Support
+    And the user enters text to a text field              id = lastName  User
+    When the user enters text to a text field             id = emailAddress  ${invalidEmail}
+    And the user clicks the button/link                   jQuery = button:contains("Send invite")
+    Then the user should see a field and summary error    Users cannot be registered without an Innovate UK email address.
+    [Teardown]  the user clicks the button/link           link = Cancel
 
 Client side validations for invite new internal user
     [Documentation]  IFS-27
@@ -106,22 +111,32 @@ Invited user can receive the invitation
     [Setup]  the guest user opens the browser
     The invitee reads his email and clicks the link  Invitation to Innovation Funding Service  Your Innovation Funding Service account has been created.
 
-Account creation validation checks
+Account creation validation checks - Blank
     [Documentation]  IFS-643
-    [Tags]
+    [Tags]  HappyPath
     Given the user clicks the button/link   jQuery=.button:contains("Create account")
-    Then the user should see a field error  Please enter a first name.
-    When the user should see a field error  Please enter a last name.
-    And the user should see the element     jQuery=li[data-valid="false"]:contains("be at least 8 characters long")
+    And the user should see a field and summary error   Please enter a first name.
+    And the user should see a field and summary error   Please enter a last name.
+    And The user should see a field and summary error   Password must be at least 8 characters
+    When the user enters text to a text field  css=#firstName  New
+    And the user enters text to a text field   css=#lastName  Administrator
+    And the user enters text to a text field   css=#password  ${correct_password}
+    Then the user should see the element       jQuery=h3:contains("Email") + p:contains("ifs.innovationLead@innovateuk")
+    Focus                                      css=#lastName
+    And the user cannot see a validation error in the page
+
+Account creation validation checks - Lowercase password
+    [Documentation]  IFS-3554
+    [Tags]
+    Given the user enters text to a text field  id=password  PASSWORD123
+    When The user clicks the button/link        jQuery=.button:contains("Create account")
+    Then The user should see a field and summary error  Password must contain at least one lower case letter.
+    [Teardown]  the user enters text to a text field   css=#password  ${correct_password}
 
 New user account is created and verified
     [Documentation]  IFS-643 IFS-983
     [Tags]   HappyPath
-    When the user enters text to a text field  css=#firstName  New
-    And the user enters text to a text field   css=#lastName  Administrator
-    And the user should see the element        jQuery=h3:contains("Email") + p:contains("ifs.innovationLead@innovateuk")
-    And the user enters text to a text field   css=#password  ${correct_password}
-    And the user clicks the button/link        jQuery=.button:contains("Create account")
+    Given the user clicks the button/link      jQuery=.button:contains("Create account")
     Then the user should see the element       jQuery=h1:contains("Your account has been created")
     When the user clicks the button/link       jQuery=.button:contains("Sign into your account")
     Then the invited user logs in

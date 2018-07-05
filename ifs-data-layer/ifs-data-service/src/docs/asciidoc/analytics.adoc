@@ -63,3 +63,15 @@ include::{snippets}/analytics/get-roles-by-project-id-for-current-user/http-resp
 
 ==== Curl Example-
 include::{snippets}/analytics/get-roles-by-project-id-for-current-user/curl-request.adoc[]
+
+=== Retrieve application id from a project
+==== Request
+include::{snippets}/analytics/get-application-id-for-project/http-request.adoc[]
+include::{snippets}/analytics/get-application-id-for-project/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/analytics/get-application-id-for-project/http-response.adoc[]
+
+==== Curl Example-
+include::{snippets}/analytics/get-application-id-for-project/curl-request.adoc[]
+

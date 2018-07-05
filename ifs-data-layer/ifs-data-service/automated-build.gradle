@@ -22,8 +22,6 @@ ext.silRestCrmBaseURL="http://sil-stub:8080/silstub"
 
 ext.idpRestBaseURL=""
 
-ext.ifsDataServiceRestBaseURL="http://localhost:8080"
-
 ext.postcodeLookupKey=""
 
 // Choose an appropriate location for a location to store uploaded files.
@@ -36,8 +34,6 @@ ext.ifsFileStorageLocation="/tmp"
 
 ext.ifsWebBaseURL="http://localhost:8080"
 
-ext.serverPort=""
 ext.activeProfile="environment"
-ext.shibbolethDir=""
 
 ext.internalUserEmailDomain="innovateuk.test"

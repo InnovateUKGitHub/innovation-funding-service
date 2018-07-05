@@ -4,7 +4,10 @@ import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -43,5 +46,10 @@ public class GoogleAnalyticsDataLayerController {
     @GetMapping("/assessment/{assessmentId}/competition-name")
     public RestResult<String> getCompetitionNameForAssessment(@PathVariable("assessmentId") long assessmentId) {
         return googleAnalyticsDataLayerService.getCompetitionNameByAssessmentId(assessmentId).toGetResponse();
+    }
+
+    @GetMapping("/project/{projectId}/application-id")
+    public RestResult<Long> getApplicationIdForProject(@PathVariable("projectId") long projectId) {
+        return googleAnalyticsDataLayerService.getApplicationIdForProject(projectId).toGetResponse();
     }
 }

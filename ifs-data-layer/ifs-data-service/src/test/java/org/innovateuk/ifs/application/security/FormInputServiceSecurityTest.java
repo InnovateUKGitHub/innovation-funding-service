@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.PROJECT_SUMMARY;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -95,12 +96,12 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
     }
 
     @Test
-    public void findResponseByApplicationIdAndQuestionName() {
-        when(classUnderTestMock.findResponseByApplicationIdAndQuestionName(1L, "name"))
+    public void findResponseByApplicationIdAndQuestionSetupType() {
+        when(classUnderTestMock.findResponseByApplicationIdAndQuestionSetupType(1L, PROJECT_SUMMARY))
                 .thenReturn(serviceSuccess(newFormInputResponseResource().build()));
 
         assertAccessDenied(
-                () -> classUnderTest.findResponseByApplicationIdAndQuestionName(1L, "name"),
+                () -> classUnderTest.findResponseByApplicationIdAndQuestionSetupType(1L, PROJECT_SUMMARY),
                 () -> {
                     verify(formInputResponsePermissionRules)
                             .consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(

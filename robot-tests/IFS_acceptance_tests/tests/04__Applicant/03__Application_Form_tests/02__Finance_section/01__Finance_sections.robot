@@ -47,14 +47,14 @@ Not requesting funding button
     And the user clicks the button/link                 jQuery=button:contains("Not requesting funding")
     Then the user should see the funding guidance
     And the user should see the element                 jQuery=button:contains("Requesting funding")
-    And the user should see the element                 jQuery=li:nth-of-type(2) span:contains("No action required")
     And the user should see the element                 jQuery=li:nth-of-type(3) span:contains("No action required")
+    And the user should see the element                 jQuery=li:nth-of-type(4) span:contains("No action required")
 
 Requesting funding button
     [Documentation]    INFUND-7093
     [Tags]
     When the user clicks the button/link                jQuery=button:contains("Requesting funding")
-    Then the user should see the element                jQuery=li:nth-of-type(2) > .action-required
+    Then the user should see the element                jQuery=li:nth-of-type(2) > .task-status-incomplete
     And the user should not see the element             jQuery=li:nth-of-type(3) span:contains("No action required")
     And the user should not see the element             jQuery=li:nth-of-type(3) > .task-status-complete
     And the user should not see the funding guidance

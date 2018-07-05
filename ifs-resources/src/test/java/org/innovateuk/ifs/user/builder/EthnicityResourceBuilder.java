@@ -7,9 +7,9 @@ import org.innovateuk.ifs.user.resource.EthnicityResource;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 /**
  * Builder for {@link org.innovateuk.ifs.user.resource.EthnicityResource}.

@@ -45,7 +45,7 @@ Funding level validations
     When the user provides invalid value as percentage then he should see the error  This field can only accept whole numbers.  15.35
     #TODO add server side validation for the percentage field when double number is provided IFS-3066
     When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  24
-    Then the user should not see an error in the page
+    Then the user cannot see a validation error in the page
 
 Other funding validations
     [Documentation]    INFUND-6794
@@ -55,13 +55,11 @@ Other funding validations
     And the user clicks the button/link                 jQuery=button:contains("Mark as complete")
     And The user should see a field and summary error   Invalid secured date
     And The user should see a field and summary error   Funding source cannot be blank.
-    #TODO update the below error after IFS-3454 is done.
-    And The user should see a field and summary error   This field should be 1 or higher.
+    And The user should see a field and summary error   This field cannot be left blank.
     When the user enters text to a text field           css=[name*=other_funding-securedDate]    12-${nextyear}
     And the user enters text to a text field            css=[name*=other_funding-fundingSource]  Lottery funding
     And the user enters text to a text field            css=[name*=other_funding-fundingAmount]    20000
-    #TODO IFS-3457
-    #Then the user cannot see a validation error in the page
+    Then the user cannot see a validation error in the page
     And the user selects the checkbox                   termsAgreed
     And the user clicks the button/link                 jQuery=button:contains("Mark as complete")
 
@@ -83,7 +81,7 @@ Changing application details sets funding level to incomplete
     When the user changes the research category
     And the user clicks the button/link    name=mark_as_complete
     And the user navigates to Your-finances page  ${applicationName}
-    Then the user should see the element    css=.task-list li:nth-of-type(3) .action-required
+    Then the user should see the element    css=.task-list li:nth-of-type(4) .task-status-incomplete
 
 Funding level has been reset
     [Documentation]    INFUND-6895

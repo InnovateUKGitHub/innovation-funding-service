@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
+import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.domain.Alert;
 import org.innovateuk.ifs.mapper.AlertMapper;
 import org.innovateuk.ifs.repository.AlertRepository;
-import org.innovateuk.ifs.alert.resource.AlertResource;
-import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -15,8 +15,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -38,7 +38,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_findAllVisible() throws Exception {
+    public void findAllVisible() throws Exception {
         final Alert alert1 = new Alert();
         final Alert alert2 = new Alert();
 
@@ -62,7 +62,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_findAllVisibleByType() throws Exception {
+    public void findAllVisibleByType() throws Exception {
         final Alert alert1 = new Alert();
         final Alert alert2 = new Alert();
 
@@ -86,7 +86,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_findById() throws Exception {
+    public void findById() throws Exception {
         final AlertResource expected = AlertResourceBuilder.newAlertResource()
                 .build();
 
@@ -99,7 +99,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_create() throws Exception {
+    public void create() throws Exception {
         final AlertResource alertResource = AlertResourceBuilder.newAlertResource()
                 .build();
 
@@ -117,13 +117,13 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_delete() throws Exception {
+    public void delete() throws Exception {
         assertTrue(alertService.delete(9999L).isSuccess());
         verify(alertRepositoryMock, only()).delete(9999L);
     }
 
     @Test
-    public void test_deleteAllByType() throws Exception {
+    public void deleteAllByType() throws Exception {
         assertTrue(alertService.delete(9999L).isSuccess());
     }
 }

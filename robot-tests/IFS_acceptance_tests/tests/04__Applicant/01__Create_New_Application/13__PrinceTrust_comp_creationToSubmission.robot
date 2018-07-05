@@ -32,8 +32,8 @@ Applicant submits his application
     [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${application_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
-    and the lead applicant fills all the questions and marks as complete(Prince's Trust comp type)
-    and the user should not see the element             jQuery=h2:contains("Finances")
+    Then the lead applicant fills all the questions and marks as complete(Prince's Trust comp type)
+    And the user should not see the element             jQuery=h2:contains("Finances")
     Then the applicant submits the application
 
 *** Keywords ***
@@ -61,6 +61,7 @@ The competition admin creates The Prince's Trust Comp
     the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the lead applicant fills all the questions and marks as complete(Prince's Trust comp type)
+    the applicant completes application team
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 

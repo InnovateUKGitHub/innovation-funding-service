@@ -6,8 +6,9 @@ import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.viewmodel.InnovationSectorViewModel;
-import org.innovateuk.ifs.management.viewmodel.AssessorsProfileViewModel;
+import org.innovateuk.ifs.management.assessor.populator.AssessorProfileModelPopulator;
+import org.innovateuk.ifs.management.assessor.viewmodel.AssessorsProfileViewModel;
+import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)

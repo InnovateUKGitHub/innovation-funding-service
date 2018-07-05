@@ -7,8 +7,8 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.interview.form.InterviewOverviewSelectionForm;
 import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
-import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
+import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
+import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * This controller handles the Overview tab for inviting assessors to an Interview Panel.

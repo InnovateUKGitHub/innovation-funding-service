@@ -6,8 +6,8 @@ import org.junit.Test;
 import java.time.ZonedDateTime;
 import java.util.stream.Stream;
 
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static junit.framework.TestCase.assertFalse;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -41,7 +41,7 @@ public class MilestoneTest {
         new Milestone(milestoneType, ZonedDateTime.now(), newCompetition().build());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void create_presetMilestoneWithNoDate() {
         MilestoneType milestoneType = Stream.of(MilestoneType.presetValues()).findFirst().get();
         new Milestone(milestoneType, newCompetition().build());

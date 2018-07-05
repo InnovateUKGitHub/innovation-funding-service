@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.overview.controller;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.forms.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -10,7 +9,6 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -35,11 +33,12 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
  * Application overview is the page that contains the most basic information about the current application and
  * the basic information about the competition the application is related to.
  */
-
 @Controller
 @RequestMapping("/application")
-@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationController.class)
 @PreAuthorize("hasAuthority('applicant')")
+@SecuredBySpring(value="Controller",
+        description = "Only applicants on an application are allowed to view the corresponding application overview",
+        securedType = ApplicationController.class)
 public class ApplicationController {
     @Autowired
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
@@ -56,14 +55,8 @@ public class ApplicationController {
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    @Autowired
-    private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
-
-    @Autowired
-    private InterviewAssignmentRestService interviewAssignmentRestService;
-
     @GetMapping("/{applicationId}")
-    public String applicationDetails(ApplicationForm form,
+    public String applicationOverview(ApplicationForm form,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
@@ -88,7 +81,7 @@ public class ApplicationController {
         Long userId = user.getId();
         model.addAttribute("form", form);
         model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, userId));
-        return "application-details";
+        return "application-overview";
     }
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {
@@ -100,11 +93,11 @@ public class ApplicationController {
 
     private boolean userIsLeadApplicant(long userId, long applicationId) {
         return processRoleService.findProcessRole(userId, applicationId)
-                .getRole() == LEADAPPLICANT.getId();
+                .getRole() == LEADAPPLICANT;
     }
 
     @PostMapping(value = "/{applicationId}")
-    public String applicationDetails(@PathVariable("applicationId") long applicationId,
+    public String applicationOverview(@PathVariable("applicationId") long applicationId,
                                      UserResource user,
                                      HttpServletRequest request) {
 
@@ -112,22 +105,6 @@ public class ApplicationController {
 
         questionService.assignQuestion(applicationId, request, assignedBy);
         return "redirect:/application/" + applicationId;
-    }
-
-    @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
-    public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
-                                                      @PathVariable("questionId") long questionId) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
-                .getSuccess();
-
-        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
-
-        if (!applicationResource.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
-            return "redirect:/application/" + applicationId + "/summary";
-        }
-        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId));
-        return "application-assessor-feedback";
-
     }
 
     @GetMapping("/terms-and-conditions")

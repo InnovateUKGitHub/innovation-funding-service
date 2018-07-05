@@ -53,7 +53,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -257,6 +256,9 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                 .content(toJson(sendResource)))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition to send invites of")
+                        ),
                         requestFields(
                                 fieldWithPath("subject").description("Subject of the email to send to applicants"),
                                 fieldWithPath("content").description("Content of the email to send to applicants")
@@ -374,6 +376,29 @@ public class InterviewAssignmentControllerDocumentation extends BaseFileControll
                 ));
 
         verify(interviewApplicationInviteServiceMock, only()).getSentInvite(applicationId);
+    }
+
+    @Test
+    public void resendInvite() throws Exception {
+        long applicationId = 1L;
+        AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
+        when(interviewApplicationInviteServiceMock.resendInvite(applicationId, sendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/resend-invite/{applicationId}", applicationId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(sendResource)))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application to resend invite of")
+                        ),
+                        requestFields(
+                                fieldWithPath("subject").description("Subject of the email to send to applicants"),
+                                fieldWithPath("content").description("Content of the email to send to applicants")
+                        )
+                ));
+
+        verify(interviewApplicationInviteServiceMock, only()).resendInvite(applicationId, sendResource);
     }
 
     private HttpHeaders createFileUploadHeader(String contentType, long contentLength) {

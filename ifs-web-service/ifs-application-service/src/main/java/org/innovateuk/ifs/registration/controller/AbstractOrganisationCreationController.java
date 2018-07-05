@@ -96,7 +96,7 @@ public abstract class AbstractOrganisationCreationController {
     }
 
     protected void addOrganisationType(OrganisationCreationForm organisationForm, Optional<Long> organisationTypeId) {
-        organisationTypeId.ifPresent(id -> organisationForm.setOrganisationTypeId(id));
+        organisationTypeId.ifPresent(organisationForm::setOrganisationTypeId);
     }
 
     protected void organisationFormAddressFormValidate(OrganisationCreationForm organisationForm, BindingResult bindingResult, BindingResult addressBindingResult) {

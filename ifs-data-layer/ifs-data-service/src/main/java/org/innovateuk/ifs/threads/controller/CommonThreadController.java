@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.threads.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.threads.service.ThreadService;
 import org.innovateuk.ifs.threads.resource.PostResource;
-import org.springframework.web.bind.annotation.*;
+import org.innovateuk.ifs.threads.service.ThreadService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 

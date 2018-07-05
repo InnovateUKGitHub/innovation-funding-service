@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.async.generation;
 
-import org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal;
+import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.After;
 import org.junit.Before;

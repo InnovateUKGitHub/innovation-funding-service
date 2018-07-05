@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -52,9 +53,10 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public ServiceResult<FormInputResponseResource> findResponseByApplicationIdAndQuestionName(long applicationId, String questionName) {
-        return find(formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionName(applicationId, questionName),
-                notFoundError(FormInputResponse.class, applicationId, questionName)).andOnSuccessReturn(formInputResponseMapper::mapToResource);
+    public ServiceResult<FormInputResponseResource> findResponseByApplicationIdAndQuestionSetupType(long applicationId,
+                                                                                                    CompetitionSetupQuestionType questionSetupType){
+        return find(formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionQuestionSetupType(applicationId, questionSetupType),
+                notFoundError(FormInputResponse.class, applicationId, questionSetupType)).andOnSuccessReturn(formInputResponseMapper::mapToResource);
     }
 
     @Override

@@ -192,6 +192,7 @@ Lead marks finances as complete
     And the user should see the element                  link=Your organisation
     And the user should see the element                  jQuery=h3:contains("Your funding")
     When the user fills in the project costs             labour costs  n/a
+    And the user enters the project location
     And the user navigates to Your-finances page         Assign test
     Then the user fills in the organisation information  Assign test  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the funding information        Assign test
@@ -224,7 +225,7 @@ The question is disabled on the summary page for other collaborators
     [Tags]
     Given the user navigates to the page     ${SUMMARY_URL}
     When the user clicks the button/link     jQuery=button:contains("Public description")
-    Then the user should see the element     css=#collapsible-2 .question .readonly
+    Then the user should see the element     css=#collapsible-3 .question .readonly
     And the user should not see the element  jQuery=button:contains("Assign to lead for review")
 
 Lead applicant should be able to remove the partner organisation
@@ -232,7 +233,7 @@ Lead applicant should be able to remove the partner organisation
     [Tags]
     [Setup]  log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link  link= Assign test
-    And the user clicks the button/link    link=view and manage contributors and collaborators
+    And the user clicks the button/link    link=Application team
     And the user clicks the button/link    jQuery=.table-overflow:contains("Dennis") ~ p a
     When the user clicks the button/link   jQuery=a:contains("Delete organisation"):first
     And the user clicks the button/link    jQuery=.modal-delete-organisation button:contains("Delete organisation")

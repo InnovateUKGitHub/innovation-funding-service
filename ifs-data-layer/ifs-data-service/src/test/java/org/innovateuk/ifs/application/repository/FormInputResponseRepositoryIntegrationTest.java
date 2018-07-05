@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.PROJECT_SUMMARY;
 import static org.junit.Assert.*;
 
 /**
@@ -134,8 +135,27 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
     }
 
     @Test
+    public void findOneByApplicationIdAndFormInputQuestionQuestionSetupType() {
+        FormInputResponse response = repository.findOneByApplicationIdAndFormInputQuestionQuestionSetupType(1L, PROJECT_SUMMARY);
+        assertEquals(15L, response.getId().longValue());
+        assertTrue(response.getValue().startsWith("The Project aims to identify,"));
+        assertEquals(Integer.valueOf(90), response.getWordCount());
+        assertEquals(Integer.valueOf(400 - 90), response.getWordCountLeft());
+        assertEquals(18, response.getUpdateDate().getDayOfMonth());
+        assertEquals(9, response.getUpdateDate().getMonthValue());
+        assertEquals(2015, response.getUpdateDate().getYear());
+        assertEquals("steve.smith@empire.com", response.getUpdatedBy().getUser().getEmail());
+        assertEquals("Project summary", response.getFormInput().getDescription());
+    }
+
+    @Test
     public void findOneByApplicationIdAndFormInputQuestionName_nonExistentApplication() {
         assertNull(repository.findOneByApplicationIdAndFormInputQuestionName(Long.MAX_VALUE, "Project Summary"));
+    }
+
+    @Test
+    public void findOneByApplicationIdAndFormInputQuestionQuestionSetupType_nonExistentApplication() {
+        assertNull(repository.findOneByApplicationIdAndFormInputQuestionQuestionSetupType(Long.MAX_VALUE, PROJECT_SUMMARY));
     }
 
     @Test

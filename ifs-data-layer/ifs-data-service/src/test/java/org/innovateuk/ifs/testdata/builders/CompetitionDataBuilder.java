@@ -2,18 +2,18 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +32,7 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -86,10 +87,30 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withBasicData(String name, String competitionTypeName, List<String> innovationAreaNames,
-                                                String innovationSectorName, String researchCategoryName, String leadTechnologist,
-                                                String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay, Boolean hasAssessmentPanel, Boolean hasInterviewStage, AssessorFinanceView assessorFinanceView,
-                                                Boolean multiStream, String collaborationLevelCode, List<OrganisationTypeEnum> leadApplicantTypes, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
+    public CompetitionDataBuilder withBasicData(String name,
+                                                String competitionTypeName,
+                                                List<String> innovationAreaNames,
+                                                String innovationSectorName,
+                                                Boolean stateAidAllowed,
+                                                String researchCategoryName,
+                                                String leadTechnologist,
+                                                String compExecutive,
+                                                String budgetCode,
+                                                String pafCode,
+                                                String code,
+                                                String activityCode,
+                                                Integer assessorCount,
+                                                BigDecimal assessorPay,
+                                                Boolean hasAssessmentPanel,
+                                                Boolean hasInterviewStage,
+                                                AssessorFinanceView assessorFinanceView,
+                                                Boolean multiStream,
+                                                String collaborationLevelCode,
+                                                List<OrganisationTypeEnum> leadApplicantTypes,
+                                                Integer researchRatio,
+                                                Boolean resubmission,
+                                                String nonIfsUrl,
+                                                String includeApplicationTeamQuestion) {
 
         return asCompAdmin(data -> {
 
@@ -115,6 +136,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setInnovationAreas(innovationAreas.isEmpty() ? emptySet() : newHashSet(innovationAreas));
                 competition.setInnovationSector(innovationSector);
                 competition.setResearchCategories(researchCategory == null ? emptySet() : singleton(researchCategory));
+                competition.setStateAid(stateAidAllowed);
                 competition.setMaxResearchRatio(30);
                 competition.setAcademicGrantPercentage(100);
                 competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));
@@ -134,6 +156,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setHasInterviewStage(hasInterviewStage);
                 competition.setAssessorFinanceView(assessorFinanceView);
                 competition.setNonIfsUrl(nonIfsUrl);
+                competition.setUseNewApplicantMenu(includeApplicationTeamQuestion.equals("Yes"));
             });
         });
     }
@@ -157,9 +180,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         updateFn.accept(competition);
 
+        // Copy the value of the useNewApplicantMenu flag so that it can restored in the resource after the
+        // competition is updated. This is eventually used to determine whether the Application Team question should
+        // be updated.
+        boolean useNewApplicantMenu = competition.getUseNewApplicantMenu();
+
         competitionSetupService.save(competition.getId(), competition).getSuccess();
 
         updateCompetitionInCompetitionData(data, competition.getId());
+
+        data.getCompetition().setUseNewApplicantMenu(useNewApplicantMenu);
     }
 
     public CompetitionDataBuilder withApplicationFormFromTemplate() {
@@ -419,6 +449,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             }
 
         }));
+    }
+
+    public void removeApplicationTeamFromCompetition(Long competitionId) {
+        asCompAdmin(data -> questionService
+                .getQuestionByCompetitionIdAndCompetitionSetupQuestionType
+                        (competitionId, APPLICATION_TEAM).andOnSuccess(
+                        question -> questionSetupTemplateService.deleteQuestionInCompetition(question
+                                .getId())));
     }
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {

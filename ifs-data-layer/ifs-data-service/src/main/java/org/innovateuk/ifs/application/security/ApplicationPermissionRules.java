@@ -47,9 +47,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     }
 
     private boolean isAssessorForApplication(ApplicationResource applicationResource, UserResource user) {
-        boolean isAssessor = isAssessor(applicationResource.getId(), user);
-        boolean isPanelAssessor = isPanelAssessor(applicationResource.getId(), user);
-        return isAssessor || isPanelAssessor;
+        return isAssessor(applicationResource.getId(), user) || isPanelAssessor(applicationResource.getId(), user) || isInterviewAssessor(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The internal users can see the participation percentage for applications they assess")
@@ -75,7 +73,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             description = "The assessor can see the application finance totals in the applications they assess",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean assessorCanSeeTheApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
-        return isAssessor(applicationResource.getId(), user);
+        return isAssessor(applicationResource.getId(), user) || isPanelAssessor(applicationResource.getId(), user) || isInterviewAssessor(applicationResource.getId(), user);
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",

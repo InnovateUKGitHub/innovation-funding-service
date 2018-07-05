@@ -35,14 +35,14 @@
 
 
     <!-- =========================== Your organisation =========================== -->
-    <th:block th:fragment="organisation_finances (model)">
+    <th:block th:fragment="organisation_finances (model, internalView)">
         <div class="question" th:with="formInputViewModel=${model.organisationSizeFormInputViewModel}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-            <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
+            <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel}, internalView=${internalView})" />
         </div>
 
         <th:block th:with="formInputViewModel=${model.financialEndYearFormInputViewModel}">
             <div class="question" th:if="${formInputViewModel != null}" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
+                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel}, internalView=${internalView})" />
             </div>
         </th:block>
 
@@ -85,7 +85,7 @@
 
         <th:block th:each="formInputViewModel : ${model.standardInputViewModels}">
             <div class="question" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})" />
+                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel}, ${internalView})" />
             </div>
         </th:block>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
@@ -173,7 +173,7 @@
                 </th:block>
                 <th:block th:if="${model.showSectionStatus(childSection)}">
                     <div th:if="${model.completedSectionIds.contains(childSection.section.id)}" class="task-status-complete"><span>Complete</span></div>
-                    <span th:unless="${model.completedSectionIds.contains(childSection.section.id)}" class="action-required"><strong>Incomplete</strong></span>
+                    <div th:unless="${model.completedSectionIds.contains(childSection.section.id)}" class="task-status-incomplete"><span>Incomplete</span></div>
                 </th:block>
             </li>
         </th:block>
@@ -204,27 +204,27 @@
         </div>
     </th:block>
 
-    <th:block th:fragment="project_cost_finances(model)">
-        <th:block th:insert="'finance/'+${model.financeView} :: your_finance(${model})" />
+    <th:block th:fragment="project_cost_finances (model, internalView)">
+        <th:block th:insert="'finance/'+${model.financeView} :: your_finance(${model}, ${internalView})" />
         <div th:insert="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container" th:if="${model.showTerms}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
 
-    <th:block th:fragment="assessment_finances(model)">
-        <th:block th:insert="'finance/'+${detailedCostings.financeView} :: assessment_detailed_finance(${model})" />
+    <th:block th:fragment="assessment_finances(model, internalView)">
+        <th:block th:insert="'finance/'+${detailedCostings.financeView} :: assessment_detailed_finance(model=${model}, internalView=${internalView})" />
     </th:block>
 
-    <th:block th:fragment="funding_finances(model)">
+    <th:block th:fragment="funding_finances(model, internalView)">
         <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
             <div class="question" th:id="'form-input-'+${formInputViewModel.formInput.getId()}">
-                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel})" />
+                <th:block th:insert="'finance/finance' :: ${formInputViewModel.formInput.type.nameLower} (model=${formInputViewModel}, internalView=${internalView})" />
             </div>
         </th:block>
         <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:unless="${model.allReadOnly}"></div>
         <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
 
-    <th:block th:fragment="overview_finances(model)">
+    <th:block th:fragment="overview_finances(model, internalView)">
         <h2 class="heading-medium">Funding rules for this competition</h2>
         <th:block th:each="formInputViewModel : ${model.formInputViewModels}" th:with="formInput=${formInputViewModel.formInput}">
             <th:block th:if="${formInput.type.displayableFinancialSummaryType}"  th:with="model=${model.openSectionViewModel}" >
@@ -239,11 +239,44 @@
             </th:block>
             <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
                 <div class="wysiwyg-styles">
-                    <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})"></th:block>
+                    <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel}, ${internalView})"></th:block>
                 </div>
             </th:block>
         </th:block>
         <a th:href="@{/application/{applicationId}(applicationId=${model.application.id})}" class="button-secondary">Return to application overview</a>
+    </th:block>
+
+
+    <th:block th:fragment="project_location(model)">
+        <div class="extra-margin">
+            <th:block th:unless="${model.readonly}">
+                <p>Where will most of the project work take place?</p>
+                <!--/* edit */-->
+                <div class="form-group" th:classappend="${#fields.hasErrors('projectLocation')} ? 'form-group-error'">
+                    <label class="form-label" for="projectLocation">
+                        <span class="form-label-bold">Postcode</span>
+                        <th:block th:if="${#fields.hasErrors('projectLocation')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
+                        </th:block>
+                    </label>
+                    <input class="form-control width-large"
+                           id="projectLocation"
+                           th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"
+                           type="text"
+                           name="financePosition-projectLocation"
+                           th:value="${model.projectLocationValue}" />
+                </div>
+
+            </th:block>
+            <th:block th:if="${model.readonly}">
+                <!--/* view  */-->
+                <dl class="readonly-data">
+                    <dt>Postcode</dt>
+                    <dd th:if="${model.projectLocationValue != null}" th:text="${model.projectLocationValue}">Postcode</dd>
+                </dl>
+            </th:block>
+        </div>
+        <th:block th:insert="finance/your-finances-sub-sections :: subsection_buttons (${model})" />
     </th:block>
 
 </html>

@@ -26,10 +26,10 @@ import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.interview.builder.InterviewApplicationSentInviteResourceBuilder.newInterviewApplicationSentInviteResource;
-import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
-import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -279,6 +279,21 @@ public class InterviewAssignmentControllerTest extends BaseFileControllerMockMVC
                 .andExpect(content().json(toJson(invite)));
 
         verify(interviewApplicationInviteServiceMock, only()).getSentInvite(applicationId);
+    }
+
+    @Test
+    public void resendInvite() throws Exception {
+        long applicationId = 1L;
+        AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
+
+        when(interviewApplicationInviteServiceMock.resendInvite(applicationId, sendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/resend-invite/{applicationId}", applicationId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(sendResource)))
+                .andExpect(status().isOk());
+
+        verify(interviewApplicationInviteServiceMock, only()).resendInvite(applicationId, sendResource);
     }
 
     protected HttpHeaders createFileUploadHeader(String contentType, long contentLength) {

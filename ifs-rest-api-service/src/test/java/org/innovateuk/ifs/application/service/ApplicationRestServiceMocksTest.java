@@ -1,11 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,9 +17,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendRe
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -212,14 +206,16 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         int pageNumber = 0;
         int pageSize = 20;
         String sortField = "id";
+        String filter = "ALL";
 
         ApplicationPageResource applicationPage = new ApplicationPageResource();
 
-        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/unsuccessful-applications?page=0&size=20&sort=id", ApplicationPageResource.class, applicationPage);
+        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/unsuccessful-applications?filter=ALL&page=0&size=20&sort=id", ApplicationPageResource.class, applicationPage);
 
-        ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField).getSuccess();
+        ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField, filter).getSuccess();
         assertNotNull(result);
         Assert.assertEquals(applicationPage, result);
+        setupGetWithRestResultVerifications(applicationRestURL + "/123" + "/unsuccessful-applications?filter=ALL&page=0&size=20&sort=id", null, ApplicationPageResource.class);
     }
 
     @Test

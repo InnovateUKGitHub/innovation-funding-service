@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.application.security;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -50,6 +50,11 @@ public class QuestionStatusRules extends BasePermissionRules {
     @PermissionRule(value = "UPDATE", description = "Users can only update statuses of questions they are assigned to")
     public boolean userCanUpdateQuestionStatusComposite(QuestionApplicationCompositeId ids, UserResource user) {
         return userIsLeadApplicant(ids.applicationId, user) || (userIsAllowed(ids, user) && userIsConnected(ids.applicationId, user));
+    }
+
+    @PermissionRule(value = "MARK_TEAM_INCOMPLETE", description = "Any users that are connected can mark the application team as incomplete")
+    public boolean userCanMarkApplicationTeamAsIncomplete(QuestionApplicationCompositeId ids, UserResource user) {
+        return userIsConnected(ids.applicationId, user);
     }
 
     @PermissionRule(value = "MARK_SECTION", description = "Only member of project team can mark a section as complete")

@@ -11,15 +11,15 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.OrganisationSizeRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ApplicationFinanceDataBuilder;
 import org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
-import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -206,13 +206,13 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         CompetitionData competition = competitionDataBuilder.
                 withExistingCompetition(competitionCreation).
                 withBasicData("APC Competition", "Advanced Propulsion Centre",
-                        singletonList("Digital manufacturing"), "Materials and manufacturing",
+                        singletonList("Digital manufacturing"), "Materials and manufacturing", true,
                         researchCategory, "ian.cooper@innovateuk.test",
                         "john.doe@innovateuk.test", "DET1536/1537", "875",
                         "CCCC", "16014", 1, BigDecimal.valueOf(100L),
                         false, false, AssessorFinanceView.OVERVIEW,false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
-                        50, false, "").
+                        50, false, "", "Yes").
                 withApplicationFormFromTemplate().
                 withNewMilestones().
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).

@@ -14,8 +14,11 @@
     </th:block>
 
     <!-- ===========================Form: overheads =========================== -->
-    <th:block th:fragment="overheads(viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <th:block th:insert="finance/finance :: overheads_finances" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}"/>
+    <th:block th:fragment="overheads(viewmode, internalView)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
+        <th:block th:insert="finance/finance :: overheads_finances (internalView=${internalView})" th:with="
+            overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]},
+            overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)},
+            internalView=${internalView}"/>
         <input type="hidden" th:id="${'section-percentage-'+subSection.id}" th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
     </th:block>
 
@@ -239,33 +242,35 @@
     <!-- ===========================Finances Overview =========================== -->
     <th:block th:fragment="project-finance-overview(overview)">
         <h3 class="heading-medium">Overview</h3>
-        <table class="table-overview extra-margin-bottom">
-            <thead>
-            <tr>
-                <th scope="col">Start date</th>
-                <th scope="col">Duration</th>
-                <th scope="col" class="numeric">Total project cost</th>
-                <th scope="col" class="numeric">Grant applied for (&pound;)</th>
-                <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
-                <th scope="col" class="numeric">Total % grant</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td th:text="${#temporals.format(overview.projectStartDate, 'd MMM yyyy')}" />
-                <td th:text="${overview.durationInMonths+' months'}" />
-                <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(overview.totalProjectCost,1,'DEFAULT')}" /></td>
-                <td class="numeric"><th:block th:text="${#numbers.formatInteger(overview.grantAppliedFor,1,'DEFAULT')}" /></td>
-                <td class="numeric"><th:block th:text="${#numbers.formatInteger(overview.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
-                <td th:text="${#numbers.formatInteger(overview.totalPercentageGrant,1,'NONE')+'%'}" class="numeric" />
-            </tr>
-            </tbody>
-        </table>
+        <div class="table-overflow extra-margin-bottom">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Start date</th>
+                        <th scope="col">Duration</th>
+                        <th scope="col" class="numeric">Total project cost</th>
+                        <th scope="col" class="numeric">Grant applied for (&pound;)</th>
+                        <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
+                        <th scope="col" class="numeric">Total % grant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td th:text="${#temporals.format(overview.projectStartDate, 'd MMM yyyy')}" />
+                        <td th:text="${overview.durationInMonths+' months'}" />
+                        <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(overview.totalProjectCost,1,'DEFAULT')}" /></td>
+                        <td class="numeric"><th:block th:text="${#numbers.formatInteger(overview.grantAppliedFor,1,'DEFAULT')}" /></td>
+                        <td class="numeric"><th:block th:text="${#numbers.formatInteger(overview.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
+                        <td th:text="${#numbers.formatInteger(overview.totalPercentageGrant,1,'NONE')+'%'}" class="numeric" />
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </th:block>
 
     <!-- ===========================Project Finance Summaries =========================== -->
     <th:block th:fragment="project-finance-summaries(summaries)">
-        <div>
+        <div class="table-overflow extra-margin-bottom">
             <table>
                 <thead>
                     <tr>
@@ -316,53 +321,51 @@
 
     <!-- ===========================Project Finance Cost Breakdown =========================== -->
     <th:block th:fragment="project-finance-cost-breakdown(breakdowns)">
-        <div class="form-group">
-            <div style="overflow: auto;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th scope="col">Partner</th>
-                            <th scope="col" class="numeric width-small">Total</th>
-                            <th scope="col" class="numeric width-small">Labour (&pound;)</th>
-                            <th scope="col" class="numeric width-small">Overheads (&pound;)</th>
-                            <th scope="col" class="numeric width-small">Materials (&pound;)</th>
-                            <th scope="col" class="numeric width-small">Capital usage (&pound;)</th>
-                            <th scope="col" class="numeric width-small">Subcontract cost (&pound;)</th>
-                            <th scope="col" class="numeric width-small">Travel and subs (&pound;)</th>
-                            <th scope="col" class="numeric width-small">Other costs (&pound;)</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Total</th>
-                            <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(breakdowns.total,1,'DEFAULT')}" /></strong></td>
-                            <td class="numeric">&nbsp;</td>
-                            <td class="numeric">&nbsp;</td>
-                            <td class="numeric">&nbsp;</td>
-                            <td class="numeric">&nbsp;</td>
-                            <td class="numeric">&nbsp;</td>
-                            <td class="numeric">&nbsp;</td>
-                            <td class="numeric">&nbsp;</td>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                    <th:block th:each="partner : ${breakdowns.getOrganisationResources()}" th:with="finance=${breakdowns.getPartnerFinances(partner.organisation)}">
-                        <tr>
-                            <th scope="col">
-                                <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
-                                <small th:if="${partner.isLeadOrganisation()}">Lead</small>
-                            </th>
-                            <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(finance.getTotal(),1,'DEFAULT')}" /></strong></td>
-                            <th:block th:each="rowType : ${finance.financeOrganisationDetails.keySet()}" th:with="row=${finance.financeOrganisationDetails.get(rowType)}">
-                                <td th:if="${rowType.isIncludedInSpendProfile()}" class="numeric">
-                                    <th:block th:text="${#numbers.formatInteger(row.total,1,'DEFAULT')}" />
-                                </td>
-                            </th:block>
-                        </tr>
-                    </th:block>
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-overflow extra-margin-bottom">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Partner</th>
+                        <th scope="col" class="numeric width-small">Total</th>
+                        <th scope="col" class="numeric width-small">Labour (&pound;)</th>
+                        <th scope="col" class="numeric width-small">Overheads (&pound;)</th>
+                        <th scope="col" class="numeric width-small">Materials (&pound;)</th>
+                        <th scope="col" class="numeric width-small">Capital usage (&pound;)</th>
+                        <th scope="col" class="numeric width-small">Subcontract cost (&pound;)</th>
+                        <th scope="col" class="numeric width-small">Travel and subs (&pound;)</th>
+                        <th scope="col" class="numeric width-small">Other costs (&pound;)</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Total</th>
+                        <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(breakdowns.total,1,'DEFAULT')}" /></strong></td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                    </tr>
+                </tfoot>
+                <tbody>
+                <th:block th:each="partner : ${breakdowns.getOrganisationResources()}" th:with="finance=${breakdowns.getPartnerFinances(partner.organisation)}">
+                    <tr>
+                        <th scope="col">
+                            <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
+                            <small th:if="${partner.isLeadOrganisation()}">Lead</small>
+                        </th>
+                        <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(finance.getTotal(),1,'DEFAULT')}" /></strong></td>
+                        <th:block th:each="rowType : ${finance.financeOrganisationDetails.keySet()}" th:with="row=${finance.financeOrganisationDetails.get(rowType)}">
+                            <td th:if="${rowType.isIncludedInSpendProfile()}" class="numeric">
+                                <th:block th:text="${#numbers.formatInteger(row.total,1,'DEFAULT')}" />
+                            </td>
+                        </th:block>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
         </div>
     </th:block>
 </html>
