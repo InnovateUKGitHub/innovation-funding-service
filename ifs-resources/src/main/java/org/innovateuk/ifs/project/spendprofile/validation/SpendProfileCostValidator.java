@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.project.spendprofile.validation;
 
-import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.project.spendprofile.validation.exception.SpendProfileValidationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.validation.exception.SpendProfileValidationException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

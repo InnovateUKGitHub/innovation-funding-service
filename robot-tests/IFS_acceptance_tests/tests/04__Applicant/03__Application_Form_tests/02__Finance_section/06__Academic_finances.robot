@@ -122,6 +122,7 @@ Mark all as complete
     Then textfield value should be                 css=input[name$="tsb_reference"]  123123
     And the user selects the checkbox              termsAgreed
     When the user clicks the button/link           jQuery=button:contains("Mark as complete")
+    And the user enters the project location
     Then the user should see the text in the page  Your finances
     And the user navigates to the finance overview of the academic
     And the user should see the element            css=.finance-summary tr:nth-of-type(2) img[src*="/images/ifs-images/icons/icon-tick"]

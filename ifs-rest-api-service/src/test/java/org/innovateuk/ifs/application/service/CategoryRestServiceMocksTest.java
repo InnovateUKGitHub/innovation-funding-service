@@ -13,9 +13,7 @@ import java.util.List;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.innovationAreaResourceListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.innovationSectorResourceListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.researchCategoryResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.cache;
 
-import org.innovateuk.ifs.commons.service.RestCacheInvalidateResult;
 import org.aopalliance.aop.Advice;
+import org.innovateuk.ifs.commons.service.RestCacheInvalidateResult;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;

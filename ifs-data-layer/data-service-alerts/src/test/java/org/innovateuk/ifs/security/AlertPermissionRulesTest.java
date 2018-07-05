@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.RootPermissionRulesTest;
-import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
+import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;

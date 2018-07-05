@@ -44,7 +44,11 @@ IFS.core.autoSave = (function () {
       var promiseListName
       if (field.closest('[data-repeatable-row]').length) {
         // make sure repeating rows process sequential per row
-        promiseListName = field.closest('[data-repeatable-row]').prop('id')
+        var rowContainer = field.closest('[data-repeatable-row]')
+        if (rowContainer.attr('data-repeatable-row').startsWith('unsaved') && field.val() === '') {
+          return
+        }
+        promiseListName = rowContainer.prop('id')
       } else {
         promiseListName = field.prop('name')
       }

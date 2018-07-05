@@ -4,15 +4,15 @@ package org.innovateuk.ifs.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static java.util.Arrays.stream;
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PrioritySortingTest {
 

@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.organisation.resource;
 
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.innovateuk.ifs.address.resource.AddressResource;
+
+import javax.validation.Valid;
 /**
  * Resource object to store the company details, from the company house api.
  */

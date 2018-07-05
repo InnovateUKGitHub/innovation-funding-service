@@ -353,6 +353,15 @@ tr {
     }
   }
 
+  .textarea-wrapped {
+    textarea {
+      &.field-group-error {
+        @include box-shadow(none);
+        border: 4px solid $error-colour;
+      }
+    }
+  }
+
   select {
     @include box-shadow(none);
     border: 4px solid $govuk-error-colour;
