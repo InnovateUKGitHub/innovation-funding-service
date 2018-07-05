@@ -39,7 +39,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.management.navigation.NavigationOrigin.INTERVIEW_APPLICATION_ALLOCATION;
 import static org.innovateuk.ifs.management.navigation.NavigationOrigin.INTERVIEW_PANEL_ALLOCATED;
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 

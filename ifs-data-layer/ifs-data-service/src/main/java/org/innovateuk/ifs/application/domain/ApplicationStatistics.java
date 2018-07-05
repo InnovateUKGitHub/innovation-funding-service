@@ -41,7 +41,7 @@ public class ApplicationStatistics {
 
     @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
     @Where(clause = "process_type = 'Assessment'")
-    // TODO 7668 Issue with retrieval may be caused by this class noting being an Application
+    // TODO IFS-498 Issue with retrieval may be caused by this class noting being an Application
     private List<Assessment> assessments;
 
     public Long getId() {

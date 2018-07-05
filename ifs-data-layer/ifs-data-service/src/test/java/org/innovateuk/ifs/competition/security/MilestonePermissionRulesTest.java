@@ -30,7 +30,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
 	}
 
     @Test
-    public void testInternalUsersOtherThanInnovationLeadsCanViewAllMilestones() {
+    public void internalUsersOtherThanInnovationLeadsCanViewAllMilestones() {
         allGlobalRoleUsers.forEach(user -> {
             if (!user.hasRole(Role.INNOVATION_LEAD) && allInternalUsers.contains(user)) {
                 assertTrue(rules.allInternalUsersCanViewCompetitionMilestonesOtherThanInnovationLeads(CompetitionCompositeId.id(1L), user));
@@ -41,7 +41,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
     }
 
     @Test
-    public void testOnlyInnovationLeadUsersAssignedToCompCanAccess() {
+    public void onlyInnovationLeadUsersAssignedToCompCanAccess() {
         List<Role> innovationLeadRoles = singletonList(Role.INNOVATION_LEAD);
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
@@ -55,7 +55,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
     }
 
     @Test
-    public void testInternalUsersCanReadMilestoneByType() {
+    public void internalUsersCanReadMilestoneByType() {
         allGlobalRoleUsers.forEach(user -> {
             if (allInternalUsers.contains(user)) {
                 assertTrue(rules.allInternalUsersCanViewCompetitionMilestonesByType(CompetitionCompositeId.id(1L), user));

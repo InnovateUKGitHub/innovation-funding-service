@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.assessment.profile.viewmodel;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.user.resource.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.user.resource.*;
 
 /**
  * Holder of model attributes for the Assessor details view.

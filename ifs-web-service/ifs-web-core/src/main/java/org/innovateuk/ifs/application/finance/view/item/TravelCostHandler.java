@@ -4,8 +4,6 @@ import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.TravelCost;
 import org.innovateuk.ifs.util.NumberUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,9 +18,9 @@ public class TravelCostHandler extends FinanceRowHandler {
         String item = null;
         Integer quantity = null;
 
-        for(FinanceFormField financeFormField : financeFormFields) {
+        for (FinanceFormField financeFormField : financeFormFields) {
             String fieldValue = financeFormField.getValue();
-            if(fieldValue != null) {
+            if (fieldValue != null) {
                 switch (financeFormField.getCostName()) {
                     case "item":
                         item = fieldValue;
@@ -39,9 +37,9 @@ public class TravelCostHandler extends FinanceRowHandler {
                 }
             }
         }
-        
-        if(allNull(id, costPerItem, item, quantity)) {
-        	return null;
+
+        if (allNull(id, costPerItem, item, quantity)) {
+            return null;
         }
         return new TravelCost(id, item, costPerItem, quantity);
     }

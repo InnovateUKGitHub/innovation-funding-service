@@ -6,8 +6,8 @@ import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
 
 /**
  * Builder for {@link UserProfileStatusResource}s.

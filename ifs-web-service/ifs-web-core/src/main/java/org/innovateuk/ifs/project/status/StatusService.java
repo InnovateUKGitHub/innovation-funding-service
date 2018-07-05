@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.project.status;
 
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+
 import java.util.Optional;
 
 /**
