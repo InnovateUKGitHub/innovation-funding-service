@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
-public class AbstractFinanceModelPopulator {
+public abstract class AbstractFinanceModelPopulator {
 
     private SectionService sectionService;
 

@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class SummaryViewModelPopulator {
+public class SummaryViewModelPopulator extends AbstractApplicationModelPopulator {
 
     private ApplicationService applicationService;
     private CompetitionService competitionService;
@@ -59,7 +59,6 @@ public class SummaryViewModelPopulator {
     private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
     private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
     private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
-    private UserService userService;
     private ApplicantRestService applicantRestService;
     private FormInputViewModelGenerator formInputViewModelGenerator;
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
@@ -78,10 +77,10 @@ public class SummaryViewModelPopulator {
                                      ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator,
                                      ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator,
                                      ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator,
-                                     UserService userService,
                                      ApplicantRestService applicantRestService,
                                      FormInputViewModelGenerator formInputViewModelGenerator,
                                      ApplicationTeamModelPopulator applicationTeamModelPopulator) {
+        super(sectionService, questionService);
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.sectionService = sectionService;
@@ -96,7 +95,6 @@ public class SummaryViewModelPopulator {
         this.applicationFinanceSummaryViewModelPopulator = applicationFinanceSummaryViewModelPopulator;
         this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;
         this.applicationResearchParticipationViewModelPopulator = applicationResearchParticipationViewModelPopulator;
-        this.userService = userService;
         this.applicantRestService = applicantRestService;
         this.formInputViewModelGenerator = formInputViewModelGenerator;
         this.applicationTeamModelPopulator = applicationTeamModelPopulator;
@@ -158,11 +156,6 @@ public class SummaryViewModelPopulator {
             financeSectionId = financeSection.getId();
         }
 
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-
-        ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantUser.getOrganisationId());
-
         ApplicationOverviewCompletedViewModel completedViewModel = getCompletedDetails(application, userOrganisation);
 
         Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream)
@@ -204,48 +197,8 @@ public class SummaryViewModelPopulator {
         );
     }
 
-    private ApplicationOverviewCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
-        boolean allQuestionsCompleted = sectionService.allSectionsMarkedAsComplete(application.getId());
-        boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation.get(), completedSectionsByOrganisation);
-
-        ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, allQuestionsCompleted, markedAsComplete, userFinanceSectionCompleted);
-        userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));
-
-        return viewModel;
-    }
-
-    private Set<Long> getCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
-        Set<Long> combinedMarkedAsComplete = new HashSet<>();
-
-        completedSectionsByOrganisation.forEach((organisationId, completedSections) -> combinedMarkedAsComplete.addAll(completedSections));
-        completedSectionsByOrganisation.forEach((key, values) -> combinedMarkedAsComplete.retainAll(values));
-
-        return combinedMarkedAsComplete;
-    }
-
-    private boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
-
-        return sectionService.getAllByCompetitionId(application.getCompetition())
-                .stream()
-                .filter(section -> section.getType().equals(FINANCE))
-                .map(SectionResource::getId)
-                .anyMatch(id -> completedSectionsByOrganisation.get(userOrganisation.getId()).contains(id));
-    }
-
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
-    }
-
-    private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-
-        Long organisationId = userOrganisation
-                .map(OrganisationResource::getId)
-                .orElse(0L);
-
-        return questionService.getMarkedAsComplete(application.getId(), organisationId);
     }
 
     private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {

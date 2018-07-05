@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.overview.populator;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.common.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.overview.viewmodel.*;
 import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -48,7 +49,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
  */
 
 @Component
-public class ApplicationOverviewModelPopulator {
+public class ApplicationOverviewModelPopulator extends AbstractApplicationModelPopulator {
 
     @Autowired
     private AssignButtonsPopulator assignButtonsPopulator;
@@ -66,13 +67,7 @@ public class ApplicationOverviewModelPopulator {
     private UserService userService;
 
     @Autowired
-    private QuestionService questionService;
-
-    @Autowired
     private InviteRestService inviteRestService;
-
-    @Autowired
-    private SectionService sectionService;
 
     @Autowired
     private ProjectService projectService;
@@ -82,6 +77,14 @@ public class ApplicationOverviewModelPopulator {
 
     @Autowired
     private ApplicantRestService applicantRestService;
+
+    private SectionService sectionService;
+    private QuestionService questionService;
+
+    public ApplicationOverviewModelPopulator(SectionService sectionService,
+                                             QuestionService questionService) {
+        super(sectionService, questionService);
+    }
     
     public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -194,36 +197,6 @@ public class ApplicationOverviewModelPopulator {
                 .collect(Collectors.toList()));
     }
 
-    private ApplicationOverviewCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
-        boolean allQuestionsCompleted = sectionService.allSectionsMarkedAsComplete(application.getId());
-        boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation.get(), completedSectionsByOrganisation);
-
-        ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, allQuestionsCompleted, markedAsComplete, userFinanceSectionCompleted);
-        userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));
-        return viewModel;
-    }
-
-    private Set<Long> getCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
-        Set<Long> combinedMarkedAsComplete = new HashSet<>();
-
-        completedSectionsByOrganisation.forEach((organisationId, completedSections) -> combinedMarkedAsComplete.addAll(completedSections));
-        completedSectionsByOrganisation.forEach((key, values) -> combinedMarkedAsComplete.retainAll(values));
-
-        return combinedMarkedAsComplete;
-    }
-
-    private boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
-
-        return sectionService.getAllByCompetitionId(application.getCompetition())
-                .stream()
-                .filter(section -> section.getType().equals(FINANCE))
-                .map(SectionResource::getId)
-                .anyMatch(id -> completedSectionsByOrganisation.get(userOrganisation.getId()).contains(id));
-    }
-
     private Long getYourFinancesSectionId(ApplicationResource application) {
 
         return sectionService.getAllByCompetitionId(application.getCompetition())
@@ -234,13 +207,4 @@ public class ApplicationOverviewModelPopulator {
                 .orElse(null);
     }
 
-
-    private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-
-        Long organisationId = userOrganisation
-                .map(OrganisationResource::getId)
-                .orElse(0L);
-
-        return questionService.getMarkedAsComplete(application.getId(), organisationId);
-    }
 }
