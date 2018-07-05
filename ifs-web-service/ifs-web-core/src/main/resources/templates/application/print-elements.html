@@ -33,6 +33,18 @@
         </div>
     </div>
 
+    <div th:if="${currentApplication.resubmission}">
+        <h2 class="heading-small">Previous application number</h2>
+        <div class="textarea-wrapped">
+            <div class="readonly" th:text="${currentApplication.previousApplicationNumber} ?: 'Not listed'" />
+        </div>
+
+        <h2 class="heading-small">Previous application title</h2>
+        <div class="textarea-wrapped">
+            <div class="readonly" th:text="${currentApplication.previousApplicationTitle} ?: 'Not listed'" />
+        </div>
+    </div>
+    
     <h2 class="heading-small">Estimated timescales</h2>
 
     <dl>
