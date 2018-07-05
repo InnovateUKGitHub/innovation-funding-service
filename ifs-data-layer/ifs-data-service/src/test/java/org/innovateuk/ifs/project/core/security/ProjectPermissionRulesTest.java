@@ -29,7 +29,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testPartnersOnProjectCanView() {
+    public void partnersOnProjectCanView() {
 
         UserResource user = newUserResource().build();
 
@@ -40,7 +40,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testPartnersOnProjectCanViewButUserNotPartner() {
+    public void partnersOnProjectCanViewButUserNotPartner() {
 
         UserResource user = newUserResource().build();
 
@@ -52,7 +52,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testInternalUsersCanViewProjects() {
+    public void internalUsersCanViewProjects() {
 
         ProjectResource project = newProjectResource().build();
 
@@ -66,7 +66,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testSystemRegistrarCanAddPartnersToProject() {
+    public void systemRegistrarCanAddPartnersToProject() {
 
         ProjectResource project = newProjectResource().build();
         ProjectProcess projectProcess = newProjectProcess().withActivityState(ProjectState.SETUP).build();
