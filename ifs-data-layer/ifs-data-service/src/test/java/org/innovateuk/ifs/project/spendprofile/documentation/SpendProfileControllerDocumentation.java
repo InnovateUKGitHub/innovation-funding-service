@@ -4,6 +4,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.documentation.LocalDateResourceDocs;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -299,6 +300,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being saved")
                         ),
                         requestFields(spendProfileTableFields)
+                        .andWithPrefix("months[].", LocalDateResourceDocs.localDateFields)
                 ));
     }
 

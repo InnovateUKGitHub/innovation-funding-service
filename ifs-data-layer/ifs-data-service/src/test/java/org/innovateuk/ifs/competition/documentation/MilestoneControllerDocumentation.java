@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.controller.MilestoneController;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
+import org.innovateuk.ifs.documentation.MilestoneResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -47,7 +48,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("list of milestones for all users")
-                        )
+                        ).andWithPrefix("[].", MilestoneResourceDocs.milestoneResourceFields)
                 ));
     }
 
@@ -65,7 +66,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("list of milestones for the authenticated user")
-                        )
+                        ).andWithPrefix("[].", MilestoneResourceDocs.milestoneResourceFields)
                 ));
     }
 
@@ -119,7 +120,7 @@ public class MilestoneControllerDocumentation extends BaseControllerMockMVCTest<
             .andDo(document("milestone/{method-name}",
                 requestFields(
                         fieldWithPath("[]").description("list of milestones that should be saved")
-                )
+                ).andWithPrefix("[].", MilestoneResourceDocs.milestoneResourceFields)
             ));
     }
 

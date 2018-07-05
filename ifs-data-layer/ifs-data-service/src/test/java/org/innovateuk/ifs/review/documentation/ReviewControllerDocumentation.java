@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.review.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.RejectionReasonResourceDocs;
+import org.innovateuk.ifs.documentation.ReviewRejectOutcomeResourceDocs;
 import org.innovateuk.ifs.review.controller.ReviewController;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
@@ -80,6 +82,8 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
                         ),
                         responseFields(fieldWithPath("[]").description("List of reviews"))
                                 .andWithPrefix("[].", reviewFields)
+                                .andWithPrefix("[].rejection.", ReviewRejectOutcomeResourceDocs.reviewRejectOutcomeResourceFields)
+
                 ));
 
         verify(reviewServiceMock, only()).getReviews(userId, competitionId);
@@ -98,6 +102,7 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
                                 parameterWithName("reviewId").description("Id of the review to receive")
                         ),
                         responseFields(reviewFields)
+                        .andWithPrefix("rejection.", ReviewRejectOutcomeResourceDocs.reviewRejectOutcomeResourceFields)
                 ));
 
         verify(reviewServiceMock, only()).getReview(reviewId);
