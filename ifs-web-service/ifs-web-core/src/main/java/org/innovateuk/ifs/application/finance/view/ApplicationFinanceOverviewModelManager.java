@@ -19,16 +19,12 @@ import org.springframework.ui.Model;
 
 import java.util.*;
 
-import static java.util.stream.Collectors.toMap;
-
 @Component
 public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModelPopulator implements FinanceOverviewModelManager {
     private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
-    private QuestionService questionService;
     private FinanceService financeService;
     private FileEntryRestService fileEntryRestService;
-    private FormInputRestService formInputRestService;
 
     @Autowired
     public ApplicationFinanceOverviewModelManager(
@@ -39,11 +35,10 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
             FileEntryRestService fileEntryRestService,
             FormInputRestService formInputRestService
     ) {
-        super(sectionService, formInputRestService);
+        super(sectionService, formInputRestService, questionService);
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
         this.financeService = financeService;
-        this.questionService = questionService;
         this.fileEntryRestService = fileEntryRestService;
     }
 
@@ -83,13 +78,8 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
         List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competitionId, section);
         model.addAttribute("financeSectionChildren", financeSubSectionChildren);
 
-        List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
-
-        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSubSectionChildren.stream()
-                .collect(toMap(
-                        SectionResource::getId,
-                        s -> filterQuestions(s.getQuestions(), allQuestions)
-                ));
+        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap =
+                getFinanceSectionChildrenQuestionsMap(financeSubSectionChildren, competitionId);
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
                 getFinanceSectionChildrenQuestionFormInputs(competitionId, financeSectionChildrenQuestionsMap);
@@ -135,13 +125,8 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
         List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competitionId, section);
         viewModel.setFinanceSectionChildren(financeSubSectionChildren);
 
-        List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
-
-        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSubSectionChildren.stream()
-                .collect(toMap(
-                        SectionResource::getId,
-                        s -> filterQuestions(s.getQuestions(), allQuestions)
-                ));
+        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap =
+                getFinanceSectionChildrenQuestionsMap(financeSubSectionChildren, competitionId);
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
                 getFinanceSectionChildrenQuestionFormInputs(competitionId, financeSectionChildrenQuestionsMap);

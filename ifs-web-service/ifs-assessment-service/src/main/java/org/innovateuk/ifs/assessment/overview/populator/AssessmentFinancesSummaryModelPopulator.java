@@ -48,22 +48,19 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
     private FileEntryRestService fileEntryRestService;
 
     @Autowired
-    private QuestionService questionService;
-
-    @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     private SectionService sectionService;
     private OrganisationService organisationService;
-    private FormInputRestService formInputRestService;
 
     @Autowired
     private FinanceService financeService;
 
     public AssessmentFinancesSummaryModelPopulator(SectionService sectionService,
                                                    OrganisationService organisationService,
-                                                   FormInputRestService formInputRestService) {
-        super(sectionService, formInputRestService);
+                                                   FormInputRestService formInputRestService,
+                                                   QuestionService questionService) {
+        super(sectionService, formInputRestService, questionService);
         this.organisationService = organisationService;
     }
 
@@ -123,13 +120,8 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competitionId, section);
         model.addAttribute("financeSectionChildren", financeSubSectionChildren);
 
-        List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
-
-        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSubSectionChildren.stream()
-                .collect(Collectors.toMap(
-                        SectionResource::getId,
-                        s -> filterQuestions(s.getQuestions(), allQuestions)
-                ));
+        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap =
+                getFinanceSectionChildrenQuestionsMap(financeSubSectionChildren, competitionId);
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
                 getFinanceSectionChildrenQuestionFormInputs(competitionId, financeSectionChildrenQuestionsMap);

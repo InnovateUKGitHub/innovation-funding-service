@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.view;
 
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -21,11 +22,14 @@ public abstract class AbstractFinanceModelPopulator {
 
     private SectionService sectionService;
     private FormInputRestService formInputRestService;
+    private QuestionService questionService;
 
     public AbstractFinanceModelPopulator(SectionService sectionService,
-                                         FormInputRestService formInputRestService) {
+                                         FormInputRestService formInputRestService,
+                                         QuestionService questionService) {
         this.sectionService = sectionService;
         this.formInputRestService = formInputRestService;
+        this.questionService = questionService;
     }
 
     protected List<SectionResource> getFinanceSubSectionChildren(Long competitionId, SectionResource section) {
@@ -56,6 +60,16 @@ public abstract class AbstractFinanceModelPopulator {
 
         removeAllQuestionsNonEmpty(financeSectionChildrenQuestionFormInputs, financeSectionChildrenQuestionsMap);
         return financeSectionChildrenQuestionFormInputs;
+    }
+
+    protected Map<Long, List<QuestionResource>> getFinanceSectionChildrenQuestionsMap(List<SectionResource> financeSubSectionChildren,
+                                                                                      Long competitionId) {
+        List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
+        return financeSubSectionChildren.stream()
+                .collect(toMap(
+                        SectionResource::getId,
+                        s -> filterQuestions(s.getQuestions(), allQuestions)
+                ));
     }
 
     private void removeAllQuestionsNonEmpty(Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs,

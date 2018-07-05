@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toMap;
-
 @Component
 public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinanceModelPopulator {
 
@@ -41,8 +39,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     private CompetitionService competitionService;
     private ApplicationService applicationService;
     private SectionService sectionService;
-    private QuestionService questionService;
-    private FormInputRestService formInputRestService;
     private UserService userService;
     private OrganisationService organisationService;
     private InviteRestService inviteRestService;
@@ -58,14 +54,13 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                                                          UserService userService,
                                                          OrganisationService organisationService,
                                                          InviteRestService inviteRestService) {
-        super(sectionService, formInputRestService);
+        super(sectionService, formInputRestService, questionService);
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
         this.organisationRestService = organisationRestService;
         this.competitionService = competitionService;
         this.applicationService = applicationService;
         this.sectionService = sectionService;
-        this.questionService = questionService;
         this.userService = userService;
         this.organisationService = organisationService;
         this.inviteRestService = inviteRestService;
@@ -105,14 +100,8 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
             sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
             List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competition.getId(), section);
 
-
-            List<QuestionResource> allQuestions = questionService.findByCompetition(competition.getId());
-
-            Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSubSectionChildren.stream()
-                    .collect(toMap(
-                            SectionResource::getId,
-                            s -> filterQuestions(s.getQuestions(), allQuestions)
-                    ));
+            Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap =
+                    getFinanceSectionChildrenQuestionsMap(financeSubSectionChildren, competition.getId());
 
             Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
                     getFinanceSectionChildrenQuestionFormInputs(competition.getId(), financeSectionChildrenQuestionsMap);

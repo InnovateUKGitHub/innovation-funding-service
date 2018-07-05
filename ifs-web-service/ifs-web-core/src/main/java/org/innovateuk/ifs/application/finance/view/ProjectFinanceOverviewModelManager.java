@@ -34,8 +34,7 @@ public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopu
                                               QuestionService questionService,
                                               FormInputRestService formInputRestService,
                                               ProjectFinanceService financeService) {
-        super(sectionService, formInputRestService);
-        this.questionService = questionService;
+        super(sectionService, formInputRestService, questionService);
         this.financeService = financeService;
     }
 
@@ -64,13 +63,9 @@ public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopu
         List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competitionId, section);
         model.addAttribute("financeSectionChildren", financeSubSectionChildren);
 
-        List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
+        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap =
+                getFinanceSectionChildrenQuestionsMap(financeSubSectionChildren, competitionId);
 
-        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSubSectionChildren.stream()
-                .collect(toMap(
-                        SectionResource::getId,
-                        s -> filterQuestions(s.getQuestions(), allQuestions)
-                ));
         model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
 
         List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION).getSuccess();
@@ -110,14 +105,8 @@ public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopu
         List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competitionId, section);
         viewModel.setFinanceSectionChildren(financeSubSectionChildren);
 
-        List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
-
-        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSubSectionChildren.stream()
-                .collect(toMap(
-                        SectionResource::getId,
-                        s -> filterQuestions(s.getQuestions(), allQuestions)
-                ));
-        viewModel.setFinanceSectionChildrenQuestionsMap(financeSectionChildrenQuestionsMap);
+        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap =
+                getFinanceSectionChildrenQuestionsMap(financeSubSectionChildren, competitionId);
 
         List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION).getSuccess();
 
