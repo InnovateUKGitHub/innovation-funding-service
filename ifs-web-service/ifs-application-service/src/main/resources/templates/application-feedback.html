@@ -112,7 +112,7 @@
                                 <div class="grid-row">
                                     <div class="column-two-thirds">
                                         <h3 class="heading-small">
-                                            <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})}"
+                                            <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})} + ${model.originQuery}"
                                             th:text="${question.shortName}" >Project summary</a>
                                         </h3>
                                     </div>
@@ -141,7 +141,7 @@
                         <div class="grid-row">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
-                                    <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})}"
+                                    <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})} + ${model.originQuery}"
                                         th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}">1. Business opportunity</a>
                                 </h3>
                             </div>
