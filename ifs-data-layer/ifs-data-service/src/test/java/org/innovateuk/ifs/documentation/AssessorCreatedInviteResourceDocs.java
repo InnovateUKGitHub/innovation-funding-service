@@ -7,6 +7,8 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class AssessorCreatedInviteResourceDocs {
 
     public static final FieldDescriptor[] assessorCreatedInviteResourceFields = {
+            fieldWithPath("id").description("id of the invitee"),
+            fieldWithPath("inviteId").description("invite Id of the invitee"),
             fieldWithPath("name").description("Name of the invitee"),
             fieldWithPath("innovationAreas").description("Innovation areas of the invitee"),
             fieldWithPath("compliant").description("Flag to signify if the invitee is compliant. An invitee " +

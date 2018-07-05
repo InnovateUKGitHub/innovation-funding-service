@@ -2,6 +2,8 @@ package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.documentation.EditUserResourceDocs;
+import org.innovateuk.ifs.documentation.UserDocs;
+import org.innovateuk.ifs.documentation.UserOrganisationResourceDocs;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.user.resource.*;
@@ -139,6 +141,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         mockMvc.perform(get(buildPaginationUri("/user/internal/active", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
+                        .andWithPrefix("content[].", UserDocs.userResourceFields)
                 ));
     }
 
@@ -149,6 +152,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
+                        .andWithPrefix("content[].", UserDocs.userResourceFields)
                 ));
     }
 
@@ -269,7 +273,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                         ,
                         responseFields(
                                 fieldWithPath("[]").description("List of external users with associated organisations, which contain the search string and match the search category")
-                        )
+                        )                        .andWithPrefix("[].", UserOrganisationResourceDocs.userOrganisationResourceFields)
+
                 ));
 
         verify(userServiceMock).findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);

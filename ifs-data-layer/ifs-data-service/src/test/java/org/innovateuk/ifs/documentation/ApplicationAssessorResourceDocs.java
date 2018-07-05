@@ -26,7 +26,17 @@ public class ApplicationAssessorResourceDocs {
             fieldWithPath("mostRecentAssessmentState").description("Assessment state of the most recent assessment for the user for the requested application"),
             fieldWithPath("totalApplicationsCount").description("Total count of applications assigned to this user for all competitions currently in assessment"),
             fieldWithPath("assignedCount").description("Count of applications assigned to this user for the requested competition including those already submitted"),
-            fieldWithPath("submittedCount").description("Count of applications submitted by this user for the requested competition")
+            fieldWithPath("submittedCount").description("Count of applications submitted by this user for the requested competition"),
+            fieldWithPath("available").description("available"),
+            fieldWithPath("innovationAreas").description("Innovation areas"),
+            fieldWithPath("assigned").description("assigned"),
+            fieldWithPath("accepted").description("accepted"),
+            fieldWithPath("notified").description("notified"),
+            fieldWithPath("started").description("started"),
+            fieldWithPath("submitted").description("submitted"),
+            fieldWithPath("rejected").description("rejected"),
+            fieldWithPath("withdrawn").description("withdrawn"),
+
     };
 
     public static final ApplicationAssessorResourceBuilder applicationAssessorResourceBuilder = newApplicationAssessorResource()

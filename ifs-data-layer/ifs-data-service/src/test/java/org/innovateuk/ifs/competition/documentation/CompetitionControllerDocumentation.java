@@ -5,8 +5,7 @@ import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
-import org.innovateuk.ifs.documentation.CompetitionSearchResultDocs;
+import org.innovateuk.ifs.documentation.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -51,7 +50,9 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                                 parameterWithName("id").description("id of the competition to be retrieved")
                         ),
                         responseFields(competitionResourceFields)
-                ));
+                                .andWithPrefix("termsAndConditions.", TermsAndConditionsResourceDocs.termsAndConditionsResourceFields)
+                        )
+                );
     }
 
     @Test
@@ -65,7 +66,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         "competition/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list of Competitions the authenticated user has access to")
-                        )
+                        ).andWithPrefix("[].", CompetitionResourceDocs.competitionResourceFields)
+                        .andWithPrefix("[].termsAndConditions.", TermsAndConditionsResourceDocs.termsAndConditionsResourceFields)
                 ));
     }
 
@@ -79,7 +81,8 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         "competition/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list of live competitions the authenticated user has access to")
-                        )
+                        ).andWithPrefix("[].", CompetitionSearchResultItemDocs.competitionSearchResultItemFields)
+
                 ));
     }
 
@@ -93,7 +96,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         "competition/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list of competitions in project set up the authenticated user has access to")
-                        )
+                        ).andWithPrefix("[].", CompetitionSearchResultItemDocs.competitionSearchResultItemFields)
                 ));
     }
 
@@ -107,7 +110,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         "competition/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list of upcoming competitions the authenticated user has access to")
-                        )
+                        ).andWithPrefix("[].", CompetitionSearchResultItemDocs.competitionSearchResultItemFields)
                 ));
     }
 
@@ -121,7 +124,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         "competition/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list of non ifs competitions the authenticated user has access to")
-                        )
+                        ).andWithPrefix("[].", CompetitionSearchResultItemDocs.competitionSearchResultItemFields)
                 ));
     }
 

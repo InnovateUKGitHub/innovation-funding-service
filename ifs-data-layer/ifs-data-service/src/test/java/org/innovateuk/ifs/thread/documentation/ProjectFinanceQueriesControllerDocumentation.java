@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.thread.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.PostResourceDocs;
 import org.innovateuk.ifs.project.queries.controller.ProjectFinanceQueriesController;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
@@ -93,7 +94,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
                 .andExpect(content().string(objectMapper.writeValueAsString(55L)))
                 .andExpect(status().isCreated())
                 .andDo(document("project/finance/queries/{method-name}",
-                        requestFields(queryResourceFields())));
+                        requestFields(queryResourceFields()).andWithPrefix("posts[].", PostResourceDocs.postResourceFields)));
     }
 
     @Test

@@ -3,6 +3,8 @@ package org.innovateuk.ifs.project.bankdetails.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
+import org.innovateuk.ifs.documentation.BankDetailsStatusResourceDocs;
+import org.innovateuk.ifs.documentation.OrganisationAddressDocs;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.bankdetails.controller.ProjectBankDetailsController;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
@@ -72,6 +74,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("projectId").description("Id of the project to be updated with bank details")
                         ),
                         requestFields(bankDetailsResourceFields)
+                        .andWithPrefix("organisationAddress.", OrganisationAddressDocs.organisationAddressResourceFields)
                 ))
                 .andReturn();
     }
@@ -107,6 +110,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("projectId").description("Id of the project to be updated with bank details")
                         ),
                         requestFields(bankDetailsResourceFields)
+                        .andWithPrefix("organisationAddress.", OrganisationAddressDocs.organisationAddressResourceFields)
                 ))
                 .andReturn();
     }
@@ -125,6 +129,7 @@ public class ProjectBankDetailsControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
                         ),
                         responseFields(projectBankDetailsStatusSummaryFields)
+                        .andWithPrefix("bankDetailsStatusResources[].", BankDetailsStatusResourceDocs.bankDetailsStatusResourcesFields)
                 ));
     }
 }

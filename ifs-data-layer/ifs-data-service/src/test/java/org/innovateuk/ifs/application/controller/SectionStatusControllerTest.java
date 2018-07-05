@@ -189,6 +189,7 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
                                         fieldWithPath("[0].objectId").description("identifier of the object, for example the FinanceRow.id"),
                                         fieldWithPath("[0].errors").description("list of Error objects, containing the validation messages"),
                                         fieldWithPath("[0].errors[0].fieldName").description("the name of the field that is invalid"),
+                                        fieldWithPath("[0].errors[0].fieldRejectedValue").description("the value of the field that is invalid"),
                                         fieldWithPath("[0].errors[0].errorKey").description("the key to identity the type of validation message"),
                                         fieldWithPath("[0].errors[0].arguments").description("array of arguments used to validate this object")
                                 )

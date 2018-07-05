@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.controller.CompetitionPostSubmissionContro
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.documentation.CompetitionOpenQueryResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -98,7 +99,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("list of open queries")
-                        )
+                        ).andWithPrefix("[].", CompetitionOpenQueryResourceDocs.competitionOpenQueryFields)
                 ));
     }
 
