@@ -4,6 +4,7 @@ group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
 
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'

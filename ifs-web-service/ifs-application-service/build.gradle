@@ -10,21 +10,6 @@ buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
 
-
-buildscript {
-
-    ext['thymeleaf.version'] = '3.0.3.RELEASE'
-
-    ext {
-        thymeleafVersion = ext['thymeleaf.version']
-    }
-
-    repositories {
-        jcenter()
-    }
-
-}
-
 bootRun {
     addResources = false
 }
@@ -33,7 +18,7 @@ group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
-
+apply plugin: 'io.spring.dependency-management'
 
 project.version = applicationServiceVersion
 tagDocker.tag = applicationServiceVersion

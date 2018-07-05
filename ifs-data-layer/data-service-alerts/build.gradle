@@ -11,6 +11,7 @@ group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
 
 def apply(profiles) {
     profiles.each { profile ->

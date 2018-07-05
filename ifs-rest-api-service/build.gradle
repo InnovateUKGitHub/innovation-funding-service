@@ -12,6 +12,7 @@ group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
 
 ext {
     javaLanguageLevel = 1.8

@@ -5,6 +5,7 @@ group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
 
 description = """"""
 tasks.withType(JavaCompile) {

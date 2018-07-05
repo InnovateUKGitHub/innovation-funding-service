@@ -4,6 +4,7 @@ group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
 
 dependencies {
     compile "commons-beanutils:commons-beanutils:1.9.3"

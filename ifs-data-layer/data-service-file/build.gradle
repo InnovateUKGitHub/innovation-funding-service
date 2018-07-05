@@ -5,8 +5,7 @@ group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
-
-ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
+apply plugin: 'io.spring.dependency-management'
 
 bootRepackage {
     enabled = false

@@ -9,6 +9,7 @@ group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
 
 dependencies {
     compile project(":ifs-commons")

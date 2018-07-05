@@ -10,29 +10,15 @@ buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
 
-buildscript {
-
-    ext['thymeleaf.version'] = '3.0.3.RELEASE'
-
-    ext {
-        thymeleafVersion = ext['thymeleaf.version']
-    }
-
-    repositories {
-        jcenter()
-    }
-
-}
-
 group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
 
 bootRun {
     addResources = false
 }
-
 
 def enabled = project.hasProperty('ifs.prototypes.enabled') ? project.property('ifs.prototypes.enabled').toBoolean() : false
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
@@ -51,7 +37,6 @@ createContainer.hostName="prototypes-svc"
 createContainer.containerName="prototypes-svc"
 createContainer.containerId="prototypes-svc"
 createContainer.portBindings = ['1234:8080']
-
 
 prepareDockerBaseInput {
     inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
