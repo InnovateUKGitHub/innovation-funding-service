@@ -25,9 +25,9 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static java.util.Collections.singletonList;
 
 /**
  * Controller backing the Other Documents page

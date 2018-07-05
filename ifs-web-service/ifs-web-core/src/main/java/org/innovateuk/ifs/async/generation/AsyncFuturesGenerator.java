@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.async.executor.AsyncExecutorFactory;
 import org.innovateuk.ifs.async.generation.handler.*;
-import org.innovateuk.ifs.async.util.*;
+import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.util.ExceptionThrowingRunnable;
 import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.application.populator.finance;
 
 import org.innovateuk.ifs.applicant.resource.*;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
-import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.viewmodel.finance.GrantClaimCostViewModel;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -11,6 +10,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,10 +26,10 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionStatusResour
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertThat;

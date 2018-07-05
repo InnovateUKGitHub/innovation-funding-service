@@ -136,7 +136,7 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
         dl.addUserRoles(roles);
     }
 
-    private long getIdFromPathVariable(final Map<String,String> pathVariables, final String pathVariable) {
+    private static long getIdFromPathVariable(final Map<String,String> pathVariables, final String pathVariable) {
         return parseLong(pathVariables.get(pathVariable));
     }
 

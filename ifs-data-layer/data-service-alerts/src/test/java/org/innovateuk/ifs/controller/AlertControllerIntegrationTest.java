@@ -1,17 +1,14 @@
 package org.innovateuk.ifs.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
+import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
-import org.innovateuk.ifs.alert.builder.AlertResourceBuilder;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -20,11 +17,11 @@ import java.util.List;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.basicSecurityUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.junit.Assert.*;
 public class AlertControllerIntegrationTest extends BaseControllerIntegrationTest<AlertController> {
 

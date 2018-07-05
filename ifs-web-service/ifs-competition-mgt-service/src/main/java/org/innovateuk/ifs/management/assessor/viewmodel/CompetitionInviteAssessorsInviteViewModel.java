@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.management.assessor.viewmodel;
 
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
-import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsViewModel;
-import org.innovateuk.ifs.management.assessor.viewmodel.InvitedAssessorRowViewModel;
 
 import java.util.List;
 

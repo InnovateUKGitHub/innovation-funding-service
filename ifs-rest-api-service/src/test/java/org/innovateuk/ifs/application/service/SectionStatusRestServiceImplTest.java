@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 

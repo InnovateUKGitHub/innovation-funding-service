@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.application.builder;
 
-import static java.util.Collections.emptyList;
+import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import static java.util.Collections.emptyList;
 
 public class CompletedPercentageResourceBuilder extends BaseBuilder<CompletedPercentageResource, CompletedPercentageResourceBuilder> {
 

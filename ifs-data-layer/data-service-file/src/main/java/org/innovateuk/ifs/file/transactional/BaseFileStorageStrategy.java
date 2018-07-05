@@ -1,18 +1,21 @@
 package org.innovateuk.ifs.file.transactional;
 
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.domain.FileEntry;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.domain.FileEntry;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
 
+import static java.io.File.separator;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -21,9 +24,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static org.innovateuk.ifs.util.FileFunctions.pathElementsToFile;
 import static org.innovateuk.ifs.util.FileFunctions.pathElementsToPath;
-import static java.io.File.separator;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Represents a component that, given a FileEntry to store, decides how best to store it and stores it on the filesystem.

@@ -3,8 +3,8 @@ package org.innovateuk.ifs.threads.resource;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.ZonedDateTime;
 import java.util.List;

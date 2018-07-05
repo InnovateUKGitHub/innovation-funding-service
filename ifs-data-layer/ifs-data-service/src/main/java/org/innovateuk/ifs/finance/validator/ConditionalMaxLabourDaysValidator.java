@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.finance.validator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

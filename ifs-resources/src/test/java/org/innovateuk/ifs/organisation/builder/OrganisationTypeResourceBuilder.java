@@ -6,8 +6,9 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
  * Builder for OrganisationResource entities.

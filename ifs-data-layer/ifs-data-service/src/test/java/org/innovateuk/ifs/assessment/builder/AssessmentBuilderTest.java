@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuild
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.READY_TO_SUBMIT;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class AssessmentBuilderTest {
 

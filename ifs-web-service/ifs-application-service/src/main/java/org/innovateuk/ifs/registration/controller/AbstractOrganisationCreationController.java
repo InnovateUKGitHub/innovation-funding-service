@@ -18,7 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

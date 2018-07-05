@@ -20,9 +20,9 @@ public class MaterialsHandler extends FinanceRowHandler {
         BigDecimal cost = null;
         Integer quantity = null;
 
-        for(FinanceFormField financeFormField : financeFormFields) {
+        for (FinanceFormField financeFormField : financeFormFields) {
             String fieldValue = financeFormField.getValue();
-            if(fieldValue != null) {
+            if (fieldValue != null) {
                 switch (financeFormField.getCostName()) {
                     case "item":
                         item = fieldValue;
@@ -39,9 +39,8 @@ public class MaterialsHandler extends FinanceRowHandler {
                 }
             }
         }
-
-        if(allNull(id, item, cost, quantity)) {
-        	return null;
+        if (allNull(id, item, cost, quantity)) {
+            return null;
         }
         return new Materials(id, item, cost, quantity);
     }

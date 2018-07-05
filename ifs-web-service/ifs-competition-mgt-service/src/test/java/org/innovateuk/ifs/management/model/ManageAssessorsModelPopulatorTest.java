@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilde
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class ManageAssessorsModelPopulatorTest extends BaseUnitTest {
