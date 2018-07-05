@@ -27,6 +27,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.AjaxResult;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static java.time.ZonedDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessageResourceBundleEntries;
@@ -284,6 +286,12 @@ public class ApplicationAjaxController {
         }
     }
 
+    @GetMapping(value = "/update_time_details")
+    public String updateTimeDetails( Model model ) {
+        model.addAttribute("updateDate", TimeZoneUtil.toUkTimeZone(now()));
+        model.addAttribute("lastUpdatedText", "by you");
+        return "question-type/form-elements :: updateTimeDetailsAjax";
+    }
 
     @GetMapping(value = "/add_cost/{" + QUESTION_ID + "}")
     public String addCostRow(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
