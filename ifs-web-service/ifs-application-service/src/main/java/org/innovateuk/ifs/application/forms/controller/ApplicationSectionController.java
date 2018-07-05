@@ -114,7 +114,6 @@ public class ApplicationSectionController {
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(user.getId(), applicationId, sectionId);
         populateSection(model, form, bindingResult, applicantSection, false, Optional.empty(), false);
-
         return APPLICATION_FORM;
     }
 

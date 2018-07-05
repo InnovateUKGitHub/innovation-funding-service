@@ -40,7 +40,13 @@ public class YourFinancesSectionPopulator extends AbstractSectionPopulator<YourF
     }
 
     @Override
-    public void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, YourFinancesSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly, Optional<Long> applicantOrganisationId) {
+    public void populateNoReturn(ApplicantSectionResource section,
+                                 ApplicationForm form,
+                                 YourFinancesSectionViewModel viewModel,
+                                 Model model,
+                                 BindingResult bindingResult,
+                                 Boolean readOnly,
+                                 Optional<Long> applicantOrganisationId) {
         ApplicantSectionResource yourOrganisation = findChildSectionByType(section, SectionType.ORGANISATION_FINANCES);
         ApplicantSectionResource yourFunding = findChildSectionByType(section, SectionType.FUNDING_FINANCES);
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
