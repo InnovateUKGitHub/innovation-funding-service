@@ -43,7 +43,6 @@ Submit button disabled when application is incomplete
     When the user clicks the button/link               jQuery=button:contains("Mark as complete")
     Then the user should see the element               jQuery=h1:contains("Application details")
     And the user should see a field and summary error  Please enter a future date
-    And the user should see a field and summary error  Please select a research category
     And the user should see a field and summary error  Please tell us if this application is a resubmission or not
 
 Applicant has read only view on review and submit page
