@@ -2,8 +2,11 @@ apply plugin: org.owasp.dependencycheck.gradle.DependencyCheckPlugin
 
 buildscript {
     repositories {
-        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
+
     dependencies {
         classpath 'org.owasp:dependency-check-gradle:3.2.1'
     }

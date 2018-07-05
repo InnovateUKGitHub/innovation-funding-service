@@ -33,8 +33,6 @@ version project.version
 
 apply plugin: 'idea'
 
-
-
 project.version = frontDoorServiceVersion
 tagDocker.tag = frontDoorServiceVersion
 osStageRemote.tag = frontDoorServiceVersion
