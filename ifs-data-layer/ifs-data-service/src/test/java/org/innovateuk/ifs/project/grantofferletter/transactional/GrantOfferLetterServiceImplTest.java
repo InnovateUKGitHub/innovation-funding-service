@@ -843,7 +843,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         assertTrue(result.isSuccess());
 
-        // TODO DW - check order, to ensure MySQL updates done first?
         verify(golWorkflowHandlerMock).grantOfferLetterSent(p, user);
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
     }

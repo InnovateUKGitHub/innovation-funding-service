@@ -137,7 +137,6 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
 
     @Override
     @Transactional
-    // TODO DW - this must be getting called independently by Controller - amend
     public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
 
         Project project = projectRepository.findOne(monitoringOfficer.getProject());

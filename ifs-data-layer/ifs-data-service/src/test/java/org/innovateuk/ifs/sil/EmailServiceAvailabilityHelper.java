@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Component
-public class SilAvailabilityHelper {
+public class EmailServiceAvailabilityHelper {
 
     @Autowired
     private RestSilEmailEndpoint restSilEmailEndpoint;

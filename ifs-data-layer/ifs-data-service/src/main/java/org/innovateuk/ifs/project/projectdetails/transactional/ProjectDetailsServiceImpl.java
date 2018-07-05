@@ -421,7 +421,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
         ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
 
-        // TODO DW - what's going on here?
         inviteContactEmailSendResult.handleSuccessOrFailure(
                 failure -> handleInviteError(projectInvite, failure),
                 success -> handleInviteSuccess(projectInvite)
@@ -458,7 +457,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceFailure(errors);
     }
 
-    // TODO DW - return true?
     private boolean handleInviteSuccess(ProjectInvite projectInvite) {
         projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
         return true;

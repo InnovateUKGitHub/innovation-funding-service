@@ -493,7 +493,6 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
         String customTextHtml = plainTextToHtml(customTextPlain);
 
-        // TODO DW - possibility of partial email send-out.  Need to do all MySQL work first then attempt sending out invites
         return processAnyFailuresOrSucceed(simpleMap(
                 assessmentInviteRepository.getByIdIn(inviteIds),
                 invite -> {

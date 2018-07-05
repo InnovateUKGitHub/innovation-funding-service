@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 /**
- * TODO DW - document this class
+ * Helper class to assert that no database changes have occurred during a given piece of work.
  */
 @Component
 public class DatabaseTestHelper {
@@ -24,14 +25,28 @@ public class DatabaseTestHelper {
     @Value("${flyway.password}")
     private String databasePassword;
 
-    public void assertingNoDatabaseChangesOccur(Runnable runnable) {
+    /**
+     * Assert that no database changes occur durinh the running of the given action
+     */
+    public void assertingNoDatabaseChangesOccur(Runnable action) {
+
+        assertingNoDatabaseChangesOccur(() -> {
+            action.run();
+            return null;
+        });
+    }
+
+    /**
+     * Assert that no database changes occur durinh the running of the given action
+     */
+    public <T> T assertingNoDatabaseChangesOccur(Supplier<T> action) {
 
         try {
             String startingContent = getDatabaseContents();
 
             try {
-                runnable.run();
-            } catch (Exception e) {
+                return action.get();
+            } finally {
                 String endingContent = getDatabaseContents();
 
                 assertThat(startingContent).isEqualTo(endingContent);
@@ -40,7 +55,6 @@ public class DatabaseTestHelper {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private String getDatabaseContents() throws SQLException {

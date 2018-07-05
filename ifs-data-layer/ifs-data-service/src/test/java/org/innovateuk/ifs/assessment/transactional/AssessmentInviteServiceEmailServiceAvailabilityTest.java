@@ -6,13 +6,11 @@ import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.sil.AbstractSilAvailabilityIntegrationTest;
+import org.innovateuk.ifs.sil.AbstractEmailServiceAvailabilityIntegrationTest;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.testutil.DatabaseTestHelper;
 import org.innovateuk.ifs.user.domain.User;
@@ -24,15 +22,12 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
-import static org.innovateuk.ifs.commons.service.ServiceFailureTestHelper.assertThatServiceFailureIs;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
-import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
 /**
- * TODO DW - document this class
+ * Tests that this Service will roll back its work if the email service is not available for sending out emails
  */
-public class AssessmentInviteServiceImplSilAvailabilityTest extends AbstractSilAvailabilityIntegrationTest {
+public class AssessmentInviteServiceEmailServiceAvailabilityTest extends AbstractEmailServiceAvailabilityIntegrationTest {
 
     @Autowired
     private AssessmentInviteService assessmentInviteService;
@@ -61,29 +56,23 @@ public class AssessmentInviteServiceImplSilAvailabilityTest extends AbstractSilA
     @Test
     public void resendInvite() {
 
-        withNewAssessmentInvite(invite -> {
+        withNewAssessmentInvite(invite ->
 
-            withMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
-
-                setupServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+            withServiceUnavailableFromEmailService(() -> {
 
                 testService.doWithinTransaction(this::loginCompAdmin);
 
-                databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
+                return databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
 
                     AssessorInviteSendResource inviteContent = newAssessorInviteSendResource().
                             withSubject("A subject").
                             withContent("Some content").
                             build();
 
-                    ServiceResult<Void> result = assessmentInviteService.resendInvite(invite.getId(), inviteContent);
-
-                    assertThatServiceFailureIs(result, new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, SERVICE_UNAVAILABLE));
-
-                    verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+                    return assessmentInviteService.resendInvite(invite.getId(), inviteContent);
                 });
-            });
-        });
+            })
+        );
     }
 
     private void withNewAssessmentInvite(Consumer<AssessmentInvite> consumer) {

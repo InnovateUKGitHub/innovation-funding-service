@@ -5,9 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.sil.AbstractSilAvailabilityIntegrationTest;
+import org.innovateuk.ifs.sil.AbstractEmailServiceAvailabilityIntegrationTest;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.testutil.DatabaseTestHelper;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -18,16 +16,13 @@ import java.sql.SQLException;
 import java.util.function.Consumer;
 
 import static java.util.Collections.singleton;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
 /**
- * TODO DW - document this class
+ * Tests that this Service will roll back its work if the email service is not available for sending out emails
  */
-public class ApplicationNotificationServiceImplSilAvailabilityTest extends AbstractSilAvailabilityIntegrationTest {
+public class ApplicationNotificationServiceEmailServiceAvailabilityTest extends AbstractEmailServiceAvailabilityIntegrationTest {
 
     @Autowired
     private ApplicationNotificationService applicationNotificationService;
@@ -49,25 +44,18 @@ public class ApplicationNotificationServiceImplSilAvailabilityTest extends Abstr
 
         withIneligibleApplication(ineligibleApplication -> {
 
-            withMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
-
-                setupServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+            withServiceUnavailableFromEmailService(() -> {
 
                 testService.doWithinTransaction(this::loginCompAdmin);
 
-                databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
+                return databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
 
                     ApplicationIneligibleSendResource ineligibleReason = newApplicationIneligibleSendResource().
                             withSubject("An ineligible subject").
                             withMessage("An ineligible reason").
                             build();
 
-                    ServiceResult<Void> result = applicationNotificationService.informIneligible(ineligibleApplication.getId(), ineligibleReason);
-
-                    assertThat(result.isFailure()).isTrue();
-                    assertThat(result.getFailure().is(new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, SERVICE_UNAVAILABLE))).isTrue();
-
-                    verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+                    return applicationNotificationService.informIneligible(ineligibleApplication.getId(), ineligibleReason);
                 });
             });
         });
@@ -81,21 +69,12 @@ public class ApplicationNotificationServiceImplSilAvailabilityTest extends Abstr
             return approvedApplication.getCompetition().getId();
         });
 
-        withMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
-
-            setupServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+        withServiceUnavailableFromEmailService(() -> {
 
             testService.doWithinTransaction(this::loginCompAdmin);
 
-            databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
-
-                ServiceResult<Void> result = applicationNotificationService.notifyApplicantsByCompetition(fundingDecisionApplicationCompetition);
-
-                assertThat(result.isFailure()).isTrue();
-                assertThat(result.getFailure().is(new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, SERVICE_UNAVAILABLE))).isTrue();
-
-                verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
-            });
+            return databaseTestHelper.assertingNoDatabaseChangesOccur(() ->
+                    applicationNotificationService.notifyApplicantsByCompetition(fundingDecisionApplicationCompetition));
         });
     }
 
@@ -109,23 +88,14 @@ public class ApplicationNotificationServiceImplSilAvailabilityTest extends Abstr
             return application;
         });
 
-        withMockSilEmailRestTemplate(mockEmailSilRestTemplate -> {
-
-            setupServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
+        withServiceUnavailableFromEmailService(() -> {
 
             setLoggedInUser(newUserResource().
                     withId(submittedApplication.getLeadApplicant().getId()).
                     build());
 
-            databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
-
-                ServiceResult<Void> result = applicationNotificationService.sendNotificationApplicationSubmitted(submittedApplication.getId());
-
-                assertThat(result.isFailure()).isTrue();
-                assertThat(result.getFailure().is(new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, SERVICE_UNAVAILABLE))).isTrue();
-
-                verifyServiceUnavailableResponseExpectationsFromSendEmailCall(mockEmailSilRestTemplate);
-            });
+            return databaseTestHelper.assertingNoDatabaseChangesOccur(() ->
+                    applicationNotificationService.sendNotificationApplicationSubmitted(submittedApplication.getId()));
         });
     }
 

@@ -113,7 +113,6 @@ public class ReviewServiceImpl implements ReviewService {
                 .forEach(assessor -> getAllApplicationsOnPanel(competitionId)
                         .forEach(application -> createAssessmentReview(assessor, application)));
 
-        // deliberately keeping this separate from creation in anticipation of splitting out notification
         return notifyAllCreated(competitionId);
     }
 
@@ -191,14 +190,12 @@ public class ReviewServiceImpl implements ReviewService {
         List<Review> reviews = reviewRepository.findByTargetCompetitionIdAndActivityState(competitionId, CREATED);
         List<ServiceResult<Void>> notificationResults = simpleMap(reviews, this::notifyInvitation);
 
-        // TODO DW - risk of some emails being sent and a rollback occurring
         return aggregate(notificationResults).andOnSuccessReturnVoid();
     }
 
     private ServiceResult<Void> notifyInvitation(Review review) {
 
         if (!workflowHandler.notifyInvitation(review)) {
-            // TODO DW - return a better error here
             return serviceFailure(internalServerErrorError());
         }
 

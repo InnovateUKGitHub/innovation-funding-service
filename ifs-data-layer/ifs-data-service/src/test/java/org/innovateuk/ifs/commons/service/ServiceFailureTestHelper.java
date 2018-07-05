@@ -7,7 +7,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * TODO DW - document this class
+ * A helper class to make testing of ServiceResult-returning methods more readable and concise.
  */
 public class ServiceFailureTestHelper {
 

@@ -67,7 +67,6 @@ public class InterviewApplicationInviteServiceImpl implements InterviewApplicati
         List<InterviewAssignment> interviewAssignments = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityState(
                 competitionId, InterviewAssignmentState.CREATED);
 
-        // TODO DW - below code needs a rewrite.  Do all MySQL updates first and then send out notifications
         ServiceResult<Void> result = serviceSuccess();
         for (InterviewAssignment assignment : interviewAssignments) {
             if (result.isSuccess()) {

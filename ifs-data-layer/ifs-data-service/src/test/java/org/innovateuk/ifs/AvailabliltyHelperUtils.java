@@ -12,7 +12,8 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
 /**
- * TODO DW - document this class
+ * Test helper class to swap out external dependency components (e.g. integration with email service) for mocks during
+ * integration testing.
  */
 public class AvailabliltyHelperUtils {
 

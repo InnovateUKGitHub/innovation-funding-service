@@ -167,7 +167,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
             ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
 
-            // TODO DW - do this work before sending the email
             inviteContactEmailSendResult.handleSuccessOrFailure(
                     failure -> handleInviteError(roleInvite, failure),
                     success -> handleInviteSuccess(roleInvite)

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
 
-import static org.innovateuk.ifs.user.transactional.AvailabliltyHelperUtils.SERVICE_UNAVAILABLE_RESPONSE_FROM_REST_TEMPLATE;
-import static org.innovateuk.ifs.user.transactional.AvailabliltyHelperUtils.temporarilySwapOutRestTemplateAdaptor;
+import static org.innovateuk.ifs.AvailabliltyHelperUtils.SERVICE_UNAVAILABLE_RESPONSE_FROM_REST_TEMPLATE;
+import static org.innovateuk.ifs.AvailabliltyHelperUtils.temporarilySwapOutRestTemplateAdaptor;
 import static org.innovateuk.ifs.util.Either.left;
 import static org.innovateuk.ifs.util.Either.right;
 import static org.mockito.Matchers.any;
