@@ -97,18 +97,14 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Ooba</td>
-                <td>£200,903,000</td>
-                <td>30%</td>
-                <td>£60,271</td>
-            </tr>
-            <tr>
-                <td>Wordpedia</td>
-                <td>£200,903</td>
-                <td>30%</td>
-                <td>£60,271</td>
-            </tr>
+            <#list financeTotalsTable.industrialOrgs as org>
+                <tr>
+                    <td>${org}</td>
+                    <td>${financeTotalsTable.getTotalEligibleCosts(org)}</td>
+                    <td>${financeTotalsTable.getGrantClaim(org)}</td>
+                    <td>${financeTotalsTable.getTotalGrant(org)}</td>
+                </tr>
+            </#list>
             <tr>
                 <td class="bold">Total (industry)</td>
                 <td class="bold">£200,903</td>
@@ -131,12 +127,14 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Jabbertype</td>
-                <td>£200,903</td>
-                <td>30%</td>
-                <td>£60,271</td>
-            </tr>
+            <#list financeTotalsTable.academicOrgs as org>
+                <tr>
+                    <td>${org}</td>
+                    <td>${financeTotalsTable.getTotalEligibleCosts(org)}</td>
+                    <td>${financeTotalsTable.getGrantClaim(org)}</td>
+                    <td>${financeTotalsTable.getTotalGrant(org)}</td>
+                </tr>
+            </#list>
             <tr>
                 <td class="bold">Total (academic)</td>
                 <td class="bold">£200,903</td>
