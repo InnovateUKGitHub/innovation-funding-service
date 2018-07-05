@@ -251,7 +251,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         ApplicationDataBuilder applicationBuilder = this.applicationDataBuilder.
                 withExistingApplication(applicationData).
                 markApplicationDetailsComplete(applicationLine.markDetailsComplete).
-                markApplicationTeamComplete(applicationLine.markDetailsComplete);
+                markApplicationTeamComplete(applicationLine.markDetailsComplete).
+                markResearchCategoryComplete(applicationLine.markDetailsComplete);
         if (applicationLine.submittedDate != null) {
             applicationBuilder = applicationBuilder.submitApplication();
         }

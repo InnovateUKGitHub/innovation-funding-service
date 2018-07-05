@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation       IFS-338 Update 'Funding level' calculated maximum values and validation
-Suite Setup         the guest user opens the browser
+Suite Setup         The guest user opens the browser
 Suite Teardown      the user closes the browser
 Force Tags          Applicant
 Resource          ../../../../resources/defaultResources.robot
@@ -21,7 +21,8 @@ Maximum funding level available for lead business
     Given we create a new user                               ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  Oscar  business  ${lead_business_email}  ${BUSINESS_TYPE_ID}
     When the user clicks the button/link                     link=Untitled application (start here)
     And the user clicks the button/link                      jQuery=button:contains("Save and return to application overview")
-    And the applicant completes the application details      Application details  Experimental development
+    And the applicant completes the application details      Application details
+    And the user selects Research category                   Experimental development
     And the user fills the organisation details with Project growth table     ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
     When the user fills in the project costs                 labour costs  n/a
     And the user clicks the button/link                      link=Your funding
@@ -62,7 +63,8 @@ Maximum funding level available for RTO lead
     Given we create a new user                                              ${openCompetitionRTO}  Smith  rto  ${lead_rto_email}    ${RTO_TYPE_ID}
     When the user clicks the button/link                                    link=Untitled application (start here)
     And the user clicks the button/link                                     jQuery=button:contains("Save and return to application overview")
-    And the applicant completes the application details for RTO lead appln  Application details  Experimental development
+    And the applicant completes the application details for RTO lead appln  Application details
+    And the user selects Research category                                  Experimental development
     And the user fills in the organisation information                      ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the project costs                                 labour costs  n/a
     When the user clicks the button/link                                    link=Your funding
@@ -136,25 +138,21 @@ the user navigates to the competition overview
     the user navigates to the page    ${frontDoor}
 
 the applicant completes the application details
-    [Arguments]   ${Application_details}         ${Research_category}
+    [Arguments]   ${Application_details}
     the user clicks the button/link              link=${Application_details}
     the user enters text to a text field         css=[id="application.name"]  ${Application_name_business}
     the user clicks the button/link              jQuery=button:contains("Choose your innovation area")
     the user clicks the button twice             jQuery=label[for^="innovationAreaChoice-22"]:contains("Digital manufacturing")
     the user clicks the button/link              jQuery=button:contains(Save)
-    the user fills the other application details questions   ${Research_category}
+    the user fills the other application details questions
 
 the applicant completes the application details for RTO lead appln
-    [Arguments]   ${Application_details}   ${Research_category}
+    [Arguments]   ${Application_details}
     the user clicks the button/link             link=${Application_details}
     the user enters text to a text field        css=[id="application.name"]  ${Application_name_RTO}
-    the user fills the other application details questions   ${Research_category}
+    the user fills the other application details questions
 
 the user fills the other application details questions
-    [Arguments]    ${Research_category}
-    the user clicks the button/link       jQuery=button:contains("research category")
-    the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("${Research_category}")
-    the user clicks the button/link       jQuery=button:contains(Save)
     the user clicks the button twice      css=label[for="application.resubmission-no"]
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
@@ -180,13 +178,10 @@ the user edits the research category
     [Arguments]   ${research_category}
     the user clicks the button/link  jQuery=a:contains("Your finances")
     the user clicks the button/link  link=Application overview
-    the user clicks the button/link  link=Application details
+    the user clicks the button/link  link=Research category
     the user clicks the button/link  jQuery=button:contains("Edit")
-    the user clicks the button/link  jQuery=button:contains("research category")
-    the user clicks the button twice  jQuery=label[for^="researchCategoryChoice"]:contains("${research_category}")
-    the user clicks the button/link  jQuery=button:contains(Save)
-    the user clicks the button/link  jQuery=button:contains("Mark as complete")
-    the user clicks the button/link  link=Application overview
+    the user clicks the button twice  jQuery=label[for^="researchCategory"]:contains("${research_category}")
+    the user clicks the button/link  id=application-question-complete
     the user clicks the button/link  link=Your finances
 
 the user edits the organisation size

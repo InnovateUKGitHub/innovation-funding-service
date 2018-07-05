@@ -20,6 +20,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 
@@ -734,10 +736,10 @@ public class Competition implements ProcessActivity {
     }
 
     public boolean getUseNewApplicantMenu() {
-
         return questions.stream().anyMatch(
-                question -> (question.getQuestionSetupType() == CompetitionSetupQuestionType.APPLICATION_TEAM)
+                question -> (EnumSet.of(APPLICATION_TEAM, RESEARCH_CATEGORY).contains(question.getQuestionSetupType()))
         );
     }
+
 }
 
