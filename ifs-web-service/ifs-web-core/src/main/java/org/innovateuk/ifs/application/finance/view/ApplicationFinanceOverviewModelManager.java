@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.finance.view;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceOverviewViewModel;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
@@ -19,11 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModelPopulator implements FinanceOverviewModelManager {
@@ -35,9 +31,6 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
     private FormInputRestService formInputRestService;
 
     @Autowired
-    private OrganisationService organisationService;
-
-    @Autowired
     public ApplicationFinanceOverviewModelManager(
             ApplicationFinanceRestService applicationFinanceRestService,
             SectionService sectionService,
@@ -46,13 +39,12 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
             FileEntryRestService fileEntryRestService,
             FormInputRestService formInputRestService
     ) {
-        super(sectionService);
+        super(sectionService, formInputRestService);
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
         this.financeService = financeService;
         this.questionService = questionService;
         this.fileEntryRestService = fileEntryRestService;
-        this.formInputRestService = formInputRestService;
     }
 
     public void addFinanceDetails(Model model, Long competitionId, Long applicationId, Optional<Long> organisationId) {
@@ -99,25 +91,8 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
                         s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
 
-        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(
-                competitionId,
-                APPLICATION
-        )
-                .getSuccess();
-
-        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
-                .values().stream().flatMap(a -> a.stream())
-                .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
-
-
-        //Remove all questions without non-empty form inputs.
-        Set<Long> questionsWithoutNonEmptyFormInput = financeSectionChildrenQuestionFormInputs.keySet().stream()
-                .filter(key -> financeSectionChildrenQuestionFormInputs.get(key).isEmpty()).collect(Collectors.toSet());
-        questionsWithoutNonEmptyFormInput.forEach(questionId -> {
-            financeSectionChildrenQuestionFormInputs.remove(questionId);
-            financeSectionChildrenQuestionsMap.keySet().forEach(key -> financeSectionChildrenQuestionsMap.get(key)
-                    .removeIf(questionResource -> questionResource.getId().equals(questionId)));
-        });
+        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
+                getFinanceSectionChildrenQuestionFormInputs(competitionId, financeSectionChildrenQuestionsMap);
 
         model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
         model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
@@ -168,25 +143,8 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
                         s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
 
-        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(
-                competitionId,
-                APPLICATION
-        )
-                .getSuccess();
-
-        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
-                .values().stream().flatMap(a -> a.stream())
-                .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
-
-
-        //Remove all questions without non-empty form inputs.
-        Set<Long> questionsWithoutNonEmptyFormInput = financeSectionChildrenQuestionFormInputs.keySet().stream()
-                .filter(key -> financeSectionChildrenQuestionFormInputs.get(key).isEmpty()).collect(Collectors.toSet());
-        questionsWithoutNonEmptyFormInput.forEach(questionId -> {
-            financeSectionChildrenQuestionFormInputs.remove(questionId);
-            financeSectionChildrenQuestionsMap.keySet().forEach(key -> financeSectionChildrenQuestionsMap.get(key)
-                    .removeIf(questionResource -> questionResource.getId().equals(questionId)));
-        });
+        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
+                getFinanceSectionChildrenQuestionFormInputs(competitionId, financeSectionChildrenQuestionsMap);
 
         viewModel.setFinanceSectionChildrenQuestionsMap(financeSectionChildrenQuestionsMap);
         viewModel.setFinanceSectionChildrenQuestionFormInputs(financeSectionChildrenQuestionFormInputs);

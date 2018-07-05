@@ -31,7 +31,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 
 @Component
 public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceModelPopulator {
@@ -52,21 +51,19 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
     private QuestionService questionService;
 
     @Autowired
-    private FormInputRestService formInputRestService;
-
-    @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     private SectionService sectionService;
     private OrganisationService organisationService;
+    private FormInputRestService formInputRestService;
 
     @Autowired
     private FinanceService financeService;
 
     public AssessmentFinancesSummaryModelPopulator(SectionService sectionService,
-                                                   OrganisationService organisationService) {
-        super(sectionService);
-        this.sectionService = sectionService;
+                                                   OrganisationService organisationService,
+                                                   FormInputRestService formInputRestService) {
+        super(sectionService, formInputRestService);
         this.organisationService = organisationService;
     }
 
@@ -134,21 +131,8 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
                         s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
 
-        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION)
-                .getSuccess();
-
-        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
-                .values().stream().flatMap(a -> a.stream())
-                .collect(Collectors.toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
-
-        //Remove all questions without non-empty form inputs.
-        Set<Long> questionsWithoutNonEmptyFormInput = financeSectionChildrenQuestionFormInputs.keySet().stream()
-                .filter(key -> financeSectionChildrenQuestionFormInputs.get(key).isEmpty()).collect(Collectors.toSet());
-        questionsWithoutNonEmptyFormInput.forEach(questionId -> {
-            financeSectionChildrenQuestionFormInputs.remove(questionId);
-            financeSectionChildrenQuestionsMap.keySet().forEach(key -> financeSectionChildrenQuestionsMap.get(key)
-                    .removeIf(questionResource -> questionResource.getId().equals(questionId)));
-        });
+        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
+                getFinanceSectionChildrenQuestionFormInputs(competitionId, financeSectionChildrenQuestionsMap);
 
         model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
         model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);

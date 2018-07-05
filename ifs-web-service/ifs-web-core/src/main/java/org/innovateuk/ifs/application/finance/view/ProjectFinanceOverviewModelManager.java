@@ -15,14 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopulator implements FinanceOverviewModelManager {
@@ -36,10 +34,8 @@ public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopu
                                               QuestionService questionService,
                                               FormInputRestService formInputRestService,
                                               ProjectFinanceService financeService) {
-        super(sectionService);
-        this.sectionService = sectionService;
+        super(sectionService, formInputRestService);
         this.questionService = questionService;
-        this.formInputRestService = formInputRestService;
         this.financeService = financeService;
     }
 

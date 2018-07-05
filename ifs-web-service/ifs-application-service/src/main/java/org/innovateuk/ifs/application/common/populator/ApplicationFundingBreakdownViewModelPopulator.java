@@ -9,8 +9,6 @@ import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
-import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -27,16 +25,12 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinanceModelPopulator {
@@ -64,7 +58,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                                                          UserService userService,
                                                          OrganisationService organisationService,
                                                          InviteRestService inviteRestService) {
-        super(sectionService);
+        super(sectionService, formInputRestService);
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
         this.organisationRestService = organisationRestService;
@@ -72,7 +66,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         this.applicationService = applicationService;
         this.sectionService = sectionService;
         this.questionService = questionService;
-        this.formInputRestService = formInputRestService;
         this.userService = userService;
         this.organisationService = organisationService;
         this.inviteRestService = inviteRestService;
@@ -92,15 +85,14 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                 applicationId
         );
 
-        Map<FinanceRowType, BigDecimal> financeTotalPerType = organisationFinanceOverview.getTotalPerType();
-        Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
-        BigDecimal financeTotal = organisationFinanceOverview.getTotal();
-
         List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
 
         SectionResource section = sectionService.getFinanceSection(competition.getId());
 
-        final List<String> activeApplicationOrganisationNames = applicationOrganisations.stream().map(OrganisationResource::getName).collect(Collectors.toList());
+        final List<String> activeApplicationOrganisationNames = applicationOrganisations
+                .stream()
+                .map(OrganisationResource::getName)
+                .collect(Collectors.toList());
 
         final List<String> pendingOrganisationNames = pendingInvitations(applicationId).stream()
                 .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
@@ -122,46 +114,29 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                             s -> filterQuestions(s.getQuestions(), allQuestions)
                     ));
 
-            List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(
-                    competition.getId(),
-                    APPLICATION
-            )
-                    .getSuccess();
-
-            Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
-                    .values().stream().flatMap(a -> a.stream())
-                    .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
-
-
-            //Remove all questions without non-empty form inputs.
-            Set<Long> questionsWithoutNonEmptyFormInput = financeSectionChildrenQuestionFormInputs.keySet().stream()
-                    .filter(key -> financeSectionChildrenQuestionFormInputs.get(key).isEmpty()).collect(Collectors.toSet());
-            questionsWithoutNonEmptyFormInput.forEach(questionId -> {
-                financeSectionChildrenQuestionFormInputs.remove(questionId);
-                    financeSectionChildrenQuestionsMap.keySet().forEach(key -> financeSectionChildrenQuestionsMap.get(key)
-                    .removeIf(questionResource -> questionResource.getId().equals(questionId)));
-            });
+            Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs =
+                    getFinanceSectionChildrenQuestionFormInputs(competition.getId(), financeSectionChildrenQuestionsMap);
 
             return new ApplicationFundingBreakdownViewModel(
-                    financeTotalPerType,
-                    financeTotal,
+                    organisationFinanceOverview.getTotalPerType(),
+                    organisationFinanceOverview.getTotal(),
                     applicationOrganisations,
                     section,
                     financeSubSectionChildren,
                     financeSectionChildrenQuestionsMap,
                     financeSectionChildrenQuestionFormInputs,
                     leadOrganisation,
-                    organisationFinances,
+                    organisationFinanceOverview.getFinancesByOrganisation(),
                     pendingOrganisationNames
 
             );
         } else {
             return new ApplicationFundingBreakdownViewModel(
-                    financeTotalPerType,
+                    organisationFinanceOverview.getTotalPerType(),
                     applicationOrganisations,
                     section,
                     leadOrganisation,
-                    organisationFinances,
+                    organisationFinanceOverview.getFinancesByOrganisation(),
                     pendingOrganisationNames
 
             );

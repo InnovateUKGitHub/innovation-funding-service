@@ -73,24 +73,10 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 applicationId
         );
 
-        BigDecimal totalFundingSought = organisationFinanceOverview.getTotalFundingSought();
-        BigDecimal totalOtherFunding = organisationFinanceOverview.getTotalOtherFunding();
-        BigDecimal totalContribution = organisationFinanceOverview.getTotalContribution();
-        BigDecimal financeTotal = organisationFinanceOverview.getTotal();
-
-        Map<FinanceRowType, BigDecimal> financeTotalPerType = organisationFinanceOverview.getTotalPerType();
-        Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
-
-        List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
-
         SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
-        final boolean hasFinanceSection;
-        final Long financeSectionId;
-        if (financeSection == null) {
-            hasFinanceSection = false;
-            financeSectionId = null;
-        } else {
-            hasFinanceSection = true;
+        final boolean hasFinanceSection = financeSection != null;
+        Long financeSectionId = null;
+        if (hasFinanceSection) {
             financeSectionId = financeSection.getId();
         }
 
@@ -101,30 +87,23 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
         Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
 
-        OrganisationResource userOrganisation = null;
-
-        if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR)) {
-            ProcessRoleResource userProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
-            userOrganisation = organisationService.getOrganisationById(userProcessRole.getOrganisationId());
-        }
-
         return new ApplicationFinanceSummaryViewModel(
                 application,
                 hasFinanceSection,
-                financeTotalPerType,
-                applicationOrganisations,
+                organisationFinanceOverview.getTotalPerType(),
+                getApplicationOrganisations(applicationId),
                 sectionsMarkedAsComplete,
                 financeSectionId,
                 leadOrganisation,
                 competition,
-                userOrganisation,
-                organisationFinances,
-                totalFundingSought,
-                totalOtherFunding,
-                totalContribution,
-                financeTotal,
+                getUserOrganisation(user, applicationId),
+                organisationFinanceOverview.getFinancesByOrganisation(),
+                organisationFinanceOverview.getTotalFundingSought(),
+                organisationFinanceOverview.getTotalOtherFunding(),
+                organisationFinanceOverview.getTotalContribution(),
+                organisationFinanceOverview.getTotal(),
                 completedSectionsByOrganisation
-                );
+        );
     }
 
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {
@@ -136,6 +115,17 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 userOrganisation.getId(),
                 new HashSet<>()
         );
+    }
+
+    private OrganisationResource getUserOrganisation(UserResource user, Long applicationId) {
+        OrganisationResource userOrganisation = null;
+
+        if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR)) {
+            ProcessRoleResource userProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
+            userOrganisation = organisationService.getOrganisationById(userProcessRole.getOrganisationId());
+        }
+
+        return userOrganisation;
     }
 
 }

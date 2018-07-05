@@ -5,18 +5,27 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 public abstract class AbstractFinanceModelPopulator {
 
     private SectionService sectionService;
+    private FormInputRestService formInputRestService;
 
-    public AbstractFinanceModelPopulator(SectionService sectionService) {
+    public AbstractFinanceModelPopulator(SectionService sectionService,
+                                         FormInputRestService formInputRestService) {
         this.sectionService = sectionService;
+        this.formInputRestService = formInputRestService;
     }
 
     protected List<SectionResource> getFinanceSubSectionChildren(Long competitionId, SectionResource section) {
@@ -32,6 +41,32 @@ public abstract class AbstractFinanceModelPopulator {
                 }
         );
         return financeSubSectionChildren;
+    }
+
+    protected Map<Long, List<FormInputResource>> getFinanceSectionChildrenQuestionFormInputs(Long competitionId,
+                                                                                             Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap) {
+        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(
+                competitionId,
+                APPLICATION
+        ).getSuccess();
+
+        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
+                .values().stream().flatMap(a -> a.stream())
+                .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
+
+        removeAllQuestionsNonEmpty(financeSectionChildrenQuestionFormInputs, financeSectionChildrenQuestionsMap);
+        return financeSectionChildrenQuestionFormInputs;
+    }
+
+    private void removeAllQuestionsNonEmpty(Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs,
+                                            Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap) {
+        Set<Long> questionsWithoutNonEmptyFormInput = financeSectionChildrenQuestionFormInputs.keySet().stream()
+                .filter(key -> financeSectionChildrenQuestionFormInputs.get(key).isEmpty()).collect(Collectors.toSet());
+        questionsWithoutNonEmptyFormInput.forEach(questionId -> {
+            financeSectionChildrenQuestionFormInputs.remove(questionId);
+            financeSectionChildrenQuestionsMap.keySet().forEach(key -> financeSectionChildrenQuestionsMap.get(key)
+                    .removeIf(questionResource -> questionResource.getId().equals(questionId)));
+        });
     }
 
     protected List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list) {
