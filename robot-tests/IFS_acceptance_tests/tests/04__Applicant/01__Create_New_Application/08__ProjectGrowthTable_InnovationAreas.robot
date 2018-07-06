@@ -351,7 +351,10 @@ the user should see the dates in full format
     the user should see the element   jQuery=td:contains("Allocate assessors") ~ td:contains("4 ${tomorrowMonthWord} ${nextyear}")
 
 the user should see that the funding depends on the research area
-    the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a") a:contains("research")
+    the user clicks the button/link  link=Your funding
+    the user should see the element  jQuery=li:contains("you must select a") a:contains("research category")
+    the user clicks the button/link  link=Your finances
+
 
 the user should see his finances empty
     the user should see the element  jQuery=thead:contains("Total project costs") ~ *:contains("£0")

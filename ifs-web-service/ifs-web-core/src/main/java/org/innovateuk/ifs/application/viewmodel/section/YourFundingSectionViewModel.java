@@ -12,6 +12,10 @@ import java.util.Optional;
  */
 public class YourFundingSectionViewModel extends AbstractSectionViewModel {
     private boolean complete;
+    private boolean researchCategoryComplete;
+    private boolean yourOrganisationComplete;
+    private long researchCategoryQuestionId;
+    private long yourOrganisationSectionId;
 
     public YourFundingSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
         super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
@@ -23,6 +27,42 @@ public class YourFundingSectionViewModel extends AbstractSectionViewModel {
 
     public void setComplete(boolean complete) {
         this.complete = complete;
+    }
+
+    public boolean isFundingSectionLocked() {
+        return !(this.researchCategoryComplete && this.yourOrganisationComplete);
+    }
+
+    public boolean isResearchCategoryComplete() {
+        return researchCategoryComplete;
+    }
+
+    public void setResearchCategoryComplete(boolean researchCategoryComplete) {
+        this.researchCategoryComplete = researchCategoryComplete;
+    }
+
+    public boolean isYourOrganisationComplete() {
+        return yourOrganisationComplete;
+    }
+
+    public void setYourOrganisationComplete(boolean yourOrganisationComplete) {
+        this.yourOrganisationComplete = yourOrganisationComplete;
+    }
+
+    public long getResearchCategoryQuestionId() {
+        return researchCategoryQuestionId;
+    }
+
+    public void setResearchCategoryQuestionId(long researchCategoryQuestionId) {
+        this.researchCategoryQuestionId = researchCategoryQuestionId;
+    }
+
+    public long getYourOrganisationSectionId() {
+        return yourOrganisationSectionId;
+    }
+
+    public void setYourOrganisationSectionId(long yourOrganisationSectionId) {
+        this.yourOrganisationSectionId = yourOrganisationSectionId;
     }
 }
 

@@ -46,7 +46,7 @@ public class AssessorCompetitionForInterviewDashboardModelPopulator {
         this.organisationService = organisationService;
     }
 
-    public AssessorCompetitionForInterviewDashboardViewModel populateModel(long competitionId, long userId) {
+    public AssessorCompetitionForInterviewDashboardViewModel populateModel(long competitionId, long userId, String originQuery) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
         List<AssessorCompetitionForInterviewDashboardApplicationViewModel> applications = getApplications(userId, competitionId);
@@ -55,8 +55,8 @@ public class AssessorCompetitionForInterviewDashboardModelPopulator {
                 competition.getId(),
                 competition.getName(),
                 competition.getLeadTechnologistName(),
-                applications
-        );
+                applications,
+                originQuery);
     }
 
     private List<AssessorCompetitionForInterviewDashboardApplicationViewModel> getApplications(long userId, long competitionId) {

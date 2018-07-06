@@ -33,6 +33,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 @Component
 public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationModelPopulator {
@@ -142,6 +143,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                 interviewFeedbackViewModel,
                 projectWithdrawn,
                 ApplicationSummaryOrigin.valueOf(origin),
+                buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams),
                 buildBackUrl(ApplicationSummaryOrigin.valueOf(origin), queryParams, "competitionId", "projectId")
         );
     }
