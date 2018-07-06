@@ -27,6 +27,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
@@ -124,8 +125,10 @@ public class SummaryViewModelPopulator {
 
         ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
 
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
+/*        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);*/
+
+        Optional<OrganisationResource> userOrganisation = getUserOrganisation(applicationId, user);
 
         List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
                 competition.getId(), APPLICATION).getSuccess();
@@ -202,6 +205,16 @@ public class SummaryViewModelPopulator {
                 true,
                 applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), competition.getId())
         );
+    }
+
+    private Optional<OrganisationResource> getUserOrganisation(long applicationId, UserResource user) {
+
+        if (user.hasRole(Role.SUPPORT)) {
+            return Optional.of(applicationService.getLeadOrganisation(applicationId));
+        } else {
+            List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+            return organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
+        }
     }
 
     private ApplicationOverviewCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {

@@ -13,6 +13,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
@@ -59,7 +60,9 @@ public class ApplicationSummaryViewModelPopulator {
 
         SummaryViewModel summaryViewModel = summaryViewModelPopulator.populate(applicationId, user, form);
 
-        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
+        boolean supportUser = user.hasRole(Role.SUPPORT);
+
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application) || supportUser;
 
         return new ApplicationSummaryViewModel(
                 application,

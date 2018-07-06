@@ -4,6 +4,7 @@ package org.innovateuk.ifs.application.viewmodel.forminput;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.user.resource.Role;
 
 /**
  * View model for text area form input.
@@ -44,7 +45,12 @@ public class TextAreaInputViewModel extends AbstractFormInputViewModel {
     }
 
     public boolean isRespondedByCurrentUser() {
-        return applicantResponse.getApplicant().isSameUser(currentApplicant);
+
+        if (assignButtonsViewModel.getCurrentUser().hasRole(Role.SUPPORT)) {
+            return false;
+        } else {
+            return applicantResponse.getApplicant().isSameUser(currentApplicant);
+        }
     }
 
     public boolean isCanMarkAsComplete() {

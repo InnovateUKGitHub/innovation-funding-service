@@ -96,8 +96,12 @@
                     </thead>
                     <tbody>
                         <tr class="filtered-result" th:each="row, iterStat : ${model.applications}">
-                            <td>
+<!--                            <td>
                                 <a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
+                                   th:text="${row.id}">194731</a>
+                            </td>-->
+                            <td>
+                                <a th:href="'/application/' + ${row.id} + '/summary'"
                                    th:text="${row.id}">194731</a>
                             </td>
                             <td th:text="${row.projectTitle}">Machine learning in robots</td>
