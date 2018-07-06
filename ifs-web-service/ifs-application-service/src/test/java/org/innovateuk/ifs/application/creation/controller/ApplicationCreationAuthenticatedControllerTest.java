@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RTO;
@@ -111,7 +111,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
         QuestionResource applicationTeamQuestion = newQuestionResource().build();
 
         when(applicationService.createApplication(competitionId, loggedInUser.getId(), organisationId, "")).thenReturn(application);
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
         when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(false);
 
@@ -121,7 +121,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
                         applicationTeamQuestion.getId())));
 
         verify(applicationService, only()).createApplication(competitionId, loggedInUser.getId(), organisationId, "");
-        verify(questionRestService, only()).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM);
+        verify(questionRestService, only()).getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM);
         verify(userService, only()).userHasApplicationForCompetition(loggedInUser.getId(), competitionId);
     }
 
@@ -132,7 +132,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
         ApplicationResource application = newApplicationResource().build();
 
         when(applicationService.createApplication(competitionId, loggedInUser.getId(), competitionId, "")).thenReturn(application);
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
                 APPLICATION_TEAM))
                 .thenReturn(restFailure(notFoundError(QuestionResource.class, competitionId, APPLICATION_TEAM)));
         when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(false);
@@ -142,7 +142,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
                 .andExpect(redirectedUrl(format("/application/%s/team", application.getId())));
 
         verify(applicationService, only()).createApplication(competitionId, loggedInUser.getId(), competitionId, "");
-        verify(questionRestService, only()).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM);
+        verify(questionRestService, only()).getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM);
         verify(userService, only()).userHasApplicationForCompetition(loggedInUser.getId(), competitionId);
     }
 
@@ -165,7 +165,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
         QuestionResource applicationTeamQuestion = newQuestionResource().build();
 
         when(applicationService.createApplication(competitionId, loggedInUser.getId(), organisationId, "")).thenReturn(application);
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
 
         mockMvc.perform(post("/application/create-authenticated/{competitionId}", competitionId)
@@ -175,7 +175,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
                         applicationTeamQuestion.getId())));
 
         verify(applicationService, only()).createApplication(competitionId, loggedInUser.getId(), organisationId, "");
-        verify(questionRestService, only()).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM);
+        verify(questionRestService, only()).getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM);
     }
 
     @Test
@@ -185,7 +185,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
         ApplicationResource application = newApplicationResource().build();
 
         when(applicationService.createApplication(competitionId, loggedInUser.getId(), competitionId, "")).thenReturn(application);
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
                 APPLICATION_TEAM))
                 .thenReturn(restFailure(notFoundError(QuestionResource.class, competitionId, APPLICATION_TEAM)));
 
@@ -195,7 +195,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
                 .andExpect(redirectedUrl(format("/application/%s/team", application.getId())));
 
         verify(applicationService, only()).createApplication(competitionId, loggedInUser.getId(), competitionId, "");
-        verify(questionRestService, only()).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM);
+        verify(questionRestService, only()).getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM);
     }
 
     @Test

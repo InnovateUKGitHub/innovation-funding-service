@@ -164,7 +164,7 @@ Collaborator can see that Research area is not selected
     [Documentation]  INFUND-6823
     [Tags]
     Given the user navigates to Your-finances page  Assign test
-    Then The user should see the element  jQuery=p:contains("The lead applicant must select a research category in application details")
+    Then The user should see the element  jQuery=.list li:contains("The lead applicant must select a research category")
 
 Lead selects Research category
     [Documentation]  INFUND-6823
@@ -172,13 +172,10 @@ Lead selects Research category
     [Setup]  log in as a different user   ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user navigates to Your-finances page  Assign test
-    Then the user should see the element  jQuery=p:contains("You must select a research category in"):contains("application details")
+    Then the user should see the element  jQuery=p:contains("You must select a"):contains("research category")
     When the user navigates to the page   ${DASHBOARD_URL}
     Then the user clicks the button/link  link=Assign test
-    When the user clicks the button/link  link=Application details
-    And the user clicks the button/link   jQuery=button:contains("Choose your research category")
-    Then the user should see the element  jQuery=legend:contains("Research category")
-    And the user fills out the research category
+    When the user selects Research category  Feasibility studies
 
 Lead marks finances as complete
     [Documentation]  INFUND-3016
@@ -186,7 +183,7 @@ Lead marks finances as complete
     [Tags]
     Given the user navigates to the page                 ${DASHBOARD_URL}
     And the user clicks the button/link                  jQuery=.progress-list a:contains("Assign test")
-    Then the applicant completes the application details  Assign test  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
+    Then the applicant completes the application details  Assign test  ${tomorrowday}  ${month}  ${nextyear}
     When the user navigates to Your-finances page         Assign test
     Then the user should see the element                 link=Your project costs
     And the user should see the element                  link=Your organisation
@@ -225,7 +222,7 @@ The question is disabled on the summary page for other collaborators
     [Tags]
     Given the user navigates to the page     ${SUMMARY_URL}
     When the user clicks the button/link     jQuery=button:contains("Public description")
-    Then the user should see the element     css=#collapsible-3 .question .readonly
+    Then the user should see the element     css=#collapsible-4 .question .readonly
     And the user should not see the element  jQuery=button:contains("Assign to lead for review")
 
 Lead applicant should be able to remove the partner organisation
