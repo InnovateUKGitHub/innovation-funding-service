@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewMo
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;

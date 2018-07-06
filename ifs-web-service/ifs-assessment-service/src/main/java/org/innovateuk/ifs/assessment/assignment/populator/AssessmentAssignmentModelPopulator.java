@@ -8,9 +8,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -26,18 +24,15 @@ public class AssessmentAssignmentModelPopulator {
     private AssessmentService assessmentService;
     private ProcessRoleService processRoleService;
     private FormInputResponseRestService formInputResponseRestService;
-    private OrganisationRestService organisationRestService;
     private OrganisationService organisationService;
 
     public AssessmentAssignmentModelPopulator(AssessmentService assessmentService,
                                               ProcessRoleService processRoleService,
                                               FormInputResponseRestService formInputResponseRestService,
-                                              OrganisationRestService organisationRestService,
                                               OrganisationService organisationService) {
         this.assessmentService = assessmentService;
         this.processRoleService = processRoleService;
         this.formInputResponseRestService = formInputResponseRestService;
-        this.organisationRestService = organisationRestService;
         this.organisationService = organisationService;
     }
 

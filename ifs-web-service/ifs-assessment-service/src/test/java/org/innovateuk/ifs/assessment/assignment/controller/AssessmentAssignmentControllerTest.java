@@ -29,7 +29,6 @@ import org.springframework.validation.BindingResult;
 import java.util.*;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
 import static java.util.Comparator.comparingLong;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;

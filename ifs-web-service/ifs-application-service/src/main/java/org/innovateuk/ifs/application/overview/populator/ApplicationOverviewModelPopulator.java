@@ -32,7 +32,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CollectionFunctions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -51,39 +50,41 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 @Component
 public class ApplicationOverviewModelPopulator extends AbstractApplicationModelPopulator {
 
-    @Autowired
     private AssignButtonsPopulator assignButtonsPopulator;
-
-    @Autowired
     private CompetitionService competitionService;
-
-    @Autowired
     private ProcessRoleService processRoleService;
-
-    @Autowired
     private OrganisationService organisationService;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private InviteRestService inviteRestService;
-
-    @Autowired
     private ProjectService projectService;
-
-    @Autowired
     private CategoryRestService categoryRestService;
-
-    @Autowired
     private ApplicantRestService applicantRestService;
-
     private SectionService sectionService;
     private QuestionService questionService;
 
     public ApplicationOverviewModelPopulator(SectionService sectionService,
-                                             QuestionService questionService) {
+                                             QuestionService questionService,
+                                             AssignButtonsPopulator assignButtonsPopulator,
+                                             CompetitionService competitionService,
+                                             ProcessRoleService processRoleService,
+                                             OrganisationService organisationService,
+                                             UserService userService,
+                                             InviteRestService inviteRestService,
+                                             ProjectService projectService,
+                                             CategoryRestService categoryRestService,
+                                             ApplicantRestService applicantRestService) {
         super(sectionService, questionService);
+        this.questionService = questionService;
+        this.sectionService = sectionService;
+        this.assignButtonsPopulator = assignButtonsPopulator;
+        this.competitionService = competitionService;
+        this.processRoleService = processRoleService;
+        this.organisationService = organisationService;
+        this.userService = userService;
+        this.inviteRestService = inviteRestService;
+        this.projectService = projectService;
+        this.categoryRestService = categoryRestService;
+        this.applicantRestService = applicantRestService;
     }
     
     public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId){

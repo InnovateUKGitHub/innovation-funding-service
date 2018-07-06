@@ -25,7 +25,6 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 @Component
 public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopulator implements FinanceOverviewModelManager {
     private SectionService sectionService;
-    private QuestionService questionService;
     private FormInputRestService formInputRestService;
     private ProjectFinanceService financeService;
 
@@ -36,6 +35,8 @@ public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopu
                                               ProjectFinanceService financeService) {
         super(sectionService, formInputRestService, questionService);
         this.financeService = financeService;
+        this.sectionService = sectionService;
+        this.formInputRestService = formInputRestService;
     }
 
     public void addFinanceDetails(Model model, Long competitionId, Long projectId, Optional<Long> organisationId) {

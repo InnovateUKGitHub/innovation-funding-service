@@ -23,45 +23,44 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 
 @Component
 public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceModelPopulator {
 
-    @Autowired
     private CompetitionService competitionService;
-
-    @Autowired
     private AssessmentService assessmentService;
-
-    @Autowired
     private ProcessRoleService processRoleService;
-
-    @Autowired
     private FileEntryRestService fileEntryRestService;
-
-    @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
-
     private SectionService sectionService;
     private OrganisationService organisationService;
-
-    @Autowired
     private FinanceService financeService;
 
-    public AssessmentFinancesSummaryModelPopulator(SectionService sectionService,
+    public AssessmentFinancesSummaryModelPopulator(CompetitionService competitionService,
+                                                   AssessmentService assessmentService,
+                                                   ProcessRoleService processRoleService,
+                                                   FileEntryRestService fileEntryRestService,
+                                                   ApplicationFinanceRestService applicationFinanceRestService,
+                                                   FinanceService financeService,
+                                                   SectionService sectionService,
                                                    OrganisationService organisationService,
                                                    FormInputRestService formInputRestService,
                                                    QuestionService questionService) {
         super(sectionService, formInputRestService, questionService);
         this.organisationService = organisationService;
+        this.sectionService = sectionService;
+        this.competitionService = competitionService;
+        this.assessmentService = assessmentService;
+        this.processRoleService = processRoleService;
+        this.fileEntryRestService = fileEntryRestService;
+        this.applicationFinanceRestService = applicationFinanceRestService;
+        this.financeService = financeService;
     }
 
     public AssessmentFinancesSummaryViewModel populateModel(Long assessmentId, Model model) {

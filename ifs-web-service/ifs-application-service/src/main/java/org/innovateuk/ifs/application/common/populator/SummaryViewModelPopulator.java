@@ -1,12 +1,8 @@
 package org.innovateuk.ifs.application.common.populator;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -29,17 +25,13 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
-import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component

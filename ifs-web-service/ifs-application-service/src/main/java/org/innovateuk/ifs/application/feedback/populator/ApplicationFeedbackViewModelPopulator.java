@@ -16,7 +16,6 @@ import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -27,19 +26,13 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationModelPopulator {
@@ -55,7 +48,6 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
     private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
     private AssessmentRestService assessmentRestService;
     private SectionService sectionService;
-    private QuestionService questionService;
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
@@ -87,7 +79,6 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         this.financeService = financeService;
         this.assessmentRestService = assessmentRestService;
         this.sectionService = sectionService;
-        this.questionService = questionService;
         this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
         this.applicationFinanceSummaryViewModelPopulator = applicationFinanceSummaryViewModelPopulator;
         this.applicationFundingBreakdownViewModelPopulator = applicationFundingBreakdownViewModelPopulator;

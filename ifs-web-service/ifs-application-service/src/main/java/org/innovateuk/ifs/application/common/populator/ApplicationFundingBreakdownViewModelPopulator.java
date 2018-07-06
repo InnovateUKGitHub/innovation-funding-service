@@ -84,16 +84,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
 
         SectionResource section = sectionService.getFinanceSection(competition.getId());
 
-        final List<String> activeApplicationOrganisationNames = applicationOrganisations
-                .stream()
-                .map(OrganisationResource::getName)
-                .collect(Collectors.toList());
-
-        final List<String> pendingOrganisationNames = pendingInvitations(applicationId).stream()
-                .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
-                .distinct()
-                .filter(orgName -> StringUtils.hasText(orgName)
-                        && activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName))).collect(Collectors.toList());
+        final List<String> pendingOrganisationNames = getPendingOrganisationNames(applicationOrganisations, applicationId);
 
         // Finance Section will be null for EOI Competitions
         if (section != null) {
@@ -145,5 +136,19 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                 success -> success.stream().flatMap(item -> item.getInviteResources().stream())
                         .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
                         .collect(Collectors.toList()));
+    }
+
+    private List<String> getPendingOrganisationNames(List<OrganisationResource> applicationOrganisations, Long applicationId) {
+        final List<String> activeApplicationOrganisationNames = applicationOrganisations
+                .stream()
+                .map(OrganisationResource::getName)
+                .collect(Collectors.toList());
+
+        return pendingInvitations(applicationId).stream()
+                .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
+                .distinct()
+                .filter(orgName -> StringUtils.hasText(orgName)
+                        && activeApplicationOrganisationNames.stream().noneMatch(organisationName -> organisationName.equals(orgName))).collect(Collectors.toList());
+
     }
 }
