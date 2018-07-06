@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -18,6 +17,7 @@ import org.innovateuk.ifs.form.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -55,7 +55,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     }
 
     private static String number = "number";
-    private static String shortTitle = CompetitionSetupQuestionType.SCOPE.getShortName();
+    private static String shortTitle = QuestionSetupType.SCOPE.getShortName();
     private static String newShortTitle = "ScopeTwo";
     private static String title = "title";
     private static String subTitle = "subTitle";
@@ -67,7 +67,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     private static String assessmentGuidanceTitle = "assessmentGuidanceTitle";
     private static Integer assessmentMaxWords = 2;
     private static Integer scoreTotal = 10;
-    private static CompetitionSetupQuestionType competitionSetupQuestionType = CompetitionSetupQuestionType.SCOPE;
+    private static QuestionSetupType questionSetupType = QuestionSetupType.SCOPE;
 
     @Mock
     private QuestionRepository questionRepository;
@@ -131,7 +131,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withDescription(subTitle)
                 .withShortName(shortTitle)
                 .withName(title)
-                .withQuestionSetupType(competitionSetupQuestionType)
+                .withQuestionSetupType(questionSetupType)
                 .withId(questionId)
                 .build();
 
@@ -162,7 +162,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getShortTitle(), shortTitle);
         assertEquals(resource.getTitle(), title);
         assertEquals(resource.getGuidance(), guidance);
-        assertEquals(resource.getType(), CompetitionSetupQuestionType.SCOPE);
+        assertEquals(resource.getType(), QuestionSetupType.SCOPE);
         assertEquals(resource.getAppendixGuidance(), fileUploadGuidance);
         assertEquals(resource.getAllowedFileTypes(), asSet(PDF, SPREADSHEET));
         verify(guidanceRowMapper).mapToResource(guidanceRows);
@@ -371,7 +371,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 .withShortTitle(newShortTitle)
                 .withSubTitle(subTitle)
                 .withQuestionId(questionId)
-                .withType(CompetitionSetupQuestionType.APPLICATION_DETAILS)
+                .withType(QuestionSetupType.APPLICATION_DETAILS)
                 .withAssessmentGuidance(assessmentGuidanceAnswer)
                 .withAssessmentGuidanceTitle(assessmentGuidanceTitle)
                 .withAssessmentMaxWords(assessmentMaxWords)
@@ -383,7 +383,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         Question question = newQuestion().
                 withShortName(oldShortTitle)
-                .withQuestionSetupType(CompetitionSetupQuestionType.APPLICATION_DETAILS).build();
+                .withQuestionSetupType(QuestionSetupType.APPLICATION_DETAILS).build();
 
         FormInput questionFormInput = newFormInput().build();
         FormInput appendixFormInput = newFormInput().build();
@@ -417,7 +417,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         when(guidanceRowMapper.mapToDomain(anyList())).thenReturn(new ArrayList<>());
 
         Question question = newQuestion().
-                withShortName(CompetitionSetupQuestionType.SCOPE.getShortName()).build();
+                withShortName(QuestionSetupType.SCOPE.getShortName()).build();
 
         FormInput questionFormInput = newFormInput().build();
         FormInput appendixFormInput = newFormInput().build();
