@@ -13,6 +13,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -42,7 +43,7 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
         this.fileEntryRestService = fileEntryRestService;
     }
 
-    public void addFinanceDetails(Model model, Long competitionId, Long applicationId, Optional<Long> organisationId) {
+    public void addFinanceDetails(Model model, Long competitionId, Long applicationId) {
         addFinanceSections(competitionId, model);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
                 financeService,

@@ -17,7 +17,6 @@ import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
@@ -39,7 +38,7 @@ public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopu
         this.formInputRestService = formInputRestService;
     }
 
-    public void addFinanceDetails(Model model, Long competitionId, Long projectId, Optional<Long> organisationId) {
+    public void addFinanceDetails(Model model, Long competitionId, Long projectId) {
         addFinanceSections(competitionId, model);
         OrganisationFinanceOverview organisationFinanceOverview = new OrganisationProjectFinanceOverviewImpl(financeService, projectId);
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
