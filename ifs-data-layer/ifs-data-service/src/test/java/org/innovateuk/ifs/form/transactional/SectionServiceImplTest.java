@@ -1,23 +1,22 @@
 package org.innovateuk.ifs.form.transactional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.resource.SectionResource;
-
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;

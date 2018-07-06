@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
-import static java.util.Collections.sort;
 
 /**
  * Implementing class for {@link ApplicationCountSummaryRestService}, for the action on retrieving application statistics.

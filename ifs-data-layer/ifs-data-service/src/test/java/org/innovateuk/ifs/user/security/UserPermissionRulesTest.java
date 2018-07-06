@@ -53,7 +53,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     private ApplicationRepository applicationRepositoryMock;
 
     @Test
-    public void testAnyoneCanViewThemselves() {
+    public void anyoneCanViewThemselves() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {
                 if (user.equals(otherUser)) {
@@ -66,7 +66,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testInternalUsersCanViewEveryone() {
+    public void internalUsersCanViewEveryone() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {
                 if (allInternalUsers.contains(user)) {
@@ -93,7 +93,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testSystemRegistrationUserCanViewEveryone() {
+    public void systemRegistrationUserCanViewEveryone() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {
                 if (user.equals(systemRegistrationUser())) {
@@ -106,7 +106,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testSystemRegistrationUserCanCreateUsers() {
+    public void systemRegistrationUserCanCreateUsers() {
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanCreateUsers(newUserResource().build(), user));
@@ -117,7 +117,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testSystemRegistrationUserCanCreateUsers_UserRegistrationResource() {
+    public void systemRegistrationUserCanCreateUsers_UserRegistrationResource() {
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanCreateUsers(newUserRegistrationResource().build(), user));
@@ -128,7 +128,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testSystemRegistrationUserCanActivateUsers() {
+    public void systemRegistrationUserCanActivateUsers() {
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanActivateUsers(newUserResource().build(), user));
@@ -139,7 +139,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testSystemRegistrationUserChangeUsersPasswords() {
+    public void systemRegistrationUserChangeUsersPasswords() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {
                 if (user.equals(systemRegistrationUser())) {
@@ -152,7 +152,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testAnyoneCanChangeTheirOwnPassword() {
+    public void anyoneCanChangeTheirOwnPassword() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {
                 if (user.equals(otherUser)) {
@@ -165,7 +165,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testConsortiumMembersCanViewOtherConsortiumMembers() {
+    public void consortiumMembersCanViewOtherConsortiumMembers() {
 
         Application application1 = newApplication().build();
         when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
@@ -247,7 +247,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testConsortiumMembersCanViewOtherConsortiumMembersButNotAssessors() {
+    public void consortiumMembersCanViewOtherConsortiumMembersButNotAssessors() {
 
         Application application1 = newApplication().build();
 
@@ -278,7 +278,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testAssessorsCanViewConsortiumMembersForApplicationsTheyAreAssessing() {
+    public void assessorsCanViewConsortiumMembersForApplicationsTheyAreAssessing() {
 
         Application application1 = newApplication().build();
         Application application2 = newApplication().build();
@@ -350,7 +350,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testConsortiumMembersCanViewTheProcessRolesOtherConsortiumMembers() {
+    public void consortiumMembersCanViewTheProcessRolesOtherConsortiumMembers() {
 
         Application application1 = newApplication().build();
         when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
@@ -410,26 +410,26 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanUpdateTheirOwnProfiles() {
+    public void usersCanUpdateTheirOwnProfiles() {
         UserResource user = newUserResource().build();
         assertTrue(rules.usersCanUpdateTheirOwnProfiles(user, user));
     }
 
     @Test
-    public void testUsersCanUpdateTheirOwnProfilesButAttemptingToUpdateAnotherUsersProfile() {
+    public void usersCanUpdateTheirOwnProfilesButAttemptingToUpdateAnotherUsersProfile() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
         assertFalse(rules.usersCanUpdateTheirOwnProfiles(user, anotherUser));
     }
 
     @Test
-    public void testUsersCanChangeTheirOwnPasswords() {
+    public void usersCanChangeTheirOwnPasswords() {
         UserResource user = newUserResource().build();
         assertTrue(rules.usersCanChangeTheirOwnPassword(user, user));
     }
 
     @Test
-    public void testUsersCanViewTheirOwnProfileSkills() {
+    public void usersCanViewTheirOwnProfileSkills() {
         UserResource user = newUserResource().build();
         ProfileSkillsResource profileSkillsResource = newProfileSkillsResource()
                 .withUser(user.getId())
@@ -438,7 +438,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanViewTheirOwnProfileSkillsButAttemptingToViewAnotherUsersProfileSkills() {
+    public void usersCanViewTheirOwnProfileSkillsButAttemptingToViewAnotherUsersProfileSkills() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
         ProfileSkillsResource profileSkillsResource = newProfileSkillsResource()
@@ -448,7 +448,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanViewTheirOwnProfileAgreement() {
+    public void usersCanViewTheirOwnProfileAgreement() {
         UserResource user = newUserResource().build();
         ProfileAgreementResource profileAgreementResource = newProfileAgreementResource()
                 .withUser(user.getId())
@@ -457,7 +457,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanViewTheirOwnProfileAgreementButAttemptingToViewAnotherUsersProfileAgreement() {
+    public void usersCanViewTheirOwnProfileAgreementButAttemptingToViewAnotherUsersProfileAgreement() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
         ProfileAgreementResource profileAgreementResource = newProfileAgreementResource()
@@ -467,7 +467,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanViewTheirOwnAffiliations() {
+    public void usersCanViewTheirOwnAffiliations() {
         UserResource user = newUserResource().build();
         AffiliationResource affiliation = newAffiliationResource()
                 .withUser(user.getId())
@@ -476,7 +476,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanViewTheirOwnAffiliationsButAttemptingToViewAnotherUsersAffiliation() {
+    public void usersCanViewTheirOwnAffiliationsButAttemptingToViewAnotherUsersAffiliation() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
         AffiliationResource affiliation = newAffiliationResource()
@@ -486,56 +486,56 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanViewTheirOwnDetails() {
+    public void usersCanViewTheirOwnDetails() {
         UserResource user = newUserResource().build();
         UserProfileResource userDetails = newUserProfileResource().withUser(user.getId()).build();
         assertTrue(rules.usersCanViewTheirOwnProfile(userDetails, user));
     }
 
     @Test
-    public void testUsersCanViewTheirOwnDetailsButNotAnotherUsersDetails() {
+    public void usersCanViewTheirOwnDetailsButNotAnotherUsersDetails() {
         UserResource anotherUser = newUserResource().withId(1L).build();
         UserProfileResource userDetails = newUserProfileResource().withUser(2L).build();
         assertFalse(rules.usersCanViewTheirOwnProfile(userDetails, anotherUser));
     }
 
     @Test
-    public void testUsersCanChangeTheirOwnPasswordsButAttemptingToUpdateAnotherUsersPassword() {
+    public void usersCanChangeTheirOwnPasswordsButAttemptingToUpdateAnotherUsersPassword() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
         assertFalse(rules.usersCanChangeTheirOwnPassword(user, anotherUser));
     }
 
     @Test
-    public void testUsersCanViewTheirOwnProfileStatus() {
+    public void usersCanViewTheirOwnProfileStatus() {
         UserResource user = newUserResource().build();
         UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
         assertTrue(rules.usersAndCompAdminCanViewProfileStatus(userProfileStatus, user));
     }
 
     @Test
-    public void testUsersCanViewTheirOwnProfileStatusButNotAnotherUsersProfileStatus() {
+    public void usersCanViewTheirOwnProfileStatusButNotAnotherUsersProfileStatus() {
         UserResource user = newUserResource().withId(1L).build();
         UserProfileStatusResource anotherUsersProfileStatus = newUserProfileStatusResource().withUser(2L).build();
         assertFalse(rules.usersAndCompAdminCanViewProfileStatus(anotherUsersProfileStatus, user));
     }
 
     @Test
-    public void testCompAdminCanViewUserProfileStatus() {
+    public void compAdminCanViewUserProfileStatus() {
         UserResource user = newUserResource().build();
         UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
         assertTrue(rules.usersAndCompAdminCanViewProfileStatus(userProfileStatus, compAdminUser()));
     }
 
     @Test
-    public void testUsersCanViewTheirOwnProcessRole() {
+    public void usersCanViewTheirOwnProcessRole() {
         UserResource user = newUserResource().build();
         ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).build();
         assertTrue(rules.usersCanViewTheirOwnProcessRole(processRoleResource, user));
     }
 
     @Test
-    public void testUsersCanViewTheirOwnProcessRoleButNotAnotherUsersProcessRole() {
+    public void usersCanViewTheirOwnProcessRoleButNotAnotherUsersProcessRole() {
         UserResource user1 = newUserResource().withId(1L).build();
         UserResource user2 = newUserResource().withId(2L).build();
 
@@ -544,21 +544,21 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testCompAdminCanViewUserProcessRole() {
+    public void compAdminCanViewUserProcessRole() {
         UserResource user = newUserResource().build();
         ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).build();
         assertTrue(rules.usersAndInternalUsersCanViewProcessRole(processRoleResource, compAdminUser()));
     }
 
     @Test
-    public void testProjectFinanceCanViewUserProcessRole() {
+    public void projectFinanceCanViewUserProcessRole() {
         UserResource user = newUserResource().build();
         ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).build();
         assertTrue(rules.usersAndInternalUsersCanViewProcessRole(processRoleResource, projectFinanceUser()));
     }
 
     @Test
-    public void testAllUsersWithProjectRolesCanAccessProcessRolesWithinConsortium(){
+    public void allUsersWithProjectRolesCanAccessProcessRolesWithinConsortium(){
         final Long userId = 11L;
         final Long applicationId = 1L;
 
@@ -580,7 +580,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testAllUsersWithProjectRolesCanNotAccessProcessRolesWhenNotInConsortium(){
+    public void allUsersWithProjectRolesCanNotAccessProcessRolesWhenNotInConsortium(){
         final Long userId = 11L;
         final Long applicationId = 1L;
 
@@ -601,20 +601,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUserCanCheckTheyHaveApplicationForCompetition() {
+    public void userCanCheckTheyHaveApplicationForCompetition() {
         UserResource user = newUserResource().build();
         assertTrue(rules.userCanCheckTheyHaveApplicationForCompetition(user, user));
     }
 
     @Test
-    public void testUserCanCheckTheyHaveApplicationForCompetitionButAttemptingToCheckAnotherUser() {
+    public void userCanCheckTheyHaveApplicationForCompetitionButAttemptingToCheckAnotherUser() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
         assertFalse(rules.userCanCheckTheyHaveApplicationForCompetition(user, anotherUser));
     }
 
     @Test
-    public void testIfsAdminCanViewAnyUsersProfile(){
+    public void ifsAdminCanViewAnyUsersProfile(){
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(ifsAdminUser())) {
                 assertTrue(rules.ifsAdminCanViewAnyUsersProfile(newUserProfileResource().build(), user));
@@ -625,7 +625,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testIfsAdminCanEditInternalUser(){
+    public void ifsAdminCanEditInternalUser(){
 
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
@@ -639,7 +639,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testIfsAdminCanDeactivateUser(){
+    public void ifsAdminCanDeactivateUser(){
 
         UserResource userToDeactivate = UserResourceBuilder.newUserResource().build();
 
@@ -653,7 +653,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testIfsAdminCanReactivateUser(){
+    public void ifsAdminCanReactivateUser(){
 
         UserResource userToReactivate = UserResourceBuilder.newUserResource().build();
 
@@ -667,7 +667,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testInternalUsersCanAccessAllUserOrganisations(){
+    public void internalUsersCanAccessAllUserOrganisations(){
 
         UserOrganisationResource userOrganisationResource = UserOrganisationResourceBuilder.newUserOrganisationResource().build();
 
@@ -681,7 +681,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanAgreeSiteTermsAndConditionsForThemselves() {
+    public void usersCanAgreeSiteTermsAndConditionsForThemselves() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {
                 if (user.equals(otherUser)) {

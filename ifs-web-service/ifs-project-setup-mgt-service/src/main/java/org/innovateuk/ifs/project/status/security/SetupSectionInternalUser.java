@@ -1,19 +1,17 @@
 package org.innovateuk.ifs.project.status.security;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInnovationLead;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access

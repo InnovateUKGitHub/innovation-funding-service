@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.core.domain;
 
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,14 +12,12 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 public class ProjectTest {

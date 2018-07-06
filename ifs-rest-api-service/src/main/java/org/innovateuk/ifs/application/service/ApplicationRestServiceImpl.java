@@ -1,11 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
@@ -91,7 +87,6 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Override
     public RestResult<ApplicationResource> createApplication(long competitionId, long userId, long organisationId, String applicationName) {
 
-        // TODO DW - INFUND-1555 - heavy way to send just a single string...
         ApplicationResource application = new ApplicationResource();
         application.setName(applicationName);
         String url = format(applicationRestURL + "/createApplicationByName/%d/%d/%d", competitionId, userId, organisationId);

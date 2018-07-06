@@ -8,9 +8,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.junit.Assert.assertEquals;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 
 public class CompetitionParticipantResourceBuilderTest {
 

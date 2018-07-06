@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
-import org.innovateuk.ifs.testdata.builders.data.IndustrialCostData;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.testdata.builders.data.IndustrialCostData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +119,20 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
             applicationFinance.setOrganisationSize(organsationSize);
 
-            financeRowCostsService.updateCost(applicationFinance.getId(), applicationFinance);
+            financeRowCostsService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
+
+    public IndustrialCostDataBuilder withWorkPostcode(String workPostcode) {
+        return with(data -> {
+
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+
+            applicationFinance.setWorkPostcode(workPostcode);
+
+            financeRowCostsService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
 

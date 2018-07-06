@@ -12,11 +12,11 @@ public class CreateUserResource {
      * For JSON marshalling
      */
     public CreateUserResource() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public CreateUserResource(String email, String password) {
-        this.email= email;
+        this.email = email;
         this.password = password;
     }
 
@@ -35,7 +35,6 @@ public class CreateUserResource {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     @Override
     public boolean equals(Object o) {

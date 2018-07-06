@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.form.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.competition.domain.Competition;
 
 import java.util.ArrayList;
 import java.util.List;

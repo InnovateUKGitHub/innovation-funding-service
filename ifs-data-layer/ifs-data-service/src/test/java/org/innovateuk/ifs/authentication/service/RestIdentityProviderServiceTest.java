@@ -21,10 +21,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.authentication.service.RestIdentityProviderService.ServiceFailures.DUPLICATE_EMAIL_ADDRESS;
 import static org.innovateuk.ifs.authentication.service.RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
-import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;

@@ -103,11 +103,11 @@ Application questions should be scorable
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
     [Tags]
-    Given The user opens the link in new window  intelligent-water-system-technical-approach.pdf, 7 KB
-    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7 KB
-    And The user opens the link in new window    intelligent-water-system-project-team.pdf, 7 KB
+    Given The user opens the link in new window  intelligent-water-system-technical-approach.pdf, 8 KB
+    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 8 KB
+    And The user opens the link in new window    intelligent-water-system-project-team.pdf, 8 KB
     When the user clicks the button/link         jQuery=a:contains("6. Innovation")
-    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 7.94 KB
+    And The user opens the link in new window    intelligent-water-system-innovation.pdf, 8 KB
     And the user goes back to the previous tab
 
 Scope: Validations

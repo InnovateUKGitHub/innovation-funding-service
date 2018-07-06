@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.common.populator;
 
 
+import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -8,12 +9,12 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -24,7 +25,10 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 public class ApplicationFinanceSummaryViewModelPopulator {
@@ -105,6 +109,9 @@ public class ApplicationFinanceSummaryViewModelPopulator {
             userOrganisation = organisationService.getOrganisationById(userProcessRole.getOrganisationId());
         }
 
+        List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
+        Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
+
         return new ApplicationFinanceSummaryViewModel(
                 application,
                 hasFinanceSection,
@@ -120,7 +127,8 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 totalOtherFunding,
                 totalContribution,
                 financeTotal,
-                completedSectionsByOrganisation
+                completedSectionsByOrganisation,
+                eachCollaboratorFinanceSectionId
                 );
     }
 
@@ -133,6 +141,14 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 userOrganisation.getId(),
                 new HashSet<>()
         );
+    }
+
+    private Long getEachCollaboratorFinanceSectionId(List<SectionResource> eachOrganisationFinanceSections) {
+        if (!eachOrganisationFinanceSections.isEmpty()) {
+            return eachOrganisationFinanceSections.get(0).getId();
+        }
+
+        return null;
     }
 
 }

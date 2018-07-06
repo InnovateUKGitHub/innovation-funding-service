@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.primitives.Ints.asList;
-import static org.innovateuk.ifs.bitbucket.plugin.hook.FlywayVersionContentTreeCallback.sortAndFilter;
-import static org.innovateuk.ifs.bitbucket.plugin.hook.FlywayVersionContentTreeCallback.versionFromName;
 import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 import static org.apache.commons.lang3.tuple.Pair.of;
+import static org.innovateuk.ifs.bitbucket.plugin.hook.FlywayVersionContentTreeCallback.sortAndFilter;
+import static org.innovateuk.ifs.bitbucket.plugin.hook.FlywayVersionContentTreeCallback.versionFromName;
 
 public class FlywayVersionContentTreeCallbackTest {
     @Test

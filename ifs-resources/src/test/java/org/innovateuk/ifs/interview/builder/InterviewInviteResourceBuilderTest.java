@@ -4,7 +4,6 @@ import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.InterviewInviteResource;
 import org.junit.Test;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder.newInterviewInviteResource;

@@ -10,8 +10,8 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.profile.domain.Profile;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.user.domain.User;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
