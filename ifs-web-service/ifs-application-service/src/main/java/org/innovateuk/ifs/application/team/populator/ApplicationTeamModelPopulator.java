@@ -31,7 +31,7 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -61,12 +61,13 @@ public class ApplicationTeamModelPopulator {
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         boolean applicationCanBegin = isApplicationStateCreated(applicationResource) && userIsLeadApplicant;
-        boolean closed = !isCompetitionOpen(applicationResource);
-        boolean complete = isComplete(applicationId, loggedInUserId, questionId);
-        boolean canMarkAsComplete = userIsLeadApplicant;
-        return new ApplicationTeamViewModel(applicationResource.getId(), applicationResource.getName(),
+        boolean isComplete = isComplete(applicationId, loggedInUserId, questionId);
+        boolean allReadonly = isComplete;
+
+        return new ApplicationTeamViewModel(applicationResource.getId(), questionId, applicationResource.getName(),
                 getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
-                userIsLeadApplicant, applicationCanBegin, closed, complete, canMarkAsComplete);
+                userIsLeadApplicant, applicationCanBegin, !isCompetitionOpen(applicationResource),
+                isComplete, userIsLeadApplicant, allReadonly);
     }
 
     public ApplicationTeamViewModel populateSummaryModel(long applicationId, long loggedInUserId, long competitionId) {
@@ -76,7 +77,7 @@ public class ApplicationTeamModelPopulator {
     }
 
     private Long getApplicationTeamQuestion(long competitionId) {
-        return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+        return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
                 APPLICATION_TEAM).handleSuccessOrFailure(failure -> null, QuestionResource::getId);
     }
 

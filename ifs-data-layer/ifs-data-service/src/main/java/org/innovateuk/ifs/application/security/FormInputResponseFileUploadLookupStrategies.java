@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.application.security;
 
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
+import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
-import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +40,7 @@ public class FormInputResponseFileUploadLookupStrategies {
             formInputResponse =
                     formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(id.getApplicationId(), id.getProcessRoleId(), id.getFormInputId());
         } else {                            // If question has single status then whoever has question assinged to them can edit/read files associated with the question
-            // TODO: Secure this by checking it is the assinged user when editing
+
             List<FormInputResponse> formInputResponses = formInputResponseRepository.findByApplicationIdAndFormInputId(id.getApplicationId(), id.getFormInputId());
             if(formInputResponses != null && !formInputResponses.isEmpty()){ // Question with single status will only have one form input response
                 formInputResponse = formInputResponses.get(0);

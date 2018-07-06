@@ -3,7 +3,7 @@ package org.innovateuk.ifs.question.transactional.template;
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.innovateuk.ifs.application.validator.WordCountValidator;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,7 +44,7 @@ public class DefaultApplicationQuestionCreator {
 
         Question question = new Question();
         question.setCompetition(competition);
-        question.setQuestionSetupType(CompetitionSetupQuestionType.ASSESSED_QUESTION);
+        question.setQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION);
         question.setMarkAsCompletedEnabled(true);
         question.setAssessorMaximumScore(DEFAULT_MAXIMUM_SCORE);
         question.setFormInputs(Arrays.asList(maxWordCountInput, questionScoreInput, feedbackInput, appendixInput));

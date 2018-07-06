@@ -63,7 +63,7 @@ Medium org can be selected
 Funding section shows as incomplete
     [Documentation]    INFUND-6394
     [Tags]
-    When the user should see the element    css=.task-list li:nth-of-type(3) .task-status-incomplete
+    When the user should see the element    css=.task-list li:nth-of-type(4) .task-status-incomplete
 
 Funding section has been reset
     [Documentation]    INFUND-6894
@@ -101,7 +101,7 @@ Large organisation can be selected
 Funding section shows as incomplete again
     [Documentation]    INFUND-6394
     [Tags]
-    When the user should see the element    css=.task-list li:nth-of-type(3) .task-status-incomplete
+    When the user should see the element    css=.task-list li:nth-of-type(4) .task-status-incomplete
 
 
 Funding section has been reset again
@@ -123,11 +123,10 @@ Funding section can be completed with under 50%
     Then the user should not see the element    jQuery=.error-message
     And the user marks the 'your funding' section as incomplete again
 
-
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
-    log in and create new application if there is not one already with complete application details  Robot test application  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
+    log in and create new application if there is not one already with complete application details  Robot test application  ${tomorrowday}  ${month}  ${nextyear}
 
 The user marks their organisation as
     [Arguments]    ${org_size}

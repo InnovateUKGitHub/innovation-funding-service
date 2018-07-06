@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.invite.resource;
 
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;

@@ -5,9 +5,9 @@ import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource
 import org.innovateuk.ifs.application.resource.ApplicationNotificationTemplateResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
-import org.innovateuk.ifs.management.ineligible.form.InformIneligibleForm;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.management.ineligible.controller.CompetitionManagementSendIneligibleController;
+import org.innovateuk.ifs.management.ineligible.form.InformIneligibleForm;
 import org.innovateuk.ifs.management.ineligible.populator.InformIneligibleModelPopulator;
 import org.innovateuk.ifs.management.ineligible.viewmodel.InformIneligibleViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -24,14 +24,14 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.user.viewmodel.UserApplicationRole.COLLABORATOR;
-import static org.innovateuk.ifs.user.viewmodel.UserApplicationRole.LEAD_APPLICANT;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.viewmodel.UserApplicationRole.COLLABORATOR;
+import static org.innovateuk.ifs.user.viewmodel.UserApplicationRole.LEAD_APPLICANT;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

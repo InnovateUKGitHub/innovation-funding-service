@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.application.viewmodel.section;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,9 @@ public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
     private boolean notRequestingFunding;
     private boolean fundingSectionLocked;
     private List<Long> completedSectionIds;
+    // TODO: IFS-3753 remove all things related to applicationDetailsQuestionId
     private Long applicationDetailsQuestionId;
+    private Long researchCategoryQuestionId;
     private Long yourOrganisationSectionId;
     private BaseFinanceResource organisationFinance;
 
@@ -56,6 +58,14 @@ public class YourFinancesSectionViewModel extends AbstractSectionViewModel {
 
     public void setApplicationDetailsQuestionId(Long applicationDetailsQuestionId) {
         this.applicationDetailsQuestionId = applicationDetailsQuestionId;
+    }
+
+    public Long getResearchCategoryQuestionId() {
+        return researchCategoryQuestionId;
+    }
+
+    public void setResearchCategoryQuestionId(Long researchCategoryQuestionId) {
+        this.researchCategoryQuestionId = researchCategoryQuestionId;
     }
 
     public Long getYourOrganisationSectionId() {

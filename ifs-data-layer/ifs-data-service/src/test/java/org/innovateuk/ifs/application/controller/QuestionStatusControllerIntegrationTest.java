@@ -12,7 +12,6 @@ import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -103,12 +102,6 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
          statuses.forEach(
                 s -> assertEquals(newAssigneeProcessRoleId, s.getAssignee().getId())
         );
-    }
-
-    @Ignore
-    @Test
-    public void testAssignMultiple() throws Exception {
-        //Todo: don't know how to implement this, can we assign questions that are in the finance form for example?
     }
 
     @Test

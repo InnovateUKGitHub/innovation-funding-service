@@ -5,8 +5,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
-import org.innovateuk.ifs.competitionsetup.core.viewmodel.TermsAndConditionsViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.TermsAndConditionsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

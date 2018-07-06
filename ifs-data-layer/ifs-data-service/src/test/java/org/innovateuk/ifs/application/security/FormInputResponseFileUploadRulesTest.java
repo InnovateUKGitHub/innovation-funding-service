@@ -49,7 +49,6 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     private static final long formInputId = 123L;
     private static final long applicationId = 456L;
     private static final long processRoleId = 789L;
-    //TODO: Implement tests for lead applicant and collaborator type users as well and not just applicant.
 
     @Test
     public void applicantCanUploadFilesInResponsesForOwnApplication() {
@@ -125,6 +124,40 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         assertTrue(fileUploadRules.assessorCanDownloadFileForApplicationTheyAreAssessing(file, assessor));
 
         verify(processRoleRepositoryMock).findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.ASSESSOR, applicationId);
+    }
+
+    @Test
+    public void panelAssessorCanDownloadFilesForApplicationTheyAreAssessing() {
+        UserResource assessor = newUserResource()
+                .withRolesGlobal(singletonList(Role.ASSESSOR))
+                .build();
+        FileEntryResource fileEntry = newFileEntryResource().build();
+        ProcessRole assessorProcessRole = newProcessRole().build();
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+
+        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.PANEL_ASSESSOR, applicationId))
+                .thenReturn(assessorProcessRole);
+
+        assertTrue(fileUploadRules.assessorCanDownloadFileForApplicationTheyAreAssessing(file, assessor));
+
+        verify(processRoleRepositoryMock).findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.PANEL_ASSESSOR, applicationId);
+    }
+
+    @Test
+    public void interviewAssessorCanDownloadFilesForApplicationTheyAreAssessing() {
+        UserResource assessor = newUserResource()
+                .withRolesGlobal(singletonList(Role.ASSESSOR))
+                .build();
+        FileEntryResource fileEntry = newFileEntryResource().build();
+        ProcessRole assessorProcessRole = newProcessRole().build();
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+
+        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.INTERVIEW_ASSESSOR, applicationId))
+                .thenReturn(assessorProcessRole);
+
+        assertTrue(fileUploadRules.assessorCanDownloadFileForApplicationTheyAreAssessing(file, assessor));
+
+        verify(processRoleRepositoryMock).findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.INTERVIEW_ASSESSOR, applicationId);
     }
 
     @Test

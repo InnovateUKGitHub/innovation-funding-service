@@ -6,18 +6,18 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -249,7 +249,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         ApplicationDataBuilder applicationBuilder = this.applicationDataBuilder.
                 withExistingApplication(applicationData).
                 markApplicationDetailsComplete(applicationLine.markDetailsComplete).
-                markApplicationTeamComplete(applicationLine.markDetailsComplete);
+                markApplicationTeamComplete(applicationLine.markDetailsComplete).
+                markResearchCategoryComplete(applicationLine.markDetailsComplete);
         if (applicationLine.submittedDate != null) {
             applicationBuilder = applicationBuilder.submitApplication();
         }
@@ -385,6 +386,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 return builder.withGrantClaim(Integer.valueOf(financeRow.metadata.get(0)));
             case "Organisation size":
                 return builder.withOrganisationSize(Long.valueOf(financeRow.metadata.get(0)));
+            case "Work postcode":
+                return builder.withWorkPostcode(financeRow.metadata.get(0));
             case "Labour":
                 return builder.withLabourEntry(
                         financeRow.metadata.get(0),
@@ -495,7 +498,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withSubcontractingCost("Developers", "UK", "To develop stuff", bd("90000")).
                         withTravelAndSubsistence("To visit colleagues", 15, bd("398")).
                         withOtherCosts("Some more costs", bd("1100")).
-                        withOrganisationSize(1L));
+                        withOrganisationSize(1L).
+                        withWorkPostcode("AB12 3CD"));
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinances(
@@ -520,7 +524,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withIndirectCosts(bd("154")).
                         withExceptionsStaff(bd("176")).
                         withExceptionsOtherCosts(bd("198")).
-                        withUploadedJesForm());
+                        withUploadedJesForm().
+                        withWorkPostcode("AB12 3CD"));
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinancesFromSuppliedData(

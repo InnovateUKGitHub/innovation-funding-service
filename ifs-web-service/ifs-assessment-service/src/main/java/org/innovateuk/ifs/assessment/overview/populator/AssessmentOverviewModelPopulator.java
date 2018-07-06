@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
-import org.apache.commons.io.FileUtils;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -23,17 +22,20 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.math.BigDecimal.ROUND_UP;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
@@ -44,6 +46,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  */
 @Component
 public class AssessmentOverviewModelPopulator {
+
+    public static final BigDecimal ONE_KB = BigDecimal.valueOf(1024L);
 
     @Autowired
     private CompetitionService competitionService;
@@ -99,7 +103,7 @@ public class AssessmentOverviewModelPopulator {
             List<QuestionResource> sectionQuestions = sectionResource.getQuestions()
                     .stream()
                     .map(questionsMap::get)
-                    .filter(question -> question.getQuestionSetupType() != APPLICATION_TEAM)
+                    .filter(this::isAssessmentQuestion)
                     .collect(toList());
 
             return new AssessmentOverviewSectionViewModel(sectionResource.getId(),
@@ -181,15 +185,21 @@ public class AssessmentOverviewModelPopulator {
         return ofNullable(responses.get(formInput.getId())).map(AssessorFormInputResponseResource::getValue);
     }
 
+    private boolean isAssessmentQuestion(QuestionResource question) {
+        return question.getQuestionSetupType() != APPLICATION_TEAM && question.getQuestionSetupType() != RESEARCH_CATEGORY;
+    }
+
     private AssessmentOverviewAppendixViewModel getAppendix(FormInputResponseResource formInputResponse,
                                                             Map<Long, QuestionResource> questions) {
         QuestionResource question = questions.get(formInputResponse.getQuestion());
+
+        String size = String.valueOf(BigDecimal.valueOf(formInputResponse.getFilesizeBytes()).divide(ONE_KB, 0, ROUND_UP)) + " KB";
 
         return new AssessmentOverviewAppendixViewModel(
                 formInputResponse.getFormInput(),
                 ofNullable(question.getShortName()).orElse(question.getName()),
                 formInputResponse.getFilename(),
-                FileUtils.byteCountToDisplaySize(formInputResponse.getFilesizeBytes())
+                size
         );
     }
 }

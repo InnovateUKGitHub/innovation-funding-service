@@ -9,17 +9,16 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.application.form.GuidanceRowForm;
-import org.innovateuk.ifs.competitionsetup.application.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.application.form.*;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupSubsectionViewModel;
-import org.innovateuk.ifs.competitionsetup.core.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -395,10 +394,10 @@ public class CompetitionSetupApplicationController {
     private String getQuestionPage(Model model, CompetitionResource competitionResource, Long questionId, boolean isEditable, CompetitionSetupForm form) {
         ServiceResult<String> view = competitionSetupQuestionService.getQuestion(questionId).andOnSuccessReturn(
                 questionResource -> {
-                    CompetitionSetupQuestionType type = questionResource.getType();
+                    QuestionSetupType type = questionResource.getType();
                     CompetitionSetupSubsection setupSubsection;
 
-                    if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
+                    if (type.equals(QuestionSetupType.ASSESSED_QUESTION)) {
                         setupSubsection = CompetitionSetupSubsection.QUESTIONS;
                     } else {
                         setupSubsection = CompetitionSetupSubsection.PROJECT_DETAILS;
