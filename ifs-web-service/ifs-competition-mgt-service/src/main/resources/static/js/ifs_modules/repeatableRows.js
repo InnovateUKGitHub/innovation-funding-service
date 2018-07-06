@@ -25,9 +25,14 @@ IFS.competitionManagement.repeatableRows = (function () {
         '<td class="width-40-percent form-group">' +
         '<label></label>' +
         '<input aria-labelledby="invite-label-assessor-name" class="form-control width-full" type="text" ' +
-        'id="invites' + uniqueRowId + '.name" ' +
+        'id="invites[' + uniqueRowId + '].name" ' +
         'name="invites[' + uniqueRowId + '].name" value="" ' +
-        'data-required-errormessage="Please enter a name." required="required" />' +
+        'minlength="2" ' +
+        'maxlength="70" ' +
+        'pattern="\\D{2,}" ' +
+        'required="required" ' +
+        'data-required-errormessage="Please enter a name." ' +
+        'data-pattern-errormessage="Please enter a valid name." /> ' +
         '</td>' +
         '<td class="width-40-percent form-group">' +
         '<label></label>' +
