@@ -37,22 +37,6 @@ public class GrantOfferLetterFinanceTotalsTable extends GrantOfferLetterFinanceT
 
     }
 
-    //    public void populate(Map<String, List<ProjectFinanceRow>> industrialFinances,
-//                         Map<String, List<ProjectFinanceRow>> academicFinances) {
-//        industrialOrgs = new ArrayList<>(industrialFinances.keySet());
-//        academicOrgs = new ArrayList<>(academicFinances.keySet());
-//        totalFinances.putAll(industrialFinances);
-//        totalFinances.putAll(academicFinances);
-//        grantClaims = sumByFinancialType(totalFinances, "grant-claim");
-//        totalFinances.forEach((org, finances) -> totalEligibleCosts.put(org,
-//                                                                      finances.stream().map(ProjectFinanceRow::getCost).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add)));
-//
-//        totalFinances.keySet().forEach( org ->
-//                                                totalGrant.put(org,
-//                                                               totalEligibleCosts.get(org).multiply(grantClaims.get(org)))
-//        );
-//    }
-
     public List<String> getIndustrialOrgs() {
         return industrialOrgs;
     }

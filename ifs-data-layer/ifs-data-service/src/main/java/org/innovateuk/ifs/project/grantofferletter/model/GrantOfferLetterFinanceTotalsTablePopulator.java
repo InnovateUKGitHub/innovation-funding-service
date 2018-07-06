@@ -54,8 +54,6 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
                 .map(Organisation::getName)
                 .collect(Collectors.toList());
 
-//        List<String> industrialOrgs = getOrgNamesOfType(org -> isAcademic(org.getOrganisationType()));
-
         List<String> academicOrgs = finances.keySet()
                 .stream()
                 .filter(org -> isAcademic(org.getOrganisationType()))
@@ -68,8 +66,4 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
                                                       industrialOrgs,
                                                       academicOrgs);
     }
-
-//    private List<String> getOrgNamesOfType(Supplier<Boolean> typeCondition) {
-//        return
-//    }
 }
