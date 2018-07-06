@@ -91,7 +91,8 @@ Applicant fills in the Application Details
     [Documentation]  INFUND-6895  INFUND-9151
     [Tags]
     When the user clicks the button/link  link=Application details
-    Then The user fills in the Application details  ${applicationWithoutGrowth}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    Then The user fills in the Application details   ${applicationWithoutGrowth}  ${tomorrowday}  ${month}  ${nextyear}
+    And the user selects Research category   Feasibility studies
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
@@ -284,7 +285,7 @@ The Lead Applicant fills in the Application Details for App with Growth
     [Tags]
     Given the user clicks the button/link           link=Application overview
     When the user clicks the button/link            link=Application details
-    Then the user fills in the Application details  ${applicationWithGrowth}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    Then the user fills in the Application details  ${applicationWithGrowth}  ${tomorrowday}  ${month}  ${nextyear}
 
 Newly created collaborator can view and edit project Growth table
     [Documentation]    INFUND-8426
@@ -350,7 +351,7 @@ the user should see the dates in full format
     the user should see the element   jQuery=td:contains("Allocate assessors") ~ td:contains("4 ${tomorrowMonthWord} ${nextyear}")
 
 the user should see that the funding depends on the research area
-    the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")
+    the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a") a:contains("research")
 
 the user should see his finances empty
     the user should see the element  jQuery=thead:contains("Total project costs") ~ *:contains("£0")

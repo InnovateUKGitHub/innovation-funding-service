@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.PROJECT_SUMMARY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUMMARY;
 
 /**
  * Build the model for the Assessment Assignment view.
