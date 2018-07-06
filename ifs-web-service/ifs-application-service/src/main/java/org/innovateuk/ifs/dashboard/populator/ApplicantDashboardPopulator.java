@@ -27,7 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -193,7 +193,7 @@ public class ApplicantDashboardPopulator {
     }
 
     private long getApplicationTeamQuestion(long competitionId) {
-        return questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+        return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
                 APPLICATION_TEAM).getSuccess().getId();
     }
 }
