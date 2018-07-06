@@ -9,9 +9,12 @@ public class AssessmentReviewApplicationSummaryViewModel {
 
     private final CompetitionResource competition;
 
-    public AssessmentReviewApplicationSummaryViewModel(SummaryViewModel summaryViewModel, CompetitionResource competition) {
+    private final AssessmentReviewFeedbackViewModel feedbackViewModel;
+
+    public AssessmentReviewApplicationSummaryViewModel(SummaryViewModel summaryViewModel, CompetitionResource competition, AssessmentReviewFeedbackViewModel feedbackViewModel) {
         this.summaryViewModel = summaryViewModel;
         this.competition = competition;
+        this.feedbackViewModel = feedbackViewModel;
     }
 
     public SummaryViewModel getSummaryViewModel() {
@@ -20,5 +23,9 @@ public class AssessmentReviewApplicationSummaryViewModel {
 
     public CompetitionResource getCompetition() {
         return competition;
+    }
+
+    public AssessmentReviewFeedbackViewModel getFeedbackViewModel() {
+        return feedbackViewModel;
     }
 }

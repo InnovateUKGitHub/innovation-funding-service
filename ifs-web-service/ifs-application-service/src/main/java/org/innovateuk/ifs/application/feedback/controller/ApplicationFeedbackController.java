@@ -11,10 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
-import org.innovateuk.ifs.review.service.ReviewRestService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -45,19 +42,16 @@ public class ApplicationFeedbackController {
     private ApplicationFeedbackViewModelPopulator applicationFeedbackViewModelPopulator;
     private ApplicationService applicationService;
     private CompetitionService competitionService;
-    private ReviewRestService reviewRestService;
-    private UserRestService userRestService;
+
     public ApplicationFeedbackController() {}
 
     @Autowired
-    public ApplicationFeedbackController(InterviewAssignmentRestService interviewAssignmentRestService, InterviewResponseRestService interviewResponseRestService, ApplicationFeedbackViewModelPopulator applicationFeedbackViewModelPopulator, ApplicationService applicationService, CompetitionService competitionService, ReviewRestService reviewRestService, UserRestService userRestService) {
+    public ApplicationFeedbackController(InterviewAssignmentRestService interviewAssignmentRestService, InterviewResponseRestService interviewResponseRestService, ApplicationFeedbackViewModelPopulator applicationFeedbackViewModelPopulator, ApplicationService applicationService, CompetitionService competitionService) {
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.interviewResponseRestService = interviewResponseRestService;
         this.applicationFeedbackViewModelPopulator = applicationFeedbackViewModelPopulator;
         this.applicationService = applicationService;
         this.competitionService = competitionService;
-        this.reviewRestService = reviewRestService;
-        this.userRestService = userRestService;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, comp admins and project finance users have permission to view the application summary page")
@@ -71,24 +65,14 @@ public class ApplicationFeedbackController {
                            UserResource user,
                            @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
                            @RequestParam MultiValueMap<String, String> queryParams) {
-        if (!canViewFeedback(user, applicationId)) {
+        ApplicationResource application = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
+        if (!competition.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
             return redirectToSummary(applicationId, queryParams);
         }
         model.addAttribute("model", applicationFeedbackViewModelPopulator.populate(applicationId, user, queryParams, origin));
         return "application-feedback";
-    }
-
-    private boolean canViewFeedback(UserResource user, Long applicationId) {
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-
-        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
-        boolean feedbackReleased = competition.getCompetitionStatus().isFeedbackReleased();
-        boolean isAssessorInPanel = user.hasRole(Role.ASSESSOR) &&
-                userRestService.findProcessRole(applicationId).getSuccess().stream().anyMatch(role -> role.getUser().equals(user.getId()) && role.getRole().equals(Role.ASSESSOR)) &&
-                reviewRestService.isAssignedToPanel(applicationId).getSuccess();
-
-        return feedbackReleased || isApplicationAssignedToInterview || isAssessorInPanel;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")

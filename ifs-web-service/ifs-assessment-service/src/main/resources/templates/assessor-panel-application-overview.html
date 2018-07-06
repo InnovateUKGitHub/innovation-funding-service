@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" />
 </head>
@@ -21,7 +21,9 @@
           th:object="${form}" class="form-serialize-js section-overview">
 
         <h2 class="heading-medium">Details</h2>
-        <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (isApplicant = false, hideDetails = true)" />
+        <th:block ifs:global="${model.feedbackViewModel}">
+            <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (isApplicant = false, hideDetails = true)" />
+        </th:block>
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

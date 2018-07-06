@@ -169,8 +169,17 @@ public class SummaryViewModelFragmentPopulator {
 
         ApplicationOverviewCompletedViewModel completedViewModel = getCompletedDetails(application, userOrganisation);
 
+        //Comp admin user doesn't have user organisation
+        long applicantId;
+        if (!userOrganisation.isPresent())  {
+            ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application.getId());
+            applicantId = leadApplicantProcessRole.getUser();
+        } else {
+            applicantId = user.getId();
+        }
+
         Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream)
-                .map(question -> applicantRestService.getQuestion(user.getId(), application.getId(), question.getId()))
+                .map(question -> applicantRestService.getQuestion(applicantId, application.getId(), question.getId()))
                 .map(applicationQuestion -> formInputViewModelGenerator.fromQuestion(applicationQuestion, new ApplicationForm()))
                 .flatMap(List::stream)
                 .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
@@ -255,5 +264,4 @@ public class SummaryViewModelFragmentPopulator {
     private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
         return simpleFilter(list, input -> input.getQuestion().equals(id));
     }
-
 }

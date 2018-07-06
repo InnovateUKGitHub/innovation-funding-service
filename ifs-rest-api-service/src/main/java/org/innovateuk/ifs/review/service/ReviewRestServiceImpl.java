@@ -9,18 +9,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.assessmentReviewResourceListType;
 
 @Service
 public class ReviewRestServiceImpl extends BaseRestService implements ReviewRestService {
 
     private static final String assessmentPanelRestUrl = "/assessmentpanel";
-
-    @Override
-    public RestResult<Boolean> isAssignedToPanel(long applicationId) {
-        return restSuccess(true);
-    }
 
     @Override
     public RestResult<Void> assignToPanel(long applicationId) {
