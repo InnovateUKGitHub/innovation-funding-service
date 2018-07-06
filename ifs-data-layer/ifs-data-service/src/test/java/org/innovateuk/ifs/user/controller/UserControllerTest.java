@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
@@ -378,5 +379,18 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(content().json(toJson(userOrganisationResources)));
 
         verify(userServiceMock).findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory);
+    }
+
+    @Test
+    public void grantRole() throws Exception {
+        Long userId = 1L;
+        Role grantRole = Role.APPLICANT;
+
+        when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/user/{userId}/grant/{role}", userId, grantRole.name()))
+                .andExpect(status().isOk());
+
+        verify(userServiceMock).grantRole(new GrantRoleCommand(userId, grantRole));
     }
 }

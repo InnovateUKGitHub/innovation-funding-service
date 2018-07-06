@@ -2,13 +2,21 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -23,11 +31,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 
 /**
  * Provides methods for confirming and saving the organisation as an intermediate step in the registration flow.
@@ -42,6 +53,18 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
     @Autowired
     private OrganisationService organisationService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
+
+    @Autowired
+    private UserRestService userRestService;
+
+    @Autowired
+    private CookieUtil cookieUtil;
 
     @GetMapping("/" + CONFIRM_ORGANISATION)
     public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
@@ -59,6 +82,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     @PostMapping("/save-organisation")
     public String saveOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                    Model model,
+                                   UserResource user,
                                    HttpServletRequest request,
                                    HttpServletResponse response) {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
@@ -76,7 +100,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
         List<OrganisationAddressResource> organisationAddressResources = new ArrayList<>();
 
-        if (address != null) {
+        if (address != null && !organisationForm.isUseSearchResultAddress()) {
             organisationAddressResources.add(
                     new OrganisationAddressResource(address,
                                                     new AddressTypeResource(OPERATING.getOrdinal(), OPERATING.name())));
@@ -97,8 +121,12 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         }
 
         organisationResource = createOrRetrieveOrganisation(organisationResource, request);
-        registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
-        return "redirect:" + RegistrationController.BASE_URL;
+        if (user != null) {
+            return createApplicationAndShowInvitees(user, registrationCookieService.getCompetitionIdCookieValue(request).get(), organisationResource.getId(), response);
+        } else {
+            registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
+            return "redirect:" + RegistrationController.BASE_URL;
+        }
     }
 
     private OrganisationResource createOrRetrieveOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
@@ -108,5 +136,26 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         }
 
         return organisationService.createOrMatch(organisationResource);
+    }
+
+    private String createApplicationAndShowInvitees(UserResource user, long competitionId, long organisationId, HttpServletResponse response) {
+        if (!user.hasRole(Role.APPLICANT)) {
+            userRestService.grantRole(user.getId(), Role.APPLICANT).getSuccess();
+            cookieUtil.saveToCookie(response, "role", Role.APPLICANT.getName());
+        }
+
+        ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), organisationId, "");
+        if (application != null) {
+            return questionRestService
+                    .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM)
+                    .handleSuccessOrFailure(
+                            failure ->  format("redirect:/application/%s/team", application.getId()),
+                            question -> format("redirect:/application/%s/form/question/%s", application.getId(),
+                                    question.getId())
+                    );
+        } else {
+            throw new ObjectNotFoundException("Could not create a new application",
+                    Arrays.asList(String.valueOf(competitionId), String.valueOf(user.getId())));
+        }
     }
 }

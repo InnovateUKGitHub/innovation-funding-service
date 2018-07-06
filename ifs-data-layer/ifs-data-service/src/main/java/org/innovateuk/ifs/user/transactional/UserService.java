@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.resource.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
@@ -48,4 +49,7 @@ public interface UserService {
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'AGREE_TERMS')")
     ServiceResult<Void> agreeNewTermsAndConditions(long userId);
+
+    @PreAuthorize("hasPermission(#grantRoleCommand, 'GRANT_ROLE')")
+    ServiceResult<Void> grantRole(GrantRoleCommand grantRoleCommand);
 }

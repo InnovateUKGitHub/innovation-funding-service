@@ -15,6 +15,7 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -54,6 +55,7 @@ import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResou
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
 import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.junit.Assert.*;
@@ -651,6 +653,18 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         inOrder.verify(userRepositoryMock).save(createUserExpectations(existingUser.getId(),
                 expectedTermsAndConditionsIds));
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void grantRole() {
+        GrantRoleCommand grantRoleCommand = new GrantRoleCommand(1L, APPLICANT);
+        User user = newUser().build();
+        when(userRepositoryMock.findOne(grantRoleCommand.getUserId())).thenReturn(user);
+
+        ServiceResult<Void> result = service.grantRole(grantRoleCommand);
+
+        assertTrue(result.isSuccess());
+        assertTrue(user.hasRole(APPLICANT));
     }
 
     private User createUserExpectations(Long userId, Set<Long> termsAndConditionsIds) {

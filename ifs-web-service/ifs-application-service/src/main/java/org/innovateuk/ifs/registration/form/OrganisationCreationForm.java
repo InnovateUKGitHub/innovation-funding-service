@@ -31,6 +31,7 @@ public class OrganisationCreationForm implements Serializable {
     private String searchOrganisationId;
     private boolean organisationSearching;
     private boolean manualEntry = false;
+    private boolean useSearchResultAddress = false;
     private transient List<OrganisationSearchResult> organisationSearchResults;
     @NotBlank(message = "{validation.standard.organisationname.required}")
     private String organisationName;
@@ -126,13 +127,13 @@ public class OrganisationCreationForm implements Serializable {
         this.triedToSave = triedToSave;
     }
 
-//    public boolean isUseSearchResultAddress() {
-//        return useSearchResultAddress;
-//    }
-//
-//    public void setUseSearchResultAddress(boolean useSearchResultAddress) {
-//        this.useSearchResultAddress = useSearchResultAddress;
-//    }
+    public boolean isUseSearchResultAddress() {
+        return useSearchResultAddress;
+    }
+
+    public void setUseSearchResultAddress(boolean useSearchResultAddress) {
+        this.useSearchResultAddress = useSearchResultAddress;
+    }
 
     @JsonIgnore
     public OrganisationTypeEnum getOrganisationTypeEnum() {
@@ -151,6 +152,7 @@ public class OrganisationCreationForm implements Serializable {
                 .append(triedToSave, that.triedToSave)
                 .append(organisationSearching, that.organisationSearching)
                 .append(manualEntry, that.manualEntry)
+                .append(useSearchResultAddress, that.useSearchResultAddress)
                 .append(addressForm, that.addressForm)
                 .append(organisationTypeId, that.organisationTypeId)
                 .append(organisationSearchName, that.organisationSearchName)
@@ -170,6 +172,7 @@ public class OrganisationCreationForm implements Serializable {
                 .append(searchOrganisationId)
                 .append(organisationSearching)
                 .append(manualEntry)
+                .append(useSearchResultAddress)
                 .append(organisationSearchResults)
                 .append(organisationName)
                 .toHashCode();
