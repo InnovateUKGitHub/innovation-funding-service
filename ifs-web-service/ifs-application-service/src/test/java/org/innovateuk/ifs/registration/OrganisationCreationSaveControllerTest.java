@@ -32,10 +32,10 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -151,7 +151,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(COMPETITION_ID));
         when(applicationService.createApplication(COMPETITION_ID, loggedInUser.getId(), ORGANISATION_ID, "")).thenReturn(newApplicationResource().withId(APPLICATION_ID).build());
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                                 .thenReturn(restSuccess(newQuestionResource().withId(TEAM_QUESTION_ID).build()));
 
         mockMvc.perform(post("/organisation/create/save-organisation")
@@ -173,7 +173,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(COMPETITION_ID));
         when(applicationService.createApplication(COMPETITION_ID, loggedInUser.getId(), ORGANISATION_ID, "")).thenReturn(newApplicationResource().withId(APPLICATION_ID).build());
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restFailure(Collections.emptyList(), HttpStatus.NOT_FOUND));
 
         mockMvc.perform(post("/organisation/create/save-organisation")
@@ -196,7 +196,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(COMPETITION_ID));
         when(userRestService.grantRole(ASSESSOR_ID, Role.APPLICANT)).thenReturn(restSuccess());
         when(applicationService.createApplication(COMPETITION_ID, ASSESSOR_ID, ORGANISATION_ID, "")).thenReturn(newApplicationResource().withId(APPLICATION_ID).build());
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(newQuestionResource().withId(TEAM_QUESTION_ID).build()));
 
         mockMvc.perform(post("/organisation/create/save-organisation")

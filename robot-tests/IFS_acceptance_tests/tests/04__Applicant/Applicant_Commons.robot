@@ -21,9 +21,9 @@ Applicant navigates to the finances of the Robot application
     the user navigates to Your-finances page  Robot test application
 
 log in and create new application if there is not one already with complete application details
-    [Arguments]  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
+    [Arguments]  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     log in and create new application if there is not one already  ${applicationTitle}
-    the applicant completes the application details  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant completes the application details  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
 Mark application details as incomplete and the user closes the browser
     [Arguments]  ${applicationTitle}
@@ -43,22 +43,22 @@ the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=img.complete[alt*="Application details"]
     Run Keyword If  '${status}' == 'FAIL'  Run keywords  the user clicks the button/link  link=Application details
     ...   AND  the user moves Application details in Edit mode
-    ...   AND  the user fills in the Application details  Robot test application  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    ...   AND  the user fills in the Application details  Robot test application  ${tomorrowday}  ${month}  ${nextyear}
 
 the applicant completes the application details
-    [Arguments]  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
+    [Arguments]  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user moves Application details in Edit mode
     ${applicationId} =  get application id by name  ${applicationTitle}
     the user navigates to the page   ${server}/application/${applicationId}
     the user clicks the button/link  link=Application details
-    the user fills in the Application details  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
+    the user fills in the Application details  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
      ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=.buttonlink[name="mark_as_incomplete"]
      Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=.buttonlink[name="mark_as_incomplete"]  # the Edit link
 
 the user fills in the Application details
-    [Arguments]  ${appTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery=h1:contains("Application details")
     the user enters text to a text field  css=[id="application.name"]  ${appTitle}
     the user enters text to a text field  css=#application_details-startdate_day  ${tomorrowday}
@@ -66,17 +66,17 @@ the user fills in the Application details
     the user enters text to a text field  css=#application_details-startdate_year  ${nextyear}
     the user enters text to a text field  css=[id="application.durationInMonths"]  24
     the user clicks the button twice      css=label[for="application.resubmission-no"]
-    the user selects Research category    ${res_category}
     the user should not see the element   link=Choose your innovation area
     The user clicks the button/link       css=button[name="mark_as_complete"]
     the user clicks the button/link       link=Application overview
     the user should see the element       jQuery=li:contains("Application details") > .task-status-complete
 
-the user selects Research category
+the user selects research category from funding
     [Arguments]  ${res_category}
-    the user clicks the button/link   jQuery=label:contains("Research category")
-    the user clicks the button twice  jQuery=label[for^="researchCategoryChoice"]:contains("${res_category}")
-    the user clicks the button/link   jQuery=button:contains("Save")
+    the user clicks the button/link   link=research category
+    the user clicks the button twice  jQuery=label:contains("${res_category}")
+    the user clicks the button/link   id=application-question-complete
+    the user should see the element   jQuery=li:contains("Research category") > .task-status-complete
 
 the user marks the finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
@@ -259,7 +259,7 @@ the user checks Your Funding section
 
 the user selects research area
     [Arguments]  ${Application}
-    the applicant completes the application details  ${Application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the user selects Research category from funding  Feasibility studies
     the user fills in the funding information        ${Application}
 
 the user fills in the funding information

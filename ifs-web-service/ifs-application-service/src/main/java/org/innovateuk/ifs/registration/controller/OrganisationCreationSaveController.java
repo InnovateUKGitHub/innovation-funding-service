@@ -38,7 +38,7 @@ import java.util.Optional;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 
 /**
  * Provides methods for confirming and saving the organisation as an intermediate step in the registration flow.
@@ -147,7 +147,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), organisationId, "");
         if (application != null) {
             return questionRestService
-                    .getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, APPLICATION_TEAM)
+                    .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM)
                     .handleSuccessOrFailure(
                             failure ->  format("redirect:/application/%s/team", application.getId()),
                             question -> format("redirect:/application/%s/form/question/%s", application.getId(),

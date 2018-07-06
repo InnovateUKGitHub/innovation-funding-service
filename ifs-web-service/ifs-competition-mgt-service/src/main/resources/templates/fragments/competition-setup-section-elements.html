@@ -303,10 +303,10 @@
             </th:block>
 
             <th:block
-                th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
+                th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">
 
                 <input type="hidden" name="competitionSetupForm.question.type"
-                       th:value="${T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}"/>
+                       th:value="${T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION}"/>
 
                 <h2 class="heading-medium extra-margin">Assessment of this question</h2>
 
@@ -493,7 +493,7 @@
                             <input type="hidden" name="removeGuidanceRow"/>
                             <h3 class="heading-small">Guidance table</h3>
                             <table id="guidance-table" class="assessed-guidance"
-                                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
+                                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION}">
                                 <thead>
                                 <tr>
                                     <th scope="col">Score <span class="visuallyhidden"> from</span></th>
@@ -586,7 +586,7 @@
                             </table>
 
                             <table id="guidance-table"
-                                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
+                                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">
                                 <thead>
                                 <tr>
                                     <th scope="col">Subject</th>
