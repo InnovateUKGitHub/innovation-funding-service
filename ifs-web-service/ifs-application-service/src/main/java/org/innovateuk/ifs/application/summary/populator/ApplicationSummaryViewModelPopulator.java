@@ -60,9 +60,10 @@ public class ApplicationSummaryViewModelPopulator {
 
         SummaryViewModel summaryViewModel = summaryViewModelPopulator.populate(applicationId, user, form);
 
-        boolean supportUser = user.hasRole(Role.SUPPORT);
+        //boolean supportUser = user.hasRole(Role.SUPPORT);
 
-        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application) || supportUser;
+        Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
+        //Boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application) || supportUser;
 
         return new ApplicationSummaryViewModel(
                 application,

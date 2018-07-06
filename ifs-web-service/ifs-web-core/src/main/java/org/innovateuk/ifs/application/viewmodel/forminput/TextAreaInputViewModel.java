@@ -45,13 +45,17 @@ public class TextAreaInputViewModel extends AbstractFormInputViewModel {
     }
 
     public boolean isRespondedByCurrentUser() {
+        return applicantResponse.getApplicant().isSameUser(currentApplicant);
+    }
+
+/*    public boolean isRespondedByCurrentUser() {
 
         if (assignButtonsViewModel.getCurrentUser().hasRole(Role.SUPPORT)) {
             return false;
         } else {
             return applicantResponse.getApplicant().isSameUser(currentApplicant);
         }
-    }
+    }*/
 
     public boolean isCanMarkAsComplete() {
         return assignButtonsViewModel != null && assignButtonsViewModel.isAssignedToCurrentUser();

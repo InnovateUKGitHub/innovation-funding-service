@@ -59,11 +59,12 @@ public class ApplicationTeamModelPopulator {
     public ApplicationTeamViewModel populateModel(long applicationId, long loggedInUserId, Long questionId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
 
-        UserResource loggedInUser = userService.findById(loggedInUserId);
-        boolean supportUser = loggedInUser.hasRole(Role.SUPPORT);
+/*        UserResource loggedInUser = userService.findById(loggedInUserId);
+        boolean supportUser = loggedInUser.hasRole(Role.SUPPORT);*/
 
         UserResource leadApplicant = getLeadApplicant(applicationResource);
-        boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant) || supportUser;
+        boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
+        //boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant) || supportUser;
         boolean applicationCanBegin = isApplicationStateCreated(applicationResource) && userIsLeadApplicant;
         boolean closed = !isCompetitionOpen(applicationResource);
         boolean complete = isComplete(applicationId, loggedInUserId, questionId);
@@ -102,10 +103,11 @@ public class ApplicationTeamModelPopulator {
 
         List<InviteOrganisationResource> inviteOrganisationResources = getOrganisationInvites(applicationId, leadOrganisation.getId());
 
-        UserResource loggedInUser = userService.findById(loggedInUserId);
-        boolean supportUser = loggedInUser.hasRole(Role.SUPPORT);
+/*        UserResource loggedInUser = userService.findById(loggedInUserId);
+        boolean supportUser = loggedInUser.hasRole(Role.SUPPORT);*/
 
-        boolean userLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant) || supportUser;
+        boolean userLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
+        //boolean userLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant) || supportUser;
 
         List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModelsForInvites = inviteOrganisationResources.stream()
                 .map(inviteOrganisationResource -> getOrganisationViewModel(inviteOrganisationResource, leadOrganisation.getId(),

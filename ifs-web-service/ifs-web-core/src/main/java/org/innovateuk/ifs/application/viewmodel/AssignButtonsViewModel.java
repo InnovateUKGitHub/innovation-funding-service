@@ -13,7 +13,7 @@ public class AssignButtonsViewModel {
     private ApplicantResource assignee;
     private ApplicantResource leadApplicant;
     private ApplicantResource currentApplicant;
-    private UserResource currentUser;
+    //private UserResource currentUser;
     private QuestionResource question;
     private List<ApplicantResource> assignableApplicants;
     private List<ApplicationInviteResource> pendingAssignableUsers;
@@ -51,13 +51,13 @@ public class AssignButtonsViewModel {
         this.currentApplicant = currentApplicant;
     }
 
-    public UserResource getCurrentUser() {
+/*    public UserResource getCurrentUser() {
         return currentUser;
     }
 
     public void setCurrentUser(UserResource currentUser) {
         this.currentUser = currentUser;
-    }
+    }*/
 
     public List<ApplicantResource> getAssignableApplicants() {
         return assignableApplicants;
@@ -96,12 +96,12 @@ public class AssignButtonsViewModel {
         return isAssignedTo(currentApplicant);
     }
 
-/*    public boolean isAssignedTo(ApplicantResource applicant) {
-        return (isNotAssigned() && applicant.isLead()) || (isAssigned() && assignee.isSameUser(applicant));
-    }*/
-
-
     public boolean isAssignedTo(ApplicantResource applicant) {
+        return (isNotAssigned() && applicant.isLead()) || (isAssigned() && assignee.isSameUser(applicant));
+    }
+
+
+    /*public boolean isAssignedTo(ApplicantResource applicant) {
         return (isNotAssigned() && isLeadOrSupport()) || complexCheck(applicant);
     }
 
@@ -122,7 +122,7 @@ public class AssignButtonsViewModel {
 
     private boolean isLeadOrSupport() {
         return currentUser.hasAnyRoles(Role.LEADAPPLICANT, Role.SUPPORT);
-    }
+    }*/
 
     public boolean isNotAssigned() {
         return !isAssigned();
@@ -132,8 +132,12 @@ public class AssignButtonsViewModel {
     }
 
     public boolean getCurrentUserIsLead() {
-        return currentUser.hasRole(Role.SUPPORT) || currentApplicant.isLead();
+        return currentApplicant.isLead();
     }
+
+/*    public boolean getCurrentUserIsLead() {
+        return currentUser.hasRole(Role.SUPPORT) || currentApplicant.isLead();
+    }*/
 
     public boolean isAssignedByLead() {
         return assignedBy.isLead();

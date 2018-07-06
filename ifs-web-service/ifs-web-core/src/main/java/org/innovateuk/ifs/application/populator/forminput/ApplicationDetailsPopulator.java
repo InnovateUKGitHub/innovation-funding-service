@@ -29,8 +29,8 @@ public class ApplicationDetailsPopulator extends AbstractFormInputPopulator<Appl
 
     @Override
     protected void populate(AbstractApplicantResource resource, ApplicationDetailsInputViewModel viewModel) {
-        //viewModel.setReadonly(viewModel.isReadonly() || !resource.getCurrentApplicant().isLead());
-        viewModel.setReadonly(viewModel.isReadonly() || !isLeadOrSupport(resource.getCurrentUser()));
+        viewModel.setReadonly(viewModel.isReadonly() || !resource.getCurrentApplicant().isLead());
+        //viewModel.setReadonly(viewModel.isReadonly() || !isLeadOrSupport(resource.getCurrentUser()));
         viewModel.setApplication(resource.getApplication());
         viewModel.setCompetition(resource.getCompetition());
         viewModel.setSelectedResearchCategoryName(resource.getApplication().getResearchCategory().getName());
@@ -38,9 +38,9 @@ public class ApplicationDetailsPopulator extends AbstractFormInputPopulator<Appl
         viewModel.setAssignButtonsViewModel(assignButtonsPopulator.populate(resource, viewModel.getApplicantQuestion(), viewModel.isComplete()));
     }
 
-    private boolean isLeadOrSupport(UserResource currentUser) {
+/*    private boolean isLeadOrSupport(UserResource currentUser) {
         return currentUser.hasAnyRoles(Role.LEADAPPLICANT, Role.SUPPORT);
-    }
+    }*/
 
     @Override
     public void addToForm(ApplicationForm form, ApplicationDetailsInputViewModel viewModel) {

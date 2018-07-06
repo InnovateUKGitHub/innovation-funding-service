@@ -36,15 +36,26 @@ public class FileUploadPopulator extends AbstractFormInputPopulator<FileUploadIn
 
     private boolean isReadOnlyViewMode(FileUploadInputViewModel viewModel, AbstractApplicantResource resource) {
         return viewModel.isReadonly() || viewModel.isComplete()
-                || !isAssignedToCurrentApplicant(viewModel.getApplicantQuestion(), resource.getCurrentApplicant(), resource.getCurrentUser());
+                || !isAssignedToCurrentApplicant(viewModel.getApplicantQuestion(), resource.getCurrentApplicant());
 
     }
+
+/*    private boolean isReadOnlyViewMode(FileUploadInputViewModel viewModel, AbstractApplicantResource resource) {
+        return viewModel.isReadonly() || viewModel.isComplete()
+                || !isAssignedToCurrentApplicant(viewModel.getApplicantQuestion(), resource.getCurrentApplicant(), resource.getCurrentUser());
+
+    }*/
 
     private boolean leadApplicantAndUnassigned(ApplicantQuestionResource applicantQuestion, ApplicantResource currentApplicant) {
         return applicantQuestion.getApplicantQuestionStatuses().stream().noneMatch(status -> status.getAssignee() != null) && currentApplicant.isLead();
     }
 
-    private boolean isAssignedToCurrentApplicant(ApplicantQuestionResource applicantQuestion, ApplicantResource currentApplicant, UserResource currentUser) {
+    private boolean isAssignedToCurrentApplicant(ApplicantQuestionResource applicantQuestion, ApplicantResource currentApplicant) {
+        return applicantQuestion.allAssignedStatuses().anyMatch(status -> status.getAssignee().isSameUser(currentApplicant))
+                || leadApplicantAndUnassigned(applicantQuestion, currentApplicant);
+    }
+
+/*    private boolean isAssignedToCurrentApplicant(ApplicantQuestionResource applicantQuestion, ApplicantResource currentApplicant, UserResource currentUser) {
 
         if (currentUser.hasRole(Role.SUPPORT)) {
             return false;
@@ -52,7 +63,7 @@ public class FileUploadPopulator extends AbstractFormInputPopulator<FileUploadIn
             return applicantQuestion.allAssignedStatuses().anyMatch(status -> status.getAssignee().isSameUser(currentApplicant))
                     || leadApplicantAndUnassigned(applicantQuestion, currentApplicant);
         }
-    }
+    }*/
 
     @Override
     protected FileUploadInputViewModel createNew() {

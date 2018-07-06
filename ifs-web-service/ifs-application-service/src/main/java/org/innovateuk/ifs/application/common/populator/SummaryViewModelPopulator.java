@@ -125,10 +125,10 @@ public class SummaryViewModelPopulator {
 
         ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
 
-/*        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);*/
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
 
-        Optional<OrganisationResource> userOrganisation = getUserOrganisation(applicationId, user);
+        //Optional<OrganisationResource> userOrganisation = getUserOrganisation(applicationId, user);
 
         List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
                 competition.getId(), APPLICATION).getSuccess();
@@ -207,7 +207,7 @@ public class SummaryViewModelPopulator {
         );
     }
 
-    private Optional<OrganisationResource> getUserOrganisation(long applicationId, UserResource user) {
+/*    private Optional<OrganisationResource> getUserOrganisation(long applicationId, UserResource user) {
 
         if (user.hasRole(Role.SUPPORT)) {
             return Optional.of(applicationService.getLeadOrganisation(applicationId));
@@ -215,7 +215,7 @@ public class SummaryViewModelPopulator {
             List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
             return organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
         }
-    }
+    }*/
 
     private ApplicationOverviewCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
