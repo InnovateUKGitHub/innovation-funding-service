@@ -70,7 +70,7 @@ Collaborator should see the terms and conditions from the overview page
     ...  This test depends on the previous test suite to run first
     [Tags]  Email
     Given the user clicks the button/link          link=Application overview
-    When The user clicks the button/link           link=view the grant terms and conditions
+    When The user clicks the button/link           link=View the grant terms and conditions
     Then the user should see the text in the page  Terms and conditions of an Innovate UK grant award
     And the user should see the text in the page   Entire agreement
 
@@ -164,7 +164,8 @@ Collaborator can see that Research area is not selected
     [Documentation]  INFUND-6823
     [Tags]
     Given the user navigates to Your-finances page  Assign test
-    Then The user should see the element  jQuery=.list li:contains("The lead applicant must select a research category")
+    When the user clicks the button/link  link=Your funding
+    Then The user should see the element  jQuery=.list li:contains("the lead applicant must select a research category")
 
 Lead selects Research category
     [Documentation]  INFUND-6823
@@ -172,7 +173,8 @@ Lead selects Research category
     [Setup]  log in as a different user   ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user navigates to Your-finances page  Assign test
-    Then the user should see the element  jQuery=p:contains("You must select a"):contains("research category")
+    And the user clicks the button/link   link=Your funding
+    Then the user should see the element  jQuery=li:contains("you must select a"):contains("research category")
     When the user navigates to the page   ${DASHBOARD_URL}
     Then the user clicks the button/link  link=Assign test
     When the user selects Research category  Feasibility studies

@@ -59,7 +59,6 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     @Test
     public void testPostCreateNewApplication() throws Exception {
         long competitionId = 1L;
-
         mockMvc.perform(post("/application/create-authenticated/{competitionId}", competitionId)
                 .param("createNewApplication", "1"))
                 .andExpect(status().is3xxRedirection())
