@@ -29,31 +29,54 @@ public class CompetitionOpenQueryResource {
 
     public CompetitionOpenQueryResource() {}
 
-    public Long getApplicationId() { return applicationId; }
+    public Long getApplicationId() {
+        return applicationId;
+    }
 
-    public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
+    }
 
-    public Long getOrganisationId() { return organisationId; }
+    public Long getOrganisationId() {
+        return organisationId;
+    }
 
-    public void setOrganisationId(Long organisationId) { this.organisationId = organisationId; }
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
+    }
 
-    public String getOrganisationName() { return organisationName; }
+    public String getOrganisationName() {
+        return organisationName;
+    }
 
-    public void setOrganisationName(String organisationName) { this.organisationName = organisationName; }
+    public void setOrganisationName(String organisationName) {
+        this.organisationName = organisationName;
+    }
 
-    public Long getProjectId() { return projectId; }
+    public Long getProjectId() {
+        return projectId;
+    }
 
-    public void setProjectId(Long projectId) { this.projectId = projectId; }
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
 
-    public String getProjectName() { return projectName; }
+    public String getProjectName() {
+        return projectName;
+    }
 
-    public void setProjectName(String projectName) { this.projectName = projectName; }
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         CompetitionOpenQueryResource that = (CompetitionOpenQueryResource) o;
 

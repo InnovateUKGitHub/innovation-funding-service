@@ -70,16 +70,30 @@ public class CompetitionFundedKeyApplicationStatisticsResource {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         CompetitionFundedKeyApplicationStatisticsResource that = (CompetitionFundedKeyApplicationStatisticsResource) o;
 
-        if (applicationsSubmitted != that.applicationsSubmitted) return false;
-        if (applicationsFunded != that.applicationsFunded) return false;
-        if (applicationsNotFunded != that.applicationsNotFunded) return false;
-        if (applicationsOnHold != that.applicationsOnHold) return false;
-        if (applicationsNotifiedOfDecision != that.applicationsNotifiedOfDecision) return false;
+        if (applicationsSubmitted != that.applicationsSubmitted)
+            return false;
+
+        if (applicationsFunded != that.applicationsFunded)
+            return false;
+
+        if (applicationsNotFunded != that.applicationsNotFunded)
+            return false;
+
+        if (applicationsOnHold != that.applicationsOnHold)
+            return false;
+
+        if (applicationsNotifiedOfDecision != that.applicationsNotifiedOfDecision)
+            return false;
+
         return applicationsAwaitingDecision == that.applicationsAwaitingDecision;
 
     }

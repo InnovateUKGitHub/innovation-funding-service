@@ -227,7 +227,9 @@ public class CompetitionResource {
         this.releaseFeedbackDate = releaseFeedbackDate;
     }
 
-    public ZonedDateTime getFeedbackReleasedDate() { return feedbackReleasedDate; }
+    public ZonedDateTime getFeedbackReleasedDate() {
+        return feedbackReleasedDate;
+    }
 
     public void setFeedbackReleasedDate(ZonedDateTime feedbackReleasedDate) {
         this.feedbackReleasedDate = feedbackReleasedDate;
@@ -642,9 +644,11 @@ public class CompetitionResource {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o)
+            return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         CompetitionResource that = (CompetitionResource) o;
 

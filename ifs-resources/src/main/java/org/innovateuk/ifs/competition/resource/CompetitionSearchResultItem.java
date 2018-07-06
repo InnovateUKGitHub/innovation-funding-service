@@ -122,15 +122,22 @@ public class CompetitionSearchResultItem {
         return topLevelNavigationLink;
     }
 
-    public ZonedDateTime getOpenDate() { return openDate; }
+    public ZonedDateTime getOpenDate() {
+        return openDate;
+    }
 
-    public void setOpenDate(ZonedDateTime openDate) { this.openDate = openDate; }
+    public void setOpenDate(ZonedDateTime openDate) {
+        this.openDate = openDate;
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         CompetitionSearchResultItem that = (CompetitionSearchResultItem) o;
 
