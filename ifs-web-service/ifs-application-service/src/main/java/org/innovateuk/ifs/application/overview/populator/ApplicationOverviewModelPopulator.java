@@ -13,8 +13,6 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
-import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -57,7 +55,6 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
     private UserService userService;
     private InviteRestService inviteRestService;
     private ProjectService projectService;
-    private CategoryRestService categoryRestService;
     private ApplicantRestService applicantRestService;
     private SectionService sectionService;
     private QuestionService questionService;
@@ -71,7 +68,6 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
                                              UserService userService,
                                              InviteRestService inviteRestService,
                                              ProjectService projectService,
-                                             CategoryRestService categoryRestService,
                                              ApplicantRestService applicantRestService) {
         super(sectionService, questionService);
         this.questionService = questionService;
@@ -83,7 +79,6 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
         this.userService = userService;
         this.inviteRestService = inviteRestService;
         this.projectService = projectService;
-        this.categoryRestService = categoryRestService;
         this.applicantRestService = applicantRestService;
     }
     
@@ -102,11 +97,8 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
 
         int completedQuestionsPercentage = application.getCompletion() == null ? 0 : application.getCompletion().intValue();
 
-        List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
-
         return new ApplicationOverviewViewModel(application, projectResource, projectWithdrawn, competition, userOrganisation.orElse(null),
-                completedQuestionsPercentage, yourFinancesSectionId, userViewModel, assignableViewModel, completedViewModel, sectionViewModel,
-                researchCategories);
+                completedQuestionsPercentage, yourFinancesSectionId, userViewModel, assignableViewModel, completedViewModel, sectionViewModel);
     }
     
     private ApplicationOverviewSectionViewModel getSections(CompetitionResource competition, ApplicationResource application, Long userId) {
