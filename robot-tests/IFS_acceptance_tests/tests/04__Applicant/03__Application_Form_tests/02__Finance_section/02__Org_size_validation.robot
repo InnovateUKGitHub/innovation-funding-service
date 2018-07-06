@@ -17,8 +17,9 @@ Resource          ../../Applicant_Commons.robot
 Before org size is selected, your funding link is not available
     [Documentation]    INFUND-6394
     [Tags]
-    When applicant navigates to the finances of the robot application
-    Then the user should not see the element    link=Your funding
+    Given applicant navigates to the finances of the robot application
+    When the user clicks the button/link        link=Your funding
+    Then the user should see the element        jQuery=li:contains("you must state"):contains("your organisation size")
 
 Small org can be selected
     [Documentation]    INFUND-1110, INFUND-6394

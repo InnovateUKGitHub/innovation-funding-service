@@ -65,6 +65,7 @@ public class ApplicationFeedbackController {
                            UserResource user,
                            @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
                            @RequestParam MultiValueMap<String, String> queryParams) {
+
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
