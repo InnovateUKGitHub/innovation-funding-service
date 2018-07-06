@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.grantofferletter.model;
 
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -8,10 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.*;
 
 /**
- * Creates the grant offer letter academic finance table, used by the html renderer for the grant offer letter
+ * Holder of values for the grant offer letter academic finance table, used by the pdf renderer
  */
 @Component
 public class GrantOfferLetterAcademicFinanceTable extends GrantOfferLetterFinanceTable {
@@ -28,22 +26,75 @@ public class GrantOfferLetterAcademicFinanceTable extends GrantOfferLetterFinanc
     private Map<String, BigDecimal> exceptionsTravelSubsistence;
     private Map<String, BigDecimal> exceptionsEquipment;
     private Map<String, BigDecimal> exceptionsOtherCosts;
+    private BigDecimal incurredStaffTotal;
+    private BigDecimal incurredTravelSubsistenceTotal;
+    private BigDecimal incurredEquipmentTotal;
+    private BigDecimal incurredOtherCostsTotal;
+    private BigDecimal allocatedInvestigatorsTotal;
+    private BigDecimal allocatedEstateCostsTotal;
+    private BigDecimal allocatedOtherCostsTotal;
+    private BigDecimal indirectCostsTotal;
+    private BigDecimal exceptionsStaffTotal;
+    private BigDecimal exceptionsTravelSubsistenceTotal;
+    private BigDecimal exceptionsEquipmentTotal;
+    private BigDecimal exceptionsOtherCostsTotal;
     private List<String> organisations;
 
-    public void populate(Map<String, List<ProjectFinanceRow>> financials) {
-        incurredStaff = sumByFinancialType(financials, DIRECTLY_INCURRED_STAFF.getFinanceRowName());
-        incurredTravelSubsistence = sumByFinancialType(financials, DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getFinanceRowName());
-        incurredEquipment = sumByFinancialType(financials, DIRECTLY_INCURRED_EQUIPMENT.getFinanceRowName());
-        incurredOtherCosts = sumByFinancialType(financials, DIRECTLY_INCURRED_OTHER_COSTS.getFinanceRowName());
-        allocatedInvestigators = sumByFinancialType(financials, DIRECTLY_ALLOCATED_INVESTIGATORS.getFinanceRowName());
-        allocatedEstateCosts = sumByFinancialType(financials, DIRECTLY_ALLOCATED_ESTATES_COSTS.getFinanceRowName());
-        allocatedOtherCosts = sumByFinancialType(financials, DIRECTLY_INCURRED_OTHER_COSTS.getFinanceRowName());
-        indirectCosts = sumByFinancialType(financials, INDIRECT_COSTS_OTHER_COSTS.getFinanceRowName());
-        exceptionsStaff = sumByFinancialType(financials, INDIRECT_COSTS_STAFF.getFinanceRowName());
-        exceptionsTravelSubsistence = sumByFinancialType(financials, INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getFinanceRowName());
-        exceptionsEquipment = sumByFinancialType(financials, INDIRECT_COSTS_EQUIPMENT.getFinanceRowName());
-        exceptionsOtherCosts = sumByFinancialType(financials, INDIRECT_COSTS_OTHER_COSTS.getFinanceRowName());
-        organisations = new ArrayList<>(financials.keySet());
+    public GrantOfferLetterAcademicFinanceTable() {
+
+    }
+
+    public GrantOfferLetterAcademicFinanceTable(Map<String, BigDecimal> incurredStaff,
+                                                Map<String, BigDecimal> incurredTravelSubsistence,
+                                                Map<String, BigDecimal> incurredEquipment,
+                                                Map<String, BigDecimal> incurredOtherCosts,
+                                                Map<String, BigDecimal> allocatedInvestigators,
+                                                Map<String, BigDecimal> allocatedEstateCosts,
+                                                Map<String, BigDecimal> allocatedOtherCosts,
+                                                Map<String, BigDecimal> indirectCosts,
+                                                Map<String, BigDecimal> exceptionsStaff,
+                                                Map<String, BigDecimal> exceptionsTravelSubsistence,
+                                                Map<String, BigDecimal> exceptionsEquipment,
+                                                Map<String, BigDecimal> exceptionsOtherCosts,
+                                                BigDecimal incurredStaffTotal,
+                                                BigDecimal incurredTravelSubsistenceTotal,
+                                                BigDecimal incurredEquipmentTotal,
+                                                BigDecimal incurredOtherCostsTotal,
+                                                BigDecimal allocatedInvestigatorsTotal,
+                                                BigDecimal allocatedEstateCostsTotal,
+                                                BigDecimal allocatedOtherCostsTotal,
+                                                BigDecimal indirectCostsTotal,
+                                                BigDecimal exceptionsStaffTotal,
+                                                BigDecimal exceptionsTravelSubsistenceTotal,
+                                                BigDecimal exceptionsEquipmentTotal,
+                                                BigDecimal exceptionsOtherCostsTotal,
+                                                List<String> organisations) {
+        this.incurredStaff = incurredStaff;
+        this.incurredTravelSubsistence = incurredTravelSubsistence;
+        this.incurredEquipment = incurredEquipment;
+        this.incurredOtherCosts = incurredOtherCosts;
+        this.allocatedInvestigators = allocatedInvestigators;
+        this.allocatedEstateCosts = allocatedEstateCosts;
+        this.allocatedOtherCosts = allocatedOtherCosts;
+        this.indirectCosts = indirectCosts;
+        this.exceptionsStaff = exceptionsStaff;
+        this.exceptionsTravelSubsistence = exceptionsTravelSubsistence;
+        this.exceptionsEquipment = exceptionsEquipment;
+        this.exceptionsOtherCosts = exceptionsOtherCosts;
+        this.incurredStaffTotal = incurredStaffTotal;
+        this.incurredTravelSubsistenceTotal = incurredTravelSubsistenceTotal;
+        this.incurredEquipmentTotal = incurredEquipmentTotal;
+        this.incurredOtherCostsTotal = incurredOtherCostsTotal;
+        this.allocatedInvestigatorsTotal = allocatedInvestigatorsTotal;
+        this.allocatedEstateCostsTotal = allocatedEstateCostsTotal;
+        this.allocatedOtherCostsTotal = allocatedOtherCostsTotal;
+        this.indirectCostsTotal = indirectCostsTotal;
+        this.exceptionsStaffTotal = exceptionsStaffTotal;
+        this.exceptionsTravelSubsistenceTotal = exceptionsTravelSubsistenceTotal;
+        this.exceptionsEquipmentTotal = exceptionsEquipmentTotal;
+        this.exceptionsOtherCostsTotal = exceptionsOtherCostsTotal;
+        this.organisations = organisations;
+
     }
 
     public List<String> getOrganisations() {
@@ -99,52 +150,51 @@ public class GrantOfferLetterAcademicFinanceTable extends GrantOfferLetterFinanc
     }
 
     public BigDecimal getIncurredStaffTotal() {
-        return sumTotals(incurredStaff);
-
+        return incurredStaffTotal;
     }
 
     public BigDecimal getIncurredTravelSubsistenceTotal() {
-        return sumTotals(incurredTravelSubsistence);
+        return incurredTravelSubsistenceTotal;
     }
 
     public BigDecimal getIncurredEquipmentTotal() {
-        return sumTotals(incurredEquipment);
+        return incurredEquipmentTotal;
     }
 
     public BigDecimal getIncurredOtherCostsTotal() {
-        return sumTotals(incurredOtherCosts);
+        return incurredOtherCostsTotal;
     }
 
     public BigDecimal getAllocatedInvestigatorsTotal() {
-        return sumTotals(allocatedInvestigators);
+        return allocatedInvestigatorsTotal;
     }
 
     public BigDecimal getAllocatedEstateCostsTotal() {
-        return sumTotals(allocatedEstateCosts);
+        return allocatedEstateCostsTotal;
     }
 
     public BigDecimal getAllocatedOtherCostsTotal() {
-        return sumTotals(allocatedOtherCosts);
+        return allocatedOtherCostsTotal;
     }
 
     public BigDecimal getIndirectCostsTotal() {
-        return sumTotals(indirectCosts);
+        return indirectCostsTotal;
     }
 
     public BigDecimal getExceptionsStaffTotal() {
-        return sumTotals(exceptionsStaff);
+        return exceptionsStaffTotal;
     }
 
     public BigDecimal getExceptionsTravelSubsistenceTotal() {
-        return sumTotals(exceptionsTravelSubsistence);
+        return exceptionsTravelSubsistenceTotal;
     }
 
     public BigDecimal getExceptionsEquipmentTotal() {
-        return sumTotals(exceptionsEquipment);
+        return exceptionsEquipmentTotal;
     }
 
     public BigDecimal getExceptionsOtherCostsTotal() {
-        return sumTotals(exceptionsOtherCosts);
+        return exceptionsOtherCostsTotal;
     }
 
 }

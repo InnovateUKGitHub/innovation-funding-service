@@ -68,7 +68,12 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<Acade
            return BigDecimal.ZERO;
         }
         String financeRowName = generator.get().getFinanceRowName();
-        return rows.stream().filter(row -> financeRowName.equals(row.getName())).findFirst().map(row -> row.getCost()).orElseGet(() -> BigDecimal.ZERO);
+        return rows
+                .stream()
+                .filter(row -> financeRowName.equals(row.getName()))
+                .findFirst()
+                .map(FinanceRow::getCost)
+                .orElse(BigDecimal.ZERO);
     }
 
     private static Optional<AcademicCostCategoryGenerator> from(CostCategory academicCostCategory){

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Creates the grant offer letter industrial finance table, used by the html renderer for the grant offer letter
+ * Holder of values for the grant offer letter industrial finance table, used by the pdf renderer
  */
 @Component
 public class GrantOfferLetterIndustrialFinanceTable extends GrantOfferLetterFinanceTable {
@@ -23,34 +23,49 @@ public class GrantOfferLetterIndustrialFinanceTable extends GrantOfferLetterFina
     private Map<String, BigDecimal> subcontract;
     private Map<String, BigDecimal> travel;
     private Map<String, BigDecimal> otherCosts;
+    private BigDecimal labourTotal;
+    private BigDecimal materialsTotal;
+    private BigDecimal overheadsTotal;
+    private BigDecimal capitalUsageTotal;
+    private BigDecimal subcontractTotal;
+    private BigDecimal travelTotal;
+    private BigDecimal otherCostsTotal;
     private List<String> organisations;
 
     public GrantOfferLetterIndustrialFinanceTable() {
 
     }
 
-    public void populate(Map<String,List<ProjectFinanceRow>> financials) {
-        labour = sumByFinancialType(financials, FinanceRowType.LABOUR);
-        materials = sumByFinancialType(financials, FinanceRowType.MATERIALS);
-        overheads = sumByFinancialType(financials, FinanceRowType.OVERHEADS);
-        capitalUsage = sumByFinancialType(financials, FinanceRowType.CAPITAL_USAGE);
-        subcontract = sumByFinancialType(financials, FinanceRowType.SUBCONTRACTING_COSTS);
-        travel = sumByFinancialType(financials, FinanceRowType.TRAVEL);
-        otherCosts = sumByFinancialType(financials, FinanceRowType.OTHER_COSTS);
-        organisations = new ArrayList<>(financials.keySet());
-    }
-
-    private Map<String, BigDecimal> sumByFinancialType(Map<String, List<ProjectFinanceRow>> financials, FinanceRowType type) {
-        Map<String, BigDecimal> financeMap = new HashMap<>();
-        financials.forEach( (orgName, finances) -> {
-            BigDecimal financeSum = finances
-                    .stream()
-                    .filter(pfr -> type.getType().equals(pfr.getName()))
-                    .map(ProjectFinanceRow::getCost)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-            financeMap.put(orgName, financeSum);
-        });
-        return financeMap;
+    public GrantOfferLetterIndustrialFinanceTable(Map<String, BigDecimal> labour,
+                                                  Map<String, BigDecimal> materials,
+                                                  Map<String, BigDecimal> overheads,
+                                                  Map<String, BigDecimal> capitalUsage,
+                                                  Map<String, BigDecimal> subcontract,
+                                                  Map<String, BigDecimal> travel,
+                                                  Map<String, BigDecimal> otherCosts,
+                                                  BigDecimal labourTotal,
+                                                  BigDecimal materialsTotal,
+                                                  BigDecimal overheadsTotal,
+                                                  BigDecimal capitalUsageTotal,
+                                                  BigDecimal subcontractTotal,
+                                                  BigDecimal travelTotal,
+                                                  BigDecimal otherCostsTotal,
+                                                  List<String> organisations) {
+        this.labour = labour;
+        this.materials = materials;
+        this.overheads = overheads;
+        this.capitalUsage = capitalUsage;
+        this.subcontract = subcontract;
+        this.travel = travel;
+        this.otherCosts = otherCosts;
+        this.labourTotal = labourTotal;
+        this.materialsTotal = materialsTotal;
+        this.overheadsTotal = overheadsTotal;
+        this.capitalUsageTotal = capitalUsageTotal;
+        this.subcontractTotal = subcontractTotal;
+        this.travelTotal = travelTotal;
+        this.otherCostsTotal = otherCostsTotal;
+        this.organisations = organisations;
     }
 
     public List<String> getOrganisations() {
@@ -81,31 +96,31 @@ public class GrantOfferLetterIndustrialFinanceTable extends GrantOfferLetterFina
     }
 
     public BigDecimal getLabourTotal() {
-        return sumTotals(labour);
+        return labourTotal;
     }
 
     public BigDecimal getMaterialsTotal() {
-        return sumTotals(materials);
+        return materialsTotal;
 
     }
 
     public BigDecimal getOverheadsTotal() {
-        return sumTotals(overheads);
+        return overheadsTotal;
     }
 
     public BigDecimal getCapitalUsageTotal() {
-        return sumTotals(capitalUsage);
+        return capitalUsageTotal;
     }
 
     public BigDecimal getSubcontractTotal() {
-        return sumTotals(subcontract);
+        return subcontractTotal;
     }
 
     public BigDecimal getTravelTotal() {
-        return sumTotals(travel);
+        return travelTotal;
     }
 
     public BigDecimal getOtherCostsTotal() {
-        return sumTotals(otherCosts);
+        return otherCostsTotal;
     }
 }

@@ -17,25 +17,41 @@ public class GrantOfferLetterFinanceTotalsTable extends GrantOfferLetterFinanceT
     private List<String> industrialOrgs;
     private List<String> academicOrgs;
     private Map<String, BigDecimal> grantClaims;
-    private Map<String, BigDecimal> totalEligibleCosts = new HashMap<>();
-    private Map<String, BigDecimal> totalGrant = new HashMap<>();
-    private Map<String, List<ProjectFinanceRow>> totalFinances = new HashMap<>();
+    private Map<String, BigDecimal> totalEligibleCosts;
+    private Map<String, BigDecimal> totalGrant;
 
-    public void populate(Map<String, List<ProjectFinanceRow>> industrialFinances,
-                         Map<String, List<ProjectFinanceRow>> academicFinances) {
-        industrialOrgs = new ArrayList<>(industrialFinances.keySet());
-        academicOrgs = new ArrayList<>(academicFinances.keySet());
-        totalFinances.putAll(industrialFinances);
-        totalFinances.putAll(academicFinances);
-        grantClaims = sumByFinancialType(totalFinances, "grant-claim");
-        totalFinances.forEach((org, finances) -> totalEligibleCosts.put(org,
-                                                                      finances.stream().map(ProjectFinanceRow::getCost).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add)));
+    public GrantOfferLetterFinanceTotalsTable() {
 
-        totalFinances.keySet().forEach( org ->
-                                                totalGrant.put(org,
-                                                               totalEligibleCosts.get(org).multiply(grantClaims.get(org)))
-        );
     }
+
+    public GrantOfferLetterFinanceTotalsTable(Map<String, BigDecimal> grantClaims,
+                                              Map<String, BigDecimal> totalEligibleCosts,
+                                              Map<String, BigDecimal> totalGrant,
+                                              List<String> industrialOrgs,
+                                              List<String> academicOrgs) {
+        this.grantClaims = grantClaims;
+        this.totalEligibleCosts = totalEligibleCosts;
+        this.totalGrant = totalGrant;
+        this.industrialOrgs = industrialOrgs;
+        this.academicOrgs = academicOrgs;
+
+    }
+
+    //    public void populate(Map<String, List<ProjectFinanceRow>> industrialFinances,
+//                         Map<String, List<ProjectFinanceRow>> academicFinances) {
+//        industrialOrgs = new ArrayList<>(industrialFinances.keySet());
+//        academicOrgs = new ArrayList<>(academicFinances.keySet());
+//        totalFinances.putAll(industrialFinances);
+//        totalFinances.putAll(academicFinances);
+//        grantClaims = sumByFinancialType(totalFinances, "grant-claim");
+//        totalFinances.forEach((org, finances) -> totalEligibleCosts.put(org,
+//                                                                      finances.stream().map(ProjectFinanceRow::getCost).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add)));
+//
+//        totalFinances.keySet().forEach( org ->
+//                                                totalGrant.put(org,
+//                                                               totalEligibleCosts.get(org).multiply(grantClaims.get(org)))
+//        );
+//    }
 
     public List<String> getIndustrialOrgs() {
         return industrialOrgs;

@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.grantofferletter.model;
 
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -9,9 +11,9 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Base class for grant offer letter finance tables
+ * Base class for grant offer letter finance table populators
  **/
-public class GrantOfferLetterFinanceTable {
+public class BaseGrantOfferLetterTablePopulator {
 
     protected Map<String, BigDecimal> sumByFinancialType(Map<String, List<ProjectFinanceRow>> financials, String type) {
         Map<String, BigDecimal> financeMap = new HashMap<>();
@@ -32,5 +34,11 @@ public class GrantOfferLetterFinanceTable {
                 .stream()
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+
+//    protected Map<String, List<ProjectFinanceRow>> mapAndFilter()
+    protected Boolean isAcademic(OrganisationType type) {
+        return OrganisationTypeEnum.RESEARCH.getId().equals(type.getId());
     }
 }

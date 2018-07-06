@@ -35,9 +35,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterAcademicFinanceTable;
-import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterFinanceTotalsTable;
-import org.innovateuk.ifs.project.grantofferletter.model.GrantOfferLetterIndustrialFinanceTable;
+import org.innovateuk.ifs.project.grantofferletter.model.*;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -126,13 +124,13 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private ProjectFinanceRowRepository projectFinanceRowRepository;
 
     @Autowired
-    private GrantOfferLetterIndustrialFinanceTable grantOfferLetterIndustrialFinanceTable;
+    private GrantOfferLetterIndustrialFinanceTablePopulator grantOfferLetterIndustrialFinanceTablePopulator;
 
     @Autowired
-    private GrantOfferLetterAcademicFinanceTable grantOfferLetterAcademicFinanceTable;
+    private GrantOfferLetterAcademicFinanceTablePopulator grantOfferLetterAcademicFinanceTablePopulator;
 
     @Autowired
-    private GrantOfferLetterFinanceTotalsTable grantOfferLetterFinanceTotalsTable;
+    private GrantOfferLetterFinanceTotalsTablePopulator grantOfferLetterFinanceTotalsTablePopulator;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -256,24 +254,10 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
 
-        Map<String, List<ProjectFinanceRow>> financesForIndustrialOrgs = new HashMap<>();
-        Map<String, List<ProjectFinanceRow>> financesForAcademicOrgs = new HashMap<>();
-
-
-        project.getOrganisations()
-                .forEach(org -> {
-                    ProjectFinance orgFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(project.getId(), org.getId());
-                    List<ProjectFinanceRow> rows = projectFinanceRowRepository.findByTargetId(orgFinance.getId());
-                    if(isAcademic(org.getOrganisationType())) {
-                        financesForAcademicOrgs.put(org.getName(), rows);
-                    } else {
-                        financesForIndustrialOrgs.put(org.getName(), rows);
-                    }
-                });
-
-        grantOfferLetterIndustrialFinanceTable.populate(financesForIndustrialOrgs);
-        grantOfferLetterAcademicFinanceTable.populate(financesForAcademicOrgs);
-        grantOfferLetterFinanceTotalsTable.populate(financesForIndustrialOrgs, financesForAcademicOrgs);
+        Map<Organisation, List<ProjectFinanceRow>> financesForOrgs = getFinances(project);
+        GrantOfferLetterIndustrialFinanceTable industrialFinanceTable = grantOfferLetterIndustrialFinanceTablePopulator.createTable(financesForOrgs);
+        GrantOfferLetterAcademicFinanceTable academicFinanceTable = grantOfferLetterAcademicFinanceTablePopulator.createTable(financesForOrgs);
+        GrantOfferLetterFinanceTotalsTable totalsFinanceTable = grantOfferLetterFinanceTotalsTablePopulator.createTable(financesForOrgs);
 
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
@@ -292,15 +276,26 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         templateReplacements.put("ProjectLength", project.getDurationInMonths());
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
 
+        // add finances tables
+        templateReplacements.put("industrialFinanceTable", industrialFinanceTable);
+        templateReplacements.put("academicFinanceTable", academicFinanceTable);
+        templateReplacements.put("financeTotalsTable", totalsFinanceTable);
 
-        templateReplacements.put("industrialFinanceTable", grantOfferLetterIndustrialFinanceTable);
-        templateReplacements.put("academicFinanceTable", grantOfferLetterAcademicFinanceTable);
-        templateReplacements.put("financeTotalsTable", grantOfferLetterFinanceTotalsTable);
         return templateReplacements;
     }
 
-    private boolean isAcademic(OrganisationType type) {
-        return OrganisationTypeEnum.RESEARCH.getId().equals(type.getId());
+    private Map<Organisation, List<ProjectFinanceRow>> getFinances(Project project) {
+        Map<Organisation, List<ProjectFinanceRow>> financesForOrgs = new HashMap<>();
+
+        project.getOrganisations()
+                .forEach(org -> {
+                    ProjectFinance orgFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(project.getId(), org.getId());
+                    List<ProjectFinanceRow> rows = projectFinanceRowRepository.findByTargetId(orgFinance.getId());
+
+                    financesForOrgs.put(org, rows);
+                });
+
+        return financesForOrgs;
     }
 
     private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource) {
