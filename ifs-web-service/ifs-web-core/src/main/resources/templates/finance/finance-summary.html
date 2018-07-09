@@ -14,7 +14,7 @@
         </div>
 
         <h2 class="heading-medium">Finances summary</h2>
-        <th:block th:insert="finance/finance-summary :: application_finances_summary" />
+        <th:block th:replace="finance/finance-summary :: application_finances_summary (yourFinancesInCompleteForAnOrganisations = ${model.yourFinancesInCompleteForAnOrganisations})" />
         <!--/* <div class="icon icon-information"></div><span>Please provide your financial breakdown in the <a th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Your finances</a> section.</span> */-->
         <h2 class="heading-medium">Project cost breakdown</h2>
         <th:block th:insert="finance/finance-summary :: financial_summary_table" />
@@ -199,13 +199,13 @@
                 <tr>
                     <th scope="row">Total
                         <div th:if="${currentApplication.isOpen()}">
-                            <th:block th:if="${model.isYourFinancesInCompleteForAnOrganisations}">
+                            <th:block th:if="${yourFinancesInCompleteForAnOrganisations}">
                                 <img class="table-total-tick" width="20" height="20"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-alert.png')}"
                                      alt="has not yet marked the Finances as complete" />
                                 <span class="visuallyhidden">Incomplete</span>
                             </th:block>
-                            <th:block th:if="${!model.isYourFinancesInCompleteForAnOrganisations}">
+                            <th:block th:if="${!yourFinancesInCompleteForAnOrganisations}">
                                 <img class="table-total-tick" width="20" height="17"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-tick.png')}"
                                      alt="has marked the Finances as complete"/>

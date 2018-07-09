@@ -90,7 +90,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
         Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
 
-        Boolean isYourFinancesInCompleteForAnOrganisations = getIsYourFinancesInCompleteForAnOrganisations(
+        Boolean yourFinancesInCompleteForAnOrganisations = getYourFinancesInCompleteForAnOrganisations(
                 completedSectionsByOrganisation, application.getCompetition());
 
         return new ApplicationFinanceSummaryViewModel(
@@ -110,7 +110,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 organisationFinanceOverview.getTotal(),
                 completedSectionsByOrganisation,
                 eachCollaboratorFinanceSectionId,
-                isYourFinancesInCompleteForAnOrganisations
+                yourFinancesInCompleteForAnOrganisations
         );
     }
 
@@ -126,8 +126,8 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         );
     }
 
-    private Boolean getIsYourFinancesInCompleteForAnOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
-                                                                  Long competitionId) {
+    private Boolean getYourFinancesInCompleteForAnOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                                                Long competitionId) {
         SectionResource financeSection = sectionService.getSectionsForCompetitionByType(competitionId, FINANCE).get(0);
         return completedSectionsByOrganisation.keySet()
                 .stream()
