@@ -3,7 +3,7 @@ package org.innovateuk.ifs.form.transactional;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
@@ -67,23 +67,20 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     public ServiceResult<QuestionResource> getNextQuestion(final Long questionId) {
 
         return find(getQuestionSupplier(questionId)).andOnSuccess(question -> {
+            Question nextQuestion = null;
+            if (question != null) {
+                nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
+                        question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
 
-            // retrieve next question within current section
-            Question nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
-                    question.getCompetition().getId(), question.getSection().getId(), question.getPriority());
-
-            // retrieve next question in following section
-            if (nextQuestion == null) {
-                nextQuestion = getNextQuestionBySection(question.getSection().getId(), question.getCompetition().getId());
+                if (nextQuestion == null) {
+                    nextQuestion = getNextQuestionBySection(question.getSection().getId(), question.getCompetition().getId());
+                }
             }
-
-            // retrieve next question in any other section, but with higher priority
             if (nextQuestion == null) {
-                nextQuestion = questionRepository.findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(
-                        question.getCompetition().getId(), question.getPriority());
+                return serviceFailure(notFoundError(QuestionResource.class, "getNextQuestion", questionId));
+            } else {
+                return serviceSuccess(questionMapper.mapToResource(nextQuestion));
             }
-
-            return serviceSuccess(questionMapper.mapToResource(nextQuestion));
         });
     }
 
@@ -134,9 +131,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<QuestionResource> getPreviousQuestion(final Long questionId) {
-
         return find(getQuestionSupplier(questionId)).andOnSuccess(question -> {
-
             Question previousQuestion = null;
             if (question != null) {
                 previousQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
@@ -146,16 +141,13 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
                     previousQuestion = getPreviousQuestionBySection(question.getSection().getId(), question.getCompetition().getId());
                 }
             }
-            if(previousQuestion == null){
+            if (previousQuestion == null) {
                 return serviceFailure(notFoundError(QuestionResource.class, "getPreviousQuestion", questionId));
-            }else{
+            } else {
                 return serviceSuccess(questionMapper.mapToResource(previousQuestion));
             }
         });
-
     }
-
-
 
     @Override
     public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
@@ -172,10 +164,10 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
-    public ServiceResult<QuestionResource> getQuestionByCompetitionIdAndCompetitionSetupQuestionType(final long competitionId,
-                                                                                                     final CompetitionSetupQuestionType competitionSetupQuestionType) {
+    public ServiceResult<QuestionResource> getQuestionByCompetitionIdAndQuestionSetupType(final long competitionId,
+                                                                                          final QuestionSetupType questionSetupType) {
         return find(questionRepository.findFirstByCompetitionIdAndQuestionSetupType(competitionId,
-                competitionSetupQuestionType), notFoundError(Question.class, competitionId, competitionSetupQuestionType)).andOnSuccessReturn(questionMapper::mapToResource);
+                questionSetupType), notFoundError(Question.class, competitionId, questionSetupType)).andOnSuccessReturn(questionMapper::mapToResource);
     }
 
     @Override

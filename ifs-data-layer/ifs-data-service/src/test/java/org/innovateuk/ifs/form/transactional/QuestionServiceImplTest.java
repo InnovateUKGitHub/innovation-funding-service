@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_DETAILS;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_DETAILS;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
@@ -433,7 +433,7 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void getQuestionByCompetitionIdAndCompetitionSetupQuestionType() {
+    public void getQuestionByCompetitionIdAndQuestionSetupType() {
         long competitionId = 1L;
 
         Question question = newQuestion().build();
@@ -446,7 +446,7 @@ public class QuestionServiceImplTest extends BaseUnitTestMocksTest {
         when(questionMapperMock.mapToResource(same(question))).thenReturn(questionResource);
 
         ServiceResult<QuestionResource> result = questionService
-                .getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId,
+                .getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
                         APPLICATION_DETAILS);
 
         assertTrue(result.isSuccess());

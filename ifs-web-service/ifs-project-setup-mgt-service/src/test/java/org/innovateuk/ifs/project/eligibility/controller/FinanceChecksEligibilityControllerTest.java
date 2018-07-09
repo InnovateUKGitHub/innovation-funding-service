@@ -159,7 +159,14 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
         when(applicationService.getById(application.getId())).thenReturn(application);
 
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(industrialOrganisation).build();
-        when(applicantRestService.getSection(loggedInUser.getId(), application.getId(), simpleFilter(sectionResources, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0).getId())).thenReturn(newApplicantSectionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser).build());
+        when(applicantRestService.getSection(loggedInUser.getId(), application.getId(), simpleFilter(sectionResources, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0).getId())).thenReturn(
+                newApplicantSectionResource()
+                        .withApplication(application)
+                        .withCompetition(competitionResource)
+                        .withCurrentApplicant(applicant)
+                        .withApplicants(asList(applicant))
+                        .withSection(newSectionResource().withType(SectionType.FINANCE).build())
+                        .withCurrentUser(loggedInUser).build());
         when(userService.retrieveUserById(loggedInUser.getId())).thenReturn(loggedInUser);
 
         when(projectService.getById(project.getId())).thenReturn(project);

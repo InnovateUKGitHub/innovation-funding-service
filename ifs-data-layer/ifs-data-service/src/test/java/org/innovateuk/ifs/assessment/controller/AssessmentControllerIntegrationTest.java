@@ -3,11 +3,16 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -22,14 +27,19 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_WITHDRAWN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.*;
 
@@ -42,7 +52,13 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     private ProcessRoleRepository processRoleRepository;
 
     @Autowired
+    private AssessmentParticipantRepository assessmentParticipantRepository;
+
+    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     @Override
@@ -83,7 +99,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void findAssignableById() {
-        Assessment assessment = setUpAssessment(getPaulPlum(), PENDING);
+        Assessment assessment = setUpAssessment(getPaulPlum(), AssessmentState.PENDING);
 
         loginPaulPlum();
         AssessmentResource result = controller.findAssignableById(assessment.getId()).getSuccess();
@@ -103,7 +119,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void findAssignableById_notTheAssessmentOwner() {
-        Assessment assessment = setUpAssessment(getFelixWilson(), PENDING);
+        Assessment assessment = setUpAssessment(getFelixWilson(), AssessmentState.PENDING);
 
         loginSteveSmith();
         RestResult<AssessmentResource> result = controller.findAssignableById(assessment.getId());
@@ -154,7 +170,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void findRejectableById_notTheAssessmentOwner() {
-        Assessment assessment = setUpAssessment(getFelixWilson(), PENDING);
+        Assessment assessment = setUpAssessment(getFelixWilson(), AssessmentState.PENDING);
 
         loginSteveSmith();
         RestResult<AssessmentResource> result = controller.findRejectableById(assessment.getId());
@@ -184,15 +200,45 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     }
 
     @Test
-    public void findByUserAndCompetition() {
+    public void findByUserAndCompetition_failure() {
         Long userId = 3L;
         Long competitionId = 1L;
 
         loginPaulPlum();
         RestResult<List<AssessmentResource>> result = controller.findByUserAndCompetition(userId, competitionId);
+        assertTrue(result.getFailure().is(notFoundError(Competition.class, competitionId)));
+    }
+
+    @Test
+    public void findByUserAndCompetition_success() {
+
+        Long userId = 3L;
+        Long competitionId = 1L;
+
+        Competition competition = newCompetition().withId(competitionId)
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .build();
+
+        assessmentParticipantRepository.save(newAssessmentParticipant()
+                .with(id(null))
+                .withStatus(ParticipantStatus.ACCEPTED)
+                .withRole(ASSESSOR)
+                .withCompetition(competition)
+                .withInvite(newAssessmentInvite()
+                        .with(id(null))
+                        .withName("name")
+                        .withEmail("paul.plum@gmail.com")
+                        .withUser(userMapper.mapToDomain(getPaulPlum()))
+                        .withHash("hash")
+                        .withCompetition(competition)
+                        .withInnovationArea(newInnovationArea().build())
+                        .build())
+                .withUser(userMapper.mapToDomain(getPaulPlum()))
+                .build());
+
+        loginPaulPlum();
+        RestResult<List<AssessmentResource>> result = controller.findByUserAndCompetition(userId, competitionId);
         assertTrue(result.isSuccess());
-        List<AssessmentResource> assessmentResources = result.getSuccess();
-        assertEquals(4, assessmentResources.size());
     }
 
     @Test
@@ -336,7 +382,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         loginPaulPlum();
         AssessmentResource assessmentResource = controller.findAssignableById(assessmentId).getSuccess();
-        assertEquals(PENDING, assessmentResource.getAssessmentState());
+        assertEquals(AssessmentState.PENDING, assessmentResource.getAssessmentState());
 
         loginCompAdmin();
         RestResult<Void> result = controller.withdrawAssessment(assessmentResource.getId());

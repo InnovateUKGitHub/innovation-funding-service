@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.builder.FormInputBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
@@ -150,11 +150,11 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void getQuestionByCompetitionIdAndCompetitionSetupQuestionType() {
+    public void getQuestionByCompetitionIdAndQuestionSetupType() {
         long competitionId = 1L;
-        CompetitionSetupQuestionType type = CompetitionSetupQuestionType.APPLICATION_DETAILS;
+        QuestionSetupType type = QuestionSetupType.APPLICATION_DETAILS;
 
-        QuestionResource question = questionService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType
+        QuestionResource question = questionService.getQuestionByCompetitionIdAndQuestionSetupType
                 (competitionId, type).getSuccess();
 
         assertEquals(9L, question.getId().longValue());

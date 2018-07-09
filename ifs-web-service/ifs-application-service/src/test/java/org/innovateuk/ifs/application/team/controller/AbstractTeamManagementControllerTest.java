@@ -30,7 +30,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -230,7 +230,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
         setupApplicationResource();
 
         QuestionResource applicationTeamQuestion = new QuestionResource();
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}",
@@ -248,7 +248,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
         when(testTeamManagementService.removeInvite(3L)).thenReturn(serviceSuccess());
 
         setupApplicationResource();
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restFailure(notFoundError(QuestionResource.class, COMPETITION_ID, APPLICATION_TEAM)));
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
@@ -291,7 +291,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
 
         setupApplicationResource();
         QuestionResource applicationTeamQuestion = new QuestionResource();
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}",
@@ -310,7 +310,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
         when(testTeamManagementService.removeInvite(anyLong())).thenReturn(serviceSuccess());
 
         setupApplicationResource();
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restFailure(notFoundError(QuestionResource.class, COMPETITION_ID, APPLICATION_TEAM)));
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)

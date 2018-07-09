@@ -2,11 +2,11 @@ package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -135,20 +135,20 @@ public class QuestionControllerTest extends BaseControllerMockMVCTest<QuestionCo
     }
 
     @Test
-    public void getQuestionByCompetitionIdAndCompetitionSetupQuestionType() throws Exception {
+    public void getQuestionByCompetitionIdAndQuestionSetupType() throws Exception {
         long competitionId = 1L;
-        CompetitionSetupQuestionType type = CompetitionSetupQuestionType.APPLICATION_DETAILS;
+        QuestionSetupType type = QuestionSetupType.APPLICATION_DETAILS;
 
         QuestionResource questionResource = newQuestionResource().build();
 
-        when(questionService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, type))
+        when(questionService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId, type))
                 .thenReturn(serviceSuccess(questionResource));
 
-        mockMvc.perform(get("/question/getQuestionByCompetitionIdAndCompetitionSetupQuestionType/{competitionId" +
+        mockMvc.perform(get("/question/getQuestionByCompetitionIdAndQuestionSetupType/{competitionId" +
                 "}/{type}", competitionId, type))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(questionResource)));
 
-        verify(questionService, only()).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competitionId, type);
+        verify(questionService, only()).getQuestionByCompetitionIdAndQuestionSetupType(competitionId, type);
     }
 }
