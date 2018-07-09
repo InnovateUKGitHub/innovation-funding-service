@@ -39,7 +39,6 @@ public class ApplicationOverviewSectionModelPopulator {
         final List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         final List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
         final List<ApplicantSectionResource> parentApplicantSections = parentSections.stream().map(sectionResource -> applicantRestService.getSection(userId, application.getId(), sectionResource.getId())).collect(Collectors.toList());
-
         final SortedMap<Long, SectionResource> sections = CollectionFunctions.toSortedMap(parentSections, SectionResource::getPriorityAsLong,
                 Function.identity());
 

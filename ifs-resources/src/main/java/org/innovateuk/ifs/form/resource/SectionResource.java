@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.form.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.util.ArrayList;
@@ -110,10 +111,9 @@ public class SectionResource {
         return this.priority;
     }
 
-
+    @JsonIgnore
     public Long getPriorityAsLong() {
-//        return Long.valueOf(this.priority);
-        return this.priority.longValue();
+        return Long.valueOf(this.priority);
     }
 
     public Boolean isQuestionGroup() {

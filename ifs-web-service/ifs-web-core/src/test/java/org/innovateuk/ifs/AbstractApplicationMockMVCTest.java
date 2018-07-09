@@ -198,6 +198,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 with(id(1L)).
                 with(name("Application details")).
                 withQuestions(simpleMap(singletonList(q01Resource), QuestionResource::getId)).
+                withPriority(1).
                 withType(SectionType.GENERAL).
                 build();
 
@@ -207,6 +208,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 with(id(2L)).
                 with(name("Scope (Gateway question)")).
                 withQuestions(simpleMap(singletonList(q10Resource), QuestionResource::getId)).
+                withPriority(2).
                 withType(SectionType.GENERAL).
                 build();
 
@@ -222,6 +224,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 with(id(3L)).
                 with(name("Business proposition (Q1 - Q4)")).
                 withQuestions(simpleMap(asList(q20Resource, q21Resource, q22Resource, q23Resource), QuestionResource::getId)).
+                withPriority(3).
                 withType(SectionType.GENERAL).
                 build();
 
@@ -238,15 +241,16 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 with(id(4L)).
                 with(name("Project approach (Q5 - Q8)")).
                 withQuestions(simpleMap(asList(q30Resource, q31Resource, q32Resource, q33Resource), QuestionResource::getId)).
+                withPriority(4).
                 withType(SectionType.GENERAL).
                 build();
 
-        SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).withType(SectionType.GENERAL).build();
-        SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).withType(SectionType.GENERAL).build();
-        SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).withType(SectionType.FINANCE).build();
-        SectionResource sectionResource8 = sectionResourceBuilder.with(id(8L)).with(name("Your project costs")).withType(SectionType.PROJECT_COST_FINANCES).withParentSection(sectionResource7.getId()).build();
-        SectionResource sectionResource9 = sectionResourceBuilder.with(id(9L)).with(name("Your organisation")).withType(SectionType.ORGANISATION_FINANCES).withParentSection(sectionResource7.getId()).build();
-        SectionResource sectionResource10 = sectionResourceBuilder.with(id(10L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).withParentSection(sectionResource7.getId()).build();
+        SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).withPriority(5).withType(SectionType.GENERAL).build();
+        SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).withPriority(6).withType(SectionType.GENERAL).build();
+        SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).withPriority(7).withType(SectionType.FINANCE).build();
+        SectionResource sectionResource8 = sectionResourceBuilder.with(id(8L)).with(name("Your project costs")).withPriority(8).withType(SectionType.PROJECT_COST_FINANCES).withParentSection(sectionResource7.getId()).build();
+        SectionResource sectionResource9 = sectionResourceBuilder.with(id(9L)).with(name("Your organisation")).withPriority(9).withType(SectionType.ORGANISATION_FINANCES).withParentSection(sectionResource7.getId()).build();
+        SectionResource sectionResource10 = sectionResourceBuilder.with(id(10L)).with(name("Your funding")).withPriority(10).withType(SectionType.FUNDING_FINANCES).withParentSection(sectionResource7.getId()).build();
 
         sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
         sectionResource7.setChildSections(Arrays.asList(sectionResource8.getId(), sectionResource9.getId(), sectionResource10.getId()));
