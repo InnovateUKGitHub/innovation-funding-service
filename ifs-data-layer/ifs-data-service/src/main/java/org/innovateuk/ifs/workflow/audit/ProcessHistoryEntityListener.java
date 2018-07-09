@@ -4,7 +4,7 @@ import org.innovateuk.ifs.workflow.domain.Process;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
+import javax.persistence.PreUpdate;
 
 /**
  * {@code EntityListener} to create new {@link ProcessHistory}s whenever a {@link Process} is updated.
@@ -12,22 +12,22 @@ import javax.persistence.*;
 @Component
 public class ProcessHistoryEntityListener {
 
-    private static EntityManager entityManager;
+    private static ProcessHistoryRepository processHistoryRepository;
 
-    private static EntityManager getEntityManager() {
-        if (ProcessHistoryEntityListener.entityManager == null) {
-            throw new IllegalStateException("entityManager not autowired in ProcessEntityListener");
+    private static ProcessHistoryRepository getProcessHistoryRepository() {
+        if (ProcessHistoryEntityListener.processHistoryRepository == null) {
+            throw new IllegalStateException("processHistoryRepository not autowired in ProcessEntityListener");
         }
-        return ProcessHistoryEntityListener.entityManager;
+        return ProcessHistoryEntityListener.processHistoryRepository;
     }
 
-    @PersistenceContext
-    private void setEntityManager(EntityManager entityManager) {
-        ProcessHistoryEntityListener.entityManager = entityManager;
+    @Autowired
+    private void setProcessHistoryRepository(ProcessHistoryRepository processHistoryRepository) {
+        ProcessHistoryEntityListener.processHistoryRepository = processHistoryRepository;
     }
 
     @PreUpdate
     public void preUpdate(Process process) {
-        getEntityManager().persist(new ProcessHistory(process));
+        getProcessHistoryRepository().save(new ProcessHistory(process));
     }
 }
