@@ -14,6 +14,7 @@ import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.Map;
 
@@ -26,7 +27,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedRequestFields;
 
 public class ApplicationFundingDecisionControllerDocumentation extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
 
@@ -78,7 +81,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notification)))
                 .andDo( document("applicationfunding/{method-name}",
-                        requestFields(fundingNotificationResourceFields)
+                        relaxedRequestFields(fundingNotificationResourceFields)
                 ));
     }
 }

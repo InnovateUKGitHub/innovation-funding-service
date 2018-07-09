@@ -13,16 +13,16 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class OrganisationDocs {
 
     public static final FieldDescriptor[] organisationResourceFields = {
-            fieldWithPath("id").description("Id of the organisaiton"),
-            fieldWithPath("name").description("Name of the organisation"),
-            fieldWithPath("companyHouseNumber").description("The companies house number"),
-            fieldWithPath("processRoles").description("Ids of the process roles"),
-            fieldWithPath("applicationFinances").description("Ids of the applications finances"),
-            fieldWithPath("addresses").description("List of organisation addresses"),
-            fieldWithPath("users").description("Ids of the users for this organisation"),
-            fieldWithPath("organisationType").description("Id of the organisation type"),
-            fieldWithPath("organisationTypeName").description("Name of the organisation type"),
-            fieldWithPath("organisationTypeDescription").description("Description of the organisation type")
+            fieldWithPath("id").description("Id of the organisation").optional(),
+            fieldWithPath("name").description("Name of the organisation").optional(),
+            fieldWithPath("companyHouseNumber").description("The companies house number").optional(),
+            fieldWithPath("processRoles").description("Ids of the process roles").optional(),
+            fieldWithPath("applicationFinances").description("Ids of the applications finances").optional(),
+            fieldWithPath("addresses").description("List of organisation addresses").optional(),
+            fieldWithPath("users").description("Ids of the users for this organisation").optional(),
+            fieldWithPath("organisationType").description("Id of the organisation type").optional(),
+            fieldWithPath("organisationTypeName").description("Name of the organisation type").optional(),
+            fieldWithPath("organisationTypeDescription").description("Description of the organisation type").optional()
     };
 
     public static final OrganisationResourceBuilder organisationResourceBuilder = newOrganisationResource()

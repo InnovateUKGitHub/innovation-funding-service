@@ -28,14 +28,14 @@ public class CompetitionInviteDocs {
             fieldWithPath("id").description("Id of the competition invite"),
             fieldWithPath("competitionId").description("Id of the competition"),
             fieldWithPath("competitionName").description("Name of the competition").optional(),
-            fieldWithPath("email").description("Email of the competition invitee"),
-            fieldWithPath("hash").description("Hash id of the competition invite"),
-            fieldWithPath("status").description("Status of the competition invite"),
-            fieldWithPath("acceptsDate").description("Date of assessor accepting"),
-            fieldWithPath("deadlineDate").description("Date of assessor deadline"),
-            fieldWithPath("briefingDate").description("Date of assessor briefing"),
-            fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess"),
-            fieldWithPath("innovationArea").description("Innovation area of the invitee")
+            fieldWithPath("email").description("Email of the competition invitee").optional(),
+            fieldWithPath("hash").description("Hash id of the competition invite").optional(),
+            fieldWithPath("status").description("Status of the competition invite").optional(),
+            fieldWithPath("acceptsDate").description("Date of assessor accepting").optional(),
+            fieldWithPath("deadlineDate").description("Date of assessor deadline").optional(),
+            fieldWithPath("briefingDate").description("Date of assessor briefing").optional(),
+            fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess").optional(),
+            fieldWithPath("innovationArea").description("Innovation area of the invitee").optional()
     };
 
     public static final FieldDescriptor[] competitionRejectionFields = {

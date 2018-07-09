@@ -15,7 +15,7 @@ public class UserDocs {
             fieldWithPath("uid").description("unique identifier returned from the authentication identity provider when the user is created"),
             fieldWithPath("title").description("title of the user"),
             fieldWithPath("firstName").type("String").description("first name of the user"),
-            fieldWithPath("lastName").description("last name of the user"),
+            fieldWithPath("lastName").type("String").description("last name of the user"),
             fieldWithPath("inviteName").description("not used"),
             fieldWithPath("phoneNumber").description("telephone number of the user"),
             fieldWithPath("imageUrl").description("not used"),

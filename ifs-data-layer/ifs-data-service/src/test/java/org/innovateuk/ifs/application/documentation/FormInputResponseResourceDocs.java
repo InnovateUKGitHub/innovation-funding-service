@@ -11,13 +11,13 @@ public class FormInputResponseResourceDocs {
             fieldWithPath("value").description("The value of the response"),
             fieldWithPath("updatedBy").type("Number").description("The id of who last updated the input"),
             fieldWithPath("updatedByUser").description("The id of the user who last updated the input"),
-            fieldWithPath("updatedByUserName").description("The user name of the user who last updated the input"),
+            fieldWithPath("updatedByUserName").type("String").description("The user name of the user who last updated the input"),
             fieldWithPath("question").description("The id of the question for this response"),
-            fieldWithPath("formInput").description("The id of the form input"),
+            fieldWithPath("formInput").type("Number").description("The id of the form input"),
             fieldWithPath("formInputMaxWordCount").description("The max word count of the form input"),
-            fieldWithPath("application").description("The id of the application for the application"),
-            fieldWithPath("fileEntry").description("The id of the file entry"),
-            fieldWithPath("filename").description("The name of the file"),
+            fieldWithPath("application").type("Number").description("The id of the application for the application"),
+            fieldWithPath("fileEntry").type("Number").description("The id of the file entry"),
+            fieldWithPath("filename").type("String").description("The name of the file"),
             fieldWithPath("filesizeBytes").description("The size of the file")
     };
 }

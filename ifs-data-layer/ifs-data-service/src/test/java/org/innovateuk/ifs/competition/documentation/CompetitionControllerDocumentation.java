@@ -23,6 +23,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,7 +65,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
-                        responseFields(
+                        relaxedResponseFields(
                                 fieldWithPath("[]").description("list of Competitions the authenticated user has access to")
                         ).andWithPrefix("[].", CompetitionResourceDocs.competitionResourceFields)
                         .andWithPrefix("[].termsAndConditions.", TermsAndConditionsResourceDocs.termsAndConditionsResourceFields)

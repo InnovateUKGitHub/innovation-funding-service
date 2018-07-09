@@ -46,8 +46,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -137,7 +136,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
                         ),
-                        responseFields(spendProfileTableFields)
+                        relaxedResponseFields(spendProfileTableFields)
                 ));
     }
 
@@ -299,7 +298,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being saved"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being saved")
                         ),
-                        requestFields(spendProfileTableFields)
+                        relaxedRequestFields(spendProfileTableFields)
                         .andWithPrefix("months[].", LocalDateResourceDocs.localDateFields)
                 ));
     }
