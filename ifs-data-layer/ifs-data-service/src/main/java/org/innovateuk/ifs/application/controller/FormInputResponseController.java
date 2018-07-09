@@ -11,7 +11,7 @@ import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +47,7 @@ public class FormInputResponseController {
 
     @GetMapping("/findByApplicationIdAndQuestionSetupType/{applicationId}/{questionSetupType}")
     public RestResult<FormInputResponseResource> findByApplicationIdAndQuestionSetupType(@PathVariable long applicationId,
-                                                                                         @PathVariable CompetitionSetupQuestionType questionSetupType) {
+                                                                                         @PathVariable QuestionSetupType questionSetupType) {
         return formInputResponseService.findResponseByApplicationIdAndQuestionSetupType(applicationId, questionSetupType).toGetResponse();
     }
 

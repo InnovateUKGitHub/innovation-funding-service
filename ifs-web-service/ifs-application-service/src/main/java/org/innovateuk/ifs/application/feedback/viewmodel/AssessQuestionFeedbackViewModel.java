@@ -16,26 +16,25 @@ import java.util.List;
 public class AssessQuestionFeedbackViewModel {
 
     private ApplicationResource application;
-
     private QuestionResource question;
-
     private List<FormInputResponseResource> responses;
-
     private AssessmentFeedbackAggregateResource aggregateResource;
-
     private NavigationViewModel navigation;
+    private String originQuery;
 
     public AssessQuestionFeedbackViewModel(ApplicationResource application,
                                            QuestionResource question,
                                            List<FormInputResponseResource> responses,
                                            AssessmentFeedbackAggregateResource aggregateResource,
-                                           NavigationViewModel navigationViewModel
+                                           NavigationViewModel navigationViewModel,
+                                           String originQuery
     ) {
         this.application = application;
         this.question = question;
         this.responses = responses;
         this.aggregateResource = aggregateResource;
         this.navigation = navigationViewModel;
+        this.originQuery = originQuery;
     }
 
     public ApplicationResource getApplication() {
@@ -58,6 +57,10 @@ public class AssessQuestionFeedbackViewModel {
         return navigation;
     }
 
+    public String getOriginQuery() {
+        return originQuery;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -75,6 +78,7 @@ public class AssessQuestionFeedbackViewModel {
                 .append(responses, that.responses)
                 .append(aggregateResource, that.aggregateResource)
                 .append(navigation, that.navigation)
+                .append(originQuery, that.originQuery)
                 .isEquals();
     }
 
@@ -86,6 +90,7 @@ public class AssessQuestionFeedbackViewModel {
                 .append(responses)
                 .append(aggregateResource)
                 .append(navigation)
+                .append(originQuery)
                 .toHashCode();
     }
 }
