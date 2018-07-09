@@ -36,7 +36,7 @@
 
         <h2 class="govuk-heading-l" th:text="${model.question.assessorMaximumScore} ? 'Average score: '+${model.aggregateResource.avgScore}+ '/ ' + ${model.question.assessorMaximumScore}">Average score: 7/10</h2>
         <h3 class="govuk-heading-m no-margin" th:if="${#lists.size(model.aggregateResource.feedback) > 0}">Your assessors' feedback</h3>
-        <ul class="boxed-list">
+        <ul class="govuk-list boxed-list">
             <li th:each="item, iterStat : ${model.aggregateResource.feedback}">
                 <h4 class="govuk-heading-s" th:text="|Assessor ${iterStat.count}|">Assessor 1</h4>
                 <div th:text="${item}" data-md-to-html="" class="wysiwyg-styles">Feedback text</div>

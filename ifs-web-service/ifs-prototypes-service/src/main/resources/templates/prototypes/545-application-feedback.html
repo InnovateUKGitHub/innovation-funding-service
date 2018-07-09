@@ -224,7 +224,7 @@
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-application-details-panel" />
 
 
-	<ul class="list-overview extra-margin">
+	<ul class="govuk-list list-overview extra-margin">
 		<!-- <li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
@@ -269,7 +269,7 @@
 
 	<h2 th:class="(${param.internal != null} ? 'govuk-heading-m' : 'govuk-heading-m no-margin-bottom')">Application questions</h2>
 	<p class="form-hint" th:unless="${param.internal != null}">Each question has been assessed by several independent assessors. They have given a score out of 10 and written feedback.</p>
-	<ul class="list-overview">
+	<ul class="govuk-list list-overview">
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">

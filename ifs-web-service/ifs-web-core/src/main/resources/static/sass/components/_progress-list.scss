@@ -16,6 +16,14 @@
     margin-top: 0;
   }
 
+  ul {
+    &:not(.govuk-list) {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+    }
+  }
+
   > ul > li {
     @include media-down(mobile) {
       padding: 15px;

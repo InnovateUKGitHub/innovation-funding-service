@@ -3,7 +3,7 @@
     <th:block th:fragment="key-statistics(keyStatistics)">
         <h2 class="govuk-heading-l">Key statistics</h2>
 
-        <ul class="grid-row">
+        <ul class="govuk-list grid-row">
             <li class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
                     <span class="govuk-heading-l" th:text="${keyStatistics.statOne}">1</span><br/>
@@ -46,7 +46,7 @@
             </li>
         </ul>
 
-        <ul class="grid-row extra-margin">
+        <ul class="govuk-list grid-row extra-margin">
             <li th:if="${keyStatistics.statFour != null}" class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
                     <span class="govuk-heading-l" th:text="${keyStatistics.statFour}">4</span><br/>

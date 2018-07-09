@@ -18,7 +18,7 @@
 
         <div class="grid-row">
             <div class="column-half">
-                <dl>
+                <dl class="govuk-list">
                     <dt>Assessor type</dt>
                     <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.profile.getBusinessType()))}">Assessor type</dd>
                     <dt>Phone number</dt>
@@ -29,13 +29,13 @@
             </div>
 
             <div class="column-half">
-                <dl>
+                <dl class="govuk-list">
                     <dt>Innovation areas</dt>
                     <dd>
-                        <ul class="list list-bullet">
+                        <ul class="govuk-list govuk-list--bullet">
                             <li th:each="innovationSector : ${model.innovationSectors}">
                                 <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
-                                <ul class="list list-bullet">
+                                <ul class="govuk-list govuk-list--bullet">
                                     <li th:each="innovationArea : ${innovationSector.children}">
                                         <th:block th:text="${innovationArea.name}">digital sciences</th:block>
                                     </li>

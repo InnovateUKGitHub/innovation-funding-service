@@ -22,7 +22,7 @@
 
                 <h2 class="govuk-heading-m no-margin-bottom">Innovation areas</h2>
 
-                <ul class="list list-bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
+                <ul class="govuk-list govuk-list--bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
                   <th:block th:each="innovationSectorEntry : ${model.innovationAreas}"
                             th:with="innovationSector=${innovationSectorEntry.key},innovationAreas=${innovationSectorEntry.value}">
                     <li th:each="innovationArea: ${innovationAreas}" th:text="${innovationArea}">

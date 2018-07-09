@@ -44,7 +44,7 @@
                 <h2 class="govuk-heading-s">This document has been returned to the project team, the following reason was
                     given;</h2>
             </th:block>
-            <ul class="list list-bullet">
+            <ul class="govuk-list govuk-list--bullet">
                 <li th:each="reason : ${model.rejectionReasons}" th:text="${reason}"/>
             </ul>
         </div>
@@ -53,7 +53,7 @@
             <th:block th:if="${model.collaborationAgreementRequired}">
                 <p>Only the Project Manager can upload and submit additional documents to support your grant application.</p>
                 <p>These documents are:</p>
-                <ul class="list list-bullet">
+                <ul class="govuk-list govuk-list--bullet">
                     <li>the collaboration agreement</li>
                     <li>the exploitation plan</li>
                 </ul>
@@ -87,13 +87,13 @@
                         complete this process before your project start date.</p>
                     <p>The following partners need to sign this collaboration agreement:</p>
 
-                    <ul class="list list-bullet" th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
+                    <ul class="govuk-list govuk-list--bullet" th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
                         <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>
                     </ul>
                     <p>An example of a collaboration agreement can be found on the <a href="http://www.ipo.gov.uk/lambert">Lambert
                         Agreement website</a>.</p>
                     <p>The uploaded collaboration agreement must:</p>
-                    <ul class="list list-bullet">
+                    <ul class="govuk-list govuk-list--bullet">
                         <li>be in portable document format (PDF)</li>
                         <li>be legible at 100% magnification</li>
                         <li>be less than 1mb in file size</li>
@@ -143,7 +143,7 @@
                     <p>This plan will evolve and change during the lifetime of the project. Its aim is to confirm the
                         business case for the project. It should also describe partner activities that will exploit the
                         results of the project so that:</p>
-                    <ul class="list list-bullet">
+                    <ul class="govuk-list govuk-list--bullet">
                         <li>changes in the commercial environment can be monitored and accounted for</li>
                         <li>adequate resources are committed to exploitation</li>
                         <li>exploitation can be monitored by the stakeholders</li>
@@ -151,7 +151,7 @@
 
                     <p>A framework of the exploitation plan is available for <a href="/files/exploitation_plan.doc">download</a>.</p>
                     <p>The uploaded exploitation plan must:</p>
-                    <ul class="list list-bullet">
+                    <ul class="govuk-list govuk-list--bullet">
                         <li>be in portable document format (PDF)</li>
                         <li>be legible at 100% magnification</li>
                         <li>be less than 1mb in file size</li>

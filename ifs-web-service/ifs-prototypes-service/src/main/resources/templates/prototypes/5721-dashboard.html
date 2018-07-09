@@ -62,7 +62,7 @@
                                       </div>
                                     </th:block>
                                     <h2 class="govuk-heading-m">Key statistics</h2>
-                                    <ul class="grid-row">
+                                    <ul class="govuk-list grid-row">
                                       <li class="column-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open' or param.status[0] == 'ready'}">
@@ -121,7 +121,7 @@
                                         </div>
                                       </li>
                                     </ul>
-                                    <ul class="grid-row extra-margin">
+                                    <ul class="govuk-list grid-row extra-margin">
                                       <li class="column-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
@@ -178,7 +178,7 @@
                                       </li>
                                     </ul>
                                     <h2 class="govuk-heading-m">Competition navigation</h2>
-                                    <ul class="link-list">
+                                    <ul class="govuk-list link-list">
                                       <li>
                                         <a th:href="${(param.status != null ? '/prototypes/5052-view-applications?comp=' + param.status[0] : '/prototypes/5052-view-applications?comp=Open')}" class="" th:classappend="${(param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Applications: All, submitted, non-submitted, ineligible</a>
                                       </li>
@@ -411,14 +411,14 @@
                                 </th:block>
                                 <h2 class="govuk-heading-m">Review progress</h2>
                                 <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
-                                    <ul class="list-overview">
+                                    <ul class="govuk-list list-overview">
                                         <li><h3 class="govuk-heading-s"><a href="/prototypes/5062-open-applications?comp=Open">All applications</a></h3></li>
                                         <li><h3 class="govuk-heading-s"><a href="/prototypes/5062-manage-assessors?comp=Open">Invite assessors</a></h3></li>
                                         <li><h3 class="govuk-heading-s"><a href="#">Update competition details</a></h3></li>
                                     </ul>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                                    <ul class="list-overview">
+                                    <ul class="govuk-list list-overview">
                                         <li>
                                             <h3 class="govuk-heading-s"><a href="/prototypes/5385-application-allocation?comp=Closed">Allocate applications</a></h3>
                                         </li>
@@ -440,7 +440,7 @@
                                     </ul>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                    <ul class="list-overview">
+                                    <ul class="govuk-list list-overview">
                                         <li>
                                             <h3 class="govuk-heading-s"><a href="/prototypes/5389-manage-assessors?comp=assessment">Manage assessors</a></h3>
                                         </li>
@@ -462,7 +462,7 @@
                                     </ul>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-                                    <ul class="list-overview">
+                                    <ul class="govuk-list list-overview">
                                         <li>
                                             <h3 class="govuk-heading-s"><a href="#">Setup panel</a></h3>
                                         </li>
@@ -484,7 +484,7 @@
                                     </ul>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-                                    <ul class="list-overview">
+                                    <ul class="govuk-list list-overview">
                                         <li>
                                             <h3 class="govuk-heading-s"><a href="#">Funding decision</a></h3>
                                         </li>

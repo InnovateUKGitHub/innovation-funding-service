@@ -8,7 +8,7 @@
 
     <div class="grid-row">
         <div class="column-half">
-            <dl class="font-xsmall">
+            <dl class="govuk-list govuk-!-font-size-16">
                 <dt>Competition name</dt>
                 <dd th:text="${competition.name}"></dd>
                 <dt>When do you wish to start your project?</dt>
@@ -35,7 +35,7 @@
         </div>
         <div class="column-half">
             <th:block th:if="${showApplicationTeamLink}">
-                <ul class="list list-bullet">
+                <ul class="govuk-list govuk-list--bullet">
                     <li>
                         <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${queryParams}">
                             view contributors and collaborators

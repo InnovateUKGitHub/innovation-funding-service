@@ -15,7 +15,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage interview panel',subTitle=|${model.competitionId}: ${model.competitionName}, competition ${#strings.toLowerCase(model.competitionStatus.displayName)} |,size='govuk-heading-xl'" />
 
-        <ul class="grid-row">
+        <ul class="govuk-list grid-row">
             <li class="column-quarter">
                 <div class="highlight-panel highlight-panel-padded">
                     <span class="govuk-heading-l" th:text="${model.keyStats.applicationsAssigned}"></span><br /><small>Applications assigned</small>

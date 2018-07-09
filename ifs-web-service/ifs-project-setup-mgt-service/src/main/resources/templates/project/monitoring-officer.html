@@ -166,7 +166,7 @@
 
                 <th:block th:if="${model.partnerOrganisationNames}">
                     <h3 class="govuk-heading-m no-margin">Project partners</h3>
-                    <ul class="list list-bullet">
+                    <ul class="govuk-list govuk-list--bullet">
                         <li th:each="organisationName : ${model.partnerOrganisationNames}">
                             <th:block th:text="${organisationName}">organisation name</th:block>
                             <th:block th:if="${organisationName.equals(model.leadOrganisationName)}"> (Lead)</th:block>

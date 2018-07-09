@@ -51,7 +51,7 @@
             <h3 class="govuk-heading-s">Lead organisation</h3>
             <p th:text="${leadOrganisation.name}" />
             <h3 class="govuk-heading-s">Partners</h3>
-            <ul class="list list-bullet">
+            <ul class="govuk-list govuk-list--bullet">
                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                     <span th:text="${organisation.getName()}"></span>
                 </li>

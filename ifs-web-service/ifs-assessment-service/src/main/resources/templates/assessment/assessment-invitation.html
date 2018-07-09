@@ -29,7 +29,7 @@
                         </div>
                         <div class="column-half">
                             <p class="govuk-heading-s no-margin">Partners:</p>
-                            <ul class="list list-bullet">
+                            <ul class="govuk-list govuk-list--bullet">
                                 <li th:each="partner : ${model.partners}">
                                     <th:block th:text="${partner.name}"></th:block>
                                     <strong th:if="${partner.id.equals(model.leadPartner.id)}">(Lead)</strong>
@@ -46,7 +46,7 @@
                 </div>
 
                 <h2 class="govuk-heading-m">Review the project summary above to make sure:</h2>
-                <ul class="list list-bullet">
+                <ul class="govuk-list govuk-list--bullet">
                     <li>you do not have a conflict of interest with this application</li>
                     <li>the application fits within your area of expertise</li>
                     <li>you have time to assess this application</li>

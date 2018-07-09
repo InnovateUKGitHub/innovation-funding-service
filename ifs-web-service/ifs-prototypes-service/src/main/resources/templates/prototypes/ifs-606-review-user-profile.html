@@ -24,7 +24,7 @@
 
   <h2 class="govuk-heading-m">Personal details</h2>
 
-  <dl>
+  <dl class="govuk-list">
     <dt>Full name</dt>
     <dd class="extra-margin-bottom" th:text="${(param.firstName == null) and (param.lastName == null)} ? 'Mark Smith' : |${param.firstName} ${param.lastName}|">Mark Smith</dd>
 

@@ -65,7 +65,7 @@
         <h2 class="govuk-heading-m">Open (5)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Technology inspired'},
@@ -124,7 +124,7 @@
         <h2 class="govuk-heading-m">Closed (1)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Portable renewable energy generation'},
@@ -143,7 +143,7 @@
         <h2 class="govuk-heading-m">In assessment (1)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Portable power station'},
@@ -162,7 +162,7 @@
         <h2 class="govuk-heading-m">Panel (1)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Portable renewable energy generation'},
@@ -181,7 +181,7 @@
         <h2 class="govuk-heading-m">Inform (1)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Solving problems with data'},
@@ -204,7 +204,7 @@
         <h2 class="govuk-heading-m">Project setup (2)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Solving problems with data'},
@@ -235,7 +235,7 @@
         <h2 class="govuk-heading-m">In preparation (3)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:unless="${param.comp != null and param.comp[0] == 'saveOpen'}"
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
@@ -271,7 +271,7 @@
         <h2 class="govuk-heading-m">Ready to open (1)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:unless="${param.comp != null and param.comp[0] == 'saveDraft' or param.comp == null}"
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
@@ -304,7 +304,7 @@
     <h2 class="govuk-heading-m">Complete (27)</h2>
 
         <div class="table-overflow">
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <th:block
                     th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                     th:with="rowTitle=${'Solving problems with data'},
@@ -395,7 +395,7 @@
 
         <h2 class="govuk-heading-m">Open competitions (1)</h2>
 
-        <ul class="list-overview">
+        <ul class="govuk-list list-overview">
             <th:block
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                 th:with="rowTitle=${param.searchQuery[0] + ' 1'},
@@ -410,7 +410,7 @@
 
         <h2 class="govuk-heading-m">In assessment (1)</h2>
 
-        <ul class="list-overview">
+        <ul class="govuk-list list-overview">
             <th:block
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                 th:with="rowTitle=${'Another ' + param.searchQuery[0]},
@@ -425,7 +425,7 @@
 
         <h2 class="govuk-heading-m">Archive (2)</h2>
 
-        <ul class="list-overview">
+        <ul class="govuk-list list-overview">
             <th:block
                 th:include="prototypes/fragments/comp-setup :: prototype-dashboard-row"
                 th:with="rowTitle=${'Old ' + param.searchQuery[0]},
@@ -1468,7 +1468,7 @@
                     </div>
                     <div class="column-three-quarters">
                         <p>You should describe:</p>
-                        <ul class="list list-bullet">
+                        <ul class="govuk-list govuk-list--bullet">
                             <li>the business opportunity you have identified and how you plan to take advantage of it</li>
                             <li>the customer needs you have identified and how your project will meet them</li>
                             <li>the challenges you expect to face and how you will overcome them</li>

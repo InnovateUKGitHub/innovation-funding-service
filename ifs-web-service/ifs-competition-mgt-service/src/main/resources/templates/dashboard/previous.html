@@ -20,7 +20,7 @@
         <section th:with="previousComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}">
             <h2 class="govuk-heading-m"
                 th:text="'Previous competitions ('+${model.counts.feedbackReleasedCount}+')'"></h2>
-            <ul class="list-overview">
+            <ul class="govuk-list list-overview">
                 <li class="grid-row" th:each="competition : ${previousComps}">
                     <th:block
                         th:insert="competition/dashboard :: dashboard-row"

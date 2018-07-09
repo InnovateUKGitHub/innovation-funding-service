@@ -27,7 +27,7 @@
                     contact Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.
                 </p>
 
-                <ul class="list list-bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
+                <ul class="govuk-list govuk-list--bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
                     <th:block th:each="innovationSectorEntry : ${model.innovationAreas}"
                         th:with="innovationSector=${innovationSectorEntry.key},innovationAreas=${innovationSectorEntry.value}">
                         <li th:each="innovationArea: ${innovationAreas}" th:text="${innovationArea}">

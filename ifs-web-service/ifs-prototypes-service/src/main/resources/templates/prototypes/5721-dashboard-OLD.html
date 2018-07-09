@@ -174,7 +174,7 @@
 	<h2 class="govuk-heading-m">Review progress</h2>
 
 	<th:block th:if="${param.status == null or param.status[0] == 'Open'}">
-		<ul class="list-overview">
+		<ul class="govuk-list list-overview">
 			<li><h3 class="govuk-heading-s"><a href="/prototypes/5062-open-applications?comp=Open">All applications</a></h3></li>
 			<li><h3 class="govuk-heading-s"><a href="/prototypes/5062-manage-assessors?comp=Open">Invite assessors</a></h3></li>
 			<li><h3 class="govuk-heading-s"><a href="#">Update competition details</a></h3></li>
@@ -183,7 +183,7 @@
 
 
 	<th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-		<ul class="list-overview">
+		<ul class="govuk-list list-overview">
 			<li>
 				<h3 class="govuk-heading-s"><a href="/prototypes/5385-application-allocation?comp=Closed">Allocate applications</a></h3>
 			</li>
@@ -206,7 +206,7 @@
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-		<ul class="list-overview">
+		<ul class="govuk-list list-overview">
 			<li>
 				<h3 class="govuk-heading-s"><a href="/prototypes/5389-manage-assessors?comp=assessment">Manage assessors</a></h3>
 			</li>
@@ -229,7 +229,7 @@
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-		<ul class="list-overview">
+		<ul class="govuk-list list-overview">
 			<li>
 				<h3 class="govuk-heading-s"><a href="#">Setup panel</a></h3>
 			</li>
@@ -252,7 +252,7 @@
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-		<ul class="list-overview">
+		<ul class="govuk-list list-overview">
 			<li>
 				<h3 class="govuk-heading-s"><a href="#">Funding decision</a></h3>
 			</li>

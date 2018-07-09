@@ -62,8 +62,8 @@ User can view the competition brief
     Then the user should get a competition brief window
     And the user should not see an error in the page
     And the user should see the text in the page         ${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user should see the element                  jQuery=.list li:contains("Competition opens")
-    And the user should see the element                  jQuery=.list li:contains("Competition closes")
+    And the user should see the element                  jQuery=.govuk-list li:contains("Competition opens")
+    And the user should see the element                  jQuery=.govuk-list li:contains("Competition closes")
     And the user should see the element                  jQuery=.button:contains("Start new application")
     [Teardown]    the user closes the competition brief
 

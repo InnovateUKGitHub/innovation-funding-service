@@ -50,10 +50,10 @@
 
         <h3 class="govuk-heading-s">Innovation areas</h3>
 
-        <ul class="list list-bullet">
+        <ul class="govuk-list govuk-list--bullet">
             <li th:each="innovationSector : ${model.innovationSectors}">
                 <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
-                <ul class="list list-bullet">
+                <ul class="govuk-list govuk-list--bullet">
                     <li th:each="innovationArea : ${innovationSector.children}">
                         <th:block th:text="${innovationArea.name}">digital sciences</th:block>
                     </li>

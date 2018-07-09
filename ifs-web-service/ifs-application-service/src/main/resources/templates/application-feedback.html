@@ -32,7 +32,7 @@
                         <p th:text="${model.leadOrganisation.name}">Aptrans Ltd</p>
 
                         <h3 class="govuk-heading-s">Partners</h3>
-                        <ul class="list">
+                        <ul class="govuk-list">
                             <li th:each="organisation : ${model.applicationOrganisations}" th:unless="${organisation.equals(model.leadOrganisation)}" th:text="${organisation.name}">Biotech Corp</li>
                         </ul>
                     </div>
@@ -109,7 +109,7 @@
 
                 <section th:each="section : ${model.sections.values()}" th:unless="${section.name.equals('Finances')}">
                     <th:block th:if="${section.name.equals('Project details')}">
-                        <ul class="list-overview extra-margin">
+                        <ul class="govuk-list list-overview extra-margin">
                             <th:block th:each="question : ${model.sectionQuestions.get(section.id)}" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS}">
                                 <li class="section-status">
                                     <div class="grid-row">
@@ -139,7 +139,7 @@
                         <h2 class="govuk-heading-m no-margin-bottom">Application questions</h2>
                         <p class="form-hint">Each question has been assessed by several independent assessors. They have given a score and feedback for each.</p>
 
-                        <ul class="list-overview">
+                        <ul class="govuk-list list-overview">
                             <li class="section-status" th:each="question : ${model.sectionQuestions.get(section.id)}">
                             <div class="grid-row">
                                 <div class="column-two-thirds">
@@ -189,7 +189,7 @@
 
                 <div th:if="!${#lists.isEmpty(model.feedback)}">
                     <h2 class="govuk-heading-m">Assessor feedback</h2>
-                    <ul class="boxed-list">
+                    <ul class="govuk-list boxed-list">
                         <li th:each="item, iterStat : ${model.feedback}">
                             <h3 class="govuk-heading-s" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
                             <div th:text="${item}" data-text-to-html="" class="wysiwyg-styles">Feedback text</div>

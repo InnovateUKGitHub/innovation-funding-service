@@ -35,7 +35,7 @@ IFS.application.progressiveSelect = (function () {
       el.next('button').remove()
       var children = el.children('option')
       var name = el.attr('name')
-      var html = '<ul class="bullet list-bullet">'
+      var html = '<ul class="govuk-list govuk-list--bullet">'
       children.each(function () {
         var inst = jQuery(this)
         var content = inst.html()

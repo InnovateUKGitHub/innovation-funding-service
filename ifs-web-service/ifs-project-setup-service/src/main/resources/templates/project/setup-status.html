@@ -16,7 +16,7 @@
 
         <div class="grid-row">
             <div class="column-half">
-                <dl class="font-xsmall extra-margin-bottom">
+                <dl class="govuk-list govuk-!-font-size-16 extra-margin-bottom">
                     <dt>Project number:</dt>
                     <dd th:text="${model.applicationId}"/>
                     <dt>Competition:</dt>
@@ -26,7 +26,7 @@
                 </dl>
             </div>
             <div class="column-half">
-                <ul class="list list-bullet">
+                <ul class="govuk-list govuk-list--bullet">
                     <li><a th:href="${'/application/' + model.applicationId + '/feedback'} + ${model.originQuery}">
                         view application feedback</a></li>
                     <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}">
@@ -167,7 +167,7 @@
                         <th:block th:unless="${model.projectManager}">
                             <p>Your Project Manager needs to upload the following:</p>
                         </th:block>
-                        <ul class="list list-bullet">
+                        <ul class="govuk-list govuk-list--bullet">
                             <th:block th:if="${model.collaborationAgreementRequired}">
                                 <li>a collaboration agreement</li>
                             </th:block>

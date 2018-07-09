@@ -71,7 +71,7 @@
                     <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
 
                     <h2 class="govuk-heading-m">Competition navigation</h2>
-                    <ul class="link-list">
+                    <ul class="govuk-list link-list">
                         <li th:with="linkTitle=${model.readOnly ? 'Applications: Submitted, ineligible' : 'Applications: All, submitted, ineligible'}">
                             <a class="disabled" aria-disabled="true"
                                th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}"

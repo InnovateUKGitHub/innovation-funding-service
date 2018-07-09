@@ -19,7 +19,7 @@
                     Please complete the following sections of your account. We cannot assign applications to you for
                     assessment until these sections are complete.
                 </p>
-                <ul class="list list-bullet extra-margin-top">
+                <ul class="govuk-list govuk-list--bullet extra-margin-top">
                     <li th:unless="${model.profileStatus.skillsComplete}">
                         <a th:href="@{/profile/skills/edit}">your skills</a>
                     </li>
@@ -247,7 +247,7 @@
             </div>
 
             <h2 class="govuk-heading-m">Your assessor details</h2>
-            <ul class="list list-bullet">
+            <ul class="govuk-list govuk-list--bullet">
                 <li>
                     <a th:href="@{/profile/skills}">your skills</a>
                 </li>
@@ -263,7 +263,7 @@
             </ul>
 
             <h2 class="govuk-heading-m">Profile</h2>
-            <ul class="list list-bullet">
+            <ul class="govuk-list govuk-list--bullet">
                 <li>
                     <a th:href="@{/profile/details}">your details</a>
                 </li>

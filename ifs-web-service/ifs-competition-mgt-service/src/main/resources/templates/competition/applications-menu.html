@@ -16,7 +16,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
                 <h2 class="govuk-heading-m">Key statistics</h2>
-                <ul class="grid-row">
+                <ul class="govuk-list grid-row">
                     <li class="column-quarter">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l" th:text="${model.assessorsInvited}">10</span>
@@ -51,7 +51,7 @@
 
                 <h2 class="govuk-heading-m">Applications navigation</h2>
 
-                <ul class="link-list">
+                <ul class="govuk-list link-list">
 
                     <li th:unless="${model.innovationLeadView}">
                         <a class="" th:href="@{/competition/{cid}/applications/all(cid=${model.competitionId})}">All applications</a>
