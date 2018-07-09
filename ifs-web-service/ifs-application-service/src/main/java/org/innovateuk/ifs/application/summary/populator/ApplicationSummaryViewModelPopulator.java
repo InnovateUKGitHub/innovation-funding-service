@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.application.summary.populator;
 
+import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator;
+import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategorySummaryModelPopulator;
 import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
-import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator;
-import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
-import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -51,13 +50,7 @@ public class ApplicationSummaryViewModelPopulator {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
-        ProjectResource project = projectService.getByApplicationId(applicationId);
-        boolean projectWithdrawn = (project != null && project.isWithdrawn());
-
-        boolean applicationReadyForSubmit = applicationService.isApplicationReadyForSubmit(application.getId());
         boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
-
-        SummaryViewModel summaryViewModel = summaryViewModelPopulator.populate(applicationId, user, form);
 
         ApplicationTeamViewModel applicationTeamViewModel = competition.getUseNewApplicantMenu() ?
                 applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), application.getCompetition()) : null;
@@ -68,11 +61,16 @@ public class ApplicationSummaryViewModelPopulator {
         return new ApplicationSummaryViewModel(
                 application,
                 competition,
-                applicationReadyForSubmit,
-                summaryViewModel,
+                applicationService.isApplicationReadyForSubmit(application.getId()),
+                summaryViewModelPopulator.populate(applicationId, user, form),
                 applicationTeamViewModel,
                 researchCategorySummaryViewModel,
-                userIsLeadApplicant,
-                projectWithdrawn);
+                userService.isLeadApplicant(user.getId(), application),
+                isProjectWithdrawn(applicationId));
+    }
+
+    private boolean isProjectWithdrawn(Long applicationId) {
+        ProjectResource project = projectService.getByApplicationId(applicationId);
+        return project != null && project.isWithdrawn();
     }
 }
