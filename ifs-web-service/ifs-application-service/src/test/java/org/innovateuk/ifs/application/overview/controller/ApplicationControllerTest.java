@@ -6,8 +6,8 @@ import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.feedback.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.feedback.populator.FeedbackNavigationPopulator;
-import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewModelPopulator;
-import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewViewModel;
+import org.innovateuk.ifs.application.overview.populator.*;
+import org.innovateuk.ifs.application.overview.viewmodel.*;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
@@ -92,6 +92,22 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
     @InjectMocks
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private ApplicationOverviewUserModelPopulator applicationOverviewUserModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationOverviewCompletedDetailsModelPopulator applicationOverviewCompletedDetailsModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator;
+
     @Mock
     private ApplicantRestService applicantRestService;
 
@@ -159,7 +175,10 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) model.get("model");
 
-        assertEquals(app, viewModel.getCurrentApplication());
+        assertEquals(app.getId(), viewModel.getApplicationId());
+        assertEquals(app.getName(), viewModel.getApplicationName());
+        assertEquals(app.getApplicationState(), viewModel.getApplicationState());
+        assertEquals(app.isSubmitted(), viewModel.isApplicationSubmitted());
         assertEquals(sections, viewModel.getCompleted().getCompletedSections());
         assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
 
@@ -213,7 +232,10 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) model.get("model");
 
-        assertEquals(app, viewModel.getCurrentApplication());
+        assertEquals(app.getId(), viewModel.getApplicationId());
+        assertEquals(app.getName(), viewModel.getApplicationName());
+        assertEquals(app.getApplicationState(), viewModel.getApplicationState());
+        assertEquals(app.isSubmitted(), viewModel.isApplicationSubmitted());
         assertEquals(sections, viewModel.getCompleted().getCompletedSections());
         assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
 
@@ -255,7 +277,10 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) model.get("model");
 
-        assertEquals(app, viewModel.getCurrentApplication());
+        assertEquals(app.getId(), viewModel.getApplicationId());
+        assertEquals(app.getName(), viewModel.getApplicationName());
+        assertEquals(app.getApplicationState(), viewModel.getApplicationState());
+        assertEquals(app.isSubmitted(), viewModel.isApplicationSubmitted());
         assertEquals(sections, viewModel.getCompleted().getCompletedSections());
         assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
 
@@ -295,7 +320,10 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         ApplicationOverviewViewModel viewModel = (ApplicationOverviewViewModel) model.get("model");
 
-        assertEquals(app, viewModel.getCurrentApplication());
+        assertEquals(app.getId(), viewModel.getApplicationId());
+        assertEquals(app.getName(), viewModel.getApplicationName());
+        assertEquals(app.getApplicationState(), viewModel.getApplicationState());
+        assertEquals(app.isSubmitted(), viewModel.isApplicationSubmitted());
         assertEquals(sections, viewModel.getCompleted().getCompletedSections());
         assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
 

@@ -3,7 +3,7 @@
 <body>
 
 <th:block
-    th:fragment="sectionDetails (questionAssignees, userIsLeadApplicant, section, currentApplication, currentUser)">
+    th:fragment="sectionDetails (questionAssignees, userIsLeadApplicant, section, applicationId, currentUser)">
     <th:block th:each="question : ${model.section.sectionQuestions.get(section.id)}"
               th:with="leadApplicant=${model.user.leadApplicant},
             assignableUsers=${model.assignable.assignableUsers},
@@ -13,7 +13,7 @@
             th:id="'form-input-'+${question.id}">
             <div class="task">
                 <h3 class="heading-small">
-                    <a th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${currentApplication.id},questionId=${question.id})}"
+                    <a th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${applicationId},questionId=${question.id})}"
                        th:text="|${questionNumber}${question.shortName}|" th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''" />
                 </h3>
             </div>

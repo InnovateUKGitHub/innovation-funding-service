@@ -110,6 +110,12 @@ public class SectionResource {
         return this.priority;
     }
 
+
+    public Long getPriorityAsLong() {
+//        return Long.valueOf(this.priority);
+        return this.priority.longValue();
+    }
+
     public Boolean isQuestionGroup() {
         return this.questionGroup;
     }

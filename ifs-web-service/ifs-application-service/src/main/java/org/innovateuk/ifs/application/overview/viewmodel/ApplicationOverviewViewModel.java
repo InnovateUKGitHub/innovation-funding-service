@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.application.overview.viewmodel;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.util.List;
 
@@ -12,29 +12,42 @@ import java.util.List;
  * View model for the application overview
  */
 public class ApplicationOverviewViewModel {
-    private ApplicationResource currentApplication;
-    private ProjectResource currentProject;
+
+    private Long applicationId;
+    private String applicationName;
+    private ApplicationState applicationState;
+    private boolean isApplicationSubmitted;
     private boolean projectWithdrawn;
     private CompetitionResource currentCompetition;
     private OrganisationResource userOrganisation;
-
     private Integer completedQuestionsPercentage;
     private Long financeSectionId;
-
     private ApplicationOverviewUserViewModel user;
     private ApplicationOverviewAssignableViewModel assignable;
     private ApplicationOverviewCompletedViewModel completed;
     private ApplicationOverviewSectionViewModel section;
-
     private List<ResearchCategoryResource> researchCategories;
+    private ApplicationForm form;
 
-    public ApplicationOverviewViewModel(ApplicationResource currentApplication, ProjectResource currentProject, boolean projectWithdrawn, CompetitionResource currentCompetition,
-                                        OrganisationResource userOrganisation, Integer completedQuestionsPercentage, Long financeSectionId,
-                                        ApplicationOverviewUserViewModel user, ApplicationOverviewAssignableViewModel assignable,
-                                        ApplicationOverviewCompletedViewModel completed, ApplicationOverviewSectionViewModel section,
-                                        List<ResearchCategoryResource> researchCategories) {
-        this.currentApplication = currentApplication;
-        this.currentProject = currentProject;
+    public ApplicationOverviewViewModel(Long applicationId,
+                                        String applicationName,
+                                        ApplicationState applicationState,
+                                        boolean isApplicationSubmitted,
+                                        boolean projectWithdrawn,
+                                        CompetitionResource currentCompetition,
+                                        OrganisationResource userOrganisation,
+                                        Integer completedQuestionsPercentage,
+                                        Long financeSectionId,
+                                        ApplicationOverviewUserViewModel user,
+                                        ApplicationOverviewAssignableViewModel assignable,
+                                        ApplicationOverviewCompletedViewModel completed,
+                                        ApplicationOverviewSectionViewModel section,
+                                        List<ResearchCategoryResource> researchCategories,
+                                        ApplicationForm form) {
+        this.applicationId = applicationId;
+        this.applicationName = applicationName;
+        this.applicationState = applicationState;
+        this.isApplicationSubmitted = isApplicationSubmitted;
         this.projectWithdrawn = projectWithdrawn;
         this.currentCompetition = currentCompetition;
         this.userOrganisation = userOrganisation;
@@ -45,14 +58,23 @@ public class ApplicationOverviewViewModel {
         this.completed = completed;
         this.section = section;
         this.researchCategories = researchCategories;
+        this.form = form;
     }
 
-    public ApplicationResource getCurrentApplication() {
-        return currentApplication;
+    public Long getApplicationId() {
+        return applicationId;
     }
 
-    public ProjectResource getCurrentProject() {
-        return currentProject;
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public ApplicationState getApplicationState() {
+        return applicationState;
+    }
+
+    public boolean isApplicationSubmitted() {
+        return isApplicationSubmitted;
     }
 
     public boolean isProjectWithdrawn() {
@@ -93,5 +115,9 @@ public class ApplicationOverviewViewModel {
 
     public ApplicationOverviewSectionViewModel getSection() {
         return section;
+    }
+
+    public ApplicationForm getForm() {
+        return form;
     }
 }
