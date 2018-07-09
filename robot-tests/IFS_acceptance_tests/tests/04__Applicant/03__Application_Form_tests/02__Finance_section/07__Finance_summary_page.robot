@@ -119,7 +119,6 @@ Finances overview shows as complete once all collaborators have marked as comple
     Then the user should see the element  jQuery=li:contains("Finances overview") .task-status-complete
     [Teardown]  logout as user
 
-
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email  HappyPath
