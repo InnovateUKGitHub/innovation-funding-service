@@ -70,16 +70,15 @@ If funding is complete. application details has a warning message
     [Tags]    HappyPath
     Given the user navigates to the page   ${DASHBOARD_URL}
     And the user clicks the button/link    link=${applicationName}
-    When the user clicks the button/link   link=Application details
+    When the user clicks the button/link   link=Research category
     And the user clicks the button/link    jQuery=button:contains(Edit)
-    And the user clicks the button/link    jQuery=button:contains("Change your research category")
     Then the user should see the text in the page    Changing the research category will reset the funding level for all business participants
 
 Changing application details sets funding level to incomplete
     [Documentation]    INFUND-6895
     [Tags]    HappyPath
-    When the user changes the research category
-    And the user clicks the button/link    name=mark_as_complete
+    Given the user clicks the button twice   css=label[for="researchCategory2"]
+    And the user clicks the button/link    id=application-question-complete
     And the user navigates to Your-finances page  ${applicationName}
     Then the user should see the element    css=.task-list li:nth-of-type(4) .task-status-incomplete
 
@@ -130,7 +129,8 @@ Custom Suite Setup
     ${applicationId} =  get application id by name  ${applicationName}
     the user navigates to the page  ${server}/application/${applicationId}
     the user clicks the button/link  link=Application details
-    the user fills in the Application details  ${applicationName}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the user fills in the Application details  ${applicationName}  ${tomorrowday}  ${month}  ${nextyear}
+    the user selects research category  Feasibility studies
     Complete the org size section  ${applicationName}
 
 the user provides invalid value as percentage then he should see the error
@@ -178,7 +178,5 @@ the user adds more rows in other funding
 
 the user changes the research category
     [Documentation]    INFUND-8260
-    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
-    the user clicks the button/link    css=label[for="researchCategoryChoice-34"]
-    the user clicks the button/link    css=label[for="researchCategoryChoice-34"]
+    the user clicks the button twice   css=label[for="researchCategory2"]
     the user clicks the button/link    jQuery=button:contains(Save)

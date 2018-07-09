@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteResultResourceBuilder.newInviteResultResource;
@@ -82,7 +82,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         QuestionResource applicationTeamQuestion = newQuestionResource().build();
 
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
 
         ApplicationTeamAddOrganisationForm expectedForm = new ApplicationTeamAddOrganisationForm();
@@ -103,7 +103,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         InOrder inOrder = inOrder(applicationService, questionRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM);
+        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -124,7 +124,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
                 .thenReturn(restSuccess(newInviteResultResource().build()));
 
         QuestionResource applicationTeamQuestion = new QuestionResource();
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID,
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID,
                 APPLICATION_TEAM)).thenReturn(restSuccess(applicationTeamQuestion));
 
         mockMvc.perform(post("/application/{applicationId}/team/addOrganisation", applicationResource.getId())
@@ -140,7 +140,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         InOrder inOrder = inOrder(inviteRestService, questionRestService);
         inOrder.verify(inviteRestService).createInvitesByInviteOrganisation("Ludlow", expectedInvites);
-        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID,
+        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID,
                 APPLICATION_TEAM);
         inOrder.verifyNoMoreInteractions();
     }
@@ -161,7 +161,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
         when(inviteRestService.createInvitesByInviteOrganisation("Ludlow", expectedInvites))
                 .thenReturn(restSuccess(newInviteResultResource().build()));
 
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID,
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID,
                 APPLICATION_TEAM)).thenReturn(restFailure(notFoundError(QuestionResource.class,
                 COMPETITION_ID, APPLICATION_TEAM)));
 
@@ -177,7 +177,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         InOrder inOrder = inOrder(inviteRestService, questionRestService);
         inOrder.verify(inviteRestService).createInvitesByInviteOrganisation("Ludlow", expectedInvites);
-        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID,
+        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID,
                 APPLICATION_TEAM);
         inOrder.verifyNoMoreInteractions();
     }
@@ -190,7 +190,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         QuestionResource applicationTeamQuestion = newQuestionResource().build();
 
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
 
         ApplicationTeamAddOrganisationViewModel expectedViewModel = new ApplicationTeamAddOrganisationViewModel(
@@ -225,7 +225,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         InOrder inOrder = inOrder(applicationService, questionRestService, inviteRestService);
         inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
-        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM);
+        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -237,7 +237,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         QuestionResource applicationTeamQuestion = newQuestionResource().build();
 
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
 
         ApplicationTeamAddOrganisationViewModel expectedViewModel = new ApplicationTeamAddOrganisationViewModel(
@@ -284,7 +284,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         InOrder inOrder = inOrder(applicationService, questionRestService, inviteRestService);
         inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
-        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM);
+        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -296,7 +296,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         QuestionResource applicationTeamQuestion = newQuestionResource().build();
 
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
 
         ApplicationTeamAddOrganisationViewModel expectedViewModel = new ApplicationTeamAddOrganisationViewModel(
@@ -335,7 +335,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         InOrder inOrder = inOrder(applicationService, questionRestService, inviteRestService);
         inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
-        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM);
+        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -347,7 +347,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         QuestionResource applicationTeamQuestion = newQuestionResource().build();
 
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
 
         ApplicationTeamAddOrganisationViewModel expectedViewModel = new ApplicationTeamAddOrganisationViewModel(
@@ -386,7 +386,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         InOrder inOrder = inOrder(applicationService, questionRestService, inviteRestService);
         inOrder.verify(applicationService, times(1)).getById(applicationResource.getId());
-        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM);
+        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -398,7 +398,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         QuestionResource applicationTeamQuestion = newQuestionResource().build();
 
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
 
         ApplicationTeamAddOrganisationViewModel expectedViewModel = new ApplicationTeamAddOrganisationViewModel(
@@ -427,7 +427,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         InOrder inOrder = inOrder(applicationService, questionRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM);
+        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -439,7 +439,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         QuestionResource applicationTeamQuestion = newQuestionResource().build();
 
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
 
         ApplicationTeamAddOrganisationViewModel expectedViewModel = new ApplicationTeamAddOrganisationViewModel(
@@ -469,7 +469,7 @@ public class ApplicationTeamAddOrganisationControllerTest extends BaseController
 
         InOrder inOrder = inOrder(applicationService, questionRestService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM);
+        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM);
         inOrder.verifyNoMoreInteractions();
     }
 

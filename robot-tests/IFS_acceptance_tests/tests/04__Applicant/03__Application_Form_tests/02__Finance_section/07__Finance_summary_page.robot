@@ -317,13 +317,15 @@ Lead enters a valid research participation value
 
 the user checks Your Funding section for the project
     [Arguments]  ${Application}
+    the user clicks the button/link  link=Your funding
     ${Research_category_selected}=  run keyword and return status without screenshots  Element Should Be Visible  link=Your funding
     Run Keyword if  '${Research_category_selected}' == 'False'  the user selects research area via Your Funding section  ${Application}
     Run Keyword if  '${Research_category_selected}' == 'True'  the user fills in the funding information with bigger amount  ${Application}
 
 the user selects research area via Your Funding section
     [Arguments]  ${Application}
-    the applicant completes the application details  ${Application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant completes the application details  ${Application}  ${tomorrowday}  ${month}  ${nextyear}
+    then the user selects research category          Feasibility studies
     the user fills in the funding information with bigger amount  ${Application}
 
 the user fills in the funding information with bigger amount
