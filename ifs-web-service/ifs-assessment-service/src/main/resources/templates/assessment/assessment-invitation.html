@@ -25,7 +25,7 @@
                     <div class="grid-row">
                         <div class="column-half">
                             <p class="govuk-heading-s no-margin">Title:</p>
-                            <p th:text="${model.applicationName}"></p>
+                            <p class="govuk-body" th:text="${model.applicationName}"></p>
                         </div>
                         <div class="column-half">
                             <p class="govuk-heading-s no-margin">Partners:</p>
@@ -41,7 +41,7 @@
 
                     <th:block th:if="${model.projectSummary}">
                         <h3 class="govuk-heading-s no-margin">Project summary:</h3>
-                        <p th:text="${model.projectSummary}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response for project summary.</p>
+                        <p th:text="${model.projectSummary}" data-md-to-html="" class="govuk-body wysiwyg-styles">This is the applicant response for project summary.</p>
                     </th:block>
                 </div>
 
@@ -68,7 +68,7 @@
                             </div>
 
                             <div class="panel js-hidden" id="accept-application">
-                                <p>You will still have the option to reject after accepting and viewing the full application</p>
+                                <p class="govuk-body">You will still have the option to reject after accepting and viewing the full application</p>
                             </div>
 
                             <label class="multiple-choice" data-target="reject-application">

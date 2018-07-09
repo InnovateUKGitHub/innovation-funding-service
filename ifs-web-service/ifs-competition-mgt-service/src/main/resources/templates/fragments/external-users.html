@@ -1,5 +1,5 @@
 <th:block th:fragment="user-list(users)">
-    <p>
+    <p class="govuk-body">
         <span class="govuk-heading-xl no-margin" th:text="${users.size()}">38</span>
         <span class="govuk-heading-s">users with IFS account</span>
     </p>
@@ -7,7 +7,7 @@
 </th:block>
 
 <th:block th:fragment="users-table(users)">
-    <p th:if="${#lists.isEmpty(users)}">There are no results for this search.</p>
+    <p class="govuk-body" th:if="${#lists.isEmpty(users)}">There are no results for this search.</p>
     <div class="table-overflow" th:unless="${#lists.isEmpty(users)}">
         <table>
             <thead>

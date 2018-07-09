@@ -23,7 +23,7 @@
         <h1 class="govuk-heading-xl no-margin">Terms of contract</h1>
     </div>
 
-	<p>Please read through all of the terms of service before agreeing.</p>
+	<p class="govuk-body">Please read through all of the terms of service before agreeing.</p>
 
 	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-terms" />
 
@@ -59,7 +59,7 @@
 	</form>
 
   <th:block th:if="${param.status != null and param.status[0] == 'signed'}">
-      <p class="extra-margin">You signed the contract on 13 December 2016.</p>
+      <p class="govuk-body extra-margin">You signed the contract on 13 December 2016.</p>
       <a class="button app-submit-btn" href="/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2">Return to assessor dashboard</a>
   </th:block>
 

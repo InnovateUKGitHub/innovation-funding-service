@@ -47,9 +47,9 @@
     <div class="grid-row">
         <div class="column-half">
             <h3 class="govuk-heading-s">Project title</h3>
-            <p th:text="${applicationName}" />
+            <p class="govuk-body" th:text="${applicationName}" />
             <h3 class="govuk-heading-s">Lead organisation</h3>
-            <p th:text="${leadOrganisation.name}" />
+            <p class="govuk-body" th:text="${leadOrganisation.name}" />
             <h3 class="govuk-heading-s">Partners</h3>
             <ul class="govuk-list govuk-list--bullet">
                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
@@ -63,10 +63,10 @@
         </div>
         <div class="column-half">
             <h3 class="govuk-heading-s">Project timescales</h3>
-            <p>Project start date:<br/>
+            <p class="govuk-body">Project start date:<br/>
             <th:block th:if="${applicationStartDate}" th:text="${#temporals.format(applicationStartDate, 'd/M/yyyy')}" />
             </p>
-            <p>Duration:<br/><th:block th:text="${applicationDurationInMonths}" /> months</p>
+            <p class="govuk-body">Duration:<br/><th:block th:text="${applicationDurationInMonths}" /> months</p>
         </div>
     </div>
 </th:block>
@@ -87,9 +87,9 @@
     </h2>
     <div class="question">
         <div class="form-group">
-            <p data-md-to-html="" class="wysiwyg-styles" th:text="${question.feedback}" />
-            <p><a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}">Return to this question in the application</a></p>
-            <p th:unless="${question.applicationInScope == null}" class="assessor-score alignright">
+            <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${question.feedback}" />
+            <p class="govuk-body"><a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}">Return to this question in the application</a></p>
+            <p th:unless="${question.applicationInScope == null}" class="govuk-body assessor-score alignright">
               <span class="score">In scope: <strong th:text="${question.applicationInScope} ? 'Yes' : 'No'" /></span>
             </p>
         </div>
@@ -100,10 +100,10 @@
 <!-- ======== Assessment - assessor summary total score ======= -->
 <div th:fragment="assessment-summary-total-score(totalGiven, totalPossible, totalPercentage)">
     <div class="extra-margin alignright">
-        <p class="no-margin">
+        <p class="govuk-body no-margin">
             <strong>Total: <th:block th:text="${totalGiven}">0</th:block>/<th:block th:text="${totalPossible}">100</th:block></strong>
         </p>
-        <p>
+        <p class="govuk-body">
             <strong th:text="${totalPercentage}+'%'">0%</strong>
         </p>
     </div>
@@ -185,7 +185,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
 
         <h2 class="govuk-heading-m no-margin">You are about to submit your assessments.</h2>
-        <p>You will not be able to edit after you submit. Are you sure you want to continue?</p>
+        <p class="govuk-body">You will not be able to edit after you submit. Are you sure you want to continue?</p>
         <hr />
         <div>
             <button class="button" type="submit">Yes I want to submit the assessments</button>

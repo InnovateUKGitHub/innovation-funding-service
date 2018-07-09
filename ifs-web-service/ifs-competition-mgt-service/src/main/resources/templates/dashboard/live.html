@@ -26,7 +26,7 @@
         <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'live'}, counts=${model.counts}, tabs=${model.tabs})" />
 
         <th:block th:if="${model.counts.liveCount == 0}">
-          <p>There are no competitions assigned to you.</p>
+          <p class="govuk-body">There are no competitions assigned to you.</p>
         </th:block>
 
         <th:block th:if="${model.counts.liveCount > 0}">

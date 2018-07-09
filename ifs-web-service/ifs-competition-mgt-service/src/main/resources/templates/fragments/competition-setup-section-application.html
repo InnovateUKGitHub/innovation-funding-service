@@ -12,7 +12,7 @@
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
         <h2 class="govuk-heading-m extra-margin" th:text="${model.general.competition.competitionTypeName+' competition questions'}" />
 
-        <p>You can review and amend the application and assessment questions and guidance for this competition. You can also edit the finances section to update funding rules. Any changes you make will be applied to this competition, but will not affect the default template for this competition type.</p>
+        <p class="govuk-body">You can review and amend the application and assessment questions and guidance for this competition. You can also edit the finances section to update funding rules. Any changes you make will be applied to this competition, but will not affect the default template for this competition type.</p>
 
         <h3 class="govuk-heading-s">Application details</h3>
         <ul class="task-list">
@@ -91,7 +91,7 @@
             </li>
         </ul>
         <th:form th:unless="${model.general.state.preventEdit}">
-            <p>
+            <p class="govuk-body">
                 <button type="submit" name="createQuestion" class="buttonlink">Add question</button>
             </p>
         </th:form>

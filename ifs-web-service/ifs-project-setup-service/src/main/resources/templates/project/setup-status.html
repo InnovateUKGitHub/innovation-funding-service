@@ -40,14 +40,14 @@
                 The project is live, you can review progress at <a href="https://grants.innovateuk.org">_connect</a>
             </div>
 
-            <p>The following steps have been completed by all partners. The project can now start.</p>
+            <p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
         </th:block>
 
         <th:block th:unless="${model.projectComplete}">
             <div class="message-alert">
-                <p>You must complete your project and bank details within 30 days of our notification to you.</p>
-                <p>All project partners have individual steps to complete in this section.</p>
-                <p><a th:href="@{/project/{id}/team-status(id=${model.projectId})}">View the status of partners</a></p>
+                <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
+                <p class="govuk-body">All project partners have individual steps to complete in this section.</p>
+                <p class="govuk-body"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}">View the status of partners</a></p>
             </div>
         </th:block>
 
@@ -65,9 +65,9 @@
                                 details
                             </th:block>
                         </h2>
-                        <p th:if="${not model.projectComplete}" class="no-margin">Confirm the contact details, proposed start date and
+                        <p th:if="${not model.projectComplete}" class="govuk-body no-margin">Confirm the contact details, proposed start date and
                             location of the project.</p>
-                        <p th:if="${model.projectComplete}" class="no-margin">The contact details, start date and location of the project.</p>
+                        <p th:if="${model.projectComplete}" class="govuk-body no-margin">The contact details, start date and location of the project.</p>
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectDetailsStatus.getSectionStatus()})"/>
                 </li>
@@ -82,11 +82,11 @@
                                 Officer</a>
                             <th:block th:unless="${model.monitoringOfficerSection.accessible}">Monitoring Officer</th:block>
                         </h2>
-                        <p th:if="${model.monitoringOfficerAssigned}" class="no-margin">
+                        <p th:if="${model.monitoringOfficerAssigned}" class="govuk-body no-margin">
                             Your Monitoring Officer for this project is
                             <th:block th:text="${model.monitoringOfficerName}"/>.
                         </p>
-                        <p th:unless="${model.monitoringOfficerAssigned}" class="no-margin">
+                        <p th:unless="${model.monitoringOfficerAssigned}" class="govuk-body no-margin">
                             We will assign the project a Monitoring Officer.
                         </p>
                     </div>
@@ -96,7 +96,7 @@
                 <li class="read-only" th:if="${model.bankDetailsSection.notAccessible}">
                     <div class="task">
                         <h2 class="govuk-heading-s">Bank details</h2>
-                        <p class="no-margin">We need bank details for those partners eligible for funding.</p>
+                        <p class="govuk-body no-margin">We need bank details for those partners eligible for funding.</p>
                     </div>
                 </li>
 
@@ -110,7 +110,7 @@
                                th:href="@{/project/{id}/bank-details/readonly(id=${model.projectId})}">Bank details</a>
                             <th:block th:if="${model.bankDetailsSection.notRequired}">Bank details (not required)</th:block>
                         </h2>
-                        <p class="no-margin">We need bank details for those partners eligible for funding.</p>
+                        <p class="govuk-body no-margin">We need bank details for those partners eligible for funding.</p>
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.bankDetailsStatus.getSectionStatus()})"/>
                 </li>
@@ -125,7 +125,7 @@
                                 <th:block th:if="${model.financeChecksSection.notRequired}">(not required)</th:block>
                             </th:block>
                         </h2>
-                        <p class="no-margin">We will review your financial information.</p>
+                        <p class="govuk-body no-margin">We will review your financial information.</p>
                     </div>
                     <th:block th:if="${!model.showFinanceChecksPendingQueryWarning}" th:insert="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"/>
                     <div class="status" th:if="${model.showFinanceChecksPendingQueryWarning}">
@@ -143,7 +143,7 @@
                                 profile</a>
                             <th:block th:if="${model.spendProfileSection.notAccessible}">Spend profile</th:block>
                         </h2>
-                        <p class="no-margin">Once we have approved your finances you can change your project spend profile.</p>
+                        <p class="govuk-body no-margin">Once we have approved your finances you can change your project spend profile.</p>
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.spendProfileStatus.getSectionStatus()})"
                               th:if="${model.spendProfileSection.accessible}"/>
@@ -162,10 +162,10 @@
 
                         <!-- TODO: INFUND - 6376 Prototype mentions Project manager should submit. Needs verification -->
                         <th:block th:if="${model.projectManager}">
-                            <p>You need to upload the following:</p>
+                            <p class="govuk-body">You need to upload the following:</p>
                         </th:block>
                         <th:block th:unless="${model.projectManager}">
-                            <p>Your Project Manager needs to upload the following:</p>
+                            <p class="govuk-body">Your Project Manager needs to upload the following:</p>
                         </th:block>
                         <ul class="govuk-list govuk-list--bullet">
                             <th:block th:if="${model.collaborationAgreementRequired}">
@@ -187,7 +187,7 @@
                                th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a>
                             <th:block th:if="${model.grantOfferLetterSection.notAccessible}">Grant offer letter</th:block>
                         </h2>
-                        <p class="no-margin">Once all tasks are complete the Project Manager can review, sign and submit the grant offer letter to Innovate UK.</p>
+                        <p class="govuk-body no-margin">Once all tasks are complete the Project Manager can review, sign and submit the grant offer letter to Innovate UK.</p>
                     </div>
                     <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.grantOfferLetterStatus.getSectionStatus()})"
                               th:if="${model.grantOfferLetterSection.accessible}"/>

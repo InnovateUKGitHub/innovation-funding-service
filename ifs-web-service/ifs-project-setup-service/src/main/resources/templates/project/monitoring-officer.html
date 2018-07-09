@@ -18,9 +18,9 @@
         <!--/* has a monitoringOfficer */-->
         <th:block th:if="${model.monitoringOfficerAssigned}">
           <div class="success-alert extra-margin-bottom">
-                <p><strong>We have assigned a Monitoring Officer to your project.</strong></p>
+                <p class="govuk-body"><strong>We have assigned a Monitoring Officer to your project.</strong></p>
             </div>
-          <p class="extra-margin">
+          <p class="govuk-body extra-margin">
             No action needs to be taken by your team. The Monitoring Officer will make contact shortly.
             If you have any questions about this appointment please contact Innovate UK.
           </p>
@@ -38,11 +38,11 @@
         </th:block>
         <!--/* no monitoringOfficer */-->
         <th:block th:unless="${model.monitoringOfficerAssigned}">
-          <p>Your project has not yet been assigned a Monitoring Officer.</p>
+          <p class="govuk-body">Your project has not yet been assigned a Monitoring Officer.</p>
         </th:block>
 
         <h3 class="govuk-heading-m">Role of Monitoring Officer</h3>
-            <p>The Monitoring Officer will be the primary point of contact for the project. They will monitor and report progress to Innovate UK.</p>
+            <p class="govuk-body">The Monitoring Officer will be the primary point of contact for the project. They will monitor and report progress to Innovate UK.</p>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

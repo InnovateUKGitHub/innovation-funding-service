@@ -27,13 +27,13 @@
             </div>
 
             <div class="column-one-half">
-                <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">View competition brief (opens in a new window)</a></p>
+                <p class="govuk-body"><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">View competition brief (opens in a new window)</a></p>
             </div>
         </div>
 
         <div class="my-applications">
 
-            <p class="extra-margin">Please click on the links below to review the applications and all feedback before the interview.</p>
+            <p class="govuk-body extra-margin">Please click on the links below to review the applications and all feedback before the interview.</p>
 
                 <div class="progress-list">
                     <h2 class="govuk-heading-m no-margin">Applications for interview panel (<span
@@ -47,7 +47,7 @@
                                     <a class="govuk-heading-s"
                                        th:href="@{~/application/{applicationId}/feedback(applicationId=${app.applicationId})}"
                                        th:text="${app.displayLabel}">Application name</a>
-                                    <p th:text="${app.leadOrganisation}" class="no-margin"/>
+                                    <p th:text="${app.leadOrganisation}" class="govuk-body no-margin"/>
                                 </div>
                             </th:block>
 
@@ -55,7 +55,7 @@
                         <th:block th:if="${#lists.isEmpty(model.applications)}">
                             <li class="status-2-col">
                                 <div class="task">
-                                    <p>No applications have been allocated to this interview panel.</p>
+                                    <p class="govuk-body">No applications have been allocated to this interview panel.</p>
                                 </div>
                             </li>
                         </th:block>

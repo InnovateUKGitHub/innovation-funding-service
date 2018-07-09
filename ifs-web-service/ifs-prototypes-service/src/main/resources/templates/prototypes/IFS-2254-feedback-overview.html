@@ -21,7 +21,7 @@
 
     <!-- <div class="success-alert">
         <h2 class="govuk-heading-s no-margin">Congratulations, your application has been successful</h2>
-        <p>Scores and written feedback from each assessor can be found below.</p>
+        <p class="govuk-body">Scores and written feedback from each assessor can be found below.</p>
     </div>
 
     <h2 class="govuk-heading-m no-margin-bottom">Application details</h2>
@@ -30,13 +30,13 @@
     <div class="grid-row">
         <div class="column-half">
             <h3 class="govuk-heading-s">Project title</h3>
-            <p>Magic material</p>
+            <p class="govuk-body">Magic material</p>
 
             <h3 class="govuk-heading-s">Application number</h3>
-            <p>112</p>
+            <p class="govuk-body">112</p>
 
             <h3 class="govuk-heading-s">Lead organisation</h3>
-            <p>Empire Ltd</p>
+            <p class="govuk-body">Empire Ltd</p>
 
             <h3 class="govuk-heading-s">Partners</h3>
             <ul class="govuk-list">
@@ -47,36 +47,36 @@
 
         <div class="column-half">
             <h3 class="govuk-heading-s">Project timescales</h3>
-            <p>Project start date: <br>1 March 2016</p>
-            <p>Duration: <br>36 months</p>
+            <p class="govuk-body">Project start date: <br>1 March 2016</p>
+            <p class="govuk-body">Duration: <br>36 months</p>
 
             <h3 class="govuk-heading-s extra-margin">Total project cost</h3>
-            <p>&pound;58,793</p>
+            <p class="govuk-body">&pound;58,793</p>
         </div>
     </div>
 
     <th:block th:if="${param.status == null or param.status != null and param.status[0] == 'noFeedback'}">
         <div class="message-alert">
-            <p>The lead applicant has responded to feedback. Download and review all attachments before the interview panel.</p>
+            <p class="govuk-body">The lead applicant has responded to feedback. Download and review all attachments before the interview panel.</p>
         </div>
     </th:block>
 
     <th:block th:if="${param.status != null and param.status[0] == 'noResponse'}">
         <div class="message-alert">
-            <p>The lead applicant can respond to feedback.</p>
+            <p class="govuk-body">The lead applicant can respond to feedback.</p>
         </div>
 
         <h2 class="govuk-heading-m">Attachments</h2>
-        <p>The lead applicant has not yet uploaded a response.</p>
+        <p class="govuk-body">The lead applicant has not yet uploaded a response.</p>
     </th:block>
 
     <th:block th:if="${param.status != null and param.status[0] == 'noResponseWithFeedback'}">
         <div class="message-alert">
-            <p>The lead applicant can respond to feedback.</p>
+            <p class="govuk-body">The lead applicant can respond to feedback.</p>
         </div>
 
         <h2 class="govuk-heading-m">Attachments</h2>
-        <p>The lead applicant has not yet uploaded a response.</p>
+        <p class="govuk-body">The lead applicant has not yet uploaded a response.</p>
 
         <div class="form-group download">
             <h3 class="govuk-heading-s no-margin">Panel assessment feedback</h3>
@@ -192,7 +192,7 @@
                         </h3>
                     </div>
                     <div class="column-third">
-                        <p class="no-margin">Average score 5 / 10</p>
+                        <p class="govuk-body no-margin">Average score 5 / 10</p>
                     </div>
                 </div>
             </li>
@@ -204,7 +204,7 @@
                         </h3>
                     </div>
                     <div class="column-third">
-                        <p class="no-margin">Average score 5 / 10</p>
+                        <p class="govuk-body no-margin">Average score 5 / 10</p>
                     </div>
                 </div>
             </li>
@@ -216,7 +216,7 @@
                         </h3>
                     </div>
                     <div class="column-third">
-                        <p class="no-margin">Average score 5 / 10</p>
+                        <p class="govuk-body no-margin">Average score 5 / 10</p>
                     </div>
                 </div>
             </li>
@@ -228,7 +228,7 @@
                         </h3>
                     </div>
                     <div class="column-third">
-                        <p class="no-margin">Average score 5 / 10</p>
+                        <p class="govuk-body no-margin">Average score 5 / 10</p>
                     </div>
                 </div>
             </li>
@@ -240,7 +240,7 @@
                         </h3>
                     </div>
                     <div class="column-third">
-                        <p class="no-margin">Average score 5 / 10</p>
+                        <p class="govuk-body no-margin">Average score 5 / 10</p>
                     </div>
                 </div>
             </li>
@@ -252,7 +252,7 @@
                         </h3>
                     </div>
                     <div class="column-third">
-                        <p class="no-margin">Average score 5 / 10</p>
+                        <p class="govuk-body no-margin">Average score 5 / 10</p>
                     </div>
                 </div>
             </li>
@@ -265,7 +265,7 @@
                     </div>
                     <div>
                         <div class="column-third">
-                            <p class="no-margin">Average score 5 / 10</p>
+                            <p class="govuk-body no-margin">Average score 5 / 10</p>
                         </div>
                     </div>
                 </div>
@@ -278,7 +278,7 @@
                         </h3>
                     </div>
                     <div class="column-third">
-                        <p class="no-margin">Average score 5 / 10</p>
+                        <p class="govuk-body no-margin">Average score 5 / 10</p>
                     </div>
                 </div>
             </li>
@@ -290,7 +290,7 @@
                         </h3>
                     </div>
                     <div class="column-third">
-                        <p class="no-margin">Average score 5 / 10</p>
+                        <p class="govuk-body no-margin">Average score 5 / 10</p>
                     </div>
                 </div>
             </li>
@@ -302,7 +302,7 @@
                         </h3>
                     </div>
                     <div class="column-third">
-                        <p class="no-margin">Average score 5 / 10</p>
+                        <p class="govuk-body no-margin">Average score 5 / 10</p>
                     </div>
                 </div>
             </li>
@@ -314,7 +314,7 @@
                     &nbsp;
                 </div>
                 <div class="column-third">
-                    <p class="no-margin">Average overall: <strong class="govuk-heading-s">50%</strong></p>
+                    <p class="govuk-body no-margin">Average overall: <strong class="govuk-heading-s">50%</strong></p>
                 </div>
             </div>
         </div>

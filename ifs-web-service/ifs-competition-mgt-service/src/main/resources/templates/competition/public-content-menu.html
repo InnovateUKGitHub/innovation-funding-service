@@ -26,8 +26,8 @@
             </th:block>
 
             <div class="message-alert" th:if="${model.hasBeenPublished()}">
-                <p th:unless="${model.inviteOnly}">This information will be publicly viewable by prospective applicants.</p>
-                <p th:if="${model.inviteOnly}">Competition URL:
+                <p class="govuk-body" th:unless="${model.inviteOnly}">This information will be publicly viewable by prospective applicants.</p>
+                <p class="govuk-body" th:if="${model.inviteOnly}">Competition URL:
                     <a th:href="${model.competitionURL}" th:text="${model.competitionURL}"></a>
                 </p>
             </div>
@@ -42,7 +42,7 @@
                     <div th:if="${model.isSectionComplete(section)}" class="task-status-complete"><span>Complete</span></div>
                 </li>
             </ul>
-            <p th:if="${model.hasBeenPublished()}"
+            <p class="govuk-body" th:if="${model.hasBeenPublished()}"
                 th:with="publishDay=${#temporals.format(model.publishDate, 'd MMMM yyyy')},
                          publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, 'h:mma'))}">
                 <small th:text="${'Last published ' + publishDay + ' ' + publishTime}"></small></p>

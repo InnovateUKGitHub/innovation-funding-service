@@ -389,7 +389,7 @@
 
 <div th:fragment="prototype-dashboard-search">
 
-    <p><span class="govuk-heading-xl">4</span> <strong>competitions</strong> with the term <strong th:text="${param.searchQuery[0]}">QUERY</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></p>
+    <p class="govuk-body"><span class="govuk-heading-xl">4</span> <strong>competitions</strong> with the term <strong th:text="${param.searchQuery[0]}">QUERY</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></p>
 
     <section>
 
@@ -453,9 +453,9 @@
 
     <li>
         <h3 class="govuk-heading-s"><a th:href="${rowUrl}" th:text="${rowTitle}">ROW TITLE</a></h3>
-        <p th:text="${rowType}">TYPE</p>
-        <p th:text="${rowSector}">SECTOR</p>
-        <p th:text="${rowStatus}">STATUS</p>
+        <p class="govuk-body" th:text="${rowType}">TYPE</p>
+        <p class="govuk-body" th:text="${rowSector}">SECTOR</p>
+        <p class="govuk-body" th:text="${rowStatus}">STATUS</p>
     </li>
 
 </div>
@@ -552,7 +552,7 @@
 
              <div class="form-group" id="stateAid" style="display: none">
                 <h3 class="govuk-heading-s">State aid</h3>
-                <p>
+                <p class="govuk-body">
                     <span class="yes">Yes</span>
                     <span class="no">No</span>
                 </p>
@@ -627,7 +627,7 @@
                 </select>
                 <a href="#" id="remove-innovation-area">Remove</a>
             </div>
-            <p th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" id="add-innovation-area" class="section-1-edit">
+            <p class="govuk-body" th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" id="add-innovation-area" class="section-1-edit">
                 <a href="#">+ add another innovation area</a>
             </p>
 
@@ -969,7 +969,7 @@
         </div>
 
         <h3 class="govuk-heading-s">Project size (&pound;)</h3>
-        <p>This indicates the size of the project based on the budget</p>
+        <p class="govuk-body">This indicates the size of the project based on the budget</p>
 
         <div class="grid-row">
             <div class="column-quarter">
@@ -991,7 +991,7 @@
         </div>
 
         <h3 class="govuk-heading-s">Project length (months)</h3>
-        <p>This indicates the length of the project in months (max 36)</p>
+        <p class="govuk-body">This indicates the length of the project in months (max 36)</p>
 
         <div class="grid-row">
             <div class="column-quarter">
@@ -1053,7 +1053,7 @@
     <div class="form-group">
         <fieldset class="inline">
             <legend class="form-label-bold">Lead applicant</legend>
-            <p>Select the lead applicant type required</p>
+            <p class="govuk-body">Select the lead applicant type required</p>
             <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-lead-business'}">
                 <input th:id="${'stream-'+streamNo+'-comp-lead-business'}" th:name="${'stream-'+streamNo+'-comp-lead-group'}" value="Business" type="radio" checked="checked" />
                 Business
@@ -1085,7 +1085,7 @@
     <div class="form-group extra-margin">
         <fieldset class="inline">
             <legend class="form-label-bold">Are resubmissions allowed?</legend>
-            <p>Please indicate whether applicants are able to reference a resubmitted application for this competition</p>
+            <p class="govuk-body">Please indicate whether applicants are able to reference a resubmitted application for this competition</p>
             <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-resubmission-yes'}">
                 <input th:id="${'stream-'+streamNo+'-comp-resubmission-yes'}" th:name="${'stream-'+streamNo+'-comp-resubmission-group'}" value="Yes" type="radio" />
             Yes
@@ -1291,7 +1291,7 @@
         These match the template for the competition type you chose - to change questions you can change the competition type in 'Initial details'
     </div>
 
-    <p>Template: Programme 10 questions</p>
+    <p class="govuk-body">Template: Programme 10 questions</p>
 
     <h2 class="govuk-heading-l">Questions</h2>
 
@@ -1440,7 +1440,7 @@
                         <h3 class="govuk-heading-s">Question title</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>What is the business opportunity this project addresses?</p>
+                        <p class="govuk-body">What is the business opportunity this project addresses?</p>
                     </div>
                 </div>
 
@@ -1449,7 +1449,7 @@
                         <h3 class="govuk-heading-s">Question subtitle</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>None</p>
+                        <p class="govuk-body">None</p>
                     </div>
                 </div>
 
@@ -1458,7 +1458,7 @@
                         <h3 class="govuk-heading-s">Guidance title</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>What should I include in the business opportunity section?</p>
+                        <p class="govuk-body">What should I include in the business opportunity section?</p>
                     </div>
                 </div>
 
@@ -1467,7 +1467,7 @@
                         <h3 class="govuk-heading-s">Guidance</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>You should describe:</p>
+                        <p class="govuk-body">You should describe:</p>
                         <ul class="govuk-list govuk-list--bullet">
                             <li>the business opportunity you have identified and how you plan to take advantage of it</li>
                             <li>the customer needs you have identified and how your project will meet them</li>
@@ -1481,7 +1481,7 @@
                         <h3 class="govuk-heading-s">Words</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>400</p>
+                        <p class="govuk-body">400</p>
                     </div>
                 </div>
 
@@ -1490,7 +1490,7 @@
                         <h3 class="govuk-heading-s">Appendix</h3>
                     </div>
                     <div class="column-three-quarters">
-                        <p>No</p>
+                        <p class="govuk-body">No</p>
                     </div>
                 </div>
 
@@ -1641,7 +1641,7 @@
         <li><div class="task"><h2 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-how-to-apply&amp;state=edit' : '?section=public-how-to-apply&amp;state=edit')}">How to apply</a></h2></div></li>
         <li><div class="task"><h2 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-supporting-information&amp;state=edit' : '?section=public-supporting-information&amp;state=edit')}">Supporting information</a></h2></div></li>
     </ul>
-    <p><small>Last published 08:55am 12 December 2016</small></p>
+    <p class="govuk-body"><small>Last published 08:55am 12 December 2016</small></p>
     <div class="grid-row">
         <div class="column-half">
             <a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="button">Return to setup overview</a>
@@ -1658,7 +1658,7 @@
 <th:block th:fragment="prototype-section-public-competition-information">
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Competition information and search'}, ${null})" />
-    <p>This information is used for search and the opening section of the competition page.</p>
+    <p class="govuk-body">This information is used for search and the opening section of the competition page.</p>
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <dl class="readonly-data">
             <dt>Short description</dt>
@@ -1725,7 +1725,7 @@
 <th:block th:fragment="prototype-section-public-summary">
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Summary'}, ${null})" />
-    <p>Text entered into this section will appear within the summary tab.</p>
+    <p class="govuk-body">Text entered into this section will appear within the summary tab.</p>
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <h2 class="govuk-heading-m">Mandatory content</h2>
         <dl class="readonly-data">
@@ -1792,7 +1792,7 @@
                 <legend class="govuk-heading-m extra-margin-bottom">
                     Additional content
                 </legend>
-                <p>There is no additional content associated with this competition.</p>
+                <p class="govuk-body">There is no additional content associated with this competition.</p>
                 <div class="alignright">
                     <a href="#">+ add new section</a>
                 </div>
@@ -1816,10 +1816,10 @@
 <th:block th:fragment="prototype-section-public-eligibility">
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Eligibility'}, ${null})" />
-    <p>Text entered into this section will appear within the eligibility tab</p>
+    <p class="govuk-body">Text entered into this section will appear within the eligibility tab</p>
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <h2 class="govuk-heading-s no-margin-bottom">Lead applicant eligibility</h2>
-        <p>To lead a project, you must:</p>
+        <p class="govuk-body">To lead a project, you must:</p>
         <ul>
             <li>be a UK-based business (of any size)</li>
             <li>have at least one SME involved in your proposal</li>
@@ -1828,35 +1828,35 @@
         </ul>
 
         <h2 class="govuk-heading-s no-margin-bottom" >Consortium eligibility</h2>
-        <p>All projects must involve at least one SME and a business must lead the project.</p>
-        <p>If you are an SME and expect your eligible project costs to be up to £100,000, you may deliver the project on your own. You may also work with other businesses or research organisations.</p>
-        <p>If you expect your eligible project costs to be more than £100,000 you must collaborate with at least one other organisation. At least one company in the collaboration must be an SME.</p>
-        <p>Find out if your business fits the EU definition of an SME.</p>
+        <p class="govuk-body">All projects must involve at least one SME and a business must lead the project.</p>
+        <p class="govuk-body">If you are an SME and expect your eligible project costs to be up to £100,000, you may deliver the project on your own. You may also work with other businesses or research organisations.</p>
+        <p class="govuk-body">If you expect your eligible project costs to be more than £100,000 you must collaborate with at least one other organisation. At least one company in the collaboration must be an SME.</p>
+        <p class="govuk-body">Find out if your business fits the EU definition of an SME.</p>
 
         <h2 class="govuk-heading-s no-margin-bottom" >Project types</h2>
-        <p>Your project may focus on technical feasibility, industrial research or experimental development. This will depend on the challenge.</p>
-        <p>For technical feasibility studies and industrial research, you could get:</p>
+        <p class="govuk-body">Your project may focus on technical feasibility, industrial research or experimental development. This will depend on the challenge.</p>
+        <p class="govuk-body">For technical feasibility studies and industrial research, you could get:</p>
         <ul>
             <li>up to 70% of your eligible project costs if you are a small business</li>
             <li>up to 60% if you are a medium-sized business</li>
             <li>up to 50% if you are a large business</li>
         </ul>
-        <p>For experimental development projects which are nearer to market, you could get:</p>
+        <p class="govuk-body">For experimental development projects which are nearer to market, you could get:</p>
         <ul>
             <li>up to 45% of your eligible project costs if you are a small business</li>
             <li>up to 35% if you are a medium-sized business</li>
             <li>up to 25% if you are a large business</li>
         </ul>
-        <p>We expect projects to last 6 months to 3 years. We expect them to range in size from total costs of £35,000 to £2 million, depending on the type of project.</p>
+        <p class="govuk-body">We expect projects to last 6 months to 3 years. We expect them to range in size from total costs of £35,000 to £2 million, depending on the type of project.</p>
 
         <h2 class="govuk-heading-s no-margin-bottom" >Projects we won't fund</h2>
-        <p>In this competition we will not fund applications in the following areas:</p>
+        <p class="govuk-body">In this competition we will not fund applications in the following areas:</p>
         <ul>
             <li>topics defined in the Innovate UK Quantum technologies competition 2016</li>
             <li>topics defined in the Innovate UK Robotics and autonomous systems competition 2016</li>
             <li>topics defined in the Innovate UK Compound semiconductor applications competition 2016</li>
         </ul>
-        <p>Note: machine learning or artificial intelligence (AI) is covered by the Innovate UK Robotics and autonomous systems competition and so is out of scope.</p>
+        <p class="govuk-body">Note: machine learning or artificial intelligence (AI) is covered by the Innovate UK Robotics and autonomous systems competition and so is out of scope.</p>
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
@@ -2087,24 +2087,24 @@
 
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <h2 class="govuk-heading-s no-margin-bottom">Project scope</h2>
-        <p>Our Emerging and Enabling Technologies programme (E&amp;E) identifies and invests in new technologies and the underpinning capabilities that improve existing industries. Our aim is to inspire the new products, processes and services of tomorrow; those with the potential to unlock billions of pounds of value to industry and disrupt existing markets.</p>
-        <p>An emerging technology is one that is progressing in, or has recently emerged from, the research base. It allows us to do something that was not possible before. Because of this, it disrupts existing markets and enhances value to customers. It can improve our lives and lead to new sources of wealth generation.</p>
-        <p>Enabling technologies underpin the development of high-value products and services in many industrial sectors and markets. They improve performance and productivity.</p>
-        <p>The aim of this competition is to help businesses broaden out innovation activities, to find new sources of revenue from new products, processes or services. Projects will:</p>
+        <p class="govuk-body">Our Emerging and Enabling Technologies programme (E&amp;E) identifies and invests in new technologies and the underpinning capabilities that improve existing industries. Our aim is to inspire the new products, processes and services of tomorrow; those with the potential to unlock billions of pounds of value to industry and disrupt existing markets.</p>
+        <p class="govuk-body">An emerging technology is one that is progressing in, or has recently emerged from, the research base. It allows us to do something that was not possible before. Because of this, it disrupts existing markets and enhances value to customers. It can improve our lives and lead to new sources of wealth generation.</p>
+        <p class="govuk-body">Enabling technologies underpin the development of high-value products and services in many industrial sectors and markets. They improve performance and productivity.</p>
+        <p class="govuk-body">The aim of this competition is to help businesses broaden out innovation activities, to find new sources of revenue from new products, processes or services. Projects will:</p>
         <ul>
             <li>harness E&amp;E technologies across the economy</li>
             <li>develop and scale-up research and development to bring ideas, processes and products closer to availability at scale and commercial release</li>
             <li>use design processes to understand customer motivations and behaviour and use that insight to create better products, services and processes</li>
         </ul>
-        <p>We are looking to fund a portfolio of projects that include:</p>
+        <p class="govuk-body">We are looking to fund a portfolio of projects that include:</p>
         <ul>
             <li>technical feasibility</li>
             <li>industrial research</li>
             <li>experimental development</li>
             <li>we will choose a portfolio that achieves a balance across topic areas, timing and costs</li>
         </ul>
-        <p>If your project falls outside these guidelines, please contact us at least 5 working days before the registration deadline to discuss further.</p>
-        <p>Projects must clearly show high-growth potential innovations in one or more of the following areas:</p>
+        <p class="govuk-body">If your project falls outside these guidelines, please contact us at least 5 working days before the registration deadline to discuss further.</p>
+        <p class="govuk-body">Projects must clearly show high-growth potential innovations in one or more of the following areas:</p>
         <ul>
             <li>any emerging technology that can demonstrate a step change in performance and the potential to disrupt existing industrial approaches</li>
             <li>we are particularly looking to fund projects in energy harvesting, imaging technologies, graphene or biofilms</li>
@@ -2112,11 +2112,11 @@
             <li>sensors; photonics; digital; internet of things; data; cybersecurity</li>
             <li>virtual or augmented reality; and distributed ledger technology</li>
         </ul>
-        <p>The type of innovation project will depend on the challenges and opportunities your business faces.</p>
-        <p>Proposals must show how project success will improve business growth and productivity and/or encourage export opportunities, including for at least one UK small and medium-sized enterprise (SME) involved in the project.</p>
+        <p class="govuk-body">The type of innovation project will depend on the challenges and opportunities your business faces.</p>
+        <p class="govuk-body">Proposals must show how project success will improve business growth and productivity and/or encourage export opportunities, including for at least one UK small and medium-sized enterprise (SME) involved in the project.</p>
         <h2 class="govuk-heading-s no-margin-bottom">Specific competition themes</h2>
-        <p>We welcome applications in one or more of the following areas:</p>
-        <p>Innovation in emerging technologies that show significant industry and commercial improvement in novel applications of:</p>
+        <p class="govuk-body">We welcome applications in one or more of the following areas:</p>
+        <p class="govuk-body">Innovation in emerging technologies that show significant industry and commercial improvement in novel applications of:</p>
         <ul>
             <li>energy harvesting</li>
             <li>imaging technologies</li>
@@ -2124,14 +2124,14 @@
             <li>biofilms</li>
             <li>other areas of emerging technology</li>
         </ul>
-        <p>Innovation in enabling technologies that:</p>
+        <p class="govuk-body">Innovation in enabling technologies that:</p>
         <ul>
             <li>show benefits across multiple industrial sectors or markets</li>
             <li>provide new products and services</li>
             <li>allow new applications for existing products and services</li>
             <li>enable new capabilities or business models</li>
         </ul>
-        <p>We are particularly encouraging proposals that address:</p>
+        <p class="govuk-body">We are particularly encouraging proposals that address:</p>
         <ul>
             <li>systems that combine multiple technologies to deliver a focused, real-world outcome, for example, combining earth observation data from satellites with other technologies to improve business performance</li>
             <li>smart sensor systems that allow intelligent decisions to be made by looking at miniaturisation, low-power processing and communications</li>
@@ -2139,7 +2139,7 @@
             <li>photonics for manufacturing, healthcare and imaging</li>
             <li>digital technologies with substantial potential to change and disrupt sectors of the economy; for example, distributed ledgers, or augmented and virtual reality</li>
         </ul>
-        <p>We also encourage proposals to include user/customer perspectives or participation. Applications should clearly state the market opportunity and the barriers that the project addresses. Proposals should show how successful completion of the project will accelerate business growth. They should also include customer research and explain how that insight will be used to design more desirable products and solutions.</p>
+        <p class="govuk-body">We also encourage proposals to include user/customer perspectives or participation. Applications should clearly state the market opportunity and the barriers that the project addresses. Proposals should show how successful completion of the project will accelerate business growth. They should also include customer research and explain how that insight will be used to design more desirable products and solutions.</p>
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
@@ -2321,7 +2321,7 @@
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <hr />
-        <p>Generated automatically from the competition milestones.</p>
+        <p class="govuk-body">Generated automatically from the competition milestones.</p>
         <dl class="readonly-data">
             <dt>10 October 2016</dt>
             <dd>Competition opens</dd>

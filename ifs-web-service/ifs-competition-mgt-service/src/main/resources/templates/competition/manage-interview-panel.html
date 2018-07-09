@@ -49,7 +49,7 @@
 
             <li><a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors</a></li>
 
-            <li><p class="extra-margin">You can allocate applications to assessors once they have responded.</p></li>
+            <li><p class="govuk-body extra-margin">You can allocate applications to assessors once they have responded.</p></li>
 
             <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
                    th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocate-assessors(competitionId=${model.competitionId})}">

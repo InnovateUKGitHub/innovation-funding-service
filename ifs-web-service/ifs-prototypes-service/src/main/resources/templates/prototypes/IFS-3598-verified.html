@@ -17,7 +17,7 @@
 
     <main id="content">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Account verified',size='govuk-heading-l'" />
-        <p>Your account has been successfully verified. You can sign in with your registered email and password.</p>
+        <p class="govuk-body">Your account has been successfully verified. You can sign in with your registered email and password.</p>
         <a th:href="${'/prototypes/IFS-3598-signin-dashboard?user='} + ${user} + '&#38;type=' + ${type}" class="button">Sign in</a>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

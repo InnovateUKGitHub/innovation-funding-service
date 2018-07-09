@@ -14,11 +14,11 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <h1 class="govuk-heading-l">Page not found</h1>
 
-        <p th:if="${url}">
+        <p class="govuk-body" th:if="${url}">
             <b>Page:</b> <span th:text="${url}">Page URL</span>
         </p>
 
-        <p th:if="${status}">
+        <p class="govuk-body" th:if="${status}">
             <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
                 th:if="${error}" th:text="'('+${error}+')'">error ...</span>
         </p>

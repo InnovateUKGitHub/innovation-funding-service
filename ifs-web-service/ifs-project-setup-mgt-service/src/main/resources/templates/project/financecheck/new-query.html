@@ -21,14 +21,14 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
         <h2 class="govuk-heading-m">Finance Contact</h2>
-        <p>
+        <p class="govuk-body">
             <th:block th:text="${model.financeContactName}">Finance Contact</th:block> <br />
             <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}">example@example.com</a> <br />
             <th:block th:text="${model.financeContactPhoneNumber}">0</th:block>
         </p>
 
         <h2 class="govuk-heading-m">Queries</h2>
-        <p>
+        <p class="govuk-body">
             If you have a query with the finances, use this section to raise your query with the finance contact.
             You must confirm any finance changes with the contact before you approve.
         </p>

@@ -17,7 +17,7 @@
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project Manager',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-                <p>As lead partner you must choose a Project Manager who will be responsible for setting up your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
+                <p class="govuk-body">As lead partner you must choose a Project Manager who will be responsible for setting up your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
 
                 <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${form}">
                     <fieldset>
@@ -86,7 +86,7 @@
                         </div>
                     </fieldset>
 
-                    <p>You can change your Project Manager up until your grant offer letter is generated.</p>
+                    <p class="govuk-body">You can change your Project Manager up until your grant offer letter is generated.</p>
 
                     <button class="button extra-margin" type="submit" id="save" name="save-pm">Save</button>
                 </form>

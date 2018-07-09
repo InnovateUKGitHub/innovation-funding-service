@@ -18,7 +18,7 @@
                 </div>
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Sign in successful',size='govuk-heading-xl'" />
-                <p>Thank you for signing into the Innovation Funding Service.</p>
+                <p class="govuk-body">Thank you for signing into the Innovation Funding Service.</p>
 
                 <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
 

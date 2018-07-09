@@ -10,9 +10,9 @@
 
             <h2 class="govuk-heading-m extra-margin-top">Technology inspired <br/> Ref: 0102468</h2>
 
-            <p th:unless="${site == 'rc'}">Choose a tab to find, invite and assign assessors to one or more applications.</p>
+            <p class="govuk-body" th:unless="${site == 'rc'}">Choose a tab to find, invite and assign assessors to one or more applications.</p>
 
-            <p th:unless="${site == null}">Choose a tab to find people, invite them to join your panel and assign panelists to one or more applications.</p>
+            <p class="govuk-body" th:unless="${site == null}">Choose a tab to find people, invite them to join your panel and assign panelists to one or more applications.</p>
 
         </div>
         <div class="column-quarter aligncentre">
@@ -22,15 +22,15 @@
             <ul class="assessor-status extra-margin">
                 <li>
                     <h3 class="govuk-heading-l no-margin">1</h3>
-                    <p>invited</p>
+                    <p class="govuk-body">invited</p>
                 </li>
                 <li>
                     <h3 class="govuk-heading-l no-margin">1</h3>
-                    <p>accepted</p>
+                    <p class="govuk-body">accepted</p>
                 </li>
                 <li>
                     <h3 class="govuk-heading-l no-margin">1</h3>
-                    <p>declined</p>
+                    <p class="govuk-body">declined</p>
                 </li>
             </ul>
         </div>
@@ -90,7 +90,7 @@
             </th:block>
 
             <th:block th:if="status != null">
-                <p th:text="${msg}"></p>
+                <p class="govuk-body" th:text="${msg}"></p>
             </th:block>
 
         </li>
@@ -105,7 +105,7 @@
                 <p class="extra-margin-right">Status: <strong th:text="${status}"></strong></p>
             </th:block>
 
-            <p>
+            <p class="govuk-body">
                 <a href="#" class="extra-margin-right">Remove from list</a>
             </p>
         </li>
@@ -118,7 +118,7 @@
 <div th:fragment="prototype-assesor-row-assign-application">
     <ul class="tabular-list__row">
         <li class="width-half">
-            <p class="no-margin">No: <a href="#" class="extra-margin-right" th:text="${number}">NUMBER</a></p>
+            <p class="govuk-body no-margin">No: <a href="#" class="extra-margin-right" th:text="${number}">NUMBER</a></p>
         </li>
         <li class="width-quarter" aria-describedby="assign-lead-org" th:text="${org}">
             ORG
@@ -131,11 +131,11 @@
                 <li class="width-half"><h3 class="govuk-heading-s no-margin"><a href="#" th:text="${application}">APPLICATION</a></h3>
 
                 <th:block th:if="${status != null}">
-                    <p>Status: <strong th:text="${status}">STATUS</strong></p>
+                    <p class="govuk-body">Status: <strong th:text="${status}">STATUS</strong></p>
                 </th:block>
 
                 <th:block th:if="${area != null}">
-                    <p>Area: <strong th:text="${area}">AREA</strong></p>
+                    <p class="govuk-body">Area: <strong th:text="${area}">AREA</strong></p>
                 </th:block>
 
                 </li>
@@ -218,8 +218,8 @@
             <h2 class="govuk-heading-s" th:unless="${site == 'rc'}">Find people on the system that you would like to invite to be an assessor.</h2>
             <h2 class="govuk-heading-s" th:unless="${site == null}">Find people on the system that you would like to invite to the panel.</h2>
 
-            <p th:unless="${site == 'rc'}">Find people to add to your assessor invite list for this competition. Alternatively, you can use the dropdown filters to narrow your results.</p>
-            <p th:unless="${site == null}">Find people to add to your panel invite list for this opportunity. Alternatively, you can use the dropdown filters to narrow your results.</p>
+            <p class="govuk-body" th:unless="${site == 'rc'}">Find people to add to your assessor invite list for this competition. Alternatively, you can use the dropdown filters to narrow your results.</p>
+            <p class="govuk-body" th:unless="${site == null}">Find people to add to your panel invite list for this opportunity. Alternatively, you can use the dropdown filters to narrow your results.</p>
 
 
             <div class="search-filters">
@@ -306,7 +306,7 @@
                     <h2 class="govuk-heading-s" th:unless="${site == 'rc'}">Invite a person to become an assessor for this competition.</h2>
                     <h2 class="govuk-heading-s" th:unless="${site == null}">Invite people to join the panel for this opportunity.</h2>
 
-                    <p>You can invite people on your list individually or as a group.</p>
+                    <p class="govuk-body">You can invite people on your list individually or as a group.</p>
                 </div>
             </div>
 
@@ -502,7 +502,7 @@
 
                 <th:block th:if="${site == 'rc'}">
 
-                    <p>Choose which assessors will be assigned to this application. You can only assign people who have accepted your invitation. When you're done return to the Assign tab and notify the assessors.</p>
+                    <p class="govuk-body">Choose which assessors will be assigned to this application. You can only assign people who have accepted your invitation. When you're done return to the Assign tab and notify the assessors.</p>
 
                 </th:block>
 
@@ -533,7 +533,7 @@
 
                 <h2 class="govuk-heading-m" th:text="${(param.name != null ? param.name[0] : 'TESTER')}">John Smith</h2>
 
-                <p>Choose which applications will be assigned to this assessor. You can only assign people who have accepted your invitation.</p>
+                <p class="govuk-body">Choose which applications will be assigned to this assessor. You can only assign people who have accepted your invitation.</p>
 
             </th:block>
 
@@ -542,7 +542,7 @@
             <ul>
                 <li>
                     <h3 class="govuk-heading-xl no-margin-bottom" id="assessors-remaining">3</h3>
-                    <p>Applications left to assign</p>
+                    <p class="govuk-body">Applications left to assign</p>
                 </li>
             </ul>
         </div>

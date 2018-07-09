@@ -16,18 +16,18 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Declaration of interest',size='govuk-heading-xl'" />
 
                 <h2 class="govuk-heading-m no-margin-bottom">Principal employer and role</h2>
-                <p th:if="${model.principalEmployer}">
+                <p class="govuk-body" th:if="${model.principalEmployer}">
                     <th:block th:text="${model.principalEmployer}">ASDF solutions</th:block><br />
                     <th:block th:text="${model.role}">CEO</th:block>
                 </p>
-                <p th:unless="${model.principalEmployer}">Not answered</p>
+                <p class="govuk-body" th:unless="${model.principalEmployer}">Not answered</p>
 
                 <h2 class="govuk-heading-m no-margin-bottom">Professional affiliations</h2>
-                <p th:text="${model.professionalAffiliations}"
+                <p class="govuk-body" th:text="${model.professionalAffiliations}"
                    th:unless="${#strings.isEmpty(model.professionalAffiliations)}">
                     Professional affiliation
                 </p>
-                <p th:if="${#strings.isEmpty(model.professionalAffiliations)}"
+                <p class="govuk-body" th:if="${#strings.isEmpty(model.professionalAffiliations)}"
                    th:text="${model.completed} ? 'None declared' : 'Not answered'">
                     None declared
                 </p>
@@ -47,15 +47,15 @@
                         </tr>
                     </tbody>
                 </table>
-                <p th:if="${#lists.isEmpty(model.appointments)}"
+                <p class="govuk-body" th:if="${#lists.isEmpty(model.appointments)}"
                    th:text="${model.completed} ? 'None declared' : 'Not answered' ">
                     None declared
                 </p>
 
                 <h2 class="govuk-heading-m no-margin-bottom">Other financial interests</h2>
 
-                <p th:if="${model.financialInterests}" th:text="${model.financialInterests}">Financial interests</p>
-                <p th:unless="${model.financialInterests}"
+                <p class="govuk-body" th:if="${model.financialInterests}" th:text="${model.financialInterests}">Financial interests</p>
+                <p class="govuk-body" th:unless="${model.financialInterests}"
                    th:text="${model.completed} ? 'None declared' : 'Not answered'">
                     None declared
                 </p>
@@ -77,14 +77,14 @@
                         </tr>
                     </tbody>
                 </table>
-                <p th:if="${#lists.isEmpty(model.familyAffiliations)}"
+                <p class="govuk-body" th:if="${#lists.isEmpty(model.familyAffiliations)}"
                    th:text="${model.completed} ? 'None declared' : 'Not answered' ">
                     None declared
                 </p>
 
                 <h2 class="govuk-heading-m no-margin-bottom">Close family members' other financial interests</h2>
-                <p th:if="${model.familyFinancialInterests}" th:text="${model.familyFinancialInterests}">Family members' financial interests</p>
-                <p th:unless="${model.familyFinancialInterests}"
+                <p class="govuk-body" th:if="${model.familyFinancialInterests}" th:text="${model.familyFinancialInterests}">Family members' financial interests</p>
+                <p class="govuk-body" th:unless="${model.familyFinancialInterests}"
                    th:text="${model.completed} ? 'None declared' : 'Not answered'">
                     None declared
                 </p>

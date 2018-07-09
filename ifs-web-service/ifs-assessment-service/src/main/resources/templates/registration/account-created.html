@@ -13,7 +13,7 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your account has been created',size='govuk-heading-xl'" />
-                <p>Before we can invite you to assess you will need to sign into your account to complete the following:</p>
+                <p class="govuk-body">Before we can invite you to assess you will need to sign into your account to complete the following:</p>
 
                 <ul class="govuk-list govuk-list--bullet">
                     <li>provide information about your skill areas</li>
@@ -21,11 +21,11 @@
                     <li>sign your contract</li>
                 </ul>
 
-                <p>Please sign into your account to complete these sections.</p>
+                <p class="govuk-body">Please sign into your account to complete these sections.</p>
 
-                <p>As this is a new service, you need to provide this information online even if you are an existing assessor with Innovate UK. Once your account is created this information will be saved.</p>
+                <p class="govuk-body">As this is a new service, you need to provide this information online even if you are an existing assessor with Innovate UK. Once your account is created this information will be saved.</p>
 
-                <p>
+                <p class="govuk-body">
                     <a th:href="@{/invite-accept/competition/{inviteHash}/accept(inviteHash=${competitionInviteHash})}" class="button">Sign into your account</a>
                 </p>
 

@@ -19,13 +19,13 @@
 
         <h2 class="govuk-heading-m no-margin-bottom">Your details <small class="list-indent"><a href="/profile/edit"> Edit your details</a></small></h2>
         <h3 class="govuk-heading-s">Your organisation</h3>
-        <p th:text="${model.organisationName}" />
+        <p class="govuk-body" th:text="${model.organisationName}" />
 
         <h3 class="govuk-heading-s">Organisation type</h3>
-        <p th:text="${model.organisationTypeName}" />
+        <p class="govuk-body" th:text="${model.organisationTypeName}" />
 
         <h3 class="govuk-heading-s">Registration number</h3>
-        <p th:text="${model.registrationNumber}" />
+        <p class="govuk-body" th:text="${model.registrationNumber}" />
 
         <h3 class="govuk-heading-s">Address</h3>
         <div th:text="${model.addressLine1}" />
@@ -36,16 +36,16 @@
         <div th:text="${model.postcode}" />
 
         <h3 class="govuk-heading-s">Your name</h3>
-        <p>
+        <p class="govuk-body">
             <th:block th:text="${model.name}" />
         </p>
         <h3 class="govuk-heading-s">Phone number</h3>
-        <p th:text="${model.phoneNumber}" />
+        <p class="govuk-body" th:text="${model.phoneNumber}" />
         <h3 class="govuk-heading-s">Email address</h3>
-        <p th:text="${model.emailAddress}" />
+        <p class="govuk-body" th:text="${model.emailAddress}" />
         <h3 class="govuk-heading-s">Email preferences</h3>
-        <p th:if="${model.allowMarketingEmails}">You have asked for updates on Innovate UK competitions by email.</p>
-        <p th:unless="${model.allowMarketingEmails}">You have asked that we do not keep you updated on Innovate UK competitions by email.</p>
+        <p class="govuk-body" th:if="${model.allowMarketingEmails}">You have asked for updates on Innovate UK competitions by email.</p>
+        <p class="govuk-body" th:unless="${model.allowMarketingEmails}">You have asked that we do not keep you updated on Innovate UK competitions by email.</p>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

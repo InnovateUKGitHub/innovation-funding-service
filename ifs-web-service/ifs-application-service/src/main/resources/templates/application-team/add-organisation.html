@@ -22,7 +22,7 @@
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add organisation',subTitle=${applicationName},size='govuk-heading-xl'" />
                 </th:block>
 
-                <p>Add organisations to your application team. If you wish to remove a sole member of an organisation, you must add a replacement member first.</p>
+                <p class="govuk-body">Add organisations to your application team. If you wish to remove a sole member of an organisation, you must add a replacement member first.</p>
 
                 <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" novalidate="novalidate" method="post">
                     <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
@@ -92,9 +92,9 @@
                         </tbody>
                     </table>
 
-                    <p><button class="buttonlink" data-repeatable-rowcontainer="#applicant-table tbody" name="addApplicant" type="submit">Add new applicant</button></p>
+                    <p class="govuk-body"><button class="buttonlink" data-repeatable-rowcontainer="#applicant-table tbody" name="addApplicant" type="submit">Add new applicant</button></p>
 
-                    <p class="extra-margin">
+                    <p class="govuk-body extra-margin">
                         <button class="button" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
                         <a th:href="@{${model.backUrl}}" class="button button-clear">Cancel</a>
                     </p>

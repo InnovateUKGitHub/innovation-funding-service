@@ -5,7 +5,7 @@
     </h2>
 
     <h3 class="govuk-heading-s">Organisation type</h3>
-    <p th:text="${organisation.organisationTypeName}">ORGANISATION TYPE</p>
+    <p class="govuk-body" th:text="${organisation.organisationTypeName}">ORGANISATION TYPE</p>
 
     <div class="grid-row">
         <div th:if="${organisation.registeredAddress != null && organisation.registeredAddress.getAddress() != null}"

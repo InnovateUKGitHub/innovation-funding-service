@@ -27,13 +27,13 @@
 
     <th:block th:if="${type == 'lead'}">
         <div class="message-alert extra-margin-bottom">
-            <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+            <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
         </div>
-        <p class="extra-margin">This is the organisation that will lead the application.</p>
+        <p class="govuk-body extra-margin">This is the organisation that will lead the application.</p>
     </th:block>
 
     <th:block th:unless="${type == 'lead'}">
-        <p>This is the organisation you will be part of for the application.</p>
+        <p class="govuk-body">This is the organisation you will be part of for the application.</p>
     </th:block>
 
     <form id="lead-organisation-type-form" action="/prototypes/IFS-3598-org-details" method="GET" novalidate="novalidate">
@@ -90,7 +90,7 @@
         </div>
 
 
-        <p>
+        <p class="govuk-body">
             If your organisation type is not listed contact the <a href="/info/contact">customer support service</a>.
         </p>
 

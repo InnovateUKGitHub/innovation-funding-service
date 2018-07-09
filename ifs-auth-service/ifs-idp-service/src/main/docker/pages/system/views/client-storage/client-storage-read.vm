@@ -63,7 +63,7 @@
         <main tabindex="-1" id="content">
 
             <div class="phase-banner">
-                <p>
+                <p class="govuk-body">
                     <strong class="phase-tag">BETA</strong>
                     <span>This is a new service – your <a target="_blank" href="https://www.surveymonkey.co.uk/r/innovationfundingservicefeedback">feedback</a> will help us to improve it.</span>
                 </p>
@@ -111,7 +111,7 @@
                     </ul>
                     <div class="open-government-licence">
                       <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
-                        <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
+                        <p class="govuk-body">All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
                     </div>               
                   </div>
 

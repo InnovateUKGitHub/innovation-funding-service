@@ -30,11 +30,11 @@
 
         <th:block th:unless="${type == 'collaborator'}">
             <div class="message-alert">
-                <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+                <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
             </div>
         </th:block>
 
-        <!--<p class="extra-margin">You can identify your organisation through Companies House or enter your details manually.</p>-->
+        <!--<p class="govuk-body extra-margin">You can identify your organisation through Companies House or enter your details manually.</p>-->
 
         <h2 class="govuk-heading-m">Search on Companies House</h2>
 
@@ -60,7 +60,7 @@
                             <a th:href="${'/prototypes/IFS-3598-org-selected?user='} + ${user} + '&#38;type=' + ${type}" title="View organisation">CERCIS LIMITED</a>
                         </h3>
                         <p class="meta crumbtrail">05750811 - Incorporated on 21 March 2006</p>
-                        <p>Queen Square, Bristol, BS1 4NT</p>
+                        <p class="govuk-body">Queen Square, Bristol, BS1 4NT</p>
 
                     </li>
                     <li class="type-company">
@@ -68,7 +68,7 @@
                             <a href="#" title="View organisation">CERCIS SERVICES LTD</a>
                         </h3>
                         <p class="meta crumbtrail">10626442 - Incorporated on 17 February 2017</p>
-                        <p>Stamford Square, London, SW15 2BF</p>
+                        <p class="govuk-body">Stamford Square, London, SW15 2BF</p>
 
                     </li>
                     <li class="type-company">
@@ -76,7 +76,7 @@
                             <a href="#" title="View organisation">CERCIS TRAINING AND CONSULTANCY LTD</a>
                         </h3>
                         <p class="meta crumbtrail">10105978 - Incorporated on 6 April 2016</p>
-                        <p>Westergate Close, Worthing, BN12 5DD</p>
+                        <p class="govuk-body">Westergate Close, Worthing, BN12 5DD</p>
 
                     </li>
                 </th:block>
@@ -86,14 +86,14 @@
                             <a th:href="${'/prototypes/IFS-3598-org-selected?user='} + ${user} + '&#38;type=' + ${type} + '&#38;status=' + ${status}" title="View organisation">SPOONS</a>
                         </h3>
                         <p class="meta crumbtrail">05750811 - Incorporated on 21 March 2006</p>
-                        <p>Queen Square, Bristol, BS1 4NT</p>
+                        <p class="govuk-body">Queen Square, Bristol, BS1 4NT</p>
                     </li>
                     <li class="type-company">
                         <h3>
                             <a href="#" title="View organisation">SPOONSAFE LTD</a>
                         </h3>
                         <p class="meta crumbtrail">10105978 - Incorporated on 6 April 2016</p>
-                        <p>Westergate Close, Worthing, BN12 5DD</p>
+                        <p class="govuk-body">Westergate Close, Worthing, BN12 5DD</p>
                     </li>
                 </th:block>
             </ul>
@@ -102,7 +102,7 @@
 
             <input type="hidden" id="manualEntry" name="manualEntry" value="false">
             <h2 class="govuk-heading-m">Not on Companies House?</h2>
-            <p>Enter your organisation details manually. You may need to supply additional details at a later point.</p>
+            <p class="govuk-body">Enter your organisation details manually. You may need to supply additional details at a later point.</p>
 
             <details role="group">
                 <summary aria-expanded="false" role="button" aria-controls="details-content-0">

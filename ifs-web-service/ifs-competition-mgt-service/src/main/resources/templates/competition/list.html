@@ -39,7 +39,7 @@
                                 competition Name
                             </a>
                         </h3>
-                        <p>Ref number: <th:block th:text="${competition.id}" /></p>
+                        <p class="govuk-body">Ref number: <th:block th:text="${competition.id}" /></p>
                     </div>
                     <div class="column-third">
                       <p class="status" th:text="${#messages.msg('ifs.competition.status.'+competition.competitionStatus)}"/>

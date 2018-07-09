@@ -29,7 +29,7 @@
 	</th:block>
 
 	<th:block th:unless="${param.user != null and param.user[0] == 'nonLead'}">
-		<p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
+		<p class="govuk-body">The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
 		<h2 class="govuk-heading-m">Next steps</h2>
 
 		<ul class="govuk-list govuk-list--bullet">
@@ -38,49 +38,49 @@
 			<li>the signed grant offer letter should then be sent to Innovate UK</li>
 		</ul>
 
-		<p>After the signed grant offer letter is received and approved by Innovate UK, project setup will be complete.</p>
+		<p class="govuk-body">After the signed grant offer letter is received and approved by Innovate UK, project setup will be complete.</p>
 	</th:block>
 
 	<th:block th:if="${param.user != null and param.user[0] == 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'GOLSent' or param.status != null and param.status[0] == 'GOLAccepted'}">
-		<p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup. It is now awaiting signature by the lead applicant.</p>
-		<p>A copy of the unsigned grant offer letter is available for your records.</p>
+		<p class="govuk-body">The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup. It is now awaiting signature by the lead applicant.</p>
+		<p class="govuk-body">A copy of the unsigned grant offer letter is available for your records.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
-		<p>We have received the signed grant offer letter and are currently reviewing this.</p>
+		<p class="govuk-body">We have received the signed grant offer letter and are currently reviewing this.</p>
 
-		<p>A copy of the unsigned grant offer letter is available for your records.</p>
+		<p class="govuk-body">A copy of the unsigned grant offer letter is available for your records.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLAccepted'}">
 
 		<div class="success-alert extra-margin-bottom">
-			<p>Your signed grant offer letter has been received and accepted by Innovate UK</p>
+			<p class="govuk-body">Your signed grant offer letter has been received and accepted by Innovate UK</p>
 		</div>
 
-		<p>The grant offer letter is available for your records below.</p>
+		<p class="govuk-body">The grant offer letter is available for your records below.</p>
 	</th:block>
 
 	<h2 class="govuk-heading-m">Grant offer letter</h2>
 
-	<p th:unless="${param.user != null and param.user[0] == 'nonLead'}">This document is awaiting signature by the Project Manager.</p>
+	<p class="govuk-body" th:unless="${param.user != null and param.user[0] == 'nonLead'}">This document is awaiting signature by the Project Manager.</p>
 
-	<!--<p th:unless="${param.user == null or param.user[0] != 'nonLead'}">This document has been approved as it has been with the document signed and recieved by Innovate to complete project setup</p>-->
+	<!--<p class="govuk-body" th:unless="${param.user == null or param.user[0] != 'nonLead'}">This document has been approved as it has been with the document signed and recieved by Innovate to complete project setup</p>-->
 
-	<p><a href="#">Grant offer letter 2016-07-28a.PDF</a></p>
+	<p class="govuk-body"><a href="#">Grant offer letter 2016-07-28a.PDF</a></p>
 
 	<h2 class="govuk-heading-m">Annex</h2>
-	<!--<p th:unless="${param.user != null and param.user[0] == 'nonLead'}">Annex contain any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in annex.</p>-->
+	<!--<p class="govuk-body" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Annex contain any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in annex.</p>-->
 
-	<!--<p th:unless="${param.user == null or param.user[0] != 'nonLead'}">Annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in annex.</p>-->
+	<!--<p class="govuk-body" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in annex.</p>-->
 
-	<p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
+	<p class="govuk-body">The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
 
-	<p><a href="Appendix 2016-07-28a.PDF">Grant offer letter 2016-07-28a.PDF</a></p>
+	<p class="govuk-body"><a href="Appendix 2016-07-28a.PDF">Grant offer letter 2016-07-28a.PDF</a></p>
 
 	<th:block th:unless="${param.user != null and param.user[0] == 'nonLead'}">
 		<h2 class="govuk-heading-m">Sending your signed grant offer letter to Innovate UK</h2>
-		<!--<p>Appendix 2 will contain any additional contracts agreed upon during your applicnation process, in signing the grant offer letter you also agree to any conditions set out in Appendix 2.</p>-->
+		<!--<p class="govuk-body">Appendix 2 will contain any additional contracts agreed upon during your applicnation process, in signing the grant offer letter you also agree to any conditions set out in Appendix 2.</p>-->
 
 		<div class="upload-section unstyled-view">
 			<h2 class="govuk-heading-s no-margin">Upload signed grant offer letter</h2>
@@ -89,7 +89,7 @@
 			<details>
 			    <summary><span class="summary">What are the requirements for upload?</span></summary>
 			    <div class="panel">
-			        <p>The uploaded signed grant offer letter agreement must:</p>
+			        <p class="govuk-body">The uploaded signed grant offer letter agreement must:</p>
 
 			        <ul class="govuk-list govuk-list--bullet">
 			        	<li>contain signed pages</li>
@@ -98,7 +98,7 @@
 			        	<li>be less than 1mb in file size</li>
 			        </ul>
 
-					<p>Unable to upload? Contact Customer Support on 0300 321 4357</p>
+					<p class="govuk-body">Unable to upload? Contact Customer Support on 0300 321 4357</p>
 			    </div>
 			</details>
 
@@ -124,7 +124,7 @@
 
 					<h2 class="govuk-heading-m no-margin">Confirm submission</h2>
 
-					<p>Once you submit the signed grant offer letter, we'll review it and will contact you if we need further information.</p>
+					<p class="govuk-body">Once you submit the signed grant offer letter, we'll review it and will contact you if we need further information.</p>
 
 					<hr />
 

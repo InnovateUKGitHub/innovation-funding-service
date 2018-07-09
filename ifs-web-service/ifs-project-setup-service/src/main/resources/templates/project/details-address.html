@@ -20,7 +20,7 @@
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project address',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-                <p>We will assign a Monitoring Officer who will visit your project at this address.</p>
+                <p class="govuk-body">We will assign a Monitoring Officer who will visit your project at this address.</p>
 
                 <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
                     <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}')}? 'form-group-error'">
@@ -42,7 +42,7 @@
                                 </div>
 
                                 <div id="registeredAddress" class="panel" th:if="${model.registeredAddress}">
-                                    <p>
+                                    <p class="govuk-body">
                                       <th:block th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}">
                                           <th:block th:text="${addressLine}">An address line</th:block><br />
                                       </th:block>
@@ -59,7 +59,7 @@
                                 </div>
 
                                 <div id="operatingAddress" class="panel" th:if="${model.operatingAddress}">
-                                    <p>
+                                    <p class="govuk-body">
                                       <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
                                           <th:block th:text="${addressLine}">An address line</th:block><br />
                                       </th:block>
@@ -76,7 +76,7 @@
                                 </div>
 
                                 <div id="projectAddress" class="panel" th:if="${model.projectAddress}">
-                                    <p>
+                                    <p class="govuk-body">
                                       <th:block th:each="addressLine : ${model.projectAddress.getNonEmptyLines()}">
                                           <th:block th:text="${addressLine}">An address line</th:block><br />
                                       </th:block>
@@ -97,7 +97,7 @@
                         </fieldset>
                     </div>
 
-                    <p>You can change your project address up until your grant offer letter is generated.</p>
+                    <p class="govuk-body">You can change your project address up until your grant offer letter is generated.</p>
 
                     <button class="button extra-margin">Save project address</button>
                 </form>

@@ -35,11 +35,11 @@
                 </div>
             </th:block>
             <th:block th:unless="${model.approved}">
-                <p>The bank account details below have been submitted to Innovate UK by <th:block th:text="${model.organisationName}" /> for use during the project <th:block th:text="${model.projectName}" />. These details are now undergoing an internal review. </p>
+                <p class="govuk-body">The bank account details below have been submitted to Innovate UK by <th:block th:text="${model.organisationName}" /> for use during the project <th:block th:text="${model.projectName}" />. These details are now undergoing an internal review. </p>
             </th:block>
 
             <h2 class="govuk-heading-m">Finance contact</h2>
-            <p>
+            <p class="govuk-body">
                 <th:block th:unless="${#strings.isEmpty(model.financeContactName)}">
                         <th:block th:text="${model.financeContactName}" /><br/>
                 </th:block>

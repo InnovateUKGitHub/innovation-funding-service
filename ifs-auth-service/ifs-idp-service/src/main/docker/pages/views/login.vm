@@ -320,7 +320,7 @@
                     if (data.length) {
                         jQuery('#global-cookie-message').after('<div id="global-alert-message"/>');
                         jQuery.each(data, function(index, value) {
-                            jQuery('#global-alert-message').append('<div class="event-alert event-warning no-animation"><p><span>' +
+                            jQuery('#global-alert-message').append('<div class="event-alert event-warning no-animation"><p class="govuk-body"><span>' +
                               value.message +
                               '</span></p></div>');
                         });

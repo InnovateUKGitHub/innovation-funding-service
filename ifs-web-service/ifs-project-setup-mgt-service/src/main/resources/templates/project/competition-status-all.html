@@ -38,7 +38,7 @@
 
         <th:block th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources) && param.applicationSearchString == null}">
             <hr />
-            <div class="warning-alert"><p>There are currently no active projects in this competition.</p></div>
+            <div class="warning-alert"><p class="govuk-body">There are currently no active projects in this competition.</p></div>
         </th:block>
 
         <th:block th:unless="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">

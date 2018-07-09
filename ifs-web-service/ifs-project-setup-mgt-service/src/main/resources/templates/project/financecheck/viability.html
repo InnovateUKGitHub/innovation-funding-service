@@ -25,7 +25,7 @@
 
         <th:block th:if="${model.isShowApprovalMessage()}">
             <div class="success-alert">
-                <p>The partner's finance viability has been approved by <span th:text="${model.getApproverName()}"></span>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"></span></p>
+                <p class="govuk-body">The partner's finance viability has been approved by <span th:text="${model.getApproverName()}"></span>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"></span></p>
             </div>
         </th:block>
 
@@ -86,8 +86,8 @@
           </div>
           <th:block th:unless="${model.isReadOnly()}">
               <h2 class="govuk-heading-m">Approve viability</h2>
-              <p>Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
-              <p>Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
+              <p class="govuk-body">Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
+              <p class="govuk-body">Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
               <div class="form-group">
                   <div class="multiple-choice" data-target="add-rag-rating">
                       <input  id="project-viable" type="checkbox" th:field="*{confirmViabilityChecked}" data-switches-button-status="#confirm-button" />

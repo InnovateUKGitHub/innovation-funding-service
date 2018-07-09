@@ -33,7 +33,7 @@
 
                 <th:block th:insert="fragments/elements :: competition-status-message (app=${model.currentApplication}, competition=${model.currentCompetition}, projectWithdrawn=${model.projectWithdrawn})" />
 
-                <p class="subtitle extra-margin" th:if="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}">
+                <p class="hint govuk-body-l extra-margin" th:if="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}">
                     Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
                 </p>
 
@@ -51,7 +51,7 @@
                 <div th:if="${model.currentCompetition.isOpen() and model.currentApplication.isOpen()}" class="extra-large-margin">
                     <th:block th:if="${model.userIsLeadApplicant}">
                         <div class="message-alert">
-                            <p>You will not be able to make changes to your application or resubmit after this point.</p>
+                            <p class="govuk-body">You will not be able to make changes to your application or resubmit after this point.</p>
                         </div>
                         <a th:if="${model.applicationReadyForSubmit}" id="submit-application-button" class="button extra-margin" data-js-modal="modal-confirm-submit-application"
                            th:href="@{/application/{id}/confirm-submit(id=${model.currentApplication.getId()})}">Submit application</a>
@@ -60,7 +60,7 @@
 
                     <th:block th:unless="${model.userIsLeadApplicant}">
                         <div class="message-alert">
-                            <p>All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application.</p>
+                            <p class="govuk-body">All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application.</p>
                         </div>
                     </th:block>
                 </div>

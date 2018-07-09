@@ -16,7 +16,7 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Organisation address',subTitle='Create your account',size='govuk-heading-xl'" />
 
         <div class="message-alert">
-            <p>
+            <p class="govuk-body">
                 <th:block th:unless="${model.research}">
                     Your organisation must be UK based to receive funding from Innovate UK
                 </th:block>
@@ -33,7 +33,7 @@
                 <form th:action="@{${formURL}}" novalidate="novalidate" method="POST">
                     <input type="hidden" th:field="*{searchOrganisationId}" />
                     <h2 class="govuk-heading-m no-margin-bottom">Operating address</h2>
-                    <p>This is the address that your organisation works from</p>
+                    <p class="govuk-body">This is the address that your organisation works from</p>
                     <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
 
                     <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>

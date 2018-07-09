@@ -13,8 +13,8 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Become an assessor for Innovate UK',size='govuk-heading-xl'" />
-                <p>Welcome to Innovate UK’s assessment service.</p>
-                <p>Please create your account. Once your account is created you will need to sign in before you can accept invitations to assess.</p>
+                <p class="govuk-body">Welcome to Innovate UK’s assessment service.</p>
+                <p class="govuk-body">Please create your account. Once your account is created you will need to sign in before you can accept invitations to assess.</p>
 
                 <a th:href="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" class="button button-large">Create account</a>
 

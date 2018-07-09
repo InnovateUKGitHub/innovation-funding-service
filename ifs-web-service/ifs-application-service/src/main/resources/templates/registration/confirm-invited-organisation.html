@@ -13,7 +13,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',size='govuk-heading-l'" />
-        <p>The lead applicant has invited you to participate on this application as part of the following organisation:
+        <p class="govuk-body">The lead applicant has invited you to participate on this application as part of the following organisation:
             <strong th:text="${model.partOfOrganisation}"></strong></p>
 
         <h2 class="govuk-heading-m no-margin-bottom">Confirm your organisation details are correct</h2>
@@ -21,12 +21,12 @@
             <legend class="visuallyhidden">Confirm your organisation details are correct</legend>
             <div class="form-block">
                 <h3 class="govuk-heading-s">Organisation type</h3>
-                <p th:text="${model.organisationType}"></p>
+                <p class="govuk-body" th:text="${model.organisationType}"></p>
                 <h3 class="govuk-heading-s">Registered name</h3>
-                <p th:text="${model.registrationName}"></p>
+                <p class="govuk-body" th:text="${model.registrationName}"></p>
                 <th:block th:if="${model.registrationNumberNotEmptyAndNotResearch}">
                     <h3 class="govuk-heading-s">Registration number</h3>
-                    <p th:text="${model.registrationNumber}"></p>
+                    <p class="govuk-body" th:text="${model.registrationNumber}"></p>
                 </th:block>
                 <h3 class="govuk-heading-s">Registered Address</h3>
                 <div th:text="${model.organisationAddress?.addressLine1}"></div>
@@ -38,8 +38,8 @@
             </div>
         </fieldset>
 
-        <p>If this is not the correct organisation, please <a th:href="${'mailto:'+ model.emailLeadApplicant}">email the lead applicant</a>.</p>
-        <p><strong>Please note</strong>, if you are representing a different organisation then you will need to make a new account.</p>
+        <p class="govuk-body">If this is not the correct organisation, please <a th:href="${'mailto:'+ model.emailLeadApplicant}">email the lead applicant</a>.</p>
+        <p class="govuk-body"><strong>Please note</strong>, if you are representing a different organisation then you will need to make a new account.</p>
 
         <a th:href="${model.registerUrl}" class="button button-large extra-margin">Confirm and continue</a>
 

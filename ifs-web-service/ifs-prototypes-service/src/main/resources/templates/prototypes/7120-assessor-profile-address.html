@@ -21,10 +21,10 @@
 	<h1 class="govuk-heading-l" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Edit your address' : 'Your address')}">Your address</h1>
 
 	<th:block th:unless="${(param.status != null and param.status[0] == 'edit')}">
-		<p>These details will be used for all accounts linked to your email address.</p>
+		<p class="govuk-body">These details will be used for all accounts linked to your email address.</p>
 
 		<h2 class="govuk-heading-s">Address</h2>
-		<p>
+		<p class="govuk-body">
 			4 Station Road<br />
 			Swindon <br />
 			Wiltshire <br />

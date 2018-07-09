@@ -23,7 +23,7 @@
                 </div>
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Target start date',subTitle=${model.projectName},size='govuk-heading-xl'" />
-                <p>The project can only start when:</p>
+                <p class="govuk-body">The project can only start when:</p>
 
                 <ol class="govuk-list govuk-list--number">
                     <li>You have provided the documents we need.</li>
@@ -45,10 +45,10 @@
                         </fieldset>
                     </div>
 
-                    <p>You can change your target start date up until the spend profile is generated.</p>
+                    <p class="govuk-body">You can change your target start date up until the spend profile is generated.</p>
 
                     <h2 class="govuk-heading-m">Project duration</h2>
-                    <p>
+                    <p class="govuk-body">
                         <span th:text="|${model.projectDurationInMonths} months|">9 months</span>
                     </p>
 

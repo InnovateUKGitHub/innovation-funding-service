@@ -22,27 +22,27 @@
 
     <th:block th:unless="${param.user != null and param.user[0] == 'nonLead'}">
         <div class="message-alert">
-            <p>Please supply the following project details within 30 days of our successful notification.</p>
-            <p>We need this information before your project can begin.</p>
+            <p class="govuk-body">Please supply the following project details within 30 days of our successful notification.</p>
+            <p class="govuk-body">We need this information before your project can begin.</p>
         </div>
     </th:block>
 
     <th:block th:if="${param.user != null and param.user[0] == 'nonLead'}">
         <div class="message-alert">
-            <p>The lead must supply the project details within 30 days of our successful notification.</p>
+            <p class="govuk-body">The lead must supply the project details within 30 days of our successful notification.</p>
         </div>
     </th:block>
 
     <div class="success-alert hidden">
-        <p>Your project details are complete.</p>
-        <p>This can be edited up until your spend profile is generated.</p>
+        <p class="govuk-body">Your project details are complete.</p>
+        <p class="govuk-body">This can be edited up until your spend profile is generated.</p>
     </div>
 
 	<h2 class="govuk-heading-m">Project information</h2>
 
-	<p th:unless="${param.user != null and param.user[0] == 'nonLead'}">You are providing these details as the lead on behalf of the overall project.</p>
+	<p class="govuk-body" th:unless="${param.user != null and param.user[0] == 'nonLead'}">You are providing these details as the lead on behalf of the overall project.</p>
 
-	<p th:unless="${param.user == null}">The lead must provide these details on behalf of the overall project.</p>
+	<p class="govuk-body" th:unless="${param.user == null}">The lead must provide these details on behalf of the overall project.</p>
 
 	<table>
 		<thead>
@@ -95,7 +95,7 @@
 
 	<h2 class="govuk-heading-m">Finance contacts</h2>
 
-	<p>Each partner must provide a finance contact. We will contact them with any queries around partner finances.</p>
+	<p class="govuk-body">Each partner must provide a finance contact. We will contact them with any queries around partner finances.</p>
 
 	<table>
 		<thead>

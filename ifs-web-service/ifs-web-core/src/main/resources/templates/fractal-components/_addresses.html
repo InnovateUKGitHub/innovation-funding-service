@@ -99,7 +99,7 @@
         <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? Organisation</legend>
         <div class="form-block">
             <h3 class="govuk-heading-s">Organisation name</h3>
-            <p th:text="${organisationForm.organisationName}"></p>
+            <p class="govuk-body" th:text="${organisationForm.organisationName}"></p>
         </div>
     </fieldset>
 </th:block>
@@ -110,16 +110,16 @@
         <div class="form-block">
             <th:block th:if="${showOrgType}">
                 <h3 class="govuk-heading-s">Organisation type</h3>
-                <p th:text="${organisationForm.organisationType.name}">Businesss</p>
+                <p class="govuk-body" th:text="${organisationForm.organisationType.name}">Businesss</p>
             </th:block>
 
             <h3 class="govuk-heading-s">Registered name</h3>
-            <p th:text="${organisationForm.organisationName}"></p>
+            <p class="govuk-body" th:text="${organisationForm.organisationName}"></p>
 
             <th:block th:unless="${organisationForm.research}">
                 <th:block th:if="${selectedOrganisation?.organisationSearchId}">
                     <h3 class="govuk-heading-s">Registration number</h3>
-                    <p th:text="${selectedOrganisation?.organisationSearchId}"></p>
+                    <p class="govuk-body" th:text="${selectedOrganisation?.organisationSearchId}"></p>
                 </th:block>
             </th:block>
 
@@ -152,10 +152,10 @@
     <fieldset>
         <div class="form-block">
             <h3 class="govuk-heading-s">Organisation name</h3>
-            <p th:text="${organisationForm.organisationName}"></p>
+            <p class="govuk-body" th:text="${organisationForm.organisationName}"></p>
 
             <h3 th:if="${business?.companyNumber}" class="govuk-heading-s">Registration number</h3>
-            <p th:if="${business?.companyNumber}" th:text="${business.companyNumber}"></p>
+            <p class="govuk-body" th:if="${business?.companyNumber}" th:text="${business.companyNumber}"></p>
 
             <h3 class="govuk-heading-s">Address</h3>
             <div>

@@ -103,7 +103,7 @@ table {
     }
 
     &.prep {
-        background: govuk-colour("grey-1");
+        background: $govuk-secondary-text-colour;
     }
 
     h2 {

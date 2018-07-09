@@ -47,7 +47,7 @@
                   <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>
                 </th:block>
             </ul>
-            <p>
+            <p class="govuk-body">
                 <th:block th:unless="${#strings.isEmpty(model.projectManagerName)}">
                   <th:block th:text="${model.projectManagerName}"/><br/>
                 </th:block>
@@ -75,7 +75,7 @@
                 <th:block th:if="${model.isShowApproveRejectButtons()}">
                     <th:block th:if="${model.collaborationAgreementRequired}">
                         <h2 class="govuk-heading-m">Review documents</h2>
-                        <p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
+                        <p class="govuk-body">Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
                         <button id="accept-documents" data-js-modal="modal-accept-docs" class="button">Accept documents</button>
                         <button id="reject-documents" data-js-modal="modal-reject-docs" class="button button-warning">Reject documents</button>
                         <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -84,7 +84,7 @@
                     </th:block>
                     <th:block th:unless="${model.collaborationAgreementRequired}">
                         <h2 class="govuk-heading-m">Review document</h2>
-                        <p>Please review the content of the document to ensure it meets Innovate UK's requirements.</p>
+                        <p class="govuk-body">Please review the content of the document to ensure it meets Innovate UK's requirements.</p>
                         <button id="accept-document" data-js-modal="modal-accept-doc" class="button">Accept document</button>
                         <button id="reject-document" data-js-modal="modal-reject-doc" class="button button-warning">Reject document</button>
                         <th:block th:insert="fragments/modals :: modal-overlay" />

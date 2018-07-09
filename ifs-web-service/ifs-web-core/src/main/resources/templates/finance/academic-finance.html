@@ -6,18 +6,18 @@
     <fieldset>
         <h2 class="govuk-heading-m">Innovate UK funding</h2>
         <legend class="visuallyhidden">Innovate UK (TSB) contribution</legend>
-        <p>Innovate UK is the new name for the Technology Strategy Board (TSB).</p>
+        <p class="govuk-body">Innovate UK is the new name for the Technology Strategy Board (TSB).</p>
 
-        <p>To receive Innovate UK funding, your academic organisation must apply for funding through the Je-S system. To find out more about the Je-S requirements and processes please go to the <a href="https://je-s.rcuk.ac.uk/" rel="external">Je-S website</a>.</p>
+        <p class="govuk-body">To receive Innovate UK funding, your academic organisation must apply for funding through the Je-S system. To find out more about the Je-S requirements and processes please go to the <a href="https://je-s.rcuk.ac.uk/" rel="external">Je-S website</a>.</p>
 
-        <p>All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this
+        <p class="govuk-body">All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this
             application will not be submitted into this competition.</p>
 
         <h3 class="govuk-heading-s">Your project costs</h3>
 
-        <p>Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate
+        <p class="govuk-body">Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate
             UK</p>
-        <p>Enter the figures from the following fields on the Je-S form:</p>
+        <p class="govuk-body">Enter the figures from the following fields on the Je-S form:</p>
         <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-' + academicFinance.tsbReference?.id + '-item]}')} ? 'form-group-error'">
             <label class="form-label" th:for="|formInput[cost-${academicFinance.tsbReference?.id}-item]|">
                 <span class="form-label-bold">TSB reference</span>
@@ -54,7 +54,7 @@
     <fieldset class="academic">
         <h2 class="govuk-heading-m" th:classappend="${isApplicant == 'true' ? ' no-margin' : ''}">Financial resources</h2>
         <legend class="visuallyhidden">Financial resources</legend>
-        <p th:text="'The following costs are entered by the organisation from the summary of resources section on ' + (${isApplicant == 'true'} ? 'your ' : 'the ') + 'Je-S form'">The following costs are entered by the organisation from the summary of resources section on the Je-S form</p>
+        <p class="govuk-body" th:text="'The following costs are entered by the organisation from the summary of resources section on ' + (${isApplicant == 'true'} ? 'your ' : 'the ') + 'Je-S form'">The following costs are entered by the organisation from the summary of resources section on the Je-S form</p>
 
         <div class="grid-row">
             <div class="column-third"><strong>Directly incurred</strong></div>
@@ -335,7 +335,7 @@
     <div class="upload-section">
         <h3 th:if="${viewmode=='edit'}" class="govuk-heading-s no-margin" th:text="${formInput.getDescription()}">Upload a pdf copy of the Je-S output form once you have a status of 'With Council'.</h3>
         <h3 th:if="${viewmode=='readonly'}" class="govuk-heading-s no-margin" th:text="'Download Je-S form'">Download Je-S form</h3>
-        <p th:if="${viewmode=='edit'}" ifs:utext="${question.description}"></p>
+        <p class="govuk-body" th:if="${viewmode=='edit'}" ifs:utext="${question.description}"></p>
         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" th:with="autoSaveOff=true" />
     </div>
 </th:block>

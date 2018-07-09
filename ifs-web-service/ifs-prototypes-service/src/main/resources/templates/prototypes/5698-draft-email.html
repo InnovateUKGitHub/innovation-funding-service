@@ -23,7 +23,7 @@
 	<h2 class="govuk-heading-m no-margin">Application:</h2>
 	<p class="no-margin-top" th:text="${(param.type != null and param.type[0] == 'multiple' ? 'Multiple' : '94565678: The potential for glucose based contact lens monitoring in the management of type two diabetes')}"></p>
 
-	<p>The following email will be sent to the lead <span th:text="${(param.type != null and param.type[0] == 'multiple' ? 'applicants' : 'applicant')}">applicant</span>, after which this application will be no longer available for assessment.</p>
+	<p class="govuk-body">The following email will be sent to the lead <span th:text="${(param.type != null and param.type[0] == 'multiple' ? 'applicants' : 'applicant')}">applicant</span>, after which this application will be no longer available for assessment.</p>
 
 	<h2 class="govuk-heading-m no-margin">Recipient:</h2>
 	<p class="no-margin-top" th:text="${(param.type != null and param.type[0] == 'multiple' ? 'Multiple' : 'Dave Smith (Lead applicant)')}"></p>
@@ -56,7 +56,7 @@
 
 				<!--<h2 class="govuk-heading-m no-margin">Remove application</h2>-->
 
-				<!--<p>The application 'Application title' will not be removed from the assessment group, the lead applicant will be informed using the email dafted of the decision</p>-->
+				<!--<p class="govuk-body">The application 'Application title' will not be removed from the assessment group, the lead applicant will be informed using the email dafted of the decision</p>-->
 
 				<!--<hr />-->
 

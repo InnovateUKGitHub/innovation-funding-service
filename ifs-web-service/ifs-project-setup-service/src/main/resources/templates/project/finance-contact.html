@@ -16,7 +16,7 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance contact',subTitle=${model.projectName},size='govuk-heading-xl'" />
-                <p>We will ask the finance contact to:</p>
+                <p class="govuk-body">We will ask the finance contact to:</p>
 
                 <ul class="govuk-list govuk-list--bullet">
                     <li>provide bank details for your organisation</li>
@@ -93,9 +93,9 @@
                         </fieldset>
                     </div>
 
-                    <p>If you add a new team member this section will show as pending until they have registered. Once they have registered you can assign the role to them.</p>
+                    <p class="govuk-body">If you add a new team member this section will show as pending until they have registered. Once they have registered you can assign the role to them.</p>
 
-                    <p>You can change your finance contact up until your grant offer letter is generated.</p>
+                    <p class="govuk-body">You can change your finance contact up until your grant offer letter is generated.</p>
 
                     <button class="button extra-margin" type="submit"  name="save-fc" id="save">Save finance contact</button>
                 </form>

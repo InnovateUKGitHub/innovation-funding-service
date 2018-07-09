@@ -17,10 +17,10 @@
         <h2 class="govuk-heading-m">Assessor details</h2>
 
         <h3 class="govuk-heading-s">Name</h3>
-        <p th:text="${model.name}">John Smith</p>
+        <p class="govuk-body" th:text="${model.name}">John Smith</p>
 
         <h3 class="govuk-heading-s" th:if="${model.address}">Address</h3>
-        <p th:if="${model.address}">
+        <p class="govuk-body" th:if="${model.address}">
             <th:block th:if="${model.address.addressLine1}">
                 <th:block th:text="${model.address.addressLine1}">Street address 1</th:block><br />
             </th:block>
@@ -40,10 +40,10 @@
         </p>
 
         <h3 class="govuk-heading-s" th:if="${model.phone}">Phone number</h3>
-        <p th:if="${model.phone}" th:text="${model.phone}">01234 567891</p>
+        <p class="govuk-body" th:if="${model.phone}" th:text="${model.phone}">01234 567891</p>
 
         <h3 class="govuk-heading-s">Email address</h3>
-        <p><a th:href="|mailto:${model.email}|" th:text="${model.email}">j.s@assessor.com</a></p>
+        <p class="govuk-body"><a th:href="|mailto:${model.email}|" th:text="${model.email}">j.s@assessor.com</a></p>
 
 
         <h2 class="govuk-heading-m">Skills</h2>
@@ -62,10 +62,10 @@
         </ul>
 
         <h3 class="govuk-heading-s" th:if="${model.skills}">Skill areas</h3>
-        <p th:if="${model.skills}" th:text="${model.skills}">Human computer interaction, Wearables, IoT</p>
+        <p class="govuk-body" th:if="${model.skills}" th:text="${model.skills}">Human computer interaction, Wearables, IoT</p>
 
         <h3 class="govuk-heading-s" th:if="${model.businessType}">Assessor type</h3>
-        <p th:if="${model.businessType}" th:text="${model.businessType}">business</p>
+        <p class="govuk-body" th:if="${model.businessType}" th:text="${model.businessType}">business</p>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

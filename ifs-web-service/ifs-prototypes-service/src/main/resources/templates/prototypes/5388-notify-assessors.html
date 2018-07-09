@@ -24,7 +24,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'incomplete'}">
 
-		<p class="extra-margin">
+		<p class="govuk-body extra-margin">
 			<span id="submitted" class="govuk-heading-l">23</span> Submitted
 
 			<span id="assessors" class="govuk-heading-l extra-margin-left">60</span> Assessors
@@ -32,17 +32,17 @@
 
 		<h2 class="govuk-heading-s">The following applications require additional assessors</h2>
 
-		<p>Required Assessors for each application: 5</p>
+		<p class="govuk-body">Required Assessors for each application: 5</p>
 
 		<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-notify-table" />
 
-		<p class="extra-margin">When you have finished assigning all required assignments to assessors,  upon selecting notify the assessors assigned to an application will be informed that they have been assigned applications to assess.</p>
+		<p class="govuk-body extra-margin">When you have finished assigning all required assignments to assessors,  upon selecting notify the assessors assigned to an application will be informed that they have been assigned applications to assess.</p>
 
 	</th:block>
 
 	<th:block th:unless="${param.status != null and param.status[0] == 'incomplete'}">
 
-		<p class="extra-margin">
+		<p class="govuk-body extra-margin">
 			<span id="submitted" class="govuk-heading-l">23</span> Submitted
 
 			<span id="assessors" class="govuk-heading-l extra-margin-left">60</span> Assessors
@@ -52,11 +52,11 @@
 
 		<h2 class="govuk-heading-s">All applications have been allocated the minimum number of assessments</h2>
 
-		<p>You will need to confirm assignments before assessors are notified.</p>
+		<p class="govuk-body">You will need to confirm assignments before assessors are notified.</p>
 
-		<p>Upon selecting notify all assessors assigned an application to mark will be informed by email that they have been given assignments</p>
+		<p class="govuk-body">Upon selecting notify all assessors assigned an application to mark will be informed by email that they have been given assignments</p>
 
-		<p>To view these assignments they will have to log in to their account and choose whether to accept or reject the marking the application.</p>
+		<p class="govuk-body">To view these assignments they will have to log in to their account and choose whether to accept or reject the marking the application.</p>
 
 	</th:block>
 
@@ -68,7 +68,7 @@
 
 			<h2 class="govuk-heading-m no-margin">Notify assessors</h2>
 
-			<p>Notifying the assessors will inform them of the applications that have been assigned to them. if you are unsure of any of the allocations please review before notifying the assessors.</p>
+			<p class="govuk-body">Notifying the assessors will inform them of the applications that have been assigned to them. if you are unsure of any of the allocations please review before notifying the assessors.</p>
 
 			<hr />
 

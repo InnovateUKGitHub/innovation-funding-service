@@ -18,7 +18,7 @@
         <!--/* <div class="icon icon-information"></div><span>Please provide your financial breakdown in the <a th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Your finances</a> section.</span> */-->
         <h2 class="govuk-heading-m">Project cost breakdown</h2>
         <th:block th:insert="finance/finance-summary :: financial_summary_table" />
-        <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
+        <p class="govuk-body">This is the level of cost detail that the assessors will see during the assessment process.</p>
 
     </th:block>
 
@@ -227,7 +227,7 @@
                    th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.getId()},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}" >Return to the finances section to complete your finances</a>
             </th:block>
 
-            <p>This application cannot be submitted unless finances have been marked as complete by all partners.</p>
+            <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete by all partners.</p>
         </div>
     </th:block>
 
@@ -235,7 +235,7 @@
     <th:block th:fragment="research_participation_alert">
         <div th:if="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio}" class="warning-alert">
             <h2 class="govuk-heading-s no-margin">The participation levels of this project are not within the required range</h2>
-            <p>The research participation costs must be <span th:text="${currentCompetition.maxResearchRatio}"></span>% or less of the total project costs.</p>
+            <p class="govuk-body">The research participation costs must be <span th:text="${currentCompetition.maxResearchRatio}"></span>% or less of the total project costs.</p>
         </div>
     </th:block>
 </html>

@@ -74,7 +74,7 @@
                 <div class="extra-margin">
                     <details th:attrappend="open=${#fields.hasErrors('${form.*}') ? 'open' : null}">
                         <summary><span class="summary">Unable to assess this application?</span></summary>
-                        <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
+                        <p class="govuk-body">If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
                         <form th:action="@{/{assessmentId}/reject(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
                             <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'form-group-error'">
                                 <label class="form-label" th:for="${#ids.next('rejectReason')}">

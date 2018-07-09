@@ -370,7 +370,7 @@ tr {
 
 td {
   &.autosave-info {
-    color: govuk-colour("grey-1");
+    color: $govuk-secondary-text-colour;
     font-size:14px;
     min-width:70px;
   }
@@ -381,7 +381,7 @@ td {
   .autosave-info {
     padding:2px 0;
     float:right;
-    color: govuk-colour("grey-1");
+    color: $govuk-secondary-text-colour;
     clear:right;
   }
 }

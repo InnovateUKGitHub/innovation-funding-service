@@ -28,12 +28,12 @@
             <div class="success-alert extra-margin-bottom">
                 The checks have been completed and your finances approved.
             </div>
-            <p> Review your <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">finances</a>
+            <p class="govuk-body"> Review your <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">finances</a>
                 or your <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}">project finance overview</a>.
             </p>
         </th:block>
         <th:block th:unless="${model.isApproved()}">
-            <p>Innovate UK is reviewing
+            <p class="govuk-body">Innovate UK is reviewing
                 <th:block th:unless="${model.isAcademic()}">
                 <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">your finances</a>.
                 </th:block>
@@ -47,18 +47,18 @@
         <th:block th:unless="${model.noQueries()}">
             <th:block th:if="${model.anyPendingQueries() && !model.isApproved()}">
                 <div class="warning-alert">
-                    <p th:text="${model.onePendingQuery()} ? 'You have a pending finance query.' : 'You have pending finance queries.'"></p>
+                    <p class="govuk-body" th:text="${model.onePendingQuery()} ? 'You have a pending finance query.' : 'You have pending finance queries.'"></p>
                 </div>
             </th:block>
 
             <th:block th:if="${model.noPendingAndAnyAwaitingResponseQueries() && !model.isApproved()}">
                 <div class="assigned-alert">
-                    <p>Your response has been sent and will be reviewed by Innovate UK.</p>
+                    <p class="govuk-body">Your response has been sent and will be reviewed by Innovate UK.</p>
                 </div>
             </th:block>
             <th:block th:if="${model.onlyClosedQueries() && !model.isApproved()}">
                     <div class="success-alert">
-                        <p th:text="${model.isSingleQuery()} ? 'This query has been resolved.' : 'All queries have been resolved.'"></p>
+                        <p class="govuk-body" th:text="${model.isSingleQuery()} ? 'This query has been resolved.' : 'All queries have been resolved.'"></p>
                     </div>
             </th:block>
 

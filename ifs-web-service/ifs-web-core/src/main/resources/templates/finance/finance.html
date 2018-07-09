@@ -40,8 +40,8 @@
     <th:block th:fragment="organisation_size(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
         <div class="message-alert extra-margin-bottom" th:if="${model.organisationSizeAlert}">
             <h2 class="govuk-heading-s no-margin">Organisation size determines funding</h2>
-            <p>The organisation size is used to calculate your funding level in the application.</p>
-            <p>Changing this selection will reset your funding level.</p>
+            <p class="govuk-body">The organisation size is used to calculate your funding level in the application.</p>
+            <p class="govuk-body">Changing this selection will reset your funding level.</p>
         </div>
 
         <th:block th:unless="${model.readonly}">
@@ -300,7 +300,7 @@
 
     <!-- ===========================Form: labour =========================== -->
     <th:block th:fragment="labour (costViewModel, internalView)">
-        <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
+        <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: labour_finances" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -492,7 +492,7 @@
     </th:block>
     <!-- ===========================Form: overheads =========================== -->
     <th:block th:fragment="overheads (costViewModel, internalView)" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}">
-        <p th:if="${viewmode == 'edit'}" ifs:utext="${question.description}" />
+        <p class="govuk-body" th:if="${viewmode == 'edit'}" ifs:utext="${question.description}" />
         <th:block th:insert="finance/finance :: overheads_finances (internalView=${internalView})" th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" />
     </th:block>
 
@@ -634,12 +634,12 @@
             </div>
 
             <div class="form-group" id="overhead-none">
-                <p th:unless="${internalView}">You are not currently applying for overhead costs</p>
+                <p class="govuk-body" th:unless="${internalView}">You are not currently applying for overhead costs</p>
                 <input type="hidden" value="£0" data-calculation-rawvalue="0" th:id="${'section-total-'+subSection.id+'-labour-cost-none'}"/>
             </div>
 
             <div class="form-group" id="overhead-default-percentage">
-                <p th:unless="${internalView}">There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
+                <p class="govuk-body" th:unless="${internalView}">There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
                 <h4 class="alignright section-total-summary">
                     Total overhead costs
                     <span class="govuk-heading-s"
@@ -657,7 +657,7 @@
             </div>
             <div th:unless="${overheadCosts?.useTotalOption}" id="overhead-custom-percentage">
                 <h3 class="govuk-heading-m">Custom overhead costs</h3>
-                <p>
+                <p class="govuk-body">
                     If you feel your overhead costs are higher than 20% you may calculate a value using an Innovate UK model.
                     The model shows you which types of indirect costs associated with your project you may claim. For support with this option,
                     please contact our Customer Support Service on 01793 44 2700. They will be happy to provide you with the calculation model sheet (together with guidance documentation).
@@ -698,7 +698,7 @@
                 <!--/* Applicants' view of Overheads */-->
                 <th:block th:unless="${internalView}">
                     <h3 class="govuk-heading-m">Calculate overheads</h3>
-                    <p>
+                    <p class="govuk-body">
                         If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadsheet available below.
                         The model shows you which types of indirect costs associated with your project you may claim.
                         For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review.
@@ -753,10 +753,10 @@
                 <!--/* Internal users' view of Overheads */-->
                 <th:block th:if="${internalView}">
                     <th:block th:if="${overheadCosts?.calculationFile == null || !overheadCosts.calculationFile.present}">
-                        <p>The applicant has not uploaded a file.</p>
+                        <p class="govuk-body">The applicant has not uploaded a file.</p>
                     </th:block>
                     <th:block th:if="${overheadCosts?.calculationFile?.present}">
-                        <p>The applicant has uploaded a completed overhead costs spreadsheet.</p>
+                        <p class="govuk-body">The applicant has uploaded a completed overhead costs spreadsheet.</p>
                         <div class="upload-section extra-margin form-group download">
                             <th:block th:with="uploadViewmode='readonly',
                                            downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts.id}},
@@ -796,7 +796,7 @@
 
     <!-- ===========================Form: materials =========================== -->
     <th:block th:fragment="materials (costViewModel, internalView)" th:with="question=${costViewModel.question}">
-        <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${question.description}">description</p>
+        <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${question.description}">description</p>
         <th:block th:insert="finance/finance :: materials_finances" th:with="costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -959,7 +959,7 @@
     <!-- ===========================Form: capital usage =========================== -->
 
     <th:block th:fragment="capital_usage (costViewModel, internalView)" >
-        <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
+        <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: capital_usage_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -1178,7 +1178,7 @@
 
     <!-- ===========================Form: subcontracting cost =========================== -->
     <th:block th:fragment="subcontracting (costViewModel, internalView)">
-        <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
+        <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: subcontracting_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -1313,7 +1313,7 @@
     <!-- ===========================Form: travel cost =========================== -->
 
     <th:block th:fragment="travel (costViewModel, internalView)">
-        <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
+        <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: travel_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -1478,7 +1478,7 @@
 
     <!-- ===========================Form: other cost =========================== -->
     <th:block th:fragment="other_costs (costViewModel, internalView)">
-        <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}" />
+        <p class="govuk-body" th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}" />
         <th:block th:insert="finance/finance :: other_costs_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -1596,7 +1596,7 @@
         <th:block th:if="${readonly}">
             <h2 class="govuk-heading-m">Other funding for this project</h2>
             <th:block th:if="${costCategory.otherPublicFunding?.equals('No')}">
-                <p>No other funding</p>
+                <p class="govuk-body">No other funding</p>
             </th:block>
             <th:block th:if="${costCategory.otherPublicFunding?.equals('Yes')}">
                 <div class="table-overflow">

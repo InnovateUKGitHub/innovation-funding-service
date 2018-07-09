@@ -40,7 +40,7 @@
                             <dd th:text="${model.executive}">Paul Ray</dd>
                         </dl>
 
-                        <p th:unless="${model.readOnly}"
+                        <p class="govuk-body" th:unless="${model.readOnly}"
                            th:if="${(model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN or
                            model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or
                            model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED or
@@ -150,7 +150,7 @@
                                 th:class="${(milestone.passed ? 'done' : 'not-done')}">
                                 <h3 class="govuk-heading-s" th:text="${milestone.milestoneType.milestoneDescription}">
                                     Milestone</h3>
-                                <p th:text="${milestone.dateTime} ? ${#temporals.format(milestone.dateTime, 'd MMMM yyyy')}">
+                                <p class="govuk-body" th:text="${milestone.dateTime} ? ${#temporals.format(milestone.dateTime, 'd MMMM yyyy')}">
                                     10 October 2017</p>
                             </li>
                             <th:block th:switch="${milestone.milestoneType}">

@@ -23,9 +23,9 @@
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Update ${model.organisationName}|,subTitle=${applicationName},size='govuk-heading-xl'" />
                 </th:block>
 
-                <p th:if="${model.userLeadApplicant}">You are able to invite and remove contributors. Only the lead organisation and lead applicant cannot be removed.</p>
-                <p th:if="${model.userLeadApplicant and model.leadOrganisation}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
-                <p th:unless="${model.userLeadApplicant}">You are able to invite contributors from your own organisation.</p>
+                <p class="govuk-body" th:if="${model.userLeadApplicant}">You are able to invite and remove contributors. Only the lead organisation and lead applicant cannot be removed.</p>
+                <p class="govuk-body" th:if="${model.userLeadApplicant and model.leadOrganisation}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
+                <p class="govuk-body" th:unless="${model.userLeadApplicant}">You are able to invite contributors from your own organisation.</p>
 
                 <h2 class="govuk-heading-m" th:text="${model.leadOrganisation} ? ${model.organisationName} + ', Lead organisation' : ${model.organisationName}">Empire Ltd, Lead organisation</h2>
 
@@ -140,10 +140,10 @@
                         <th:block th:insert="fragments/modals :: modal-delete-organisation" />
                     </div>
 
-                    <p class="extra-margin">Once you update the organisation, your changes will take effect. Invites will be sent to all new applicants.</p>
-                    <p th:if="${model.userLeadApplicant}">You should not remove members of your team without discussing this action with them first. Members who are removed may not receive a notification from Innovate UK.</p>
+                    <p class="govuk-body extra-margin">Once you update the organisation, your changes will take effect. Invites will be sent to all new applicants.</p>
+                    <p class="govuk-body" th:if="${model.userLeadApplicant}">You should not remove members of your team without discussing this action with them first. Members who are removed may not receive a notification from Innovate UK.</p>
 
-                    <p class="extra-margin">
+                    <p class="govuk-body extra-margin">
                         <a
                             th:href="@{${model.backUrl}}" class="button-secondary">Return to application team page</a>
                     </p>

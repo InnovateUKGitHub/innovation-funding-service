@@ -137,7 +137,7 @@
             View assessors who have not yet responded or have declined the invite.
         </h2>
 
-        <p th:unless="${param.status != null and param.status[0] == 'invitesPending'}">There are no assessors invited to this panel.</p>
+        <p class="govuk-body" th:unless="${param.status != null and param.status[0] == 'invitesPending'}">There are no assessors invited to this panel.</p>
 
         <th:block th:if="${param.status != null and param.status[0] == 'invitesPending'}">
 
@@ -277,7 +277,7 @@
             View assessors who have accepted an invite to interview panel.
         </h2>
 
-        <p th:unless="${param.status != null and param.status[0] == 'invitesPending'}">There are no assessors who have accepted invites to this assessment panel.</p>
+        <p class="govuk-body" th:unless="${param.status != null and param.status[0] == 'invitesPending'}">There are no assessors who have accepted invites to this assessment panel.</p>
 
         <th:block th:if="${param.status != null and param.status[0] == 'invitesPending'}">
             <div class="grid-row sorting">

@@ -8,9 +8,9 @@
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition terms and conditions',size='govuk-heading-xl'" />
 
-    <p>These are the terms and conditions applicants must accept for this competition.</p>
+    <p class="govuk-body">These are the terms and conditions applicants must accept for this competition.</p>
 
-    <p><a th:text="${model.currentTermsAndConditions.name}" th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.general.competition.id})}">
+    <p class="govuk-body"><a th:text="${model.currentTermsAndConditions.name}" th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.general.competition.id})}">
         Terms and conditions</a>
     </p>
 

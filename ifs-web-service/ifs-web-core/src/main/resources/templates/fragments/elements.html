@@ -11,7 +11,7 @@
 
 <th:block th:fragment="global-cookie-message">
     <div id="global-cookie-message">
-        <p>GOV.UK uses cookies to make the site simpler. <a href="/info/cookies">Find out more about cookies</a>.</p>
+        <p class="govuk-body">GOV.UK uses cookies to make the site simpler. <a href="/info/cookies">Find out more about cookies</a>.</p>
     </div>
 </th:block>
 
@@ -21,7 +21,7 @@
     <div th:if="${alertMessages}" id="global-alert-message">
         <th:block th:each="alertMessage : ${alertMessages}">
             <div class="event-alert event-warning no-animation">
-                <p><span ifs:utext="${alertMessage.message}"></span></p>
+                <p class="govuk-body"><span ifs:utext="${alertMessage.message}"></span></p>
             </div>
         </th:block>
     </div>
@@ -99,28 +99,28 @@
 <!-- =========================== Element: Notification / event =========================== -->
 <th:block th:fragment="notification">
     <div class="event-alert" th:if="${notifications} and ${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
-        <p><span th:text="${notification?.assignedByName + ' has assigned ' + questions + ' to you'}"></span></p>
+        <p class="govuk-body"><span th:text="${notification?.assignedByName + ' has assigned ' + questions + ' to you'}"></span></p>
     </div>
     <div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert" >
-        <p><span>Your changes have been saved</span></p>
+        <p class="govuk-body"><span>Your changes have been saved</span></p>
     </div>
     <div th:if="${assignedQuestion}" class="event-alert" >
-        <p><span>Question assigned successfully</span></p>
+        <p class="govuk-body"><span>Question assigned successfully</span></p>
     </div>
     <div th:if="${invitesSend}" class="event-alert">
-        <p><span>Invites sent</span></p>
+        <p class="govuk-body"><span>Invites sent</span></p>
     </div>
     <div th:if="${inviteNotValid}" class="event-alert">
-        <p><span>Invite not valid or expired</span></p>
+        <p class="govuk-body"><span>Invite not valid or expired</span></p>
     </div>
     <div th:if="${inviteAlreadyAccepted}" class="event-alert">
-        <p><span>Invite already accepted</span></p>
+        <p class="govuk-body"><span>Invite already accepted</span></p>
     </div>
     <div th:if="${fileUploaded}" class="event-alert" >
-        <p><span>You have uploaded file successfully</span></p>
+        <p class="govuk-body"><span>You have uploaded file successfully</span></p>
     </div>
     <div th:if="${fileRemoved}" class="event-alert" >
-        <p><span>File has been removed successfully</span></p>
+        <p class="govuk-body"><span>File has been removed successfully</span></p>
     </div>
 </th:block>
 
@@ -180,27 +180,27 @@
 <th:block th:fragment="competition-status-message (app, competition, projectWithdrawn)">
     <div class="warning-alert" th:if="${(app.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).CREATED or app.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).OPEN) and competition.competitionStatus.name() != 'OPEN'}">
         <h2 class="govuk-heading-s no-margin">Application not submitted</h2>
-        <p>This application has not been entered into the competition <th:block th:text="${competition.name}" /> as it was not submitted before the competition deadline.</p>
+        <p class="govuk-body">This application has not been entered into the competition <th:block th:text="${competition.name}" /> as it was not submitted before the competition deadline.</p>
     </div>
     <div class="warning-alert" th:if="${projectWithdrawn}">
         <h2 class="govuk-heading-s no-margin">This project has been withdrawn.</h2>
-        <p>The application was successful but withdrawn at project setup stage. The scores and written feedback from each assessor can be found below.</p>
+        <p class="govuk-body">The application was successful but withdrawn at project setup stage. The scores and written feedback from each assessor can be found below.</p>
     </div>
     <th:block th:unless="${projectWithdrawn}">
 		<div class="success-alert" th:if="${app.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).APPROVED}">
 	        <h2 class="govuk-heading-s no-margin">Congratulations, your application has been successful</h2>
-	        <p>
+	        <p class="govuk-body">
                 <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful in this round of funding.</th:block>
                 <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
                 <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" />
             </p>
-            <p th:if="${currentProject}">
+            <p class="govuk-body" th:if="${currentProject}">
                 <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
             </p>
         </div>
         <div class="warning-alert" th:if="${app.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).REJECTED}">
             <h2 class="govuk-heading-s no-margin">Your application has not been successful in this competition.</h2>
-            <p>
+            <p class="govuk-body">
                 <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
                 <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')+'.'}" />
             </p>

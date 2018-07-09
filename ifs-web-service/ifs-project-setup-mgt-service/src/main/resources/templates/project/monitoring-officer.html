@@ -131,18 +131,18 @@
 
                 <th:block th:if="${model.projectTitle}">
                     <h3 class="govuk-heading-m no-margin">Project title</h3>
-                    <p th:text="${model.projectTitle}">Technology inspired</p>
+                    <p class="govuk-body" th:text="${model.projectTitle}">Technology inspired</p>
                 </th:block>
 
                 <th:block th:if="${model.area}">
                 <h3 class="govuk-heading-m no-margin">Area</h3>
-                <p th:text="${model.area}">Technology</p>
+                <p class="govuk-body" th:text="${model.area}">Technology</p>
                 </th:block>
 
                 <th:block th:if="${model.primaryAddressLines}">
                     <h3 class="govuk-heading-m no-margin">Primary address</h3>
                     <p class="form-hint">This has been designated by the lead organisation as the main work location for the project.</p>
-                    <p>
+                    <p class="govuk-body">
                         <th:block th:each="addressLine : ${model.primaryAddressLines}">
                         <th:block th:text="${addressLine}">An address line</th:block><br />
                       </th:block>
@@ -152,7 +152,7 @@
                 <th:block th:if="${model.targetProjectStartDate}">
                     <h3 class="govuk-heading-m no-margin">Target project start date</h3>
                     <p class="form-hint">Planned start date for the project.</p>
-                    <p th:if="${model.targetProjectStartDate}">
+                    <p class="govuk-body" th:if="${model.targetProjectStartDate}">
                       <th:block th:insert="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
                       <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMM yyyy')}" />
                     </p>
@@ -161,7 +161,7 @@
                 <th:block th:if="${model.projectManagerName}">
                     <h3 class="govuk-heading-m no-margin">Project Manager</h3>
                     <p class="form-hint">Project Manager for the project, designated by the lead organisation.</p>
-                    <p th:text="${model.projectManagerName}">David Smith</p>
+                    <p class="govuk-body" th:text="${model.projectManagerName}">David Smith</p>
                 </th:block>
 
                 <th:block th:if="${model.partnerOrganisationNames}">

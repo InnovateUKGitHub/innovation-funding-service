@@ -43,13 +43,13 @@
                 </div>
 
                 <div class="column-one-half">
-                    <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">View competition brief (opens in a new window)</a></p>
+                    <p class="govuk-body"><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">View competition brief (opens in a new window)</a></p>
                 </div>
             </div>
 
             <div class="my-applications">
 
-                <p th:if="${ #lists.isEmpty(model.outstanding) && #lists.isEmpty(model.submitted) }" class="extra-margin">
+                <p th:if="${ #lists.isEmpty(model.outstanding) && #lists.isEmpty(model.submitted) }" class="govuk-body extra-margin">
                     There are currently no assessments for you to review.
                 </p>
 
@@ -82,7 +82,7 @@
                                         <h3 class="govuk-heading-s"><a
                                             th:href="${app.pending} ? ${assignmentUrl} : @{/{assessmentId}(assessmentId=${app.assessmentId})}"
                                             th:text="${app.displayLabel}"/></h3>
-                                        <p th:text="${app.leadOrganisation}" class="no-margin"/>
+                                        <p th:text="${app.leadOrganisation}" class="govuk-body no-margin"/>
                                     </div>
 
                                     <th:block th:unless="${app.readyToSubmit}">
@@ -144,7 +144,7 @@
                         <li th:each="app : ${model.submitted}" class="status-2-col">
                             <div class="task">
                                 <h4 class="govuk-heading-s" th:text="${app.displayLabel}" />
-                                <p th:text="${app.leadOrganisation}" />
+                                <p class="govuk-body" th:text="${app.leadOrganisation}" />
                             </div>
                             <div class="status" th:classappend="${app.recommended} ? 'positive' : 'negative'">
                                 <div class="status-msg score">

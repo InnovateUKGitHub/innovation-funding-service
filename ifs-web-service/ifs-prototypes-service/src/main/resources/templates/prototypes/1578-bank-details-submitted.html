@@ -20,19 +20,19 @@
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Bank account'})" />
 
 	<div class="success-alert extra-margin-bottom" th:unless="${param.status != null and param.status[0] == 'review'}">
-		<p><strong>Your bank details have been approved.</strong></p>
+		<p class="govuk-body"><strong>Your bank details have been approved.</strong></p>
 	</div>
 
-	<p th:unless="${param.status != null and param.status[0] == 'review'}">
+	<p class="govuk-body" th:unless="${param.status != null and param.status[0] == 'review'}">
 		Your details have been verified and can be used for this project.
 	</p>
 
-	<p th:unless="${param.status == null or param.status[0] != 'review'}">The bank account details below are being reviewed. We will contact you if we need any further information.</p>
+	<p class="govuk-body" th:unless="${param.status == null or param.status[0] != 'review'}">The bank account details below are being reviewed. We will contact you if we need any further information.</p>
 
 	<h3 class="govuk-heading-m">Organisation information</h3>
 	<p class="form-hint">This information provided during the application process cannot be changed.</p>
 
-	<p class="extra-margin">
+	<p class="govuk-body extra-margin">
 		Aptrans Ltd <br />
 		Company no. 04214477
 	</p>
@@ -47,7 +47,7 @@
 	</dl>
 
 	<h2 class="govuk-heading-m">Billing address</h2>
-	<p>
+	<p class="govuk-body">
 		Aptana Ltd<br />
 		13 Queen Square<br />
 		Bristol<br />

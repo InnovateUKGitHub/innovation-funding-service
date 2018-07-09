@@ -129,7 +129,7 @@
             </table>
         </div>
 
-        <p th:if="${#lists.isEmpty(model.assigned)}">No applications have been assigned to this assessor.</p>
+        <p class="govuk-body" th:if="${#lists.isEmpty(model.assigned)}">No applications have been assigned to this assessor.</p>
 
 
         <div th:if="${model.competitionInAssessment}">
@@ -163,7 +163,7 @@
                 </table>
             </div>
 
-            <p th:if="${#lists.isEmpty(model.rejected)}">No applications have been rejected by this assessor.</p>
+            <p class="govuk-body" th:if="${#lists.isEmpty(model.rejected)}">No applications have been rejected by this assessor.</p>
 
             <h2 class="govuk-heading-m" th:text="| Previously assigned (${#lists.size(model.previouslyAssigned)}) |"/>
 
@@ -198,12 +198,12 @@
                 </table>
             </div>
 
-            <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">No applications have been previously assigned to this assessor.</p>
+            <p class="govuk-body" th:if="${#lists.isEmpty(model.previouslyAssigned)}">No applications have been previously assigned to this assessor.</p>
         </div>
 
         <h2 class="govuk-heading-m">Applications</h2>
 
-        <p>These are the rest of the applications for this competition. You can assign more to this assessor.</p>
+        <p class="govuk-body">These are the rest of the applications for this competition. You can assign more to this assessor.</p>
 
         <form method="GET">
             <div class="search-filters extra-margin">

@@ -24,26 +24,26 @@
       <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate" th:with="readonly=${bankDetails == null ? false : true}">
 
       <th:block th:unless="${bankDetails == null}" >
-          <p th:unless="${bankDetails.approved}">The bank account details below are being reviewed. We will contact you if we need any further information.</p>
-          <div class="success-alert" th:if="${bankDetails.approved}"><p><strong>Your bank details have been approved.</strong></p></div>
+          <p class="govuk-body" th:unless="${bankDetails.approved}">The bank account details below are being reviewed. We will contact you if we need any further information.</p>
+          <div class="success-alert" th:if="${bankDetails.approved}"><p class="govuk-body"><strong>Your bank details have been approved.</strong></p></div>
       </th:block>
 
       <p class="extra-margin" th:if="${bankDetails?.approved}">Your details have been verified and can be used for this project.</p>
 
       <th:block th:if="${bankDetails == null}">
-        <p class="extra-margin">In order for us to pay your grant we need the bank details of your organisation.</p>
-        <p>The bank account must belong to the organisation listed.</p>
+        <p class="govuk-body extra-margin">In order for us to pay your grant we need the bank details of your organisation.</p>
+        <p class="govuk-body">The bank account must belong to the organisation listed.</p>
       </th:block>
 
 
         <h2 class="govuk-heading-m">Organisation information</h2>
-        <p class="extra-margin">
+        <p class="govuk-body extra-margin">
             <th:block th:text="${organisation.name}">ACME Limited</th:block> <br />
             <th:block th:if="${organisation.companyHouseNumber}" th:text="|Company no. ${organisation.companyHouseNumber}|">02423435</th:block>
         </p>
 
         <h2 class="govuk-heading-m no-margin-bottom">Account details</h2>
-        <p th:if="${bankDetails == null}" class="form-hint">Please enter the bank account that you wish to use to receive the grant.</p>
+        <p th:if="${bankDetails == null}" class="govuk-body form-hint">Please enter the bank account that you wish to use to receive the grant.</p>
 
         <!--/* open */-->
         <th:block th:unless="${readonly}">
@@ -118,7 +118,7 @@
                         </label>
                     </div>
                     <div id="registeredAddress" class="panel">
-                        <p>
+                        <p class="govuk-body">
                           <th:block th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}">
                               <th:block th:text="${addressLine}">An address line</th:block><br />
                           </th:block>
@@ -139,7 +139,7 @@
                         </label>
                     </div>
                     <div id="operatingAddress" class="panel">
-                        <p>
+                        <p class="govuk-body">
                           <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
                               <th:block th:text="${addressLine}">An address line</th:block><br />
                           </th:block>

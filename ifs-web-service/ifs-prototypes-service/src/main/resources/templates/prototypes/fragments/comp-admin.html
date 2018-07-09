@@ -179,19 +179,19 @@
 <!-- ===================Applications summary for competition============================== -->
 <div th:fragment="prototype-comp-summary">
     <section class="boxed">
-        <p>Innovate UK is to invest up to £9 million in collaborative research and development to stimulate innovation in integrated transport solutions for local authorities. The aim of this competition is to meet user needs by connecting people and/or goods to transport products and services. New or improved systems will be tested in environment laboratories.</p>
+        <p class="govuk-body">Innovate UK is to invest up to £9 million in collaborative research and development to stimulate innovation in integrated transport solutions for local authorities. The aim of this competition is to meet user needs by connecting people and/or goods to transport products and services. New or improved systems will be tested in environment laboratories.</p>
 
         <h2 class="govuk-heading-m no-margin">Applications</h2>
 
         <div class="grid-row">
             <div class="column-third">
-                <p><span class="govuk-heading-m">6</span> Submitted</p>
+                <p class="govuk-body"><span class="govuk-heading-m">6</span> Submitted</p>
             </div>
             <div class="column-third">
-                <p><span class="govuk-heading-m">6</span> In progress <small>(50% completed)</small></p>
+                <p class="govuk-body"><span class="govuk-heading-m">6</span> In progress <small>(50% completed)</small></p>
             </div>
             <div class="column-third">
-                <p><span class="govuk-heading-m">24</span> Open</p>
+                <p class="govuk-body"><span class="govuk-heading-m">24</span> Open</p>
             </div>
         </div>
     </section>
@@ -698,7 +698,7 @@
                         <p class="form-hint">Predicted applications per confirmed assessor</p>
                     </li>
                 </ul>
-                <p class="extra-margin">
+                <p class="govuk-body extra-margin">
 
                     <div th:if="${param.invitesSent == null}" th:remove="tag">
                         <a href="/prototypes/863-invite-assessors" class="button">Invite assessors</a>
@@ -742,47 +742,47 @@
             <ul class="comp-timeline-status">
                  <li th:class="${status == 'assess'} or ${status == 'closed'} or ${status == 'open'} ? 'done'">
                     <h3 class="govuk-heading-s">Competition opens</h3>
-                    <p>10 March 2016</p>
+                    <p class="govuk-body">10 March 2016</p>
                 </li>
                  <li th:class="${status == 'assess'} or ${status == 'closed'}  ? 'done'">
                     <h3 class="govuk-heading-s">Optional briefing</h3>
-                    <p>10 March 2016</p>
+                    <p class="govuk-body">10 March 2016</p>
                 </li>
                  <li th:class="${status == 'assess'} or ${status == 'closed'}  ? 'done'">
                     <h3 class="govuk-heading-s">Application deadline</h3>
-                    <p>10 March 2016</p>
+                    <p class="govuk-body">10 March 2016</p>
                 </li>
                 <li th:class="${status == 'assess'} or ${status == 'closed'}  ? 'done'">
                     <h3 class="govuk-heading-s">Assessor briefing webinar</h3>
-                    <p>10 March 2016</p>
+                    <p class="govuk-body">10 March 2016</p>
                 </li>
                 <li th:class="${status == 'assess'} ? 'done'">
                     <h3 class="govuk-heading-s">Applications to assessors</h3>
-                    <p>10 March 2016</p>
+                    <p class="govuk-body">10 March 2016</p>
                 </li>
                 <li>
                     <h3 class="govuk-heading-s">Assessor deadline</h3>
-                    <p>10 March 2016</p>
+                    <p class="govuk-body">10 March 2016</p>
                 </li>
                 <li>
                     <h3 class="govuk-heading-s">Line drawing</h3>
-                    <p>10 March 2016</p>
+                    <p class="govuk-body">10 March 2016</p>
                 </li>
                 <li>
                     <h3 class="govuk-heading-s">Feedback produced</h3>
-                    <p>10 March 2016</p>
+                    <p class="govuk-body">10 March 2016</p>
                 </li>
                 <li>
                     <h3 class="govuk-heading-s">Applicants informed</h3>
-                    <p>10 March 2016</p>
+                    <p class="govuk-body">10 March 2016</p>
                 </li>
                 <li>
                     <h3 class="govuk-heading-s">Feedback to successful applicants provided</h3>
-                    <p>10 March 2016</p>
+                    <p class="govuk-body">10 March 2016</p>
                 </li>
                 <li>
                     <h3 class="govuk-heading-s">Feedback to unsuccessful applicants provided</h3>
-                    <p>10 March 2016</p>
+                    <p class="govuk-body">10 March 2016</p>
                 </li>
             </ul>
         </div>
@@ -1793,11 +1793,11 @@
         <div class="column-quarter">
 
             <div class="boxed">
-                <p><span class="govuk-heading-m">BBC</span><br />Lead applicant</p>
-                <p><span class="govuk-heading-m">6 months</span><br />Duration</p>
-                <p><span class="govuk-heading-m">120,000</span><br />Project cost</p>
-                <p><span class="govuk-heading-m">60,000</span><br />Grant requested</p>
-                <p><span class="govuk-heading-m">10,000</span><br />Other funding</p>
+                <p class="govuk-body"><span class="govuk-heading-m">BBC</span><br />Lead applicant</p>
+                <p class="govuk-body"><span class="govuk-heading-m">6 months</span><br />Duration</p>
+                <p class="govuk-body"><span class="govuk-heading-m">120,000</span><br />Project cost</p>
+                <p class="govuk-body"><span class="govuk-heading-m">60,000</span><br />Grant requested</p>
+                <p class="govuk-body"><span class="govuk-heading-m">10,000</span><br />Other funding</p>
             </div>
 
 

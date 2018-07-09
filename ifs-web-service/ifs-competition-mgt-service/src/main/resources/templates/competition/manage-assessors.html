@@ -15,7 +15,7 @@
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='govuk-heading-xl'" />
 
-                <p class="extra-margin">Assign applications to assessors. You will need to confirm assignments before assessors are notified.</p>
+                <p class="govuk-body extra-margin">Assign applications to assessors. You will need to confirm assignments before assessors are notified.</p>
 
                 <form method="GET" th:object="${filterForm}">
                     <div class="search-filters">

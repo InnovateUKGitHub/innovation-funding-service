@@ -16,13 +16,13 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage users',size='govuk-heading-l'" />
 
-        <p>You can view the status of all internal users and add new users.</p>
-        <p><a th:href="@{/admin/invite-user}">Invite a new internal user</a></p>
+        <p class="govuk-body">You can view the status of all internal users and add new users.</p>
+        <p class="govuk-body"><a th:href="@{/admin/invite-user}">Invite a new internal user</a></p>
 
         <!--/*
          TODO: Uncomment this when search feature is implemented.  Probably after IFS-34.
-        <p>You can view, edit and search for internal users here.</p>
-        <p><a href="/">Invite a new internal user</a></p>
+        <p class="govuk-body">You can view, edit and search for internal users here.</p>
+        <p class="govuk-body"><a href="/">Invite a new internal user</a></p>
 
         <div class="search-filters extra-margin">
           <h2 class="govuk-heading-m">Search users</h2>

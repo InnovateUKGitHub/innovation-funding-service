@@ -73,7 +73,7 @@
                             th:text="${question.assessmentGuidanceTitle}"></dd>
                         <dt class="column-third">Guidance</dt>
                         <dd class="column-two-thirds">
-                            <p th:text="${question.assessmentGuidance}">Your score should be based on the following:</p>
+                            <p class="govuk-body" th:text="${question.assessmentGuidance}">Your score should be based on the following:</p>
                             <dl class="grid-row extra-margin">
                                 <th:block th:each="score : ${question.guidanceRows}">
                                     <dt class="column-quarter"

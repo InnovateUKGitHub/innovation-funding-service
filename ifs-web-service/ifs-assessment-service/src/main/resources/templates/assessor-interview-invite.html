@@ -19,11 +19,11 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to interview panel',subTitle=|${model.competitionName}|,size='govuk-heading-xl'" />
 
-        <p>You have been invited to the interview panel for <strong th:text="|${model.competitionName}|">'Technology inspired'</strong>.</p>
+        <p class="govuk-body">You have been invited to the interview panel for <strong th:text="|${model.competitionName}|">'Technology inspired'</strong>.</p>
 
-        <p>Innovate UK is to invest up to £9 million in Technology inspired.</p>
+        <p class="govuk-body">Innovate UK is to invest up to £9 million in Technology inspired.</p>
 
-        <p>Please review the <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">details of this competition (opens in a new window)</a> before the interview panel.</p>
+        <p class="govuk-body">Please review the <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">details of this competition (opens in a new window)</a> before the interview panel.</p>
         <br>
 
         <form th:action="@{/invite/interview/{inviteHash}/decision(inviteHash=${model.panelInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
@@ -35,7 +35,7 @@
                         <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
                             <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
                         </th:block>
-                        <p>You should reject this invitation if you are unavailable.</p>
+                        <p class="govuk-body">You should reject this invitation if you are unavailable.</p>
                     </legend>
 
                     <div class="multiple-choice">

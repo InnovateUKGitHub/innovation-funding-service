@@ -37,7 +37,7 @@
             </div>
         </th:block>
         <th:block th:unless="${model.openQueries.size() > 0}">
-            <p>There are no outstanding queries.</p>
+            <p class="govuk-body">There are no outstanding queries.</p>
         </th:block>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

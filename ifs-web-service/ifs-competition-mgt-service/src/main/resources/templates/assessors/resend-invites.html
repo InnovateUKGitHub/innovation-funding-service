@@ -22,7 +22,7 @@
 
                 <h2 class="govuk-heading-m no-margin">Recipients</h2>
 
-                <p th:text="${#strings.listJoin(model.recipients, ', ')}">Paul Plum, Felix Wilson</p>
+                <p class="govuk-body" th:text="${#strings.listJoin(model.recipients, ', ')}">Paul Plum, Felix Wilson</p>
 
                 <form th:action="@{/competition/{competitionId}/assessors/invite/resend(competitionId=${model.competitionId})}" novalidate="novalidate" method="post" enctype="multipart/form-data" th:object="${form}">
                     <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">

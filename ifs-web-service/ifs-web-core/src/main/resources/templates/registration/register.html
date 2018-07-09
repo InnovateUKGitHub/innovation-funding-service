@@ -22,7 +22,7 @@
 
         <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}" novalidate="novalidate">
             <div class="panel">
-                <p>
+                <p class="govuk-body">
                     The profile that you are creating will be linked to the following organisation <br/>
                     <strong><th:block th:text="${organisationName}"/></strong>
                 </p>

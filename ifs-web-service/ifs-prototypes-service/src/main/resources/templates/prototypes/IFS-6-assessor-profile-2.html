@@ -25,19 +25,19 @@
     <th:block th:if="${param.deactivateAssessor != null}">
         <div class="message-alert">
             <h2 class="govuk-heading-s no-margin">This assessor has been deactivated with the reason:</h2>
-            <p th:text="${param.deactivateAssessor[0]}">REASON</p>
+            <p class="govuk-body" th:text="${param.deactivateAssessor[0]}">REASON</p>
         </div>
     </th:block>
 
     <h2 class="govuk-heading-m">Assessor details</h2>
 
     <h3 class="govuk-heading-s">Name</h3>
-    <p>Veronica Lederman</p>
+    <p class="govuk-body">Veronica Lederman</p>
 
     <h3 class="govuk-heading-s">Address</h3>
 
     <h3 class="govuk-heading-s">Email address</h3>
-    <p><a href="#">mailto:veronica.lederman@innovateuk.test</a></p>
+    <p class="govuk-body"><a href="#">mailto:veronica.lederman@innovateuk.test</a></p>
 
     <ul class="inline-nav extra-margin-top">
         <li th:class="${(param.tab == null or param.tab[0] == 'skills' ? 'selected' : 'not-selected' )}"><a href="?tab=skills">Skills</a></li>
@@ -60,7 +60,7 @@
 
         <div class="upload-section" style="border: none;">
             <h3 class="govuk-heading-s no-margin">CV</h3>
-            <p><a href="#">example-cv.pdf (opens in a new window)</a></p>
+            <p class="govuk-body"><a href="#">example-cv.pdf (opens in a new window)</a></p>
         </div>
 
         <div class="form-footer">
@@ -90,7 +90,7 @@
                         <h2 class="govuk-heading-m no-margin">Deactivate assessor</h2>
                     </legend>
 
-                    <p>Please select the reason for deactivating this assessor</p>
+                    <p class="govuk-body">Please select the reason for deactivating this assessor</p>
 
                     <div class="multiple-choice">
                         <input id="deactivate-assessor-1" type="radio" name="deactivateAssessor" value="Training required" required>
@@ -115,7 +115,7 @@
             <form th:action="${#httpServletRequest.requestURI}">
 
                 <h2 class="govuk-heading-m no-margin">Reactivate assessor</h2>
-                <p>Are you sure you want to reactivate this assessor?</p>
+                <p class="govuk-body">Are you sure you want to reactivate this assessor?</p>
 
                 <div class="extra-margin-top">
                     <button class="button">Yes, reactivate</button>
@@ -133,10 +133,10 @@
         <h2 class="govuk-heading-m">Declaration of interest</h2>
 
         <h3 class="govuk-heading-s no-margin-bottom">Principal employer and role</h3>
-        <p>University of Sheffield <br /> Professor</p>
+        <p class="govuk-body">University of Sheffield <br /> Professor</p>
 
         <h3 class="govuk-heading-s no-margin-bottom">Professional affiliations</h3>
-        <p>None declared</p>
+        <p class="govuk-body">None declared</p>
 
         <h3 class="govuk-heading-s extra-margin-top">Appointments, directorships and consultancies</h3>
         <table>
@@ -159,7 +159,7 @@
         </table>
 
         <h3 class="govuk-heading-s">Other financial interests</h3>
-        <p>None declared</p>
+        <p class="govuk-body">None declared</p>
 
         <h3 class="govuk-heading-s extra-margin-top">Close family members' appointments, directorships and consultancies</h3>
         <table>
@@ -180,7 +180,7 @@
         </table>
 
         <h3 class="govuk-heading-s">Close family members' other financial inerests</h3>
-        <p>None declared</p>
+        <p class="govuk-body">None declared</p>
 
     </th:block>
 

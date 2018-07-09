@@ -77,7 +77,7 @@
                                     </div>
                                     <div class="grid-row">
                                         <div class="column-one">
-                                            <p th:text="${item.value}">Feedback text</p>
+                                            <p class="govuk-body" th:text="${item.value}">Feedback text</p>
                                         </div>
                                     </div>
                                 </div>
@@ -105,8 +105,8 @@
 
           <div class="question">
 
-              <p>This is the overview of the finances provided by all partners in this project.</p>
-              <p th:if="${(currentApplication.isOpen() and isApplicant)}">To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'>your                  finances</a> section.</p>
+              <p class="govuk-body">This is the overview of the finances provided by all partners in this project.</p>
+              <p class="govuk-body" th:if="${(currentApplication.isOpen() and isApplicant)}">To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'>your                  finances</a> section.</p>
 
               <div th:if="${fromApplicationService}">
                 <th:block ifs:global="${applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></th:block>
@@ -129,12 +129,12 @@
     <section th:if="!${#lists.isEmpty(feedbackSummary)}">
         <h2 class="govuk-heading-m">Feedback summary</h2>
         <h3 class="govuk-heading-s">Do you believe that this application is suitable for funding?</h3>
-        <p th:if="${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">Yes</p>
-        <p th:if="!${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">No</p>
+        <p class="govuk-body" th:if="${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">Yes</p>
+        <p class="govuk-body" th:if="!${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">No</p>
         <h3 class="govuk-heading-s">Your feedback</h3>
-        <p th:text="${feedbackSummary[0].getFundingDecision().getFeedback()}">Feedback text</p>
+        <p class="govuk-body" th:text="${feedbackSummary[0].getFundingDecision().getFeedback()}">Feedback text</p>
         <h3 class="govuk-heading-s">Other comments</h3>
-        <p th:text="${feedbackSummary[0].getFundingDecision().getComment()}">Feedback text</p>
+        <p class="govuk-body" th:text="${feedbackSummary[0].getFundingDecision().getComment()}">Feedback text</p>
     </section>
 
 </th:block>

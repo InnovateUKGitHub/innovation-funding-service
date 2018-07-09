@@ -42,14 +42,14 @@
     </div>
 
     <div class="message-alert" th:unless="${param.status[0] == 'step9'}">
-        <p>You must complete the following tasks to finish setting up your project.</p>
-        <p>All project partners have individual steps to complete in this section.</p>
-        <p><a href="#">View the status of partners.</a></p>
+        <p class="govuk-body">You must complete the following tasks to finish setting up your project.</p>
+        <p class="govuk-body">All project partners have individual steps to complete in this section.</p>
+        <p class="govuk-body"><a href="#">View the status of partners.</a></p>
     </div>
 
     <div class="success-alert" th:if="${param.status[0] == 'step9'}">
-        <p>You have completed all of the required steps to set up your project.</p>
-        <p>Your project will begin on 15th March 2018.</p>
+        <p class="govuk-body">You have completed all of the required steps to set up your project.</p>
+        <p class="govuk-body">Your project will begin on 15th March 2018.</p>
     </div>
 
     <div id="tasks-container" class="tabs">
@@ -73,15 +73,15 @@
             <span class="govuk-heading-s">Current tasks</span>
 
             <th:block th:if="${param.status[0] == 'step4' or param.status[0] == 'step5a' or param.status[0] == 'step6'}">
-                <p>There are no current tasks to complete.<br />Your tasks require action from Innovate UK and will appear when they are ready.</p>
+                <p class="govuk-body">There are no current tasks to complete.<br />Your tasks require action from Innovate UK and will appear when they are ready.</p>
             </th:block>
 
             <th:block th:if="${param.status[0] == 'step8'}">
-                <p>There are no current tasks to complete.</p>
+                <p class="govuk-body">There are no current tasks to complete.</p>
             </th:block>
 
             <th:block th:if="${param.status[0] == 'step9'}">
-                <p>You have completed all tasks.</p>
+                <p class="govuk-body">You have completed all tasks.</p>
             </th:block>
 
             <div class="progress-list progress-list--individual-blocks">
@@ -91,7 +91,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-bank-details">Bank details</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 Each organisation must submit their bank details to be reviewed.
                             </p>
                         </div>
@@ -106,7 +106,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-other-documents">Other documents</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 The Project Manager must upload these documents to set up the project.
                             </p>
                         </div>
@@ -121,7 +121,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-finance-checks">Finance checks</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 You have a pending finance query to respond to.
                             </p>
                         </div>
@@ -136,7 +136,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-spend-profile">Spend profile</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 Each organisation must submit their spend profile to the lead for review by Innovate UK.
                             </p>
                         </div>
@@ -151,7 +151,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-grant-offer-letter">Grant offer letter</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 The Project Manager must sign and upload the grant offer letter.
                             </p>
                         </div>
@@ -167,11 +167,11 @@
             <span class="govuk-heading-s" th:unless="${param.status[0] == 'step9'}">Pending tasks</span>
 
             <th:block th:if="${param.status[0] == 'step7'}">
-                <p>There are no pending tasks to complete.</p>
+                <p class="govuk-body">There are no pending tasks to complete.</p>
             </th:block>
 
             <th:block th:if="${param.status[0] == 'step'}">
-                <p>You have completed all tasks.</p>
+                <p class="govuk-body">You have completed all tasks.</p>
             </th:block>
 
             <div class="progress-list progress-list--individual-blocks">
@@ -181,7 +181,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Monitoring Officer</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 Innovate UK are assigning you a Monitoring Officer.
                             </p>
                         </div>
@@ -196,7 +196,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Bank details</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 You bank details are being reviewed by Innovate UK.
                             </p>
                         </div>
@@ -211,7 +211,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Other documents</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 Your documents have been uploaded and are being reviewed by Innovate UK.
                             </p>
                         </div>
@@ -226,7 +226,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="#">Finance checks</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 Innovate UK will review your finances once bank details have been submitted.
                             </p>
                         </div>
@@ -241,7 +241,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="#">Spend profile</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 You can update your spend profile once finances have been approved.
                             </p>
                         </div>
@@ -256,7 +256,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="#">Grant offer letter</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 The Project Manager can review and accept this once all tasks have been completed.
                             </p>
                         </div>
@@ -281,7 +281,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Project details</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 Your project details have been completed for each organisation.
                             </p>
                         </div>
@@ -296,7 +296,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="#">Monitoring officer</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 Innovate UK have assigned your Monitoring Officer, James Smith.
                             </p>
                         </div>
@@ -311,7 +311,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="#">Bank details</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 Your bank details have been approved by Innovate UK.
                             </p>
                         </div>
@@ -326,7 +326,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="#">Other documents</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 Your documents have been uploaded and approved by Innovate UK.
                             </p>
                         </div>
@@ -341,7 +341,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="#">Finance checks</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 Your finances have been approved by Innovate UK.
                             </p>
                         </div>
@@ -356,7 +356,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="#">Spend profile</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 Your spend profile has been approved by Innovate UK.
                             </p>
                         </div>
@@ -371,7 +371,7 @@
                             <h2 class="govuk-heading-s">
                                 <a href="#">Grant offer letter</a>
                             </h2>
-                            <p class="no-margin">
+                            <p class="govuk-body no-margin">
                                 Your grant offer letter has been signed and approved by Innovate UK.
                             </p>
                         </div>

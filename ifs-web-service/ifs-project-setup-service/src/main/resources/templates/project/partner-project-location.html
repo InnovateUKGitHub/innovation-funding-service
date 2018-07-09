@@ -24,7 +24,7 @@
             </ul>
         </div>
 
-        <p>We will assign a Monitoring Officer who will visit your project location.</p>
+        <p class="govuk-body">We will assign a Monitoring Officer who will visit your project location.</p>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
             <h2 class="govuk-heading-m">Project location</h2>
@@ -48,7 +48,7 @@
                        th:field="*{postcode}" />
             </div>
 
-            <p>You can change your project location up until a Monitoring Officer is assigned to your project.</p>
+            <p class="govuk-body">You can change your project location up until a Monitoring Officer is assigned to your project.</p>
 
             <button class="button" type="submit">Save project location</button>
         </form>

@@ -30,28 +30,28 @@
 
     <!-- ===========================Form: capital usage =========================== -->
     <th:block th:fragment="capital_usage(viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <p th:if="${viewmode == 'edit'}" th:text="${question.getDescription()}"></p>
+        <p class="govuk-body" th:if="${viewmode == 'edit'}" th:text="${question.getDescription()}"></p>
         <th:block th:insert="finance/finance :: capital_usage_finances" />
         <input type="hidden" th:id="${'section-percentage-'+subSection.id}" th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
     </th:block>
 
     <!-- ===========================Form: subcontracting cost =========================== -->
     <th:block th:fragment="subcontracting (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <p th:if="${viewmode == 'edit'}" th:text="${question.getDescription()}"></p>
+        <p class="govuk-body" th:if="${viewmode == 'edit'}" th:text="${question.getDescription()}"></p>
         <th:block th:insert="finance/finance :: subcontracting_finances" />
         <input type="hidden" th:id="${'section-percentage-'+subSection.id}" th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
     </th:block>
 
     <!-- ===========================Form: travel cost =========================== -->
     <th:block th:fragment="travel (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <p th:if="${viewmode == 'edit'}" th:text="${question.description}"></p>
+        <p class="govuk-body" th:if="${viewmode == 'edit'}" th:text="${question.description}"></p>
         <th:block th:insert="finance/finance :: travel_finances" />
         <input type="hidden" th:id="${'section-percentage-'+subSection.id}" th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
     </th:block>
 
     <!-- ===========================Form: other cost =========================== -->
     <th:block th:fragment="other_costs (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <p th:if="${viewmode == 'edit'}" th:text="${question.description}" />
+        <p class="govuk-body" th:if="${viewmode == 'edit'}" th:text="${question.description}" />
         <th:block th:insert="finance/finance :: other_costs_finances" />
         <input type="hidden" th:id="${'section-percentage-'+subSection.id}"  th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
     </th:block>
@@ -235,7 +235,7 @@
         </div>
         <div th:if="${researchParticipationPercentage &gt; maxResearchPercentage}" class="warning-alert">
             <h2 class="govuk-heading-s no-margin">Maximum research participation exceeded</h2>
-            <p>Please seek confirmation that the project is still eligible for funding.</p>
+            <p class="govuk-body">Please seek confirmation that the project is still eligible for funding.</p>
         </div>
     </th:block>
 

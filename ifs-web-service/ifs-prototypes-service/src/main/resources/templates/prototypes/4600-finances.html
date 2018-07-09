@@ -20,12 +20,12 @@
   <th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Finances'})" />
 
   <h2 class="govuk-heading-m no-margin-bottom">Finances</h2>
-  <p>Each partner should submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section.</p>
+  <p class="govuk-body">Each partner should submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section.</p>
 
   <details class="extra-margin-bottom">
     <summary><span class="summary">Not requesting funding</span></summary>
     <div class="panel-indent">
-      <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span id="prototype-confirmation-text">Please confirm below.</span></p>
+      <p class="govuk-body">If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span id="prototype-confirmation-text">Please confirm below.</span></p>
       <!--<form action="#">-->
         <!--<div class="form-group">-->
           <!--<fieldset>-->
@@ -62,7 +62,7 @@
 
           <th:block th:if="${param.status != null and param.status[0] == 'initialView'}">
             <h3 class="govuk-heading-s">Your funding</h3>
-            <p>Before you can supply your funding information this project must be given a research area in <a href="/prototypes/5452-application-details">project details</a>, and your organisation size defined in the <a href="/prototypes/4600-your-org">your organisation</a> section.</p>
+            <p class="govuk-body">Before you can supply your funding information this project must be given a research area in <a href="/prototypes/5452-application-details">project details</a>, and your organisation size defined in the <a href="/prototypes/4600-your-org">your organisation</a> section.</p>
           </th:block>
 
           <th:block th:if="${param.status == null or param.status[0] != 'initialView'}">
@@ -102,7 +102,7 @@
 
   <h2 class="govuk-heading-m">Finance summary</h2>
 
-  <p>This is a breakdown of your project costs and sources of funding for this project.</p>
+  <p class="govuk-body">This is a breakdown of your project costs and sources of funding for this project.</p>
 
   <div class="table-overflow">
     <table>
@@ -140,7 +140,7 @@
   </div>
 
   <!--<h2 class="govuk-heading-m no-margin-bottom">Organisation size</h2>
-  <p>Medium (Claim up to 60%)</p>
+  <p class="govuk-body">Medium (Claim up to 60%)</p>
 
 	<p class="form-hint">To determine the level of funding you are eligible to receive please provide your business sizing using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
 	<div class="form-block">

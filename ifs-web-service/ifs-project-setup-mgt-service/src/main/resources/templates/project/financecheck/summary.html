@@ -22,7 +22,7 @@
         </th:block>
 
         <div th:if="${model.showSpendProfilesGeneratedMessage}" class="success-alert">
-            <p><strong
+            <p class="govuk-body"><strong
                 th:text="|The finance checks have been approved and profiles generated. ${model.financeCheckSummaryResource.spendProfileGeneratedBy}, ${#temporals.format(model.financeCheckSummaryResource.spendProfileGeneratedDate, 'd MMMM yyyy')}|">Generated
                 by</strong></p>
         </div>
@@ -133,7 +133,7 @@
               th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.financeCheckSummaryResource.projectId})}"
               th:if="${model.showEnabledGenerateSpendProfilesButton or model.showDisabledGenerateSpendProfilesButton}">
             <h3 class="govuk-heading-m">Generate spend profile</h3>
-            <p>To generate your spend profile, the viability and eligibility sections, plus bank details must be approved
+            <p class="govuk-body">To generate your spend profile, the viability and eligibility sections, plus bank details must be approved
                 for all partners. This will create their individual flat spend profiles. These spend profiles can be edited
                 during the project.</p>
             <button th:if="${model.showDisabledGenerateSpendProfilesButton}" disabled="disabled"

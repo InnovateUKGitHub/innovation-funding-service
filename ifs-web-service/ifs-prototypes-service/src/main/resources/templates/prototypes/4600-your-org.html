@@ -23,8 +23,8 @@
 
         <div class="message-alert extra-margin-bottom" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
           <h2 class="govuk-heading-s no-margin">Organisation size determines funding</h2>
-          <p>Your organisation size will determine the level of funding you may receive.</p>
-          <p>Changing the organisation size will reset the funding level.</p>
+          <p class="govuk-body">Your organisation size will determine the level of funding you may receive.</p>
+          <p class="govuk-body">Changing the organisation size will reset the funding level.</p>
         </div>
 
         <form action="#">
@@ -189,12 +189,12 @@
 
               <!--<legend class="govuk-heading-l no-margin-bottom">Projected growth</legend>-->
 
-              <!--<p>Details relating to your projected growth for the next 5 years.</p>-->
+              <!--<p class="govuk-body">Details relating to your projected growth for the next 5 years.</p>-->
 
               <!--<details th:unless="${param.status != null and param.status[0] == 'readOnly'}">-->
                 <!--<summary><span class="summary">What we need from the projected growth?</span></summary>-->
                 <!--<div class="panel">-->
-                  <!--<p>-->
+                  <!--<p class="govuk-body">-->
                     <!--GUIDANCE TEXT REQUIRED-->
                   <!--</p>-->
                 <!--</div>-->

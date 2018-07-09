@@ -42,7 +42,7 @@
 
         </h1>
 
-        <p>
+        <p class="govuk-body">
 
           <th:block th:if="${param.company != null and param.company[0] == 'empire'}">
             From this page you are able to invite and remove contributors from the lead organisation. This organisation and the lead applicant cannot be removed from the application.
@@ -152,7 +152,7 @@
           </div>
         </th:block>
 
-        <p th:unless="${param.action != null and param.action[0] == 'addApplicant' or param.company != null and param.company[0] == 'newOrg'}">
+        <p class="govuk-body" th:unless="${param.action != null and param.action[0] == 'addApplicant' or param.company != null and param.company[0] == 'newOrg'}">
           <a th:href="@{'?action=addApplicant&#38;company=' + ${param.company[0]} + ${(param.user != null and param.user[0] == 'nonLead' ? '&#38;user=' + param.user[0] : '' )}}">Add new applicant</a>
         </p>
 
@@ -196,7 +196,7 @@
             </table>
           </fieldset>
 
-          <p>
+          <p class="govuk-body">
             <a href="#">Add new applicant</a>
           </p>
 
@@ -228,8 +228,8 @@
         <div class="modal-update-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
             <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
             <h2 class="govuk-heading-m no-margin">Update organisation</h2>
-            <p>Invites will be sent to all new applicants.</p>
-            <p>You should not remove applicants without discussing this action with them first. They will not receive any notification about their removal.</p>
+            <p class="govuk-body">Invites will be sent to all new applicants.</p>
+            <p class="govuk-body">You should not remove applicants without discussing this action with them first. They will not receive any notification about their removal.</p>
             <hr />
 
             <form method="get" id="submit-remove-collaborator-form">
@@ -253,7 +253,7 @@
         <div class="modal-new-organisation" role="dialog" aria-hidden="true">
           <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
           <h2 class="govuk-heading-m no-margin">Add organisation and invite applicants</h2>
-          <p>All applicants that have been added to this organisation will be added at this point.</p>
+          <p class="govuk-body">All applicants that have been added to this organisation will be added at this point.</p>
           <hr />
 
           <form method="get" id="submit-remove-collaborator-form">
@@ -271,8 +271,8 @@
         <div class="modal-delete-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
             <button class="js-close close" type="button" aria-label="Close Popup">X</button>
             <h2 class="govuk-heading-m no-margin">Delete organisation</h2>
-            <p>Are you sure you wish to remove this organisation from the application. The innovate funding system will not inform collaborators of their removal, this action should be discussed with all applicants beforehand.</p>
-            <p>This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
+            <p class="govuk-body">Are you sure you wish to remove this organisation from the application. The innovate funding system will not inform collaborators of their removal, this action should be discussed with all applicants beforehand.</p>
+            <p class="govuk-body">This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
             <hr />
 
             <form method="get">

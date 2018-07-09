@@ -55,7 +55,7 @@
 
     <div id="selected-address" class="panel extra-margin" style="display: none;">
         <h3 class="govuk-heading-m no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm project location')}">LOCATION TITLE</h3>
-        <p><span class="street">Street</span> <br />
+        <p class="govuk-body"><span class="street">Street</span> <br />
             <span class="street2"></span> <br />
             <span class="street3"></span> <br />
             <span class="town">Town</span><br />
@@ -559,10 +559,10 @@
         <!-- <th:block th:if="${queryType == 'note'}">
             <div class="panel">
                 <p class="govuk-heading-s no-margin-top">Francis Delt - Finance team <small>27/06/2015 09:40</small></p>
-                <p>I think I have found the document (attached) showing that they have done this before.</p>
+                <p class="govuk-body">I think I have found the document (attached) showing that they have done this before.</p>
 
                 <h4 class="govuk-heading-s">Supporting document</h4>
-                <p><a href="#">Report1.doc</a></p>
+                <p class="govuk-body"><a href="#">Report1.doc</a></p>
             </div>
         </th:block> -->
 
@@ -580,7 +580,7 @@
 
         <p th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteDetails') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteDetails == null}"></p>
 
-        <p th:unless="${param.noteDetails != null}">Need to look into why the admin support costs are so high, surely they could be lower for a company of this type.</p>
+        <p class="govuk-body" th:unless="${param.noteDetails != null}">Need to look into why the admin support costs are so high, surely they could be lower for a company of this type.</p>
 
 
     </th:block> -->
@@ -588,8 +588,8 @@
     <th:block th:if="${param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'postResponse' or param.action != null and param.action[0] == 'Response' or param.action != null and param.action[0] == 'newResponse'}">
 
         <div class="panel" th:unless="${queryType == 'note' or user == 'partner'}">
-            <p><strong>Steve Smith - Aptrans Ltd </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
-            <p>We have always used Francois. He is related to the director of the company. &pound;150k equates to 150 days.</p>
+            <p class="govuk-body"><strong>Steve Smith - Aptrans Ltd </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
+            <p class="govuk-body">We have always used Francois. He is related to the director of the company. &pound;150k equates to 150 days.</p>
         </div>
 
     </th:block>
@@ -612,17 +612,17 @@
         <div class="panel" th:if="${param.action != null and param.action[0] == 'postResponse'}">
 
             <th:block th:if="${user == 'admin'}">
-                <p class="no-margin"><strong>Innovate UK - Finance team </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
+                <p class="govuk-body no-margin"><strong>Innovate UK - Finance team </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
             </th:block>
 
             <th:block th:if="${user == 'partner'}">
-                <p class="no-margin"><strong>Steve Smith - Aptrans Ltd </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
+                <p class="govuk-body no-margin"><strong>Steve Smith - Aptrans Ltd </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
             </th:block>
 
             <div th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('response') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">
         </div>
             <h4 class="govuk-heading-s">Supporting document</h4>
-            <p><a href="#">Report1.doc</a></p>
+            <p class="govuk-body"><a href="#">Report1.doc</a></p>
         </div>
 
         <form method="get" th:action="${#httpServletRequest.requestURI}" th:unless="${queryType == 'note'}">

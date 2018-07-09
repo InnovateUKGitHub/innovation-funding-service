@@ -33,50 +33,50 @@
 
         <th:block th:unless="${type == 'collaborator'}">
             <div class="message-alert">
-                <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+                <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
             </div>
-            <p class="extra-margin">This organisation will lead the application.</p>
+            <p class="govuk-body extra-margin">This organisation will lead the application.</p>
         </th:block>
 
         <th:block th:if="${type == 'collaborator'}">
             <th:block th:if="${status == 'orgAdded'}">
-                <p>The lead applicant has invited you to participate on this application as part of the following organisation:
+                <p class="govuk-body">The lead applicant has invited you to participate on this application as part of the following organisation:
                 <strong>EGGS</strong></p>
 
-                <p>Please review the organisation details below and confirm that they are correct.</p>
+                <p class="govuk-body">Please review the organisation details below and confirm that they are correct.</p>
             </th:block>
-            <p>This is the organisation you will be part of for the application.</p>
+            <p class="govuk-body">This is the organisation you will be part of for the application.</p>
         </th:block>
 
         <th:block th:unless="${status == 'orgAdded'}">
             <h3 class="govuk-heading-s">Organisation type</h3>
-            <p>Business</p>
+            <p class="govuk-body">Business</p>
 
             <h3 class="govuk-heading-s">Registered name</h3>
-            <p th:text="${type == 'collaborator' ? 'SPOONS' : 'CERCIS LIMITED' }">COMPANY NAME</p>
+            <p class="govuk-body" th:text="${type == 'collaborator' ? 'SPOONS' : 'CERCIS LIMITED' }">COMPANY NAME</p>
         </th:block>
 
         <th:block th:unless="${param.entry != null and param.entry[0] == 'manual'}">
             <th:block th:if="${status == 'orgAdded'}">
                 <h3 class="govuk-heading-s">Organisation type</h3>
-                <p>Research</p>
+                <p class="govuk-body">Research</p>
 
                 <h3 class="govuk-heading-s">Registered name</h3>
-                <p>EGGS</p>
+                <p class="govuk-body">EGGS</p>
             </th:block>
 
             <h3 class="govuk-heading-s">Registration number</h3>
-            <p>05750811</p>
+            <p class="govuk-body">05750811</p>
 
             <h3 class="govuk-heading-s">Registered address</h3>
-            <p>16 Queen Square
+            <p class="govuk-body">16 Queen Square
                 <br /> Bristol
                 <br /> BS1 4NT
             </p>
         </th:block>
 
         <th:block th:if="${type == 'collaborator' and status == 'orgAdded'}">
-            <p>If this is not the correct organisation, please <a href="#">email the lead applicant</a>.</p>
+            <p class="govuk-body">If this is not the correct organisation, please <a href="#">email the lead applicant</a>.</p>
         </th:block>
 
         <th:block th:if="${type == 'lead'}">

@@ -19,7 +19,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Finances'})" />
 
-	<p>Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. Your designated finance partner will be the main contact for queries. You will be consulted before any changes are approved.</p>
+	<p class="govuk-body">Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. Your designated finance partner will be the main contact for queries. You will be consulted before any changes are approved.</p>
 
 	<h2 class="govuk-heading-m">Overview</h2>
 
@@ -62,7 +62,7 @@
 	</div> -->
 
 	<h2 class="govuk-heading-m">Detailed finances</h2>
-	<p>Changes made to your finances will be visible here. Please review this section carefully as you are responsible for the accuracy of any approved finances.</p>
+	<p class="govuk-body">Changes made to your finances will be visible here. Please review this section carefully as you are responsible for the accuracy of any approved finances.</p>
 
 	<div class="collapsible section-overview extra-margin">
 
@@ -106,7 +106,7 @@
 
 	<h3 class="govuk-heading-m">Other funding</h3>
 
-	<p>Details of other applicable public sector funding received or applied for is shown here. You must inform us if you know of any applicable funding that is not listed here.</p>
+	<p class="govuk-body">Details of other applicable public sector funding received or applied for is shown here. You must inform us if you know of any applicable funding that is not listed here.</p>
 
 	<th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:with="status=partnerView" />
 

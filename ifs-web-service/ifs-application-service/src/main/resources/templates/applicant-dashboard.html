@@ -14,7 +14,7 @@
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="event-alert is-open" th:each="notification:${notifications}">
-            <p>
+            <p class="govuk-body">
                 <span th:text="${notification?.assignedByName + ' has assigned a question to you'}"></span>
             </p>
         </div>
@@ -114,18 +114,18 @@
                                 </ul>
                             </div>
                             <div class="status">
-                                <p th:if="${previousView.rejected}" class="status-msg msg-progress">Unsuccessful</p>
-                                <p th:if="${previousView.approved}" class="status-msg msg-progress">Successful</p>
-                                <p th:if="${previousView.createdOrOpen}" class="status-msg msg-progress not-submitted">Not submitted</p>
-                                <p th:if="${previousView.informedIneligible}" class="status-msg msg-progress">Ineligible</p>
-                                <p th:if="${previousView.withdrawn}" class="status-msg msg-progress">Project withdrawn</p>
+                                <p th:if="${previousView.rejected}" class="govuk-body status-msg msg-progress">Unsuccessful</p>
+                                <p th:if="${previousView.approved}" class="govuk-body status-msg msg-progress">Successful</p>
+                                <p th:if="${previousView.createdOrOpen}" class="govuk-body status-msg msg-progress not-submitted">Not submitted</p>
+                                <p th:if="${previousView.informedIneligible}" class="govuk-body status-msg msg-progress">Ineligible</p>
+                                <p th:if="${previousView.withdrawn}" class="govuk-body status-msg msg-progress">Project withdrawn</p>
                             </div>
                         </li>
                     </ul>
                 </div>
             </section>
             <section class="terms-and-conditions">
-                <p>Read the <a href="/info/terms-and-conditions" target="_blank">terms and conditions</a> (this link will open in a new window)</p>
+                <p class="govuk-body">Read the <a href="/info/terms-and-conditions" target="_blank">terms and conditions</a> (this link will open in a new window)</p>
             </section>
         </div>
 

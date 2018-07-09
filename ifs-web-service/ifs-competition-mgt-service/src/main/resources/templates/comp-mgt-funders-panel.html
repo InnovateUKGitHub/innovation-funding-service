@@ -54,11 +54,11 @@
         </form>
 
         <div th:if="${fundingNotDecidedForAllApplications}" class="event-alert">
-            <p><span>A funding decision is required for all applications to the competition.</span></p>
+            <p class="govuk-body"><span>A funding decision is required for all applications to the competition.</span></p>
         </div>
 
         <div class="warning-alert extra-margin-bottom" th:if="${selectionLimitWarning}">
-            <p th:text="#{competition.management.limit.warning}"></p>
+            <p class="govuk-body" th:text="#{competition.management.limit.warning}"></p>
         </div>
         <div data-selection-limit-exceeded-block=""></div>
 

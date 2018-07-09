@@ -51,26 +51,26 @@
 
         <th:block th:if="${model.isShowGuidanceInformation()}">
             <th:block th:if="${model.collaborationAgreementRequired}">
-                <p>Only the Project Manager can upload and submit additional documents to support your grant application.</p>
-                <p>These documents are:</p>
+                <p class="govuk-body">Only the Project Manager can upload and submit additional documents to support your grant application.</p>
+                <p class="govuk-body">These documents are:</p>
                 <ul class="govuk-list govuk-list--bullet">
                     <li>the collaboration agreement</li>
                     <li>the exploitation plan</li>
                 </ul>
-                <p>You should review these documents with the other partners in the project.</p>
+                <p class="govuk-body">You should review these documents with the other partners in the project.</p>
             </th:block>
             <th:block th:unless="${model.collaborationAgreementRequired}">
-                <p>Only the Project Manager can upload and submit the exploitation plan to support your grant application.</p>
+                <p class="govuk-body">Only the Project Manager can upload and submit the exploitation plan to support your grant application.</p>
             </th:block>
         </th:block>
 
         <th:block th:if="${model.isShowDocumentsBeingReviewedMessage()}">
             <th:block th:if="${model.collaborationAgreementRequired}">
-                <p>The documents submitted below are now being reviewed. We will contact the Project Manager
+                <p class="govuk-body">The documents submitted below are now being reviewed. We will contact the Project Manager
                 if we need any further information.</p>
             </th:block>
             <th:block th:unless="${model.collaborationAgreementRequired}">
-                <p>The document submitted below is now being reviewed. We will contact the Project Manager
+                <p class="govuk-body">The document submitted below is now being reviewed. We will contact the Project Manager
                     if we need any further information.</p>
             </th:block>
         </th:block>
@@ -82,17 +82,17 @@
             <details>
                 <summary><span class="summary">What should I include in the collaboration agreement?</span></summary>
                 <div class="panel">
-                    <p>This is an agreement between project partners and will cover how the project will operate. It will
+                    <p class="govuk-body">This is an agreement between project partners and will cover how the project will operate. It will
                         also include details of how you will exploit the results of the project. Please allow enough time to
                         complete this process before your project start date.</p>
-                    <p>The following partners need to sign this collaboration agreement:</p>
+                    <p class="govuk-body">The following partners need to sign this collaboration agreement:</p>
 
                     <ul class="govuk-list govuk-list--bullet" th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
                         <li th:each="partner : ${model.partnerOrganisationNames}" th:text="${partner}"/>
                     </ul>
-                    <p>An example of a collaboration agreement can be found on the <a href="http://www.ipo.gov.uk/lambert">Lambert
+                    <p class="govuk-body">An example of a collaboration agreement can be found on the <a href="http://www.ipo.gov.uk/lambert">Lambert
                         Agreement website</a>.</p>
-                    <p>The uploaded collaboration agreement must:</p>
+                    <p class="govuk-body">The uploaded collaboration agreement must:</p>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>be in portable document format (PDF)</li>
                         <li>be legible at 100% magnification</li>
@@ -129,7 +129,7 @@
                                removeName='',
                                saveName=''">
                  <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-                 <p th:unless="${model.collaborationAgreementFileDetails}" class="uploaded-file">Awaiting upload by the Project Manager</p>
+                 <p th:unless="${model.collaborationAgreementFileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager</p>
             </th:block>
         </div>
 
@@ -140,7 +140,7 @@
             <details>
                 <summary><span class="summary">What should I include in the exploitation plan?</span></summary>
                 <div class="panel">
-                    <p>This plan will evolve and change during the lifetime of the project. Its aim is to confirm the
+                    <p class="govuk-body">This plan will evolve and change during the lifetime of the project. Its aim is to confirm the
                         business case for the project. It should also describe partner activities that will exploit the
                         results of the project so that:</p>
                     <ul class="govuk-list govuk-list--bullet">
@@ -149,8 +149,8 @@
                         <li>exploitation can be monitored by the stakeholders</li>
                     </ul>
 
-                    <p>A framework of the exploitation plan is available for <a href="/files/exploitation_plan.doc">download</a>.</p>
-                    <p>The uploaded exploitation plan must:</p>
+                    <p class="govuk-body">A framework of the exploitation plan is available for <a href="/files/exploitation_plan.doc">download</a>.</p>
+                    <p class="govuk-body">The uploaded exploitation plan must:</p>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>be in portable document format (PDF)</li>
                         <li>be legible at 100% magnification</li>
@@ -188,23 +188,23 @@
                                removeName='',
                                saveName=''">
                  <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-                 <p th:unless="${model.exploitationPlanFileDetails}" class="uploaded-file">Awaiting upload by the Project Manager</p>
+                 <p th:unless="${model.exploitationPlanFileDetails}" class="govuk-body uploaded-file">Awaiting upload by the Project Manager</p>
             </th:block>
         </div>
         <th:block th:if="${model.collaborationAgreementRequired}">
             <th:block th:if="${model.projectManager}">
-                <p>You need to upload the documents and submit them to us.</p>
+                <p class="govuk-body">You need to upload the documents and submit them to us.</p>
             </th:block>
             <th:block th:unless="${model.projectManager}">
-                <p>Your Project Manager needs to upload the documents and submit them to us.</p>
+                <p class="govuk-body">Your Project Manager needs to upload the documents and submit them to us.</p>
             </th:block>
         </th:block>
         <th:block th:unless="${model.collaborationAgreementRequired}">
             <th:block th:if="${model.projectManager}">
-                <p>You need to upload the document and submit it to us.</p>
+                <p class="govuk-body">You need to upload the document and submit it to us.</p>
             </th:block>
             <th:block th:unless="${model.projectManager}">
-                <p>Your Project Manager needs to upload the document and submit it to us.</p>
+                <p class="govuk-body">Your Project Manager needs to upload the document and submit it to us.</p>
             </th:block>
         </th:block>
 

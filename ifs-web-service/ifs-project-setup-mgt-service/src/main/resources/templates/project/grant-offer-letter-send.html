@@ -30,18 +30,18 @@
 
         <div class="warning-alert" th:if="${model.getSignedGrantOfferLetterRejected()}">
             <p class="govuk-heading-s no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
-            <p>If you have not already done so, please contact the Project Manager to explain your decision.</p>
-            <p>Reason for rejection:</p>
-            <p th:text="${model.getGrantOfferLetterRejectionReason()}"></p>
+            <p class="govuk-body">If you have not already done so, please contact the Project Manager to explain your decision.</p>
+            <p class="govuk-body">Reason for rejection:</p>
+            <p class="govuk-body" th:text="${model.getGrantOfferLetterRejectionReason()}"></p>
         </div>
 
         <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
             <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
-                <p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and that the project is ready to begin.</p>
+                <p class="govuk-body">Please review the grant offer letter. You should confirm that it has been signed by the lead partner and that the project is ready to begin.</p>
             </th:block>
             <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
                 <th:block th:if="${!model.isSentToProjectTeam()}">
-                    <p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
+                    <p class="govuk-body">The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
                 </th:block>
             </th:block>
         </th:block>
@@ -52,7 +52,7 @@
         <form th:action="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}"
               th:object="${form}" method="post" enctype="multipart/form-data">
 
-            <p th:unless="${model.grantOfferLetterFile}">The grant offer letter has not yet been generated or uploaded. You are able to manually upload the GOL from this page.</p>
+            <p class="govuk-body" th:unless="${model.grantOfferLetterFile}">The grant offer letter has not yet been generated or uploaded. You are able to manually upload the GOL from this page.</p>
 
             <th:block th:with="uploadViewmode='edit',
                            downloadUrl=@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})},
@@ -68,18 +68,18 @@
         </div>
 
         <h2 class="govuk-heading-m">Annex</h2>
-        <p th:unless="${model.additionalContractFile}">The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
+        <p class="govuk-body" th:unless="${model.additionalContractFile}">The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
 
 
 
         <div class="upload-section">
 
             <form th:action="@{/project/{id}/grant-offer-letter/upload-annex(id=${model.projectId})}"   th:object="${form}" method="post" enctype="multipart/form-data">
-                <p>Any additional supporting materials should be uploaded to the Annex.</p>
+                <p class="govuk-body">Any additional supporting materials should be uploaded to the Annex.</p>
                 <details th:unless="${model.isSentToProjectTeam()}">
                     <summary><span class="summary">What are the requirements for upload?</span></summary>
                     <div class="panel">
-                        <p>The Annex should:</p>
+                        <p class="govuk-body">The Annex should:</p>
                         <ul class="govuk-list govuk-list--bullet">
                             <li>be in a portable document format (.pdf)</li>
                             <li>be less than 1mb in size</li>
@@ -108,10 +108,10 @@
             <h2 class="govuk-heading-m no-margin">Signed grant offer letter</h2>
             <div class="upload-section">
                 <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
-                    <p><a class="uploaded-file" target="_blank" th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename} + ' (opens in a new window)'">signed-offer-letter.PDF</a></p>
+                    <p class="govuk-body"><a class="uploaded-file" target="_blank" th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename} + ' (opens in a new window)'">signed-offer-letter.PDF</a></p>
                 </th:block>
                 <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
-                    <p>Awaiting upload by the Project Manager</p>
+                    <p class="govuk-body">Awaiting upload by the Project Manager</p>
                 </th:block>
             </div>
         </th:block>

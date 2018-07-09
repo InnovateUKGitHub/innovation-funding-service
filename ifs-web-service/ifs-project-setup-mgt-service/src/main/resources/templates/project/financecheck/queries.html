@@ -17,7 +17,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
         <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
             <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There was a problem saving your response.</h2>
-            <p>Please review:</p>
+            <p class="govuk-body">Please review:</p>
             <ul class="error-summary-list">
                 <th:block th:each="err : ${nonFormErrors}">
                     <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
@@ -28,18 +28,18 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
         <h2 class="govuk-heading-m">Finance Contact</h2>
-        <p th:if="${model.financeContact.isPresent()}">
+        <p class="govuk-body" th:if="${model.financeContact.isPresent()}">
             <th:block th:text="${model.financeContact.get().userName}">Finance Contact</th:block> <br />
             <th:block th:text="${model.financeContact.get().email}">example@example.com</th:block> <br />
             <th:block th:text="${model.financeContact.get().phoneNumber}">0</th:block>
         </p>
 
-        <p th:unless="${model.financeContact.isPresent()}">
+        <p class="govuk-body" th:unless="${model.financeContact.isPresent()}">
             No assigned contact
         </p>
 
         <h2 class="govuk-heading-m">Queries</h2>
-        <p>
+        <p class="govuk-body">
             Raise finance queries to the organisation in this section. You should confirm any changes to finances with the finance contact before you approve them. If the query button is disabled, the organisation has not yet appointed a finance contact.
         </p>
         <div class="grid-row extra-margin-bottom">
@@ -166,10 +166,10 @@
                     </th:block>
                     <th:block th:if="${query.isClosed()}">
                         <div class="message-alert">
-                            <p>This query has been marked as resolved by
+                            <p class="govuk-body">This query has been marked as resolved by
                                 <th:block th:text="${query.getClosedBy().getName()}">Name</th:block> on
                                 <th:block th:text="${#temporals.format(query.getClosedDate(), 'd MMMM yyyy')}">Date</th:block>.</p>
-                            <p>If you wish to follow this up, please raise a new query.</p>
+                            <p class="govuk-body">If you wish to follow this up, please raise a new query.</p>
                         </div>
                     </th:block>
                 </div>

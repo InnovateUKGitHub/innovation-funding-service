@@ -1,5 +1,5 @@
 <th:block th:fragment="invite-list(invites)" xmlns:th="http://www.w3.org/1999/html">
-    <p>
+    <p class="govuk-body">
         <span class="govuk-heading-xl no-margin" th:text="${invites.size()}">38</span>
         <span class="govuk-heading-s">users invited to collaborate</span>
     </p>
@@ -7,7 +7,7 @@
 </th:block>
 
 <th:block th:fragment="invites-table(invites)" xmlns:th="http://www.w3.org/1999/html">
-    <p th:if="${#lists.isEmpty(invites)}">There are no results for this search.</p>
+    <p class="govuk-body" th:if="${#lists.isEmpty(invites)}">There are no results for this search.</p>
     <div class="table-overflow" th:unless="${#lists.isEmpty(invites)}">
         <table>
             <thead>

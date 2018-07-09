@@ -18,20 +18,20 @@
                 </div>
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assessment panel for '${model.competitionName}'|,size='govuk-heading-xl'" />
-                <p>You are invited to the assessment panel for the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
+                <p class="govuk-body">You are invited to the assessment panel for the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
                 <section class="boxed">
                     <h2 class="govuk-heading-m no-margin" th:text="|${#temporals.format(model.panelDate, 'd MMMM yyyy')}: assessment panel|">
                         21 March 2017: assessment panel
                     </h2>
-                    <p>Are you available to take part in this assessment panel? <br>
+                    <p class="govuk-body">Are you available to take part in this assessment panel? <br>
                         If you respond ‘Yes’ below, you will be required to attend the panel on this date.</p>
                 </section>
 
                 <section>
                     <h2 class="govuk-heading-m" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
 
-                    <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief (opens in a new window)</a></p>
+                    <p class="govuk-body"><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief (opens in a new window)</a></p>
                     <br>
                 </section>
 
@@ -43,7 +43,7 @@
                                 <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
                                     <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
                                 </th:block>
-                                <p>You should reject this invitation if you are unavailable for the assessment panel date.</p>
+                                <p class="govuk-body">You should reject this invitation if you are unavailable for the assessment panel date.</p>
                             </legend>
 
                             <div class="multiple-choice">

@@ -100,7 +100,7 @@
                     </table>
                 </div>
 
-                <p th:if="${#lists.isEmpty(model.assigned)}">No assessors have been assigned to this application.</p>
+                <p class="govuk-body" th:if="${#lists.isEmpty(model.assigned)}">No assessors have been assigned to this application.</p>
 
                 <th:block th:if="${model.inAssessment}">
                 <h2 class="govuk-heading-m" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
@@ -135,7 +135,7 @@
                     </table>
                 </div>
 
-                <p th:if="${#lists.isEmpty(model.rejected)}">No assessors have rejected this application.</p>
+                <p class="govuk-body" th:if="${#lists.isEmpty(model.rejected)}">No assessors have rejected this application.</p>
 
 
                 <h2 class="govuk-heading-m" th:text="|Previously assigned (${#lists.size(model.previouslyAssigned)})|">Previously assigned (0)</h2>
@@ -171,7 +171,7 @@
                     </table>
                 </div>
 
-                <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">No assessors were previously assigned to this application.</p>
+                <p class="govuk-body" th:if="${#lists.isEmpty(model.previouslyAssigned)}">No assessors were previously assigned to this application.</p>
 
                 </th:block>
                 <h2 class="govuk-heading-m">Available assessors</h2>
@@ -209,7 +209,7 @@
 
                 <div class="grid-row sorting">
                     <div class="column-two-thirds">
-                        <p><span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">20</span> <span class="govuk-heading-s">Assessors</span></p>
+                        <p class="govuk-body"><span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">20</span> <span class="govuk-heading-s">Assessors</span></p>
                     </div>
                 </div>
 

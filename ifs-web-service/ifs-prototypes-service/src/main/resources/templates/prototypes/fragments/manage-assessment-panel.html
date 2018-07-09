@@ -121,7 +121,7 @@
             </th:block>
 
             <th:block th:if="status != null">
-                <p th:text="${msg}"></p>
+                <p class="govuk-body" th:text="${msg}"></p>
             </th:block>
 
         </li>
@@ -136,7 +136,7 @@
                 <p class="extra-margin-right">Status: <strong th:text="${status}"></strong></p>
             </th:block>
 
-            <p>
+            <p class="govuk-body">
                 <a href="#" class="extra-margin-right">Remove</a>
             </p>
         </li>
@@ -149,7 +149,7 @@
 <div th:fragment="prototype-assesor-row-assign-application">
     <ul class="tabular-list__row">
         <li class="width-half">
-            <p class="no-margin">No: <a href="#" class="extra-margin-right" th:text="${number}">NUMBER</a></p>
+            <p class="govuk-body no-margin">No: <a href="#" class="extra-margin-right" th:text="${number}">NUMBER</a></p>
         </li>
         <li class="width-quarter" aria-describedby="assign-lead-org" th:text="${org}">
             ORG
@@ -163,11 +163,11 @@
                     <h3 class="govuk-heading-s no-margin"><a href="#" th:text="${application}">APPLICATION</a></h3>
 
                     <th:block th:if="${status != null}">
-                        <p>Status: <strong th:text="${status}">STATUS</strong></p>
+                        <p class="govuk-body">Status: <strong th:text="${status}">STATUS</strong></p>
                     </th:block>
 
                     <th:block th:if="${area != null}">
-                        <p>Area: <strong th:text="${area}">AREA</strong></p>
+                        <p class="govuk-body">Area: <strong th:text="${area}">AREA</strong></p>
                     </th:block>
 
                 </li>
@@ -752,7 +752,7 @@
 
                     <div class="panel">
                         <form th:action="${#httpServletRequest.requestURI}">
-                            <p>Enter the new assessor's details.</p>
+                            <p class="govuk-body">Enter the new assessor's details.</p>
 
                             <th:block th:if="${param.version != null and param.version[0] == 'v1'}" th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-areas" th:with="assessor='non-registered'" />
                             <th:block th:if="${param.version == null or param.version[0] == 'v2'}" th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-areas-full-list" th:with="assessor='non-registered'" />
@@ -1100,7 +1100,7 @@
 
                 <th:block th:if="${site == 'rc'}">
 
-                    <p>Choose which assessors will be assigned to this application. You can only assign people who have accepted your invitation. When you're done return to the Assign tab and notify the assessors.</p>
+                    <p class="govuk-body">Choose which assessors will be assigned to this application. You can only assign people who have accepted your invitation. When you're done return to the Assign tab and notify the assessors.</p>
 
                 </th:block>
 
@@ -1131,7 +1131,7 @@
 
                 <h2 class="govuk-heading-m" th:text="${(param.name != null ? param.name[0] : 'TESTER')}">John Smith</h2>
 
-                <p>Choose which applications will be assigned to this assessor. You can only assign people who have accepted your invitation.</p>
+                <p class="govuk-body">Choose which applications will be assigned to this assessor. You can only assign people who have accepted your invitation.</p>
 
             </th:block>
 
@@ -1140,7 +1140,7 @@
             <ul>
                 <li>
                     <h3 class="govuk-heading-xl no-margin-bottom" id="assessors-remaining">3</h3>
-                    <p>Applications left to assign</p>
+                    <p class="govuk-body">Applications left to assign</p>
                 </li>
             </ul>
         </div>

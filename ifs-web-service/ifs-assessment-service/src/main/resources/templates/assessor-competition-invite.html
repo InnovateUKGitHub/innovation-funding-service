@@ -18,22 +18,22 @@
                 </div>
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assess '${model.competitionName}'|,size='govuk-heading-xl'" />
-                <p>You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
+                <p class="govuk-body">You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
                 <section class="boxed">
                     <h2 class="govuk-heading-m no-margin" th:text="|${#temporals.format(model.acceptsDate, 'd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'd MMMM yyyy')}: Assessment period|">
                         21 March 2017 to 28 March 2017: Assessment period
                     </h2>
-                    <p>This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependent on how many applications have been submitted. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.</p>
+                    <p class="govuk-body">This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependent on how many applications have been submitted. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.</p>
 
-                    <p th:if="${model.briefingDate}" th:text="|The assessor webinar briefing will last one hour,
+                    <p class="govuk-body" th:if="${model.briefingDate}" th:text="|The assessor webinar briefing will last one hour,
                         taking place on ${#temporals.format(model.briefingDate, 'd MMMM')}.|"></p>
                 </section>
 
                 <section>
                     <h2 class="govuk-heading-m" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
 
-                    <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief (opens in a new window)</a></p>
+                    <p class="govuk-body"><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief (opens in a new window)</a></p>
 
                     <h3 class="govuk-heading-s">You should reject this invitation if:</h3>
                     <ul class="govuk-list govuk-list--bullet">

@@ -19,9 +19,9 @@
             <legend class="visuallyhidden">Business organisation</legend>
             <div class="form-block">
                 <h3 class="govuk-heading-s">Organisation name</h3>
-                <p th:text="${organisation.name}">Nomensa</p>
+                <p class="govuk-body" th:text="${organisation.name}">Nomensa</p>
                 <h3 class="govuk-heading-s">Registration number</h3>
-                <p th:text="${organisation.companyHouseNumber}">0123456789</p>
+                <p class="govuk-body" th:text="${organisation.companyHouseNumber}">0123456789</p>
                 <h3 class="govuk-heading-s">Address</h3>
                 <div th:text="${organisationAddress?.addressLine1}"></div>
                 <div th:text="${organisationAddress?.addressLine2}"></div>
@@ -32,7 +32,7 @@
             </div>
         </fieldset>
 
-        <p>If this is not the correct organisation <a th:href="${'mailto:'+ invite.leadApplicantEmail}">email the lead applicant</a>.</p>
+        <p class="govuk-body">If this is not the correct organisation <a th:href="${'mailto:'+ invite.leadApplicantEmail}">email the lead applicant</a>.</p>
 
         <a th:href="${registerUrl}" class="button button-large extra-margin">Continue</a>
 

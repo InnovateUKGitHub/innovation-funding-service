@@ -13,7 +13,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose your organisation type',subTitle='Create your account',size='govuk-heading-xl'" />
-        <p>You are participating in this competition as part of the organisation
+        <p class="govuk-body">You are participating in this competition as part of the organisation
             <strong>
                 <span th:if="${model.inviteOrganisationNameConfirmed}" th:text="${model.inviteOrganisationNameConfirmed}"></span>
                 <span th:unless="${model.inviteOrganisationNameConfirmed}" th:text="${model.inviteOrganisationName}"></span>
@@ -40,7 +40,7 @@
                     </div>
                 </fieldset>
             </div>
-            <p>
+            <p class="govuk-body">
                 If your organisation type is not listed contact the <a th:href="@{/info/contact}">customer support service</a>.
             </p>
             <button id="organisation-type-cta" class="button button-large extra-margin" name="select-company-type" type="submit">Continue</button>

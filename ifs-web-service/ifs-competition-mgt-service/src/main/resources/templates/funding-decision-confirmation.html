@@ -13,8 +13,8 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Notify applicants',size='govuk-heading-m'" />
-        <p>Are you sure you wish to inform applicants if they have been successful in gaining funding?</p>
-        <p>This step cannot be undone.</p>
+        <p class="govuk-body">Are you sure you wish to inform applicants if they have been successful in gaining funding?</p>
+        <p class="govuk-body">This step cannot be undone.</p>
 
         <form method="post" action="#" id="submit-funding-decision-form" th:action="@{/competition/{competitionId}/fundingdecisionsubmit(competitionId=${competitionId})}">
         <th:block th:each="entry : ${applicationFundingDecisions.entrySet()}">

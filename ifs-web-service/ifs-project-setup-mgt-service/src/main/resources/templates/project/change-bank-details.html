@@ -29,11 +29,11 @@
         </div>
 
         <hr/>
-        <p>Bank account details have been submitted to Innovate UK for use during the project <strong th:text="|${model.projectName} (${model.applicationId})|">Machine Learning In Robots (10294856)</strong></p>
+        <p class="govuk-body">Bank account details have been submitted to Innovate UK for use during the project <strong th:text="|${model.projectName} (${model.applicationId})|">Machine Learning In Robots (10294856)</strong></p>
 
         <h2 class="govuk-heading-m">Finance contact</h2>
 
-        <p>
+        <p class="govuk-body">
             <th:block th:unless="${#strings.isEmpty(model.financeContactName)}">
                 <th:block th:text="${model.financeContactName}" /><br/>
             </th:block>

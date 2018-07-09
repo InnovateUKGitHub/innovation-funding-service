@@ -75,7 +75,7 @@
   }
 
   .section-awaiting {
-    color: govuk-colour("grey-1");
+    color: $govuk-secondary-text-colour;
   }
 
   @include media-down(mobile) {

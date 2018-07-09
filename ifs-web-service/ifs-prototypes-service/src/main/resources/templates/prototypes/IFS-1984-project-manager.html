@@ -20,7 +20,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Project manager'}, ${null})" />
 
-    <p>As lead partner you must choose a Project Manager who will be responsible for setting up your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
+    <p class="govuk-body">As lead partner you must choose a Project Manager who will be responsible for setting up your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
 
 	<form>
 
@@ -65,7 +65,7 @@
 
 		<th:block th:insert="prototypes/fragments/project-setup :: prototype-add-users('pm')" />
 
-		<p>You can change your Project Manager up until your grant offer letter is generated.</p>
+		<p class="govuk-body">You can change your Project Manager up until your grant offer letter is generated.</p>
 
 		<div class="extra-margin">
 			<a href="#" class="button button-large" data-js-modal="modal-assign" id="pm-cta">Assign</a>
@@ -77,7 +77,7 @@
 
 				<h2 class="govuk-heading-m no-margin">Assign Project Manager</h2>
 
-				<p>This will assign <span id="project-manager">[name]</span> as the Project Manager for this project.</p>
+				<p class="govuk-body">This will assign <span id="project-manager">[name]</span> as the Project Manager for this project.</p>
 
 				<hr />
 
@@ -95,7 +95,7 @@
 
 				<h2 class="govuk-heading-m no-margin">Project Manager cannot be assigned</h2>
 
-				<p><span id="project-manager-pending">[name]</span> has been invited to create an account. This must be completed before they can be assigned as your Project Manager.</p>
+				<p class="govuk-body"><span id="project-manager-pending">[name]</span> has been invited to create an account. This must be completed before they can be assigned as your Project Manager.</p>
 
 				<hr />
 

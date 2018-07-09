@@ -7,7 +7,7 @@
     <th:block th:unless="${(param.section != null)}">
         <div th:if="${setupComplete}" class="extra-margin-bottom">
             <div class="message-alert">
-                <p>Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
+                <p class="govuk-body">Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
             </div>
         </div>
         <ul class="task-list">
@@ -40,7 +40,7 @@
             </li>
         </ul>
         <div th:if="${!isReadyToOpen}" class="extra-margin">
-            <p>Once you complete, this competition will be ready to open.</p>
+            <p class="govuk-body">Once you complete, this competition will be ready to open.</p>
             <a data-js-modal="complete-modal"
                th:disabled="${!setupReady}"
                class="button no-margin-right" id="compCTA">Complete</a>
@@ -87,7 +87,7 @@
 <div th:fragment="comp-setup-remove-assigned-assessor-content">
     <h2 class="govuk-heading-m no-margin">Are you sure you want to remove this assessor from the application?</h2>
 
-    <p>Any work they have started will be permanently deleted. This action cannot be undone.</p>
+    <p class="govuk-body">Any work they have started will be permanently deleted. This action cannot be undone.</p>
 </div>
 
 <!-- ======== Comp admin - send email to all applicants modal ======= -->
@@ -95,7 +95,7 @@
     <div class="send-to-all-applicants-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Send email to all applicants</h2>
-        <p>This will inform all applicants of the funding decision. If applicants are successful you cannot retract this decision.</p>
+        <p class="govuk-body">This will inform all applicants of the funding decision. If applicants are successful you cannot retract this decision.</p>
         <hr />
         <div>
             <button name="send-emails" class="button">Send email to all applicants</button>
@@ -109,7 +109,7 @@
     <div class="complete-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Complete competition setup</h2>
-        <p>Setup of competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
+        <p class="govuk-body">Setup of competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
         <hr />
         <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
               th:action="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${model.general.competition.id})}">
@@ -127,7 +127,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m no-margin">Deleting this competition will remove all data</h2>
-            <p>All information entered and stored for this competition will be removed from the service and will not be
+            <p class="govuk-body">All information entered and stored for this competition will be removed from the service and will not be
                 accessible again.</p>
         </div>
         <hr />
@@ -146,8 +146,8 @@
     <div class="mark-as-successful-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Mark application as successful</h2>
-        <p>Are you sure?</p>
-        <p>Remember that:</p>
+        <p class="govuk-body">Are you sure?</p>
+        <p class="govuk-body">Remember that:</p>
         <ul class="govuk-list govuk-list--bullet">
             <li>you cannot undo this</li>
             <li>IFS will not inform the applicants, so you must contact them</li>

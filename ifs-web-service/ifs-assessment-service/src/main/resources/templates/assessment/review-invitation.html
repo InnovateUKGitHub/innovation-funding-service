@@ -23,11 +23,11 @@
             <div class="grid-row">
                 <div class="column-half">
                     <h2 class="govuk-heading-s no-margin">Title:</h2>
-                    <p th:text="${model.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</p>
+                    <p class="govuk-body" th:text="${model.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</p>
 
                     <th:block th:if="${model.projectSummary}">
                         <h2 class="govuk-heading-s">Project summary:</h2>
-                        <p th:text="${model.projectSummary}">This is the applicant response for project summary</p>
+                        <p class="govuk-body" th:text="${model.projectSummary}">This is the applicant response for project summary</p>
                     </th:block>
                 </div>
                 <div class="column-half">
@@ -41,7 +41,7 @@
             </div>
         </section>
 
-        <p class="extra-margin">Read the project summary above to make sure you do not have a conflict of interest with this application.</p>
+        <p class="govuk-body extra-margin">Read the project summary above to make sure you do not have a conflict of interest with this application.</p>
 
         <form th:action="@{/review/{reviewId}/respond(reviewId=${model.reviewId})}" method="post" novalidate="novalidate" th:object="${form}">
             <div class="form-group" th:classappend="${#fields.hasErrors('reviewAccept')} ? 'form-group-error'">
@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="panel js-hidden" id="accept-application">
-                        <p>You will still have the option to reject after accepting and viewing the full application.</p>
+                        <p class="govuk-body">You will still have the option to reject after accepting and viewing the full application.</p>
                     </div>
 
                     <label class="multiple-choice" data-target="reject-application">

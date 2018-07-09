@@ -46,14 +46,14 @@
         </th:block>
 
         <th:block th:unless="${model.empty}">
-            <p>This overview details the spend profile of each partner.</p>
-            <p>You can download each spend profile to enable sharing with the Monitoring Officer.</p>
+            <p class="govuk-body">This overview details the spend profile of each partner.</p>
+            <p class="govuk-body">You can download each spend profile to enable sharing with the Monitoring Officer.</p>
             <h2 class="govuk-heading-m">Innovation Lead</h2>
-            <p th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}" >
+            <p class="govuk-body" th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}">
                 Innovation Lead
             </p>
             <th:block th:if="${model.notApprovedOrRejected}">
-                <p>The spend profile must be sent to Innovate UK for their review and approval.</p>
+                <p class="govuk-body">The spend profile must be sent to Innovate UK for their review and approval.</p>
             </th:block>
 
             <h2 class="govuk-heading-m">Project spend profile</h2>

@@ -20,7 +20,7 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='New website terms and conditions',size='govuk-heading-xl'" />
 
-        <p>We have updated our terms and conditions. Please read them and confirm you agree.</p>
+        <p class="govuk-body">We have updated our terms and conditions. Please read them and confirm you agree.</p>
 
         <form th:action="@{'/info/new-terms-and-conditions'}" method="post" th:object="${form}" novalidate="novalidate">
             <div class="form-group" th:classappend="${#fields.hasErrors('agree')} ? 'form-group-error'">

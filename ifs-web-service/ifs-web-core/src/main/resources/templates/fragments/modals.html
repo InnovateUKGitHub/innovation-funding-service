@@ -17,7 +17,7 @@
     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 th:text="${messageTitle}" class="govuk-heading-m no-margin"></h2>
-        <p th:text="${message}"></p>
+        <p class="govuk-body" th:text="${message}"></p>
         <hr />
         <div>
             <a class="button" th:href="${submitLink}" th:text="${submitText}"></a>
@@ -32,7 +32,7 @@
         <div class="modal-confirm-submit-application" role="dialog" aria-hidden="true">
             <th:block th:insert="fragments/modals :: close-button" />
             <h2 th:text="${messageTitle}" class="govuk-heading-m no-margin"></h2>
-            <p th:text="${message}"></p>
+            <p class="govuk-body" th:text="${message}"></p>
             <hr />
             <div>
                 <button type="submit" class="button" th:attr="data-submitted-text=${submittedText}" th:text="${submitText}" />
@@ -48,7 +48,7 @@
     <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 th:text="${messageTitle}" class="govuk-heading-m no-margin"></h2>
-        <p th:text="${message}"></p>
+        <p class="govuk-body" th:text="${message}"></p>
         <hr />
         <div>
             <button role="button" tabindex="0" class="button" th:name="${submitName}" type="submit"
@@ -64,8 +64,8 @@
         <th:block th:insert="fragments/modals :: close-button" />
 
         <h2 class="govuk-heading-m no-margin">Notify applicants</h2>
-        <p>Are you sure you wish to inform applicants if they have been successful in gaining funding?</p>
-        <p>This step cannot be undone.</p>
+        <p class="govuk-body">Are you sure you wish to inform applicants if they have been successful in gaining funding?</p>
+        <p class="govuk-body">This step cannot be undone.</p>
         <hr />
         <div>
             <button class="button" name="publish" value="publish" type="submit">Notify applicants</button>
@@ -79,7 +79,7 @@
     <div class="modal-assign-mo" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Assign Monitoring Officer</h2>
-        <p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will
+        <p class="govuk-body">This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will
             be visible to all members of the consortium.</p>
         <hr />
         <div>
@@ -97,7 +97,7 @@
     <div class="modal-project-details" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Submit project details</h2>
-        <p>Are you sure that you wish to submit your project details to Innovate UK?</p>
+        <p class="govuk-body">Are you sure that you wish to submit your project details to Innovate UK?</p>
         <hr />
         <div>
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
@@ -113,7 +113,7 @@
     <div class="modal-bank" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Submit bank details</h2>
-        <p>Your bank details will now be submitted to Innovate UK.</p>
+        <p class="govuk-body">Your bank details will now be submitted to Innovate UK.</p>
         <hr />
         <div method="post">
             <button class="button" id="submit-bank-details" name="submit-app-details">Submit</button>
@@ -128,8 +128,8 @@
         <th:block th:insert="fragments/modals :: close-button" />
 
         <h2 class="govuk-heading-m no-margin">Generate spend profile</h2>
-        <p>This will generate a flat spend profile for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
-        <p>Partners will be notified that they can now create their spend profile.</p>
+        <p class="govuk-body">This will generate a flat spend profile for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
+        <p class="govuk-body">Partners will be notified that they can now create their spend profile.</p>
         <hr />
         <div method="post">
             <button id="generate-spend-profile-modal-button" class="button" name="submit-app-details">Generate spend profile</button>
@@ -143,7 +143,7 @@
     <div class="modal-partner-documents" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Submit documents</h2>
-        <p>Are you sure that you wish to submit your documents to Innovate UK?</p>
+        <p class="govuk-body">Are you sure that you wish to submit your documents to Innovate UK?</p>
         <hr />
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
             <div>
@@ -159,7 +159,7 @@
     <div class="modal-partner-document" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Submit document</h2>
-        <p>Are you sure that you wish to submit your document to Innovate UK?</p>
+        <p class="govuk-body">Are you sure that you wish to submit your document to Innovate UK?</p>
         <hr />
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
             <div>
@@ -175,7 +175,7 @@
     <div class="modal-partner-change-bank-details" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Update bank account details</h2>
-        <p>Please confirm that any updates match the information supplied by the finance contact. After this update has been completed, previously supplied details will be overwritten.</p>
+        <p class="govuk-body">Please confirm that any updates match the information supplied by the finance contact. After this update has been completed, previously supplied details will be overwritten.</p>
         <hr />
         <div>
             <button class="button" id="submit-change-bank-details" name="submit-change-bank-details">Update bank account details</button>
@@ -187,8 +187,8 @@
     <div class="modal-partner-approve-bank-details" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Approve bank account</h2>
-        <p>Approving the bank account will enable the finance checks to begin on the account</p>
-        <p>This step should only be done after the bank account for the organisation has been checked and meets the requirements of Innovate UK</p>
+        <p class="govuk-body">Approving the bank account will enable the finance checks to begin on the account</p>
+        <p class="govuk-body">This step should only be done after the bank account for the organisation has been checked and meets the requirements of Innovate UK</p>
         <hr />
         <div>
             <button class="button" id="submit-approve-bank-details" name="submit-approve-bank-details">Approve account</button>
@@ -202,7 +202,7 @@
     <div class="modal-accept-docs" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Accept documents</h2>
-        <p>Once accepted the project team can complete any remaining stages of project setup.</p>
+        <p class="govuk-body">Once accepted the project team can complete any remaining stages of project setup.</p>
         <hr />
         <div>
             <button class="button" id="accept-documents" name="approved" value="true">Accept documents</button>
@@ -216,7 +216,7 @@
     <div class="modal-accept-doc" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Accept document</h2>
-        <p>Once accepted the project team can complete any remaining stages of project setup.</p>
+        <p class="govuk-body">Once accepted the project team can complete any remaining stages of project setup.</p>
         <hr />
         <div>
             <button class="button" id="accept-document" name="approved" value="true">Accept document</button>
@@ -231,7 +231,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m no-margin">Reject documents</h2>
-            <p>If rejected, the Project Manager will be told along with the reason for rejection.
+            <p class="govuk-body">If rejected, the Project Manager will be told along with the reason for rejection.
                 New versions of the documents need to be provided before the project can begin.</p>
         </div>
         <hr />
@@ -248,7 +248,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m no-margin">Reject document</h2>
-            <p>If rejected, the Project Manager will be told along with the reason for rejection.
+            <p class="govuk-body">If rejected, the Project Manager will be told along with the reason for rejection.
                 A new version of the document needs to be provided before the project can begin.</p>
         </div>
         <hr />
@@ -264,7 +264,7 @@
     <div class="approve-eligibility-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Approve eligible costs</h2>
-        <p>This partner will now be marked as eligible for this project.</p>
+        <p class="govuk-body">This partner will now be marked as eligible for this project.</p>
         <hr />
         <div>
             <button class="button" name="approve">Approve eligible costs</button>
@@ -277,7 +277,7 @@
     <div class="modal-confirm-grant-offer-letter" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Send to Innovate UK</h2>
-        <p>Once you send the signed grant offer letter we will review it and will contact you if we need further information.</p>
+        <p class="govuk-body">Once you send the signed grant offer letter we will review it and will contact you if we need further information.</p>
         <hr />
         <div>
             <button class="button" id="submit-gol-for-review" name="confirmSubmit">Send to Innovate UK</button>
@@ -291,7 +291,7 @@
     <div class="modal-confirm-spend-profile-totals" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Send project spend profile</h2>
-        <p>The project spend profile will be sent to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
+        <p class="govuk-body">The project spend profile will be sent to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
         <hr />
         <div>
             <input type="submit" id="submit-send-all-spend-profiles" tabindex="0" class="button" value="Send"/>
@@ -305,7 +305,7 @@
     <div class="modal-confirm-spend-profile-submit" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Submit to lead partner</h2>
-        <p>Are you sure you want to submit your spend profile to the lead partner?</p>
+        <p class="govuk-body">Are you sure you want to submit your spend profile to the lead partner?</p>
         <hr />
         <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
             <div>
@@ -321,7 +321,7 @@
     <div class="modal-confirm-allow-spend-profile-edits" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Allow partner to edit</h2>
-        <p>
+        <p class="govuk-body">
             <span class="govuk-heading-s no-margin"><th:block th:text="${orgName}" />'s</span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
         <hr />
         <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
@@ -338,7 +338,7 @@
     <div class="modal-accept-profile" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Approved by Innovate UK</h2>
-        <p>The project spend profile has been approved and accepted by Innovate UK. The Project Manager will be
+        <p class="govuk-body">The project spend profile has been approved and accepted by Innovate UK. The Project Manager will be
             notified via email.</p>
         <hr />
         <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/APPROVED'}" method="post">
@@ -355,7 +355,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m no-margin">Reject spend profile</h2>
-            <p>Rejecting will return access to the spend profile to all project partners. You should contact the Project Manager to explain why the spend profile is being returned.</p>
+            <p class="govuk-body">Rejecting will return access to the spend profile to all project partners. You should contact the Project Manager to explain why the spend profile is being returned.</p>
         </div>
         <hr />
         <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/REJECTED'}" method="post">
@@ -372,7 +372,7 @@
     <div class="modal-accept-send-gol" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Send grant offer letter</h2>
-        <p>The Project Manager will be told by email.</p>
+        <p class="govuk-body">The Project Manager will be told by email.</p>
         <hr />
         <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post">
             <div>
@@ -388,7 +388,7 @@
     <div class="modal-accept-signed-gol" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Accept signed grant offer letter</h2>
-        <p>This will inform the Project Manager that the signed grant offer letter has been accepted.</p>
+        <p class="govuk-body">This will inform the Project Manager that the signed grant offer letter has been accepted.</p>
         <hr />
         <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed'}" method="post">
             <input type="hidden" name="approvalType" value="APPROVED" />
@@ -406,7 +406,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m no-margin">Reject signed grant offer letter</h2>
-            <p>This will be returned to the Project Manager. You should contact the Project Manager to explain why the
+            <p class="govuk-body">This will be returned to the Project Manager. You should contact the Project Manager to explain why the
                 signed grant offer letter is being rejected.</p>
         </div>
         <hr />
@@ -426,7 +426,7 @@
     <div class="modal-confirm-viability" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin-top">Confirm viability</h2>
-        <p>This partner will now be marked as viable for this project.</p>
+        <p class="govuk-body">This partner will now be marked as viable for this project.</p>
         <hr />
         <div>
             <button class="button" name="confirm-viability">Confirm viability</button>
@@ -440,7 +440,7 @@
     <div class="modal-confirm-eligibility" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin-top">Approve eligible costs</h2>
-        <p>This partner will now be marked as eligible for this project.</p>
+        <p class="govuk-body">This partner will now be marked as eligible for this project.</p>
         <hr />
         <div>
             <button class="button" name="confirm-eligibility">Approve eligible costs</button>
@@ -454,8 +454,8 @@
     <div class="modal-delete-organisation" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin-top">Delete organisation</h2>
-        <p>Are you sure you wish to remove the entire organisation from this project? This will also remove team members associated with that organisation. The organisation's finance information will be deleted and any assigned questions will be returned to you.</p>
-        <p>The organisation will not be notified of this action through this service. You should therefore discuss this with them beforehand.</p>
+        <p class="govuk-body">Are you sure you wish to remove the entire organisation from this project? This will also remove team members associated with that organisation. The organisation's finance information will be deleted and any assigned questions will be returned to you.</p>
+        <p class="govuk-body">The organisation will not be notified of this action through this service. You should therefore discuss this with them beforehand.</p>
         <hr />
         <div>
             <button class="button" name="deleteOrganisation" type="submit">Delete organisation</button>
@@ -471,7 +471,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m no-margin">Deactivate user</h2>
-            <p>Are you sure you want to deactivate this user?</p>
+            <p class="govuk-body">Are you sure you want to deactivate this user?</p>
         </div>
         <hr />
         <div>
@@ -487,7 +487,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m no-margin">Reactivate user</h2>
-            <p>Are you sure you want to reactivate this user profile?</p>
+            <p class="govuk-body">Are you sure you want to reactivate this user profile?</p>
         </div>
         <hr />
         <div>
@@ -503,8 +503,8 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m no-margin">Mark as resolved</h2>
-            <p>Are you sure you wish to close this query?</p>
-            <p>You won't be able to make any changes after this point.</p>
+            <p class="govuk-body">Are you sure you wish to close this query?</p>
+            <p class="govuk-body">You won't be able to make any changes after this point.</p>
         </div>
         <hr />
         <form th:action="'#'" method="post" novalidate="novalidate">
@@ -522,7 +522,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m no-margin">Resend invite to team member</h2>
-            <p>They will be resent an email inviting them to join the project.</p>
+            <p class="govuk-body">They will be resent an email inviting them to join the project.</p>
         </div>
         <hr />
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" data-single-submit="">
@@ -542,7 +542,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m no-margin">Resend invite to team member</h2>
-            <p>They will be resent an email inviting them to join the project.</p>
+            <p class="govuk-body">They will be resent an email inviting them to join the project.</p>
         </div>
         <hr />
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" data-single-submit="">
@@ -561,7 +561,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="govuk-heading-m no-margin">Resend invite to internal user</h2>
-            <p>They will be reminded to accept their allocated role.</p>
+            <p class="govuk-body">They will be reminded to accept their allocated role.</p>
         </div>
         <hr />
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" data-single-submit="">
@@ -579,8 +579,8 @@
     <div class="modal-withdraw-project" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m no-margin">Withdraw project from competition</h2>
-        <p>Are you sure you want to withdraw the project '<th:block th:text="${model.project.name}"></th:block>' from the competition '<th:block th:text="${model.competitionName}"></th:block>'&quest;</p>
-        <p>The project will be marked as withdrawn and removed from project setup. You can still view the application in
+        <p class="govuk-body">Are you sure you want to withdraw the project '<th:block th:text="${model.project.name}"></th:block>' from the competition '<th:block th:text="${model.competitionName}"></th:block>'&quest;</p>
+        <p class="govuk-body">The project will be marked as withdrawn and removed from project setup. You can still view the application in
             previous competitions.</p>
         <hr />
         <form th:action="@{/competition/{competitionId}/project/{projectId}/withdraw(competitionId=${model.competitionId},projectId=${model.project.id})}" method="post">

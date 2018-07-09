@@ -57,7 +57,7 @@
 	</ul>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'} and ${param.status != null and param.status[0] == 'removeAll'}">
-        <p>There are no applications on the invite list.</p>
+        <p class="govuk-body">There are no applications on the invite list.</p>
     </th:block>
 
     <th:block th:unless="${param.tab != null and param.tab[0] == 'invite'} and ${param.status != null and param.status[0] == 'removeAll'}">

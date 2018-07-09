@@ -6,14 +6,14 @@
         <div class="your-finances">
             <h2 class="govuk-heading-m no-margin-bottom">Finances</h2>
             <div class="message-alert">
-                <p>Only members from your organisation will be able to see a breakdown of your finances.</p>
+                <p class="govuk-body">Only members from your organisation will be able to see a breakdown of your finances.</p>
             </div>
-            <p class="extra-margin">Please complete your project finances.</p>
+            <p class="govuk-body extra-margin">Please complete your project finances.</p>
 
             <details th:unless="${model.canNotRequestFunding || model.allReadOnly}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
                 <summary><span class="summary">Not requesting funding</span></summary>
                 <div class="panel-indent">
-                    <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
+                    <p class="govuk-body">If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
                     <button th:unless="${model.notRequestingFunding}" class="button" name="not_requesting_funding">Not requesting funding</button>
                     <button th:if="${model.notRequestingFunding}" class="button" name="requesting_funding">Requesting funding</button>
                 </div>
@@ -26,7 +26,7 @@
         </div>
 
         <h2 class="govuk-heading-m">Finance summary</h2>
-        <p>This is a breakdown of your project costs and sources of funding for this project.</p>
+        <p class="govuk-body">This is a breakdown of your project costs and sources of funding for this project.</p>
 
         <th:block th:insert="finance/your-finances-sub-sections :: your_finance_summary (${model})" />
 
@@ -148,7 +148,7 @@
                 <th:block th:if="${model.showSectionAsLockedFunding(childSection)}">
                     <div class="task full-width">
                         <h3 class="govuk-heading-s" th:text="${childSection.section.name}"></h3>
-                        <p>
+                        <p class="govuk-body">
                             <th:block th:if="${model.userIsLeadApplicant}">
                                 You must select a research category in
                                 <th:block th:unless="${model.allReadOnly}">
@@ -250,7 +250,7 @@
     <th:block th:fragment="project_location(model)">
         <div class="extra-margin">
             <th:block th:unless="${model.readonly}">
-                <p>Where will most of the project work take place?</p>
+                <p class="govuk-body">Where will most of the project work take place?</p>
                 <!--/* edit */-->
                 <div class="form-group" th:classappend="${#fields.hasErrors('projectLocation')} ? 'form-group-error'">
                     <label class="form-label" for="projectLocation">

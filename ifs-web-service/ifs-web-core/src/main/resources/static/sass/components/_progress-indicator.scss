@@ -34,7 +34,7 @@
 
   .progress-totals {
     position: absolute;
-    color:govuk-colour("grey-1");
+    color:$govuk-secondary-text-colour;
     font-size:15px;
     display:block; // overwriting the aria-hidden="true" as we do want this for non-assisted technlogy users but not for screen readers
     bottom:-40px;

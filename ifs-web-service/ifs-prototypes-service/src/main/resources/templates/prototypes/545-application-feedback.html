@@ -28,7 +28,7 @@
 
 			<div class="success-alert">
 				<h2 class="govuk-heading-s no-margin">Congratulations, your application has been successful.</h2>
-				<p>Average scores and written feedback from each assessor can be found below.</p>
+				<p class="govuk-body">Average scores and written feedback from each assessor can be found below.</p>
 		    </div>
 
 		</div>
@@ -37,7 +37,7 @@
 
 			<div class="warning-alert">
 		        <h2 class="govuk-heading-s no-margin">Your application has not been successful in this competition</h2>
-                <p>Average scores and written feedback from each assessor can be found below.</p>
+                <p class="govuk-body">Average scores and written feedback from each assessor can be found below.</p>
 		    </div>
 
 		</div>
@@ -366,7 +366,7 @@
 			&nbsp;
 		</div>
 		<div class="column-third">
-			<p>
+			<p class="govuk-body">
 				Average overall: <strong th:text="${score}+'0%'" class="heading-">SCORE</strong>
 			</p>
 		</div>
@@ -400,24 +400,24 @@
 	<ul class="boxed-list" th:with="recommend=${param.unsuccessful} ? No : Yes">
 		<li>
 			<h4 class="govuk-heading-s" th:text="${(param.internal != null ? 'Ray Browne':'Assessor 1')}">Assessor 1</h4>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+			<p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 
 			<div th:unless="${param.internal == null}" th:remove="tag">
-				<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
+				<p class="govuk-body">Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
 			</div>
 
 		</li>
 		<li>
 			<h4 class="govuk-heading-s" th:text="${(param.internal != null ? 'Julio Fario':'Assessor 4')}">Assessor 2</h4>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+			<p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 		</li>
 		<li>
 			<h4 class="govuk-heading-s" th:text="${(param.internal != null ? 'Colin Seabrook':'Assessor 5')}">Assessor 4</h4>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+			<p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 
 			<div th:unless="${param.internal == null}" th:remove="tag">
 				<h5 class="govuk-heading-s">Other comments</h5>
-				<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
+				<p class="govuk-body">Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
 			</div>
 		</li>
 	</ul>

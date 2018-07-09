@@ -84,7 +84,7 @@
 
             <!--/* Application Form for a Section. */-->
             <th:block th:if="${model.isSection()}">
-                <p class="subtitle" th:if="${model.section.description}" th:text="${model.section.description}"/>
+                <p class="hint govuk-body-l" th:if="${model.section.description}" th:text="${model.section.description}"/>
                 <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (${model})"/>
             </th:block>
 

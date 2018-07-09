@@ -17,23 +17,23 @@
 
         <th:block th:if="${model.submitted and !model.approved}">
             <div class="success-alert extra-margin-bottom">
-                <p><strong>All project spend profiles have been sent to Innovate UK.</strong></p>
+                <p class="govuk-body"><strong>All project spend profiles have been sent to Innovate UK.</strong></p>
             </div>
         </th:block>
 
         <th:block th:if="${model.submitted and model.approved}">
             <div class="success-alert extra-margin-bottom">
-                <p><strong>All project spend profiles have been accepted by Innovate UK.</strong></p>
+                <p class="govuk-body"><strong>All project spend profiles have been accepted by Innovate UK.</strong></p>
             </div>
         </th:block>
 
-        <p>This overview shows the spend profile status of each organisation in your project.</p>
+        <p class="govuk-body">This overview shows the spend profile status of each organisation in your project.</p>
 
         <th:block th:if="${model.submitted}">
             <h2 class="govuk-heading-m">Spend profile</h2>
-            <p th:if="${!model.approved}" >All spend profiles have been sent to Innovate UK and the Monitoring Officer assigned to this application.
+            <p class="govuk-body" th:if="${!model.approved}" >All spend profiles have been sent to Innovate UK and the Monitoring Officer assigned to this application.
                You may view these profiles.</p>
-            <p th:if="${model.approved}" >All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
+            <p class="govuk-body" th:if="${model.approved}">All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
                 You may view these profiles.</p>
         </th:block>
 
@@ -62,7 +62,7 @@
         </ul>
 
         <th:block th:if="${model.markAsComplete and !model.submitted}">
-            <p class="extra-margin">Please review each partner's spend profile once they are marked as complete.</p>
+            <p class="govuk-body extra-margin">Please review each partner's spend profile once they are marked as complete.</p>
             <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and send total project spend profile</a>
         </th:block>
 

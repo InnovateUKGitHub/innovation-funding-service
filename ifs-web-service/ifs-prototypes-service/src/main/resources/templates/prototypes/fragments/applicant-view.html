@@ -35,7 +35,7 @@
 <!-- ========Applicant view - sign in makeover====== -->
 <div th:fragment="prototype-signinnew(url)">
     <h1 class="govuk-heading-l">Sign into Innovation Funding Service</h1>
-    <p>Enter the email address and password you used to create your Innovation Funding Service account.</p>
+    <p class="govuk-body">Enter the email address and password you used to create your Innovation Funding Service account.</p>
     <div class="grid-row">
         <section class="column-half">
             <form action="#" method="GET">
@@ -64,9 +64,9 @@
 <!-- ========Applicant view - sign in - create account content====== -->
 <div th:fragment="prototype-signin-create-acc(url)">
     <h1 class="govuk-heading-l">New to this service?</h1>
-    <p>If you haven’t used this service before you must <a href="/prototypes/643-create-acc-business-lead">create an account</a>, even if you already have an existing account with Innovate UK.</p>
+    <p class="govuk-body">If you haven’t used this service before you must <a href="/prototypes/643-create-acc-business-lead">create an account</a>, even if you already have an existing account with Innovate UK.</p>
 
-    <p>When you create an account you can:</p>
+    <p class="govuk-body">When you create an account you can:</p>
     <ul class="govuk-list govuk-list--bullet">
         <li>apply for a competition</li>
         <li>track your competition applications</li>
@@ -220,26 +220,26 @@
                 <h3 class="govuk-heading-s">Project title</h3>
 
                 <th:block th:if="${status == 'closed' and user == 'admin'}">
-                  <p>The potential for glucose based contact lens monitoring in the management of type two diabetes</p>
+                  <p class="govuk-body">The potential for glucose based contact lens monitoring in the management of type two diabetes</p>
                 </th:block>
 
                 <th:block th:if="${status == 'open' and user == 'admin'}">
-                  <p>Machine learning in robots</p>
+                  <p class="govuk-body">Machine learning in robots</p>
                 </th:block>
 
                 <th:block th:unless="${status == 'closed' and user == 'admin'}">
-                  <p th:if="${param.status == null or param.status[0] == 'successful' or param.status[0] == 'unsuccessful'}">Machine learning in robots</p>
+                  <p class="govuk-body" th:if="${param.status == null or param.status[0] == 'successful' or param.status[0] == 'unsuccessful'}">Machine learning in robots</p>
 
-                  <p th:if="${param.status != null and param.status[0] == 'successfulFeedback' or param.status != null and param.status[0] == 'unsuccessfulFeedback'}">Machine learning in robots</p>
+                  <p class="govuk-body" th:if="${param.status != null and param.status[0] == 'successfulFeedback' or param.status != null and param.status[0] == 'unsuccessfulFeedback'}">Machine learning in robots</p>
 
-                  <p th:if="${param.status != null and param.status[0] == 'notSubmitted'}">Not submitted</p>
+                  <p class="govuk-body" th:if="${param.status != null and param.status[0] == 'notSubmitted'}">Not submitted</p>
                 </th:block>
 
                 <h3 class="govuk-heading-s">Application number</h3>
-                <p>3456</p>
+                <p class="govuk-body">3456</p>
 
                 <h3 class="govuk-heading-s">Lead organisation</h3>
-                <p>Aptrans Ltd</p>
+                <p class="govuk-body">Aptrans Ltd</p>
 
                 <h3 class="govuk-heading-s">Partners</h3>
                 <ul class="govuk-list govuk-list--bullet">
@@ -250,11 +250,11 @@
 
             <div class="column-half">
                 <h3 class="govuk-heading-s">Project timescales</h3>
-                <p>Project start date: <br />4 November 2016</p>
-                <p>Duration: <br />51 months</p>
+                <p class="govuk-body">Project start date: <br />4 November 2016</p>
+                <p class="govuk-body">Duration: <br />51 months</p>
 
                 <h3 class="govuk-heading-s extra-margin">Total project cost</h3>
-                <p>£203,567</p>
+                <p class="govuk-body">£203,567</p>
             </div>
         </div>
 
@@ -266,7 +266,7 @@
     <h2 class="govuk-heading-m">Finance summaries</h2>
 
     <div th:unless="${hideText != null}" th:remove="tag">
-        <p>This is the level of cost detail that the assessors will see during the assessment process</p>
+        <p class="govuk-body">This is the level of cost detail that the assessors will see during the assessment process</p>
     </div>
 
     <div class="form-group">
@@ -515,7 +515,7 @@
 <div th:fragment="prototype-eligibility-success">
     <div class="success-alert">
         <h2 class="govuk-heading-s no-margin">The participation levels of this project are within the required range.</h2>
-        <p>This application can be submitted with these project costs.</p>
+        <p class="govuk-body">This application can be submitted with these project costs.</p>
     </div>
 </div>
 
@@ -524,7 +524,7 @@
 <div th:fragment="prototype-eligibility-warning">
     <div class="warning-alert">
         <h2 class="govuk-heading-s no-margin">The participation levels of this project are not within the required range</h2>
-        <p>You will not be able to submit this application until the research participation is 30% or less.</p>
+        <p class="govuk-body">You will not be able to submit this application until the research participation is 30% or less.</p>
     </div>
 </div>
 
@@ -542,17 +542,17 @@
 <!-- =============================Appendix content question 5============================== -->
 <div th:fragment="appendix-question5" th:remove="tag" >
     <h3 class="govuk-heading-s no-margin">Project management appendix</h3>
-    <p>If you need to provide more information to support your answer, you can include an appendix, e.g. a project plan</p>
+    <p class="govuk-body">If you need to provide more information to support your answer, you can include an appendix, e.g. a project plan</p>
     <details>
         <summary><span class="summary">What should I include in the project management appendix?</span></summary>
         <div class="panel">
-          <p>
+          <p class="govuk-body">
             You should include only supporting information in the appendix. You shouldn’t use it to provide responses to the question.
           </p>
-          <p>
+          <p class="govuk-body">
             You can include a Gantt chart of your proposed project
           </p>
-          <p>The appendix must:</p>
+          <p class="govuk-body">The appendix must:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>be in a Portable Document Format (.pdf)</li>
                 <li>be legible at 100% magnification</li>
@@ -567,14 +567,14 @@
 <!-- =============================Appendix content question 6============================== -->
 <div th:fragment="appendix-question6" th:remove="tag" >
     <h3 class="govuk-heading-s no-margin">Innovate appendix</h3>
-    <p>If you need to provide more information to support your answer, you can include an appendix, e.g. a diagram of your innovation</p>
+    <p class="govuk-body">If you need to provide more information to support your answer, you can include an appendix, e.g. a diagram of your innovation</p>
     <details>
         <summary><span class="summary">What should I include in the innovation appendix?</span></summary>
         <div class="panel">
-          <p>
+          <p class="govuk-body">
             You should include only supporting information in the appendix. You shouldn’t use it to provide your responses to the question.
           </p>
-          <p>The appendix must:</p>
+          <p class="govuk-body">The appendix must:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>be in a Portable Document Format (.pdf)</li>
                 <li>be legible at 100% magnification</li>
@@ -590,15 +590,15 @@
 <!-- =============================Appendix content question 8============================== -->
 <div th:fragment="appendix-question8" th:remove="tag" >
     <h3 class="govuk-heading-s no-margin">Project team appendix</h3>
-    <p>If you need to provide more information to support your answer, you can include an appendix, e.g. details of subcontractors</p>
+    <p class="govuk-body">If you need to provide more information to support your answer, you can include an appendix, e.g. details of subcontractors</p>
     <details>
         <summary><span class="summary">What should I include in the innovation appendix?</span></summary>
         <div class="panel">
-          <p>
+          <p class="govuk-body">
             You should include only supporting information in the appendix. You shouldn’t use it to provide your responses to the question.
           </p>
-          <p>You can describe the expertise and track record of project partners and sub-contractors. Academic collaborators can include details of their research achievements.</p>
-          <p>The appendix must:</p>
+          <p class="govuk-body">You can describe the expertise and track record of project partners and sub-contractors. Academic collaborators can include details of their research achievements.</p>
+          <p class="govuk-body">The appendix must:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>be in a Portable Document Format (.pdf)</li>
                 <li>be legible at 100% magnification</li>
@@ -616,10 +616,10 @@
     <details>
         <summary><span class="summary">How do I create my Je-S output?</span></summary>
         <div class="panel">
-          <p>
+          <p class="govuk-body">
             You should include only supporting information in the appendix. You shouldn’t use it to provide your responses to the question.
           </p>
-          <p>Guidance for this section needs to be created</p>
+          <p class="govuk-body">Guidance for this section needs to be created</p>
         </div>
      </details>
 </th:block>
@@ -630,10 +630,10 @@
     <details>
         <summary><span class="summary">How do I create my Je-S output?</span></summary>
         <div class="panel">
-          <p>
+          <p class="govuk-body">
             You should include only supporting information in the appendix. You shouldn’t use it to provide your responses to the question.
           </p>
-          <p>Guidance for this section needs to be created</p>
+          <p class="govuk-body">Guidance for this section needs to be created</p>
         </div>
      </details>
 </div>
@@ -676,7 +676,7 @@
         </div>
 
         <th:block th:if="${param.error != null}">
-            <p>
+            <p class="govuk-body">
                 <ul class="govuk-list govuk-list--bullet">
                     <th:block th:if="${param.size != null}">
                         <li>
@@ -713,7 +713,7 @@
 
         <div class="upload-section">
             <h3 class="govuk-heading-s no-margin">Assessor feedback</h3>
-            <p>Upload the assessor feedback page</p>
+            <p class="govuk-body">Upload the assessor feedback page</p>
             <label for="file" class="button-secondary extra-margin">+ Upload</label>
         </div>
 
@@ -739,14 +739,14 @@
                 <div class="form-group">
 
                     <h3 class="govuk-heading-s">Project title</h3>
-                    <p>A novel solution to an old problem</p>
+                    <p class="govuk-body">A novel solution to an old problem</p>
 
                     <h3 class="govuk-heading-s">Estimated timescales</h3>
-                    <p>Project start date: 01/03/2016</p>
-                    <p>Duration: 51 months</p>
+                    <p class="govuk-body">Project start date: 01/03/2016</p>
+                    <p class="govuk-body">Duration: 51 months</p>
 
                     <h3 class="govuk-heading-s">Lead organisation</h3>
-                    <p>Empire Ltd</p>
+                    <p class="govuk-body">Empire Ltd</p>
 
                     <h3 class="govuk-heading-s">Partners</h3>
 
@@ -765,7 +765,7 @@
 
         <div class="question">
             <div class="form-group extra-margin">
-                <p>The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
+                <p class="govuk-body">The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
             </div>
         </div>
 
@@ -773,8 +773,8 @@
 
             <div class="question">
                 <div class="form-group extra-margin">
-                    <p>Wastage in our industry can be attributed in no small part to one issue. To date businesses have been reluctant to tackle that problem and instead worked around it. That has stifled progress.</p>
-                    <p>The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.</p>
+                    <p class="govuk-body">Wastage in our industry can be attributed in no small part to one issue. To date businesses have been reluctant to tackle that problem and instead worked around it. That has stifled progress.</p>
+                    <p class="govuk-body">The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.</p>
                 </div>
             </div>
 
@@ -784,7 +784,7 @@
             <div class="question">
                 <div class="form-group">
                     <h3 class="govuk-heading-s">How does your project align with the scope of this competition?</h3>
-                    <p>The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
+                    <p class="govuk-body">The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
                 </div>
             </div>
 
@@ -802,9 +802,9 @@
 
                 <h3 class="govuk-heading-s">What is the business opportunity that your project addresses?</h3>
 
-                <p>Within the Industry one issue has caused progress in the field to be stifled. Up until now any advancement has been made by working around this anomaly.</p>
+                <p class="govuk-body">Within the Industry one issue has caused progress in the field to be stifled. Up until now any advancement has been made by working around this anomaly.</p>
 
-                <p>We propose to tackle the situation head on and develop a tool that will circumvent the problem entirely allowing development to </p>
+                <p class="govuk-body">We propose to tackle the situation head on and develop a tool that will circumvent the problem entirely allowing development to </p>
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
@@ -817,11 +817,11 @@
                         </div>
                     </div>
 
-                    <p>Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
+                    <p class="govuk-body">Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
 
-                    <p>Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
+                    <p class="govuk-body">Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
 
-                    <p>Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
+                    <p class="govuk-body">Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
 
                 </th:block>
 
@@ -836,11 +836,11 @@
 
                 <h2 class="govuk-heading-s">What is the size of the potential market for your project?</h2>
 
-                <p> The issue affects the entire field, the market value of which is significant, and accounts for a percentage of its annual overhead. A tool to reduce that amount by a significant proportion would be taken up by the entire industry. </p>
+                <p class="govuk-body"> The issue affects the entire field, the market value of which is significant, and accounts for a percentage of its annual overhead. A tool to reduce that amount by a significant proportion would be taken up by the entire industry. </p>
 
-                <p>At this time no other solutions are available or near market giving us the leading edge on market share.</p>
+                <p class="govuk-body">At this time no other solutions are available or near market giving us the leading edge on market share.</p>
 
-                <p>Manufacture and development could remain in the United Kingdom with an international export market.</p>
+                <p class="govuk-body">Manufacture and development could remain in the United Kingdom with an international export market.</p>
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
@@ -853,11 +853,11 @@
                         </div>
                     </div>
 
-                    <p>Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
+                    <p class="govuk-body">Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
 
-                    <p>Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
+                    <p class="govuk-body">Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
 
-                    <p>Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
+                    <p class="govuk-body">Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
 
                 </th:block>
 
@@ -875,11 +875,11 @@
 
                 <h2 class="govuk-heading-s">How will you exploit and market your project?</h2>
 
-                <p>The issue affects the entire field, the market value of which is significant, and accounts for a percentage of its annual overhead. A tool to reduce that amount by a significant proportion would be taken up by the entire industry.</p>
+                <p class="govuk-body">The issue affects the entire field, the market value of which is significant, and accounts for a percentage of its annual overhead. A tool to reduce that amount by a significant proportion would be taken up by the entire industry.</p>
 
-                <p>At this time no other solutions are available or near market giving us the leading edge on market share.</p>
+                <p class="govuk-body">At this time no other solutions are available or near market giving us the leading edge on market share.</p>
 
-                <p>Manufacture and development could remain in the United Kingdom with an international export market.</p>
+                <p class="govuk-body">Manufacture and development could remain in the United Kingdom with an international export market.</p>
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
@@ -892,11 +892,11 @@
                         </div>
                     </div>
 
-                    <p>Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
+                    <p class="govuk-body">Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
 
-                    <p>Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
+                    <p class="govuk-body">Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
 
-                    <p>Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
+                    <p class="govuk-body">Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
 
                 </th:block>
 
@@ -912,11 +912,11 @@
 
                     <h3 class="govuk-heading-s">What economic, social and environmental benefits do you expect your project to deliver and when?</h3>
 
-                    <p> The tool will give the consortium the leading edge on the technology as currently no one else is close to considering developing a solution.</p>
+                    <p class="govuk-body"> The tool will give the consortium the leading edge on the technology as currently no one else is close to considering developing a solution.</p>
 
-                    <p>The Industry will be able to reduce wastage by a significant degree and pass those savings on to the consumer or reinvest into advancing the field.</p>
+                    <p class="govuk-body">The Industry will be able to reduce wastage by a significant degree and pass those savings on to the consumer or reinvest into advancing the field.</p>
 
-                    <p>Inside 2 years it is estimated that a very large sum of money can be recouped by using our solution</p>
+                    <p class="govuk-body">Inside 2 years it is estimated that a very large sum of money can be recouped by using our solution</p>
 
                     <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
@@ -929,11 +929,11 @@
                             </div>
                         </div>
 
-                        <p>Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
+                        <p class="govuk-body">Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
 
-                        <p>Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
+                        <p class="govuk-body">Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
 
-                        <p>Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
+                        <p class="govuk-body">Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
 
                     </th:block>
 
@@ -947,9 +947,9 @@
         <div class="question">
             <div class="form-group">
                 <h3 class="govuk-heading-s">What technical approach will you use and how will you manage your project?</h3>
-                <p>Our Academic partner has developed a technique to identify the precise cause of the issue and have been able to demonstrate it at a small scale. Taking this information they will scale up the experiment to a percentage of industrial scale to confirm.</p>
+                <p class="govuk-body">Our Academic partner has developed a technique to identify the precise cause of the issue and have been able to demonstrate it at a small scale. Taking this information they will scale up the experiment to a percentage of industrial scale to confirm.</p>
 
-                <p>We will take this data and engineer a solution to isolate the problem we will then collude with our fabrication partner to design and prototype a tool to correct the obstacle.</p>
+                <p class="govuk-body">We will take this data and engineer a solution to isolate the problem we will then collude with our fabrication partner to design and prototype a tool to correct the obstacle.</p>
 
                 <div class="form-group download">
                     <h3 class="govuk-heading-s no-margin">View project management appendix:</h3>
@@ -967,11 +967,11 @@
                         </div>
                     </div>
 
-                    <p>Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
+                    <p class="govuk-body">Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
 
-                    <p>Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
+                    <p class="govuk-body">Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
 
-                    <p>Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
+                    <p class="govuk-body">Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
 
                 </th:block>
 
@@ -986,7 +986,7 @@
             <div class="form-group">
                 <h3 class="govuk-heading-s">What is innovative about your project?
 </h3>
-                <p>The project is based on Manchester?s novel IP that, for the first time, allows SLM to be conducted without any need for anchors/supports. A search of the literature has established that the advances proposed in this project on which RAMP are based are not available via any commercially available process. In addition, the development and supply of tailored materials by Empire and a dedicated high temperature rig by Ludlow will involve further, critical degrees of innovation that will help to build a portfolio of IP to enhance commercial exploitation. NB. RAMP does not simply reduce stresses by working at higher temperatures; it involves a novel step based on manufacturing engineering and material science that completely eliminates stresses.</p>
+                <p class="govuk-body">The project is based on Manchester?s novel IP that, for the first time, allows SLM to be conducted without any need for anchors/supports. A search of the literature has established that the advances proposed in this project on which RAMP are based are not available via any commercially available process. In addition, the development and supply of tailored materials by Empire and a dedicated high temperature rig by Ludlow will involve further, critical degrees of innovation that will help to build a portfolio of IP to enhance commercial exploitation. NB. RAMP does not simply reduce stresses by working at higher temperatures; it involves a novel step based on manufacturing engineering and material science that completely eliminates stresses.</p>
 
                 <div class="form-group download">
                     <h3 class="govuk-heading-s no-margin">View innovation appendix:</h3>
@@ -1004,11 +1004,11 @@
                         </div>
                     </div>
 
-                    <p>Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
+                    <p class="govuk-body">Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
 
-                    <p>Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
+                    <p class="govuk-body">Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
 
-                    <p>Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
+                    <p class="govuk-body">Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
 
                 </th:block>
 
@@ -1024,7 +1024,7 @@
 
                 <h3 class="govuk-heading-s">What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h3>
 
-                <p>Three principal risks exist at this stage:</p>
+                <p class="govuk-body">Three principal risks exist at this stage:</p>
 
                 <ol class="list-number">
                     <li>The academic scale up fails to replicate the smaller results either entirely or not to a satisfactory level. In this event the academic partner would begin a controlled scale back to identify if the method needs to be altered during scale up to replicate results.  In the event that the issue can only be identified in the small scale we would build that into our planning for the isolation phase</li>
@@ -1045,11 +1045,11 @@
                         </div>
                     </div>
 
-                    <p>Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
+                    <p class="govuk-body">Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
 
-                    <p>Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
+                    <p class="govuk-body">Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
 
-                    <p>Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
+                    <p class="govuk-body">Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
 
                 </th:block>
 
@@ -1064,11 +1064,11 @@
 
                 <h3 class="govuk-heading-s">Does your project team have the skills, experience and facilities to deliver this project?</h3>
 
-                <p>The team consists of: Us - We have been supplying engineering solutions to the industry for a number of years and have been principal deliverers for various advancements within the field. We are a suitably sized team capable of developing flexible solutions to a wide variety of clients internationally.</p>
+                <p class="govuk-body">The team consists of: Us - We have been supplying engineering solutions to the industry for a number of years and have been principal deliverers for various advancements within the field. We are a suitably sized team capable of developing flexible solutions to a wide variety of clients internationally.</p>
 
-                <p>Academic ? the principal investigator and his team have been studying the issue for a number of years and have qualifications across the spectrum that apply to the field. Together they have already identified several efficiencies that can be made within the industry.</p>
+                <p class="govuk-body">Academic ? the principal investigator and his team have been studying the issue for a number of years and have qualifications across the spectrum that apply to the field. Together they have already identified several efficiencies that can be made within the industry.</p>
 
-                <p>The Fabricators ? Are a leading team within complex engineering fabrication. They have work on multiple high budget engineering solutions and consist of a team of people with many years? experience in a range of industries</p>
+                <p class="govuk-body">The Fabricators ? Are a leading team within complex engineering fabrication. They have work on multiple high budget engineering solutions and consist of a team of people with many years? experience in a range of industries</p>
 
                 <div class="form-group download">
                     <h3 class="govuk-heading-s no-margin">View project team appendix:</h3>
@@ -1086,11 +1086,11 @@
                         </div>
                     </div>
 
-                    <p>Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
+                    <p class="govuk-body">Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
 
-                    <p>Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
+                    <p class="govuk-body">Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
 
-                    <p>Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
+                    <p class="govuk-body">Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
 
                 </th:block>
 
@@ -1104,10 +1104,10 @@
         <div class="question">
             <div class="form-group">
                 <h3 class="govuk-heading-s">What will your project cost?</h3>
-                <p>The amount of money needed to complete this project is large.</p>
-                <p>The academic phase will require the acquisition of several pieces of lab equipment and the employ of additional graduates to ensure the experiments run smoothly.</p>
-                <p>The Materials and use of the fabricators equipment will account for approximately some of the budget.</p>
-                <p>The time and expertise required across all 3 partners to complete each phase will amount to the lion share of the cost.</p>
+                <p class="govuk-body">The amount of money needed to complete this project is large.</p>
+                <p class="govuk-body">The academic phase will require the acquisition of several pieces of lab equipment and the employ of additional graduates to ensure the experiments run smoothly.</p>
+                <p class="govuk-body">The Materials and use of the fabricators equipment will account for approximately some of the budget.</p>
+                <p class="govuk-body">The time and expertise required across all 3 partners to complete each phase will amount to the lion share of the cost.</p>
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
@@ -1120,11 +1120,11 @@
                         </div>
                     </div>
 
-                    <p>Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
+                    <p class="govuk-body">Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
 
-                    <p>Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
+                    <p class="govuk-body">Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
 
-                    <p>Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
+                    <p class="govuk-body">Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
 
                 </th:block>
 
@@ -1137,8 +1137,8 @@
         <div class="question">
             <div class="form-group">
                 <h3 class="govuk-heading-s">How does financial support from Innovate UK and its funding partners add value?</h3>
-                <p>Although steps are under way to get this project off the ground, investment by Innovate UK will stimulate Industry leads to supply additional resource funding and use of their facilities as required to advance the progress of this project.</p>
-                <p>UK Investment will ensure that we are able to retain the onward manufacture internally instead of needing to create international deals taking work and profit out of the country.</p>
+                <p class="govuk-body">Although steps are under way to get this project off the ground, investment by Innovate UK will stimulate Industry leads to supply additional resource funding and use of their facilities as required to advance the progress of this project.</p>
+                <p class="govuk-body">UK Investment will ensure that we are able to retain the onward manufacture internally instead of needing to create international deals taking work and profit out of the country.</p>
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
@@ -1151,11 +1151,11 @@
                         </div>
                     </div>
 
-                    <p>Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
+                    <p class="govuk-body">Morbi in mollis ex. Nullam sed pulvinar nisl, vitae dignissim nibh. Sed feugiat eros sit amet aliquam placerat. Sed lectus nibh, porttitor vel rutrum in, laoreet vitae est. </p>
 
-                    <p>Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
+                    <p class="govuk-body">Curabitur ac purus convallis, condimentum leo a, tincidunt orci. Aliquam erat volutpat. In eget ultrices diam, non bibendum dolor. Aenean at mauris eget orci pretium congue. </p>
 
-                    <p>Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
+                    <p class="govuk-body">Mauris dignissim sapien in cursus gravida. Aenean auctor commodo nisl in tempor. Ut vulputate, sem vitae blandit dapibus, eros sapien vulputate lectus, eu aliquam enim leo non dolor.</p>
 
                 </th:block>
 
@@ -1188,14 +1188,14 @@
         <h2 class="govuk-heading-m">Feedback summary</h2>
 
         <h3 class="govuk-heading-s">Do you believe that this application is suitable for funding?</h3>
-        <p>Yes</p>
+        <p class="govuk-body">Yes</p>
 
         <h3 class="govuk-heading-s">Your feedback</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda corporis hic illo modi ullam. Autem ipsam labore magnam pariatur qui quisquam quos voluptatum.</p>
-        <p>Aliquam explicabo illo libero reiciendis repellendus tempora.</p>
+        <p class="govuk-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda corporis hic illo modi ullam. Autem ipsam labore magnam pariatur qui quisquam quos voluptatum.</p>
+        <p class="govuk-body">Aliquam explicabo illo libero reiciendis repellendus tempora.</p>
 
         <h3 class="govuk-heading-s">Other comments</h3>
-        <p>Quisque est sem, consectetur et urna pulvinar, tincidunt vestibulum justo. Fusce vel mauris at ligula lacinia fringilla. Nam in faucibus dolor, quis hendrerit leo. Sed a turpis tortor.</p>
+        <p class="govuk-body">Quisque est sem, consectetur et urna pulvinar, tincidunt vestibulum justo. Fusce vel mauris at ligula lacinia fringilla. Nam in faucibus dolor, quis hendrerit leo. Sed a turpis tortor.</p>
     </th:block>
 
 </div>
@@ -1231,7 +1231,7 @@
                         </a>
                     </h3>
                     <p class="meta crumbtrail"> <strong>04214477</strong> - Incorporated on 10 May 2001 </p>
-                    <p>King William House, 13 Queen Square, Bristol, BS1 4NT</p>
+                    <p class="govuk-body">King William House, 13 Queen Square, Bristol, BS1 4NT</p>
                 </li>
 
                 <li class="type-company">
@@ -1240,7 +1240,7 @@
                         </a>
                     </h3>
                     <p class="meta crumbtrail"> <strong>03130339</strong> - Dissolved on  1 April 2014 </p>
-                    <p>23, Star Hill, Rochester, Kent, ME1 1XF</p>
+                    <p class="govuk-body">23, Star Hill, Rochester, Kent, ME1 1XF</p>
                 </li>
 
                 <li class="type-company">
@@ -1249,7 +1249,7 @@
                         </a>
                     </h3>
                     <p class="meta crumbtrail"> <strong>06285018</strong> - Dissolved on 13 October 2009 </p>
-                    <p>1 Colman Way, Redhill, RH1 2BB</p>
+                    <p class="govuk-body">1 Colman Way, Redhill, RH1 2BB</p>
                 </li>
 
             </ul>
@@ -1343,7 +1343,7 @@
 
     <h2 class="govuk-heading-m">Project costs for financial year</h2>
 
-    <p>Your submitted spend profile will be used as the base for your project spend over the following financial years.
+    <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.
 </p>
 
     <table class="extra-margin-bottom" style="width: 50%;">

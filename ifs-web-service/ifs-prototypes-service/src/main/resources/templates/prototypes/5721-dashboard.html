@@ -38,7 +38,7 @@
                                         <dt>Competition Executive</dt>
                                         <dd>Paul Ray</dd>
                                       </dl>
-                                      <p th:if="${(param.status == null or param.status[0] == 'Open' or param.status[0] == 'ready')}">
+                                      <p class="govuk-body" th:if="${(param.status == null or param.status[0] == 'Open' or param.status[0] == 'ready')}">
                                         <a href="/prototypes/2469-comp-setup?compStatus=ready">View and update competition setup</a>
                                       </p>
                                     </div>
@@ -206,19 +206,19 @@
                                     <ul class="comp-timeline-status">
                                       <li class="done">
                                         <h3 class="govuk-heading-s">Open date</h3>
-                                        <p>10 October 2016</p>
+                                        <p class="govuk-body">10 October 2016</p>
                                       </li>
                                       <li class="done">
                                         <h3 class="govuk-heading-s">Briefing event</h3>
-                                        <p>12 October 2016</p>
+                                        <p class="govuk-body">12 October 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
                                         <h3 class="govuk-heading-s">Submission date</h3>
-                                        <p>30 October 2016</p>
+                                        <p class="govuk-body">30 October 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
                                         <h3 class="govuk-heading-s">Allocate assessors</h3>
-                                        <p>31 October 2016</p>
+                                        <p class="govuk-body">31 October 2016</p>
                                         <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
                                           <div class="aligncentre">
                                             <a href="#" class="button">Notify assessors</a>
@@ -227,15 +227,15 @@
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
                                         <h3 class="govuk-heading-s">Assessor briefing</h3>
-                                        <p>05 November 2016</p>
+                                        <p class="govuk-body">05 November 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
                                         <h3 class="govuk-heading-s">Assessor accepts</h3>
-                                        <p>12 November 2016</p>
+                                        <p class="govuk-body">12 November 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
                                         <h3 class="govuk-heading-s">Assessor deadline</h3>
-                                        <p>17 November 2016</p>
+                                        <p class="govuk-body">17 November 2016</p>
                                         <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
                                           <div class="aligncentre">
                                             <a href="#" class="button">Close assessment</a>
@@ -244,19 +244,19 @@
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
                                         <h3 class="govuk-heading-s">Line draw</h3>
-                                        <p>20 November 2016</p>
+                                        <p class="govuk-body">20 November 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
                                         <h3 class="govuk-heading-s">Assessment panel</h3>
-                                        <p>23 November 2016</p>
+                                        <p class="govuk-body">23 November 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
                                         <h3 class="govuk-heading-s">Funders panel</h3>
-                                        <p>03 December 2016</p>
+                                        <p class="govuk-body">03 December 2016</p>
                                       </li>
                                       <li th:class="${(param.status != null and param.status[0] == 'Inform' ? 'done' : 'not-done')}">
                                         <h3 class="govuk-heading-s">Funding decision notifications</h3>
-                                        <p>05 December 2016</p>
+                                        <p class="govuk-body">05 December 2016</p>
                                         <th:block th:if="${param.status != null and param.status[0] == 'panel'}" th:unless="${param.action != null and param.action[0] == 'notify'}">
                                           <div class="aligncentre">
                                             <a href="#" class="button disabled">Manage funding notifications</a>
@@ -270,7 +270,7 @@
                                       </li>
                                       <li th:class="${(param.action != null and param.action[0] == 'feedback-sent' ? 'done' : 'not-done')}">
                                         <h3 class="govuk-heading-s">Release feedback</h3>
-                                        <p>10 December 2016</p>
+                                        <p class="govuk-body">10 December 2016</p>
                                         <th:block th:if="${param.status != null and param.status[0] == 'Inform'}" th:unless="${param.action != null and param.action[0] == 'feedback-sent'}">
                                           <div class="aligncentre">
                                             <a href="/prototypes/1561-inform-release-feedback?comp=Inform" class="button">Release feedback</a>
@@ -286,19 +286,19 @@
                                     <div class="grid-row">
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Submission date</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Briefing event</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Allocate assessors</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Assessor dashboard</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                     </div>
                                 </th:block>
@@ -306,15 +306,15 @@
                                     <div class="grid-row">
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Allocate assesors</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Assessor accepts</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Assessor deadline</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                     </div>
                                 </th:block>
@@ -322,19 +322,19 @@
                                     <div class="grid-row">
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Assessor accepts</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Assessor deadline</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Line draw</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Assessment panel</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                     </div>
                                 </th:block>
@@ -342,19 +342,19 @@
                                     <div class="grid-row">
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Line draw</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Assessment panel</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Panel date</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Funders panel</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                     </div>
                                 </th:block>
@@ -362,15 +362,15 @@
                                     <div class="grid-row">
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Funders panel</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Notifications</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Release feedback</h2>
-                                            <p>18 October 2016</p>
+                                            <p class="govuk-body">18 October 2016</p>
                                         </div>
                                     </div>
                                 </th:block>
@@ -399,7 +399,7 @@
                                             <a href="#" class="button button-large width-full aligncentre">Update assessors</a>
                                         </div>
                                         <div class="column-half">
-                                            <p><span class="govuk-heading-l">5</span> changes since last update</p>
+                                            <p class="govuk-body"><span class="govuk-heading-l">5</span> changes since last update</p>
                                         </div>
                                     </div>
                                 </th:block>

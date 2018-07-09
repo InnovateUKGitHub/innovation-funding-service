@@ -16,7 +16,7 @@
         </dl>
     </th:block>
     <th:block th:unless="${model.readOnly}">
-        <p>This information is used for search results and the opening section of the competition page.</p>
+        <p class="govuk-body">This information is used for search results and the opening section of the competition page.</p>
         <div class="form-group" th:classappend="${#fields.hasErrors('shortDescription')} ? 'form-group-error'">
             <label for="shortDescription">
                 <span class="form-label-bold">Short description</span>
@@ -122,7 +122,7 @@
           </fieldset>
         </div>
         <div id="invite-only-guidance" class="panel">
-            <p>
+            <p class="govuk-body">
                 Selecting invite only excludes the competition from the competition listing page available to the public.
                 A URL to the competition overview page will be displayed on the public content page once the competition is published.
             </p>
@@ -146,7 +146,7 @@
                 <h2 class="govuk-heading-m no-margin">Funding type</h2>
             </div>
             <div class="column-two-thirds">
-                <p th:text="${form.fundingType}"></p>
+                <p class="govuk-body" th:text="${form.fundingType}"></p>
             </div>
         </div>
         <div class="grid-row extra-margin-bottom">
@@ -154,13 +154,13 @@
                 <h2 class="govuk-heading-m no-margin">Project size</h2>
             </div>
             <div class="column-two-thirds">
-                <p th:text="${form.projectSize}"></p>
+                <p class="govuk-body" th:text="${form.projectSize}"></p>
             </div>
         </div>
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
-        <p>Text entered into this section will appear in the summary tab.</p>
+        <p class="govuk-body">Text entered into this section will appear in the summary tab.</p>
         <div>
             <div class="contentGroup">
                 <div class="form-group" th:classappend="${#fields.hasErrors('description')} ? 'form-group-error'">
@@ -233,7 +233,7 @@
         <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
-        <p>Text entered into this section will appear within the eligibility tab.</p>
+        <p class="govuk-body">Text entered into this section will appear within the eligibility tab.</p>
         <div th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </th:block>
@@ -253,7 +253,7 @@
         </th:block>
     </th:block>
     <th:block th:unless="${model.readOnly}">
-        <p>Text entered into this section will appear within the dates tab.</p>
+        <p class="govuk-body">Text entered into this section will appear within the dates tab.</p>
         <h2 class="govuk-heading-s extra-margin-bottom">Generated automatically from the competition milestones.</h2>
         <th:block th:each="event : ${model.sortedEvents}">
             <div class="grid-row extra-margin-bottom">
@@ -364,7 +364,7 @@
         <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
-        <p>Text entered into this section will appear within the scope tab.</p>
+        <p class="govuk-body">Text entered into this section will appear within the scope tab.</p>
         <div th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </th:block>
@@ -375,7 +375,7 @@
         <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
-        <p>Text entered into this section will appear within the supporting information tab.</p>
+        <p class="govuk-body">Text entered into this section will appear within the supporting information tab.</p>
         <div th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </th:block>
@@ -386,7 +386,7 @@
         <th:block th:insert="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
-        <p>Text entered into this section will appear within the how to apply tab.</p>
+        <p class="govuk-body">Text entered into this section will appear within the how to apply tab.</p>
         <div th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </th:block>
@@ -458,7 +458,7 @@
             <div class="column-two-thirds">
                 <div class="wysiwyg-styles" ifs:utext="${contentGroup.content}"></div>
                 <th:block th:if="${model.hasAttachment(contentGroup.id)}">
-                    <p><a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
+                    <p class="govuk-body"><a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
                           th:text="${model.fileName(contentGroup.id)}">Filename.pdf</a></p>
                 </th:block>
             </div>

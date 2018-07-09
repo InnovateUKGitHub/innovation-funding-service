@@ -215,27 +215,6 @@ hr {
   }
 }
 
-.subtitle {
-  @include media-down(tablet){
-    font-size:20px;
-  }
-
-  @include media-down(mobile){
-    font-size:16px;
-  }
-
-  color: govuk-colour("grey-1");
-  font-size: 24px;
-  font-weight: 400;
-  line-height: 1.25;
-}
-
-p {
-  &.subtitle {
-    margin: 0;
-  }
-}
-
 .alignright {
   text-align:right;
 }

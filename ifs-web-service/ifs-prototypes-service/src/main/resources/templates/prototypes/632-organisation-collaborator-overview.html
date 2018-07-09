@@ -24,7 +24,7 @@
           Application team
         </h1>
 
-        <p>View and manage your participants in the application. If an individual is ‘pending’ they have not yet joined the application.</p>
+        <p class="govuk-body">View and manage your participants in the application. If an individual is ‘pending’ they have not yet joined the application.</p>
 
         <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
           <div class="message-alert">
@@ -37,7 +37,7 @@
           </div>
         </th:block>
 
-        <p th:unless="${param.status != null and param.status[0] == 'firstLoad'}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
+        <p class="govuk-body" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
 
         <div class="table-display-stacked">
 
@@ -66,7 +66,7 @@
           </table>
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'empire'}">
-            <p>
+            <p class="govuk-body">
               <a th:href="${'/prototypes/7661-edit-org?company=empire' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status='+ param.status[0] : '')}">Update Empire Ltd</a>
             </p>
           </th:block>
@@ -100,7 +100,7 @@
           </table>
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'ludlow'}">
-            <p>
+            <p class="govuk-body">
               <a th:href="${'/prototypes/7661-edit-org?company=ludlow' + (param.company != null ? '&#38;user=nonLead' : '')}">Update Ludlow</a>
             </p>
           </th:block>
@@ -129,7 +129,7 @@
           </table>
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'eggs'}">
-            <p>
+            <p class="govuk-body">
               <a th:href="${'/prototypes/7661-edit-org?company=eggs' + (param.company != null ? '&#38;user=nonLead' : '')}">Update EGGS</a>
             </p>
           </th:block>
@@ -138,13 +138,13 @@
 
         <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'newOrg'}">
 
-          <p class="extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
+          <p class="govuk-body extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
 
-          <p><a th:href="${'/prototypes/7661-edit-org?company=newOrg' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status=firstLoad' : '')}">Add organisation</a></p>
+          <p class="govuk-body"><a th:href="${'/prototypes/7661-edit-org?company=newOrg' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status=firstLoad' : '')}">Add organisation</a></p>
 
         </th:block>
 
-        <p class="extra-margin">
+        <p class="govuk-body extra-margin">
           <a href="/prototypes/635-application-overview" class="button-secondary" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">Return to application overview</a>
 
           <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
@@ -157,8 +157,8 @@
         <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true" style="margin-top: -153px;">
             <button class="js-close close" type="button" aria-label="Close Popup">X</button>
             <h2 class="govuk-heading-m no-margin">Removing collaborator</h2>
-            <p>Are you sure you wish to remove this collaborator from this application.</p>
-            <p>This step cannot be undone.</p>
+            <p class="govuk-body">Are you sure you wish to remove this collaborator from this application.</p>
+            <p class="govuk-body">This step cannot be undone.</p>
             <hr />
             <div class="grid-row extra-margin">
                 <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
@@ -176,8 +176,8 @@
         <div class="modal-submit-remove-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
             <button class="js-close close" type="button" aria-label="Close Popup">X</button>
             <h2 class="govuk-heading-m no-margin">Remove organisation and collaborator</h2>
-            <p>Are you sure you wish to remove this organisation from this application?</p>
-            <p>This will remove all collaborators and delete the organisations financial details.</p>
+            <p class="govuk-body">Are you sure you wish to remove this organisation from this application?</p>
+            <p class="govuk-body">This will remove all collaborators and delete the organisations financial details.</p>
             <hr />
             <div class="grid-row extra-margin">
                 <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">

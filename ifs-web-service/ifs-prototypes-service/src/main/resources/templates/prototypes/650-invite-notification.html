@@ -18,19 +18,19 @@
 
 	<div class="extra-margin" style="padding-top: 30px">
 
-		<p>From: <a href="#">john.smith@worth.sytems</a><br />
+		<p class="govuk-body">From: <a href="#">john.smith@worth.sytems</a><br />
 			To: Me </p>
 
 		<h2 class="govuk-heading-m"><strong>Invite to collaborate</strong></h2>
 
-		<p>You have been invited to join a collaborative application for the competition 'Technology Inspired'.</p>
-		<p>Lead organisation: <strong>Worth Systems</strong><br />
+		<p class="govuk-body">You have been invited to join a collaborative application for the competition 'Technology Inspired'.</p>
+		<p class="govuk-body">Lead organisation: <strong>Worth Systems</strong><br />
 		Lead applicant: <strong>John Smith</strong></p>
 
-		<p>The lead applicant has invited you to join this application on behalf of the following organisation:
+		<p class="govuk-body">The lead applicant has invited you to join this application on behalf of the following organisation:
 		Nomensa</p>
 
-		<p>If this is not the correct organisation <a href="#">email the application lead</a></p>
+		<p class="govuk-body">If this is not the correct organisation <a href="#">email the application lead</a></p>
 
 		<div th:if="${param.org == null}" th:remove="tag">
 			 	<a href="/prototypes/642-signup-create-acc" class="button">Accept invitation</a>

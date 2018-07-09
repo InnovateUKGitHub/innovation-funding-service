@@ -37,7 +37,7 @@
                 <span class="summary" th:text="${field.guidanceTitle}" />
             </summary>
             <div class="panel wysiwyg-styles">
-                <p th:if="${field.guidanceAnswer}" th:text="${field.guidanceAnswer}" />
+                <p class="govuk-body" th:if="${field.guidanceAnswer}" th:text="${field.guidanceAnswer}" />
                 <table th:unless="${#lists.isEmpty(field.guidanceRows)}">
                     <tr th:each="guidance : ${field.guidanceRows}">
                         <th class="cell-nowrap" scope="row" th:text="${guidance.subject}" />

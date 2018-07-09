@@ -15,7 +15,7 @@
             <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
                 <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
                     <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There was a problem saving your comment.</h2>
-                    <p>Please review:</p>
+                    <p class="govuk-body">Please review:</p>
                     <ul class="error-summary-list">
                         <th:block th:each="err : ${nonFormErrors}">
                             <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
@@ -25,7 +25,7 @@
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
                 <h2 class="govuk-heading-m">Review notes</h2>
-                <p>
+                <p class="govuk-body">
                     Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
                 </p>
                 <div class="grid-row extra-margin">
