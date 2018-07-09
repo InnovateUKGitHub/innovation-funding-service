@@ -286,7 +286,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which finance totals are being retrieved")
                         ),
-                        PayloadDocumentation.responseFields(ProjectFinanceResponseFields.projectFinanceFields)
+                        PayloadDocumentation.relaxedResponseFields(ProjectFinanceResponseFields.projectFinanceFields)
                 ));
     }
 }

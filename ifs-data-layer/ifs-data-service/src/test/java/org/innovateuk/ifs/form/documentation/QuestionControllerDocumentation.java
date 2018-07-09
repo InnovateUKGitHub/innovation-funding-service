@@ -65,7 +65,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of questions belonging to the competition")
-                        )
+                        ).andWithPrefix("[].", questionFields)
                 ));
     }
 
@@ -174,7 +174,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("An array of the questions which are visible for the specified assessment")
-                        )
+                        ).andWithPrefix("[].", questionFields)
                 ));
     }
 

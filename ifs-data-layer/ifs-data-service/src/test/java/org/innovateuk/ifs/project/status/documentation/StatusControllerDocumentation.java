@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.status.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.ProjectPartnerStatusResourceDocs;
+import org.innovateuk.ifs.documentation.ProjectStatusDocs;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.status.controller.StatusController;
@@ -71,6 +73,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                                 parameterWithName("applicationSearchString").description("The filter to search by application number.")
                         ),
                         responseFields(competitionProjectsStatusResourceFields)
+                        .andWithPrefix("projectStatusResources[].", ProjectStatusDocs.projectStatusResourceFields)
                 ));
     }
 
@@ -85,7 +88,8 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
                         ),
-                        responseFields(projectTeamStatusResourceFields)));
+                        responseFields(projectTeamStatusResourceFields)
+                .andWithPrefix("partnerStatuses[].", ProjectPartnerStatusResourceDocs.projectPartnerStatusResourceFields)));
     }
 
     @Test
@@ -105,7 +109,9 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                                         "will be filtered by, such that the non-lead partner organisations will only include organisations that " +
                                         "this user is a partner in")
                         ),
-                        responseFields(projectTeamStatusResourceFields)));
+                        responseFields(projectTeamStatusResourceFields)
+                                .andWithPrefix("partnerStatuses[].", ProjectPartnerStatusResourceDocs.projectPartnerStatusResourceFields)
+                ));
     }
 
     @Test

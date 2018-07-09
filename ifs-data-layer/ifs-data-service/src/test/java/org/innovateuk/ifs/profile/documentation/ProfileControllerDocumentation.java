@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.profile.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.AddressDocs;
+import org.innovateuk.ifs.documentation.AgreementDocs;
+import org.innovateuk.ifs.documentation.EthnicityResourceDocs;
+import org.innovateuk.ifs.documentation.InnovationAreaResourceDocs;
 import org.innovateuk.ifs.profile.controller.ProfileController;
 import org.innovateuk.ifs.profile.transactional.ProfileService;
-import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
-import org.innovateuk.ifs.user.resource.ProfileSkillsEditResource;
-import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
-import org.innovateuk.ifs.user.resource.UserProfileResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -51,6 +52,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("id").description("Identifier of the user associated with the profile agreement being requested")
                         ),
                         responseFields(profileAgreementResourceFields)
+                        .andWithPrefix("agreement.", AgreementDocs.agreementResourceFields)
                 ));
     }
 
@@ -83,6 +85,7 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("id").description("Identifier of the user associated with the profile skills being requested")
                         ),
                         responseFields(profileSkillsResourceFields)
+                        .andWithPrefix("innovationAreas[].", InnovationAreaResourceDocs.innovationAreaResourceFields)
                 ));
     }
 
@@ -119,6 +122,8 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("id").description("Identifier of the user associated with the profile being requested")
                         ),
                         responseFields(userProfileResourceFields)
+                                .andWithPrefix("ethnicity.", EthnicityResourceDocs.ethnicityResourceFields)
+                                .andWithPrefix("address.", AddressDocs.addressResourceFields)
                 ));
     }
 
@@ -138,6 +143,8 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("id").description("Identifier of the user to update the profile for")
                         ),
                         requestFields(userProfileResourceFields)
+                                .andWithPrefix("ethnicity.", EthnicityResourceDocs.ethnicityResourceFields)
+                                .andWithPrefix("address.", AddressDocs.addressResourceFields)
                 ));
     }
 }

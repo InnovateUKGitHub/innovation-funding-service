@@ -31,33 +31,4 @@ public class CategoryDocs {
             .withId(2L ,3L)
             .withName("Research category name");
 
-
-    public static FieldDescriptor[] categoryResourceFields(String description, String categoryType) {
-        return toArray(baseFields(description, categoryType));
-    };
-
-    public static FieldDescriptor[] categoryResourceFieldsWithSector(String description, String categoryType, String sectorDescription) {;
-        List<FieldDescriptor> fields = baseFields(description, categoryType);
-        fields.add(fieldWithPath("[].sector").description(sectorDescription));
-        return toArray(fields);
-    };
-
-    public static FieldDescriptor[] categoryResourceFieldsWithChildren(String description, String categoryType, String childrenDescription) {
-        List<FieldDescriptor> fields = baseFields(description, categoryType);
-        fields.add(fieldWithPath("[].children").description(childrenDescription));
-        return toArray(fields);
-    };
-
-    private static List<FieldDescriptor> baseFields(String description, String categoryType) {
-        return newArrayList(
-                fieldWithPath("[]").description(description),
-                fieldWithPath("[].id").description("id of the " + categoryType),
-                fieldWithPath("[].name").description("name of the " + categoryType),
-                fieldWithPath("[].type").description("type of the " + categoryType),
-                fieldWithPath("[].priority").description("priority of the " + categoryType));
-    }
-
-    private static FieldDescriptor[] toArray(List<FieldDescriptor> list) {
-        return list.toArray(new FieldDescriptor[list.size()]);
-    }
 }

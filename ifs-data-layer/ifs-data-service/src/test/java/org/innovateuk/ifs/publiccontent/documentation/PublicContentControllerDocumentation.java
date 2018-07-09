@@ -3,6 +3,8 @@ package org.innovateuk.ifs.publiccontent.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.documentation.ContentGroupResourceDocs;
+import org.innovateuk.ifs.documentation.PublicContentSectionResourceDocs;
 import org.innovateuk.ifs.publiccontent.controller.PublicContentController;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.junit.Test;
@@ -45,6 +47,8 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                                 parameterWithName("competitionId").description("The competition id of the required public content")
                         ),
                         responseFields(publicContentResourceFields)
+                                .andWithPrefix("contentSections[].", PublicContentSectionResourceDocs.publicContentSectionResourceFields)
+                                .andWithPrefix("contentSections[].contentGroups[].", ContentGroupResourceDocs.contentGroupResourceFields)
                 ));
     }
 
@@ -79,6 +83,8 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                                 parameterWithName("section").description("The section of the public content to update")
                         ),
                         requestFields(publicContentResourceFields)
+                                .andWithPrefix("contentSections[].", PublicContentSectionResourceDocs.publicContentSectionResourceFields)
+                                .andWithPrefix("contentSections[].contentGroups[].", ContentGroupResourceDocs.contentGroupResourceFields)
                 ));
 
     }
@@ -99,6 +105,8 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                                 parameterWithName("section").description("The section of the public content to update")
                         ),
                         requestFields(publicContentResourceFields)
+                                .andWithPrefix("contentSections[].", PublicContentSectionResourceDocs.publicContentSectionResourceFields)
+                                .andWithPrefix("contentSections[].contentGroups[].", ContentGroupResourceDocs.contentGroupResourceFields)
                 ));
 
     }

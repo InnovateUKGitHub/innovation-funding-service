@@ -3,6 +3,8 @@ package org.innovateuk.ifs.publiccontent.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.documentation.PublicContentItemResourceDocs;
+import org.innovateuk.ifs.documentation.PublicContentResourceDocs;
 import org.innovateuk.ifs.publiccontent.controller.PublicContentItemController;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentItemService;
 import org.junit.Test;
@@ -56,6 +58,7 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
                                 parameterWithName("pageSize").description("Page size of the current page requesting")
                         ),
                         responseFields(publicContentItemPageResourceFields)
+                        .andWithPrefix("content[].", PublicContentItemResourceDocs.publicContentItemResourceFields)
                 ));
     }
 
@@ -78,6 +81,7 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
                                 parameterWithName("id").description("The competition id of the required public content item")
                         ),
                         responseFields(publicContentItemResourceFields)
+                        .andWithPrefix("publicContentResource.", PublicContentResourceDocs.publicContentResourceFields)
                 ));
     }
 }

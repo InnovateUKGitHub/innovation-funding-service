@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.bankdetails.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
+import org.innovateuk.ifs.documentation.BankDetailsReviewResourceDocs;
 import org.innovateuk.ifs.project.bankdetails.controller.CompetitionsBankDetailsController;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class CompetitionsBankDetailsControllerDocumentation extends BaseControll
                         "competitions/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("List organisations for which Bank Details Approval is pending")
-                        )
+                        ).andWithPrefix("[].", BankDetailsReviewResourceDocs.bankDetailsReviewResourceFields)
                 ));
 
         verify(bankDetailsServiceMock, only()).getPendingBankDetailsApprovals();

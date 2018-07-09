@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.controller.AssessorController;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.documentation.*;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -55,6 +56,8 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
                                 parameterWithName("hash").description("hash of the invite being accepted")
                         ),
                         requestFields(userRegistrationResourceFields)
+                        .andWithPrefix("ethnicity.", EthnicityResourceDocs.ethnicityResourceFields)
+                        .andWithPrefix("address.", AddressDocs.addressResourceFields)
                 ));
 
         verify(assessorServiceMock).registerAssessorByHash(hash, userRegistrationResource);
@@ -75,6 +78,10 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
                                 parameterWithName("assessorId").description("Id of the assessor")
                         ),
                         responseFields(assessorProfileResourceFields)
+                        .andWithPrefix("profile.", ProfileResourceDocs.profileResourceFields)
+                                .andWithPrefix("profile.innovationAreas[].", InnovationAreaResourceDocs.innovationAreaResourceFields)
+                                .andWithPrefix("profile.affiliations[].", AffiliationDocs.affiliationResourceFields)
+                                .andWithPrefix("profile.address.", AddressDocs.addressResourceFields)
                 ));
     }
 

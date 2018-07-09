@@ -2,8 +2,11 @@ package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessorCompetitionSummaryController;
+import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorCompetitionSummaryService;
+import org.innovateuk.ifs.documentation.AssessorAssessmentResourceDocs;
+import org.innovateuk.ifs.documentation.AssessorProfileResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -46,6 +49,8 @@ public class AssessorCompetitionSummaryControllerDocumentation extends BaseContr
                                 parameterWithName("competitionId").description("Id of the competition to refine the summary by.")
                         ),
                         responseFields(assessorCompetitionSummaryResourceFields)
+                                .andWithPrefix("assessor.", AssessorProfileResourceDocs.assessorProfileResourceFields)
+                                .andWithPrefix("assignedAssessments[].", AssessorAssessmentResourceDocs.assessorAssessmentResourceFields)
                 ));
     }
 }

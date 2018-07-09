@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.interview.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.InterviewResourceDocs;
 import org.innovateuk.ifs.interview.controller.InterviewAllocationController;
 import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.interview.transactional.InterviewAllocationService;
@@ -149,6 +150,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                                 parameterWithName("userId").description("Id of the assessor")
                         ),
                         responseFields(fieldWithPath("[]").description("List of interviews"))
+                                .andWithPrefix("[].", InterviewResourceDocs.interviewResourceFields)
                 ));
 
         verify(interviewAllocationServiceMock, only()).getAllocatedApplicationsByAssessorId(competitionId, userId);
@@ -299,6 +301,7 @@ public class InterviewAllocationControllerDocumentation extends BaseControllerMo
                                 parameterWithName("applicationIds").description("Ids of applications")
                         ),
                         responseFields(fieldWithPath("[]").description("List of unallocated applications"))
+                        .andWithPrefix("[].", InterviewApplicationResourceFields)
                 ));
 
         verify(interviewAllocationServiceMock, only()).getUnallocatedApplicationsById(applicationIds);

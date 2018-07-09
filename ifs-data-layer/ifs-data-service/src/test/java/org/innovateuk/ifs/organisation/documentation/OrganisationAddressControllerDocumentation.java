@@ -5,6 +5,7 @@ import org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.documentation.AddressDocs;
+import org.innovateuk.ifs.documentation.AddressTypeResourceDocs;
 import org.innovateuk.ifs.documentation.OrganisationAddressDocs;
 import org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder;
 import org.innovateuk.ifs.organisation.controller.OrganisationAddressController;
@@ -57,6 +58,8 @@ public class OrganisationAddressControllerDocumentation extends BaseControllerMo
                                 parameterWithName("id").description("Id of the Organisation Address for which Organisation Address is being retrieved")
                         ),
                         responseFields(OrganisationAddressDocs.organisationAddressResourceFields)
+                        .andWithPrefix("address.", AddressDocs.addressResourceFields)
+                        .andWithPrefix("addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
 
         verify(organisationAddressServiceMock).findOne(id);
@@ -87,6 +90,8 @@ public class OrganisationAddressControllerDocumentation extends BaseControllerMo
                                 parameterWithName("addressId").description("Id of the Address for which Organisation Address is being retrieved")
                         ),
                         responseFields(OrganisationAddressDocs.organisationAddressResourceFields)
+                                .andWithPrefix("address.", AddressDocs.addressResourceFields)
+                                .andWithPrefix("addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
 
         verify(organisationAddressServiceMock).findByOrganisationIdAndAddressId(organisationId, addressId);

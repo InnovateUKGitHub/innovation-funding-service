@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.core.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.AddressDocs;
+import org.innovateuk.ifs.documentation.ProjectUserResourceDocs;
 import org.innovateuk.ifs.project.core.controller.ProjectController;
 import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -50,6 +52,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("id").description("Id of the project that is being requested")
                         ),
                         responseFields(projectResourceFields)
+                        .andWithPrefix("address.", AddressDocs.addressResourceFields)
                 ));
     }
 
@@ -64,7 +67,8 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                         document("project/{method-name}",
                                 responseFields(
                                         fieldWithPath("[]").description("List of projects the user is allowed to see")
-                                )
+                                ).andWithPrefix("[].", projectResourceFields)
+                                .andWithPrefix("[].address.", AddressDocs.addressResourceFields)
                         ));
     }
 
@@ -83,6 +87,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
                         ),
                         responseFields(fieldWithPath("[]").description("List of Project Users the user is allowed to see"))
+                        .andWithPrefix("[].", ProjectUserResourceDocs.projectUserResourceFields)
                 ));
     }
 
@@ -100,6 +105,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("applicationId").description("Id of the application to turn into a project")
                         ),
                                 responseFields(projectResourceFields)
+                                        .andWithPrefix("address.", AddressDocs.addressResourceFields)
                 ));
     }
 

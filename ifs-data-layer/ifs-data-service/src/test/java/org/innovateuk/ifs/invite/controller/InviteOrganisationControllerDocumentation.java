@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.ApplicationInviteResourceDocs;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.InviteOrganisationService;
 import org.junit.Test;
@@ -41,6 +43,7 @@ public class InviteOrganisationControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("id").description("Id of the invite organisation that is being requested")
                         ),
                         responseFields(inviteOrganisationFields)
+                                .andWithPrefix("inviteResources[].", ApplicationInviteResourceDocs.applicationInviteResourceFields)
                 ));
     }
 
@@ -62,6 +65,7 @@ public class InviteOrganisationControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("applicationId").description("Id of the application that invites are being requested for")
                         ),
                         responseFields(inviteOrganisationFields)
+                                .andWithPrefix("inviteResources[].", ApplicationInviteResourceDocs.applicationInviteResourceFields)
                 ));
     }
 }

@@ -39,7 +39,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
     public void addProjectCost() throws Exception {
         String url = BASE_URL + "/add/{projectFinanceId}/{questionId}";
 
-        when(validationUtil.validateProjectCostItem(any(FinanceRowItem.class))).thenReturn(new ValidationMessages());
+        when(validationUtil.validateProjectCostItem(nullable(FinanceRowItem.class))).thenReturn(new ValidationMessages());
         when(projectFinanceRowServiceMock.addCost(123L, 456L, null)).thenReturn(serviceSuccess(new GrantClaim()));
 
         mockMvc.perform(post(url, 123L, 456L).

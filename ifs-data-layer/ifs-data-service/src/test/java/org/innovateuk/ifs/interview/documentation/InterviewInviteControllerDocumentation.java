@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.interview.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.InterviewParticipantResourceDocs;
 import org.innovateuk.ifs.interview.controller.InterviewInviteController;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -217,6 +218,7 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
                                 parameterWithName("userId").description("Id of the user to get interview panel invites for")
                         ),
                         responseFields(fieldWithPath("[]").description("List of interview panel invites belonging to the user"))
+                        .andWithPrefix("[].", InterviewParticipantResourceDocs.interviewParticipantResourceFields)
                 ));
     }
 

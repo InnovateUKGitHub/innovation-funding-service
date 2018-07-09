@@ -10,5 +10,6 @@ public class InterviewAcceptedAssessorsResourceDocs {
             fieldWithPath("id").description("Id of the assessor"),
             fieldWithPath("name").description("Name of the assessor"),
             fieldWithPath("skillAreas").description("Skill areas of the assessor"),
+            fieldWithPath("numberOfAllocatedApplications").description("Number of allocated applications"),
     };
 }

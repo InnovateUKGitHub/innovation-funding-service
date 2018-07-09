@@ -7,6 +7,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResourc
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
+import org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -54,7 +55,7 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of responses the user is allowed to see")
-                        )
+                        ).andWithPrefix("[].", AssessorFormInputResponseDocs.assessorFormInputResponseFields)
                 ));
     }
 
@@ -73,7 +74,7 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("List of responses the user is allowed to see")
-                        )
+                        ).andWithPrefix("[].", AssessorFormInputResponseDocs.assessorFormInputResponseFields)
                 ));
     }
 
@@ -96,6 +97,7 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
                 .andExpect(status().is2xxSuccessful())
                 .andDo(document("assessorFormInputResponse/{method-name}",
                         requestFields(assessorFormInputResponsesFields)
+                        .andWithPrefix("responses[].", AssessorFormInputResponseDocs.assessorFormInputResponseFields)
                 ));
     }
 

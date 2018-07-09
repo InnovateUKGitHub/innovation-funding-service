@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.project.financecheck.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.CostCategoryResourceDocs;
+import org.innovateuk.ifs.documentation.CostGroupResourceDocs;
+import org.innovateuk.ifs.documentation.CostResourceDocs;
+import org.innovateuk.ifs.documentation.FinanceCheckPartnerStatusResourceDocs;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
@@ -66,6 +70,9 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                                 parameterWithName("organisationId").description("Id of the organisation to which the Finance Check is linked")
                         ),
                         responseFields(financeCheckResourceFields)
+                                .andWithPrefix("costGroup.", CostGroupResourceDocs.costGroupResourceFields)
+                                .andWithPrefix("costGroup.costs[].", CostResourceDocs.costResourceFields)
+                                .andWithPrefix("costGroup.costs[].costCategory.", CostCategoryResourceDocs.costCategoryResourceFields)
                 ));
 
         verify(financeCheckServiceMock).getByProjectAndOrganisation(projectOrganisationCompositeId);
@@ -104,6 +111,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                                 parameterWithName("projectId").description("Id of the project to which the Finance Check is linked")
                         ),
                         responseFields(financeCheckSummaryResourceFields)
+                        .andWithPrefix("partnerStatusResources[].", FinanceCheckPartnerStatusResourceDocs.financeCheckPartnerStatusResourceFields)
                 ));
 
         verify(financeCheckServiceMock).getFinanceCheckSummary(123L);

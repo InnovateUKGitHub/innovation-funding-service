@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
+import org.innovateuk.ifs.documentation.TermsAndConditionsResourceDocs;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -145,8 +146,8 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
                                 parameterWithName("id").description("Id of the competition whose initial details are being updated")
                         ),
                         requestFields(CompetitionResourceDocs.competitionResourceFields)
-                        )
-                );
+                                .andWithPrefix("termsAndConditions.", TermsAndConditionsResourceDocs.termsAndConditionsResourceFields)
+                ));
     }
 
     @Test
