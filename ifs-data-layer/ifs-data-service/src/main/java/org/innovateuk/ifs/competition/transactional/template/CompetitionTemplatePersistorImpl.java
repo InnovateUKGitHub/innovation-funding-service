@@ -2,8 +2,8 @@ package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competitionsetup.transactional.template.GrantClaimMaximumTemplatePersistor;
 import org.innovateuk.ifs.question.transactional.template.SectionTemplatePersistorImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +15,18 @@ import javax.persistence.PersistenceContext;
  */
 @Component
 public class CompetitionTemplatePersistorImpl implements BaseTemplatePersistor<Competition> {
-    @Autowired
-    private SectionTemplatePersistorImpl sectionTemplateService;
 
-    @Autowired
+    private GrantClaimMaximumTemplatePersistor grantClaimMaximumTemplatePersistor;
+    private SectionTemplatePersistorImpl sectionTemplateService;
     private CompetitionRepository competitionRepository;
+
+    public CompetitionTemplatePersistorImpl(GrantClaimMaximumTemplatePersistor grantClaimMaximumTemplatePersistor,
+                                            SectionTemplatePersistorImpl sectionTemplateService,
+                                            CompetitionRepository competitionRepository) {
+        this.grantClaimMaximumTemplatePersistor = grantClaimMaximumTemplatePersistor;
+        this.sectionTemplateService = sectionTemplateService;
+        this.competitionRepository = competitionRepository;
+    }
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -28,6 +35,7 @@ public class CompetitionTemplatePersistorImpl implements BaseTemplatePersistor<C
     public void cleanByEntityId(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
         sectionTemplateService.cleanForParentEntity(competition);
+        grantClaimMaximumTemplatePersistor.cleanForParentEntity(competition);
     }
 
     @Override
@@ -38,6 +46,7 @@ public class CompetitionTemplatePersistorImpl implements BaseTemplatePersistor<C
         Competition competition = competitionRepository.save(template);
         template.setId(competition.getId());
         sectionTemplateService.persistByParentEntity(template);
+        grantClaimMaximumTemplatePersistor.persistByParentEntity(template);
 
         return competition;
     }

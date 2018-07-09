@@ -60,7 +60,7 @@ public class ApplicationFinance extends Finance {
                 .stream()
                 .filter(this::isMatchingGrantClaimMaximum)
                 .findAny()
-                .map(this::getMaximum).orElse(null);
+                .map(this::getMaximum).orElse(0);
     }
 
     private Integer getMaximum(GrantClaimMaximum grantClaimMaximum) {

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.transactional.template;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competitionsetup.transactional.template.GrantClaimMaximumTemplatePersistor;
 import org.innovateuk.ifs.question.transactional.template.SectionTemplatePersistorImpl;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -10,51 +11,51 @@ import org.mockito.Mock;
 import javax.persistence.EntityManager;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CompetitionTemplatePersistorImplTest extends BaseServiceUnitTest<CompetitionTemplatePersistorImpl> {
-    public CompetitionTemplatePersistorImpl supplyServiceUnderTest() {
-        return new CompetitionTemplatePersistorImpl();
-    }
+
+    @Mock
+    private GrantClaimMaximumTemplatePersistor grantClaimMaximumTemplatePersistor;
 
     @Mock
     private SectionTemplatePersistorImpl sectionTemplateService;
 
     @Mock
-    private CompetitionRepository competitionRepositoryMock;
+    private CompetitionRepository competitionRepository;
 
     @Mock
     private EntityManager entityManagerMock;
 
-    @Test
-    public void cleanByEntityId() throws Exception {
-        Long competitionId = 2L;
+    public CompetitionTemplatePersistorImpl supplyServiceUnderTest() {
+        return new CompetitionTemplatePersistorImpl(
+                grantClaimMaximumTemplatePersistor, sectionTemplateService, competitionRepository);
+    }
 
+    @Test
+    public void cleanByEntityId() {
         Competition competition = newCompetition().build();
 
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionRepository.findById(competition.getId())).thenReturn(competition);
 
-        service.cleanByEntityId(competitionId);
+        service.cleanByEntityId(competition.getId());
 
         verify(sectionTemplateService).cleanForParentEntity(competition);
+        verify(grantClaimMaximumTemplatePersistor).cleanForParentEntity(competition);
     }
 
     @Test
-    public void persistByEntity() throws Exception {
-        Competition template = newCompetition().build();
+    public void persistByEntity() {
+        Competition competition = newCompetition().build();
 
-        Competition savedCompetition = template;
-        savedCompetition.setId(3L);
+        when(competitionRepository.save(competition)).thenReturn(competition);
 
-        when(competitionRepositoryMock.save(template)).thenReturn(savedCompetition);
+        service.persistByEntity(competition);
 
-        service.persistByEntity(template);
-
-        verify(entityManagerMock).detach(template);
-        verify(competitionRepositoryMock).save(template);
-        verify(sectionTemplateService).persistByParentEntity(refEq(savedCompetition));
+        verify(entityManagerMock).detach(competition);
+        verify(competitionRepository).save(competition);
+        verify(sectionTemplateService).persistByParentEntity(competition);
+        verify(grantClaimMaximumTemplatePersistor).persistByParentEntity(competition);
     }
-
 }

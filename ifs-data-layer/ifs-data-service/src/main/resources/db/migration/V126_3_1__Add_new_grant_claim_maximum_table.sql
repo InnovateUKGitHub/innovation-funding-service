@@ -1,5 +1,5 @@
--- IFS-3818 Add the new Grant Claim Maximum table
-CREATE TABLE grant_claim_maximum_new
+-- IFS-3818 Add the new Grant Claim Maximums table
+CREATE TABLE grant_claim_maximums
 (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
 	`competition_id` bigint(20) NOT NULL,
@@ -10,10 +10,10 @@ CREATE TABLE grant_claim_maximum_new
 	`medium` tinyint(1) DEFAULT NULL,
 	`large` tinyint(1) DEFAULT NULL,
 	PRIMARY KEY (`id`),
-	CONSTRAINT unique_grant_claim_maximum_new UNIQUE (competition_id, category_id, organisation_type_id),
-	CONSTRAINT grant_claim_maximum_new_competition_fk FOREIGN KEY (competition_id) REFERENCES competition (id),
-	CONSTRAINT grant_claim_maximum_new_category_fk FOREIGN KEY (category_id) REFERENCES category (id),
-	CONSTRAINT grant_claim_maximum_new_organisation_type_fk FOREIGN KEY (organisation_type_id) REFERENCES
+	CONSTRAINT unique_grant_claim_maximums UNIQUE (competition_id, category_id, organisation_type_id),
+	CONSTRAINT grant_claim_maximums_competition_fk FOREIGN KEY (competition_id) REFERENCES competition (id),
+	CONSTRAINT grant_claim_maximums_category_fk FOREIGN KEY (category_id) REFERENCES category (id),
+	CONSTRAINT grant_claim_maximums_organisation_type_fk FOREIGN KEY (organisation_type_id) REFERENCES
 	organisation_type(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -30,7 +30,7 @@ SET @org_size_large_id = (SELECT id
                  WHERE description = 'Large');
 
 -- Insert grant claim maximum values for all of the template competitions
-INSERT INTO grant_claim_maximum_new (competition_id, category_id, organisation_type_id, def, small, medium, large)
+INSERT INTO grant_claim_maximums (competition_id, category_id, organisation_type_id, def, small, medium, large)
 SELECT  ct.template_competition_id, gcm.category_id, gcm.organisation_type_id,
   MAX(CASE WHEN organisation_size_id IS NULL THEN maximum ELSE NULL END) AS def,
   MAX(CASE WHEN organisation_size_id = @org_size_small_id THEN maximum ELSE NULL END) AS small,
@@ -42,7 +42,7 @@ INNER JOIN competition_type ct ON gcm.competition_type_id = ct.id
 GROUP BY ct.id, gcm.category_id, gcm.organisation_type_id;
 
 -- Insert grant claim maximum values for all of the non-template competitions
-INSERT INTO grant_claim_maximum_new (competition_id, category_id, organisation_type_id, def, small, medium, large)
+INSERT INTO grant_claim_maximums (competition_id, category_id, organisation_type_id, def, small, medium, large)
 SELECT  c.id , gcm.category_id, gcm.organisation_type_id,
         MAX(CASE WHEN organisation_size_id IS NULL THEN maximum ELSE NULL END) AS def,
         MAX(CASE WHEN organisation_size_id = @org_size_small_id THEN maximum ELSE NULL END) AS small,
