@@ -66,10 +66,10 @@ public class ApplicationSummaryViewModelPopulator {
                 applicationTeamViewModel,
                 researchCategorySummaryViewModel,
                 userService.isLeadApplicant(user.getId(), application),
-                isProjectWithDrawn(applicationId));
+                isProjectWithdrawn(applicationId));
     }
 
-    private boolean isProjectWithDrawn(Long applicationId) {
+    private boolean isProjectWithdrawn(Long applicationId) {
         ProjectResource project = projectService.getByApplicationId(applicationId);
         return project != null && project.isWithdrawn();
     }

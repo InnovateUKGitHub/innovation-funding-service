@@ -86,7 +86,7 @@ public class ApplicationOverviewViewModel {
         return section;
     }
 
-    public boolean isComplete(SectionResource section) {
+    public boolean isFinanceSectionComplete(SectionResource section) {
         if (section.getId().equals(financeSectionId)) {
             return completed.getUserFinanceSectionCompleted();
         }
