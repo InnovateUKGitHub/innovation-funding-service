@@ -9,7 +9,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,9 +24,6 @@ public class ProcessHistoryEntityListenerIntegrationTest extends BaseRepositoryI
 
     @Autowired
     private CompetitionRepository competitionRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @PersistenceContext
     private EntityManager entityManager; // avoiding having a ProcessHistoryRepository as we don't want it in application code
@@ -54,7 +50,7 @@ public class ProcessHistoryEntityListenerIntegrationTest extends BaseRepositoryI
                 .with(id(null))
                 .build();
 
-        applicationRepository.save(application);
+        repository.save(application);
         flushAndClearSession();
 
         assertEquals(1, repository.countByCompetitionId(competition.getId()));
