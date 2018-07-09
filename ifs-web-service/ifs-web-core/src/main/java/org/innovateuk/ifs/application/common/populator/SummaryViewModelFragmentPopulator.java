@@ -196,6 +196,8 @@ public class SummaryViewModelFragmentPopulator {
         );
         form.setFormInput(values);
 
+        boolean showApplicationTeamLink = applicationService.showApplicationTeam(application.getId(), user.getId());
+
         return new SummaryViewModel(
                 application,
                 sections,
@@ -212,8 +214,8 @@ public class SummaryViewModelFragmentPopulator {
                 applicationResearchParticipationViewModel,
                 completedViewModel,
                 formInputViewModels,
-                true,
-                applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), competition.getId())
+                applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), competition.getId()),
+                showApplicationTeamLink
         );
     }
 

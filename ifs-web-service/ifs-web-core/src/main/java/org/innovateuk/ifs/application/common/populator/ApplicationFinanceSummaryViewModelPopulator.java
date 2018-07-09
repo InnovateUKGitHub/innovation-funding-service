@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummary
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
@@ -16,6 +17,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -29,6 +31,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class ApplicationFinanceSummaryViewModelPopulator {
@@ -112,6 +120,22 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
         Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
 
+        final List<OrganisationResource> academicOrganisations = getAcademicOrganisations(applicationOrganisations);
+        final List<Long> academicOrganisationIds = academicOrganisations.stream().map(ao -> ao.getId()).collect(Collectors.toList());
+        Map<Long, Boolean> applicantOrganisationsAreAcademic = applicationOrganisations.stream().collect(Collectors.toMap(o -> o.getId(), o -> academicOrganisationIds.contains(o.getId())));
+        Map<Long, Boolean> showDetailedFinanceLink = applicationOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
+                organisation -> {
+
+                    boolean orgFinancesExist = ofNullable(organisationFinances)
+                            .map(finances -> organisationFinances.get(organisation.getId()))
+                            .map(BaseFinanceResource::getOrganisationSize)
+                            .isPresent();
+                    boolean academicFinancesExist = applicantOrganisationsAreAcademic.get(organisation.getId());
+                    boolean financesExist = orgFinancesExist || academicFinancesExist;
+
+                    return isApplicationVisibleToUser(application, user) && financesExist;
+                })
+        );
         return new ApplicationFinanceSummaryViewModel(
                 application,
                 hasFinanceSection,
@@ -128,7 +152,8 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 totalContribution,
                 financeTotal,
                 completedSectionsByOrganisation,
-                eachCollaboratorFinanceSectionId
+                eachCollaboratorFinanceSectionId,
+                showDetailedFinanceLink
                 );
     }
 
@@ -150,5 +175,18 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
         return null;
     }
+
+    private boolean isApplicationVisibleToUser(ApplicationResource application, UserResource user) {
+        boolean canSeeUnsubmitted = user.hasRole(IFS_ADMINISTRATOR) || user.hasRole(SUPPORT);
+        boolean canSeeSubmitted = user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN) || user.hasRole(INNOVATION_LEAD);
+        boolean isSubmitted = application.getApplicationState() != ApplicationState.OPEN &&  application.getApplicationState() != ApplicationState.CREATED;
+
+        return canSeeUnsubmitted || (canSeeSubmitted && isSubmitted);
+    }
+
+    private List<OrganisationResource> getAcademicOrganisations(final List<OrganisationResource> organisations) {
+        return simpleFilter(organisations, o -> OrganisationTypeEnum.RESEARCH.getId().equals(o.getOrganisationType()));
+    }
+
 
 }

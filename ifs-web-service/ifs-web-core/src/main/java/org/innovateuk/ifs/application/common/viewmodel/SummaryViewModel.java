@@ -35,8 +35,8 @@ public class SummaryViewModel {
     private final ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel;
     private final ApplicationOverviewCompletedViewModel completedViewModel;
     private final Map<Long, AbstractFormInputViewModel> formInputViewModels;
-    private final boolean fromApplicationService;
     private final ApplicationTeamViewModel applicationTeamModel;
+    private final boolean showApplicationTeamLink;
 
     public SummaryViewModel(ApplicationResource currentApplication,
                             Map<Long, SectionResource> sections,
@@ -53,8 +53,8 @@ public class SummaryViewModel {
                             ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
                             ApplicationOverviewCompletedViewModel completedViewModel,
                             Map<Long, AbstractFormInputViewModel> formInputViewModels,
-                            boolean fromApplicationService,
-                            ApplicationTeamViewModel applicationTeamModel) {
+                            ApplicationTeamViewModel applicationTeamModel,
+                            boolean showApplicationTeamLink) {
         this.currentApplication = currentApplication;
         this.sections = sections;
         this.sectionQuestions = sectionQuestions;
@@ -70,8 +70,8 @@ public class SummaryViewModel {
         this.applicationResearchParticipationViewModel = applicationResearchParticipationViewModel;
         this.completedViewModel = completedViewModel;
         this.formInputViewModels = formInputViewModels;
-        this.fromApplicationService = fromApplicationService;
         this.applicationTeamModel = applicationTeamModel;
+        this.showApplicationTeamLink = showApplicationTeamLink;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -134,11 +134,11 @@ public class SummaryViewModel {
         return formInputViewModels;
     }
 
-    public boolean isFromApplicationService() {
-        return fromApplicationService;
-    }
-
     public ApplicationTeamViewModel getApplicationTeamModel() {
         return applicationTeamModel;
+    }
+
+    public boolean isShowApplicationTeamLink() {
+        return showApplicationTeamLink;
     }
 }
