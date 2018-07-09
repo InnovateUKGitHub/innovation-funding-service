@@ -60,10 +60,48 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
                 .map(Organisation::getName)
                 .collect(Collectors.toList());
 
+        BigDecimal industryTotalEligibleCosts = getTotalOfOrgs(totalEligibleCosts, industrialOrgs);
+
+        BigDecimal academicTotalEligibleCosts = getTotalOfOrgs(totalEligibleCosts, academicOrgs);
+
+        BigDecimal allTotalEligibleCosts = industryTotalEligibleCosts.add(academicTotalEligibleCosts);
+
+        BigDecimal industryTotalGrant = getTotalOfOrgs(totalGrant, industrialOrgs);
+
+        BigDecimal academicTotalGrant = getTotalOfOrgs(totalGrant, academicOrgs);
+
+        BigDecimal allTotalGrant = industryTotalGrant.add(academicTotalGrant);
+
+        BigDecimal industryTotalGrantClaim = industryTotalEligibleCosts.multiply(industryTotalGrant);
+
+        BigDecimal academicTotalGrantClaim = academicTotalEligibleCosts.multiply(academicTotalGrant);
+
+        BigDecimal allTotalGrantClaim = allTotalEligibleCosts.multiply(allTotalGrant);
+
+
+
         return new GrantOfferLetterFinanceTotalsTable(grantClaims,
                                                       totalEligibleCosts,
                                                       totalGrant,
                                                       industrialOrgs,
-                                                      academicOrgs);
+                                                      academicOrgs,
+                                                      industryTotalEligibleCosts,
+                                                      academicTotalEligibleCosts,
+                                                      allTotalEligibleCosts,
+                                                      industryTotalGrant,
+                                                      academicTotalGrant,
+                                                      allTotalGrant,
+                                                      industryTotalGrantClaim,
+                                                      academicTotalGrantClaim,
+                                                      allTotalGrantClaim);
+    }
+
+    private BigDecimal getTotalOfOrgs(Map<String, BigDecimal> finances, List<String> orgs) {
+        return finances
+                .entrySet()
+                .stream()
+                .filter(entry -> orgs.contains(entry.getKey()))
+                .map(Map.Entry::getValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
