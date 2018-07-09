@@ -11,9 +11,8 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
-import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -23,7 +22,6 @@ import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -73,24 +71,10 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 applicationId
         );
 
-        BigDecimal totalFundingSought = organisationFinanceOverview.getTotalFundingSought();
-        BigDecimal totalOtherFunding = organisationFinanceOverview.getTotalOtherFunding();
-        BigDecimal totalContribution = organisationFinanceOverview.getTotalContribution();
-        BigDecimal financeTotal = organisationFinanceOverview.getTotal();
-
-        Map<FinanceRowType, BigDecimal> financeTotalPerType = organisationFinanceOverview.getTotalPerType();
-        Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
-
-        List<OrganisationResource> applicationOrganisations = getApplicationOrganisations(applicationId);
-
         SectionResource financeSection = sectionService.getFinanceSection(application.getCompetition());
-        final boolean hasFinanceSection;
-        final Long financeSectionId;
-        if (financeSection == null) {
-            hasFinanceSection = false;
-            financeSectionId = null;
-        } else {
-            hasFinanceSection = true;
+        final boolean hasFinanceSection = financeSection != null;
+        Long financeSectionId = null;
+        if (hasFinanceSection) {
             financeSectionId = financeSection.getId();
         }
 
@@ -101,30 +85,27 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
         Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
 
-        OrganisationResource userOrganisation = null;
-
-        if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR)) {
-            ProcessRoleResource userProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
-            userOrganisation = organisationService.getOrganisationById(userProcessRole.getOrganisationId());
-        }
+        List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
+        Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
 
         return new ApplicationFinanceSummaryViewModel(
                 application,
                 hasFinanceSection,
-                financeTotalPerType,
-                applicationOrganisations,
+                organisationFinanceOverview.getTotalPerType(),
+                getApplicationOrganisations(applicationId),
                 sectionsMarkedAsComplete,
                 financeSectionId,
                 leadOrganisation,
                 competition,
-                userOrganisation,
-                organisationFinances,
-                totalFundingSought,
-                totalOtherFunding,
-                totalContribution,
-                financeTotal,
-                completedSectionsByOrganisation
-                );
+                getUserOrganisation(user, applicationId),
+                organisationFinanceOverview.getFinancesByOrganisation(),
+                organisationFinanceOverview.getTotalFundingSought(),
+                organisationFinanceOverview.getTotalOtherFunding(),
+                organisationFinanceOverview.getTotalContribution(),
+                organisationFinanceOverview.getTotal(),
+                completedSectionsByOrganisation,
+                eachCollaboratorFinanceSectionId
+        );
     }
 
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {
@@ -136,6 +117,25 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 userOrganisation.getId(),
                 new HashSet<>()
         );
+    }
+
+    private Long getEachCollaboratorFinanceSectionId(List<SectionResource> eachOrganisationFinanceSections) {
+        if (!eachOrganisationFinanceSections.isEmpty()) {
+            return eachOrganisationFinanceSections.get(0).getId();
+        }
+
+        return null;
+    }
+
+    private OrganisationResource getUserOrganisation(UserResource user, Long applicationId) {
+        OrganisationResource userOrganisation = null;
+
+        if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR)) {
+            ProcessRoleResource userProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
+            userOrganisation = organisationService.getOrganisationById(userProcessRole.getOrganisationId());
+        }
+
+        return userOrganisation;
     }
 
 }

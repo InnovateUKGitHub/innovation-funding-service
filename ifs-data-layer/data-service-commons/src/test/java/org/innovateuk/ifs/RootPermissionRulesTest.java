@@ -70,14 +70,13 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
     public void setupSetsOfData() {
         allRoles = asList(Role.values());
         allGlobalRoleUsers = simpleMap(allRoles, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
-        allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser(), innovationLeadUser());
+        allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser(), innovationLeadUser(), ifsAdminUser());
 
     }
 
     protected UserResource getUserWithRole(Role type) {
         return simpleFilter(allGlobalRoleUsers, user -> user.hasRole(type)).get(0);
     }
-
 
     protected void setUpUserNotAsProjectManager(UserResource user) {
         List<Role> projectManagerUser = emptyList();

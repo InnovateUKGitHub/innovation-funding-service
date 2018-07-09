@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupQuestion
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.QuestionSetupViewModel;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,11 +40,12 @@ import java.util.Optional;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.ASSESSED_QUESTION;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.SCOPE;
+import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder
+        .newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.SCOPE;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -744,7 +746,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         CompetitionResource competition = newCompetitionResource().withId(QUESTION_ID).withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
         CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
-                .withType(CompetitionSetupQuestionType.ASSESSED_QUESTION).build();
+                .withType(QuestionSetupType.ASSESSED_QUESTION).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupQuestionService.getQuestion(QUESTION_ID)).thenReturn(ServiceResult.serviceSuccess(question));

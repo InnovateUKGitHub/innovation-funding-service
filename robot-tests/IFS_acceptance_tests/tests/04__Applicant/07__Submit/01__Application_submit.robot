@@ -45,7 +45,6 @@ Submit button disabled when application is incomplete
     When the user clicks the button/link               jQuery=button:contains("Mark as complete")
     Then the user should see the element               jQuery=h1:contains("Application details")
     And the user should see a field and summary error  Please enter a future date
-    And the user should see a field and summary error  Please select a research category
     And the user should see a field and summary error  Please tell us if this application is a resubmission or not
 
 Applicant has read only view on review and submit page
@@ -53,7 +52,7 @@ Applicant has read only view on review and submit page
     [Tags]    HappyPath
     Given the user navigates to the page                  ${DASHBOARD_URL}
     And the user clicks the button/link                   link=${application_bus_name}
-    When the applicant completes the application details  ${application_bus_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    When the applicant completes the application details  ${application_bus_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the user clicks the button/link                   link=Your finances
     And the user marks the finances as complete           ${application_bus_name}  labour costs  n/a  no
     And the user clicks the button/link                   link=Review and submit
@@ -131,7 +130,7 @@ RTO lead has read only view after submission
     [Setup]  log in as a different user  ${submit_rto_email}  ${correct_password}
     Given the user navigates to the page                   ${DASHBOARD_URL}
     And the user clicks the button/link                    link=${application_rto_name}
-    When the applicant completes the application details   ${application_rto_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    When the applicant completes the application details   ${application_rto_name}  ${tomorrowday}  ${month}  ${nextyear}
     Then the user clicks the button/link                   link=Your finances
     And the user enters the project location
     When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  css=.extra-margin-bottom [aria-expanded="false"]
@@ -194,7 +193,7 @@ the applicant accepts the terms and conditions
 the applicant marks the first section as complete
     the user navigates to the page    ${DASHBOARD_URL}
     the user clicks the button/link    link=${application_name}
-    the applicant completes the application details  ${application_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant completes the application details  ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
 
 the applicant clicks the submit and then clicks the "close button" in the modal
     Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")

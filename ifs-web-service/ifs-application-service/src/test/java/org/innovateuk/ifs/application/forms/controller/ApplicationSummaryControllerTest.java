@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.forms.controller;
 import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategorySummaryModelPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
@@ -47,8 +49,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -101,6 +103,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @Mock
+    private ApplicationResearchCategorySummaryModelPopulator researchCategorySummaryModelPopulator;
+
+    @Mock
     private ProjectService projectService;
 
     @Override
@@ -135,12 +140,10 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(false));
 
-        MvcResult result = mockMvc.perform(get("/application/" + app.getId() + "/summary"))
+        mockMvc.perform(get("/application/{applicationId}/summary", app.getId()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/application/" + app.getId() + "/feedback"))
-                .andReturn();
+                .andExpect(redirectedUrl("/application/" + app.getId() + "/feedback"));
     }
-
 
     @Test
     public void testApplicationSummary() throws Exception {
@@ -150,6 +153,12 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
         when(interviewAssignmentRestService.isAssignedToInterview(app.getId())).thenReturn(restSuccess(false));
+        ApplicationTeamViewModel applicationTeamViewModel = setupApplicationTeamViewModel();
+        when(applicationTeamModelPopulator.populateSummaryModel(app.getId(), loggedInUser.getId(), competitionId)).thenReturn
+                (applicationTeamViewModel);
+        ResearchCategorySummaryViewModel researchCategorySummaryViewModel = setupResearchCategorySummaryViewModel();
+        when(researchCategorySummaryModelPopulator.populate(app, loggedInUser.getId(), true)).thenReturn
+                (researchCategorySummaryViewModel);
 
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
                 true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
@@ -158,9 +167,6 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
         when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId())).thenReturn(restSuccess(aggregateResource));
         when(assessmentRestService.getByUserAndApplication(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(feedbackSummary));
-        ApplicationTeamViewModel applicationTeamViewModel = mock(ApplicationTeamViewModel.class);
-        when(applicationTeamModelPopulator.populateSummaryModel(app.getId(), loggedInUser.getId(), competitionId)).thenReturn
-                (applicationTeamViewModel);
 
         MvcResult result = mockMvc.perform(get("/application/" + app.getId() + "/summary"))
                 .andExpect(status().isOk())
@@ -169,11 +175,39 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
         ApplicationSummaryViewModel model = (ApplicationSummaryViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals(model.getCurrentApplication(), app);
-        assertEquals(model.getCurrentCompetition().getId(), app.getCompetition());
-        assertEquals(model.getSummaryViewModel().getFeedbackSummary(), feedbackSummary);
-        assertEquals(model.getSummaryViewModel().getResponses(), formInputsToFormInputResponses);
-        assertEquals(model.getSummaryViewModel().getApplicationTeamModel(), applicationTeamViewModel);
-        assertEquals(model.isUserIsLeadApplicant(), true);
+        assertEquals(app, model.getCurrentApplication());
+        assertEquals(app.getCompetition(), model.getCurrentCompetition().getId());
+        assertEquals(feedbackSummary, model.getSummaryViewModel().getFeedbackSummary());
+        assertEquals(formInputsToFormInputResponses, model.getSummaryViewModel().getResponses());
+        assertEquals(applicationTeamViewModel, model.getApplicationTeamViewModel());
+        assertEquals(researchCategorySummaryViewModel, model.getResearchCategorySummaryViewModel());
+        assertTrue(model.isUserIsLeadApplicant());
+    }
+
+    private ApplicationTeamViewModel setupApplicationTeamViewModel() {
+        ApplicationTeamViewModel applicationTeamViewModel = new ApplicationTeamViewModel(
+                1L,
+                1L,
+                "Application name",
+                emptyList(),
+                false,
+                false,
+                false,
+                false,
+                false,
+                false);
+        applicationTeamViewModel.setSummary(true);
+
+        return applicationTeamViewModel;
+    }
+
+    private ResearchCategorySummaryViewModel setupResearchCategorySummaryViewModel() {
+        return new ResearchCategorySummaryViewModel(1L,
+                1L,
+                "Research category",
+                false,
+                false,
+                false,
+                false);
     }
 }
