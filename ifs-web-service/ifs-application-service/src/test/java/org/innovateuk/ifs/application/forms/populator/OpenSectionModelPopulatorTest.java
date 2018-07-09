@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
@@ -71,9 +70,6 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private SectionService sectionService;
-
-    @Mock
-    private ProcessRoleService processRoleService;
 
     @Mock
     private FormInputRestService formInputRestService;
