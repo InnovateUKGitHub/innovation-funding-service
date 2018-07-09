@@ -3,6 +3,7 @@ package org.innovateuk.ifs.workflow.audit;
 import org.innovateuk.ifs.workflow.domain.Process;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.PreUpdate;
 
@@ -10,6 +11,7 @@ import javax.persistence.PreUpdate;
  * {@code EntityListener} to create new {@link ProcessHistory}s whenever a {@link Process} is updated.
  */
 @Component
+@Transactional
 public class ProcessHistoryEntityListener {
 
     private static ProcessHistoryRepository processHistoryRepository;
