@@ -30,9 +30,6 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private ProcessHistoryEntityListener processHistoryEntityListener;
-
-    @Autowired
     @Override
     protected void setControllerUnderTest(ApplicationAssessmentSummaryController controller) {
         this.controller = controller;
@@ -56,7 +53,6 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
 
         assertEquals(Collections.emptyList(), applicationAssessorResources);
     }
-
 
     @Test
     public void getApplicationAssessmentSummary() {
