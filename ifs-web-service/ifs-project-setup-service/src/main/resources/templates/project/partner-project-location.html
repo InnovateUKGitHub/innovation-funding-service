@@ -1,57 +1,61 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project location',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
-<body>
+<body class="govuk-template__body">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project location',subTitle=${model.projectName},size='heading-xlarge'" />
 
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to save your project location.</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${form.*}')}">
-                <a href="#postcode" th:text="${err}">The error message</a>
-            </li>
-        </ul>
-    </div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project location',subTitle=${model.projectName},size='heading-xlarge'" />
 
-    <p>We will assign a Monitoring Officer who will visit your project location.</p>
-
-    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
-        <h2 class="heading-medium">Project location</h2>
-
-        <div class="form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'form-group-error'" >
-            <label class="form-label-bold" for="postcode">
-                Postcode
-                <span class="form-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>
-            </label>
-            <th:block th:if="${#fields.hasErrors('postcode')}">
-                <span class="error-message" th:each="err : ${#fields.errors('postcode')}" th:text="${err}" />
-            </th:block>
-            <input name="postcode"
-                   id="postcode"
-                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                   type="text"
-                   class="form-control width-medium"
-                   required="required"
-                   th:value="${form.getPostcode() != null ? form.getPostcode() : NULL}"
-                   th:errorclass="form-control-error"
-                   th:field="*{postcode}" />
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+            <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to save your project location.</h2>
+            <ul class="error-summary-list">
+                <li th:each="err : ${#fields.errors('${form.*}')}">
+                    <a href="#postcode" th:text="${err}">The error message</a>
+                </li>
+            </ul>
         </div>
 
-        <p>You can change your project location up until a Monitoring Officer is assigned to your project.</p>
+        <p>We will assign a Monitoring Officer who will visit your project location.</p>
 
-        <button class="button" type="submit">Save project location</button>
-    </form>
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
+            <h2 class="heading-medium">Project location</h2>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+            <div class="form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'form-group-error'" >
+                <label class="form-label-bold" for="postcode">
+                    Postcode
+                    <span class="form-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>
+                </label>
+                <th:block th:if="${#fields.hasErrors('postcode')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('postcode')}" th:text="${err}" />
+                </th:block>
+                <input name="postcode"
+                       id="postcode"
+                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                       type="text"
+                       class="form-control width-medium"
+                       required="required"
+                       th:value="${form.getPostcode() != null ? form.getPostcode() : NULL}"
+                       th:errorclass="form-control-error"
+                       th:field="*{postcode}" />
+            </div>
+
+            <p>You can change your project location up until a Monitoring Officer is assigned to your project.</p>
+
+            <button class="button" type="submit">Save project location</button>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

@@ -1,139 +1,142 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessment summary',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body class="assessment assessment-form">
+    <body class="govuk-template__body assessment assessment-form">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
-                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-            </div>
-
-            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment summary',subTitle=${applicationName},size='heading-xlarge'" />
-            </th:block>
-
-            <h2 class="heading-medium">Review assessment</h2>
-            <div class="collapsible section-overview">
-                <th:block th:each="question : ${model.questionsForReview}">
-                    <th:block th:insert="fragments/assessment :: assessment-summary-section (question=${question})" />
-                </th:block>
-            </div>
-
-            <th:block th:insert="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" />
-
-            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate">
-                <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
-
-                <div class="question" th:id="form-input-fundingConfirmation">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('fundingConfirmation')} ? 'form-group-error'">
-                        <fieldset class="inline">
-                            <legend id="fundingConfirmation">
-                                <span class="form-label-bold">Do you believe that this application is suitable for funding?</span>
-                                <th:block th:if="${#fields.hasErrors('fundingConfirmation')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}"></span>
-                                </th:block>
-                            </legend>
-                            <div class="multiple-choice">
-                                <input
-                                value="true"
-                                type="radio"
-                                th:field="*{fundingConfirmation}"
-                                required="required"
-                                th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
-                                data-conditionally-remove-required="#feedback" />
-                                <label class="form-label" th:for="${#ids.prev('fundingConfirmation')}">Yes</label>
-                            </div>
-                            <div class="multiple-choice">
-                                <input
-                                value="false"
-                                type="radio"
-                                th:field="*{fundingConfirmation}"
-                                required="required"
-                                th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
-                                data-conditionally-add-required="#feedback, .form-group input" />
-                                <label class="form-label" th:for="${#ids.prev('fundingConfirmation')}">No</label>
-                            </div>
-                        </fieldset>
-                    </div>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
+                    <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <fieldset>
-                    <legend class="visuallyhidden">Question feedback</legend>
-                    <div class="question" th:id="form-input-feedback">
-                        <div class="form-group" th:classappend="${#fields.hasErrors('feedback')} ? 'form-group-error'">
-                            <label class="form-label form-label-bold" th:for="feedback">
-                                Your feedback
-                                <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
-                                <th:block th:if="${#fields.hasErrors('feedback')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('feedback')}" th:text="${err}"></span>
-                                </th:block>
-                            </label>
+                <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment summary',subTitle=${applicationName},size='heading-xlarge'" />
+                </th:block>
 
-                            <div class="textarea-wrapped word-count">
-                                <textarea
-                                    class="form-control width-full"
-                                    maxlength="5000"
-                                    data-max_words="100"
-                                    data-maxwordslength="100"
-                                    data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                                    th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                                    th:errorclass="form-control-error"
-                                    rows="4"
-                                    th:field="*{feedback}"></textarea>
-                                <div class="textarea-footer" th:with="feedback=*{feedback}" aria-live="polite" aria-atomic="true" role="status">
-                                    <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, feedback)})" />
+                <h2 class="heading-medium">Review assessment</h2>
+                <div class="collapsible section-overview">
+                    <th:block th:each="question : ${model.questionsForReview}">
+                        <th:block th:insert="fragments/assessment :: assessment-summary-section (question=${question})" />
+                    </th:block>
+                </div>
+
+                <th:block th:insert="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" />
+
+                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate">
+                    <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
+
+                    <div class="question" th:id="form-input-fundingConfirmation">
+                        <div class="form-group" th:classappend="${#fields.hasErrors('fundingConfirmation')} ? 'form-group-error'">
+                            <fieldset class="inline">
+                                <legend id="fundingConfirmation">
+                                    <span class="form-label-bold">Do you believe that this application is suitable for funding?</span>
+                                    <th:block th:if="${#fields.hasErrors('fundingConfirmation')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}"></span>
+                                    </th:block>
+                                </legend>
+                                <div class="multiple-choice">
+                                    <input
+                                    value="true"
+                                    type="radio"
+                                    th:field="*{fundingConfirmation}"
+                                    required="required"
+                                    th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
+                                    data-conditionally-remove-required="#feedback" />
+                                    <label class="form-label" th:for="${#ids.prev('fundingConfirmation')}">Yes</label>
                                 </div>
-                            </div>
+                                <div class="multiple-choice">
+                                    <input
+                                    value="false"
+                                    type="radio"
+                                    th:field="*{fundingConfirmation}"
+                                    required="required"
+                                    th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
+                                    data-conditionally-add-required="#feedback, .form-group input" />
+                                    <label class="form-label" th:for="${#ids.prev('fundingConfirmation')}">No</label>
+                                </div>
+                            </fieldset>
                         </div>
                     </div>
 
-                    <div class="question" th:id="form-input-comments">
-                        <div class="form-group" th:classappend="${#fields.hasErrors('comment')} ? 'form-group-error'">
-                            <label class="form-label form-label-bold" th:for="comment">
-                                Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
-                                <th:block th:if="${#fields.hasErrors('comment')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
-                                </th:block>
-                            </label>
+                    <fieldset>
+                        <legend class="visuallyhidden">Question feedback</legend>
+                        <div class="question" th:id="form-input-feedback">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('feedback')} ? 'form-group-error'">
+                                <label class="form-label form-label-bold" th:for="feedback">
+                                    Your feedback
+                                    <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
+                                    <th:block th:if="${#fields.hasErrors('feedback')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('feedback')}" th:text="${err}"></span>
+                                    </th:block>
+                                </label>
 
-                            <div class="textarea-wrapped word-count">
-                                <textarea
-                                    class="form-control width-full"
-                                    maxlength="5000"
-                                    data-max_words="100"
-                                    data-maxwordslength="100"
-                                    data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                                    th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                                    th:errorclass="form-control-error"
-                                    rows="4"
-                                    th:field="*{comment}"></textarea>
-
-                                <div class="textarea-footer" th:with="comment=*{comment}" aria-live="polite" aria-atomic="true" role="status">
-                                    <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, comment)})" />
+                                <div class="textarea-wrapped word-count">
+                                    <textarea
+                                        class="form-control width-full"
+                                        maxlength="5000"
+                                        data-max_words="100"
+                                        data-maxwordslength="100"
+                                        data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                        th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                                        th:errorclass="form-control-error"
+                                        rows="4"
+                                        th:field="*{feedback}"></textarea>
+                                    <div class="textarea-footer" th:with="feedback=*{feedback}" aria-live="polite" aria-atomic="true" role="status">
+                                        <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, feedback)})" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </fieldset>
 
-                <p class="icon-info">You will still be able to edit after you have saved this assessment. Saved assessments are submitted through your dashboard.</p>
+                        <div class="question" th:id="form-input-comments">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('comment')} ? 'form-group-error'">
+                                <label class="form-label form-label-bold" th:for="comment">
+                                    Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
+                                    <th:block th:if="${#fields.hasErrors('comment')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
+                                    </th:block>
+                                </label>
 
-                <input type="hidden" id="application_id" th:value="${model.applicationId}" />
+                                <div class="textarea-wrapped word-count">
+                                    <textarea
+                                        class="form-control width-full"
+                                        maxlength="5000"
+                                        data-max_words="100"
+                                        data-maxwordslength="100"
+                                        data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                        th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                                        th:errorclass="form-control-error"
+                                        rows="4"
+                                        th:field="*{comment}"></textarea>
 
-                <button type="submit" class="button extra-margin" name="submit-section">Save assessment</button>
+                                    <div class="textarea-footer" th:with="comment=*{comment}" aria-live="polite" aria-atomic="true" role="status">
+                                        <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, comment)})" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
 
-            </form>
+                    <p class="icon-info">You will still be able to edit after you have saved this assessment. Saved assessments are submitted through your dashboard.</p>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                    <input type="hidden" id="application_id" th:value="${model.applicationId}" />
+
+                    <button type="submit" class="button extra-margin" name="submit-section">Save assessment</button>
+
+                </form>
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

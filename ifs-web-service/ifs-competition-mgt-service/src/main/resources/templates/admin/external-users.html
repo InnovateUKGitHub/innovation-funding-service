@@ -1,29 +1,33 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage users'" />
 </head>
-<body>
+<body class="govuk-template__body">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='External user list',size='heading-large'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <ul class="inline-nav cf">
-        <li th:classappend="selected">
-            <a th:href="@{/admin/users/created}">Users with account</a>
-        </li>
-        <li>
-            <a th:href="@{/admin/invites}">Invited users</a>
-        </li>
-    </ul>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='External user list',size='heading-large'" />
 
-    <th:block th:insert="fragments/external-users :: user-list(users=${users})" />
+        <ul class="inline-nav cf">
+            <li th:classappend="selected">
+                <a th:href="@{/admin/users/created}">Users with account</a>
+            </li>
+            <li>
+                <a th:href="@{/admin/invites}">Invited users</a>
+            </li>
+        </ul>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/external-users :: user-list(users=${users})" />
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

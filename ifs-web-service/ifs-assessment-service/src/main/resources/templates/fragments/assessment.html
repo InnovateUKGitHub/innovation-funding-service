@@ -25,18 +25,18 @@
 
 <!-- ======== Assessment - sub header back to assessment overview ======= -->
 <div th:fragment="assessment-header-sub (linkTitle, linkUrl, linkClass)">
-    <div class="sub-header">
-        <nav>
-            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
-        </nav>
-    </div>
+    <a th:if="${linkTitle != null and linkUrl != null}"
+       class="govuk-back-link"
+       th:href="${linkUrl}"
+       th:text="${linkTitle}" />
 </div>
 
 <div th:fragment="assessment-header-deadline-sub (linkTitle, linkUrl, linkClass, daysPercentage, daysLeft)">
     <div class="sub-header">
-        <nav>
-            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
-        </nav>
+        <a th:if="${linkTitle != null and linkUrl != null}"
+           class="govuk-back-link"
+           th:href="${linkUrl}"
+           th:text="${linkTitle}" />
         <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}"><th:block th:text="${daysLeft}" /> days left to submit</div>
     </div>
 </div>

@@ -357,7 +357,7 @@ tr {
     textarea {
       &.field-group-error {
         @include box-shadow(none);
-        border: 4px solid $error-colour;
+        border: 4px solid $govuk-error-colour;
       }
     }
   }

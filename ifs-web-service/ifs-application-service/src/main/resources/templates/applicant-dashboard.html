@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dashboard'" />
 </head>
 
-<body class="app-dashboard">
+<body class="govuk-template__body app-dashboard">
 
     <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
+    <div class="govuk-width-container">
+        <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <main tabindex="-1" id="content">
+        <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="event-alert is-open" th:each="notification:${notifications}">
             <p>
                 <span th:text="${notification?.assignedByName + ' has assigned a question to you'}"></span>
@@ -66,11 +68,11 @@
                             <div class="status">
                                 <th:block th:unless="${inProgressView.submitted}">
                                     <div class="status-msg msg-deadline" th:unless="${inProgressView.within24Hours}">
-                                      <strong class="bold-medium days-remaining" th:text="${inProgressView.daysLeft}">DAYS LEFT</strong> <br />
-                                      days left <br />
-                                      Deadline
-                                      <span class="day" th:text="${#temporals.day(inProgressView.endDate)}">END DAY</span>
-                                      <span class="month" th:text="${#temporals.monthName(inProgressView.endDate)}">END MONTH</span>
+                                        <strong class="bold-medium days-remaining" th:text="${inProgressView.daysLeft}">DAYS LEFT</strong> <br />
+                                        days left <br />
+                                        Deadline
+                                        <span class="day" th:text="${#temporals.day(inProgressView.endDate)}">END DAY</span>
+                                        <span class="month" th:text="${#temporals.monthName(inProgressView.endDate)}">END MONTH</span>
                                     </div>
                                     <div class="status-msg msg-deadline-today" th:if="${inProgressView.within24Hours}">
                                         <strong class="bold-medium" th:text="${inProgressView.hoursLeftBeforeSubmit}"></strong><br/>
@@ -130,10 +132,11 @@
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
+</div>
 
-    <th:block th:insert="fragments/layout :: footer" />
-    <th:block th:insert="fragments/layout :: body-end" />
-    <th:block th:insert="fragments/service-layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 
 </html>

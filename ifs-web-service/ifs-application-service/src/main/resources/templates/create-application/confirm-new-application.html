@@ -1,54 +1,58 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create a new application?'" />
 </head>
-<body class="create-application-eligibility">
+<body class="govuk-template__body create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You have an application in progress',size='heading-large'" />
-            <p>You have already started an application in this competition. Do you want to continue with your existing application or create a new one in the same competition?</p>
-        </div>
-    </div>
-    <div class="grid-row">
-        <div class="column-full">
-            <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
-                <div class="form-group" th:classappend="${#fields.hasErrors('createNewApplication')} ? 'form-group-error'">
-                <fieldset>
-                    <legend id="createNewApplication">
-                        <span class="visuallyhidden">Create a new application?</span>
-                        <th:block th:if="${#fields.hasErrors('createNewApplication')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('createNewApplication')}" th:text="${err}"></span>
-                         </th:block>
-                    </legend>
-                    <div class="multiple-choice" th:each="value : ${ {true, false} }">
-                            <input type="radio"
-                                   th:field="*{createNewApplication}"
-                                   th:value="${value}"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
-                        <label th:for="${#ids.prev('createNewApplication')}" th:text="${value} ? 'Yes, I want to create a new application.' : 'No, I want to continue with my existing application.'"/>
-                    </div>
-                </fieldset>
-                </div>
-                <button type="submit" name="create-application-submit" class="button">
-                    Continue
-                </button>
-            </form>
-        </div>
-    </div>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You have an application in progress',size='heading-large'" />
+                <p>You have already started an application in this competition. Do you want to continue with your existing application or create a new one in the same competition?</p>
+            </div>
+        </div>
+        <div class="grid-row">
+            <div class="column-full">
+                <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
+                    <div class="form-group" th:classappend="${#fields.hasErrors('createNewApplication')} ? 'form-group-error'">
+                    <fieldset>
+                        <legend id="createNewApplication">
+                            <span class="visuallyhidden">Create a new application?</span>
+                            <th:block th:if="${#fields.hasErrors('createNewApplication')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('createNewApplication')}" th:text="${err}"></span>
+                             </th:block>
+                        </legend>
+                        <div class="multiple-choice" th:each="value : ${ {true, false} }">
+                                <input type="radio"
+                                       th:field="*{createNewApplication}"
+                                       th:value="${value}"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
+                            <label th:for="${#ids.prev('createNewApplication')}" th:text="${value} ? 'Yes, I want to create a new application.' : 'No, I want to continue with my existing application.'"/>
+                        </div>
+                    </fieldset>
+                    </div>
+                    <button type="submit" name="create-application-submit" class="button">
+                        Continue
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

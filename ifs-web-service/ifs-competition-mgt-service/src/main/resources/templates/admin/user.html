@@ -1,57 +1,59 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='View internal user details'" />
 </head>
-<body class="competition-management">
+<body class="govuk-template__body competition-management">
 
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkClass='link-back',linkUrl=@{/admin/users/active}"  />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='View internal user details',size='heading-xlarge'" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='View internal user details',size='heading-xlarge'" />
 
-    <dl>
-        <dt>Full name</dt>
-        <dd class="extra-margin-bottom" th:text="${model.user.name}">Mark Smith</dd>
+        <dl>
+            <dt>Full name</dt>
+            <dd class="extra-margin-bottom" th:text="${model.user.name}">Mark Smith</dd>
 
-        <dt>Email address</dt>
-        <dd class="extra-margin-bottom" th:text="${model.user.email}">mark.smith@innovate.gov.uk</dd>
+            <dt>Email address</dt>
+            <dd class="extra-margin-bottom" th:text="${model.user.email}">mark.smith@innovate.gov.uk</dd>
 
-        <dt>Role</dt>
-        <dd class="extra-margin-bottom" th:text="${model.user.getRolesString()}">Super admin</dd>
-    </dl>
+            <dt>Role</dt>
+            <dd class="extra-margin-bottom" th:text="${model.user.getRolesString()}">Super admin</dd>
+        </dl>
 
-    <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST" novalidate="novalidate">
+        <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST" novalidate="novalidate">
+                <div class="form-footer">
+                    <div class="form-footer__actions">
+                        <button class="buttonlink" data-js-modal="modal-confirm-reactivate-user" type="button">Reactivate user</button>
+                    </div>
+                    <div class="form-footer__info" th:text="|Deactivated by ${model.user.modifiedBy} on ${#temporals.format(model.user.modifiedOn, 'd MMMM yyyy')}">
+                        Deactivated by Susan Smith on 23rd March 2017
+                    </div>
+                </div>
+                <th:block th:insert="fragments/modals :: modal-confirm-reactivate-user" />
+            </form>
+        </th:block>
+        <th:block th:unless="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
             <div class="form-footer">
                 <div class="form-footer__actions">
-                    <button class="buttonlink" data-js-modal="modal-confirm-reactivate-user" type="button">Reactivate user</button>
+                    <a th:href="@{|/admin/user/${model.user.id}/edit|}">Edit</a>
                 </div>
-                <div class="form-footer__info" th:text="|Deactivated by ${model.user.modifiedBy} on ${#temporals.format(model.user.modifiedOn, 'd MMMM yyyy')}">
-                    Deactivated by Susan Smith on 23rd March 2017
+                <div class="form-footer__info" th:text="|Created by ${model.user.createdBy} on ${#temporals.format(model.user.createdOn, 'd MMMM yyyy')}|">
+                    Created by Susan Smith on 23rd March 2017
                 </div>
             </div>
-            <th:block th:insert="fragments/modals :: modal-confirm-reactivate-user" />
-        </form>
-    </th:block>
-    <th:block th:unless="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
-        <div class="form-footer">
-            <div class="form-footer__actions">
-                <a th:href="@{|/admin/user/${model.user.id}/edit|}">Edit</a>
-            </div>
-            <div class="form-footer__info" th:text="|Created by ${model.user.createdBy} on ${#temporals.format(model.user.createdOn, 'd MMMM yyyy')}|">
-                Created by Susan Smith on 23rd March 2017
-            </div>
-        </div>
-    </th:block>
+        </th:block>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 

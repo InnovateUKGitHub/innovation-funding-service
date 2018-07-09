@@ -1,160 +1,164 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit your details',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body>
+    <body class="govuk-template__body">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Your details',linkClass='link-back',linkUrl=@{/profile/details}" />
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to update your account.</h2>
-                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-            </div>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your details',size='heading-xlarge'" />
-
-            <form th:action="@{/profile/details/edit}" method="post" th:object="${form}" novalidate="novalidate">
-                <h2 class="heading-medium">Your details</h2>
-                <div class="form-group" th:classappend="${#fields.hasErrors('firstName')}? 'form-group-error'">
-                    <label class="form-label" th:for="firstName">
-                        <span class="form-label-bold">First name</span>
-                        <th:block th:if="${#fields.hasErrors('firstName')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
-                        </th:block>
-                    </label>
-                    <input class="form-control"
-                           th:errorclass="form-control-error"
-                           type="text"
-                           th:field="*{firstName}"
-                           required="required"
-                           minlength="2"
-                           maxlength="70"
-                           pattern="\D{2,}"
-                           th:attr="data-required-errormessage=#{validation.standard.firstname.required},
-                                    data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
-                                    data-maxlength-errormessage=#{validation.standard.firstname.length.max},
-                                    data-pattern-errormessage=#{validation.standard.firstname.invalid}" />
+                <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to update your account.</h2>
+                    <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
-                    <label class="form-label" for="lastName">
-                        <span class="form-label-bold">Last name</span>
-                        <th:block th:if="${#fields.hasErrors('lastName')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
-                        </th:block>
-                    </label>
-                    <input class="form-control"
-                           th:errorclass="form-control-error"
-                           id="lastName"
-                           type="text"
-                           th:field="*{lastName}"
-                           required="required"
-                           minlength="2"
-                           maxlength="70"
-                           pattern="\D{2,}"
-                           th:attr="data-required-errormessage=#{validation.standard.lastname.required},
-                                    data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
-                                    data-maxlength-errormessage=#{validation.standard.lastname.length.max},
-                                    data-pattern-errormessage=#{validation.standard.lastname.invalid}" />
-                </div>
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your details',size='heading-xlarge'" />
 
-
-                <fieldset class="extra-margin">
-                    <legend class="visuallyhidden">Address details</legend>
-                    <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'form-group-error'">
-                        <label class="form-label" for="addressForm.addressLine1">
-                            <span class="form-label-bold">Street</span>
-                            <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine1}')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine1')}" th:text="${err}"></span>
+                <form th:action="@{/profile/details/edit}" method="post" th:object="${form}" novalidate="novalidate">
+                    <h2 class="heading-medium">Your details</h2>
+                    <div class="form-group" th:classappend="${#fields.hasErrors('firstName')}? 'form-group-error'">
+                        <label class="form-label" th:for="firstName">
+                            <span class="form-label-bold">First name</span>
+                            <th:block th:if="${#fields.hasErrors('firstName')}">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <input class="form-control" th:attr="data-required-errormessage=#{validation.standard.addressline1.required}" required="required" th:field="*{addressForm.addressLine1}" th:errorclass="form-control-error" type="text" />
+                        <input class="form-control"
+                               th:errorclass="form-control-error"
+                               type="text"
+                               th:field="*{firstName}"
+                               required="required"
+                               minlength="2"
+                               maxlength="70"
+                               pattern="\D{2,}"
+                               th:attr="data-required-errormessage=#{validation.standard.firstname.required},
+                                        data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                                        data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                        data-pattern-errormessage=#{validation.standard.firstname.invalid}" />
                     </div>
-                    <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine2}')} ? 'form-group-error'">
-                        <label class="form-label visuallyhidden" for="addressForm.addressLine2">
-                            <span class="form-label-bold">Street line 2</span>
-                            <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine2}')}">
-                                  <span class="error-message" th:each="err : ${#fields.errors('addressForm.addressLine2')}" th:text="${err}"></span>
+
+                    <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
+                        <label class="form-label" for="lastName">
+                            <span class="form-label-bold">Last name</span>
+                            <th:block th:if="${#fields.hasErrors('lastName')}">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <input class="form-control" th:field="*{addressForm.addressLine2}" th:errorclass="form-control-error" type="text" />
+                        <input class="form-control"
+                               th:errorclass="form-control-error"
+                               id="lastName"
+                               type="text"
+                               th:field="*{lastName}"
+                               required="required"
+                               minlength="2"
+                               maxlength="70"
+                               pattern="\D{2,}"
+                               th:attr="data-required-errormessage=#{validation.standard.lastname.required},
+                                        data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
+                                        data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                        data-pattern-errormessage=#{validation.standard.lastname.invalid}" />
                     </div>
-                    <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine3}')} ? 'form-group-error'">
-                        <label class="form-label" for="addressForm.addressLine3">
-                            <span class="form-label-bold visuallyhidden">Street line 3</span>
-                            <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine3}')}">
-                                  <span class="error-message" th:each="err : ${#fields.errors('addressForm.addressLine3')}" th:text="${err}"></span>
+
+
+                    <fieldset class="extra-margin">
+                        <legend class="visuallyhidden">Address details</legend>
+                        <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'form-group-error'">
+                            <label class="form-label" for="addressForm.addressLine1">
+                                <span class="form-label-bold">Street</span>
+                                <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine1}')}">
+                                      <span class="error-message"  th:each="err : ${#fields.errors('addressForm.addressLine1')}" th:text="${err}"></span>
+                                </th:block>
+                            </label>
+                            <input class="form-control" th:attr="data-required-errormessage=#{validation.standard.addressline1.required}" required="required" th:field="*{addressForm.addressLine1}" th:errorclass="form-control-error" type="text" />
+                        </div>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine2}')} ? 'form-group-error'">
+                            <label class="form-label visuallyhidden" for="addressForm.addressLine2">
+                                <span class="form-label-bold">Street line 2</span>
+                                <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine2}')}">
+                                      <span class="error-message" th:each="err : ${#fields.errors('addressForm.addressLine2')}" th:text="${err}"></span>
+                                </th:block>
+                            </label>
+                            <input class="form-control" th:field="*{addressForm.addressLine2}" th:errorclass="form-control-error" type="text" />
+                        </div>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine3}')} ? 'form-group-error'">
+                            <label class="form-label" for="addressForm.addressLine3">
+                                <span class="form-label-bold visuallyhidden">Street line 3</span>
+                                <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine3}')}">
+                                      <span class="error-message" th:each="err : ${#fields.errors('addressForm.addressLine3')}" th:text="${err}"></span>
+                                </th:block>
+                            </label>
+                            <input class="form-control" th:field="*{addressForm.addressLine3}"  th:errorclass="form-control-error" type="text" />
+                        </div>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.town}')} ? 'form-group-error'">
+                            <label class="form-label" for="addressForm.town">
+                                <span class="form-label-bold">Town</span>
+                                <th:block th:if="${#fields.hasErrors('*{addressForm.town}')}">
+                                      <span class="error-message"  th:each="err : ${#fields.errors('addressForm.town')}" th:text="${err}"></span>
+                                </th:block>
+                            </label>
+                            <input class="form-control" required="required" th:attr="data-required-errormessage=#{validation.standard.town.required}" th:field="*{addressForm.town}"  th:errorclass="form-control-error" type="text" />
+                        </div>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.county}')} ? 'form-group-error'">
+                            <label class="form-label" for="addressForm.county">
+                                <span class="form-label-bold">County</span>
+                                <th:block th:if="${#fields.hasErrors('*{addressForm.county}')}">
+                                      <span class="error-message"  th:each="err : ${#fields.errors('addressForm.county')}" th:text="${err}"></span>
+                                </th:block>
+                            </label>
+                            <input class="form-control" th:field="*{addressForm.county}" th:errorclass="form-control-error"  type="text" />
+                        </div>
+                        <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcode}')} ? 'form-group-error'">
+                            <label class="form-label" for="addressForm.postcode" >
+                                <span class="form-label-bold">Postcode</span>
+                                <th:block th:if="${#fields.hasErrors('*{addressForm.postcode}')}">
+                                      <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcode')}" th:text="${err}"></span>
+                                </th:block>
+                            </label>
+                            <input class="form-control" required="required" th:attr="data-required-errormessage=#{validation.standard.postcode.required}" th:field="*{addressForm.postcode}" th:errorclass="form-control-error" type="text" />
+                        </div>
+                    </fieldset>
+
+                    <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
+                        <label class="form-label" th:for="phoneNumber">
+                            <span class="form-label-bold">Phone number</span>
+                            <span class="form-hint">We may use this to contact you about the application.</span>
+                            <th:block th:if="${#fields.hasErrors('phoneNumber')}">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <input class="form-control" th:field="*{addressForm.addressLine3}"  th:errorclass="form-control-error" type="text" />
+                        <input class="form-control"
+                               th:errorclass="field-error"
+                               type="tel"
+                               th:field="*{phoneNumber}"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
+
                     </div>
-                    <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.town}')} ? 'form-group-error'">
-                        <label class="form-label" for="addressForm.town">
-                            <span class="form-label-bold">Town</span>
-                            <th:block th:if="${#fields.hasErrors('*{addressForm.town}')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.town')}" th:text="${err}"></span>
-                            </th:block>
-                        </label>
-                        <input class="form-control" required="required" th:attr="data-required-errormessage=#{validation.standard.town.required}" th:field="*{addressForm.town}"  th:errorclass="form-control-error" type="text" />
+
+                    <div class="form-group">
+                        <h3 class="heading-small">Email</h3>
+                        <p class="form-hint">
+                            Your email address cannot be changed in the system.<br />
+                            <strong th:text="${model.email}">jsmith@assessor.co.uk</strong>
+                        </p>
                     </div>
-                    <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.county}')} ? 'form-group-error'">
-                        <label class="form-label" for="addressForm.county">
-                            <span class="form-label-bold">County</span>
-                            <th:block th:if="${#fields.hasErrors('*{addressForm.county}')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.county')}" th:text="${err}"></span>
-                            </th:block>
-                        </label>
-                        <input class="form-control" th:field="*{addressForm.county}" th:errorclass="form-control-error"  type="text" />
-                    </div>
-                    <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcode}')} ? 'form-group-error'">
-                        <label class="form-label" for="addressForm.postcode" >
-                            <span class="form-label-bold">Postcode</span>
-                            <th:block th:if="${#fields.hasErrors('*{addressForm.postcode}')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcode')}" th:text="${err}"></span>
-                            </th:block>
-                        </label>
-                        <input class="form-control" required="required" th:attr="data-required-errormessage=#{validation.standard.postcode.required}" th:field="*{addressForm.postcode}" th:errorclass="form-control-error" type="text" />
-                    </div>
-                </fieldset>
 
-                <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
-                    <label class="form-label" th:for="phoneNumber">
-                        <span class="form-label-bold">Phone number</span>
-                        <span class="form-hint">We may use this to contact you about the application.</span>
-                        <th:block th:if="${#fields.hasErrors('phoneNumber')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
-                        </th:block>
-                    </label>
-                    <input class="form-control"
-                           th:errorclass="field-error"
-                           type="tel"
-                           th:field="*{phoneNumber}"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
+                    <p>To change your email address please contact Innovate UK: phone <strong>0300 321 4357</strong></p>
 
-                </div>
+                    <button class="button button-large" type="submit">Save and return to your details</button>
+                    <a th:href="@{/profile/details}">Cancel</a>
+                </form>
 
-                <div class="form-group">
-                    <h3 class="heading-small">Email</h3>
-                    <p class="form-hint">
-                        Your email address cannot be changed in the system.<br />
-                        <strong th:text="${model.email}">jsmith@assessor.co.uk</strong>
-                    </p>
-                </div>
-
-                <p>To change your email address please contact Innovate UK: phone <strong>0300 321 4357</strong></p>
-
-                <button class="button button-large" type="submit">Save and return to your details</button>
-                <a th:href="@{/profile/details}">Cancel</a>
-            </form>
-
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

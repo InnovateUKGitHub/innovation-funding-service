@@ -1,96 +1,100 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <!-- todo: make hasFormErrors a bit better by adding in viewmodel, IFS-2033 -->
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${(#fields.hasErrors('${organisationForm.organisationSearchName}') and organisationForm.organisationSearching) or (#fields.hasErrors('${organisationForm.addressForm.*}') and  (organisationForm.addressForm.triedToSave or organisationForm.addressForm.triedToSearch))}" />
 </head>
-<body class="create-application-find-business">
+<body class="govuk-template__body create-application-find-business">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:unless="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkClass='link-back',linkUrl='/organisation/create/new-account-organisation-type',currentApplication=${currentApplication}" />
-    <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkClass='link-back',linkUrl='/organisation/create/lead-organisation-type'" />
 
-    <th:block th:with="orgTitle=${organisationType.name}">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${orgTitle},subTitle='Create your account',size='heading-xlarge'" />
-    </th:block>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkClass='link-back',linkUrl='/organisation/create/lead-organisation-type'" />
 
-    <th:block th:unless="${organisationForm.research}">
-        <div class="message-alert">
-            <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
-        </div>
-        <p>You can identify your organisation through Companies House or enter your details manually.</p>
-        <h2 class="heading-medium">Search on Companies House</h2>
-    </th:block>
-    <th:block th:if="${organisationForm.research}">
-        <div class="message-alert">
-            <p>Your organisation must be registered on Je-S before we will consider you to be a research organisation.</p>
-        </div>
-    </th:block>
-
-    <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
-
-        <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-group-error'">
-            <label class="form-label" th:for="*{organisationSearchName}">
-                <span class="form-label-bold" th:text="${searchLabel}">Find your ? organisation</span>
-                <span class="form-hint" th:text="${searchHint}">Enter your organisation name</span>
-                <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}">
-                      <span class="error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
-                </th:block>
-            </label>
-            <input class="form-control" th:field="*{organisationSearchName}" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-control-error'" type="text" value="" />
-            <button type="submit" id="org-search" name="search-organisation" class="button">Search</button>
-        </div>
-        <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
-            <th:block th:if="${organisationForm.research}">
-                <p class="form-hint">Choose your organisation:</p>
-            </th:block>
-            <th:block th:unless="${organisationForm.research}">
-                <h2 class="heading-medium no-margin">Companies House search results</h2>
-                <p class="form-hint">Select your organisation from the options below</p>
-            </th:block>
+        <th:block th:with="orgTitle=${organisationType.name}">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${orgTitle},subTitle='Create your account',size='heading-xlarge'" />
         </th:block>
-        <ul id="org-results" class="results-list panel" th:if="${organisationForm.organisationSearching}"
-            th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
-            <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">
-                <h3>
-                    <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}"
-                       title="View organisation"
-                       th:text="${organisation.name}">
-                    </a>
-                </h3>
-                <th:block th:unless="${organisationForm.research}">
-                    <p class="meta crumbtrail" th:text="${organisation.extraAttributes.description}"></p>
-                    <p th:text="${organisation.location}"></p>
-                </th:block>
-            </li>
-            <li th:unless="${organisationForm.organisationSearchResults.size()}">
-                <p>No results found.<br/>Please check your search criteria and try again.</p>
-            </li>
-        </ul>
+
         <th:block th:unless="${organisationForm.research}">
-            <input type="hidden" th:field="*{manualEntry}" />
-            <h2 class="heading-medium">Not on Companies House?</h2>
-            <p>Enter your organisation details manually. You may need to supply additional details at a later point.</p>
-            <th:block th:with="isOpen=${#strings.isEmpty('*{organisationSearchName}') or !#strings.isEmpty(organisationForm.organisationName) or !#strings.isEmpty(organisationForm.addressForm.postcodeInput) or organisationForm.addressForm.manualAddress or organisationForm.addressForm.triedToSearch}">
-                <details th:attr="open=${isOpen} ? 'open' : null ">
-                    <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"><span class="summary">Enter details manually</span></summary>
-                    <div class="panel" th:attr="aria-hidden=${isOpen} ? 'false' : null">
-                        <h2 class="heading-medium">Enter your organisation details</h2>
-                        <th:block th:insert="fragments/addresses :: organisation-name"  th:with="form=${organisationForm},addressType=${'organisation address'}"/>
-                        <th:block th:insert="fragments/addresses :: company-address-details"  th:with="form=${organisationForm}, addressType=${'organisation address'}"/>
-                        <button type="submit" name="save-organisation-details" class="button extra-margin">Continue</button>
-                    </div>
-                </details>
-            </th:block>
+            <div class="message-alert">
+                <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+            </div>
+            <p>You can identify your organisation through Companies House or enter your details manually.</p>
+            <h2 class="heading-medium">Search on Companies House</h2>
         </th:block>
-    </form>
+        <th:block th:if="${organisationForm.research}">
+            <div class="message-alert">
+                <p>Your organisation must be registered on Je-S before we will consider you to be a research organisation.</p>
+            </div>
+        </th:block>
+
+        <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-group-error'">
+                <label class="form-label" th:for="*{organisationSearchName}">
+                    <span class="form-label-bold" th:text="${searchLabel}">Find your ? organisation</span>
+                    <span class="form-hint" th:text="${searchHint}">Enter your organisation name</span>
+                    <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
+                    </th:block>
+                </label>
+                <input class="form-control" th:field="*{organisationSearchName}" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-control-error'" type="text" value="" />
+                <button type="submit" id="org-search" name="search-organisation" class="button">Search</button>
+            </div>
+            <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
+                <th:block th:if="${organisationForm.research}">
+                    <p class="form-hint">Choose your organisation:</p>
+                </th:block>
+                <th:block th:unless="${organisationForm.research}">
+                    <h2 class="heading-medium no-margin">Companies House search results</h2>
+                    <p class="form-hint">Select your organisation from the options below</p>
+                </th:block>
+            </th:block>
+            <ul id="org-results" class="results-list panel" th:if="${organisationForm.organisationSearching}"
+                th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
+                <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">
+                    <h3>
+                        <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}"
+                           title="View organisation"
+                           th:text="${organisation.name}">
+                        </a>
+                    </h3>
+                    <th:block th:unless="${organisationForm.research}">
+                        <p class="meta crumbtrail" th:text="${organisation.extraAttributes.description}"></p>
+                        <p th:text="${organisation.location}"></p>
+                    </th:block>
+                </li>
+                <li th:unless="${organisationForm.organisationSearchResults.size()}">
+                    <p>No results found.<br/>Please check your search criteria and try again.</p>
+                </li>
+            </ul>
+            <th:block th:unless="${organisationForm.research}">
+                <input type="hidden" th:field="*{manualEntry}" />
+                <h2 class="heading-medium">Not on Companies House?</h2>
+                <p>Enter your organisation details manually. You may need to supply additional details at a later point.</p>
+                <th:block th:with="isOpen=${#strings.isEmpty('*{organisationSearchName}') or !#strings.isEmpty(organisationForm.organisationName) or !#strings.isEmpty(organisationForm.addressForm.postcodeInput) or organisationForm.addressForm.manualAddress or organisationForm.addressForm.triedToSearch}">
+                    <details th:attr="open=${isOpen} ? 'open' : null ">
+                        <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"><span class="summary">Enter details manually</span></summary>
+                        <div class="panel" th:attr="aria-hidden=${isOpen} ? 'false' : null">
+                            <h2 class="heading-medium">Enter your organisation details</h2>
+                            <th:block th:insert="fragments/addresses :: organisation-name"  th:with="form=${organisationForm},addressType=${'organisation address'}"/>
+                            <th:block th:insert="fragments/addresses :: company-address-details"  th:with="form=${organisationForm}, addressType=${'organisation address'}"/>
+                            <button type="submit" name="save-organisation-details" class="button extra-margin">Continue</button>
+                        </div>
+                    </details>
+                </th:block>
+            </th:block>
+        </form>
 
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

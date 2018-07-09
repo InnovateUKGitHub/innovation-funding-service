@@ -1,136 +1,139 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="project-detail gol">
+<body class="govuk-template__body project-detail gol">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
 
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to submit grant offer letter</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
-
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=${model.projectName},size='heading-xlarge'" />
-
-    <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
-
-        <th:block th:if="${model.showGrantOfferLetterReceivedByInnovateMessage}">
-            <p>The signed grant offer letter has been received by Innovate UK and is awaiting review.</p>
-            <p>The unsigned grant offer letter is available for your records.</p>
-        </th:block>
-
-        <div th:if="${model.showGrantOfferLetterApprovedByInnovateMessage}" class="success-alert extra-margin-bottom">
-            <p>Your signed grant offer letter has been received and accepted by Innovate UK.</p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to submit grant offer letter</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:if="${model.showGrantOfferLetterRejectedMessage}">
-            <div class="fail-alert extra-margin-bottom">
-                <h2 class="heading-small">Your grant offer letter has been rejected by Innovate UK</h2>
-                <p>Someone will be in touch with you soon.</p>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=${model.projectName},size='heading-xlarge'" />
+
+        <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
+
+            <th:block th:if="${model.showGrantOfferLetterReceivedByInnovateMessage}">
+                <p>The signed grant offer letter has been received by Innovate UK and is awaiting review.</p>
+                <p>The unsigned grant offer letter is available for your records.</p>
+            </th:block>
+
+            <div th:if="${model.showGrantOfferLetterApprovedByInnovateMessage}" class="success-alert extra-margin-bottom">
+                <p>Your signed grant offer letter has been received and accepted by Innovate UK.</p>
             </div>
-        </th:block>
 
-        <th:block th:if="${model.leadPartner}">
-            <p th:unless="${model.submitted}">The grant offer letter has been provided by Innovate UK. It has been
-                created using the information provided during project setup.</p>
-
-            <th:block th:unless="${model.submitted}">
-                <h2 class="heading-medium">Next steps</h2>
-                <ul class="list list-bullet">
-                    <li>review grant offer letter and annex if provided</li>
-                    <li>the Project Manager will need to sign the document</li>
-                    <li>the signed grant offer letter should then be sent to Innovate UK</li>
-                </ul>
-                <p>After the signed grant offer letter is received and approved by Innovate UK, project setup will
-                    be complete.</p>
+            <th:block th:if="${model.showGrantOfferLetterRejectedMessage}">
+                <div class="fail-alert extra-margin-bottom">
+                    <h2 class="heading-small">Your grant offer letter has been rejected by Innovate UK</h2>
+                    <p>Someone will be in touch with you soon.</p>
+                </div>
             </th:block>
 
-            <h2 class="heading-medium">Grant offer letter</h2>
-            <p th:unless="${model.submitted}">This document is awaiting signature by the Project Manager.</p>
+            <th:block th:if="${model.leadPartner}">
+                <p th:unless="${model.submitted}">The grant offer letter has been provided by Innovate UK. It has been
+                    created using the information provided during project setup.</p>
 
-            <th:block th:if="${model.grantOfferLetterSent}">
-                <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}" th:text="${model.grantOfferLetterFile?.filename} + ' (opens in a new window)'" target="_blank" class="grant-offer-download">Grant offer letter 2016-07-28a.PDF</a></p>
-            </th:block>
-
-            <th:block th:if="${model.signedGrantOfferLetterFile != null && model.signedGrantOfferLetterFile.filename != null}">
-                <h2 class="heading-medium">Signed grant offer letter</h2>
-                <p><a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile.filename} + ' (opens in a new window)'" target="_blank">Signed grant offer letter 2016-07-28a.PDF</a></p>
-            </th:block>
-
-            <th:block th:if="${model.additionalContractFile != null}">
-                <h2 class="heading-medium">Annex</h2>
-                <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
-                <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename} + ' (opens in a new window)'" target="_blank">Grant offer letter 2016-07-28a.PDF</a></p>
-            </th:block>
-
-            <div th:if="${model.grantOfferLetterSent and !model.submitted and model.grantOfferLetterFile != null}" class="upload-section">
-                <h2 class="heading-medium">Sending your signed grant offer letter to Innovate UK</h2>
-                <h2 class="heading-small no-margin">Upload signed grant offer letter</h2>
-                The Project Manager is required to provide a signed copy of the grant offer letter.
-                <details>
-                    <summary><span class="summary">What are the requirements for upload?</span></summary>
-                    <div class="panel">
-                        <p>The uploaded signed grant offer letter agreement must:</p>
-                        <ul class="list list-bullet">
-                            <li>contain signed pages</li>
-                            <li>be in a portable document format (.pdf)</li>
-                            <li>be legible at 100% magnification</li>
-                            <li>be less than 1mb in file size</li>
-                        </ul>
-                        <p>Unable to upload? Contact Customer Support on 0300 321 4357.</p>
-                    </div>
-                </details>
-                <th:block th:with="uploadViewmode='edit',
-                               downloadUrl=@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})},
-                               filename=${model.signedGrantOfferLetterFile?.filename},
-                               inputField='signedGrantOfferLetter',
-                               validationField=${inputField},
-                               mayRemove=${model.ableToRemoveSignedGrantOffer},
-                               removeName='removeSignedGrantOfferLetterClicked',
-                               saveName='uploadSignedGrantOfferLetterClicked'">
-                    <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                <th:block th:unless="${model.submitted}">
+                    <h2 class="heading-medium">Next steps</h2>
+                    <ul class="list list-bullet">
+                        <li>review grant offer letter and annex if provided</li>
+                        <li>the Project Manager will need to sign the document</li>
+                        <li>the signed grant offer letter should then be sent to Innovate UK</li>
+                    </ul>
+                    <p>After the signed grant offer letter is received and approved by Innovate UK, project setup will
+                        be complete.</p>
                 </th:block>
-            </div>
 
-            <th:block th:if="${model.grantOfferLetterSent}">
-                <a th:if="${model.showSubmitButton}"
-                   th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"
-                   data-js-modal="modal-confirm-grant-offer-letter" class="button">Send to Innovate UK</a>
-                <button th:if="${model.showDisabledSubmitButton}"
-                        disabled="disabled" class="button">Send to Innovate UK
-                </button>
+                <h2 class="heading-medium">Grant offer letter</h2>
+                <p th:unless="${model.submitted}">This document is awaiting signature by the Project Manager.</p>
+
+                <th:block th:if="${model.grantOfferLetterSent}">
+                    <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}" th:text="${model.grantOfferLetterFile?.filename} + ' (opens in a new window)'" target="_blank" class="grant-offer-download">Grant offer letter 2016-07-28a.PDF</a></p>
+                </th:block>
+
+                <th:block th:if="${model.signedGrantOfferLetterFile != null && model.signedGrantOfferLetterFile.filename != null}">
+                    <h2 class="heading-medium">Signed grant offer letter</h2>
+                    <p><a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile.filename} + ' (opens in a new window)'" target="_blank">Signed grant offer letter 2016-07-28a.PDF</a></p>
+                </th:block>
+
+                <th:block th:if="${model.additionalContractFile != null}">
+                    <h2 class="heading-medium">Annex</h2>
+                    <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
+                    <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename} + ' (opens in a new window)'" target="_blank">Grant offer letter 2016-07-28a.PDF</a></p>
+                </th:block>
+
+                <div th:if="${model.grantOfferLetterSent and !model.submitted and model.grantOfferLetterFile != null}" class="upload-section">
+                    <h2 class="heading-medium">Sending your signed grant offer letter to Innovate UK</h2>
+                    <h2 class="heading-small no-margin">Upload signed grant offer letter</h2>
+                    The Project Manager is required to provide a signed copy of the grant offer letter.
+                    <details>
+                        <summary><span class="summary">What are the requirements for upload?</span></summary>
+                        <div class="panel">
+                            <p>The uploaded signed grant offer letter agreement must:</p>
+                            <ul class="list list-bullet">
+                                <li>contain signed pages</li>
+                                <li>be in a portable document format (.pdf)</li>
+                                <li>be legible at 100% magnification</li>
+                                <li>be less than 1mb in file size</li>
+                            </ul>
+                            <p>Unable to upload? Contact Customer Support on 0300 321 4357.</p>
+                        </div>
+                    </details>
+                    <th:block th:with="uploadViewmode='edit',
+                                   downloadUrl=@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})},
+                                   filename=${model.signedGrantOfferLetterFile?.filename},
+                                   inputField='signedGrantOfferLetter',
+                                   validationField=${inputField},
+                                   mayRemove=${model.ableToRemoveSignedGrantOffer},
+                                   removeName='removeSignedGrantOfferLetterClicked',
+                                   saveName='uploadSignedGrantOfferLetterClicked'">
+                        <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                    </th:block>
+                </div>
+
+                <th:block th:if="${model.grantOfferLetterSent}">
+                    <a th:if="${model.showSubmitButton}"
+                       th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"
+                       data-js-modal="modal-confirm-grant-offer-letter" class="button">Send to Innovate UK</a>
+                    <button th:if="${model.showDisabledSubmitButton}"
+                            disabled="disabled" class="button">Send to Innovate UK
+                    </button>
+                </th:block>
+
+                <th:block th:insert="fragments/modals :: modal-overlay" />
+                <th:block th:insert="fragments/modals :: modal-confirm-grant-offer-letter" />
+
             </th:block>
 
-            <th:block th:insert="fragments/modals :: modal-overlay" />
-            <th:block th:insert="fragments/modals :: modal-confirm-grant-offer-letter" />
+            <th:block th:if="${!model.leadPartner}">
+                <th:block th:if="${model.showAwaitingSignatureFromLeadPartnerMessage}">
+                    <p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup. It is now awaiting signature by the lead applicant.</p>
+                    <p>A copy of the unsigned grant offer letter is available for your records.</p>
+                </th:block>
 
-        </th:block>
+                <h2 class="heading-medium">Grant offer letter</h2>
+                <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}" th:text="${model.grantOfferLetterFile?.filename} + ' (opens in a new window)'" target="_blank" class="grant-offer-download">Grant offer letter 2016-07-28a.PDF</a></p>
 
-        <th:block th:if="${!model.leadPartner}">
-            <th:block th:if="${model.showAwaitingSignatureFromLeadPartnerMessage}">
-                <p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup. It is now awaiting signature by the lead applicant.</p>
-                <p>A copy of the unsigned grant offer letter is available for your records.</p>
+                <th:block th:if="${model.additionalContractFile}">
+                    <h2 class="heading-medium">Annex</h2>
+                    <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
+                    <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename} + ' (opens in a new window)'" target="_blank">Grant offer letter 2016-07-28a.PDF</a></p>
+                </th:block>
             </th:block>
 
-            <h2 class="heading-medium">Grant offer letter</h2>
-            <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}" th:text="${model.grantOfferLetterFile?.filename} + ' (opens in a new window)'" target="_blank" class="grant-offer-download">Grant offer letter 2016-07-28a.PDF</a></p>
 
-            <th:block th:if="${model.additionalContractFile}">
-                <h2 class="heading-medium">Annex</h2>
-                <p>The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
-                <p><a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}" th:text="${model.additionalContractFile?.filename} + ' (opens in a new window)'" target="_blank">Grant offer letter 2016-07-28a.PDF</a></p>
-            </th:block>
-        </th:block>
-
-
-    </form>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        </form>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

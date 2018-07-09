@@ -1,64 +1,8 @@
+@import "../layout/grid";
+
 //Competition management admin pages require extra page width to prevent admin data tables from horizontal scrolling
-
-$wide-page-width: 1400px;
-
-.wide-page,
 .competition-management{
-
-  #global-header{
-    .header-wrapper{
-      max-width: $wide-page-width + $govuk-gutter;
-    }
-  }
-
-  #content{
-
-    @include media-down(mobile){
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-    @include govuk-media-query(tablet){
-      margin: 0;
-    }
-
-    @media (min-width: $wide-page-width + ($govuk-gutter * 2)){
-      padding-left: 0;
-      padding-right: 0;
-      margin: 0 auto;
-    }
-
-    max-width: $wide-page-width;
-    padding-left: $govuk-gutter;
-    padding-right: $govuk-gutter;
-
-  }
-
-  %wide-page-margins{
-    @include media-down(mobile){
-      margin-left: $govuk-gutter-half;
-      margin-right: $govuk-gutter-half;
-    }
-
-    @media (min-width: $wide-page-width + ($govuk-gutter * 2)){
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    max-width: $wide-page-width;
-    margin-left: $govuk-gutter;
-    margin-right: $govuk-gutter;
-  }
-
-  .phase-banner{
-    @extend %wide-page-margins;
-  }
-
-  #footer{
-    .footer-wrapper{
-      @extend %wide-page-margins;
-    }
-  }
+  @extend %wide-page;
 }
 
 .grid-row {

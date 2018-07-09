@@ -1,54 +1,57 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
 </head>
-<body class="competition-management competition-overview">
+<body class="govuk-template__body competition-management competition-overview">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <div class="grid-row">
-        <div class="column-half">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competitions',size='heading-xlarge'" />
-        </div>
-        <div class="column-half">
-            <div class="alignright extra-margin">
-                <a href="competition/create" class="button button-large" th:text="#{ifs.competition.create_competition}">Create Competition</a>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div class="grid-row">
+            <div class="column-half">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competitions',size='heading-xlarge'" />
+            </div>
+            <div class="column-half">
+                <div class="alignright extra-margin">
+                    <a href="competition/create" class="button button-large" th:text="#{ifs.competition.create_competition}">Create Competition</a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="competitions-list">
-        <ul class="comp-list">
-            <li th:each="competition: ${competitions}">
-                <div class="column-two-thirds">
-                    <h3 class="heading-small">
-                        <a th:href="@{'competition/setup/'+${competition.id}}"
-                           th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP || competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}"
-                           th:text="${#strings.isEmpty(competition.name)} ? #{ifs.competition.no_title} : ${competition.name}">
-                           Competition name
-                        </a>
-                        <a th:href="@{'competition/'+${competition.id}}"
-                           th:unless="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP || competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN }"
-                           th:text="${#strings.isEmpty(competition.name)} ? #{ifs.competition.no_title} : ${competition.name}">
-                            competition Name
-                        </a>
-                    </h3>
-                    <p>Ref number: <th:block th:text="${competition.id}" /></p>
-                </div>
-                <div class="column-third">
-                  <p class="status" th:text="${#messages.msg('ifs.competition.status.'+competition.competitionStatus)}"/>
-                </div>
-            </li>
-        </ul>
-    </div>
+        <div class="competitions-list">
+            <ul class="comp-list">
+                <li th:each="competition: ${competitions}">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a th:href="@{'competition/setup/'+${competition.id}}"
+                               th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP || competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}"
+                               th:text="${#strings.isEmpty(competition.name)} ? #{ifs.competition.no_title} : ${competition.name}">
+                               Competition name
+                            </a>
+                            <a th:href="@{'competition/'+${competition.id}}"
+                               th:unless="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP || competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN }"
+                               th:text="${#strings.isEmpty(competition.name)} ? #{ifs.competition.no_title} : ${competition.name}">
+                                competition Name
+                            </a>
+                        </h3>
+                        <p>Ref number: <th:block th:text="${competition.id}" /></p>
+                    </div>
+                    <div class="column-third">
+                      <p class="status" th:text="${#messages.msg('ifs.competition.status.'+competition.competitionStatus)}"/>
+                    </div>
+                </li>
+            </ul>
+        </div>
 
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

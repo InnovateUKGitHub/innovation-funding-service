@@ -1,22 +1,26 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Sign In'" />
 </head>
-<body class="sign-in">
+<body class="govuk-template__body sign-in">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <h1 class="heading-large">Invalid URL</h1>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <p>The link you are trying to access is no longer valid. If you are trying to access a page via an email link, please note that these links will only work once. If it has expired then contact the email sender.</p>
-    <p>You can try copying and pasting the entire URL from your email into your browser’s address bar and press enter.</p>
-    <p>If you still receive this error message then go back to the <a th:href="@{/login}">sign in page</a> and try again. You can only sign in if you have an account with us.</p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <h1 class="heading-large">Invalid URL</h1>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <p>The link you are trying to access is no longer valid. If you are trying to access a page via an email link, please note that these links will only work once. If it has expired then contact the email sender.</p>
+        <p>You can try copying and pasting the entire URL from your email into your browser’s address bar and press enter.</p>
+        <p>If you still receive this error message then go back to the <a th:href="@{/login}">sign in page</a> and try again. You can only sign in if you have an account with us.</p>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

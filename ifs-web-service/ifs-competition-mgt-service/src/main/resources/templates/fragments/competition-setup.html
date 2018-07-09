@@ -61,11 +61,7 @@
 
 <!-- ======== Comp admin - sub header with back link ======= -->
 <div th:fragment="comp-setup-header-sub (linkTitle, linkClass, linkUrl)">
-    <div class="sub-header">
-        <nav>
-            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
-        </nav>
-    </div>
+    <a th:if="${linkTitle != null and linkUrl != null}" class="govuk-back-link" th:href="${linkUrl}" th:text="${linkTitle}" />
 </div>
 
 

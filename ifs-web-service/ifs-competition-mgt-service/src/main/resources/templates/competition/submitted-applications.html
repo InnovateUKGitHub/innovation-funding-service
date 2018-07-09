@@ -1,106 +1,109 @@
 <!DOCTYPE html>
-<html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Submitted applications - ${model.competitionName}|" />
     </head>
 
-    <body class="dashboard-internal wide-page">
+    <body class="govuk-template__body dashboard-internal wide-page">
         <th:block th:insert="fragments/layout :: body-start" />
        <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submitted applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
-            <h2 class="heading-medium">Key statistics</h2>
-            <ul class="grid-row extra-margin-bottom">
-                <li class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-medium" th:text="${#temporals.format(model.assessmentDeadline, 'd MMMM Y')}">17 November 2016</span>
-                        <br />
-                        <small>Assessment deadline</small>
-                    </div>
-                </li>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submitted applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
-                <li class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.applicationsSubmitted}">18</span>
-                        <br />
-                        <small>Applications submitted</small>
-                    </div>
-                </li>
-            </ul>
-
-            <form method="GET">
-               <div class="search-filters extra-margin">
-                   <fieldset>
-                        <legend class="heading-medium no-margin-top">Filter applications</legend>
-                        <div class="grid-row">
-                            <div class="column-two-thirds">
-                                <label class="form-label" for="filterSearch">Search by application number.</label>
-                                <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
-                            </div>
-                            <div class="column-third">
-                                <button class="button">Filter</button>
-                            </div>
+                <h2 class="heading-medium">Key statistics</h2>
+                <ul class="grid-row extra-margin-bottom">
+                    <li class="column-quarter">
+                        <div class="highlight-panel highlight-panel-padded">
+                            <span class="heading-medium" th:text="${#temporals.format(model.assessmentDeadline, 'd MMMM Y')}">17 November 2016</span>
+                            <br />
+                            <small>Assessment deadline</small>
                         </div>
-                   </fieldset>
-                   <div class="extra-margin">
-                       <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
-                   </div>
-                </div>
-                <div class="grid-row sorting">
-                    <div class="column-half">
-                        <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">22</span>
-                            <span class="heading-small">eligible applications</span>
-                        </p>
-                    </div>
-                    <div class="column-half alignright">
-                        <label for="sort-by">Sort by</label>
-                        <select id="sort-by" name="sort" class="js-auto-submit form-control">
-                            <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>
-                            <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead</option>
-                        </select>
-                        <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
-                    </div>
-                </div>
-            </form>
-            <div class="table-overflow">
-                <table id="application-list">
-                    <thead>
-                        <tr>
-                            <th scope="col">Application number</th>
-                            <th scope="col">Project title</th>
-                            <th scope="col">Lead</th>
-                            <th scope="col">Innovation area</th>
-                            <th scope="col">Number of partners</th>
-                            <th scope="col">Grant requested (&pound;)</th>
-                            <th scope="col">Total project cost (&pound;)</th>
-                            <th scope="col" class="alignright" style="width: 10%">Duration (months)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="filtered-result" th:each="row, iterStat : ${model.applications}">
-                            <td>
-                                <a
-                                th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
-                                th:text="${row.id}">194731</a>
-                            </td>
-                            <td th:text="${row.projectTitle}">Machine learning in robots</td>
-                            <td th:text="${row.lead}">PWC</td>
-                            <td th:text="${row.innovationArea} ?: 'Not listed'">HVM</td>
-                            <td th:text="${row.numberOfPartners}">5</td>
-                            <td th:text="${#numbers.formatInteger(row.grantRequested, 1, 'DEFAULT')}">£203,000</td>
-                            <td th:text="${#numbers.formatInteger(row.totalProjectCost, 1, 'DEFAULT')}">£324,000</td>
-                            <td class="alignright" th:text="${row.durationInMonths}">12</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                    </li>
 
+                    <li class="column-quarter">
+                        <div class="highlight-panel highlight-panel-padded">
+                            <span class="heading-large" th:text="${model.applicationsSubmitted}">18</span>
+                            <br />
+                            <small>Applications submitted</small>
+                        </div>
+                    </li>
+                </ul>
+
+                <form method="GET">
+                   <div class="search-filters extra-margin">
+                       <fieldset>
+                            <legend class="heading-medium no-margin-top">Filter applications</legend>
+                            <div class="grid-row">
+                                <div class="column-two-thirds">
+                                    <label class="form-label" for="filterSearch">Search by application number.</label>
+                                    <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
+                                </div>
+                                <div class="column-third">
+                                    <button class="button">Filter</button>
+                                </div>
+                            </div>
+                       </fieldset>
+                       <div class="extra-margin">
+                           <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
+                       </div>
+                    </div>
+                    <div class="grid-row sorting">
+                        <div class="column-half">
+                            <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">22</span>
+                                <span class="heading-small">eligible applications</span>
+                            </p>
+                        </div>
+                        <div class="column-half alignright">
+                            <label for="sort-by">Sort by</label>
+                            <select id="sort-by" name="sort" class="js-auto-submit form-control">
+                                <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>
+                                <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead</option>
+                            </select>
+                            <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="table-overflow">
+                    <table id="application-list">
+                        <thead>
+                            <tr>
+                                <th scope="col">Application number</th>
+                                <th scope="col">Project title</th>
+                                <th scope="col">Lead</th>
+                                <th scope="col">Innovation area</th>
+                                <th scope="col">Number of partners</th>
+                                <th scope="col">Grant requested (&pound;)</th>
+                                <th scope="col">Total project cost (&pound;)</th>
+                                <th scope="col" class="alignright" style="width: 10%">Duration (months)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="filtered-result" th:each="row, iterStat : ${model.applications}">
+                                <td>
+                                    <a
+                                    th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
+                                    th:text="${row.id}">194731</a>
+                                </td>
+                                <td th:text="${row.projectTitle}">Machine learning in robots</td>
+                                <td th:text="${row.lead}">PWC</td>
+                                <td th:text="${row.innovationArea} ?: 'Not listed'">HVM</td>
+                                <td th:text="${row.numberOfPartners}">5</td>
+                                <td th:text="${#numbers.formatInteger(row.grantRequested, 1, 'DEFAULT')}">£203,000</td>
+                                <td th:text="${#numbers.formatInteger(row.totalProjectCost, 1, 'DEFAULT')}">£324,000</td>
+                                <td class="alignright" th:text="${row.durationInMonths}">12</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
         <th:block th:insert="fragments/service-layout :: body-end" />

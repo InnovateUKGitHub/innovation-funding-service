@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage assessments'" />
 </head>
 
-<body class="competition-management">
+<body class="govuk-template__body competition-management">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Competition', linkClass='link-back', linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessments', size='heading-xlarge'" />
-
-    <div class="no-constrain-width justify-left">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessments', size='heading-xlarge'" />
 
         <h2 class="heading-medium">Key statistics</h2>
 
@@ -73,14 +73,11 @@
                     Allocate/Manage applications
                 </a>
             </li>
-
         </ul>
 
-    </div>
-
-    <th:block th:insert="fragments/layout :: main-content-end"/>
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

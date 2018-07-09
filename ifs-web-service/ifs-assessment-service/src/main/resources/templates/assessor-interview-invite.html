@@ -1,63 +1,67 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invitation to assess',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
-<body class="app-dashboard">
+<body class="govuk-template__body app-dashboard">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to interview panel',subTitle=|${model.competitionName}|,size='heading-xlarge'" />
-
-    <p>You have been invited to the interview panel for <strong th:text="|${model.competitionName}|">'Technology inspired'</strong>.</p>
-
-    <p>Innovate UK is to invest up to £9 million in Technology inspired.</p>
-
-    <p>Please review the <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">details of this competition (opens in a new window)</a> before the interview panel.</p>
-    <br>
-
-    <form th:action="@{/invite/interview/{inviteHash}/decision(inviteHash=${model.panelInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
-        <div class="form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'form-group-error'">
-            <fieldset>
-                <legend id="acceptInvitation">
-                    <span class="heading-medium">Are you able to attend the interview panel?</span>
-                    <br>
-                    <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
-                    </th:block>
-                    <p>You should reject this invitation if you are unavailable.</p>
-                </legend>
-
-                <div class="multiple-choice">
-                    <input id="acceptPanel" value="true" type="radio" required="required"
-                           th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.interviewinvitedecision.required}" />
-                    <label for="acceptPanel">
-                        Yes, I am able to attend.
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="reject-panel">
-                    <input id="rejectPanel" value="false" type="radio" required="required"
-                           th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.interviewinvitedecision.required}"/>
-                    <label for="rejectPanel">
-                        No, I am not able to attend.
-                    </label>
-                </div>
-            </fieldset>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <button class="button" type="submit">Confirm</button>
-    </form>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to interview panel',subTitle=|${model.competitionName}|,size='heading-xlarge'" />
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <p>You have been invited to the interview panel for <strong th:text="|${model.competitionName}|">'Technology inspired'</strong>.</p>
+
+        <p>Innovate UK is to invest up to £9 million in Technology inspired.</p>
+
+        <p>Please review the <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">details of this competition (opens in a new window)</a> before the interview panel.</p>
+        <br>
+
+        <form th:action="@{/invite/interview/{inviteHash}/decision(inviteHash=${model.panelInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'form-group-error'">
+                <fieldset>
+                    <legend id="acceptInvitation">
+                        <span class="heading-medium">Are you able to attend the interview panel?</span>
+                        <br>
+                        <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
+                        </th:block>
+                        <p>You should reject this invitation if you are unavailable.</p>
+                    </legend>
+
+                    <div class="multiple-choice">
+                        <input id="acceptPanel" value="true" type="radio" required="required"
+                               th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.interviewinvitedecision.required}" />
+                        <label for="acceptPanel">
+                            Yes, I am able to attend.
+                        </label>
+                    </div>
+
+                    <div class="multiple-choice" data-target="reject-panel">
+                        <input id="rejectPanel" value="false" type="radio" required="required"
+                               th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.interviewinvitedecision.required}"/>
+                        <label for="rejectPanel">
+                            No, I am not able to attend.
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button class="button" type="submit">Confirm</button>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

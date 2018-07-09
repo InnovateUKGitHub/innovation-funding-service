@@ -1,34 +1,38 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm application submit'" />
 </head>
-<body class="app-confirm-submit">
+<body class="govuk-template__body app-confirm-submit">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" />
 
-    <div th:if="${agreeToTerms}" class="event-alert" >
-      	<p><span>You must agree to the terms and conditions.</span></p>
-	</div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
 
-	<div th:if="${cannotSubmit}" class="event-alert" >
-        <p><span>Registration is now closed, you are no longer able to submit your application.</span></p>
-    </div>
+        <div th:if="${agreeToTerms}" class="event-alert" >
+            <p><span>You must agree to the terms and conditions.</span></p>
+        </div>
+
+        <div th:if="${cannotSubmit}" class="event-alert" >
+            <p><span>Registration is now closed, you are no longer able to submit your application.</span></p>
+        </div>
 
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='This is your final chance to make changes to the application.',size='heading-medium'" />
-    <p>You will not be able to access the application after this point. Are you sure you want to submit?</p>
-    <form method="post" th:action="@{/application/{id}/submit(id=${currentApplication.getId()})}">
-	        <input type="submit" tabindex="0" class="button" value="Yes, I want to submit my application" />
-	        <a role="button" tabindex="1" class="button button-clear" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Cancel</a>
-  	</form>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='This is your final chance to make changes to the application.',size='heading-medium'" />
+        <p>You will not be able to access the application after this point. Are you sure you want to submit?</p>
+        <form method="post" th:action="@{/application/{id}/submit(id=${currentApplication.getId()})}">
+                <input type="submit" tabindex="0" class="button" value="Yes, I want to submit my application" />
+                <a role="button" tabindex="1" class="button button-clear" th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">Cancel</a>
+        </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

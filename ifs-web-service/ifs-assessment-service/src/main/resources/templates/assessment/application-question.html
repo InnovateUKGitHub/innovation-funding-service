@@ -1,78 +1,82 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body th:with="responseRequired=${!#lists.isEmpty(model.assessmentFormInputs)}" class="assessment" th:classappend="${responseRequired} ? assessment-form">
+    <body th:with="responseRequired=${!#lists.isEmpty(model.assessmentFormInputs)}" class="govuk-template__body assessment" th:classappend="${responseRequired} ? assessment-form">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
-                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-            </div>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
 
-            <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.questionShortName},subTitle=${applicationName},size='heading-xlarge'" />
-            </th:block>
-
-            <form th:if="${responseRequired}"
-                  th:action="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${model.questionId})}"
-                  method="post"
-                  enctype="multipart/form-data"
-                  th:object="${form}"
-                  novalidate="novalidate"
-                  data-autosave="assessorFeedback">
-                <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
-
-                <p class="form-hint" th:text="|Please review the answer provided and score the answer out of ${model.maximumScore} points.|" th:if="${model.scoreFormInputExists}" />
-                <p class="form-hint" th:if="${model.scopeFormInputExists}">Please indicate whether this application is in scope for this competition.</p>
-
-                <div class="form-group">
-                    <h2 class="heading-medium">
-                        <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
-                        <th:block th:text="${model.questionName}" />
-                    </h2>
-
-                    <p th:text="${model.applicantResponse}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response.</p>
+                <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
+                    <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <div th:if="${model.appendixExists}">
-                    <div th:replace="question-type/form-elements :: readonly-file-download
-                    (filename=${model.appendixDetails.filename},
-                    filesizeKbytes=${model.appendixDetails.filesizeKbytes},
-                    fileDescription=${model.appendixFileDescription}+':',
-                    downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.appendixDetails.formInputId})})" />
-                </div>
+                <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.questionShortName},subTitle=${applicationName},size='heading-xlarge'" />
+                </th:block>
 
-                <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">
-                    <div th:replace="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" />
-                </div>
+                <form th:if="${responseRequired}"
+                      th:action="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${model.questionId})}"
+                      method="post"
+                      enctype="multipart/form-data"
+                      th:object="${form}"
+                      novalidate="novalidate"
+                      data-autosave="assessorFeedback">
+                    <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
-                <input type="hidden" id="application_id" th:value="${model.applicationId}" />
+                    <p class="form-hint" th:text="|Please review the answer provided and score the answer out of ${model.maximumScore} points.|" th:if="${model.scoreFormInputExists}" />
+                    <p class="form-hint" th:if="${model.scopeFormInputExists}">Please indicate whether this application is in scope for this competition.</p>
 
-                <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
-            </form>
+                    <div class="form-group">
+                        <h2 class="heading-medium">
+                            <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
+                            <th:block th:text="${model.questionName}" />
+                        </h2>
 
-            <th:block th:unless="${responseRequired}">
-                <div class="form-group">
-                    <h2 class="heading-medium">
-                        <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
-                        <th:block th:text="${model.questionName}"  />
-                    </h2>
-                    <p th:text="${model.applicantResponse}" data-md-to-html="" class="wysiwyg-styles" />
-                </div>
-            </th:block>
-            <input type="hidden" id="cacheTest" value="" />
+                        <p th:text="${model.applicantResponse}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response.</p>
+                    </div>
 
-            <th:block th:insert="fragments/assessment :: assessment-pagination" />
+                    <div th:if="${model.appendixExists}">
+                        <div th:replace="question-type/form-elements :: readonly-file-download
+                        (filename=${model.appendixDetails.filename},
+                        filesizeKbytes=${model.appendixDetails.filesizeKbytes},
+                        fileDescription=${model.appendixFileDescription}+':',
+                        downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.appendixDetails.formInputId})})" />
+                    </div>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                    <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">
+                        <div th:replace="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" />
+                    </div>
+
+                    <input type="hidden" id="application_id" th:value="${model.applicationId}" />
+
+                    <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
+                </form>
+
+                <th:block th:unless="${responseRequired}">
+                    <div class="form-group">
+                        <h2 class="heading-medium">
+                            <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
+                            <th:block th:text="${model.questionName}"  />
+                        </h2>
+                        <p th:text="${model.applicantResponse}" data-md-to-html="" class="wysiwyg-styles" />
+                    </div>
+                </th:block>
+                <input type="hidden" id="cacheTest" value="" />
+
+                <th:block th:insert="fragments/assessment :: assessment-pagination" />
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

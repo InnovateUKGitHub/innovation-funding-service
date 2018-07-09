@@ -1,34 +1,38 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <th:block th:insert="fragments/layout :: head"  th:with="pageTitle=${title != null ? title : 'Payload too large'}" />
 </head>
-<body class="error">
+<body class="govuk-template__body error">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" th:with="hidePropositionLinks=true" />
 
-<main tabindex="-1" id="content">
-    <h1 class="heading-large" th:text="${title}">Payload too large</h1>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <p th:if="${status}">
-      <b>Response Status:</b> <span th:text="${status}">status-code</span>
-     <span th:if="${error}" th:text="'('+${error}+')'">error ...</span>
-    </p>
+    <main tabindex="-1" id="content">
+        <h1 class="heading-large" th:text="${title}">Payload too large</h1>
 
-    We are unable to complete your request because the size of file or request being submitted is too large.
-    Please limit the size of your file to the sizes specified. You can now return to <a th:href="${userDashboardLink}">your dashboard</a> or use your back button.
+        <p th:if="${status}">
+            <b>Response Status:</b> <span th:text="${status}">status-code</span>
+            <span th:if="${error}" th:text="'('+${error}+')'">error ...</span>
+        </p>
 
-    <th:block th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}">
-        Error message will be displayed here for developers on dev/UAT environments.
-    </th:block>
+        We are unable to complete your request because the size of file or request being submitted is too large.
+        Please limit the size of your file to the sizes specified. You can now return to <a th:href="${userDashboardLink}">your dashboard</a> or use your back button.
 
-    <th:block ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}">
-        Stack trace will be printed here...
-    </th:block>
+        <th:block th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}">
+            Error message will be displayed here for developers on dev/UAT environments.
+        </th:block>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block ifs:utext="${'&lt;!-- Stack trace for debugging (for developers): ' + stacktrace + ' --&gt;'}">
+            Stack trace will be printed here...
+        </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

@@ -1,103 +1,106 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Review bank details',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="competition-management project-management review-bank-details">
+<body class="govuk-template__body competition-management project-management review-bank-details">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Bank details',linkClass='link-back',linkUrl=@{/project/{projectId}/review-all-bank-details(projectId=${model.projectId})}" />
-    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-    </div>
 
-    <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank Details',subTitle=|${model.applicationId}: ${model.projectName}|,size='heading-xlarge'" />
-            </div>
-            <div class="column-third alignright extra-margin">
-                    <h2 class="bold-small blue-block">Bank account</h2>
-            </div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
-        <hr/>
 
-        <th:block th:if="${model.approved}">
-            <div class="success-alert">
-                <h2 class="heading-small no-margin-top">The bank details provided have been approved.</h2>
+        <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
+            <div class="grid-row">
+                <div class="column-two-thirds">
+                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank Details',subTitle=|${model.applicationId}: ${model.projectName}|,size='heading-xlarge'" />
+                </div>
+                <div class="column-third alignright extra-margin">
+                        <h2 class="bold-small blue-block">Bank account</h2>
+                </div>
             </div>
-        </th:block>
-        <th:block th:unless="${model.approved}">
-            <p>The bank account details below have been submitted to Innovate UK by <th:block th:text="${model.organisationName}" /> for use during the project <th:block th:text="${model.projectName}" />. These details are now undergoing an internal review. </p>
-        </th:block>
+            <hr/>
 
-        <h2 class="heading-medium">Finance contact</h2>
-        <p>
-            <th:block th:unless="${#strings.isEmpty(model.financeContactName)}">
-                    <th:block th:text="${model.financeContactName}" /><br/>
+            <th:block th:if="${model.approved}">
+                <div class="success-alert">
+                    <h2 class="heading-small no-margin-top">The bank details provided have been approved.</h2>
+                </div>
             </th:block>
-            <th:block th:unless="${#strings.isEmpty(model.financeContactEmail)}">
-                    <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}" /><br/>
+            <th:block th:unless="${model.approved}">
+                <p>The bank account details below have been submitted to Innovate UK by <th:block th:text="${model.organisationName}" /> for use during the project <th:block th:text="${model.projectName}" />. These details are now undergoing an internal review. </p>
             </th:block>
-            <th:block th:unless="${#strings.isEmpty(model.financeContactPhoneNumber)}">
-                    <th:block th:text="${model.financeContactPhoneNumber}" /><br/>
-            </th:block>
-        </p>
 
-        <h2 class="heading-medium"><th:block th:text="${model.organisationName}" /> - Account details</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th scope="col">Section</th>
-                    <th scope="col">Answer</th>
-                    <th scope="col">Experian score</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Company</td>
-                    <td th:text="${model.organisationName}" />
-                    <td><span class="yes" th:text="${model.companyNameScore+' / 9'}" th:class="${model.companyNameVerified ? 'yes' : 'no'}"/></td>
-                </tr>
-                <tr>
-                    <td>Company Number</td>
-                    <td th:text="${model.registrationNumber}" />
-                    <td><span th:text="${model.registrationNumberMatched ? 'Match' : 'No Match'}" th:class="${model.registrationNumberMatched ? 'yes' : 'no'}" /></td>
-                </tr>
-                <tr>
-                    <td>Bank account number / Sort code</td>
-                    <td th:text="${model.bankAccountNumber+' / '+model.sortCode}" />
-                    <td><span th:text="${model.registrationNumberMatched ? 'Match' : 'No Match'}" th:class="${model.registrationNumberMatched ? 'yes' : 'no'}" /></td>
-                </tr>
-                <tr>
-                    <td>Address</td>
-                    <td>
-                        <th:block th:each="addressLine : ${model.organisationAddress}">
-                            <th:block th:text="${addressLine}" /><br />
-                        </th:block>
-                    </td>
-                    <td><span th:text="${model.addressScore+' / 9'}" class="yes" th:class="${model.addressScoreVerified ? 'yes' : 'no'}" /></td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="grid-row extra-margin" th:unless="${model.approved}">
-            <div class="column-half">
-                <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}">Change bank account details</a>
+            <h2 class="heading-medium">Finance contact</h2>
+            <p>
+                <th:block th:unless="${#strings.isEmpty(model.financeContactName)}">
+                        <th:block th:text="${model.financeContactName}" /><br/>
+                </th:block>
+                <th:block th:unless="${#strings.isEmpty(model.financeContactEmail)}">
+                        <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}" /><br/>
+                </th:block>
+                <th:block th:unless="${#strings.isEmpty(model.financeContactPhoneNumber)}">
+                        <th:block th:text="${model.financeContactPhoneNumber}" /><br/>
+                </th:block>
+            </p>
+
+            <h2 class="heading-medium"><th:block th:text="${model.organisationName}" /> - Account details</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Section</th>
+                        <th scope="col">Answer</th>
+                        <th scope="col">Experian score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Company</td>
+                        <td th:text="${model.organisationName}" />
+                        <td><span class="yes" th:text="${model.companyNameScore+' / 9'}" th:class="${model.companyNameVerified ? 'yes' : 'no'}"/></td>
+                    </tr>
+                    <tr>
+                        <td>Company Number</td>
+                        <td th:text="${model.registrationNumber}" />
+                        <td><span th:text="${model.registrationNumberMatched ? 'Match' : 'No Match'}" th:class="${model.registrationNumberMatched ? 'yes' : 'no'}" /></td>
+                    </tr>
+                    <tr>
+                        <td>Bank account number / Sort code</td>
+                        <td th:text="${model.bankAccountNumber+' / '+model.sortCode}" />
+                        <td><span th:text="${model.registrationNumberMatched ? 'Match' : 'No Match'}" th:class="${model.registrationNumberMatched ? 'yes' : 'no'}" /></td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td>
+                            <th:block th:each="addressLine : ${model.organisationAddress}">
+                                <th:block th:text="${addressLine}" /><br />
+                            </th:block>
+                        </td>
+                        <td><span th:text="${model.addressScore+' / 9'}" class="yes" th:class="${model.addressScoreVerified ? 'yes' : 'no'}" /></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="grid-row extra-margin" th:unless="${model.approved}">
+                <div class="column-half">
+                    <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}">Change bank account details</a>
+                </div>
+                <div class="column-half alignright">
+                    <button data-js-modal="modal-partner-approve-bank-details" class="no-margin-right button">Approve bank account details</button>
+                </div>
+                <th:block th:insert="fragments/modals :: modal-overlay" />
+                <th:block th:insert="fragments/modals :: modal-partner-approve-bank-details" />
             </div>
-            <div class="column-half alignright">
-                <button data-js-modal="modal-partner-approve-bank-details" class="no-margin-right button">Approve bank account details</button>
-            </div>
-            <th:block th:insert="fragments/modals :: modal-overlay" />
-            <th:block th:insert="fragments/modals :: modal-partner-approve-bank-details" />
-        </div>
-    </form>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        </form>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 

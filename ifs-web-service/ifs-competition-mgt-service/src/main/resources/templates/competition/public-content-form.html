@@ -1,51 +1,53 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Public Content',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="competition-management competition-setup">
+<body class="govuk-template__body competition-management competition-setup">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post" enctype="multipart/form-data">
-        <!-- Link back -->
-        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkClass='link-back',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"  />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkClass='link-back',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"  />
 
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem submitting the public content.</h2>
-            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-        </div>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post" enctype="multipart/form-data">
 
-        <th:block th:with="competitionTitle=${#strings.isEmpty(model.competition.name)} ? |${model.competition.id} : $#{ifs.competition.no_title}| : |${model.competition.id} : ${model.competition.name}|">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.section.type.text},subTitle=${competitionTitle},size='heading-xlarge'" />
-        </th:block>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem submitting the public content.</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
 
-        <!-- sections -->
-        <th:block th:insert="fragments/public-content :: ${'section-' + model.section.type.path} (model=${model},form=${form})" />
-
-        <!-- buttons -->
-        <div class="grid-row extra-margin">
-            <th:block th:if="${model.readOnly}">
-                <div class="column-half">
-                    <a class="button" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
-                </div>
-                <div class="column-half alignright">
-                    <a class="button-secondary no-margin" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
-                </div>
+            <th:block th:with="competitionTitle=${#strings.isEmpty(model.competition.name)} ? |${model.competition.id} : $#{ifs.competition.no_title}| : |${model.competition.id} : ${model.competition.name}|">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.section.type.text},subTitle=${competitionTitle},size='heading-xlarge'" />
             </th:block>
-            <th:block th:unless="${model.readOnly}">
-                <div class="column-half">
-                    <button name="save-and-return" class="button" th:text="${model.published ? 'Publish and review' : 'Save and review'}"></button>
-                </div>
-            </th:block>
-        </div>
-        <hr />
-    </form>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
 
+            <!-- sections -->
+            <th:block th:insert="fragments/public-content :: ${'section-' + model.section.type.path} (model=${model},form=${form})" />
+
+            <!-- buttons -->
+            <div class="grid-row extra-margin">
+                <th:block th:if="${model.readOnly}">
+                    <div class="column-half">
+                        <a class="button" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
+                    </div>
+                    <div class="column-half alignright">
+                        <a class="button-secondary no-margin" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
+                    </div>
+                </th:block>
+                <th:block th:unless="${model.readOnly}">
+                    <div class="column-half">
+                        <button name="save-and-return" class="button" th:text="${model.published ? 'Publish and review' : 'Save and review'}"></button>
+                    </div>
+                </th:block>
+            </div>
+            <hr />
+        </form>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

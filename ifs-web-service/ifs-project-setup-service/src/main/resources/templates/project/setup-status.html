@@ -1,201 +1,205 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Set up your project'" />
 </head>
-<body class="project-overview">
+<body class="govuk-template__body project-overview">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Set up your project',subTitle=${model.projectName},size='heading-xlarge'" />
 
-    <div class="grid-row">
-        <div class="column-half">
-            <dl class="font-xsmall extra-margin-bottom">
-                <dt>Project number:</dt>
-                <dd th:text="${model.applicationId}"/>
-                <dt>Competition:</dt>
-                <dd th:text="${model.competitionName}"/>
-                <dt>Funding body:</dt>
-                <dd>Innovate UK</dd>
-            </dl>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Set up your project',subTitle=${model.projectName},size='heading-xlarge'" />
+
+        <div class="grid-row">
+            <div class="column-half">
+                <dl class="font-xsmall extra-margin-bottom">
+                    <dt>Project number:</dt>
+                    <dd th:text="${model.applicationId}"/>
+                    <dt>Competition:</dt>
+                    <dd th:text="${model.competitionName}"/>
+                    <dt>Funding body:</dt>
+                    <dd>Innovate UK</dd>
+                </dl>
+            </div>
+            <div class="column-half">
+                <ul class="list list-bullet">
+                    <li><a th:href="${'/application/' + model.applicationId + '/feedback'} + ${model.originQuery}">
+                        view application feedback</a></li>
+                    <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}">
+                        view the grant terms and conditions</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="column-half">
-            <ul class="list list-bullet">
-                <li><a th:href="${'/application/' + model.applicationId + '/feedback'} + ${model.originQuery}">
-                    view application feedback</a></li>
-                <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}">
-                    view the grant terms and conditions</a></li>
+
+        <th:block th:if="${model.projectComplete}">
+            <div class="success-alert extra-margin-bottom">
+                The project is live, you can review progress at <a href="https://grants.innovateuk.org">_connect</a>
+            </div>
+
+            <p>The following steps have been completed by all partners. The project can now start.</p>
+        </th:block>
+
+        <th:block th:unless="${model.projectComplete}">
+            <div class="message-alert">
+                <p>You must complete your project and bank details within 30 days of our notification to you.</p>
+                <p>All project partners have individual steps to complete in this section.</p>
+                <p><a th:href="@{/project/{id}/team-status(id=${model.projectId})}">View the status of partners</a></p>
+            </div>
+        </th:block>
+
+        <div class="progress-list progress-list--individual-blocks">
+            <ul>
+                <!--/* ========================= Project Details ========================= */-->
+                <li th:classappend="${model.projectDetailsStatus.getSectionStatus()}">
+                    <div class="task">
+                        <h2 class="heading-small">
+                            <a th:if="${model.projectDetailsSection.accessible and not model.projectComplete}"
+                               th:href="@{/project/{id}/details(id=${model.projectId})}">Project details</a>
+                            <a th:if="${model.projectComplete}" th:href="@{/project/{id}/readonly(id=${model.projectId})}">Project
+                                details</a>
+                            <th:block th:unless="${model.projectDetailsSection.accessible or model.projectComplete}">Project
+                                details
+                            </th:block>
+                        </h2>
+                        <p th:if="${not model.projectComplete}" class="no-margin">Confirm the contact details, proposed start date and
+                            location of the project.</p>
+                        <p th:if="${model.projectComplete}" class="no-margin">The contact details, start date and location of the project.</p>
+                    </div>
+                    <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectDetailsStatus.getSectionStatus()})"/>
+                </li>
+                <!--/* ========================= Monitoring Officer ========================= */-->
+                <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : 'waiting'}">
+                    <div class="task">
+                        <h2 class="heading-small">
+                            <a th:if="${model.monitoringOfficerSection.accessible and not model.projectComplete}"
+                               th:href="@{/project/{id}/monitoring-officer(id=${model.projectId})}">Monitoring Officer</a>
+                            <a th:if="${model.projectComplete}"
+                               th:href="@{/project/{id}/monitoring-officer/readonly(id=${model.projectId})}">Monitoring
+                                Officer</a>
+                            <th:block th:unless="${model.monitoringOfficerSection.accessible}">Monitoring Officer</th:block>
+                        </h2>
+                        <p th:if="${model.monitoringOfficerAssigned}" class="no-margin">
+                            Your Monitoring Officer for this project is
+                            <th:block th:text="${model.monitoringOfficerName}"/>.
+                        </p>
+                        <p th:unless="${model.monitoringOfficerAssigned}" class="no-margin">
+                            We will assign the project a Monitoring Officer.
+                        </p>
+                    </div>
+                    <th:block th:insert="project/fragments :: project-setup-status-indicator(${(model.monitoringOfficerAssigned ? model.monitoringOfficerStatus.getSectionStatus() : 'awaiting-assignment')})" />
+                </li>
+                <!--/* ========================= Bank Details ========================= */-->
+                <li class="read-only" th:if="${model.bankDetailsSection.notAccessible}">
+                    <div class="task">
+                        <h2 class="heading-small">Bank details</h2>
+                        <p class="no-margin">We need bank details for those partners eligible for funding.</p>
+                    </div>
+                </li>
+
+                <li th:if="${model.bankDetailsSection.accessibleOrNotRequired}"
+                    th:classappend="${model.bankDetailsStatus.getSectionStatus()}">
+                    <div class="task">
+                        <h2 class="heading-small">
+                            <a th:if="${model.bankDetailsSection.accessible and not model.projectComplete}"
+                               th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
+                            <a th:if="${model.projectComplete}"
+                               th:href="@{/project/{id}/bank-details/readonly(id=${model.projectId})}">Bank details</a>
+                            <th:block th:if="${model.bankDetailsSection.notRequired}">Bank details (not required)</th:block>
+                        </h2>
+                        <p class="no-margin">We need bank details for those partners eligible for funding.</p>
+                    </div>
+                    <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.bankDetailsStatus.getSectionStatus()})"/>
+                </li>
+                <!--/* ========================= Finance Check ========================= */-->
+                <li th:class="${model.financeChecksSection.notAccessible} ? 'read-only'" th:classappend="${model.financeChecksStatus.getSectionStatus()}">
+                    <div class="task">
+                        <h2 class="heading-small">
+                            <a th:if="${model.financeChecksSection.accessible}"
+                               th:href="@{/project/{id}/finance-checks(id=${model.projectId})}">Finance
+                                checks</a>
+                            <th:block th:unless="${model.financeChecksSection.accessible}">Finance checks
+                                <th:block th:if="${model.financeChecksSection.notRequired}">(not required)</th:block>
+                            </th:block>
+                        </h2>
+                        <p class="no-margin">We will review your financial information.</p>
+                    </div>
+                    <th:block th:if="${!model.showFinanceChecksPendingQueryWarning}" th:insert="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"/>
+                    <div class="status" th:if="${model.showFinanceChecksPendingQueryWarning}">
+                        <div class="status-msg msg-progress">
+                            <span class="status-warning">Pending query</span>
+                        </div>
+                    </div>
+                </li>
+                <!--/* ========================= Spend Profile ========================= */-->
+                <li th:class="${model.spendProfileSection.notAccessible} ? 'read-only'" th:classappend="${model.spendProfileStatus.getSectionStatus()}">
+                    <div class="task">
+                        <h2 class="heading-small">
+                            <a th:if="${model.spendProfileSection.accessible}"
+                               th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile(id=${model.projectId}, organisationId=${model.getOrganisationId()})}">Spend
+                                profile</a>
+                            <th:block th:if="${model.spendProfileSection.notAccessible}">Spend profile</th:block>
+                        </h2>
+                        <p class="no-margin">Once we have approved your finances you can change your project spend profile.</p>
+                    </div>
+                    <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.spendProfileStatus.getSectionStatus()})"
+                              th:if="${model.spendProfileSection.accessible}"/>
+                </li>
+                <!--/* ========================= Other documents ========================= */-->
+                <li th:class="${model.otherDocumentsSection.notAccessible} ? 'read-only'" th:classappend="${model.otherDocumentsStatus.getSectionStatus()}">
+                    <div class="task">
+                        <h2 class="heading-small">
+                            <a th:if="${model.otherDocumentsSection.accessible and not model.projectComplete}"
+                               th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a>
+                            <a th:if="${model.projectComplete}"
+                               th:href="@{/project/{id}/partner/documents/readonly(id=${model.projectId})}">Other
+                                documents</a>
+                            <th:block th:if="${model.otherDocumentsSection.notAccessible}">Other documents</th:block>
+                        </h2>
+
+                        <!-- TODO: INFUND - 6376 Prototype mentions Project manager should submit. Needs verification -->
+                        <th:block th:if="${model.projectManager}">
+                            <p>You need to upload the following:</p>
+                        </th:block>
+                        <th:block th:unless="${model.projectManager}">
+                            <p>Your Project Manager needs to upload the following:</p>
+                        </th:block>
+                        <ul class="list list-bullet">
+                            <th:block th:if="${model.collaborationAgreementRequired}">
+                                <li>a collaboration agreement</li>
+                            </th:block>
+                            <li>exploitation plan</li>
+                        </ul>
+                    </div>
+                    <th:block
+                        th:insert="project/fragments :: project-setup-status-indicator(${model.otherDocumentsStatus.getSectionStatus()})"
+                        th:if="${model.otherDocumentsSection.accessible}"/>
+                </li>
+                <!--/* ========================= GOL ========================= */-->
+                <!--/* TODO extra case to be outlined before GOL has been sent by internal user  */-->
+                <li th:class="${model.grantOfferLetterSection.notAccessible} ? 'read-only'" th:classappend="${model.grantOfferLetterStatus.getSectionStatus()}">
+                    <div class="task">
+                        <h2 class="heading-small">
+                            <a th:if="${model.grantOfferLetterSection.accessible}"
+                               th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a>
+                            <th:block th:if="${model.grantOfferLetterSection.notAccessible}">Grant offer letter</th:block>
+                        </h2>
+                        <p class="no-margin">Once all tasks are complete the Project Manager can review, sign and submit the grant offer letter to Innovate UK.</p>
+                    </div>
+                    <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.grantOfferLetterStatus.getSectionStatus()})"
+                              th:if="${model.grantOfferLetterSection.accessible}"/>
+                </li>
+
             </ul>
         </div>
-    </div>
-
-    <th:block th:if="${model.projectComplete}">
-        <div class="success-alert extra-margin-bottom">
-            The project is live, you can review progress at <a href="https://grants.innovateuk.org">_connect</a>
-        </div>
-
-        <p>The following steps have been completed by all partners. The project can now start.</p>
-    </th:block>
-
-    <th:block th:unless="${model.projectComplete}">
-        <div class="message-alert">
-            <p>You must complete your project and bank details within 30 days of our notification to you.</p>
-            <p>All project partners have individual steps to complete in this section.</p>
-            <p><a th:href="@{/project/{id}/team-status(id=${model.projectId})}">View the status of partners</a></p>
-        </div>
-    </th:block>
-
-    <div class="progress-list progress-list--individual-blocks">
-        <ul>
-            <!--/* ========================= Project Details ========================= */-->
-            <li th:classappend="${model.projectDetailsStatus.getSectionStatus()}">
-                <div class="task">
-                    <h2 class="heading-small">
-                        <a th:if="${model.projectDetailsSection.accessible and not model.projectComplete}"
-                           th:href="@{/project/{id}/details(id=${model.projectId})}">Project details</a>
-                        <a th:if="${model.projectComplete}" th:href="@{/project/{id}/readonly(id=${model.projectId})}">Project
-                            details</a>
-                        <th:block th:unless="${model.projectDetailsSection.accessible or model.projectComplete}">Project
-                            details
-                        </th:block>
-                    </h2>
-                    <p th:if="${not model.projectComplete}" class="no-margin">Confirm the contact details, proposed start date and
-                        location of the project.</p>
-                    <p th:if="${model.projectComplete}" class="no-margin">The contact details, start date and location of the project.</p>
-                </div>
-                <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.projectDetailsStatus.getSectionStatus()})"/>
-            </li>
-            <!--/* ========================= Monitoring Officer ========================= */-->
-            <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : 'waiting'}">
-                <div class="task">
-                    <h2 class="heading-small">
-                        <a th:if="${model.monitoringOfficerSection.accessible and not model.projectComplete}"
-                           th:href="@{/project/{id}/monitoring-officer(id=${model.projectId})}">Monitoring Officer</a>
-                        <a th:if="${model.projectComplete}"
-                           th:href="@{/project/{id}/monitoring-officer/readonly(id=${model.projectId})}">Monitoring
-                            Officer</a>
-                        <th:block th:unless="${model.monitoringOfficerSection.accessible}">Monitoring Officer</th:block>
-                    </h2>
-                    <p th:if="${model.monitoringOfficerAssigned}" class="no-margin">
-                        Your Monitoring Officer for this project is
-                        <th:block th:text="${model.monitoringOfficerName}"/>.
-                    </p>
-                    <p th:unless="${model.monitoringOfficerAssigned}" class="no-margin">
-                        We will assign the project a Monitoring Officer.
-                    </p>
-                </div>
-                <th:block th:insert="project/fragments :: project-setup-status-indicator(${(model.monitoringOfficerAssigned ? model.monitoringOfficerStatus.getSectionStatus() : 'awaiting-assignment')})" />
-            </li>
-            <!--/* ========================= Bank Details ========================= */-->
-            <li class="read-only" th:if="${model.bankDetailsSection.notAccessible}">
-                <div class="task">
-                    <h2 class="heading-small">Bank details</h2>
-                    <p class="no-margin">We need bank details for those partners eligible for funding.</p>
-                </div>
-            </li>
-
-            <li th:if="${model.bankDetailsSection.accessibleOrNotRequired}"
-                th:classappend="${model.bankDetailsStatus.getSectionStatus()}">
-                <div class="task">
-                    <h2 class="heading-small">
-                        <a th:if="${model.bankDetailsSection.accessible and not model.projectComplete}"
-                           th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
-                        <a th:if="${model.projectComplete}"
-                           th:href="@{/project/{id}/bank-details/readonly(id=${model.projectId})}">Bank details</a>
-                        <th:block th:if="${model.bankDetailsSection.notRequired}">Bank details (not required)</th:block>
-                    </h2>
-                    <p class="no-margin">We need bank details for those partners eligible for funding.</p>
-                </div>
-                <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.bankDetailsStatus.getSectionStatus()})"/>
-            </li>
-            <!--/* ========================= Finance Check ========================= */-->
-            <li th:class="${model.financeChecksSection.notAccessible} ? 'read-only'" th:classappend="${model.financeChecksStatus.getSectionStatus()}">
-                <div class="task">
-                    <h2 class="heading-small">
-                        <a th:if="${model.financeChecksSection.accessible}"
-                           th:href="@{/project/{id}/finance-checks(id=${model.projectId})}">Finance
-                            checks</a>
-                        <th:block th:unless="${model.financeChecksSection.accessible}">Finance checks
-                            <th:block th:if="${model.financeChecksSection.notRequired}">(not required)</th:block>
-                        </th:block>
-                    </h2>
-                    <p class="no-margin">We will review your financial information.</p>
-                </div>
-                <th:block th:if="${!model.showFinanceChecksPendingQueryWarning}" th:insert="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"/>
-                <div class="status" th:if="${model.showFinanceChecksPendingQueryWarning}">
-                    <div class="status-msg msg-progress">
-                        <span class="status-warning">Pending query</span>
-                    </div>
-                </div>
-            </li>
-            <!--/* ========================= Spend Profile ========================= */-->
-            <li th:class="${model.spendProfileSection.notAccessible} ? 'read-only'" th:classappend="${model.spendProfileStatus.getSectionStatus()}">
-                <div class="task">
-                    <h2 class="heading-small">
-                        <a th:if="${model.spendProfileSection.accessible}"
-                           th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile(id=${model.projectId}, organisationId=${model.getOrganisationId()})}">Spend
-                            profile</a>
-                        <th:block th:if="${model.spendProfileSection.notAccessible}">Spend profile</th:block>
-                    </h2>
-                    <p class="no-margin">Once we have approved your finances you can change your project spend profile.</p>
-                </div>
-                <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.spendProfileStatus.getSectionStatus()})"
-                          th:if="${model.spendProfileSection.accessible}"/>
-            </li>
-            <!--/* ========================= Other documents ========================= */-->
-            <li th:class="${model.otherDocumentsSection.notAccessible} ? 'read-only'" th:classappend="${model.otherDocumentsStatus.getSectionStatus()}">
-                <div class="task">
-                    <h2 class="heading-small">
-                        <a th:if="${model.otherDocumentsSection.accessible and not model.projectComplete}"
-                           th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a>
-                        <a th:if="${model.projectComplete}"
-                           th:href="@{/project/{id}/partner/documents/readonly(id=${model.projectId})}">Other
-                            documents</a>
-                        <th:block th:if="${model.otherDocumentsSection.notAccessible}">Other documents</th:block>
-                    </h2>
-
-                    <!-- TODO: INFUND - 6376 Prototype mentions Project manager should submit. Needs verification -->
-                    <th:block th:if="${model.projectManager}">
-                        <p>You need to upload the following:</p>
-                    </th:block>
-                    <th:block th:unless="${model.projectManager}">
-                        <p>Your Project Manager needs to upload the following:</p>
-                    </th:block>
-                    <ul class="list list-bullet">
-                        <th:block th:if="${model.collaborationAgreementRequired}">
-                            <li>a collaboration agreement</li>
-                        </th:block>
-                        <li>exploitation plan</li>
-                    </ul>
-                </div>
-                <th:block
-                    th:insert="project/fragments :: project-setup-status-indicator(${model.otherDocumentsStatus.getSectionStatus()})"
-                    th:if="${model.otherDocumentsSection.accessible}"/>
-            </li>
-            <!--/* ========================= GOL ========================= */-->
-            <!--/* TODO extra case to be outlined before GOL has been sent by internal user  */-->
-            <li th:class="${model.grantOfferLetterSection.notAccessible} ? 'read-only'" th:classappend="${model.grantOfferLetterStatus.getSectionStatus()}">
-                <div class="task">
-                    <h2 class="heading-small">
-                        <a th:if="${model.grantOfferLetterSection.accessible}"
-                           th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a>
-                        <th:block th:if="${model.grantOfferLetterSection.notAccessible}">Grant offer letter</th:block>
-                    </h2>
-                    <p class="no-margin">Once all tasks are complete the Project Manager can review, sign and submit the grant offer letter to Innovate UK.</p>
-                </div>
-                <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.grantOfferLetterStatus.getSectionStatus()})"
-                          th:if="${model.grantOfferLetterSection.accessible}"/>
-            </li>
-
-        </ul>
-    </div>
 
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

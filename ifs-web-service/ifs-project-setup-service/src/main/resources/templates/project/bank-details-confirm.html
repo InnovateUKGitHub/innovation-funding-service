@@ -1,35 +1,39 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm Bank Details'" />
 </head>
-<body class="bank-detail-confirm">
-  <th:block th:insert="fragments/layout :: body-start" />
-  <th:block th:insert="fragments/layout :: global-header" />
+<body class="govuk-template__body bank-detail-confirm">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit bank details',subTitle=${project.name},size='heading-xlarge'" />
 
-    <form th:object="${form}" th:action="@{/project/{id}/bank-details(id=${project.id})}" method="post">
-        <input type="hidden" th:field="*{accountNumber}"/>
-        <input type="hidden" th:field="*{sortCode}"/>
-        <input type="hidden" th:field="*{addressType}"/>
-        <p>Are you sure you wish to submit your bank details?</p>
-        <p>After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues before we perform finance checks.</p>
-        <hr />
-        <div class="grid-row">
-            <div class="column-half">
-                <button class="button">Submit</button>
-            </div>
-            <div class="column-half alignright">
-                <a th:href="@{/project/{id}/bank-details(id=${project.id})}" class="buttonlink">Cancel</a>
-            </div>
-        </div>
-    </form>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit bank details',subTitle=${project.name},size='heading-xlarge'" />
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <form th:object="${form}" th:action="@{/project/{id}/bank-details(id=${project.id})}" method="post">
+            <input type="hidden" th:field="*{accountNumber}"/>
+            <input type="hidden" th:field="*{sortCode}"/>
+            <input type="hidden" th:field="*{addressType}"/>
+            <p>Are you sure you wish to submit your bank details?</p>
+            <p>After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues before we perform finance checks.</p>
+            <hr />
+            <div class="grid-row">
+                <div class="column-half">
+                    <button class="button">Submit</button>
+                </div>
+                <div class="column-half alignright">
+                    <a th:href="@{/project/{id}/bank-details(id=${project.id})}" class="buttonlink">Cancel</a>
+                </div>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

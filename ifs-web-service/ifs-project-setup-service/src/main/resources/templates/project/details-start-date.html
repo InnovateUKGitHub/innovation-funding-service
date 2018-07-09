@@ -1,60 +1,63 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Target start date',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body class="project-details start-date">
+    <body class="govuk-template__body project-details start-date">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}" />
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to save your target start date.</h2>
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('${form.*}')}">
-                        <a href="#projectStartDate_month" th:text="${err}">The error message</a>
-                    </li>
-                </ul>
-            </div>
-
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Target start date',subTitle=${model.projectName},size='heading-xlarge'" />
-            <p>The project can only start when:</p>
-
-            <ol class="list list-number">
-                <li>You have provided the documents we need.</li>
-                <li>We have approved your financial information.</li>
-                <li>You have received, signed and returned the grant offer letter on behalf of the project.</li>
-            </ol>
-
-            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
-                <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate')} ? 'form-group-error'">
-                    <fieldset>
-                        <legend id="projectStartDate">
-                            <span class="heading-medium">Target start date</span>
-                            <th:block th:if="${#fields.hasErrors('projectStartDate')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('projectStartDate')}" th:text="${err}" />
-                            </th:block>
-                        </legend>
-                        <p class="form-hint">Projects must start on the first day of a month so please choose the month and year of your project start.</p>
-                        <th:block th:insert="question-type/form-elements :: form-dateinput (id='projectStartDate', field='projectStartDate', dayReadonly=true)" />
-                    </fieldset>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                    <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to save your target start date.</h2>
+                    <ul class="error-summary-list">
+                        <li th:each="err : ${#fields.errors('${form.*}')}">
+                            <a href="#projectStartDate_month" th:text="${err}">The error message</a>
+                        </li>
+                    </ul>
                 </div>
 
-                <p>You can change your target start date up until the spend profile is generated.</p>
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Target start date',subTitle=${model.projectName},size='heading-xlarge'" />
+                <p>The project can only start when:</p>
 
-                <h2 class="heading-medium">Project duration</h2>
-                <p>
-                    <span th:text="|${model.projectDurationInMonths} months|">9 months</span>
-                </p>
+                <ol class="list list-number">
+                    <li>You have provided the documents we need.</li>
+                    <li>We have approved your financial information.</li>
+                    <li>You have received, signed and returned the grant offer letter on behalf of the project.</li>
+                </ol>
 
-                <button type="submit" class="button">Save</button>
-            </form>
+                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
+                    <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate')} ? 'form-group-error'">
+                        <fieldset>
+                            <legend id="projectStartDate">
+                                <span class="heading-medium">Target start date</span>
+                                <th:block th:if="${#fields.hasErrors('projectStartDate')}">
+                                    <span class="error-message" th:each="err : ${#fields.errors('projectStartDate')}" th:text="${err}" />
+                                </th:block>
+                            </legend>
+                            <p class="form-hint">Projects must start on the first day of a month so please choose the month and year of your project start.</p>
+                            <th:block th:insert="question-type/form-elements :: form-dateinput (id='projectStartDate', field='projectStartDate', dayReadonly=true)" />
+                        </fieldset>
+                    </div>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                    <p>You can change your target start date up until the spend profile is generated.</p>
+
+                    <h2 class="heading-medium">Project duration</h2>
+                    <p>
+                        <span th:text="|${model.projectDurationInMonths} months|">9 months</span>
+                    </p>
+
+                    <button type="submit" class="button">Save</button>
+                </form>
+
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />

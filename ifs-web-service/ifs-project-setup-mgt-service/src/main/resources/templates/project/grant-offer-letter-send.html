@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter'" />
 </head>
-<body class="competition-management project-management grant-offer-letter">
+<body class="govuk-template__body competition-management project-management grant-offer-letter">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/modals :: modal-accept-send-gol" />
 <th:block th:insert="fragments/modals :: modal-accept-signed-gol" />
@@ -12,167 +12,170 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" />
-    <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=${competitionTitle},size='heading-xlarge'" />
-    </th:block>
-    <hr/>
 
-    <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
-        <div class="success-alert extra-margin-bottom">
-            <h2 class="heading-small no-margin-top">These documents have been approved.</h2>
-        </div>
-    </th:block>
-
-    <div class="warning-alert" th:if="${model.getSignedGrantOfferLetterRejected()}">
-        <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
-        <p>If you have not already done so, please contact the Project Manager to explain your decision.</p>
-        <p>Reason for rejection:</p>
-        <p th:text="${model.getGrantOfferLetterRejectionReason()}"></p>
-    </div>
-
-    <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
-        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
-            <p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and that the project is ready to begin.</p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=${competitionTitle},size='heading-xlarge'" />
         </th:block>
-        <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
-            <th:block th:if="${!model.isSentToProjectTeam()}">
-                <p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
+        <hr/>
+
+        <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
+            <div class="success-alert extra-margin-bottom">
+                <h2 class="heading-small no-margin-top">These documents have been approved.</h2>
+            </div>
+        </th:block>
+
+        <div class="warning-alert" th:if="${model.getSignedGrantOfferLetterRejected()}">
+            <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+            <p>If you have not already done so, please contact the Project Manager to explain your decision.</p>
+            <p>Reason for rejection:</p>
+            <p th:text="${model.getGrantOfferLetterRejectionReason()}"></p>
+        </div>
+
+        <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
+            <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
+                <p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and that the project is ready to begin.</p>
+            </th:block>
+            <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
+                <th:block th:if="${!model.isSentToProjectTeam()}">
+                    <p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
+                </th:block>
             </th:block>
         </th:block>
-    </th:block>
 
-    <h2 class="heading-medium">Grant offer letter</h2>
+        <h2 class="heading-medium">Grant offer letter</h2>
 
-    <div class="upload-section">
-    <form th:action="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}"
-          th:object="${form}" method="post" enctype="multipart/form-data">
+        <div class="upload-section">
+        <form th:action="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}"
+              th:object="${form}" method="post" enctype="multipart/form-data">
 
-        <p th:unless="${model.grantOfferLetterFile}">The grant offer letter has not yet been generated or uploaded. You are able to manually upload the GOL from this page.</p>
+            <p th:unless="${model.grantOfferLetterFile}">The grant offer letter has not yet been generated or uploaded. You are able to manually upload the GOL from this page.</p>
 
-        <th:block th:with="uploadViewmode='edit',
-                       downloadUrl=@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})},
-                       filename=${model.grantOfferLetterFile?.filename},
-                       inputField='grantOfferLetter',
-                       validationField=${inputField},
-                       mayRemove=${model.showRemoveOfferLetterButton},
-                       removeName='removeGrantOfferLetterClicked',
-                       saveName='uploadGrantOfferLetterClicked'">
-            <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
-        </th:block>
-    </form>
-    </div>
-
-    <h2 class="heading-medium">Annex</h2>
-    <p th:unless="${model.additionalContractFile}">The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
-
-
-
-    <div class="upload-section">
-
-        <form th:action="@{/project/{id}/grant-offer-letter/upload-annex(id=${model.projectId})}"   th:object="${form}" method="post" enctype="multipart/form-data">
-            <p>Any additional supporting materials should be uploaded to the Annex.</p>
-            <details th:unless="${model.isSentToProjectTeam()}">
-                <summary><span class="summary">What are the requirements for upload?</span></summary>
-                <div class="panel">
-                    <p>The Annex should:</p>
-                    <ul class="list list-bullet">
-                        <li>be in a portable document format (.pdf)</li>
-                        <li>be less than 1mb in size</li>
-                    </ul>
-                </div>
-            </details>
-            <th:block th:with="uploadViewmode=${model.isSentToProjectTeam()} ? 'readonly' : 'edit',
-                           downloadUrl=@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})},
-                           filename=${model.additionalContractFile?.filename},
-                           inputField='annex',
+            <th:block th:with="uploadViewmode='edit',
+                           downloadUrl=@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})},
+                           filename=${model.grantOfferLetterFile?.filename},
+                           inputField='grantOfferLetter',
                            validationField=${inputField},
-                           mayRemove=false,
-                           removeName='',
-                           saveName='uploadAnnexClicked'">
+                           mayRemove=${model.showRemoveOfferLetterButton},
+                           removeName='removeGrantOfferLetterClicked',
+                           saveName='uploadGrantOfferLetterClicked'">
                 <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
             </th:block>
         </form>
-    </div>
-    <th:block th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null}">
-        <button data-js-modal="modal-accept-send-gol" id="send-gol" class="button">
-            Publish to project team
-        </button>
-    </th:block>
-
-    <th:block th:if="${model.isSentToProjectTeam()}">
-        <h2 class="heading-medium no-margin">Signed grant offer letter</h2>
-        <div class="upload-section">
-            <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
-                <p><a class="uploaded-file" target="_blank" th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename} + ' (opens in a new window)'">signed-offer-letter.PDF</a></p>
-            </th:block>
-            <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
-                <p>Awaiting upload by the Project Manager</p>
-            </th:block>
         </div>
-    </th:block>
-    <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}">
-        <h2 class="heading-medium">Confirm signed grant offer letter</h2>
-        <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" id="gol-decision-form" method="post" novalidate="novalidate">
-            <div class="form-group">
-                <fieldset>
-                    <legend id="decisionGOL" class="extra-margin-bottom">
-                        Please confirm that these documents meet the requirements for the grant offer letter.
-                    </legend>
-                    <div class="multiple-choice">
-                        <input id="acceptGOL"
-                               value="APPROVED"
-                               type="radio"
-                               name="approvalType"
-                               required="required"
-                               data-switches-button-status="#submit-button"
-                               data-switches-modal-target="#submit-button"
-                               data-switches-modal-target-value="modal-accept-signed-gol"
-                        />
-                        <label for="acceptGOL">
-                            Accept documents
-                        </label>
+
+        <h2 class="heading-medium">Annex</h2>
+        <p th:unless="${model.additionalContractFile}">The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
+
+
+
+        <div class="upload-section">
+
+            <form th:action="@{/project/{id}/grant-offer-letter/upload-annex(id=${model.projectId})}"   th:object="${form}" method="post" enctype="multipart/form-data">
+                <p>Any additional supporting materials should be uploaded to the Annex.</p>
+                <details th:unless="${model.isSentToProjectTeam()}">
+                    <summary><span class="summary">What are the requirements for upload?</span></summary>
+                    <div class="panel">
+                        <p>The Annex should:</p>
+                        <ul class="list list-bullet">
+                            <li>be in a portable document format (.pdf)</li>
+                            <li>be less than 1mb in size</li>
+                        </ul>
                     </div>
-                    <div class="multiple-choice" data-target="reject-gol">
-                        <input id="rejectGOL"
-                               value="REJECTED"
-                               type="radio"
-                               name="approvalType"
-                               required="required"
-                               data-switches-modal-target="#submit-button"
-                               data-switches-modal-target-value="modal-reject-signed-gol"
-                        />
-                        <label for="rejectGOL">
-                            Reject documents
-                        </label>
-                    </div>
-                    <div class="panel js-hidden" id="reject-gol">
-                        <div class="form-group">
-                            <label for="gol-reject-reason" class="form-label">
-                                Reason for rejection (this will not be seen by the project team)
-                            </label>
-                            <input type="text"
-                                   class="form-control width-full"
-                                   id="gol-reject-reason"
-                                   name="GOLRejectReason"
-                                   required="required"
-                                   maxlength="128"
-                                   data-switches-button-status="#submit-button"
-                                   th:attr="data-maxlength-errormessage=#{validation.rejection.gol.reason.has.too.many.characters}"
-                            />
-                        </div>
-                    </div>
-                </fieldset>
+                </details>
+                <th:block th:with="uploadViewmode=${model.isSentToProjectTeam()} ? 'readonly' : 'edit',
+                               downloadUrl=@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})},
+                               filename=${model.additionalContractFile?.filename},
+                               inputField='annex',
+                               validationField=${inputField},
+                               mayRemove=false,
+                               removeName='',
+                               saveName='uploadAnnexClicked'">
+                    <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
+                </th:block>
+            </form>
+        </div>
+        <th:block th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null}">
+            <button data-js-modal="modal-accept-send-gol" id="send-gol" class="button">
+                Publish to project team
+            </button>
+        </th:block>
+
+        <th:block th:if="${model.isSentToProjectTeam()}">
+            <h2 class="heading-medium no-margin">Signed grant offer letter</h2>
+            <div class="upload-section">
+                <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
+                    <p><a class="uploaded-file" target="_blank" th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename} + ' (opens in a new window)'">signed-offer-letter.PDF</a></p>
+                </th:block>
+                <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
+                    <p>Awaiting upload by the Project Manager</p>
+                </th:block>
             </div>
-            <button class="button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
-        </form>
+        </th:block>
+        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}">
+            <h2 class="heading-medium">Confirm signed grant offer letter</h2>
+            <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" id="gol-decision-form" method="post" novalidate="novalidate">
+                <div class="form-group">
+                    <fieldset>
+                        <legend id="decisionGOL" class="extra-margin-bottom">
+                            Please confirm that these documents meet the requirements for the grant offer letter.
+                        </legend>
+                        <div class="multiple-choice">
+                            <input id="acceptGOL"
+                                   value="APPROVED"
+                                   type="radio"
+                                   name="approvalType"
+                                   required="required"
+                                   data-switches-button-status="#submit-button"
+                                   data-switches-modal-target="#submit-button"
+                                   data-switches-modal-target-value="modal-accept-signed-gol"
+                            />
+                            <label for="acceptGOL">
+                                Accept documents
+                            </label>
+                        </div>
+                        <div class="multiple-choice" data-target="reject-gol">
+                            <input id="rejectGOL"
+                                   value="REJECTED"
+                                   type="radio"
+                                   name="approvalType"
+                                   required="required"
+                                   data-switches-modal-target="#submit-button"
+                                   data-switches-modal-target-value="modal-reject-signed-gol"
+                            />
+                            <label for="rejectGOL">
+                                Reject documents
+                            </label>
+                        </div>
+                        <div class="panel js-hidden" id="reject-gol">
+                            <div class="form-group">
+                                <label for="gol-reject-reason" class="form-label">
+                                    Reason for rejection (this will not be seen by the project team)
+                                </label>
+                                <input type="text"
+                                       class="form-control width-full"
+                                       id="gol-reject-reason"
+                                       name="GOLRejectReason"
+                                       required="required"
+                                       maxlength="128"
+                                       data-switches-button-status="#submit-button"
+                                       th:attr="data-maxlength-errormessage=#{validation.rejection.gol.reason.has.too.many.characters}"
+                                />
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <button class="button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
+            </form>
 
-    </th:block>
+        </th:block>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 

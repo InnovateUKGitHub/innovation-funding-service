@@ -1,141 +1,144 @@
 <!DOCTYPE html>
 
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Resend invites to interview panel'" />
 </head>
 
-<body th:with="context='comp-management'" class="competition-management competition-overview resend-applicant-invite">
+<body class="govuk-template__body competition-management competition-overview resend-applicant-invite">
     <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
 
-    <main tabindex="-1" id="content">
+    <div class="govuk-width-container">
+        <th:block th:insert="fragments/layout :: phase-banner" />
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assign applications to interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" />
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Resend invites to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'" />
 
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to send your invite.</h2>
-            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-        </div>
-        <p>Upload additional assessment feedback for applicants, edit the email and click send. The applications will then be assigned to this interview panel.</p>
-        <details>
-            <summary>
-                <span class="summary">Additional feedback guidance</span>
-            </summary>
-            <div class="panel">
-                <p>You may upload additional assessment feedback per application, if available. The applicant can download this along with their overall feedback document which is sent out automatically.</p>
-                <p>The feedback document should be:</p>
-                <ul class="list list-bullet">
-                    <li>a portable document format (.pdf)</li>
-                    <li>readable with 100% magnification</li>
-                    <li>less than 10MB in size</li>
-                </ul>
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Resend invites to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'" />
+
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to send your invite.</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
-        </details>
-
-        <form th:action="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit(competitionId=${model.competitionId}, applicationId=${model.applicationId})}"
-              method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate">
-            <div class="table-overflow">
-                <table>
-                    <thead>
-                    <tr>
-                        <th class="width-small">Application number</th>
-                        <th>Project title</th>
-                        <th>Lead organisation</th>
-                        <th>Date assigned</th>
-                        <th>Additional feedback</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${model.applicationId})} + ${model.originQuery}"
-                               th:text="${model.applicationId}">114
-                            </a>
-                        </td>
-                        <td th:text="${model.title}">Electronics, sensors &amp; photonics, Materials</td>
-                        <td th:text="${model.leadOrganisation}">Ooba</td>
-                        <td th:text="${#temporals.format(model.dateAssigned, 'dd/MM/yyyy')}">01/09/2017</td>
-                        <td>
-                            <div th:with="fieldName=${'feedback'},isError=${#fields.hasErrors(fieldName)}"
-                                 th:class="${isError ? 'form-group-error' : ''}">
-                                <th:block th:if="${isError}">
-                                    <th:block th:if="${isError}">
-                                        <span class="error-message" th:each="err : ${#fields.errors(fieldName)}" th:text="${err}" />
-                                    </th:block>
-                                    <p class="uploaded-file">No file currently uploaded</p>
-                                </th:block>
-
-                                <div class="upload-section file-toggle" th:style="${model.hasAttachment()} ? 'display:none' : 'display:block'" >
-                                    <input type="file" th:id="${fieldName}" class="inputfile" name="feedback">
-                                    <label th:for="${fieldName}" class="button-secondary extra-margin">+ Upload</label>
-                                    <button id="upload-applicant-resend-file" class="button-secondary" th:attr="data-for-file-upload=${fieldName}">Save</button>
-                                </div>
-                                <div class="grid-row file-toggle" th:style="${model.hasAttachment()} ? 'display:block' : 'display:none'" >
-                                    <div class="column-two-thirds">
-                                        <!--/* empty file input so that spring form is complete */-->
-                                        <input type="file" name="feedback" class="visuallyhidden">
-                                        <span th:text="${model.feedbackFilename}" id="file-name">Uploaded-file.pdf</span>
-                                    </div>
-                                    <div class="column-third">
-                                        <button style="padding:0" id="remove-applicant-resend-file" class="button button-clear">Remove</button>
-                                    </div>
-                                </div>
-                                <input type="hidden" id="remove-file" name="removeFile" th:value="${model.hasAttachment()}" />
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="form-group extra-margin-bottom extra-margin" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
-                <label class="form-label-bold" th:for="${#ids.next('subject')}">
-                    <span>Email subject</span>
-                    <th:block th:if="${#fields.hasErrors('subject')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
-                    </th:block>
-                </label>
-                <input class="form-control width-full"
-                       id="subject"
-                       type="text"
-                       th:field="*{subject}"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
-            </div>
-
-            <h3 class="heading-small">Message</h3>
-            <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
-
-            <div class="form-group extra-margin">
-                <label class="form-label-bold" for="message">Additional text</label>
-                <div class="textarea-wrapped">
-                <textarea id="message" rows="8" data-editor="html" class="width-full" th:field="*{content}">
-                </textarea>
+            <p>Upload additional assessment feedback for applicants, edit the email and click send. The applications will then be assigned to this interview panel.</p>
+            <details>
+                <summary>
+                    <span class="summary">Additional feedback guidance</span>
+                </summary>
+                <div class="panel">
+                    <p>You may upload additional assessment feedback per application, if available. The applicant can download this along with their overall feedback document which is sent out automatically.</p>
+                    <p>The feedback document should be:</p>
+                    <ul class="list list-bullet">
+                        <li>a portable document format (.pdf)</li>
+                        <li>readable with 100% magnification</li>
+                        <li>less than 10MB in size</li>
+                    </ul>
                 </div>
-            </div>
+            </details>
 
-            <p class="form-hint extra-margin">
-                Yours sincerely,
-            </p>
+            <form th:action="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit(competitionId=${model.competitionId}, applicationId=${model.applicationId})}"
+                  method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate">
+                <div class="table-overflow">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th class="width-small">Application number</th>
+                            <th>Project title</th>
+                            <th>Lead organisation</th>
+                            <th>Date assigned</th>
+                            <th>Additional feedback</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${model.applicationId})} + ${model.originQuery}"
+                                   th:text="${model.applicationId}">114
+                                </a>
+                            </td>
+                            <td th:text="${model.title}">Electronics, sensors &amp; photonics, Materials</td>
+                            <td th:text="${model.leadOrganisation}">Ooba</td>
+                            <td th:text="${#temporals.format(model.dateAssigned, 'dd/MM/yyyy')}">01/09/2017</td>
+                            <td>
+                                <div th:with="fieldName=${'feedback'},isError=${#fields.hasErrors(fieldName)}"
+                                     th:class="${isError ? 'form-group-error' : ''}">
+                                    <th:block th:if="${isError}">
+                                        <th:block th:if="${isError}">
+                                            <span class="error-message" th:each="err : ${#fields.errors(fieldName)}" th:text="${err}" />
+                                        </th:block>
+                                        <p class="uploaded-file">No file currently uploaded</p>
+                                    </th:block>
 
-            <p class="form-hint extra-margin">
-                Innovate UK, part of UK Research and Innovation <br />
-                Tel: 0300 321 4357 <br />
-                Email: competitions@innovateuk.ukri.org
-            </p>
+                                    <div class="upload-section file-toggle" th:style="${model.hasAttachment()} ? 'display:none' : 'display:block'" >
+                                        <input type="file" th:id="${fieldName}" class="inputfile" name="feedback">
+                                        <label th:for="${fieldName}" class="button-secondary extra-margin">+ Upload</label>
+                                        <button id="upload-applicant-resend-file" class="button-secondary" th:attr="data-for-file-upload=${fieldName}">Save</button>
+                                    </div>
+                                    <div class="grid-row file-toggle" th:style="${model.hasAttachment()} ? 'display:block' : 'display:none'" >
+                                        <div class="column-two-thirds">
+                                            <!--/* empty file input so that spring form is complete */-->
+                                            <input type="file" name="feedback" class="visuallyhidden">
+                                            <span th:text="${model.feedbackFilename}" id="file-name">Uploaded-file.pdf</span>
+                                        </div>
+                                        <div class="column-third">
+                                            <button style="padding:0" id="remove-applicant-resend-file" class="button button-clear">Remove</button>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="remove-file" name="removeFile" th:value="${model.hasAttachment()}" />
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <div class="extra-margin">
-                <button type="submit" class="button">Resend invite</button>
-                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view(competitionId=${model.competitionId}, applicationId=${model.applicationId})}"
-                   class="button button-clear">Cancel</a>
-            </div>
+                <div class="form-group extra-margin-bottom extra-margin" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+                    <label class="form-label-bold" th:for="${#ids.next('subject')}">
+                        <span>Email subject</span>
+                        <th:block th:if="${#fields.hasErrors('subject')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                        </th:block>
+                    </label>
+                    <input class="form-control width-full"
+                           id="subject"
+                           type="text"
+                           th:field="*{subject}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
+                </div>
 
-        </form>
+                <h3 class="heading-small">Message</h3>
+                <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
 
-        <th:block th:insert="fragments/layout :: main-content-end" />
-    </main>
+                <div class="form-group extra-margin">
+                    <label class="form-label-bold" for="message">Additional text</label>
+                    <div class="textarea-wrapped">
+                    <textarea id="message" rows="8" data-editor="html" class="width-full" th:field="*{content}">
+                    </textarea>
+                    </div>
+                </div>
 
+                <p class="form-hint extra-margin">
+                    Yours sincerely,
+                </p>
+
+                <p class="form-hint extra-margin">
+                    Innovate UK, part of UK Research and Innovation <br />
+                    Tel: 0300 321 4357 <br />
+                    Email: competitions@innovateuk.ukri.org
+                </p>
+
+                <div class="extra-margin">
+                    <button type="submit" class="button">Resend invite</button>
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view(competitionId=${model.competitionId}, applicationId=${model.applicationId})}"
+                       class="button button-clear">Cancel</a>
+                </div>
+
+            </form>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+    </div>
     <th:block th:insert="fragments/layout :: footer" />
     <th:block th:insert="fragments/layout :: body-end" />
     <th:block th:insert="fragments/service-layout :: body-end" />

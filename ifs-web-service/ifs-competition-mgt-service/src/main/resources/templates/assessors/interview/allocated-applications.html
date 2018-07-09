@@ -1,126 +1,128 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${'Allocate applications to ' + model.user.getName()}" />
 </head>
 
-<body class="competition-management competition-overview">
+<body class="govuk-template__body competition-management competition-overview">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications to assessors',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/allocate-assessors(competitionId=${model.competitionId})}" />
 
-    <th:block th:insert="fragments/layout :: page-title"
-              th:with="pageTitle=${'Allocate applications to ' + model.user.getName()},subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle=${'Allocate applications to ' + model.user.getName()},subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
 
-    <div class="grid-row">
-        <div class="column-half">
-            <dl>
-                <dt>Assessor type</dt>
-                <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.profile.getBusinessType()))}">Assessor type</dd>
-                <dt>Phone number</dt>
-                <dd th:text="${model.user.getPhoneNumber()}">01234 567891</dd>
-                <dt>Email address</dt>
-                <dd th:text="${model.user.getEmail()}">Felix.Wilson@gmail.com</dd>
-            </dl>
+        <div class="grid-row">
+            <div class="column-half">
+                <dl>
+                    <dt>Assessor type</dt>
+                    <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.profile.getBusinessType()))}">Assessor type</dd>
+                    <dt>Phone number</dt>
+                    <dd th:text="${model.user.getPhoneNumber()}">01234 567891</dd>
+                    <dt>Email address</dt>
+                    <dd th:text="${model.user.getEmail()}">Felix.Wilson@gmail.com</dd>
+                </dl>
+            </div>
+
+            <div class="column-half">
+                <dl>
+                    <dt>Innovation areas</dt>
+                    <dd>
+                        <ul class="list list-bullet">
+                            <li th:each="innovationSector : ${model.innovationSectors}">
+                                <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
+                                <ul class="list list-bullet">
+                                    <li th:each="innovationArea : ${innovationSector.children}">
+                                        <th:block th:text="${innovationArea.name}">digital sciences</th:block>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </dd>
+                    <dt>Skill areas</dt>
+                    <dd th:text="${model.profile.getSkillsAreas()}">skills</dd>
+                </dl>
+            </div>
         </div>
 
-        <div class="column-half">
-            <dl>
-                <dt>Innovation areas</dt>
-                <dd>
-                    <ul class="list list-bullet">
-                        <li th:each="innovationSector : ${model.innovationSectors}">
-                            <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
-                            <ul class="list list-bullet">
-                                <li th:each="innovationArea : ${innovationSector.children}">
-                                    <th:block th:text="${innovationArea.name}">digital sciences</th:block>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </dd>
-                <dt>Skill areas</dt>
-                <dd th:text="${model.profile.getSkillsAreas()}">skills</dd>
-            </dl>
+        <ul class="inline-nav extra-margin">
+            <li class="not-selected">
+                <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
+                   th:text="${'Applications (' + model.unallocatedApplications + ')' }"></a>
+            </li>
+            <li class="selected">
+                <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
+                   th:text="${'Allocated (' + model.allocatedApplications + ')' }"></a>
+            </li>
+        </ul>
+
+        <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">
+            <p th:text="#{competition.management.limit.warning}"></p>
         </div>
-    </div>
+        <div data-selection-limit-exceeded-block=""></div>
 
-    <ul class="inline-nav extra-margin">
-        <li class="not-selected">
-            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
-               th:text="${'Applications (' + model.unallocatedApplications + ')' }"></a>
-        </li>
-        <li class="selected">
-            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
-               th:text="${'Allocated (' + model.allocatedApplications + ')' }"></a>
-        </li>
-    </ul>
-
-    <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">
-        <p th:text="#{competition.management.limit.warning}"></p>
-    </div>
-    <div data-selection-limit-exceeded-block=""></div>
-
-    <div class="grid-row sorting">
-        <div class="column-one">
-            <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
-            <span class="heading-small">applications allocated to this assessor</span>
+        <div class="grid-row sorting">
+            <div class="column-one">
+                <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
+                <span class="heading-small">applications allocated to this assessor</span>
+            </div>
         </div>
-    </div>
 
-    <form
-          method="POST"
-          th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
-          th:object="${form}">
+        <form
+              method="POST"
+              th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
+              th:object="${form}">
 
-        <div class="table-overflow">
-            <table>
-                <thead>
-                <tr>
-                    <th scope="col" class="width-small">Application number</th>
-                    <th scope="col">Project title</th>
-                    <th scope="col">Lead organisation</th>
-                    <th scope="col" class="numeric">Assessors</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="row, index : ${model.rows}">
-                    <td>
-                        <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${row.id})} + ${model.originQuery}"
-                           th:text="${row.id}">123
-                        </a>
-                    </td>
-                    <td>
-                        <span th:text="${row.name}">project name</span>
-                    </td>
-                    <td>
-                        <span th:text="${row.leadOrganisation}">Lead organisation</span>
-                    </td>
-                    <td class="numeric">
-                        <span th:text="${row.numberOfAssessors}">1</span>
-                    </td>
-                    <td class="alignright">
-                        <button class="buttonlink"
-                                name="removeApplication"
-                                th:value="${row.id}"
-                                type="submit">
-                            Remove
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </form>
+            <div class="table-overflow">
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col" class="width-small">Application number</th>
+                        <th scope="col">Project title</th>
+                        <th scope="col">Lead organisation</th>
+                        <th scope="col" class="numeric">Assessors</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="row, index : ${model.rows}">
+                        <td>
+                            <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${row.id})} + ${model.originQuery}"
+                               th:text="${row.id}">123
+                            </a>
+                        </td>
+                        <td>
+                            <span th:text="${row.name}">project name</span>
+                        </td>
+                        <td>
+                            <span th:text="${row.leadOrganisation}">Lead organisation</span>
+                        </td>
+                        <td class="numeric">
+                            <span th:text="${row.numberOfAssessors}">1</span>
+                        </td>
+                        <td class="alignright">
+                            <button class="buttonlink"
+                                    name="removeApplication"
+                                    th:value="${row.id}"
+                                    type="submit">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
 
-    <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
+        <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

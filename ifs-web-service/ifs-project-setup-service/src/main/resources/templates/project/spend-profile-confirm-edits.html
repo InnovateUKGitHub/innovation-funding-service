@@ -1,24 +1,27 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit to lead partner'" />
 </head>
-<body>
+<body class="govuk-template__body">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${projectId},organisationId=${organisationId})}" method="POST">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Allow partner to edit',size='heading-medium'" />
-        <p><span class="heading-small no-margin"><th:block th:text="${model.getOrganisationName()}" />'s</span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
-        <hr />
-        <input type="submit" class="button" value="Allow edits" />
-    </form>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${projectId},organisationId=${organisationId})}" method="POST">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Allow partner to edit',size='heading-medium'" />
+            <p><span class="heading-small no-margin"><th:block th:text="${model.getOrganisationName()}" />'s</span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
+            <hr />
+            <input type="submit" class="button" value="Allow edits" />
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

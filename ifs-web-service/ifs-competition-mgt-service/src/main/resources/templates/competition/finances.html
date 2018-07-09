@@ -1,131 +1,133 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard',hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
 </head>
-<body class="competition-management competition-setup">
+<body class="govuk-template__body competition-management competition-setup">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${model.general.competition.id})}" />
 
-    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
-    </div>
-
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application finances',size='heading-xlarge'" />
-    <div class="panel">
-        The competition template will select the following finance sections for each partner.
-    </div>
-    <form th:if="${model.editable}" th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" method="POST"
-          th:action="@{${!model.subsection.noneFinanceCompetition ? #ifsUtil.formPostUri(#httpServletRequest) : 'none/edit'}}"
-          th:object="${competitionSetupForm}"
-          novalidate="novalidate"
-          data-th-attr="data-competition=${model.general.competition.id}"
-          data-section="application"
-          data-subsection="finance">
-
-        <div class="form-group" th:classappend="${#fields.hasErrors('applicationFinanceType')}? 'form-group-error'">
-            <fieldset>
-                <legend id="applicationFinanceType">
-                    <span class="form-label-bold">Finances form</span>
-                    <th:block th:if="${#fields.hasErrors('applicationFinanceType')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('applicationFinanceType')}" th:text="${err}"></span>
-                    </th:block>
-                </legend>
-                <div class="multiple-choice">
-                    <input id="application-finance-full"
-                           th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).FULL}"
-                           th:disabled="${model.subsection.noneFinanceCompetition}" type="radio"
-                           th:field="*{applicationFinanceType}" required="required"/>
-                    <label for="application-finance-full" th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).FULL.name}" />
-                </div>
-                <div class="multiple-choice">
-                    <input id="application-finance-light"
-                           th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).LIGHT}"
-                           disabled="disabled" type="radio"
-                           th:field="*{applicationFinanceType}" required="required" />
-                    <label for="application-finance-light" th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).LIGHT.name}" />
-                </div>
-                <div class="multiple-choice">
-                    <input id="application-finance-none"
-                           th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).NONE}"
-                           th:disabled="${!model.subsection.noneFinanceCompetition}"
-                           type="radio" th:field="*{applicationFinanceType}" required="required"/>
-                    <label for="application-finance-none" th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).NONE.name}" />
-                </div>
-            </fieldset>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
         </div>
 
-        <div class="form-group" th:classappend="${#fields.hasErrors('includeGrowthTable')} ? 'form-group-error'" th:unless="${model.subsection.noneFinanceCompetition}">
-            <fieldset class="inline">
-                <legend id="includeGrowthTable">
-                    <span class="form-label-bold">Include project growth table</span>
-                    <th:block th:if="${#fields.hasErrors('includeGrowthTable')}">
-	                    <span class="error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}"></span>
-	                </th:block>
-                </legend>
-                <div class="multiple-choice">
-                    <input id="include-growth-table-yes" value="true" type="radio" th:field="*{includeGrowthTable}" required="required" />
-                    <label for="include-growth-table-yes">
-                        Yes
-                    </label>
-                </div>
-                <div class="multiple-choice">
-                    <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" th:disabled="${model.subsection.sectorCompetition}" />
-                    <label for="include-growth-table-no">
-                        No
-                    </label>
-                </div>
-            </fieldset>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application finances',size='heading-xlarge'" />
+        <div class="panel">
+            The competition template will select the following finance sections for each partner.
         </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-group-error'" th:unless="${model.subsection.noneFinanceCompetition}">
-              <label for="fundingRules">
-                  <span class="form-label-bold">Funding rules for this competition</span>
-                  <th:block th:if="${#fields.hasErrors('fundingRules')}">
-                      <span class="error-message"  th:each="err : ${#fields.errors('fundingRules')}" th:text="${err}"></span>
-                  </th:block>
-              </label>
-              <div class="textarea-wrapped ">
-                  <textarea data-editor="html"
-                            class="form-control"
-                            id="fundingRules"
-                            th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-control-error'"
-                            th:field="${competitionSetupForm.fundingRules}"
-                            required="required"
-                            th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                            ifs:utext="${competitionSetupForm.fundingRules}">
-                  </textarea>
-              </div>
-        </div>
-        <button type="submit" class="button">Done</button>
+        <form th:if="${model.editable}" th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" method="POST"
+              th:action="@{${!model.subsection.noneFinanceCompetition ? #ifsUtil.formPostUri(#httpServletRequest) : 'none/edit'}}"
+              th:object="${competitionSetupForm}"
+              novalidate="novalidate"
+              data-th-attr="data-competition=${model.general.competition.id}"
+              data-section="application"
+              data-subsection="finance">
 
-    </form>
-    <th:block th:unless="${model.editable}">
-        <dl class="application-question-list grid-row">
-            <dt class="column-third">Finances form</dt>
-            <dd class="column-two-thirds" th:text="${competitionSetupForm.applicationFinanceType.name}" />
-            <th:block th:unless="${model.subsection.noneFinanceCompetition}">
-                <dt class="column-third">Include project growth table</dt>
-                <dd class="column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
-                <dt class="column-full no-margin">Funding rules for this competition</dt>
-                <dd class="column-full wysiwyg-styles" ifs:utext="${competitionSetupForm.fundingRules}" />
-            </th:block>
-        </dl>
-        <div class="extra-margin">
-            <a class="button" th:unless="${model.general.state.preventEdit}" th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${model.general.competition.id})}">Edit this question</a>
-        </div>
-        <div class="extra-margin">
-            <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/section/application(competitionId=${model.general.competition.id})}">Return to application questions</a>
-        </div>
-    </th:block>
+            <div class="form-group" th:classappend="${#fields.hasErrors('applicationFinanceType')}? 'form-group-error'">
+                <fieldset>
+                    <legend id="applicationFinanceType">
+                        <span class="form-label-bold">Finances form</span>
+                        <th:block th:if="${#fields.hasErrors('applicationFinanceType')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('applicationFinanceType')}" th:text="${err}"></span>
+                        </th:block>
+                    </legend>
+                    <div class="multiple-choice">
+                        <input id="application-finance-full"
+                               th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).FULL}"
+                               th:disabled="${model.subsection.noneFinanceCompetition}" type="radio"
+                               th:field="*{applicationFinanceType}" required="required"/>
+                        <label for="application-finance-full" th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).FULL.name}" />
+                    </div>
+                    <div class="multiple-choice">
+                        <input id="application-finance-light"
+                               th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).LIGHT}"
+                               disabled="disabled" type="radio"
+                               th:field="*{applicationFinanceType}" required="required" />
+                        <label for="application-finance-light" th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).LIGHT.name}" />
+                    </div>
+                    <div class="multiple-choice">
+                        <input id="application-finance-none"
+                               th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).NONE}"
+                               th:disabled="${!model.subsection.noneFinanceCompetition}"
+                               type="radio" th:field="*{applicationFinanceType}" required="required"/>
+                        <label for="application-finance-none" th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).NONE.name}" />
+                    </div>
+                </fieldset>
+            </div>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+            <div class="form-group" th:classappend="${#fields.hasErrors('includeGrowthTable')} ? 'form-group-error'" th:unless="${model.subsection.noneFinanceCompetition}">
+                <fieldset class="inline">
+                    <legend id="includeGrowthTable">
+                        <span class="form-label-bold">Include project growth table</span>
+                        <th:block th:if="${#fields.hasErrors('includeGrowthTable')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}"></span>
+                        </th:block>
+                    </legend>
+                    <div class="multiple-choice">
+                        <input id="include-growth-table-yes" value="true" type="radio" th:field="*{includeGrowthTable}" required="required" />
+                        <label for="include-growth-table-yes">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="multiple-choice">
+                        <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" th:disabled="${model.subsection.sectorCompetition}" />
+                        <label for="include-growth-table-no">
+                            No
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-group-error'" th:unless="${model.subsection.noneFinanceCompetition}">
+                  <label for="fundingRules">
+                      <span class="form-label-bold">Funding rules for this competition</span>
+                      <th:block th:if="${#fields.hasErrors('fundingRules')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('fundingRules')}" th:text="${err}"></span>
+                      </th:block>
+                  </label>
+                  <div class="textarea-wrapped ">
+                      <textarea data-editor="html"
+                                class="form-control"
+                                id="fundingRules"
+                                th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-control-error'"
+                                th:field="${competitionSetupForm.fundingRules}"
+                                required="required"
+                                th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                ifs:utext="${competitionSetupForm.fundingRules}">
+                      </textarea>
+                  </div>
+            </div>
+            <button type="submit" class="button">Done</button>
 
+        </form>
+        <th:block th:unless="${model.editable}">
+            <dl class="application-question-list grid-row">
+                <dt class="column-third">Finances form</dt>
+                <dd class="column-two-thirds" th:text="${competitionSetupForm.applicationFinanceType.name}" />
+                <th:block th:unless="${model.subsection.noneFinanceCompetition}">
+                    <dt class="column-third">Include project growth table</dt>
+                    <dd class="column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
+                    <dt class="column-full no-margin">Funding rules for this competition</dt>
+                    <dd class="column-full wysiwyg-styles" ifs:utext="${competitionSetupForm.fundingRules}" />
+                </th:block>
+            </dl>
+            <div class="extra-margin">
+                <a class="button" th:unless="${model.general.state.preventEdit}" th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${model.general.competition.id})}">Edit this question</a>
+            </div>
+            <div class="extra-margin">
+                <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/section/application(competitionId=${model.general.competition.id})}">Return to application questions</a>
+            </div>
+        </th:block>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

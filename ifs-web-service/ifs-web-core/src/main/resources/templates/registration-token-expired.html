@@ -1,29 +1,33 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${title}" />
 </head>
-<body class="error" th:attrappend="class='${errorMessageClass}'">
+<body class="govuk-template__body error" th:attrappend="class='${errorMessageClass}'">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <h1 class="heading-large" th:text="${title}">Page title</h1>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <p th:if="${url}">
-        <b>Page:</b> <span th:text="${url}">Page URL</span>
-    </p>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <h1 class="heading-large" th:text="${title}">Page title</h1>
 
-    <div class="boxed">
-		<span>
-            <th:block th:text="${messageForUser}">An unexpected error occurred.</th:block>
-            You can choose to <a th:href="@{/registration/resend-email-verification}">send a new verification link</a> by e-mail or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
-        </span>
-    </div>
+        <p th:if="${url}">
+            <b>Page:</b> <span th:text="${url}">Page URL</span>
+        </p>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <div class="boxed">
+            <span>
+                <th:block th:text="${messageForUser}">An unexpected error occurred.</th:block>
+                You can choose to <a th:href="@{/registration/resend-email-verification}">send a new verification link</a> by e-mail or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+            </span>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

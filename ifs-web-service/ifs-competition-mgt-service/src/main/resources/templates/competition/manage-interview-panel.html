@@ -1,68 +1,71 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage interview panel'" />
 </head>
 
-<body class="competition-management wide-page">
+<body class="govuk-template__body competition-management">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{id}(id=${model.competitionId})})" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage interview panel',subTitle=|${model.competitionId}: ${model.competitionName}, competition ${#strings.toLowerCase(model.competitionStatus.displayName)} |,size='heading-xlarge'" />
 
-    <ul class="grid-row">
-        <li class="column-quarter">
-            <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="${model.keyStats.applicationsAssigned}"></span><br /><small>Applications assigned</small>
-            </div>
-        </li>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage interview panel',subTitle=|${model.competitionId}: ${model.competitionName}, competition ${#strings.toLowerCase(model.competitionStatus.displayName)} |,size='heading-xlarge'" />
 
-        <li class="column-quarter">
-            <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="${model.keyStats.respondedToFeedback}"></span><br /><small>Applicants responded to feedback</small>
-            </div>
-        </li>
+        <ul class="grid-row">
+            <li class="column-quarter">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large" th:text="${model.keyStats.applicationsAssigned}"></span><br /><small>Applications assigned</small>
+                </div>
+            </li>
 
-        <li class="column-quarter">
-            <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="${model.keyStats.assessorsAccepted}"></span><br /><small>Assessors accepted</small>
-            </div>
-        </li>
-    </ul>
+            <li class="column-quarter">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large" th:text="${model.keyStats.respondedToFeedback}"></span><br /><small>Applicants responded to feedback</small>
+                </div>
+            </li>
 
-    <ul class="link-list extra-margin">
+            <li class="column-quarter">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large" th:text="${model.keyStats.assessorsAccepted}"></span><br /><small>Assessors accepted</small>
+                </div>
+            </li>
+        </ul>
 
-        <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
-               th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">
-            Assign applications
-        </a>
-            <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
-               class="disabled" aria-disabled="true" >
+        <ul class="link-list extra-margin">
+
+            <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
+                   th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">
                 Assign applications
             </a>
-        </li>
+                <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
+                   class="disabled" aria-disabled="true" >
+                    Assign applications
+                </a>
+            </li>
 
-        <li><a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors</a></li>
+            <li><a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors</a></li>
 
-        <li><p class="extra-margin">You can allocate applications to assessors once they have responded.</p></li>
+            <li><p class="extra-margin">You can allocate applications to assessors once they have responded.</p></li>
 
-        <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
-               th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocate-assessors(competitionId=${model.competitionId})}">
-            Allocate applications to assessors
-        </a>
-            <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
-               class="disabled" aria-disabled="true" >
+            <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
+                   th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocate-assessors(competitionId=${model.competitionId})}">
                 Allocate applications to assessors
             </a>
-        </li>
+                <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
+                   class="disabled" aria-disabled="true" >
+                    Allocate applications to assessors
+                </a>
+            </li>
 
-    </ul>
+        </ul>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 <th:block th:insert="fragments/service-layout :: body-end" />

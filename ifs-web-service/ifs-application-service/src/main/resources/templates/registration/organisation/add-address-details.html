@@ -1,45 +1,49 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
 </head>
-<body class="create-application-organisation">
+<body class="govuk-template__body create-application-organisation">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to ' + ${model.organisationTypeName} + ' organisation',linkClass='link-back',linkUrl='/organisation/create/find-organisation'" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Organisation address',subTitle='Create your account',size='heading-xlarge'" />
 
-    <div class="message-alert">
-        <p>
-            <th:block th:unless="${model.research}">
-                Your organisation must be UK based to receive funding from Innovate UK
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Organisation address',subTitle='Create your account',size='heading-xlarge'" />
+
+        <div class="message-alert">
+            <p>
+                <th:block th:unless="${model.research}">
+                    Your organisation must be UK based to receive funding from Innovate UK
+                </th:block>
+                <th:block th:if="${model.research}">
+                    Your organisation must be registered Je-S to be a research organisation by Innovate UK
+                </th:block>
+            </p>
+        </div>
+
+        <th:block th:insert="fragments/addresses :: organisation-details-minimal" />
+
+        <th:block th:with="organisationId=${organisationForm.searchOrganisationId}, postcode=${organisationForm.addressForm.postcodeInput}, selectedPostcode=${organisationForm.addressForm.selectedPostcodeIndex}" th:object="${organisationForm}">
+            <th:block th:with="formURL=${#strings.isEmpty(postcode) && #strings.isEmpty(selectedPostcode)} ? |/organisation/create/selected-organisation/${organisationId}| : |/organisation/create/selected-organisation/${organisationId}/${postcode}/${selectedPostcode}|">
+                <form th:action="@{${formURL}}" novalidate="novalidate" method="POST">
+                    <input type="hidden" th:field="*{searchOrganisationId}" />
+                    <h2 class="heading-medium no-margin-bottom">Operating address</h2>
+                    <p>This is the address that your organisation works from</p>
+                    <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
+
+                    <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>
+                </form>
             </th:block>
-            <th:block th:if="${model.research}">
-                Your organisation must be registered Je-S to be a research organisation by Innovate UK
-            </th:block>
-        </p>
-    </div>
-
-    <th:block th:insert="fragments/addresses :: organisation-details-minimal" />
-
-    <th:block th:with="organisationId=${organisationForm.searchOrganisationId}, postcode=${organisationForm.addressForm.postcodeInput}, selectedPostcode=${organisationForm.addressForm.selectedPostcodeIndex}" th:object="${organisationForm}">
-        <th:block th:with="formURL=${#strings.isEmpty(postcode) && #strings.isEmpty(selectedPostcode)} ? |/organisation/create/selected-organisation/${organisationId}| : |/organisation/create/selected-organisation/${organisationId}/${postcode}/${selectedPostcode}|">
-            <form th:action="@{${formURL}}" novalidate="novalidate" method="POST">
-                <input type="hidden" th:field="*{searchOrganisationId}" />
-                <h2 class="heading-medium no-margin-bottom">Operating address</h2>
-                <p>This is the address that your organisation works from</p>
-                <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
-
-                <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>
-            </form>
         </th:block>
-    </th:block>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

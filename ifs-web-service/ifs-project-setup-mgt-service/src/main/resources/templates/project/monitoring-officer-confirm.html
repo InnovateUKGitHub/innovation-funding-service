@@ -1,47 +1,50 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assign a Monitoring Officer'" />
 </head>
-<body class="competition-management project-management application-overview">
+<body class="govuk-template__body competition-management project-management application-overview">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-	<div class="grid-row">
-		<div class="column-two-thirds">
-            <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='heading-xlarge'" />
-            </th:block>
+<div class="govuk-width-container">
+	<th:block th:insert="fragments/layout :: phase-banner" />
+
+	<main class="govuk-main-wrapper" id="main-content" role="main">
+		<div class="grid-row">
+			<div class="column-two-thirds">
+				<th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
+					<th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='heading-xlarge'" />
+				</th:block>
+			</div>
+			<div class="column-third alignright extra-margin">
+				<th:block th:insert="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" />
+			</div>
 		</div>
-		<div class="column-third alignright extra-margin">
-			<th:block th:insert="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" />
-		</div>
-	</div>
-	<hr/>
+		<hr/>
 
-    <form th:action="@{/project/{projectId}/monitoring-officer/assign(projectId=${model.projectId})}" method="post" th:object="${form}">
-				<input type="hidden" th:field="*{firstName}" />
-				<input type="hidden" th:field="*{lastName}" />
-				<input type="hidden" th:field="*{emailAddress}" />
-				<input type="hidden" th:field="*{phoneNumber}" />
+		<form th:action="@{/project/{projectId}/monitoring-officer/assign(projectId=${model.projectId})}" method="post" th:object="${form}">
+					<input type="hidden" th:field="*{firstName}" />
+					<input type="hidden" th:field="*{lastName}" />
+					<input type="hidden" th:field="*{emailAddress}" />
+					<input type="hidden" th:field="*{phoneNumber}" />
 
-				<h2 class="heading-large">Assign Monitoring Officer</h2>
-        <p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will be visible to all members of the consortium.</p>
-        <div class="grid-row">
-            <div class="column-half">
-                <button class="button" name="submit-app-details">Assign Monitoring Officer</button>
-            </div>
-            <div class="column-half alignright">
-                <a th:href="@{/project/{projectId}/monitoring-officer(projectId=${model.projectId})}" class="buttonlink">Cancel</a>
-            </div>
-        </div>
-    </form>
+					<h2 class="heading-large">Assign Monitoring Officer</h2>
+			<p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will be visible to all members of the consortium.</p>
+			<div class="grid-row">
+				<div class="column-half">
+					<button class="button" name="submit-app-details">Assign Monitoring Officer</button>
+				</div>
+				<div class="column-half alignright">
+					<a th:href="@{/project/{projectId}/monitoring-officer(projectId=${model.projectId})}" class="buttonlink">Cancel</a>
+				</div>
+			</div>
+		</form>
 
-	<th:block th:insert="fragments/layout :: main-content-end" />
-</main>
-
+		<th:block th:insert="fragments/layout :: main-content-end" />
+	</main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 

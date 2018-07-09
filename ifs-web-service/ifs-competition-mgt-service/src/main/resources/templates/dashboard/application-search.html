@@ -1,36 +1,39 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Search'" />
 </head>
-<body class="competition-management">
+<body class="govuk-template__body competition-management">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <form role="search" method="get" id="searchform" th:action="@{'/dashboard/application/search'}">
-        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${searchQuery})"
-                  th:with="setPageTitle='Search results',
-                    size='heading-large',
-                    searchType='applications'"
-        />
-    </form>
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <th:block th:if="${model.searchStringPresent}">
-        <p>
-            <span th:text="${model.applicationCount}" class="heading-xlarge" />
-            <strong>applications</strong>
-            matching the number
-            <strong th:text="${model.searchString}" />
-        </p>
-    </th:block>
-    
-    <th:block th:insert="fragments/dashboard-application-search :: application-search(applications=${model.applications}, count=${model.applicationCount}, pagination=${model.applicationPagination})" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <form role="search" method="get" id="searchform" th:action="@{'/dashboard/application/search'}">
+            <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${searchQuery})"
+                      th:with="setPageTitle='Search results',
+                        size='heading-large',
+                        searchType='applications'"
+            />
+        </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:if="${model.searchStringPresent}">
+            <p>
+                <span th:text="${model.applicationCount}" class="heading-xlarge" />
+                <strong>applications</strong>
+                matching the number
+                <strong th:text="${model.searchString}" />
+            </p>
+        </th:block>
 
+        <th:block th:insert="fragments/dashboard-application-search :: application-search(applications=${model.applications}, count=${model.applicationCount}, pagination=${model.applicationPagination})" />
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
 

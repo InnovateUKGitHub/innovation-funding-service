@@ -1,114 +1,117 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite applications to panel',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body class="competition-management competition-overview">
+    <body class="govuk-template__body competition-management competition-overview">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
+        <div class="govuk-width-container">
+            <th:block th:insert="fragments/layout :: phase-banner" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}" />
-            <th:block th:insert="fragments/layout :: page-title"
-                      th:with="pageTitle='Assign applications to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
-                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-            </div>
+            <main class="govuk-main-wrapper" id="main-content" role="main">
+                <th:block th:insert="fragments/layout :: page-title"
+                          th:with="pageTitle='Assign applications to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
 
-            <h2 class="heading-medium">Key statistics</h2>
-
-            <div class="grid-row">
-                <div class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.applicationsInCompetition}">45</span><br/>
-                        <small>Applications in competition</small>
-                    </div>
+                <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+                    <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
-                <div class="column-quarter">
-                    <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.applicationsInPanel}">23</span><br/>
-                        <small>Assigned to interview panel</small>
+
+                <h2 class="heading-medium">Key statistics</h2>
+
+                <div class="grid-row">
+                    <div class="column-quarter">
+                        <div class="highlight-panel highlight-panel-padded">
+                            <span class="heading-large" th:text="${model.applicationsInCompetition}">45</span><br/>
+                            <small>Applications in competition</small>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <dl class="standard-definition-list extra-margin">
-                <dt>Innovation sector</dt>
-                <dd th:text="${model.innovationSector}">Health and life sciences</dd>
-
-                <dt>Innovation area</dt>
-                <dd th:text="${model.innovationArea}">Agriculture and food</dd>
-            </dl>
-
-            <ul class="inline-nav extra-margin">
-                <li class="not-selected">
-                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
-                </li>
-                <li class="selected">
-                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
-                </li>
-                <li class="not-selected">
-                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}">View status</a>
-                </li>
-            </ul>
-
-            <form method="POST" th:action="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">
-
-                <div class="grid-row sorting">
-                    <div class="column-half">
-                        <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
-                        <span class="heading-small">applications on invite list</span>
-                    </div>
-
-                    <div class="column-half alignright" th:if="${!#lists.isEmpty(model.applications)}">
-                        <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
+                    <div class="column-quarter">
+                        <div class="highlight-panel highlight-panel-padded">
+                            <span class="heading-large" th:text="${model.applicationsInPanel}">23</span><br/>
+                            <small>Assigned to interview panel</small>
+                        </div>
                     </div>
                 </div>
 
-                <div class="table-overflow">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th scope="col" class="width-small">Application number</th>
-                            <th scope="col">Project title</th>
-                            <th scope="col">Lead organisation</th>
-                            <td scope="col" class="alignright">
-                                <button name="removeAll" class="buttonlink alignright"
-                                        th:if="${!#lists.isEmpty(model.applications)}">
-                                    Remove all
-                                </button>
-                            </td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="app : ${model.applications}">
-                            <td>
-                                <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${originQuery}"
-                                   th:text="${app.applicationId}">123
-                                </a>
-                            </td>
-                            <td th:text="${app.applicationName}">Application name</td>
-                            <td th:text="${app.leadOrganisation}">Lead organisation</td>
-                            <td class="alignright">
-                                <button class="buttonlink alignright" name="remove" th:value="${app.applicationId}">
-                                    <span class="hidden" th:text="${app.applicationName}">John Barnes </span>Remove
-                                </button>
-                            </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(model.applications)}">
-                            <td colspan="5">There are no applications to be invited to this panel.</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </form>
-            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+                <dl class="standard-definition-list extra-margin">
+                    <dt>Innovation sector</dt>
+                    <dd th:text="${model.innovationSector}">Health and life sciences</dd>
 
+                    <dt>Innovation area</dt>
+                    <dd th:text="${model.innovationArea}">Agriculture and food</dd>
+                </dl>
+
+                <ul class="inline-nav extra-margin">
+                    <li class="not-selected">
+                        <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
+                    </li>
+                    <li class="selected">
+                        <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
+                    </li>
+                    <li class="not-selected">
+                        <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}">View status</a>
+                    </li>
+                </ul>
+
+                <form method="POST" th:action="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">
+
+                    <div class="grid-row sorting">
+                        <div class="column-half">
+                            <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
+                            <span class="heading-small">applications on invite list</span>
+                        </div>
+
+                        <div class="column-half alignright" th:if="${!#lists.isEmpty(model.applications)}">
+                            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
+                        </div>
+                    </div>
+
+                    <div class="table-overflow">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th scope="col" class="width-small">Application number</th>
+                                <th scope="col">Project title</th>
+                                <th scope="col">Lead organisation</th>
+                                <td scope="col" class="alignright">
+                                    <button name="removeAll" class="buttonlink alignright"
+                                            th:if="${!#lists.isEmpty(model.applications)}">
+                                        Remove all
+                                    </button>
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="app : ${model.applications}">
+                                <td>
+                                    <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${originQuery}"
+                                       th:text="${app.applicationId}">123
+                                    </a>
+                                </td>
+                                <td th:text="${app.applicationName}">Application name</td>
+                                <td th:text="${app.leadOrganisation}">Lead organisation</td>
+                                <td class="alignright">
+                                    <button class="buttonlink alignright" name="remove" th:value="${app.applicationId}">
+                                        <span class="hidden" th:text="${app.applicationName}">John Barnes </span>Remove
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(model.applications)}">
+                                <td colspan="5">There are no applications to be invited to this panel.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+                <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+                <th:block th:insert="fragments/layout :: main-content-end" />
+            </main>
+        </div>
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
         <th:block th:insert="fragments/service-layout :: body-end" />

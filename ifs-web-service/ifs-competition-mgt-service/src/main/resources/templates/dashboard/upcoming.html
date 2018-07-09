@@ -1,49 +1,53 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
 </head>
-<body class="competition-management competition-overview">
+<body class="govuk-template__body competition-management competition-overview">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
-        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
-    </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'upcoming'}, counts=${model.counts}, tabs=${model.tabs})" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <section th:with="inPrepComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP)}">
-        <h2 class="heading-medium"
-            th:text="'In preparation ('+${inPrepComps == null ? '0' : inPrepComps.size()}+')'"></h2>
-        <ul class="list-overview">
-            <li class="grid-row section" th:each="competition : ${inPrepComps}">
-                <th:block
-                    th:insert="competition/dashboard :: dashboard-row"
-                    th:with="competition=${competition},
-                        innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.startDateDisplay}"/>
-            </li>
-        </ul>
-    </section>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
+            <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
+        </form>
+        <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'upcoming'}, counts=${model.counts}, tabs=${model.tabs})" />
 
-    <section th:with="readyToOpenComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}">
-        <h2 class="heading-medium"
-            th:text="'Ready to open ('+${readyToOpenComps == null ? 0 : readyToOpenComps.size()}+')'"></h2>
-        <ul class="list-overview">
-            <li class="grid-row section" th:each="competition : ${readyToOpenComps}">
-                <th:block
-                    th:insert="competition/dashboard :: dashboard-row"
-                    th:with="competition=${competition},
-                        innovationAreas=competition.innovationAreaNames,
-                        cell4=${competition.startDateDisplay}"/>
-            </li>
-        </ul>
-    </section>
-    <a th:href="@{/competition/create}" class="button button-large extra-margin" th:text="#{ifs.competition.create_competition}">Create Competition</a>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <section th:with="inPrepComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP)}">
+            <h2 class="heading-medium"
+                th:text="'In preparation ('+${inPrepComps == null ? '0' : inPrepComps.size()}+')'"></h2>
+            <ul class="list-overview">
+                <li class="grid-row section" th:each="competition : ${inPrepComps}">
+                    <th:block
+                        th:insert="competition/dashboard :: dashboard-row"
+                        th:with="competition=${competition},
+                            innovationAreas=competition.innovationAreaNames,
+                            cell4=${competition.startDateDisplay}"/>
+                </li>
+            </ul>
+        </section>
+
+        <section th:with="readyToOpenComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}">
+            <h2 class="heading-medium"
+                th:text="'Ready to open ('+${readyToOpenComps == null ? 0 : readyToOpenComps.size()}+')'"></h2>
+            <ul class="list-overview">
+                <li class="grid-row section" th:each="competition : ${readyToOpenComps}">
+                    <th:block
+                        th:insert="competition/dashboard :: dashboard-row"
+                        th:with="competition=${competition},
+                            innovationAreas=competition.innovationAreaNames,
+                            cell4=${competition.startDateDisplay}"/>
+                </li>
+            </ul>
+        </section>
+        <a th:href="@{/competition/create}" class="button button-large extra-margin" th:text="#{ifs.competition.create_competition}">Create Competition</a>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

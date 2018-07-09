@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Service Problems'" />
 </head>
-<body class="assessment-review">
+<body class="govuk-template__body assessment-review">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Service problems',size='heading-xlarge'" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <p>We are experiencing a few technical problems at the moment. We are aware of the issues and are working hard to resolve them. Please try again later. We are sorry for any inconvenience this might cause.</p>
-    <p class="user-feedback"><span>Need help with this service?</span> <a href="/info/contact">Contact us</a></p>
-</main>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Service problems',size='heading-xlarge'" />
+
+        <p>We are experiencing a few technical problems at the moment. We are aware of the issues and are working hard to resolve them. Please try again later. We are sorry for any inconvenience this might cause.</p>
+        <p class="user-feedback"><span>Need help with this service?</span> <a href="/info/contact">Contact us</a></p>
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

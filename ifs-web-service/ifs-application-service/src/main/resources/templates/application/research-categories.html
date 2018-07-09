@@ -1,57 +1,60 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Research category'" />
 </head>
-<body class="application details innovation-areas">
+<body class="govuk-template__body application details innovation-areas">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Research category',subTitle=${model.currentCompetitionName},size='heading-xlarge'" />
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Research category',subTitle=${model.currentCompetitionName},size='heading-xlarge'" />
 
-    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
-        <div class="form-group" th:classappend="${#fields.hasErrors('*{__researchCategoryChoice__}')} ? 'form-group-error'">
-            <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
-                <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
-                <p>The type of research affects the level of funding a business can receive under UK state aid rules.
-                    Changing the research category will reset the funding level for all business participants.
-                </p>
-            </div>
+        <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{__researchCategoryChoice__}')} ? 'form-group-error'">
+                <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
+                    <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
+                    <p>The type of research affects the level of funding a business can receive under UK state aid rules.
+                        Changing the research category will reset the funding level for all business participants.
+                    </p>
+                </div>
 
-            <fieldset>
-                <legend class="extra-margin-bottom">
-                    <h2 class="heading-medium">Research category</h2>
-                    <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a
-                        href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
-                        target="_blank">Innovate UK funding rules</a>.</span>
-                    <th:block th:if="${#fields.hasErrors('researchCategoryChoice')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryChoice')}" th:text="${err}"></span>
+                <fieldset>
+                    <legend class="extra-margin-bottom">
+                        <h2 class="heading-medium">Research category</h2>
+                        <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a
+                            href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
+                            target="_blank">Innovate UK funding rules</a>.</span>
+                        <th:block th:if="${#fields.hasErrors('researchCategoryChoice')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryChoice')}" th:text="${err}"></span>
+                        </th:block>
+                    </legend>
+                    <th:block th:each="researchCategory : ${model.availableResearchCategories}">
+                        <div class="multiple-choice">
+                            <input type="radio" name="researchCategoryChoice" required="required"
+                                   th:id="${'researchCategoryChoice-'+researchCategory.id}"
+                                   th:value="${researchCategory.id}"
+                                   th:checked="${model.selectedResearchCategoryId} == ${researchCategory.id}"
+                                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}" />
+                            <label th:for="${'researchCategoryChoice-'+researchCategory.id}">
+                                <th:block th:text="${researchCategory.name}" />
+                                <span class="form-hint" th:text="${researchCategory.description}">description</span>
+                            </label>
+                        </div>
                     </th:block>
-                </legend>
-                <th:block th:each="researchCategory : ${model.availableResearchCategories}">
-                    <div class="multiple-choice">
-                        <input type="radio" name="researchCategoryChoice" required="required"
-                               th:id="${'researchCategoryChoice-'+researchCategory.id}"
-                               th:value="${researchCategory.id}"
-                               th:checked="${model.selectedResearchCategoryId} == ${researchCategory.id}"
-                               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}" />
-                        <label th:for="${'researchCategoryChoice-'+researchCategory.id}">
-                            <th:block th:text="${researchCategory.name}" />
-                            <span class="form-hint" th:text="${researchCategory.description}">description</span>
-                        </label>
-                    </div>
-                </th:block>
-            </fieldset>
-        </div>
-        <button class="button" name="save-research-category">Save</button>
-        <a class="button button-clear" th:href="@{/application/__${model.applicationId}__/form/question/__${model.questionId}__}">Cancel</a>
-    </form>
+                </fieldset>
+            </div>
+            <button class="button" name="save-research-category">Save</button>
+            <a class="button button-clear" th:href="@{/application/__${model.applicationId}__/form/question/__${model.questionId}__}">Cancel</a>
+        </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

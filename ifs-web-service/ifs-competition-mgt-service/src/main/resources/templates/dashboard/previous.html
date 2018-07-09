@@ -1,36 +1,40 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
 </head>
-<body class="competition-management competition-overview">
+<body class="govuk-template__body competition-management competition-overview">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content">
-    <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
-        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
-    </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'previous'}, counts=${model.counts}, tabs=${model.tabs})" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
 
-    <section th:with="previousComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}">
-        <h2 class="heading-medium"
-            th:text="'Previous competitions ('+${model.counts.feedbackReleasedCount}+')'"></h2>
-        <ul class="list-overview">
-            <li class="grid-row" th:each="competition : ${previousComps}">
-                <th:block
-                    th:insert="competition/dashboard :: dashboard-row"
-                    th:with="competition=${competition},
-                        innovationAreas=competition.innovationAreaNames,
-                        cell4='Opened '+${competition.openDate != null ? #temporals.format(competition.openDate, 'd MMMM yyyy') : ''},
-                        customLink='/competition/'+${competition.id}+'/applications/previous'"/>
-            </li>
-        </ul>
-    </section>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
+            <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
+        </form>
+        <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'previous'}, counts=${model.counts}, tabs=${model.tabs})" />
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+        <section th:with="previousComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}">
+            <h2 class="heading-medium"
+                th:text="'Previous competitions ('+${model.counts.feedbackReleasedCount}+')'"></h2>
+            <ul class="list-overview">
+                <li class="grid-row" th:each="competition : ${previousComps}">
+                    <th:block
+                        th:insert="competition/dashboard :: dashboard-row"
+                        th:with="competition=${competition},
+                            innovationAreas=competition.innovationAreaNames,
+                            cell4='Opened '+${competition.openDate != null ? #temporals.format(competition.openDate, 'd MMMM yyyy') : ''},
+                            customLink='/competition/'+${competition.id}+'/applications/previous'"/>
+                </li>
+            </ul>
+        </section>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />

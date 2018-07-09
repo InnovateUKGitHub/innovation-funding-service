@@ -1,50 +1,52 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Delete ' + ${model.organisationName},hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 
-<body class="app-org-invite">
+<body class="govuk-template__body app-org-invite">
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
-<main tabindex="-1" id="content">
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle=|Back to ${model.organisationName}|, linkClass='link-back', linkUrl=${model.inviteOrganisationId} ?
     @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, inviteOrganisation=${model.inviteOrganisationId})} :
     @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, organisation=${model.organisationId})}"/>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Delete ${model.organisationName}|,subTitle=${applicationName},size='heading-xlarge'" />
+        </th:block>
 
-    <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Delete ${model.organisationName}|,subTitle=${applicationName},size='heading-xlarge'" />
-    </th:block>
+        <form th:action="${actionUrl}"
+              th:object="${form}" method="POST" class="contributorsForm"  novalidate="novalidate" th:with="
+                      actionUrl=${model.inviteOrganisationId} ?
+                      @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, inviteOrganisation=${model.inviteOrganisationId})} :
+                      @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, organisation=${model.organisationId})}">
 
-    <form th:action="${actionUrl}"
-          th:object="${form}" method="POST" class="contributorsForm"  novalidate="novalidate" th:with="
-                  actionUrl=${model.inviteOrganisationId} ?
-                  @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, inviteOrganisation=${model.inviteOrganisationId})} :
-                  @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, organisation=${model.organisationId})}">
+            <p>Are you sure you wish to remove the entire organisation from this project? This will also remove team
+                members associated with that organisation. The organisation's finance information will be deleted and any
+                assigned questions will be returned to you.</p>
 
-        <p>Are you sure you wish to remove the entire organisation from this project? This will also remove team
-            members associated with that organisation. The organisation's finance information will be deleted and any
-            assigned questions will be returned to you.</p>
+            <p>The organisation will not be notified of this action through this service. You should therefore discuss this
+                with them beforehand.</p>
 
-        <p>The organisation will not be notified of this action through this service. You should therefore discuss this
-            with them beforehand.</p>
-
-        <div>
-            <button class="button"
-                    name="deleteOrganisation"
-                    type="submit">
-                Delete organisation
-            </button>
-            <a th:href="${model.inviteOrganisationId} ?
-            @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, inviteOrganisation=${model.inviteOrganisationId})} :
-            @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, organisation=${model.organisationId})}"
-               class="buttonlink">
-                Cancel
-            </a>
-        </div>
-    </form>
-</main>
+            <div>
+                <button class="button"
+                        name="deleteOrganisation"
+                        type="submit">
+                    Delete organisation
+                </button>
+                <a th:href="${model.inviteOrganisationId} ?
+                @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, inviteOrganisation=${model.inviteOrganisationId})} :
+                @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, organisation=${model.organisationId})}"
+                   class="buttonlink">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </main>
+</div>
 </body>
 
 </html>
