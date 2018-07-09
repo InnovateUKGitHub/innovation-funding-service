@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.workflow.audit;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.workflow.domain.Process;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import javax.persistence.PreUpdate;
  */
 @Service
 @Transactional
+@SecuredBySpring(value = "TODO", description = "TODO")
 public class ProcessHistoryEntityListener {
 
     private static ProcessHistoryRepository processHistoryRepository;
@@ -25,11 +27,13 @@ public class ProcessHistoryEntityListener {
     }
 
     @Autowired
+    @NotSecured("not secured")
     public void setProcessHistoryRepository(ProcessHistoryRepository processHistoryRepository) {
         ProcessHistoryEntityListener.processHistoryRepository = processHistoryRepository;
     }
 
     @PreUpdate
+    @NotSecured("not secured")
     public void preUpdate(Process process) {
         getProcessHistoryRepository().save(new ProcessHistory(process));
     }
