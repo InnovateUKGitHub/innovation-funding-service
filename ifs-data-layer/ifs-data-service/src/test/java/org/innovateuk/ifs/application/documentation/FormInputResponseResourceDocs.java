@@ -9,7 +9,7 @@ public class FormInputResponseResourceDocs {
             fieldWithPath("id").description("Id of the FormInputResponseResource"),
             fieldWithPath("updateDate").description("The date of the last update"),
             fieldWithPath("value").description("The value of the response"),
-            fieldWithPath("updatedBy").description("The id of who last updated the input"),
+            fieldWithPath("updatedBy").type("Number").description("The id of who last updated the input"),
             fieldWithPath("updatedByUser").description("The id of the user who last updated the input"),
             fieldWithPath("updatedByUserName").description("The user name of the user who last updated the input"),
             fieldWithPath("question").description("The id of the question for this response"),

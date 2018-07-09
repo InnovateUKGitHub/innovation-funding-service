@@ -3,6 +3,7 @@ package org.innovateuk.ifs.publiccontent.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.documentation.ContentEventResourceDocs;
 import org.innovateuk.ifs.documentation.ContentGroupResourceDocs;
 import org.innovateuk.ifs.documentation.PublicContentSectionResourceDocs;
 import org.innovateuk.ifs.publiccontent.controller.PublicContentController;
@@ -49,6 +50,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                         responseFields(publicContentResourceFields)
                                 .andWithPrefix("contentSections[].", PublicContentSectionResourceDocs.publicContentSectionResourceFields)
                                 .andWithPrefix("contentSections[].contentGroups[].", ContentGroupResourceDocs.contentGroupResourceFields)
+                                .andWithPrefix("contentEvents[].", ContentEventResourceDocs.contentEventResourceFields)
                 ));
     }
 
@@ -85,6 +87,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                         requestFields(publicContentResourceFields)
                                 .andWithPrefix("contentSections[].", PublicContentSectionResourceDocs.publicContentSectionResourceFields)
                                 .andWithPrefix("contentSections[].contentGroups[].", ContentGroupResourceDocs.contentGroupResourceFields)
+                                .andWithPrefix("contentEvents[].", ContentEventResourceDocs.contentEventResourceFields)
                 ));
 
     }
@@ -107,6 +110,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                         requestFields(publicContentResourceFields)
                                 .andWithPrefix("contentSections[].", PublicContentSectionResourceDocs.publicContentSectionResourceFields)
                                 .andWithPrefix("contentSections[].contentGroups[].", ContentGroupResourceDocs.contentGroupResourceFields)
+                                .andWithPrefix("contentEvents[].", ContentEventResourceDocs.contentEventResourceFields)
                 ));
 
     }

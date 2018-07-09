@@ -17,7 +17,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class ApplicationDocs {
     public static final FieldDescriptor[] applicationResourceFields = {
             fieldWithPath("id").description("Id of the application"),
-            fieldWithPath("name").description("Name of the application"),
+            fieldWithPath("name").description("Name of the application").optional(),
             fieldWithPath("startDate").description("Estimated timescales: project start date"),
             fieldWithPath("submittedDate").description("The date the applicant has submitted this application."),
             fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),

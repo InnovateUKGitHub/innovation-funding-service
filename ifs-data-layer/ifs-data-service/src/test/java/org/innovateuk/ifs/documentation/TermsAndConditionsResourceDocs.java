@@ -12,7 +12,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class TermsAndConditionsResourceDocs {
 
     public static final FieldDescriptor[] termsAndConditionsResourceFields = {
-            fieldWithPath("id").description("id of the terms and conditions"),
+            fieldWithPath("id").description("id of the terms and conditions").optional(),
             fieldWithPath("name").description("name of the terms and conditions"),
             fieldWithPath("template").description("template filename of the terms and conditions"),
             fieldWithPath("version").description("version of the terms and conditions"),
