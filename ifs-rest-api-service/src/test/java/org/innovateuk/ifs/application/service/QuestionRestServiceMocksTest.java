@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.junit.Assert;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_DETAILS;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_DETAILS;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.junit.Assert.*;
 
@@ -116,17 +116,17 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
     }
 
     @Test
-    public void getQuestionByCompetitionIdAndCompetitionSetupQuestionType() {
+    public void getQuestionByCompetitionIdAndQuestionSetupType() {
         long competitionId = 1L;
-        CompetitionSetupQuestionType competitionSetupQuestionType = APPLICATION_DETAILS;
+        QuestionSetupType questionSetupType = APPLICATION_DETAILS;
 
         QuestionResource questionResource = newQuestionResource()
                 .build();
 
-        setupGetWithRestResultExpectations(format("%s/getQuestionByCompetitionIdAndCompetitionSetupQuestionType/%s/%s",
-                questionRestURL, competitionId, competitionSetupQuestionType), QuestionResource.class, questionResource);
-        RestResult<QuestionResource> response = service.getQuestionByCompetitionIdAndCompetitionSetupQuestionType
-                (competitionId, competitionSetupQuestionType);
+        setupGetWithRestResultExpectations(format("%s/getQuestionByCompetitionIdAndQuestionSetupType/%s/%s",
+                questionRestURL, competitionId, questionSetupType), QuestionResource.class, questionResource);
+        RestResult<QuestionResource> response = service.getQuestionByCompetitionIdAndQuestionSetupType
+                (competitionId, questionSetupType);
 
         assertTrue(response.isSuccess());
         assertEquals(questionResource, response.getSuccess());

@@ -231,6 +231,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("stateAid", stateAid);
     }
 
+    public CompetitionResourceBuilder withUseNewApplicantMenu(Boolean... useNewApplicantMenu) {
+        return withArraySetFieldByReflection("useNewApplicantMenu", useNewApplicantMenu);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);

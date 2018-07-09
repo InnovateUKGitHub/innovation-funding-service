@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -27,7 +26,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/application")
 public class ApplicationSummaryController {
 
-
     private ApplicationService applicationService;
     private CompetitionService competitionService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
@@ -37,7 +35,10 @@ public class ApplicationSummaryController {
     }
 
     @Autowired
-    public ApplicationSummaryController(ApplicationService applicationService, CompetitionService competitionService, InterviewAssignmentRestService interviewAssignmentRestService, ApplicationTeamModelPopulator applicationTeamModelPopulator, ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
+    public ApplicationSummaryController(ApplicationService applicationService,
+                                        CompetitionService competitionService,
+                                        InterviewAssignmentRestService interviewAssignmentRestService,
+                                        ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
@@ -58,6 +59,7 @@ public class ApplicationSummaryController {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
+
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
         if (competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview) {
             return redirectToFeedback(applicationId, queryParams);
