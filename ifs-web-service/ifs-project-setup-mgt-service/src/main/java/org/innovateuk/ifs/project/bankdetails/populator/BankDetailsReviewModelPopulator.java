@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.project.bankdetails.populator;
 
 import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.form.ChangeBankDetailsForm;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

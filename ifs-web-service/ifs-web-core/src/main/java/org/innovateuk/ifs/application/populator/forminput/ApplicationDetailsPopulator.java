@@ -30,6 +30,7 @@ public class ApplicationDetailsPopulator extends AbstractFormInputPopulator<Appl
         viewModel.setReadonly(viewModel.isReadonly() || !resource.getCurrentApplicant().isLead());
         viewModel.setApplication(resource.getApplication());
         viewModel.setCompetition(resource.getCompetition());
+        // TODO: IFS-2123 remove selectedResearchCategoryName when all competitions have the new Applicant menu
         viewModel.setSelectedResearchCategoryName(resource.getApplication().getResearchCategory().getName());
         viewModel.setSelectedInnovationAreaName(resource.getApplication().getInnovationArea().getName());
         viewModel.setAssignButtonsViewModel(assignButtonsPopulator.populate(resource, viewModel.getApplicantQuestion(), viewModel.isComplete()));
@@ -41,11 +42,11 @@ public class ApplicationDetailsPopulator extends AbstractFormInputPopulator<Appl
         ApplicationResource application = viewModel.getApplication();
         formInputs.put("application_details-title", application.getName());
         formInputs.put("application_details-duration", String.valueOf(application.getDurationInMonths()));
-        if(application.getStartDate() == null){
+        if (application.getStartDate() == null) {
             formInputs.put("application_details-startdate_day", "");
             formInputs.put("application_details-startdate_month", "");
             formInputs.put("application_details-startdate_year", "");
-        }else{
+        } else {
             formInputs.put("application_details-startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
             formInputs.put("application_details-startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
             formInputs.put("application_details-startdate_year", String.valueOf(application.getStartDate().getYear()));

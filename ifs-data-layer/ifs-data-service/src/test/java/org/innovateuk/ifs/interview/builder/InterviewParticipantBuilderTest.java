@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.interview.builder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
@@ -12,10 +12,10 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
-import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 

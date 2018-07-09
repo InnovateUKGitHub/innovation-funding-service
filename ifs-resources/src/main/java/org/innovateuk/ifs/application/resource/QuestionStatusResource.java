@@ -23,9 +23,8 @@ public class QuestionStatusResource {
     private Long assigneeUserId;
     private long assignedByUserId;
 
-
     public QuestionStatusResource() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public QuestionStatusResource(QuestionResource question, ApplicationResource application, ProcessRoleResource markedAsCompleteBy, Boolean markedAsComplete) {

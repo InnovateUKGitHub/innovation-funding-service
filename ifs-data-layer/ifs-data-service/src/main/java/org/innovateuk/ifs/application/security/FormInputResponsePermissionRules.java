@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.application.security;
 
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
+import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -61,6 +61,11 @@ public class FormInputResponsePermissionRules {
     @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they review")
     public boolean assessorCanSeeTheInputResponsesInApplicationsTheyReview(final FormInputResponseResource response, final UserResource user) {
         return checkProcessRole(user, response.getApplication(), PANEL_ASSESSOR, processRoleRepository);
+    }
+
+    @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they interview")
+    public boolean assessorCanSeeTheInputResponsesInApplicationsTheyInterview(final FormInputResponseResource response, final UserResource user) {
+        return checkProcessRole(user, response.getApplication(), INTERVIEW_ASSESSOR, processRoleRepository);
     }
 
     @PermissionRule(value = "READ", description = "An internal user can see form input responses for applications")

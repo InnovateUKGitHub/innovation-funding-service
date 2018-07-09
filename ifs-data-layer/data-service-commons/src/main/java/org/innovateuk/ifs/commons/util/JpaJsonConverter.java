@@ -3,12 +3,10 @@ package org.innovateuk.ifs.commons.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import javax.persistence.AttributeConverter;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.persistence.AttributeConverter;
 import java.io.IOException;
 
 public class JpaJsonConverter implements AttributeConverter<JsonNode, String> {

@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.competitionsetup.application.populator;
 
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
-import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.application.form.FinanceForm;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupFinanceService;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSubsectionFormPopulator;
+import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupFinanceService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.application.transactional.FormInputResponseServiceImpl;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -13,7 +12,7 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.PROJECT_SUMMARY;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUMMARY;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 

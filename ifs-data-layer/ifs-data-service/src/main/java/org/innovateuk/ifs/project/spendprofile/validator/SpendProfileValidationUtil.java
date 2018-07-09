@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.spendprofile.validator;
 
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.project.spendprofile.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.validation.SpendProfileCostValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;

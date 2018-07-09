@@ -125,9 +125,7 @@ public class FinanceRowCostsServiceSecurityTest extends BaseServiceSecurityTest<
                     verify(applicationFinanceRules)
                             .consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                     verify(applicationFinanceRules)
-                            .supportCanAddACostToApplicationFinance(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                    verify(applicationFinanceRules)
-                            .innovationLeadCanAddACostToApplicationFinance(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                            .internalUserCanAddACostToApplicationFinance(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 
@@ -143,9 +141,7 @@ public class FinanceRowCostsServiceSecurityTest extends BaseServiceSecurityTest<
                     verify(applicationFinanceRules)
                             .consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                     verify(applicationFinanceRules)
-                            .supportCanAddACostToApplicationFinance(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                    verify(applicationFinanceRules)
-                            .innovationLeadCanAddACostToApplicationFinance(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                            .internalUserCanAddACostToApplicationFinance(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 
@@ -155,7 +151,7 @@ public class FinanceRowCostsServiceSecurityTest extends BaseServiceSecurityTest<
         final ApplicationFinanceResource applicationFinanceResource = new ApplicationFinanceResource();
         when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
         assertAccessDenied(
-                () -> classUnderTest.updateCost(applicationFinanceId, applicationFinanceResource),
+                () -> classUnderTest.updateApplicationFinance(applicationFinanceId, applicationFinanceResource),
                 () -> verify(applicationFinanceRules)
                         .consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class))
         );

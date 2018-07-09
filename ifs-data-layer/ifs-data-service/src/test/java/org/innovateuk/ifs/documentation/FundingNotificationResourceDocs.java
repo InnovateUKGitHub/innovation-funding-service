@@ -5,10 +5,8 @@ import org.innovateuk.ifs.util.MapFunctions;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.application.builder.FundingNotificationResourceBuilder.newFundingNotificationResource;
+import static org.innovateuk.ifs.application.resource.FundingDecision.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
-import static org.innovateuk.ifs.application.resource.FundingDecision.ON_HOLD;
-import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 
 public class FundingNotificationResourceDocs {
     public static final FieldDescriptor[] fundingNotificationResourceFields = {

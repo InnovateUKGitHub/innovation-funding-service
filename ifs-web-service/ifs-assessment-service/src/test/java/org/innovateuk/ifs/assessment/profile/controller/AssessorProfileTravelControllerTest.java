@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.profile.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.profile.controller.AssessorProfileTravelController;
 import org.junit.Test;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

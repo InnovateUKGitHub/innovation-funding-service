@@ -2,11 +2,11 @@ package org.innovateuk.ifs.application.viewmodel.forminput;
 
 
 import org.innovateuk.ifs.applicant.resource.*;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
 
 /**
  * Abstract class for all form input view models.
@@ -30,6 +30,10 @@ public abstract class AbstractFormInputViewModel {
 
     public QuestionResource getQuestion() {
         return applicantQuestion.getQuestion();
+    }
+
+    public long getQuestionId() {
+        return getQuestion().getId();
     }
 
     public FormInputResource getFormInput() {
@@ -115,6 +119,4 @@ public abstract class AbstractFormInputViewModel {
     public boolean getHasResponse() {
         return applicantResponse != null;
     }
-
-
 }
