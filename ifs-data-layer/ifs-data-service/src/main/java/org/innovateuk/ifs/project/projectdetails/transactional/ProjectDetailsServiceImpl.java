@@ -17,6 +17,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
+import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -108,6 +109,9 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Autowired
     private InviteProjectMapper inviteProjectMapper;
+
+    @Autowired
+    private ProjectInviteRepository projectInviteRepository;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
@@ -416,16 +420,12 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
 
         ProjectInvite projectInvite = inviteProjectMapper.mapToDomain(projectResource);
+        projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
+        projectInviteRepository.save(projectInvite);
 
         Notification notification = new Notification(systemNotificationSource, createInviteContactNotificationTarget(projectInvite), kindOfNotification, createGlobalArgsForInviteContactEmail(projectId, projectResource));
 
-        ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
-
-        inviteContactEmailSendResult.handleSuccessOrFailure(
-                failure -> handleInviteError(projectInvite, failure),
-                success -> handleInviteSuccess(projectInvite)
-        );
-        return inviteContactEmailSendResult;
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private NotificationTarget createInviteContactNotificationTarget(ProjectInvite projectInvite) {
@@ -455,10 +455,5 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
         List<Error> errors = failure.getErrors();
         return serviceFailure(errors);
-    }
-
-    private boolean handleInviteSuccess(ProjectInvite projectInvite) {
-        projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
-        return true;
     }
 }
