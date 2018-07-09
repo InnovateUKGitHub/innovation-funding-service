@@ -4,7 +4,6 @@ import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.junit.Assert.assertEquals;

@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.saver.ApplicationSectionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
@@ -12,21 +11,22 @@ import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
-import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -46,6 +46,7 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.jsoup.helper.StringUtil.isBlank;
 
 /**
  * This controller will handle all submit requests that are related to the application form.
@@ -53,6 +54,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 public class ApplicationSectionController {
+    private static final int MINIMUM_POSTCODE_LENGTH = 6;
+    private static final int MAXIMUM_POSTCODE_LENGTH = 8;
 
     private static final Log LOG = LogFactory.getLog(ApplicationSectionController.class);
 
@@ -114,10 +117,12 @@ public class ApplicationSectionController {
         return APPLICATION_FORM;
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead')")
+    @SecuredBySpring(value = "ApplicationSectionController", description = "Internal users can access the sections in the 'Your Finances'")
+    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance')")
     @GetMapping(SECTION_URL + "{sectionId}/{applicantOrganisationId}")
-    public String applicationFormWithOpenSectionForApplicant(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
+    public String applicationFormWithOpenSectionForApplicant(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
+                                                             BindingResult bindingResult,
+                                                             Model model,
                                                              @PathVariable(APPLICATION_ID) final Long applicationId,
                                                              @PathVariable("sectionId") final Long sectionId,
                                                              @PathVariable("applicantOrganisationId") final Long applicantOrganisationId,
@@ -227,6 +232,9 @@ public class ApplicationSectionController {
             case ORGANISATION_FINANCES:
                 return validateOrganisationSizeSelected(params, userId, bindingResult);
 
+            case PROJECT_LOCATION:
+                return validateProjectLocation(params, bindingResult);
+
             default:
                 return true;
         }
@@ -273,6 +281,22 @@ public class ApplicationSectionController {
             return true;
         }
         bindingResult.rejectValue(ORGANISATION_SIZE_KEY, "APPLICATION_ORGANISATION_SIZE_REQUIRED");
+        return false;
+    }
+
+    private boolean validateProjectLocation(
+            Map<String, String[]> params,
+            BindingResult bindingResult
+    ) {
+        List<String> financePositionKeys = simpleFilter(params.keySet(), k -> k.contains("financePosition-"));
+        if (!financePositionKeys.isEmpty()) {
+            String projectLocation = params.get(financePositionKeys.get(0))[0];
+            if (!isBlank(projectLocation) && projectLocation.length() >= MINIMUM_POSTCODE_LENGTH &&
+                    projectLocation.length() <= MAXIMUM_POSTCODE_LENGTH) {
+                return true;
+            }
+        }
+        bindingResult.rejectValue(PROJECT_LOCATION_KEY, "APPLICATION_PROJECT_LOCATION_REQUIRED");
         return false;
     }
 }

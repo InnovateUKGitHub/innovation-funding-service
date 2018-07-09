@@ -12,9 +12,9 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.Optional;
 
+import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.token.resource.TokenType.RESET_PASSWORD;
 import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
-import static java.time.ZonedDateTime.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

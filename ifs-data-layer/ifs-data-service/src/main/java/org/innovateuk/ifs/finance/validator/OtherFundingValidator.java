@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.validator;
 
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
@@ -9,7 +8,8 @@ import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
-import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.finance.handler.item.OtherFundingHandler.COST_K
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 
 /**
- * This class validates the FormInputResponse, it checks if the maximum word count has been exceeded.
+ * This class validates the financial 'other funding' inputs
  */
 @Component
 public class OtherFundingValidator implements Validator {
@@ -73,9 +73,10 @@ public class OtherFundingValidator implements Validator {
     }
 
     private void validateFundingAmount(BigDecimal fundingAmount, Errors errors) {
-        if (fundingAmount == null || fundingAmount.compareTo(BigDecimal.ZERO) != 1) {
+        if (fundingAmount == null) {
+            rejectValue(errors, "fundingAmount", "validation.field.must.not.be.blank");
+        } else if (fundingAmount.compareTo(BigDecimal.ZERO) < 1) {
             rejectValue(errors, "fundingAmount", "validation.field.max.value.or.higher", 1);
-
         }
     }
 

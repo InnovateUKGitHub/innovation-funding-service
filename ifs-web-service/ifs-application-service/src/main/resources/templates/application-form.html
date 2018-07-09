@@ -21,7 +21,13 @@
 
                 <ul class="error-summary-list">
                     <li th:each="err : ${#fields.detailedErrors('${form.*}')}"
-                        th:classappend="${err.code.equals(T(org.innovateuk.ifs.application.forms.saver.AbstractApplicationSaver).MARKED_AS_COMPLETE_KEY)} ? 'list-header'"><th:block th:if="${err.global || err.fieldName == 'formInput[cost]'}" th:text="${err.message}">Non-field specific message</th:block>
+                        th:if="${err.code.equals(T(org.innovateuk.ifs.application.forms.saver.AbstractApplicationSaver).MARKED_AS_COMPLETE_KEY)}"
+                        class="list-header">
+                        <th:block th:text="${err.message}">Non-field specific message</th:block>
+                    </li>
+                    <li th:each="err : ${#fields.detailedErrors('${form.*}')}"
+                        th:unless="${err.code.equals(T(org.innovateuk.ifs.application.forms.saver.AbstractApplicationSaver).MARKED_AS_COMPLETE_KEY)}">
+                        <th:block th:if="${err.global || err.fieldName == 'formInput[cost]'}" th:text="${err.message}">Non-field specific message</th:block>
                         <th:block th:unless="${err.global || err.fieldName == 'formInput[cost]'}">
                           <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
                           <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
@@ -73,11 +79,11 @@
             </th:block>
         </th:block>
 
-                <!--/* Application Form for a Section. */-->
-                <th:block th:if="${model.isSection()}">
-                    <p class="subtitle" th:if="${model.section.description}" th:text="${model.section.description}"/>
-                    <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (model=${model}, internalView=${false})"/>
-                </th:block>
+        <!--/* Application Form for a Section. */-->
+        <th:block th:if="${model.isSection()}">
+            <p class="subtitle" th:if="${model.section.description}" th:text="${model.section.description}"/>
+            <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (model=${model}, internalView=${false})"/>
+        </th:block>
 
         <input type="hidden" id="application_id" th:value="${model.application.id}"/>
         <input type="hidden" id="competition_id" th:value="${model.competition.id}"/>

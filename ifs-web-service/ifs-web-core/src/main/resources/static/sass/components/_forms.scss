@@ -346,9 +346,16 @@ tr {
 }
 
 .form-group-error {
+  [contenteditable="true"] {
+    &.editor {
+      @include box-shadow(none);
+      border: 4px solid $error-colour;
+    }
+  }
+
   .textarea-wrapped {
-    [contenteditable="true"] {
-      &.editor {
+    textarea {
+      &.field-group-error {
         @include box-shadow(none);
         border: 4px solid $error-colour;
       }

@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
-
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;

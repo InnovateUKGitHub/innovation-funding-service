@@ -24,7 +24,8 @@ public class AssessmentPermissionRules {
     public boolean assessment(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) &&
-                !competitionIsInInformOrLater(competition);
+                !competitionIsInInformOrLater(competition) &&
+                competitionIsInReadyToOpenOrLater(competition);
     }
 
     @PermissionRule(value = "ASSESSMENT_APPLICATIONS", description = "Only project finance or competition admin can " +
@@ -37,5 +38,9 @@ public class AssessmentPermissionRules {
 
     private boolean competitionIsInInformOrLater(CompetitionResource competition) {
         return competition.getCompetitionStatus().isLaterThan(CompetitionStatus.FUNDERS_PANEL);
+    }
+
+    private boolean competitionIsInReadyToOpenOrLater(CompetitionResource competition) {
+        return competition.getCompetitionStatus().isLaterThan(CompetitionStatus.COMPETITION_SETUP);
     }
 }

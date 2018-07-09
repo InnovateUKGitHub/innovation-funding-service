@@ -2,10 +2,7 @@ package org.innovateuk.ifs.management.application.service;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.resource.AppendixResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
@@ -36,9 +33,12 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
+import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 /**
  * Implementation of {@link CompetitionManagementApplicationService}
@@ -99,13 +99,22 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         Map<Long, Boolean> isAcademicOrganisation = (Map<Long, Boolean>) model.asMap().get("applicantOrganisationIsAcademic");
         List<OrganisationResource> organisations = (List<OrganisationResource>) model.asMap().get("applicationOrganisations");
         Map<Long, BaseFinanceResource> organisationFinances = (Map<Long, BaseFinanceResource>) model.asMap().get("organisationFinances");
-        Map<Long, Boolean> detailedFinanceLink = organisations.stream().collect(Collectors.toMap(o -> o.getId(),
-                o -> (user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD)) &&
-                        ((organisationFinances != null && organisationFinances.containsKey(o.getId()) && organisationFinances.get(o.getId()).getOrganisationSize() != null) ||
-                                isAcademicOrganisation.get(o.getId()))
-                        ? Boolean.TRUE : Boolean.FALSE));
-        model.addAttribute("showDetailedFinanceLink", detailedFinanceLink);
 
+        Map<Long, Boolean> showDetailedFinanceLink = organisations.stream().collect(Collectors.toMap(OrganisationResource::getId,
+                organisation -> {
+
+                    boolean orgFinancesExist = ofNullable(organisationFinances)
+                            .map(finances -> organisationFinances.get(organisation.getId()))
+                            .map(BaseFinanceResource::getOrganisationSize)
+                            .isPresent();
+                    boolean academicFinancesExist = isAcademicOrganisation.get(organisation.getId());
+                    boolean financesExist = orgFinancesExist || academicFinancesExist;
+
+                    return isApplicationVisibleToUser(application, user) && financesExist;
+                })
+        );
+
+        model.addAttribute("showDetailedFinanceLink", showDetailedFinanceLink);
         model.addAttribute("readOnly", user.hasRole(SUPPORT));
         model.addAttribute("canReinstate", !(user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD)));
         model.addAttribute("form", form);
@@ -114,7 +123,9 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("ineligibility", applicationOverviewIneligibilityModelPopulator.populateModel(application, competition));
         model.addAttribute("showApplicationTeamLink", applicationService.showApplicationTeam(application.getId(), user.getId()));
 
-        model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId, assessorId, queryParams));
+        queryParams.put("competitionId", asList(String.valueOf(competitionId)));
+        queryParams.put("applicationId", asList(String.valueOf(application.getId())));
+        model.addAttribute("backUrl", buildBackUrl(NavigationOrigin.valueOf(origin), queryParams, "assessorId", "applicationId", "competitionId"));
         UriComponentsBuilder builder =  UriComponentsBuilder.newInstance()
                 .queryParam("origin", origin)
                 .queryParams(queryParams);
@@ -131,6 +142,14 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("fromApplicationService", false);
 
         return "competition-mgt-application-overview";
+    }
+
+    private boolean isApplicationVisibleToUser(ApplicationResource application, UserResource user) {
+        boolean canSeeUnsubmitted = user.hasRole(IFS_ADMINISTRATOR) || user.hasRole(SUPPORT);
+        boolean canSeeSubmitted = user.hasRole(PROJECT_FINANCE) || user.hasRole(COMP_ADMIN) || user.hasRole(INNOVATION_LEAD);
+        boolean isSubmitted = application.getApplicationState() != ApplicationState.OPEN &&  application.getApplicationState() != ApplicationState.CREATED;
+
+        return canSeeUnsubmitted || (canSeeSubmitted && isSubmitted);
     }
 
     @Override
@@ -170,30 +189,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         } else {
             throw new ObjectNotFoundException();
         }
-    }
-
-    private String buildBackUrl(String origin,
-                                Long applicationId,
-                                Long competitionId,
-                                Optional<Long> assessorId,
-                                MultiValueMap<String, String> queryParams) {
-        String baseUrl = NavigationOrigin.valueOf(origin).getBaseOriginUrl();
-
-        queryParams.remove("origin");
-
-        if (queryParams.containsKey("assessorId")) {
-            queryParams.remove("assessorId");
-        }
-
-        return UriComponentsBuilder.fromPath(baseUrl)
-                .queryParams(queryParams)
-                .buildAndExpand(asMap(
-                        "competitionId", competitionId,
-                        "applicationId", applicationId,
-                        "assessorId", assessorId.orElse(null)
-                ))
-                .encode()
-                .toUriString();
     }
 
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
