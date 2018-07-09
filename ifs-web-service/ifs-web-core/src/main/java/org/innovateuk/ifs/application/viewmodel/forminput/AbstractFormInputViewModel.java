@@ -32,6 +32,10 @@ public abstract class AbstractFormInputViewModel {
         return applicantQuestion.getQuestion();
     }
 
+    public long getQuestionId() {
+        return getQuestion().getId();
+    }
+
     public FormInputResource getFormInput() {
         return applicantFormInput.getFormInput();
     }
@@ -115,6 +119,4 @@ public abstract class AbstractFormInputViewModel {
     public boolean getHasResponse() {
         return applicantResponse != null;
     }
-
-
 }

@@ -5,6 +5,11 @@
 
 <th:block th:fragment="application_details">
 
+    <h2 class="heading-small">Competition name</h2>
+    <div class="textarea-wrapped">
+        <div class="readonly" th:text="${currentCompetition.name}" />
+    </div>
+
     <h2 class="heading-small">Project title</h2>
     <div class="textarea-wrapped">
         <div class="readonly" th:text="${applicationTitle}" />
@@ -15,6 +20,31 @@
         <div class="readonly" th:text="${applicationResearchCategory}" />
     </div>
 
+    <h2 class="heading-small">Innovation area</h2>
+    <div class="textarea-wrapped">
+        <div class="readonly" th:text="${currentApplication.innovationArea.name} ?: 'Not listed'" />
+    </div>
+
+    <h2 class="heading-small">Resubmission</h2>
+    <div class="textarea-wrapped">
+        <div>
+            <div th:if="${currentApplication.resubmission}">Yes</div>
+            <div th:unless="${currentApplication.resubmission}">No</div>
+        </div>
+    </div>
+
+    <div th:if="${currentApplication.resubmission}">
+        <h2 class="heading-small">Previous application number</h2>
+        <div class="textarea-wrapped">
+            <div class="readonly" th:text="${currentApplication.previousApplicationNumber} ?: 'Not listed'" />
+        </div>
+
+        <h2 class="heading-small">Previous application title</h2>
+        <div class="textarea-wrapped">
+            <div class="readonly" th:text="${currentApplication.previousApplicationTitle} ?: 'Not listed'" />
+        </div>
+    </div>
+    
     <h2 class="heading-small">Estimated timescales</h2>
 
     <dl>

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.overview.populator;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.common.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.overview.viewmodel.*;
 import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -12,8 +13,6 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
-import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -31,7 +30,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CollectionFunctions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -48,40 +46,41 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
  */
 
 @Component
-public class ApplicationOverviewModelPopulator {
+public class ApplicationOverviewModelPopulator extends AbstractApplicationModelPopulator {
 
-    @Autowired
     private AssignButtonsPopulator assignButtonsPopulator;
-
-    @Autowired
     private CompetitionService competitionService;
-
-    @Autowired
     private ProcessRoleService processRoleService;
-
-    @Autowired
     private OrganisationService organisationService;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
+    private InviteRestService inviteRestService;
+    private ProjectService projectService;
+    private ApplicantRestService applicantRestService;
+    private SectionService sectionService;
     private QuestionService questionService;
 
-    @Autowired
-    private InviteRestService inviteRestService;
-
-    @Autowired
-    private SectionService sectionService;
-
-    @Autowired
-    private ProjectService projectService;
-
-    @Autowired
-    private CategoryRestService categoryRestService;
-
-    @Autowired
-    private ApplicantRestService applicantRestService;
+    public ApplicationOverviewModelPopulator(SectionService sectionService,
+                                             QuestionService questionService,
+                                             AssignButtonsPopulator assignButtonsPopulator,
+                                             CompetitionService competitionService,
+                                             ProcessRoleService processRoleService,
+                                             OrganisationService organisationService,
+                                             UserService userService,
+                                             InviteRestService inviteRestService,
+                                             ProjectService projectService,
+                                             ApplicantRestService applicantRestService) {
+        super(sectionService, questionService);
+        this.questionService = questionService;
+        this.sectionService = sectionService;
+        this.assignButtonsPopulator = assignButtonsPopulator;
+        this.competitionService = competitionService;
+        this.processRoleService = processRoleService;
+        this.organisationService = organisationService;
+        this.userService = userService;
+        this.inviteRestService = inviteRestService;
+        this.projectService = projectService;
+        this.applicantRestService = applicantRestService;
+    }
     
     public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -98,11 +97,8 @@ public class ApplicationOverviewModelPopulator {
 
         int completedQuestionsPercentage = application.getCompletion() == null ? 0 : application.getCompletion().intValue();
 
-        List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
-
         return new ApplicationOverviewViewModel(application, projectResource, projectWithdrawn, competition, userOrganisation.orElse(null),
-                completedQuestionsPercentage, yourFinancesSectionId, userViewModel, assignableViewModel, completedViewModel, sectionViewModel,
-                researchCategories);
+                completedQuestionsPercentage, yourFinancesSectionId, userViewModel, assignableViewModel, completedViewModel, sectionViewModel);
     }
     
     private ApplicationOverviewSectionViewModel getSections(CompetitionResource competition, ApplicationResource application, Long userId) {
@@ -194,36 +190,6 @@ public class ApplicationOverviewModelPopulator {
                 .collect(Collectors.toList()));
     }
 
-    private ApplicationOverviewCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
-        Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
-        boolean allQuestionsCompleted = sectionService.allSectionsMarkedAsComplete(application.getId());
-        boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation.get(), completedSectionsByOrganisation);
-
-        ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, allQuestionsCompleted, markedAsComplete, userFinanceSectionCompleted);
-        userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));
-        return viewModel;
-    }
-
-    private Set<Long> getCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {
-        Set<Long> combinedMarkedAsComplete = new HashSet<>();
-
-        completedSectionsByOrganisation.forEach((organisationId, completedSections) -> combinedMarkedAsComplete.addAll(completedSections));
-        completedSectionsByOrganisation.forEach((key, values) -> combinedMarkedAsComplete.retainAll(values));
-
-        return combinedMarkedAsComplete;
-    }
-
-    private boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
-
-        return sectionService.getAllByCompetitionId(application.getCompetition())
-                .stream()
-                .filter(section -> section.getType().equals(FINANCE))
-                .map(SectionResource::getId)
-                .anyMatch(id -> completedSectionsByOrganisation.get(userOrganisation.getId()).contains(id));
-    }
-
     private Long getYourFinancesSectionId(ApplicationResource application) {
 
         return sectionService.getAllByCompetitionId(application.getCompetition())
@@ -234,13 +200,4 @@ public class ApplicationOverviewModelPopulator {
                 .orElse(null);
     }
 
-
-    private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-
-        Long organisationId = userOrganisation
-                .map(OrganisationResource::getId)
-                .orElse(0L);
-
-        return questionService.getMarkedAsComplete(application.getId(), organisationId);
-    }
 }

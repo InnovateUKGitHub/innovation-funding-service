@@ -39,13 +39,13 @@
             <div th:include="fragments/elements :: progress-indicator"
                  th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="extra-margin"/>
         </div>
+
         <div class="column-half">
-            <ul class="list list-bullet">
-                <th:block th:unless="${model.currentCompetition.useNewApplicantMenu}">
-                    <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.currentApplication.id})}">view and manage contributors and collaborators</a></li>
-                </th:block>
+            <ul class="list list-bullet" th:unless="${model.currentCompetition.useNewApplicantMenu}">
+                <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.currentApplication.id})}">view and manage contributors and collaborators</a></li>
                 <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}">view the grant terms and conditions</a></li>
             </ul>
+            <a th:if="${model.currentCompetition.useNewApplicantMenu}" th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}">View the grant terms and conditions</a>
         </div>
 
         <div class="column-one extra-margin-bottom">
@@ -73,12 +73,12 @@
                                        th:text="${childSection.getName()}" />
                                 </h3>
                             </div>
-                            <th:block th:if="${childSection.id.equals(model.financeSectionId)}">
-                                <div th:unless="${model.completed.userFinanceSectionCompleted}"
+                            <th:block th:if="${model.user.userIsLeadApplicant or childSection.id.equals(model.financeSectionId)}">
+                                <div th:unless="${model.isFinanceSectionComplete(childSection)}"
                                      class="task-status-incomplete">
                                     <span>Incomplete</span>
                                 </div>
-                                <div th:if="${model.completed.userFinanceSectionCompleted}"
+                                <div th:if="${model.isFinanceSectionComplete(childSection)}"
                                      class="task-status-complete">
                                     <span>Complete</span>
                                 </div>

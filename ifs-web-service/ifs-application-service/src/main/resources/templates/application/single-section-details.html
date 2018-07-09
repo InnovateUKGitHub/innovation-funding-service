@@ -20,7 +20,7 @@
             <th:block th:unless="${model.completed.completedOrMarkedAsComplete(question, section)}">
 
                 <!-- /* 'Assigned to' info */-->
-                <th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
+                <th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
                     <!--/* lead */-->
                     <th:block th:if="${userIsLeadApplicant}">
                         <th:block
