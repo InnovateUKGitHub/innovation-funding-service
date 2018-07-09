@@ -29,6 +29,19 @@ SET @org_size_large_id = (SELECT id
                  FROM organisation_size
                  WHERE description = 'Large');
 
+-- Insert grant claim maximum values for all of the template competitions
+INSERT INTO grant_claim_maximum_new (competition_id, category_id, organisation_type_id, def, small, medium, large)
+SELECT  ct.template_competition_id, gcm.category_id, gcm.organisation_type_id,
+  MAX(CASE WHEN organisation_size_id IS NULL THEN maximum ELSE NULL END) AS def,
+  MAX(CASE WHEN organisation_size_id = @org_size_small_id THEN maximum ELSE NULL END) AS small,
+  MAX(CASE WHEN organisation_size_id = @org_size_med_id THEN maximum ELSE NULL END) AS medium,
+  MAX(CASE WHEN organisation_size_id = @org_size_large_id THEN maximum ELSE NULL END) AS large
+FROM
+   grant_claim_maximum gcm
+INNER JOIN competition_type ct ON gcm.competition_type_id = ct.id
+GROUP BY ct.id, gcm.category_id, gcm.organisation_type_id;
+
+-- Insert grant claim maximum values for all of the non-template competitions
 INSERT INTO grant_claim_maximum_new (competition_id, category_id, organisation_type_id, def, small, medium, large)
 SELECT  c.id , gcm.category_id, gcm.organisation_type_id,
         MAX(CASE WHEN organisation_size_id IS NULL THEN maximum ELSE NULL END) AS def,
