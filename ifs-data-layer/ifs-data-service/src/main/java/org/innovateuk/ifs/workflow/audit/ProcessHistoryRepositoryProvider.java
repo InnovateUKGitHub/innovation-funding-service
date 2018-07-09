@@ -12,7 +12,7 @@ public class ProcessHistoryRepositoryProvider {
 
     private static ProcessHistoryRepository processHistoryRepository;
 
-    static ProcessHistoryRepository processHistoryRepository() {
+    public static ProcessHistoryRepository processHistoryRepository() {
         if (ProcessHistoryRepositoryProvider.processHistoryRepository == null) {
             throw new IllegalStateException("processHistoryRepository not autowired in ProcessEntityListener");
         }
