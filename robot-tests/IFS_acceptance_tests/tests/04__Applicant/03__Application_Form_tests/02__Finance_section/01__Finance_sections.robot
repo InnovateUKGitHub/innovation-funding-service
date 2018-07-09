@@ -47,14 +47,14 @@ Not requesting funding button
     And the user clicks the button/link                 jQuery=button:contains("Not requesting funding")
     Then the user should see the funding guidance
     And the user should see the element                 jQuery=button:contains("Requesting funding")
-    And the user should see the element                 jQuery=li:nth-of-type(2) span:contains("No action required")
     And the user should see the element                 jQuery=li:nth-of-type(3) span:contains("No action required")
+    And the user should see the element                 jQuery=li:nth-of-type(4) span:contains("No action required")
 
 Requesting funding button
     [Documentation]    INFUND-7093
     [Tags]
     When the user clicks the button/link                jQuery=button:contains("Requesting funding")
-    Then the user should see the element                jQuery=li:nth-of-type(2) > .action-required
+    Then the user should see the element                jQuery=li:nth-of-type(2) > .task-status-incomplete
     And the user should not see the element             jQuery=li:nth-of-type(3) span:contains("No action required")
     And the user should not see the element             jQuery=li:nth-of-type(3) > .task-status-complete
     And the user should not see the funding guidance
@@ -97,11 +97,11 @@ Non-academic partner finance section
     [Tags]    HappyPath
     [Setup]  Log in as a different user     &{collaborator1_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
-    Then The user should see the element      JQuery=span.summary:contains("Not requesting funding")
+    And The user should see the element      JQuery=span.summary:contains("Not requesting funding")
     and the user should see the element     link=Your project costs
     and the user should see the element     link=Your organisation
-    and the user should not see the element     link=Your funding
-    and the user should not see the element     link=application details
+    When the user clicks the button/link    link=Your funding
+    Then the user should see the element    jQuery=.list li:contains("the lead applicant must select a research category")
 
 Academic partner finance section
     [Documentation]    INFUND-7522

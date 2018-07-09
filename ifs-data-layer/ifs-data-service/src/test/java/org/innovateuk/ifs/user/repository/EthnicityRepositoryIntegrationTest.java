@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.*;
+import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
+import static org.junit.Assert.assertEquals;
 
 public class EthnicityRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<EthnicityRepository> {
 

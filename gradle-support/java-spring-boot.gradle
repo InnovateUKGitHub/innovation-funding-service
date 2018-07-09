@@ -35,22 +35,17 @@ dependencies {
         compile "org.springframework.boot:spring-boot-devtools"
     }
 
+    if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
+        compile "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.4.1"
+    }
+
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-web"
-    compile "com.fasterxml.jackson.core:jackson-databind"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
-    compile 'org.realityforge.gelf4j:gelf4j:1.10'
+    compile('org.springframework.cloud:spring-cloud-starter-hystrix')
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
     compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
 
-    // Test Libraries
-    testCompile group: 'org.hamcrest', name: 'hamcrest-core'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile 'org.assertj:assertj-core:3.9.0'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile 'org.mockito:mockito-core'
-    testCompile group: 'org.hamcrest', name: 'hamcrest-library'
 
 }
 
@@ -79,14 +74,17 @@ processTestResources {
     }
 }
 
+ext.springCloudVersion = 'Edgware.SR3'
+
+
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
 
+
 repositories {
-    maven { url "https://repo.spring.io/milestone" }
     jcenter()
 }
 

@@ -5,6 +5,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,9 +20,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.async.AsyncExecutionTestHelper.BLOCKING_TIMEOUT_MILLIS;
 import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isReadLocked;
 import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isWriteLocked;
@@ -33,7 +32,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link RestCacheMethodInterceptor} in respect to thread safety.  This is important when using
- * {@link org.innovateuk.ifs.async.generation.AsyncFuturesGenerator} and its respective mechanisms to execute
+ * {@link AsyncFuturesGenerator} and its respective mechanisms to execute
  * RestTemplate calls in parallel.  When executing parallel calls under high load, we need to ensure that a
  * single Controller call can safely share cache results and add cache results to the existing set of results
  * between the various Threads its Futures execute within.

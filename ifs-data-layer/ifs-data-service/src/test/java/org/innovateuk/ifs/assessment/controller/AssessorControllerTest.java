@@ -39,9 +39,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -293,14 +291,15 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRegistrationResource)))
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("phoneNumber", phoneNumber, "validation.standard.phonenumber.format", "", "", "([0-9\\ +-])+")))));
+                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("phoneNumber", phoneNumber, "validation.standard.phonenumber.format", "", "", "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$")))));
 
         verify(assessorServiceMock, never()).registerAssessorByHash(isA(String.class), isA(UserRegistrationResource.class));
     }
 
     @Test
     public void registerAssessorByHash_phoneNumberTooShort() throws Exception {
-        String phoneNumber = new RandomStringGenerator.Builder().selectFrom("01234567890 +-".toCharArray()).build().generate(7);
+
+        String phoneNumber = "1234567-+";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(Mr)
@@ -322,15 +321,15 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRegistrationResource)))
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("phoneNumber", phoneNumber, "validation.standard.phonenumber.length.min", "", "8", "2147483647")))));
+                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("phoneNumber", phoneNumber, "validation.standard.phonenumber.format", "", "", "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$")))));
 
         verify(assessorServiceMock, never()).registerAssessorByHash(isA(String.class), isA(UserRegistrationResource.class));
     }
 
     @Test
     public void registerAssessorByHash_phoneNumberTooLong() throws Exception {
-        String phoneNumber = new RandomStringGenerator.Builder().selectFrom("01234567890 +-".toCharArray()).build()
-                .generate(21);
+
+        String phoneNumber = "123456789012345678901-+";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(Mr)
@@ -352,7 +351,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRegistrationResource)))
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("phoneNumber", phoneNumber, "validation.standard.phonenumber.length.max", "", "20", "0")))));
+                .andExpect(content().json(toJson(new RestErrorResponse(fieldError("phoneNumber", phoneNumber, "validation.standard.phonenumber.format", "", "", "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$")))));
 
         verify(assessorServiceMock, never()).registerAssessorByHash(isA(String.class), isA(UserRegistrationResource.class));
     }

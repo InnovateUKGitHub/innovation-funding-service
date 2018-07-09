@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.competition.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.domain.InnovationSector;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
-import org.innovateuk.ifs.category.domain.*;
-import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
@@ -17,6 +19,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 
@@ -334,9 +338,7 @@ public class Competition implements ProcessActivity {
 
     private void setMilestoneDate(MilestoneType milestoneType, ZonedDateTime dateTime) {
         Milestone milestone = milestones.stream().filter(m -> m.getType() == milestoneType).findAny().orElseGet(() -> {
-            Milestone m = new Milestone();
-            m.setType(milestoneType);
-            m.setCompetition(this);
+            Milestone m = new Milestone(milestoneType,this);
             milestones.add(m);
             return m;
         });
@@ -720,5 +722,12 @@ public class Competition implements ProcessActivity {
     public void setStateAid(final Boolean stateAid) {
         this.stateAid = stateAid;
     }
+
+    public boolean getUseNewApplicantMenu() {
+        return questions.stream().anyMatch(
+                question -> (EnumSet.of(APPLICATION_TEAM, RESEARCH_CATEGORY).contains(question.getQuestionSetupType()))
+        );
+    }
+
 }
 

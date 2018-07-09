@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.async.controller;
 
+import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
@@ -25,8 +26,8 @@ public class AwaitAsyncFuturesCompletionIntegrationTest extends BaseIntegrationT
 
     /**
      * This method asserts that Futures created using the
-     * {@link org.innovateuk.ifs.async.generation.AsyncFuturesGenerator#async} and
-     * {@link org.innovateuk.ifs.async.generation.AsyncFuturesGenerator#awaitAll} methods will block the
+     * {@link AsyncFuturesGenerator#async} and
+     * {@link AsyncFuturesGenerator#awaitAll} methods will block the
      * Controller from completing until they themselves have completed.
      */
     @Test

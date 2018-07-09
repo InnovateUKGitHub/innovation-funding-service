@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessmentController;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
-import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.junit.Test;
 import org.mockito.Mock;
 

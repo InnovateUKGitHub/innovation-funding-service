@@ -12,25 +12,20 @@ import java.util.concurrent.Future;
  */
 public class ApplicationOverviewCompletedViewModel {
     private Set<Long> sectionsMarkedAsComplete;
-    private Boolean allQuestionsCompleted;
     private Future<Set<Long>> markedAsComplete;
     private Set<Long> completedSections;
     private Boolean userFinanceSectionCompleted;
 
-    public ApplicationOverviewCompletedViewModel(Set<Long> sectionsMarkedAsComplete, Boolean allQuestionsCompleted, Future<Set<Long>> markedAsComplete,
+    public ApplicationOverviewCompletedViewModel(Set<Long> sectionsMarkedAsComplete,
+                                                 Future<Set<Long>> markedAsComplete,
                                                  Boolean userFinanceSectionCompleted) {
         this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
-        this.allQuestionsCompleted = allQuestionsCompleted;
         this.markedAsComplete = markedAsComplete;
         this.userFinanceSectionCompleted = userFinanceSectionCompleted;
     }
 
     public Set<Long> getSectionsMarkedAsComplete() {
         return sectionsMarkedAsComplete;
-    }
-
-    public Boolean getAllQuestionsCompleted() {
-        return allQuestionsCompleted;
     }
 
     public Set<Long> getMarkedAsComplete() throws ExecutionException, InterruptedException {

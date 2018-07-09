@@ -6,11 +6,11 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
-import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
-import org.innovateuk.ifs.management.form.OverviewAssessorsFilterForm;
-import org.innovateuk.ifs.management.form.OverviewSelectionForm;
-import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
+import org.innovateuk.ifs.management.assessor.form.OverviewAssessorsFilterForm;
+import org.innovateuk.ifs.management.assessor.form.OverviewSelectionForm;
+import org.innovateuk.ifs.management.assessor.populator.CompetitionInviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -31,7 +31,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 /**
  * This controller handles the Overview tab for inviting assessors to a Competition.

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 
 /**
  * This controller is used when a existing user want to create a new application.
@@ -40,13 +42,16 @@ public class ApplicationCreationAuthenticatedController {
     public static final String FORM_NAME = "form";
 
     @Autowired
-    protected ApplicationService applicationService;
+    private ApplicationService applicationService;
 
     @Autowired
-    protected CompetitionService competitionService;
+    private CompetitionService competitionService;
 
     @Autowired
-    protected OrganisationService organisationService;
+    private OrganisationService organisationService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
 
     @Autowired
     protected UserService userService;
@@ -110,9 +115,14 @@ public class ApplicationCreationAuthenticatedController {
 
     private String createApplicationAndShowInvitees(UserResource user, Long competitionId) {
         ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), "");
-
         if (application != null) {
-            return format("redirect:/application/%s/team", application.getId());
+            return questionRestService
+                    .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM)
+                    .handleSuccessOrFailure(
+                            failure ->  format("redirect:/application/%s/team", application.getId()),
+                            question -> format("redirect:/application/%s/form/question/%s", application.getId(),
+                                    question.getId())
+                    );
         } else {
             // Application not created, throw exception
             List<Object> args = new ArrayList<>();

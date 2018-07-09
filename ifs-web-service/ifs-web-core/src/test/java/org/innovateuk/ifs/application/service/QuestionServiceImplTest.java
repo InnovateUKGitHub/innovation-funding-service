@@ -3,12 +3,12 @@ package org.innovateuk.ifs.application.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -16,13 +16,15 @@ import java.util.*;
 import java.util.concurrent.Future;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService> {
+
     @Mock
     private QuestionRestService questionRestService;
 
@@ -74,13 +76,33 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
 
     @Test
     public void testMarkAsInComplete() throws Exception {
-        Long questionId = 1L;
-        Long applicationId = 2L;
-        Long markedAsInCompleteById = 3L;
+        Long applicationId = 1L;
+        Long markedAsInCompleteById = 2L;
 
-        service.markAsIncomplete(questionId, applicationId, markedAsInCompleteById);
+        QuestionResource questionResource = newQuestionResource()
+                .build();
 
-        verify(questionStatusRestService).markAsInComplete(questionId, applicationId, markedAsInCompleteById);
+        when(questionRestService.findById(questionResource.getId())).thenReturn(restSuccess(questionResource));
+
+        service.markAsIncomplete(questionResource.getId(), applicationId, markedAsInCompleteById);
+
+        verify(questionStatusRestService).markAsInComplete(questionResource.getId(), applicationId, markedAsInCompleteById);
+    }
+
+    @Test
+    public void testMarkAsInComplete_applicationTeamQuestion() throws Exception {
+        Long applicationId = 1L;
+        Long markedAsInCompleteById = 2L;
+
+        QuestionResource questionResource = newQuestionResource()
+                .withQuestionSetupType(APPLICATION_TEAM)
+                .build();
+
+        when(questionRestService.findById(questionResource.getId())).thenReturn(restSuccess(questionResource));
+
+        service.markAsIncomplete(questionResource.getId(), applicationId, markedAsInCompleteById);
+
+        verify(questionStatusRestService).markTeamAsInComplete(questionResource.getId(), applicationId, markedAsInCompleteById);
     }
 
     @Test

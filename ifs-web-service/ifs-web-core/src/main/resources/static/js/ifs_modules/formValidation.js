@@ -79,7 +79,7 @@ IFS.core.formValidation = (function () {
       },
       tel: {
         fields: '[type="tel"]:not([readonly])',
-        messageInvalid: 'Please enter a valid phone number.'
+        messageInvalid: 'Please enter a valid phone number between 8 and 20 digits.'
       },
       lowerthan: {
         fields: '[data-lowerthan]',
@@ -116,7 +116,7 @@ IFS.core.formValidation = (function () {
       })
 
       jQuery('body').on('change ifsValidate', s.email.fields, function () { IFS.core.formValidation.checkEmail(jQuery(this)) })
-      jQuery('body').on('change ifsValidate', s.number.fields, function () { IFS.core.formValidation.checkNumber(jQuery(this)) })
+      jQuery('body').on('blur change ifsValidate', s.number.fields, function () { IFS.core.formValidation.checkNumber(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.min.fields, function () { IFS.core.formValidation.checkMin(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.max.fields, function () { IFS.core.formValidation.checkMax(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.range.fields, function () { IFS.core.formValidation.checkRange(jQuery(this)) })
@@ -271,13 +271,15 @@ IFS.core.formValidation = (function () {
       var numberAttribute = 'number'
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, numberAttribute)
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'number')
+      var value = field.val()
       // In modern browsers the number field doesn't allow text input
       // When inserting a string like "test" the browser converts this to an empty string "" (this is the specced behaviour)
       // An empty string is returned as true therefore
       // http://stackoverflow.com/questions/18852244/how-to-get-the-raw-value-an-input-type-number-field
       if (s.html5validationMode) {
         var domField = field[0]
-        if (domField.validity.badInput === true || domField.validity.stepMismatch === true) {
+        var containsExponential = value.indexOf('e') !== -1
+        if (domField.validity.badInput === true || domField.validity.stepMismatch === true || containsExponential) {
           IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
           return false
         } else {
@@ -287,8 +289,7 @@ IFS.core.formValidation = (function () {
       } else {
         // old browser mode
         // https://api.jquery.com/jQuery.isNumeric for what this checks
-        var value = field.val()
-        var wholeNumber = (value.indexOf(',') === -1) && (value.indexOf('.') === -1)
+        var wholeNumber = (value.indexOf(',') === -1) && (value.indexOf('.') === -1) && (value.indexOf('e') === -1)
         if (!jQuery.isNumeric(value) || !wholeNumber) {
           IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
           return false
@@ -507,7 +508,8 @@ IFS.core.formValidation = (function () {
       var telAttribute = 'tel'
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, telAttribute)
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, telAttribute)
-      var re = /^(?=.*[0-9])[- +()0-9]+$/
+      var re = /^$|^[\\)\\(\\+\s-]*(?:\d[\\)\\(\\+\s-]*){8,20}$/
+
       var tel = field.val()
       var validPhone = re.test(tel)
 

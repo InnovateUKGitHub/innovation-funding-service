@@ -2,9 +2,9 @@ package org.innovateuk.ifs.project.status.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,8 +15,8 @@ public class StatusRestServiceImpl extends BaseRestService implements StatusRest
     private static final String projectRestURL = "/project";
 
     @Override
-    public RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
-        return getWithRestResult(competitionURL + "/" + competitionId, CompetitionProjectsStatusResource.class);
+    public RestResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId, String applicationSearchString) {
+        return getWithRestResult(competitionURL + "/" + competitionId + "?applicationSearchString=" + applicationSearchString, CompetitionProjectsStatusResource.class);
     }
 
     @Override

@@ -2,13 +2,13 @@ package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
-import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.form.builder.QuestionBuilder;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -47,7 +47,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     }
 
     @Test
-    public void testUserCanReadQuestionStatus() {
+    public void userCanReadQuestionStatus() {
         ApplicationResource application = newApplicationResource().build();
         QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource()
                 .withApplication(application).build();
@@ -64,7 +64,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     }
 
     @Test
-    public void testUserCanUpdateQuestionStatus() {
+    public void userCanUpdateQuestionStatus() {
         ApplicationResource application = newApplicationResource().build();
         QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource()
                 .withApplication(application).build();
@@ -98,7 +98,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     }
 
     @Test
-    public void testInternalUserCanReadQuestionStatus() {
+    public void internalUserCanReadQuestionStatus() {
         QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource().build();
 
         UserResource compAdminUser = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
@@ -115,7 +115,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     }
 
     @Test
-    public void testOnlyMemberOfProjectTeamCanMarkSection() {
+    public void onlyMemberOfProjectTeamCanMarkSection() {
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource().build();
         UserResource leadApplicant = UserResourceBuilder.newUserResource().build();
         UserResource nonProjectTeamMember = UserResourceBuilder.newUserResource().build();

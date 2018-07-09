@@ -134,7 +134,7 @@
                             <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}">
                                 <small>Partner</small>
                             </div>
-                            <a th:if="${!form.isAdminMode() and !currentCompetition.isOpen() and applicationOrganisation.id.equals(userOrganisation.id)}"
+                            <a th:if="${(form == null || !form.isAdminMode()) and !currentCompetition.isOpen() and applicationOrganisation.equals(userOrganisation)}"
                                th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}' th:style="'font-weight: normal;'">
                                 View finances
                             </a>

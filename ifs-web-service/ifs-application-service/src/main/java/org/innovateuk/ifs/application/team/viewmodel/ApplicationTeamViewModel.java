@@ -2,30 +2,36 @@ package org.innovateuk.ifs.application.team.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.application.viewmodel.AbstractLeadOnlyViewModel;
 
 import java.util.List;
 
 /**
  * Holder of model attributes for the Application Team view.
  */
-public class ApplicationTeamViewModel {
+public class ApplicationTeamViewModel extends AbstractLeadOnlyViewModel {
 
-    private long applicationId;
     private String applicationName;
     private List<ApplicationTeamOrganisationRowViewModel> organisations;
     private boolean userLeadApplicant;
     private boolean applicationCanBegin;
+    private boolean summary;
 
-    public ApplicationTeamViewModel(long applicationId, String applicationName, List<ApplicationTeamOrganisationRowViewModel> organisations, boolean userLeadApplicant, boolean applicationCanBegin) {
-        this.applicationId = applicationId;
+    public ApplicationTeamViewModel(Long applicationId,
+                                    Long questionId,
+                                    String applicationName,
+                                    List<ApplicationTeamOrganisationRowViewModel> organisations,
+                                    boolean userLeadApplicant,
+                                    boolean applicationCanBegin,
+                                    boolean closed,
+                                    boolean complete,
+                                    boolean canMarkAsComplete,
+                                    boolean allReadonly) {
+        super(questionId, applicationId, closed, complete, canMarkAsComplete, allReadonly);
         this.applicationName = applicationName;
         this.organisations = organisations;
         this.userLeadApplicant = userLeadApplicant;
         this.applicationCanBegin = applicationCanBegin;
-    }
-
-    public long getApplicationId() {
-        return applicationId;
     }
 
     public String getApplicationName() {
@@ -45,7 +51,16 @@ public class ApplicationTeamViewModel {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean isSummary() {
+        return summary;
+    }
+
+    public void setSummary(final boolean summary) {
+        this.summary = summary;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -54,12 +69,12 @@ public class ApplicationTeamViewModel {
             return false;
         }
 
-        ApplicationTeamViewModel that = (ApplicationTeamViewModel) o;
+        final ApplicationTeamViewModel that = (ApplicationTeamViewModel) o;
 
         return new EqualsBuilder()
-                .append(applicationId, that.applicationId)
                 .append(userLeadApplicant, that.userLeadApplicant)
                 .append(applicationCanBegin, that.applicationCanBegin)
+                .append(summary, that.summary)
                 .append(applicationName, that.applicationName)
                 .append(organisations, that.organisations)
                 .isEquals();
@@ -68,11 +83,11 @@ public class ApplicationTeamViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(applicationId)
                 .append(applicationName)
                 .append(organisations)
                 .append(userLeadApplicant)
                 .append(applicationCanBegin)
+                .append(summary)
                 .toHashCode();
     }
 }

@@ -6,7 +6,7 @@ log in and create new application if there is not one already
     [Arguments]  ${application_name}
     Given the user logs-in in new browser  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain  ${application_name}
-    Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  ${application_name}
+    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  AND  the user selects Research category  Industrial research
 
 Login new application invite academic
     [Arguments]  ${recipient}  ${subject}  ${pattern}
@@ -27,17 +27,27 @@ new account complete all but one
 create new account for submitting
     [Arguments]  ${application_name}
     the user clicks the button/link                   link=Untitled application (start here)
-    the user clicks the button/link                   jQuery=a:contains("Begin application")
+    the user clicks the button/link                   jQuery=button:contains("Save and return to application overview")
     the user clicks the button/link                   link=Application details
     the user enters text to a text field              css=[id="application.name"]    ${application_name}
     the user clicks the button/link                   jQuery=button:contains("Save and return")
-    the user marks every section but one as complete  ${application_name}
+    the user marks every section but one as complete  ${application_name}  Experimental development
 
 the user marks every section but one as complete
-    [Arguments]  ${application_name}
+    [Arguments]  ${application_name}  ${rescat}
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
+    the applicant completes Application Team
+    the user selects Research category  ${rescat}
     the lead applicant fills all the questions and marks as complete(programme)
+
+the user selects Research category
+    [Arguments]  ${res_category}
+    the user clicks the button/link   link=Research category
+    the user clicks the button twice  jQuery=label:contains("${res_category}")
+    the user clicks the button/link   id=application-question-complete
+    the user should see the element   jQuery=li:contains("Research category") > .task-status-complete
+
 
 the lead applicant fills all the questions and marks as complete(programme)
     the user marks the project details as complete
@@ -72,7 +82,7 @@ Create new application with the same user
     the user navigates to the page        ${openCompetitionBusinessRTO_overview}
     the user clicks the button/link       jQuery=a:contains("Start new application")
     check if there is an existing application in progress for this competition
-    the user clicks the button/link       jQuery=a:contains("Begin application")
+    the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
     the user clicks the button/link       link=Application details
     the user enters text to a text field  css=[id="application.name"]  ${Application_title}
     the user clicks the button/link       jQuery=button:contains("Save and return")
@@ -87,7 +97,7 @@ create new submit application
     [Arguments]  ${overview}  ${email}  ${application_name}
     And The guest user inserts user email and password  ${email}   ${correct_password}
     And the guest user clicks the log-in button
-    And the user clicks the button/link                 jQuery=a:contains("Begin application")
+    And the user clicks the button/link                 jQuery=button:contains("Save and return to application overview")
     And the user clicks the button/link                 link=Application details
     And the user enters text to a text field            css=[id="application.name"]    ${application_name}
     And the user clicks the button/link                 jQuery=button:contains("Save and return")
@@ -96,7 +106,7 @@ Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page                ${DASHBOARD_URL}
     And the user clicks the button/link                 link=Academic robot test application
-    the user fills in the inviting steps                ${test_mailbox_one}+academictest@gmail.com
+    the user fills in the inviting steps no edit                ${test_mailbox_one}+academictest@gmail.com
     logout as user
     When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}    2
     And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
@@ -108,9 +118,19 @@ Invite and accept the invitation
     And the user clicks the button/link                 jQuery=.button:contains("Sign in")
     And Logging in and Error Checking                   ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
+the user fills in the inviting steps no edit
+    [Arguments]  ${email}
+    the user clicks the button/link       link=Application team
+    the user clicks the button/link       link=Add a collaborator organisation
+    the user enters text to a text field  css=#organisationName  New Organisation's Name
+    the user enters text to a text field  css=[id="applicants[0].name"]  Partner's name
+    the user enters text to a text field  css=[id="applicants[0].email"]  ${email}
+    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
+
 the user fills in the inviting steps
     [Arguments]  ${email}
-    the user clicks the button/link       link=view and manage contributors and collaborators
+    the user clicks the button/link       link=Application team
+    the user clicks the button/link       jQuery=button:contains("Edit")
     the user clicks the button/link       link=Add a collaborator organisation
     the user enters text to a text field  css=#organisationName  New Organisation's Name
     the user enters text to a text field  css=[id="applicants[0].name"]  Partner's name
@@ -156,7 +176,7 @@ invite a registered user
     the user enters text to a text field                       css=[id="applicants[0].name"]  Partner's name
     the user enters text to a text field                       css=[id="applicants[0].email"]  ${EMAIL_INVITED}
     the user clicks the button/link                            jQuery=button:contains("Add organisation and invite applicants")
-    the user clicks the button/link                            jQuery=a:contains("Begin application")
+    the user clicks the button/link                            jQuery=button:contains("Save and return to application overview")
     the user should see the text in the page                   Application overview
     the user closes the browser
     the guest user opens the browser

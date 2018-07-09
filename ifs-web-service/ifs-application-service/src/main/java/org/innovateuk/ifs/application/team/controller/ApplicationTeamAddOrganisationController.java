@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.application.team.controller;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.team.form.ApplicationTeamAddOrganisationForm;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamAddOrganisationModelPopulator;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -28,6 +29,7 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
@@ -48,6 +50,9 @@ public class ApplicationTeamAddOrganisationController {
 
     @Autowired
     private InviteRestService inviteRestService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
 
     @Autowired
     private ApplicationTeamAddOrganisationModelPopulator applicationTeamAddOrganisationModelPopulator;
@@ -83,7 +88,7 @@ public class ApplicationTeamAddOrganisationController {
             ServiceResult<InviteResultsResource> updateResult = inviteRestService.createInvitesByInviteOrganisation(
                     form.getOrganisationName(), createInvites(form, applicationId)).toServiceResult();
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, () -> format("redirect:/application/%s/team", applicationId));
+                    .failNowOrSucceedWith(failureView, () -> redirectToApplicationTeamPage(applicationId));
         });
     }
 
@@ -132,5 +137,15 @@ public class ApplicationTeamAddOrganisationController {
                 bindingResult.rejectValue(format("applicants[%s].email", index), "validation.applicationteamaddorganisationform.email.notUnique");
             }
         });
+    }
+
+    protected String redirectToApplicationTeamPage(long applicationId) {
+        long competitionId = applicationService.getById(applicationId).getCompetition();
+        return questionRestService
+                .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM)
+                .handleSuccessOrFailure(
+                        failure -> format("redirect:/application/%s/team", applicationId),
+                        question -> format("redirect:/application/%s/form/question/%s", applicationId, question.getId())
+                );
     }
 }

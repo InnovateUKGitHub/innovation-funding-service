@@ -3,8 +3,8 @@ package org.innovateuk.ifs.application.controller;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,6 +67,14 @@ public class QuestionStatusController {
                                              @PathVariable("markedAsInCompleteById") final long markedAsInCompleteById) {
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionId, applicationId);
         return questionStatusService.markAsInComplete(ids, markedAsInCompleteById).toPutResponse();
+    }
+
+    @PutMapping("/mark-team-as-in-complete/{questionId}/{applicationId}/{markedAsInCompleteById}")
+    public RestResult<Void> markTeamAsInComplete(@PathVariable("questionId") final long questionId,
+                                             @PathVariable("applicationId") final long applicationId,
+                                             @PathVariable("markedAsInCompleteById") final long markedAsInCompleteById) {
+        QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionId, applicationId);
+        return questionStatusService.markTeamAsInComplete(ids, markedAsInCompleteById).toPutResponse();
     }
 
     @PutMapping("/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")

@@ -4,7 +4,9 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -12,7 +14,10 @@ import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewM
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.form.resource.*;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -139,7 +144,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
                 .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
         model.addAttribute("formInputViewModels", formInputViewModels);
         formInputViewModels.values().forEach(viewModel -> {
-            viewModel.setClosed(true);
+            viewModel.setClosed(!(competition.isOpen() && application.isOpen()));
             viewModel.setReadonly(true);
             viewModel.setSummary(true);
         });
@@ -247,7 +252,9 @@ public class ApplicationSectionAndQuestionModelPopulator {
     }
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
-        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
+        List<QuestionResource> questionResources = simpleFilter(questions, q -> questionIds.contains(q.getId()));
+        Collections.sort(questionResources);
+        return questionResources;
     }
 
     private Optional<SectionResource> getSection(List<SectionResource> sections, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {

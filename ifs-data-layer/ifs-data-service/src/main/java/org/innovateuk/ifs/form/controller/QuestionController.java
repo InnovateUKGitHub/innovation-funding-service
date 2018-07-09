@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.form.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
@@ -76,4 +78,23 @@ public class QuestionController {
     public RestResult<List<QuestionResource>> getQuestionsByAssessmentId(@PathVariable("assessmentId") final Long assessmentId) {
         return questionService.getQuestionsByAssessmentId(assessmentId).toGetResponse();
     }
+
+    @GetMapping("/getQuestionByCompetitionIdAndQuestionSetupType/{competitionId}/{type}")
+    public RestResult<QuestionResource> getQuestionByCompetitionIdQuestionSetupType(
+            @PathVariable("competitionId") final long competitionId,
+            @PathVariable("type") final QuestionSetupType questionSetupType) {
+        return questionService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
+                questionSetupType).toGetResponse();
+    }
+
+    @ZeroDowntime(reference = "IFS-2123", description = "To support the older type (CompetitionSetupQuestionType) before this was renamed " +
+            "Remove in cleanup before the next release.")
+    @GetMapping("/getQuestionByCompetitionIdAndCompetitionSetupQuestionType/{competitionId}/{type}")
+    public RestResult<QuestionResource> getQuestionByCompetitionIdAndCompetitionSetupQuestionType(
+            @PathVariable("competitionId") final long competitionId,
+            @PathVariable("type") final QuestionSetupType questionSetupType) {
+        return questionService.getQuestionByCompetitionIdAndQuestionSetupType(competitionId,
+                questionSetupType).toGetResponse();
+    }
+
 }

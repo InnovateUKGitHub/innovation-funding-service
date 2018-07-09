@@ -2,9 +2,9 @@ package org.innovateuk.ifs.application.finance.view.jes;
 
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
-import org.innovateuk.ifs.util.NumberUtils;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.util.NumberUtils;
 
 import java.math.BigDecimal;
 import java.util.List;

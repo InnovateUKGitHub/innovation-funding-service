@@ -4,13 +4,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
-import org.innovateuk.ifs.application.validator.ApplicationMarkAsCompleteValidator;
+import org.innovateuk.ifs.application.validator.ApplicationTeamMarkAsCompleteValidator;
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.validator.AcademicJesValidator;
 import org.innovateuk.ifs.finance.validator.MinRowCountValidator;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
@@ -42,10 +42,10 @@ public class ApplicationValidationUtil {
     private ApplicationValidatorService applicationValidatorService;
 
     @Autowired
-    private MinRowCountValidator minRowCountValidator;
+    private ApplicationTeamMarkAsCompleteValidator applicationTeamMarkAsCompleteValidator;
 
     @Autowired
-    private AcademicJesValidator academicJesValidator;
+    private MinRowCountValidator minRowCountValidator;
 
     public BindingResult validateResponse(FormInputResponse response, boolean ignoreEmpty) {
         DataBinder binder = new DataBinder(response);
@@ -79,16 +79,9 @@ public class ApplicationValidationUtil {
         return binder.getBindingResult();
     }
 
-    public BindingResult validationApplicationDetails(Application application){
+    public BindingResult addValidation(Application application, Validator validator) {
         DataBinder binder = new DataBinder(application);
-        binder.addValidators(new ApplicationMarkAsCompleteValidator());
-        binder.validate();
-        return binder.getBindingResult();
-    }
-
-    public BindingResult validationJesForm(Application application) {
-        DataBinder binder = new DataBinder(application);
-        binder.addValidators(academicJesValidator);
+        binder.addValidators(validator);
         binder.validate();
         return binder.getBindingResult();
     }
@@ -110,10 +103,23 @@ public class ApplicationValidationUtil {
             for (FormInput formInput : formInputs) {
                 validationMessages.addAll(isFormInputValid(question, application, markedAsCompleteById, formInput));
             }
+
+        } else if(question.getQuestionSetupType() == QuestionSetupType.APPLICATION_TEAM) {
+            validationMessages.addAll(isApplicationTeamValid(application, question));
         } else {
             for (FormInput formInput : formInputs) {
                 validationMessages.addAll(isFormInputValid(application, formInput));
             }
+        }
+        return validationMessages;
+    }
+
+    private List<ValidationMessages> isApplicationTeamValid(Application application, Question question) {
+        List<ValidationMessages> validationMessages = new ArrayList<>();
+
+        BindingResult bindingResult = addValidation(application, applicationTeamMarkAsCompleteValidator);
+        if (bindingResult.hasErrors()) {
+            validationMessages.add(new ValidationMessages(question.getId(), bindingResult));
         }
         return validationMessages;
     }

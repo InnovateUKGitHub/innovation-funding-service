@@ -3,16 +3,16 @@ package org.innovateuk.ifs.application.transactional;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.resource.comparators.*;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -79,7 +79,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     // TODO These comparators are used to sort application after loading them in memory.
     // TODO The code currently is retrieving to many of them and this sorting should be done in the database query.
-    // TODO Ideally they should all be replaced
+    // TODO Ideally they should all be replaced - IFS-3759
     private static final Map<String, Comparator<ApplicationSummaryResource>> SUMMARY_COMPARATORS =
             new HashMap<String, Comparator<ApplicationSummaryResource>>() {{
         put("lead", new ApplicationSummaryResourceLeadComparator());

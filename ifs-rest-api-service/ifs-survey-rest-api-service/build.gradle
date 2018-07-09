@@ -1,0 +1,14 @@
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+
+dependencies {
+    compile project(':ifs-rest-api-service')
+    compile project(':ifs-resources')
+    compile project(':ifs-resources:ifs-survey-resources')
+    compile project(':ifs-security')
+
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-resources:ifs-survey-resources", configuration: 'testArtifacts')
+}
+
+ext.ifsSurveyAuthSecretKey="supersecretkey"
+ext.ifsSurveyDataSericeBaseUrl="survey-data-service"

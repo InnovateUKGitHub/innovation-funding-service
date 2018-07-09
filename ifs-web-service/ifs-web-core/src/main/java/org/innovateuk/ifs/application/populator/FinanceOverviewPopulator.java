@@ -4,13 +4,13 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -39,7 +39,6 @@ public class FinanceOverviewPopulator {
     @Autowired
     private FinanceViewHandlerProvider financeViewHandlerProvider;
 
-    //TODO - INFUND-7482 - remove usages of Model model
     public void addOverviewDetails(OpenSectionViewModel openSectionViewModel, Model model, ApplicationForm form, ApplicantSectionResource applicantSection) {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicantSection.getCompetition().getId());
         List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
@@ -50,7 +49,7 @@ public class FinanceOverviewPopulator {
             Long organisationType = applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType();
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSections.get(0).getId(), QuestionType.COST);
 
-            applicationFinanceOverviewModelManager.addFinanceDetails(model, applicantSection.getCompetition().getId(), applicantSection.getApplication().getId(), Optional.of(applicantSection.getCurrentApplicant().getOrganisation().getId()));
+            applicationFinanceOverviewModelManager.addFinanceDetails(model, applicantSection.getCompetition().getId(), applicantSection.getApplication().getId());
             if(!form.isAdminMode() && applicantSection.getCompetition().isOpen()) {
                 openSectionViewModel.setFinanceViewModel(financeViewHandlerProvider.getFinanceModelManager(organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions, applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
             }

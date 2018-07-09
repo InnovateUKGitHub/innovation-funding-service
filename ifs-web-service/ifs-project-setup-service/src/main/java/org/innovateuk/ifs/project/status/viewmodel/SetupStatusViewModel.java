@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.Optional;
 
@@ -31,6 +31,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private boolean collaborationAgreementRequired;
     private boolean projectManager;
     private boolean pendingQuery;
+    private String originQuery;
 
     public SetupStatusViewModel() {}
 
@@ -43,7 +44,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 SectionStatusList sectionStatuses,
                                 boolean collaborationAgreementRequired,
                                 boolean projectManager,
-                                boolean pendingQuery) {
+                                boolean pendingQuery,
+                                String originQuery) {
 
         this.projectId = project.getId();
         this.projectName = project.getName();
@@ -61,6 +63,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.collaborationAgreementRequired = collaborationAgreementRequired;
         this.projectManager = projectManager;
         this.pendingQuery = pendingQuery;
+        this.originQuery = originQuery;
     }
 
     public Long getProjectId() {
@@ -175,5 +178,9 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public boolean isShowFinanceChecksPendingQueryWarning() {
         return pendingQuery;
+    }
+
+    public String getOriginQuery() {
+        return originQuery;
     }
 }

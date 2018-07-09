@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId})}">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" />
 
     <div th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem saving your response.</h2>
@@ -91,7 +91,7 @@
                         </div>
                     </th:block>
                     <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                        <a id="post-new-response-1" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.Id})}" class="extra-margin-top button">Respond</a>
+                        <a id="post-new-response-1" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.Id})}" class="extra-margin button">Respond</a>
                     </th:block>
                     <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                         <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"

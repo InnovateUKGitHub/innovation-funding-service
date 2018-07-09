@@ -17,8 +17,9 @@ Resource          ../../Applicant_Commons.robot
 Before org size is selected, your funding link is not available
     [Documentation]    INFUND-6394
     [Tags]
-    When applicant navigates to the finances of the robot application
-    Then the user should not see the element    link=Your funding
+    Given applicant navigates to the finances of the robot application
+    When the user clicks the button/link        link=Your funding
+    Then the user should see the element        jQuery=li:contains("you must state"):contains("your organisation size")
 
 Small org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
@@ -63,7 +64,7 @@ Medium org can be selected
 Funding section shows as incomplete
     [Documentation]    INFUND-6394
     [Tags]
-    When the user should see the element    css=.task-list li:nth-of-type(3) .action-required
+    When the user should see the element    css=.task-list li:nth-of-type(4) .task-status-incomplete
 
 Funding section has been reset
     [Documentation]    INFUND-6894
@@ -101,7 +102,7 @@ Large organisation can be selected
 Funding section shows as incomplete again
     [Documentation]    INFUND-6394
     [Tags]
-    When the user should see the element    css=.task-list li:nth-of-type(3) .action-required
+    When the user should see the element    css=.task-list li:nth-of-type(4) .task-status-incomplete
 
 
 Funding section has been reset again
@@ -123,11 +124,10 @@ Funding section can be completed with under 50%
     Then the user should not see the element    jQuery=.error-message
     And the user marks the 'your funding' section as incomplete again
 
-
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
-    log in and create new application if there is not one already with complete application details  Robot test application  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
+    log in and create new application if there is not one already with complete application details  Robot test application  ${tomorrowday}  ${month}  ${nextyear}
 
 The user marks their organisation as
     [Arguments]    ${org_size}

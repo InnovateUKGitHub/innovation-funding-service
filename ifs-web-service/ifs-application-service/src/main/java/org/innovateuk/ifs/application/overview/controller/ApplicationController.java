@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.overview.controller;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.forms.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -10,9 +9,7 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
-import static org.innovateuk.ifs.user.resource.Role.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 /**
@@ -43,7 +36,9 @@ import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 @Controller
 @RequestMapping("/application")
 @PreAuthorize("hasAuthority('applicant')")
-@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationController.class)
+@SecuredBySpring(value="Controller",
+        description = "Only applicants on an application are allowed to view the corresponding application overview",
+        securedType = ApplicationController.class)
 public class ApplicationController {
     @Autowired
     private ApplicationOverviewModelPopulator applicationOverviewModelPopulator;
@@ -60,14 +55,8 @@ public class ApplicationController {
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    @Autowired
-    private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
-
-    @Autowired
-    private InterviewAssignmentRestService interviewAssignmentRestService;
-
     @GetMapping("/{applicationId}")
-    public String applicationDetails(ApplicationForm form,
+    public String applicationOverview(ApplicationForm form,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
@@ -92,7 +81,7 @@ public class ApplicationController {
         Long userId = user.getId();
         model.addAttribute("form", form);
         model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, userId));
-        return "application-details";
+        return "application-overview";
     }
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {
@@ -108,7 +97,7 @@ public class ApplicationController {
     }
 
     @PostMapping(value = "/{applicationId}")
-    public String applicationDetails(@PathVariable("applicationId") long applicationId,
+    public String applicationOverview(@PathVariable("applicationId") long applicationId,
                                      UserResource user,
                                      HttpServletRequest request) {
 
@@ -116,33 +105,6 @@ public class ApplicationController {
 
         questionService.assignQuestion(applicationId, request, assignedBy);
         return "redirect:/application/" + applicationId;
-    }
-
-    @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
-    @SecuredBySpring(value = "READ", description = "Applicants and Assessors can view question feedback for an application")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
-    public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
-                                                      @PathVariable("questionId") long questionId,
-                                                      UserResource user) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
-                .getSuccess();
-
-        List<ProcessRoleResource> processRoleResources = processRoleService.findProcessRolesByApplicationId(applicationId);
-        List<Role> userRoles = processRoleResources.stream()
-                .filter(pr -> pr.getUser().equals(user.getId()))
-                .map(pr -> pr.getRole())
-                .collect(Collectors.toList());
-
-        boolean isInterviewAssessor = userRoles.contains(INTERVIEW_ASSESSOR);
-
-        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
-
-        if (!applicationResource.getCompetitionStatus().isFeedbackReleased() && !isApplicationAssignedToInterview) {
-            return "redirect:/application/" + applicationId + "/summary";
-        }
-        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId, isInterviewAssessor));
-        return "application-assessor-feedback";
-
     }
 
     @GetMapping("/terms-and-conditions")

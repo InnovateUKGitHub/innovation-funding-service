@@ -10,6 +10,7 @@ import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
@@ -21,7 +22,6 @@ import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.services.*;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -42,7 +42,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -218,7 +217,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         inviteLines = readInvites();
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
-        competitionLines = readCompetitions();
     }
 
     @PostConstruct
@@ -250,7 +248,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     @Test
-    public void generateTestData() throws ExecutionException, InterruptedException {
+    public void generateTestData() {
 
         long before = System.currentTimeMillis();
 
@@ -267,6 +265,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         List<CompletableFuture<CompetitionData>> createCompetitionFutures =
                 createCompetitions(competitionsToProcess);
+
+        CompletableFuture<Void> competitionQuestionsForApplicantMenuFutures =
+                waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
+                handleCorrectQuestionsForApplicantMenu(createCompetitionFutures), taskExecutor);
 
         List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures =
                 fillInAndCompleteApplications(createCompetitionFutures);
@@ -291,7 +293,12 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         }, taskExecutor);
 
-        CompletableFuture.allOf(competitionFundersFutures, publicContentFutures, assessorFutures, competitionsFinalisedFuture).join();
+        CompletableFuture.allOf(competitionQuestionsForApplicantMenuFutures,
+                                competitionFundersFutures,
+                                publicContentFutures,
+                                assessorFutures,
+                                competitionsFinalisedFuture
+        ).join();
 
         long after = System.currentTimeMillis();
 
@@ -332,6 +339,15 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         assessmentDataBuilderService.createAssessors(competitions, filteredAssessorLines, filteredAssessorInviteLines);
         assessmentDataBuilderService.createNonRegisteredAssessorInvites(competitions, filteredAssessorInviteLines);
         assessmentDataBuilderService.createAssessments(applications, filteredAssessmentLines, filteredAssessorResponseLines);
+    }
+
+    private void handleCorrectQuestionsForApplicantMenu(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
+        List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+        competitions.forEach(competition -> {
+            if (!competition.getCompetition().getUseNewApplicantMenu()) {
+                competitionDataBuilderService.removeApplicationTeamForCompetition(competition);
+            }
+        });
     }
 
     private void createPublicContent(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {

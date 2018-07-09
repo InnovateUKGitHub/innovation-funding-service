@@ -3,6 +3,8 @@
 // DO NOT HAVE OUT OF SYNC VERSION NUMBERS - THIS WILL BE IMPLEMENTED AS PART OF IFS-334
 ext.dataServiceVersion = project.properties['data-service.version'] ?: project.version
 ext.financeDataServiceVersion=project.properties['finance-data-service.version'] ?:project.version
+ext.alertServiceVersion = project.properties['alerts-service.version'] ?: project.version
+ext.surveyDataServiceVersion=project.properties['survey-data-service.version'] ?:project.version
 
 ext.applicationServiceVersion = project.properties['application-service.version'] ?: project.version
 ext.frontDoorServiceVersion = project.properties['front-door-service.version'] ?: project.version

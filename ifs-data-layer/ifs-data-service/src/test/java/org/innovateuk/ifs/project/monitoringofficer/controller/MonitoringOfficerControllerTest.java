@@ -25,9 +25,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -170,8 +168,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
           Error firstNameError = fieldError("firstName", "", "validation.standard.firstname.required", "");
           Error lastNameError = fieldError("lastName", "", "validation.standard.lastname.required", "");
           Error emailError = fieldError("email", "abc", "validation.standard.email.format", "", "", "^[a-zA-Z0-9._%+-^[^{}|]*$]+@[a-zA-Z0-9.-^[^{}|]*$]+\\.[a-zA-Z^[^0-9{}|]*$]{2,}$");
-          Error phoneNumberError = fieldError("phoneNumber", "hello", "validation.standard.phonenumber.format", "", "", "([0-9\\ +-])+");
-          Error phoneNumberLengthError = fieldError("phoneNumber", "hello", "validation.standard.phonenumber.length.min", "", "2147483647", "8");
+          Error phoneNumberError = fieldError("phoneNumber", "hello", "validation.standard.phonenumber.format", "", "", "^[\\\\)\\\\(\\\\+\\s-]*(?:\\d[\\\\)\\\\(\\\\+\\s-]*){8,20}$");
 
           MvcResult result = mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                   .contentType(APPLICATION_JSON)
@@ -180,8 +177,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                   .andReturn();
 
           RestErrorResponse response = fromJson(result.getResponse().getContentAsString(), RestErrorResponse.class);
-          assertEquals(7, response.getErrors().size());
-          asList(firstNameError, lastNameError, emailError, phoneNumberError, phoneNumberLengthError).forEach(e -> {
+          assertEquals(6, response.getErrors().size());
+          asList(firstNameError, lastNameError, emailError, phoneNumberError).forEach(e -> {
               String fieldName = e.getFieldName();
               String errorKey = e.getErrorKey();
               List<Error> matchingErrors = simpleFilter(response.getErrors(), error ->

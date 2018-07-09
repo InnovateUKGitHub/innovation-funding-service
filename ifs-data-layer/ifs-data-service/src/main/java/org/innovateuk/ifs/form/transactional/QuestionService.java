@@ -2,6 +2,7 @@ package org.innovateuk.ifs.form.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -40,6 +41,10 @@ public interface QuestionService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<QuestionResource> getQuestionByCompetitionIdAndQuestionSetupType(long competitionId,
+                                                                                   QuestionSetupType questionSetupType);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
