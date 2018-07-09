@@ -24,7 +24,7 @@ public class ProcessHistoryEntityListener {
     }
 
     @Autowired
-    private void setProcessHistoryRepository(ProcessHistoryRepository processHistoryRepository) {
+    public void setProcessHistoryRepository(ProcessHistoryRepository processHistoryRepository) {
         ProcessHistoryEntityListener.processHistoryRepository = processHistoryRepository;
     }
 
