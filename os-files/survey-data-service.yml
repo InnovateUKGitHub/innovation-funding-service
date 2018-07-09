@@ -46,7 +46,7 @@ items:
           imagePullPolicy: Always
           env:
           - name: JAVA_OPTS
-            value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
+            value: -Xms450m -Xmx450m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: "ifs-survey-data-service (${openshiftEnv})"
           - name: NEW_RELIC_LICENSE_KEY

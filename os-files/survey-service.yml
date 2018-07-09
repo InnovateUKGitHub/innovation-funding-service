@@ -48,7 +48,7 @@ items:
           - name: SPRING_APPLICATION_JSON
             value: '{"logout":{"url": "https://${SHIB_ADDRESS}/Logout/"}}'
           - name: JAVA_OPTS
-            value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
+            value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: "ifs-survey-service (${openshiftEnv})"
           - name: NEW_RELIC_LICENSE_KEY
