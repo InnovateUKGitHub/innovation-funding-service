@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
+
 @Component
 public class ApplicationFinanceSummaryViewModelPopulator {
 
@@ -88,6 +90,9 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
         Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
 
+        Boolean isYourFinancesInCompleteForAnOrganisations = getIsYourFinancesInCompleteForAnOrganisations(
+                completedSectionsByOrganisation, application.getCompetition());
+
         return new ApplicationFinanceSummaryViewModel(
                 application,
                 hasFinanceSection,
@@ -104,7 +109,8 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 organisationFinanceOverview.getTotalContribution(),
                 organisationFinanceOverview.getTotal(),
                 completedSectionsByOrganisation,
-                eachCollaboratorFinanceSectionId
+                eachCollaboratorFinanceSectionId,
+                isYourFinancesInCompleteForAnOrganisations
         );
     }
 
@@ -112,11 +118,20 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
     }
 
-    private Set<Long> getCompletedSectionsForUserOrganisation(Map<Long, Set<Long>> completedSectionsByOrganisation, OrganisationResource userOrganisation) {
+    private Set<Long> getCompletedSectionsForUserOrganisation(Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                                              OrganisationResource userOrganisation) {
         return completedSectionsByOrganisation.getOrDefault(
                 userOrganisation.getId(),
                 new HashSet<>()
         );
+    }
+
+    private Boolean getIsYourFinancesInCompleteForAnOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                                                  Long competitionId) {
+        SectionResource financeSection = sectionService.getSectionsForCompetitionByType(competitionId, FINANCE).get(0);
+        return completedSectionsByOrganisation.keySet()
+                .stream()
+                .anyMatch(id -> !completedSectionsByOrganisation.get(id).contains(financeSection.getId()));
     }
 
     private Long getEachCollaboratorFinanceSectionId(List<SectionResource> eachOrganisationFinanceSections) {

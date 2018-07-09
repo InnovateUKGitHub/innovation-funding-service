@@ -198,7 +198,7 @@
                 </tr>
                 <tr>
                     <th scope="row">Total
-                        <div th:if="${currentApplication.isOpen() and model.userIsLeadApplicant}">
+                        <div th:if="${currentApplication.isOpen()}">
                             <th:block th:if="${model.isYourFinancesInCompleteForAnOrganisations}">
                                 <img class="table-total-tick" width="20" height="20"
                                      th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-alert.png')}"
