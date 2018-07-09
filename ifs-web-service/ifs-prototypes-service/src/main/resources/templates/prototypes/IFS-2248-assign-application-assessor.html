@@ -21,7 +21,7 @@
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired'}, ${'Allocate applications to ' + name}, ${'competition closed'})" />
 
-    <!-- <h2 class="heading-large" th:text="${param.name != null ? param.name[0] : 'John Smith'}">ASSESSOR NAME</h2> -->
+    <!-- <h2 class="govuk-heading-l" th:text="${param.name != null ? param.name[0] : 'John Smith'}">ASSESSOR NAME</h2> -->
 
     <div class="grid-row">
         <div class="column-half">
@@ -68,7 +68,7 @@
 
     <th:block th:if="${param.tab == null or param.tab[0] == 'applications'}">
 
-        <!--<h2 class="heading-medium">Allocate applications to this assessor for interview panel.</h2>
+        <!--<h2 class="govuk-heading-m">Allocate applications to this assessor for interview panel.</h2>
 
         <form action="GET">
             <div class="search-filters">
@@ -91,8 +91,8 @@
         <div class="grid-row sorting">
             <div class="column-two-thirds">
                 <h2>
-                    <span class="heading-xlarge">5</span>
-                    <span class="heading-small">applications</span>
+                    <span class="govuk-heading-xl">5</span>
+                    <span class="govuk-heading-s">applications</span>
                 </h2>
             </div>
         </div>
@@ -246,8 +246,8 @@
         <div class="grid-row sorting">
             <div class="column-two-thirds">
                 <h2>
-                    <span class="heading-xlarge">4</span>
-                    <span class="heading-small">applications allocated to this assessor</span>
+                    <span class="govuk-heading-xl">4</span>
+                    <span class="govuk-heading-s">applications allocated to this assessor</span>
                 </h2>
             </div>
         </div>

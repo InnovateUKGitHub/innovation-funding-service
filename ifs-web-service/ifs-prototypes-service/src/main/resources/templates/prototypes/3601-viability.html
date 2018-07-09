@@ -33,7 +33,7 @@
 
 	<th:block th:if="${param.compName != null and param.compName[0] == 'updated'}">
 		<div class="panel" th:unless="${param.status != null and param.status[0] == 'approved'}">
-			<h2 class="heading-medium no-margin-top">Company name updated since original application</h2>
+			<h2 class="govuk-heading-m no-margin-top">Company name updated since original application</h2>
 
 			<dl class="standard-definition-list">
 				<dt>Name in application</dt>
@@ -59,7 +59,7 @@
 
 	</th:block>
 
-	<h2 class="heading-medium">Finances overview</h2>
+	<h2 class="govuk-heading-m">Finances overview</h2>
 
 	<div class="table-overflow">
 		<table>
@@ -84,7 +84,7 @@
 		</table>
 	</div>
 
-	<h2 class="heading-medium">Organisation information</h2>
+	<h2 class="govuk-heading-m">Organisation information</h2>
 
 	<dl class="standard-definition-list">
 		<dt>Company name</dt>
@@ -111,7 +111,7 @@
 
 				<div class="panel">
 
-					<h3 class="heading-small no-margin">Business size has been changed from medium (60%) to large (50% grant).</h3>
+					<h3 class="govuk-heading-s no-margin">Business size has been changed from medium (60%) to large (50% grant).</h3>
 
 					<dl class="standard-definition-list extra-margin">
 						<dt>The grant % has been set to</dt>
@@ -132,7 +132,7 @@
 
 				<div class="panel">
 
-					<h3 class="heading-small no-margin">Changing the business size from medium (60% grant) to small (70% grant).</h3>
+					<h3 class="govuk-heading-s no-margin">Changing the business size from medium (60% grant) to small (70% grant).</h3>
 
 					<dl class="standard-definition-list extra-margin">
 						<dt>The grant % will remain at</dt>
@@ -159,7 +159,7 @@
 
 		<form>
 			<fieldset class="extra-margin">
-				<legend class="heading-medium" id="change-org-title">Change organisation size</legend>
+				<legend class="govuk-heading-m" id="change-org-title">Change organisation size</legend>
 				<p class="form-hint">If the credit report shows that the business has not self declared properly, please update their business size. This should only be done after communicating with the lead partner. Increasing their buiness size will reduce their grant amount.</p>
 				<div class="form-block">
 					<label class="block-label selection-button-radio" for="orgSizeSmall">
@@ -185,7 +185,7 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Change organisation size</h2>
+					<h2 class="govuk-heading-m no-margin">Change organisation size</h2>
 
 					<div id="org-text-small" style="display: none">
 						<p>Changing the business size from Medium (60% Grant) to Small (70% Grant).</p>
@@ -240,7 +240,7 @@
 		<dd>No</dd>
 	</dl>
 
-	<h2 class="heading-medium">Credit check</h2>
+	<h2 class="govuk-heading-m">Credit check</h2>
 
 	<dl class="standard-definition-list">
 		<dt>Date of incorporation</dt>
@@ -266,7 +266,7 @@
 	</dl>
 
 
-	<h2 class="heading-medium">Credit report</h2>
+	<h2 class="govuk-heading-m">Credit report</h2>
 	 <div class="form-group">
     	<label class="block-label selection-button-checkbox" for="costs-reviewed">
 	      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" th:disabled="${param.status != null and param.status[0] == 'approved'}" th:checked="${param.status != null and param.status[0] == 'approved'}" />
@@ -281,7 +281,7 @@
 
     <th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
-			<h3 class="heading-medium">Approve viability</h3>
+			<h3 class="govuk-heading-m">Approve viability</h3>
 		    <p>Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
 		    <p>Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
 
@@ -310,7 +310,7 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-		        	<h2 class="heading-medium no-margin-top">Confirm viability</h2>
+		        	<h2 class="govuk-heading-m no-margin-top">Confirm viability</h2>
 
 					<p>This partner will now be marked as viable for this project.</p>
 

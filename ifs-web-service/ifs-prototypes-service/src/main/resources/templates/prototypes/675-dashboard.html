@@ -16,17 +16,17 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<h1 class="heading-xlarge">Your dashboard</h1>
+	<h1 class="govuk-heading-xl">Your dashboard</h1>
 
 	<th:block th:if="${param.status != null} and ${param.status[0] == 'projectSetup'}">
 		<!---->
-		<!--<h2 class="heading-large">Projects in setup</h2>-->
+		<!--<h2 class="govuk-heading-l">Projects in setup</h2>-->
 
 		<!--<ul class="boxed-list">-->
 			<!--<li>-->
 		        <!--<div class="grid-row">-->
 		            <!--<div class="column-assessment-details">-->
-		                <!--<h2 class="heading-medium">-->
+		                <!--<h2 class="govuk-heading-m">-->
 		                <!--<a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">194741: Machine learning in robots</a>-->
 		                <!--</h2>-->
 		            <!--</div>-->
@@ -41,11 +41,11 @@
 		<!--</ul>-->
 
 		<div class="progress-list">
-			<h3 class="heading-medium">Projects in setup</h3>
+			<h3 class="govuk-heading-m">Projects in setup</h3>
 			<ul>
 				<li>
 					<div class="task">
-						<h4 class="heading-small"><a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">Machine learning in robots</a></h4>
+						<h4 class="govuk-heading-s"><a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">Machine learning in robots</a></h4>
             <ul class="application-details">
               <li>Application number: 19474</li>
               <li>Competition: Technology inspired</li>
@@ -63,12 +63,12 @@
 
 	<th:block th:unless="${param.action != null and param.action[0] == 'accVerified'}">
 
-		<!--<h2 class="heading-large">In progess</h2>-->
+		<!--<h2 class="govuk-heading-l">In progess</h2>-->
 		<!--<ul class="boxed-list">-->
 		    <!--<li>-->
 		        <!--<div class="grid-row">-->
 		            <!--<div class="column-assessment-details">-->
-		                <!--<h2 class="heading-medium">-->
+		                <!--<h2 class="govuk-heading-m">-->
 		                <!--<a href="#">0000002: Providing sustainable childcare</a>-->
 		                <!--</h2>-->
 		                <!--<strong class="greentext">Application submitted</strong>-->
@@ -85,7 +85,7 @@
 		        <!---->
 		        <!--<div class="grid-row">-->
 		            <!--<div class="column-assessment-details">-->
-		                <!--<h2 class="heading-medium">-->
+		                <!--<h2 class="govuk-heading-m">-->
 		                <!--<a href="#">0000005: A new innovative solution</a>-->
 		                <!--</h2>-->
 		                <!--<strong class="greentext">Application submitted</strong>-->
@@ -102,11 +102,11 @@
 		<!--</ul>-->
 
 		<div class="progress-list">
-			<h3 class="heading-medium no-margin-top">Applications in progress</h3>
+			<h3 class="govuk-heading-m no-margin-top">Applications in progress</h3>
 			<ul>
 				<li class="status-2-col">
 					<div class="task">
-						<h4 class="heading-small"><a href="/prototypes/635-application-overview#">Providing sustainable childcare</a></h4>
+						<h4 class="govuk-heading-s"><a href="/prototypes/635-application-overview#">Providing sustainable childcare</a></h4>
             <ul class="application-details">
               <li>Application number: 2</li>
               <li>Competition: Technology inspired</li>
@@ -119,7 +119,7 @@
 				</li>
 				<li class="status-2-col">
 					<div class="task">
-						<h4 class="heading-small"><a href="/prototypes/635-application-overview">Providing sustainable childcare</a></h4>
+						<h4 class="govuk-heading-s"><a href="/prototypes/635-application-overview">Providing sustainable childcare</a></h4>
             <ul class="application-details">
               <li>Application number: 8</li>
               <li>Competition: Technology inspired</li>
@@ -136,7 +136,7 @@
 				</li>
 				<li class="status-2-col">
 					<div class="task">
-						<h4 class="heading-small"><a href="/prototypes/635-application-overview">A new innovative solution</a></h4>
+						<h4 class="govuk-heading-s"><a href="/prototypes/635-application-overview">A new innovative solution</a></h4>
             <ul class="application-details">
               <li>Application number: 5</li>
               <li>Competition: Technology inspired</li>
@@ -154,13 +154,13 @@
 
 	<th:block th:unless="${param.action != null and param.action[0] == 'accVerified'}">
 
-		<!--<h2 class="heading-large">Previous applications</h2>-->
+		<!--<h2 class="govuk-heading-l">Previous applications</h2>-->
 
 		<!--<ul class="boxed-list">-->
 			<!--<li>-->
 		        <!--<div class="grid-row">-->
 		            <!--<div class="column-assessment-details">-->
-		                <!--<h2 class="heading-medium">0000004: Using natural gas to heat homes</h2>-->
+		                <!--<h2 class="govuk-heading-m">0000004: Using natural gas to heat homes</h2>-->
 		            <!--</div>-->
 		            <!--<div class="column-assessment-status navigation-right">-->
 		                <!--<div class="no application-status assessed">-->
@@ -173,7 +173,7 @@
 		    <!--<li>-->
 		        <!--<div class="grid-row">-->
 		            <!--<div class="column-assessment-details">-->
-		                <!--<h2 class="heading-medium">000003: Mobile Phone Data for Logistics Analytics</h2>-->
+		                <!--<h2 class="govuk-heading-m">000003: Mobile Phone Data for Logistics Analytics</h2>-->
 		            <!--</div>-->
 		            <!--<div class="column-assessment-status navigation-right">-->
 		                <!--<div class="yes application-status assessed">-->
@@ -187,7 +187,7 @@
 		    <!--<li>-->
 		        <!--<div class="grid-row">-->
 		            <!--<div class="column-assessment-details">-->
-		                <!--<h2 class="heading-medium"> <a href="/prototypes/545-application-feedback">0000003: Mobile Phone Data for Logistics Analytics</a></h2>-->
+		                <!--<h2 class="govuk-heading-m"> <a href="/prototypes/545-application-feedback">0000003: Mobile Phone Data for Logistics Analytics</a></h2>-->
 		            <!--</div>-->
 		            <!--<div class="column-assessment-status navigation-right">-->
 		                <!--<div class="yes application-status assessed">-->
@@ -201,7 +201,7 @@
 		    <!--<li>-->
 		        <!--<div class="grid-row">-->
 		            <!--<div class="column-assessment-details">-->
-		                <!--<h2 class="heading-medium"><a href="/prototypes/545-application-feedback?unsuccessful">0000004: Using natural gas to heat homes</a></h2>-->
+		                <!--<h2 class="govuk-heading-m"><a href="/prototypes/545-application-feedback?unsuccessful">0000004: Using natural gas to heat homes</a></h2>-->
 		            <!--</div>-->
 		            <!--<div class="column-assessment-status navigation-right">-->
 		                <!--<div class="no application-status assessed">-->
@@ -213,11 +213,11 @@
 		<!--</ul>-->
 
 		<div class="progress-list">
-			<h3 class="heading-medium no-margin-top">Previous applications</h3>
+			<h3 class="govuk-heading-m no-margin-top">Previous applications</h3>
 			<ul>
 				<li class="negative">
 					<div class="task">
-						<h4 class="heading-small"><a href="/prototypes/545-application-feedback?unsuccessful">Using natural gas to heat homes</a></h4>
+						<h4 class="govuk-heading-s"><a href="/prototypes/545-application-feedback?unsuccessful">Using natural gas to heat homes</a></h4>
             <ul class="application-details">
               <li>Application number: 4</li>
               <li>Competition: Technology inspired</li>
@@ -229,7 +229,7 @@
 				</li>
 				<li class="positive">
 					<div class="task">
-						<h4 class="heading-small"><a href="/prototypes/545-application-feedback">Mobile Phone Data for Logistics Analytics</a></h4>
+						<h4 class="govuk-heading-s"><a href="/prototypes/545-application-feedback">Mobile Phone Data for Logistics Analytics</a></h4>
             <ul class="application-details">
               <li>Application number: 3</li>
               <li>Competition: Technology inspired</li>
@@ -241,7 +241,7 @@
 				</li>
 				<li class="positive">
 					<div class="task">
-						<h4 class="heading-small"><a href="/prototypes/545-application-feedback">Mobile Phone Data for Logistics Analytics</a></h4>
+						<h4 class="govuk-heading-s"><a href="/prototypes/545-application-feedback">Mobile Phone Data for Logistics Analytics</a></h4>
             <ul class="application-details">
               <li>Application number: 2</li>
               <li>Competition: Technology inspired</li>
@@ -253,7 +253,7 @@
 				</li>
 				<li class="negative">
 					<div class="task">
-						<h4 class="heading-small"><a href="/prototypes/545-application-feedback?unsuccessful">Using natural gas to heat homes</a></h4>
+						<h4 class="govuk-heading-s"><a href="/prototypes/545-application-feedback?unsuccessful">Using natural gas to heat homes</a></h4>
             <ul class="application-details">
               <li>Application number: 1</li>
               <li>Competition: Technology inspired</li>
@@ -267,7 +267,7 @@
 		</div>
 	</th:block>
 
-	<h2 class="heading-large">Your profile</h2>
+	<h2 class="govuk-heading-l">Your profile</h2>
 
 	<ul class="list list-bullet">
 		<li>

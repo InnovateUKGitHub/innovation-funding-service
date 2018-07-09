@@ -13,15 +13,15 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='heading-xlarge',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
-                <h2 class="heading-medium">Review notes</h2>
+                <h2 class="govuk-heading-m">Review notes</h2>
                 <p>
                     Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
                 </p>
                 <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post"
                       enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
-                    <h2 class="heading-medium">New note</h2>
+                    <h2 class="govuk-heading-m">New note</h2>
                     <div class="form-group" th:classappend="${#fields.hasErrors('noteTitle')} ? 'form-group-error'">
                         <label for="noteTitle">
                             <span class="form-label-bold">Title</span>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="upload-section">
                         <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                            <h2 class="heading-small no-margin">Supporting documentation</h2>
+                            <h2 class="govuk-heading-s no-margin">Supporting documentation</h2>
                             <ul>
                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                     <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
@@ -76,7 +76,7 @@
                                 </li>
                             </ul>
                         </th:block>
-                        <h2 class="heading-small">Upload supporting documentation in pdf format</h2>
+                        <h2 class="govuk-heading-s">Upload supporting documentation in pdf format</h2>
                         <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
                             <th:block th:if="${#fields.hasErrors('attachment')}">
                                 <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />

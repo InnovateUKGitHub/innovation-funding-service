@@ -20,21 +20,21 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Assessor progress',
                     subTitle=|${model.competitionId} : ${model.competitionName}|,
-                    size='heading-xlarge'" />
+                    size='govuk-heading-xl'" />
 
-        <h2 class="heading-large no-margin" th:text="${model.assessorName}"></h2>
+        <h2 class="govuk-heading-l no-margin" th:text="${model.assessorName}"></h2>
 
-        <h3 class="heading-medium no-margin">Innovation area and skills</h3>
+        <h3 class="govuk-heading-m no-margin">Innovation area and skills</h3>
 
         <div class="grid-row">
             <div class="column-half">
-                <h4 class="heading-small">Innovation area</h4>
+                <h4 class="govuk-heading-s">Innovation area</h4>
                 <ul>
                     <li th:each="area : ${model.innovationAreas}" th:text="${area}" />
                 </ul>
             </div>
             <div class="column-half">
-                <h4 class="heading-small">Type</h4>
+                <h4 class="govuk-heading-s">Type</h4>
                 <span th:text="${#strings.isEmpty(model.businessType)} ? 'Unknown' : ${model.businessType}" />
             </div>
         </div>
@@ -44,7 +44,7 @@
                th:text="'Review assessor'"/>
         </div>
 
-        <h2 class="heading-medium" th:text="| Assigned (${#lists.size(model.assigned)}) |"/>
+        <h2 class="govuk-heading-m" th:text="| Assigned (${#lists.size(model.assigned)}) |"/>
 
         <div class="table-overflow" th:if="${!#lists.isEmpty(model.assigned)}">
             <table>
@@ -133,7 +133,7 @@
 
 
         <div th:if="${model.competitionInAssessment}">
-            <h2 class="heading-medium" th:text="| Rejected (${#lists.size(model.rejected)}) |"/>
+            <h2 class="govuk-heading-m" th:text="| Rejected (${#lists.size(model.rejected)}) |"/>
 
             <div class="table-overflow" th:if="${!#lists.isEmpty(model.rejected)}">
                 <table>
@@ -165,7 +165,7 @@
 
             <p th:if="${#lists.isEmpty(model.rejected)}">No applications have been rejected by this assessor.</p>
 
-            <h2 class="heading-medium" th:text="| Previously assigned (${#lists.size(model.previouslyAssigned)}) |"/>
+            <h2 class="govuk-heading-m" th:text="| Previously assigned (${#lists.size(model.previouslyAssigned)}) |"/>
 
             <div class="table-overflow" th:if="${!#lists.isEmpty(model.previouslyAssigned)}">
                 <table>
@@ -201,14 +201,14 @@
             <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">No applications have been previously assigned to this assessor.</p>
         </div>
 
-        <h2 class="heading-medium">Applications</h2>
+        <h2 class="govuk-heading-m">Applications</h2>
 
         <p>These are the rest of the applications for this competition. You can assign more to this assessor.</p>
 
         <form method="GET">
             <div class="search-filters extra-margin">
                 <fieldset>
-                    <legend class="heading-medium no-margin-top">Filter applications</legend>
+                    <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
                     <div class="grid-row">
                         <div class="column-two-thirds">
                             <label class="form-label" for="filterSearch">Search by application number.</label>

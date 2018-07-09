@@ -177,13 +177,13 @@
 	<fieldset class="">
 
 		<div id="admin-support-1">
-				<h3 class="heading-medium">No Administration support cost funding</h3>
+				<h3 class="govuk-heading-m">No Administration support cost funding</h3>
 				<p>You are not currently applying for administration support cost funding</p>
 			</div>
 
 
 			<div id="admin-support-2">
-			<h3 class="heading-medium">20% of labour costs</h3>
+			<h3 class="govuk-heading-m">20% of labour costs</h3>
 			<div class="form-group alignright">
 				<label>
 					Total administration support cost
@@ -194,11 +194,11 @@
 
 
 		<div id="admin-support-3">
-			<h3 class="heading-medium">Calculate overheads</h3>
+			<h3 class="govuk-heading-m">Calculate overheads</h3>
 			<p>If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadheet available below. The model shows you which types of indirect costs associated with your project you may claim. For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review. This will assess the appropriateness of your claim if your grant application is successful.</p>
 
       <div class="form-group download">
-	        <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
+	        <h3 class="govuk-heading-s no-margin">Download the overhead calculation spreadsheet</h3>
 	        <a href="#">Overhead calculation spreadsheet.pdf (56kb)</a>
 	    </div>
 
@@ -207,7 +207,7 @@
 
         <th:block th:if="${param.status == null or param.status[0] == 'overheadRemoved'}">
           <div class="upload-section extra-margin">
-            <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
+            <h3 class="govuk-heading-s no-margin">Upload your completed spreadsheet</h3>
             <input type="file" name="file" id="file" class="inputfile" />
             <label for="file" class="button-secondary extra-margin">+ Upload</label>
           </div>
@@ -215,7 +215,7 @@
 
         <th:block th:if="${param.status != null and param.status[0] == 'overheadUploaded'}">
           <div class="upload-section extra-margin">
-            <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
+            <h3 class="govuk-heading-s no-margin">Upload your completed spreadsheet</h3>
             <div>
               <a href="#" class="uploaded-file">The-uploaded-file-example.pdf</a>
             </div>
@@ -236,7 +236,7 @@
 		</div>
 
 		<div id="admin-support-4">
-			<h3 class="heading-medium">Special rate agreed with Innovate UK</h3>
+			<h3 class="govuk-heading-m">Special rate agreed with Innovate UK</h3>
 			<p>I confirm that I will need to justify this rate if this project is granted funding by Innovate UK.</p>
 			<div class="form-group alignright">
 				<label>
@@ -654,7 +654,7 @@
 
 <div th:fragment="finance-other-funding">
 
-<h2 class="heading-medium no-margin-bottom">Other funding for this project</h2>
+<h2 class="govuk-heading-m no-margin-bottom">Other funding for this project</h2>
 	<fieldset>
 		<legend class="visuallyhidden">Other funding for this project</legend>
 		<p class="form-hint">Please tell us if you have applied for or received any other public sector funding for this project. Any other funding received will need to be deducted from the total value of any funding you are claiming for this project.</p>

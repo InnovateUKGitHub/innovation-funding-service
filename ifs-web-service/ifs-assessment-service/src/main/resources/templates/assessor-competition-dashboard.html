@@ -14,7 +14,7 @@
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem submitting some of your assessments.</h2>
+                <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There was a problem submitting some of your assessments.</h2>
                 <ul class="error-summary-list">
                     <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
                         <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
@@ -26,7 +26,7 @@
             </div>
 
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},size='govuk-heading-xl'" />
 
             <div class="grid-row">
                 <div class="column-one-half competition details">
@@ -58,7 +58,7 @@
                     <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
 
                         <div class="progress-list">
-                            <h2 class="heading-medium no-margin">Applications for assessment (<span
+                            <h2 class="govuk-heading-m no-margin">Applications for assessment (<span
                             th:text="${#lists.size(model.outstanding)}"/>)</h2>
 
                             <ul>
@@ -79,7 +79,7 @@
                                                 </div>
                                             </div>
                                         </th:block>
-                                        <h3 class="heading-small"><a
+                                        <h3 class="govuk-heading-s"><a
                                             th:href="${app.pending} ? ${assignmentUrl} : @{/{assessmentId}(assessmentId=${app.assessmentId})}"
                                             th:text="${app.displayLabel}"/></h3>
                                         <p th:text="${app.leadOrganisation}" class="no-margin"/>
@@ -139,11 +139,11 @@
                 </div>
 
                 <div class="submitted progress-list extra-margin-top" th:unless="${#lists.isEmpty(model.submitted)}">
-                    <h3 class="heading-medium no-margin">Submitted assessment (<span th:text="${#lists.size(model.submitted)}" />)</h3>
+                    <h3 class="govuk-heading-m no-margin">Submitted assessment (<span th:text="${#lists.size(model.submitted)}" />)</h3>
                     <ul>
                         <li th:each="app : ${model.submitted}" class="status-2-col">
                             <div class="task">
-                                <h4 class="heading-small" th:text="${app.displayLabel}" />
+                                <h4 class="govuk-heading-s" th:text="${app.displayLabel}" />
                                 <p th:text="${app.leadOrganisation}" />
                             </div>
                             <div class="status" th:classappend="${app.recommended} ? 'positive' : 'negative'">

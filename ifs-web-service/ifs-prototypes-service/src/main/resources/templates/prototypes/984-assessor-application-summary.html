@@ -16,7 +16,7 @@
         <!-- HARDCODED PROTOTYPE HTML -->
         <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'12347353: A new innovation solution'}, ${'Assessment summary'})" />
 
-        <h2 class="heading-medium">Overall scores</h2>
+        <h2 class="govuk-heading-m">Overall scores</h2>
         <div class="table-overflow">
             <table>
                 <tbody>
@@ -55,7 +55,7 @@
             <p><strong th:text="${param.status != null and param.status[0] == 'complete' ? '71%' : '21%'}">21%</strong></p>
         </div>
 
-        <h2 class="heading-medium">Review assessment</h2>
+        <h2 class="govuk-heading-m">Review assessment</h2>
         <div class="collapsible section-overview">
 
             <h2>Scope
@@ -219,7 +219,7 @@
             <p><strong th:text="${param.status != null and param.status[0] == 'complete' ? '71%' : '21%'}">21%</strong></p>
         </div>
 
-        <h2 class="heading-medium extra-margin">Do you believe that this application is suitable for funding?</h2>
+        <h2 class="govuk-heading-m extra-margin">Do you believe that this application is suitable for funding?</h2>
         <form>
             <fieldset class="inline">
                 <legend class="visuallyhidden">Do you believe that this application is suitable for funding?</legend>

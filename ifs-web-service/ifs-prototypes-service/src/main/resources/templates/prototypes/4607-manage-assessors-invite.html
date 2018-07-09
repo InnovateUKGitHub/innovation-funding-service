@@ -20,7 +20,7 @@
 
   <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Invite to be an assessor'}, ${null})" />
 
-	<h2 class="heading-medium">Recipients:
+	<h2 class="govuk-heading-m">Recipients:
 
 		<th:block th:if="${param.status == null or param.status[0] == 'invite-individual'}">
 			<span th:text="${(param.name != null ? param.name[0] : 'Dave Smith')}">Dave smith</span>

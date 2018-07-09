@@ -14,10 +14,10 @@
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assign applications to interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" />
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Resend invites to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Resend invites to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to send your invite.</h2>
+                <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to send your invite.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
             <p>Upload additional assessment feedback for applicants, edit the email and click send. The applications will then be assigned to this interview panel.</p>
@@ -107,7 +107,7 @@
                            th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
                 </div>
 
-                <h3 class="heading-small">Message</h3>
+                <h3 class="govuk-heading-s">Message</h3>
                 <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
 
                 <div class="form-group extra-margin">

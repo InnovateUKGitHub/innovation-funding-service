@@ -22,11 +22,11 @@
 
         <main tabindex="-1" id="content">
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to collaborate',size='heading-xlarge'"
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to collaborate',size='govuk-heading-xl'"
             />
             <p>You have been invited to join an application in the competition '<a href="#" th:text="${'Predicting market trends programme'}"></a>'.</p>
             <div>
-                <h1 class="heading-large">Application details</h1>
+                <h1 class="govuk-heading-l">Application details</h1>
                 <dl class="extra-margin-bottom">
                     <dt>Lead organisation:</dt>
                     <dd th:text="${'Empire Ltd'}"></dd>
@@ -46,7 +46,7 @@
 
                 <th:block th:unless="${user == 'existing'}">
 
-                    <h2 class="heading-medium">Are you happy to accept the invitation to participate?</h2>
+                    <h2 class="govuk-heading-m">Are you happy to accept the invitation to participate?</h2>
                     <p>As this email address is new to the service, you will need to create an account.</p>
 
                     <th:block th:unless="${status == 'orgAdded'}">
@@ -60,7 +60,7 @@
                 </th:block>
 
                 <th:block th:if="${user == 'existing'}">
-                    <h2 class="heading-medium">We have found an account with the invited email address</h2>
+                    <h2 class="govuk-heading-m">We have found an account with the invited email address</h2>
                     <p>Please sign in to accept the invitation and continue with your application.</p>
 
                     <a th:href="${status == 'orgAdded' ? '/prototypes/IFS-3599-signin-collab-with' : '/prototypes/IFS-3599-signin-collab-without'} + ${'-org?type=' + type + '&user=' + user + '&status=' + status}" class="button">Sign in</a>

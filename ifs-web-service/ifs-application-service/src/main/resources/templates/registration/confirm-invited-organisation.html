@@ -12,23 +12,23 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',size='heading-large'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',size='govuk-heading-l'" />
         <p>The lead applicant has invited you to participate on this application as part of the following organisation:
             <strong th:text="${model.partOfOrganisation}"></strong></p>
 
-        <h2 class="heading-medium no-margin-bottom">Confirm your organisation details are correct</h2>
+        <h2 class="govuk-heading-m no-margin-bottom">Confirm your organisation details are correct</h2>
         <fieldset>
             <legend class="visuallyhidden">Confirm your organisation details are correct</legend>
             <div class="form-block">
-                <h3 class="heading-small">Organisation type</h3>
+                <h3 class="govuk-heading-s">Organisation type</h3>
                 <p th:text="${model.organisationType}"></p>
-                <h3 class="heading-small">Registered name</h3>
+                <h3 class="govuk-heading-s">Registered name</h3>
                 <p th:text="${model.registrationName}"></p>
                 <th:block th:if="${model.registrationNumberNotEmptyAndNotResearch}">
-                    <h3 class="heading-small">Registration number</h3>
+                    <h3 class="govuk-heading-s">Registration number</h3>
                     <p th:text="${model.registrationNumber}"></p>
                 </th:block>
-                <h3 class="heading-small">Registered Address</h3>
+                <h3 class="govuk-heading-s">Registered Address</h3>
                 <div th:text="${model.organisationAddress?.addressLine1}"></div>
                 <div th:text="${model.organisationAddress?.addressLine2}"></div>
                 <div th:text="${model.organisationAddress?.addressLine3}"></div>

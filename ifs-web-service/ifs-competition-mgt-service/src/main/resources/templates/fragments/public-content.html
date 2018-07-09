@@ -135,7 +135,7 @@
     <th:block th:if="${model.readOnly}">
         <div class="grid-row extra-margin-bottom">
             <div class="column-third">
-                <h2 class="heading-medium no-margin">Description</h2>
+                <h2 class="govuk-heading-m no-margin">Description</h2>
             </div>
             <div class="column-two-thirds">
                 <div class="wysiwyg-styles extra-margin-bottom" ifs:utext="${form.description}"></div>
@@ -143,7 +143,7 @@
         </div>
         <div class="grid-row extra-margin-bottom">
             <div class="column-third">
-                <h2 class="heading-medium no-margin">Funding type</h2>
+                <h2 class="govuk-heading-m no-margin">Funding type</h2>
             </div>
             <div class="column-two-thirds">
                 <p th:text="${form.fundingType}"></p>
@@ -151,7 +151,7 @@
         </div>
         <div class="grid-row extra-margin-bottom">
             <div class="column-third">
-                <h2 class="heading-medium no-margin">Project size</h2>
+                <h2 class="govuk-heading-m no-margin">Project size</h2>
             </div>
             <div class="column-two-thirds">
                 <p th:text="${form.projectSize}"></p>
@@ -244,7 +244,7 @@
         <th:block th:each="event : ${model.sortedEvents}">
             <div class="grid-row extra-margin-bottom">
                 <div class="column-third">
-                    <h2 class="heading-medium no-margin" th:text="${event.dateTimeFormatted}"></h2>
+                    <h2 class="govuk-heading-m no-margin" th:text="${event.dateTimeFormatted}"></h2>
                 </div>
                 <div class="column-two-thirds">
                     <div class="wysiwyg-styles extra-margin-bottom" ifs:utext="${event.content}"></div>
@@ -254,11 +254,11 @@
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p>Text entered into this section will appear within the dates tab.</p>
-        <h2 class="heading-small extra-margin-bottom">Generated automatically from the competition milestones.</h2>
+        <h2 class="govuk-heading-s extra-margin-bottom">Generated automatically from the competition milestones.</h2>
         <th:block th:each="event : ${model.sortedEvents}">
             <div class="grid-row extra-margin-bottom">
                 <div class="column-third">
-                    <h2 class="heading-medium no-margin" th:text="${event.dateTimeFormatted}"></h2>
+                    <h2 class="govuk-heading-m no-margin" th:text="${event.dateTimeFormatted}"></h2>
                 </div>
                 <div class="column-two-thirds">
                     <div class="wysiwyg-styles extra-margin-bottom" ifs:utext="${event.content}"></div>
@@ -453,7 +453,7 @@
     <th:block th:each="contentGroup: ${form.contentGroups}">
         <div class="grid-row extra-margin-bottom">
             <div class="column-third">
-                <h2 class="heading-medium no-margin" th:text="${contentGroup.heading}"></h2>
+                <h2 class="govuk-heading-m no-margin" th:text="${contentGroup.heading}"></h2>
             </div>
             <div class="column-two-thirds">
                 <div class="wysiwyg-styles" ifs:utext="${contentGroup.content}"></div>

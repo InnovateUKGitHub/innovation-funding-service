@@ -117,7 +117,8 @@
                         aria-label="Show or hide Top Level Navigation"
                         th:unless="${hidePropositionLinks}">Menu</button>
                 <th:block th:include="fragments/elements :: header-links"
-                          th:with="hideDashboardLink=${hideDashboardLink}, hidePropositionLinks=${hidePropositionLinks}"
+                          th:with="hideDashboardLink=${hideDashboardLink},
+                                   loggedIn=${#authentication} ? ${#authorization.expression('isAuthenticated()')} : false"
                           th:unless="${hidePropositionLinks}"></th:block>
             </div>
         </div>

@@ -19,7 +19,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
   <th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Finances'})" />
 
-  <h2 class="heading-medium no-margin-bottom">Finances</h2>
+  <h2 class="govuk-heading-m no-margin-bottom">Finances</h2>
   <p>Each partner should submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section.</p>
 
   <details class="extra-margin-bottom">
@@ -44,7 +44,7 @@
     <li class="section-status assigned-to-me">
       <div class="grid-row">
         <div class="column-two-thirds">
-          <h3 class="heading-small"><a href="/prototypes/4600-your-finances">Your project costs</a></h3>
+          <h3 class="govuk-heading-s"><a href="/prototypes/4600-your-finances">Your project costs</a></h3>
         </div>
 
       </div>
@@ -52,7 +52,7 @@
     <li class="funding assigned-to-me">
       <div class="grid-row">
         <div class="column-two-thirds">
-          <h3 class="heading-small"><a href="/prototypes/4600-your-org">Your organisation size</a></h3>
+          <h3 class="govuk-heading-s"><a href="/prototypes/4600-your-org">Your organisation size</a></h3>
         </div>
       </div>
     </li>
@@ -61,12 +61,12 @@
         <div class="column-one">
 
           <th:block th:if="${param.status != null and param.status[0] == 'initialView'}">
-            <h3 class="heading-small">Your funding</h3>
+            <h3 class="govuk-heading-s">Your funding</h3>
             <p>Before you can supply your funding information this project must be given a research area in <a href="/prototypes/5452-application-details">project details</a>, and your organisation size defined in the <a href="/prototypes/4600-your-org">your organisation</a> section.</p>
           </th:block>
 
           <th:block th:if="${param.status == null or param.status[0] != 'initialView'}">
-            <h3 class="heading-small"><a href="/prototypes/6618-your-funding">Your funding</a></h3>
+            <h3 class="govuk-heading-s"><a href="/prototypes/6618-your-funding">Your funding</a></h3>
           </th:block>
 
         </div>
@@ -77,7 +77,7 @@
     <li class="no-funding hidden">
       <div class="grid-row">
         <div class="column-half">
-          <h3 class="heading-small">Your organisation size</h3>
+          <h3 class="govuk-heading-s">Your organisation size</h3>
         </div>
         <div class="column-half alignright">
           <span class="form-hint">Not required</span>
@@ -87,7 +87,7 @@
     <li class="no-funding hidden">
       <div class="grid-row">
         <div class="column-half">
-          <h3 class="heading-small">Your funding</h3>
+          <h3 class="govuk-heading-s">Your funding</h3>
         </div>
         <div class="column-half alignright">
           <span class="form-hint">Not required</span>
@@ -100,7 +100,7 @@
 
   </ul>
 
-  <h2 class="heading-medium">Finance summary</h2>
+  <h2 class="govuk-heading-m">Finance summary</h2>
 
   <p>This is a breakdown of your project costs and sources of funding for this project.</p>
 
@@ -139,7 +139,7 @@
     </table>
   </div>
 
-  <!--<h2 class="heading-medium no-margin-bottom">Organisation size</h2>
+  <!--<h2 class="govuk-heading-m no-margin-bottom">Organisation size</h2>
   <p>Medium (Claim up to 60%)</p>
 
 	<p class="form-hint">To determine the level of funding you are eligible to receive please provide your business sizing using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
@@ -161,7 +161,7 @@
 <fieldset>
 	<div class="form-group extra-margin">
 		<label class="form-label" for="other-funding">
-			<span class="heading-medium">Funding level</span>
+			<span class="govuk-heading-m">Funding level</span>
 			<span class="form-hint">Please enter the funding level that you would like to apply for in this application. This is based on the size of your organisation.</span>
 		</label>
 		<details>

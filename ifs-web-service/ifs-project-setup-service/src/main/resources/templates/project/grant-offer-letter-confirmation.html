@@ -11,7 +11,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <h1 class="heading-medium">Send to Innovate UK</h1>
+        <h1 class="govuk-heading-m">Send to Innovate UK</h1>
         <p>Once you send the signed grant offer letter we will review it and will contact you if we need further information.</p>
 
         <form th:action="@{/project/{id}/offer(id=${projectId})}" method="post">

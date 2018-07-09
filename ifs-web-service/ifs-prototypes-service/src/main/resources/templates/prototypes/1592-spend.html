@@ -28,7 +28,7 @@
 	<div th:if="${param.spend != null and param.spend[0] == 'high'}" th:remove="tag">
 
 		<div class="warning-alert extra-margin-bottom">
-			<h2 class="heading-small">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
+			<h2 class="govuk-heading-s">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
 			<p class="no-margin-bottom">Please review:</p>
 			<ul class="list list-bullet">
 				<li>subcontracting costs</li>
@@ -72,7 +72,7 @@
 	</dl>
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
-		<h2 class="heading-medium">Partner project costs</h2>
+		<h2 class="govuk-heading-m">Partner project costs</h2>
 		<p class="form-hint">These are the project costs for your partners on the project.</p>
 
 		<table id="partner-totals">
@@ -117,10 +117,10 @@
 		</table>
 	</div>
 
-	<h2 class="heading-medium" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span></h2>
+	<h2 class="govuk-heading-m" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span></h2>
 
 	<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
-		<h2 class="heading-medium">Project spend profile</h2>
+		<h2 class="govuk-heading-m">Project spend profile</h2>
 	</div>
 
 	<p th:unless="${param.task != null and param.task[0] == 'reviewProject' or param.task != null and param.task[0] == 'reviewPartner'}">
@@ -437,7 +437,7 @@
 			        <button class="js-close close" aria-label="Close Popup">X</button>
 			        <div>
 
-						<h2 class="heading-medium no-margin">Send to lead partner</h2>
+						<h2 class="govuk-heading-m no-margin">Send to lead partner</h2>
 
 						<p>Are you sure you want to submit your spend profile to the lead partner?</p>
 
@@ -480,7 +480,7 @@
 			        <button class="js-close close" aria-label="Close Popup">X</button>
 			        <div>
 
-						<h2 class="heading-medium no-margin">Save</h2>
+						<h2 class="govuk-heading-m no-margin">Save</h2>
 
 						<p>Are you sure you wish to save your spend profile with higher costs than your eligible project costs?</p>
 
@@ -518,7 +518,7 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Allow partner to edit</h2>
+					<h2 class="govuk-heading-m no-margin">Allow partner to edit</h2>
 
 					<p><strong>Biotech Corp's</strong> spend profile has been handed back to them, they have been informaed of by email, if there are any specific changes required please contact them.</p>
 
@@ -544,7 +544,7 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Submit project spend profile</h2>
+					<h2 class="govuk-heading-m no-margin">Submit project spend profile</h2>
 
 					<p>The project spend profile will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
 

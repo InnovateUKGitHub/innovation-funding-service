@@ -145,8 +145,8 @@ New query can be posted
     When the user clicks the button/link      jQuery=.button:contains("Post query")
     Then the user should not see the element  jQuery=.button:contains("Post query")
     When the user expands the section         an eligibility query's title
-    Then the user should see the element      jQuery=.heading-small:contains("Lee Bowman - Innovate UK (Finance team)")
-    When the user should see the element      jQuery=.heading-small:contains("${today}")
+    Then the user should see the element      jQuery=.govuk-heading-s:contains("Lee Bowman - Innovate UK (Finance team)")
+    When the user should see the element      jQuery=.govuk-heading-s:contains("${today}")
     Then the user should see the element      css=#post-new-response  # Respond button
 
 Query Section dropdown filters the queries displayed
@@ -240,8 +240,8 @@ Applicant - Query response can be posted
     When the user clicks the button/link      jQuery=.button:contains("Post response")
     Then the user should not see the element  jQuery=.button:contains("Post response")
     And the user should see the element       jQuery=h2:contains("an eligibility") .section-awaiting
-    And the user should see the element       jQuery=.heading-small:contains("Becky Mason") small:contains("${today}")
-    And the user should see the element       jQuery=.heading-small:contains("Becky Mason") ~ .heading-small:contains("Supporting documentation")
+    And the user should see the element       jQuery=.govuk-heading-s:contains("Becky Mason") small:contains("${today}")
+    And the user should see the element       jQuery=.govuk-heading-s:contains("Becky Mason") ~ .govuk-heading-s:contains("Supporting documentation")
 
 Applicant - Respond to older query
     [Documentation]    INFUND-4843
@@ -288,7 +288,7 @@ Project finance user can view the response and uploaded files
     Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     When the user clicks the button/link  css=table.table-progress tr:nth-child(1) td:nth-child(6)  # View
     And the user expands the section      an eligibility query's title
-    Then the user should see the element  jQuery=.heading-small:contains("Becky") + p:contains("This is some response text")
+    Then the user should see the element  jQuery=.govuk-heading-s:contains("Becky") + p:contains("This is some response text")
     And the user should see the element   jQuery=.panel li:nth-of-type(1) a:contains("${valid_pdf}")
 
 Project finance user can continue the conversation
@@ -309,7 +309,7 @@ Finance contact can view the new response
     Given log in as a different user      &{PublicSector_lead_applicant_credentials}
     When the user clicks the button/link  jQuery=.projects-in-setup a:contains("${Queries_Application_Title}")
     And the user clicks the button/link   link=Finance checks
-    Then the user should see the element  jQuery=.heading-small:contains("Finance team") + .wysiwyg-styles:contains("This is a response to a response")
+    Then the user should see the element  jQuery=.govuk-heading-s:contains("Finance team") + .wysiwyg-styles:contains("This is a response to a response")
 
 Project Finance user is able to mark a query discussion as complete
     [Documentation]  IFS-1987

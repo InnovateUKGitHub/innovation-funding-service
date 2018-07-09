@@ -13,34 +13,34 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
         <form th:object="${form}" id="other-documents-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Other documents',subTitle=${model.projectName},size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Other documents',subTitle=${model.projectName},size='govuk-heading-xl'" />
             <hr/>
 
             <div class="success-alert" th:if="${model.isApproved()}">
                 <th:block th:if="${model.collaborationAgreementRequired}">
-                    <p class="heading-small no-margin-top">The documents provided have been approved.</p>
+                    <p class="govuk-heading-s no-margin-top">The documents provided have been approved.</p>
                 </th:block>
                 <th:block th:unless="${model.collaborationAgreementRequired}">
-                    <p class="heading-small no-margin-top">The document provided has been approved.</p>
+                    <p class="govuk-heading-s no-margin-top">The document provided has been approved.</p>
                 </th:block>
             </div>
 
             <div class="warning-alert" th:if="${model.isRejected()}">
                 <th:block th:if="${model.collaborationAgreementRequired}">
-                    <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+                    <p class="govuk-heading-s no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
                 </th:block>
                 <th:block th:unless="${model.collaborationAgreementRequired}">
-                    <p class="heading-small no-margin-top">This document has been reviewed and rejected. We have returned it to the Project Manager.</p>
+                    <p class="govuk-heading-s no-margin-top">This document has been reviewed and rejected. We have returned it to the Project Manager.</p>
                 </th:block>
             </div>
 
-            <h2 class="heading-medium" th:text="${model.applicationId} + ': ' + ${model.projectName} "/>
+            <h2 class="govuk-heading-m" th:text="${model.applicationId} + ': ' + ${model.projectName} "/>
             <ul class="list list-bullet">
                 <li th:text="${model.leadPartnerOrganisationName}" />
                 <th:block th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
@@ -62,19 +62,19 @@
             <th:block th:if="${(!(model.collaborationAgreementRequired) or model.collaborationAgreementFileDetails != null) and model.exploitationPlanFileDetails != null}">
 
                 <th:block th:if="${model.collaborationAgreementRequired}">
-                    <h2 class="heading-medium">Collaboration agreement</h2>
+                    <h2 class="govuk-heading-m">Collaboration agreement</h2>
                     <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
                     class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
                 </th:block>
 
-                <h2 class="heading-medium">Exploitation plan</h2>
+                <h2 class="govuk-heading-m">Exploitation plan</h2>
                 <a th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
                  class="uploaded-file"
                  th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
 
                 <th:block th:if="${model.isShowApproveRejectButtons()}">
                     <th:block th:if="${model.collaborationAgreementRequired}">
-                        <h2 class="heading-medium">Review documents</h2>
+                        <h2 class="govuk-heading-m">Review documents</h2>
                         <p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
                         <button id="accept-documents" data-js-modal="modal-accept-docs" class="button">Accept documents</button>
                         <button id="reject-documents" data-js-modal="modal-reject-docs" class="button button-warning">Reject documents</button>
@@ -83,7 +83,7 @@
                         <th:block th:insert="fragments/modals :: modal-reject-docs" />
                     </th:block>
                     <th:block th:unless="${model.collaborationAgreementRequired}">
-                        <h2 class="heading-medium">Review document</h2>
+                        <h2 class="govuk-heading-m">Review document</h2>
                         <p>Please review the content of the document to ensure it meets Innovate UK's requirements.</p>
                         <button id="accept-document" data-js-modal="modal-accept-doc" class="button">Accept document</button>
                         <button id="reject-document" data-js-modal="modal-reject-doc" class="button button-warning">Reject document</button>

@@ -11,9 +11,9 @@
         <th:block th:insert="fragments/layout :: phase-banner" />
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessor dashboard',size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessor dashboard',size='govuk-heading-xl'" />
             <div class="message-alert extra-margin-bottom" th:unless="${model.profileStatus.complete}">
-                <h2 class="heading-small no-margin">Complete your assessor account</h2>
+                <h2 class="govuk-heading-s no-margin">Complete your assessor account</h2>
 
                 <p>
                     Please complete the following sections of your account. We cannot assign applications to you for
@@ -34,18 +34,18 @@
 
             <div class="invite-to-assess" th:unless="${#lists.isEmpty(model.pendingInvites)}">
                 <div class="progress-list">
-                    <h2 class="heading-medium">Invitations to assess (<span
+                    <h2 class="govuk-heading-m">Invitations to assess (<span
                         th:text="${#lists.size(model.pendingInvites)}"/>)</h2>
                     <ul>
                         <li th:each="pendingInvite : ${model.pendingInvites}" class="status-2-col">
                             <div class="task">
-                                <h3 class="heading-small"><a
+                                <h3 class="govuk-heading-s"><a
                                     th:href="@{/invite/competition/{hash}(hash=${pendingInvite.hash})}"
                                     th:text="${pendingInvite.displayLabel}">Technology inspired</a></h3>
                                     <p class="no-margin">You have been asked to assess this competition. Please respond.</p>
                             </div>
                             <div class="assessment-period">
-                                <h3 class="heading-small no-margin">Assessment period</h3>
+                                <h3 class="govuk-heading-s no-margin">Assessment period</h3>
                                 <dl class="standard-definition-list reduced-width">
                                     <dt>Begins</dt>
                                     <dd th:text="${#temporals.format(pendingInvite.assessmentPeriodDateFrom, 'd MMMM yyyy')}">
@@ -66,12 +66,12 @@
                 <th:block th:unless="${#lists.isEmpty(model.activeCompetitions)}">
 
                     <div class="progress-list">
-                        <h2 class="heading-medium no-margin-top">Competitions for assessment (<span
+                        <h2 class="govuk-heading-m no-margin-top">Competitions for assessment (<span
                             th:text="${#lists.size(model.activeCompetitions)}"/>)</h2>
                         <ul>
                             <li th:each="activeCompetition : ${model.activeCompetitions}">
                                 <div class="task">
-                                    <h3 class="heading-small"><a
+                                    <h3 class="govuk-heading-s"><a
                                         th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
                                         th:text="${activeCompetition.displayLabel}"/></h3>
                                     <div th:if="${!activeCompetition.hasPendingAssessments() && !activeCompetition.hasApplicationsToAssess()}">
@@ -120,19 +120,19 @@
             </div>
 
             <div class="upcoming-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">
-                <div class="progress-list"><h2 class="heading-medium">Upcoming competitions to assess (<span
+                <div class="progress-list"><h2 class="govuk-heading-m">Upcoming competitions to assess (<span
                     th:text="${#lists.size(model.upcomingCompetitions)}"/>)</h2>
                     <ul>
                         <li th:each="upcomingCompetition : ${model.upcomingCompetitions}" class="status-2-col">
                             <div class="task">
-                                <h3 class="heading-small">
+                                <h3 class="govuk-heading-s">
                                     <a th:href="@{/competition/{competitionId}/upcoming(competitionId=${upcomingCompetition.competitionId})}"
                                        th:text="${upcomingCompetition.displayLabel}"/>
                                 </h3>
                                 <p class="no-margin">Upcoming competition</p>
                             </div>
                             <div class="assessment-period">
-                                <h3 class="heading-small no-margin">Assessment period</h3>
+                                <h3 class="govuk-heading-s no-margin">Assessment period</h3>
                                 <dl class="standard-definition-list reduced-width">
                                     <dt>Begins</dt>
                                     <dd th:text="|${#temporals.day(upcomingCompetition.assessmentPeriodDateFrom)} ${#temporals.monthName(upcomingCompetition.assessmentPeriodDateFrom)}|">15 November 2017</dd>
@@ -147,12 +147,12 @@
 
             <div class="assessment-panel-invites">
                 <th:block th:unless="${#lists.isEmpty(model.assessmentPanelAccepted)}">
-                    <div class="progress-list"><h2 class="heading-medium no-margin-top">Attend panel (<span
+                    <div class="progress-list"><h2 class="govuk-heading-m no-margin-top">Attend panel (<span
                         th:text="${#lists.size(model.assessmentPanelAccepted)}"/>)</h2>
                         <ul>
                             <li th:each="assessmentPanelAccept : ${model.assessmentPanelAccepted}">
                                 <div class="task">
-                                    <h3 class="heading-small">
+                                    <h3 class="govuk-heading-s">
                                         <a th:href="@{/assessor/dashboard/competition/{competitionId}/panel(competitionId=${assessmentPanelAccept.competitionId})}"
                                            th:text="${assessmentPanelAccept.competitionName}"/>
                                     </h3>
@@ -184,12 +184,12 @@
             </div>
 
             <div class="assessment-panel-invites" th:unless="${#lists.isEmpty(model.assessmentPanelInvites)}">
-                <div class="progress-list"><h2 class="heading-medium">Invitations to attend panel (<span
+                <div class="progress-list"><h2 class="govuk-heading-m">Invitations to attend panel (<span
                     th:text="${#lists.size(model.assessmentPanelInvites)}"/>)</h2>
                     <ul>
                         <li th:each="assessmentReviewPanelInvite : ${model.assessmentPanelInvites}" class="status-2-col">
                             <div class="task">
-                                <h3 class="heading-small">
+                                <h3 class="govuk-heading-s">
                                     <a th:href="@{/invite/panel/{inviteHash}(inviteHash=${assessmentReviewPanelInvite.inviteHash})}"
                                        th:text="${assessmentReviewPanelInvite.competitionName}"/>
                                 </h3>
@@ -201,12 +201,12 @@
             </div>
 
             <div class="interview-panel-invites" th:unless="${#lists.isEmpty(model.interviewPanelInvites)}">
-                <div class="progress-list"><h2 class="heading-medium">Invitations to interview panel (<span
+                <div class="progress-list"><h2 class="govuk-heading-m">Invitations to interview panel (<span
                     th:text="${#lists.size(model.interviewPanelInvites)}"/>)</h2>
                     <ul>
                         <li th:each="interviewPanelInvite : ${model.interviewPanelInvites}" class="status-2-col">
                             <div class="task">
-                                <h3 class="heading-small">
+                                <h3 class="govuk-heading-s">
                                     <a th:href="@{/invite/interview/{inviteHash}(inviteHash=${interviewPanelInvite.inviteHash})}"
                                        th:text="${interviewPanelInvite.competitionName}"/>
                                 </h3>
@@ -220,13 +220,13 @@
             <div class="interview-panel-invites">
                 <th:block th:unless="${#lists.isEmpty(model.interviewPanelAccepted)}">
                     <div class="progress-list">
-                        <h2 class="heading-medium no-margin-top">Interviews you have agreed to attend (<span
+                        <h2 class="govuk-heading-m no-margin-top">Interviews you have agreed to attend (<span
                         th:text="${#lists.size(model.interviewPanelAccepted)}"/>)</h2>
                         <ul>
                             <li th:each="interviewPanelAccept : ${model.interviewPanelAccepted}">
                                 <div class="task">
-                                    <h3 class="heading-small">
-                                        <a class="heading-small"
+                                    <h3 class="govuk-heading-s">
+                                        <a class="govuk-heading-s"
                                            th:href="@{/assessor/dashboard/competition/{competitionId}/interview(competitionId=${interviewPanelAccept.competitionId})}"
                                            th:text="${interviewPanelAccept.competitionName}"/>
                                     </h3>
@@ -246,7 +246,7 @@
                 </th:block>
             </div>
 
-            <h2 class="heading-medium">Your assessor details</h2>
+            <h2 class="govuk-heading-m">Your assessor details</h2>
             <ul class="list list-bullet">
                 <li>
                     <a th:href="@{/profile/skills}">your skills</a>
@@ -262,7 +262,7 @@
                 </li>
             </ul>
 
-            <h2 class="heading-medium">Profile</h2>
+            <h2 class="govuk-heading-m">Profile</h2>
             <ul class="list list-bullet">
                 <li>
                     <a th:href="@{/profile/details}">your details</a>

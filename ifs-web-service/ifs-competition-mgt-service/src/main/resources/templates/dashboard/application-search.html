@@ -15,14 +15,14 @@
         <form role="search" method="get" id="searchform" th:action="@{'/dashboard/application/search'}">
             <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${searchQuery})"
                       th:with="setPageTitle='Search results',
-                        size='heading-large',
+                        size='govuk-heading-l',
                         searchType='applications'"
             />
         </form>
 
         <th:block th:if="${model.searchStringPresent}">
             <p>
-                <span th:text="${model.applicationCount}" class="heading-xlarge" />
+                <span th:text="${model.applicationCount}" class="govuk-heading-xl" />
                 <strong>applications</strong>
                 matching the number
                 <strong th:text="${model.searchString}" />

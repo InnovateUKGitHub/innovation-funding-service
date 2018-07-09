@@ -41,19 +41,19 @@
 
 		<section class="info-area">
 			<section class="boxed">
-				<h2 class="heading-small no-margin">Challenge area</h2>
+				<h2 class="govuk-heading-s no-margin">Challenge area</h2>
 		        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
 
-		        <h2 class="heading-small no-margin">Skills</h2>
+		        <h2 class="govuk-heading-s no-margin">Skills</h2>
 		        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit voluptatibus consequatur alias, sed iure quod atque cupiditate magni ratione veniam expedita corporis optio aperiam nostrum suscipit dignissimos quaerat, ea ullam!</p>
 
 		        <div class="grid-row">
 		            <div class="column-half">
-		            	<h2 class="heading-small no-margin">Area</h2>
+		            	<h2 class="govuk-heading-s no-margin">Area</h2>
 		                <p th:text="${(param.assessorType != null ? param.assessorType[0] : 'Industry')}">AREA</p>
 		            </div>
 		            <div class="column-half">
-		                <h2 class="heading-small no-margin">S.M.A.R.T</h2>
+		                <h2 class="govuk-heading-s no-margin">S.M.A.R.T</h2>
 		                <p>Yes</p>
 		            </div>
 		        </div>
@@ -62,17 +62,17 @@
 
 		        <div class="grid-row">
 		        	<div class="column-third">
-		        		<p>Assigned <br /><span class="heading-medium">5</span></p>
+		        		<p>Assigned <br /><span class="govuk-heading-m">5</span></p>
 
-		        		<p>Accepted <br /><span class="heading-medium">4</span></p>
+		        		<p>Accepted <br /><span class="govuk-heading-m">4</span></p>
 		        	</div>
 		        	<div class="column-third">
-		        		<p>Started <br /><span class="heading-medium">1</span></p>
+		        		<p>Started <br /><span class="govuk-heading-m">1</span></p>
 
-		        		<p>Completed <br /><span class="heading-medium">1</span></p>
+		        		<p>Completed <br /><span class="govuk-heading-m">1</span></p>
 		        	</div>
 		        	<div class="column-third">
-		        		<p>Rejected <br /><span class="heading-medium">1</span></p>
+		        		<p>Rejected <br /><span class="govuk-heading-m">1</span></p>
 		        	</div>
 		        </div>
 
@@ -80,7 +80,7 @@
 		</section>
 
 		<section class="data-area">
-		    <h2 class="heading-large" id="current-assessors">Currently assigned <span class="assigned-count">(3)</span></h2>
+		    <h2 class="govuk-heading-l" id="current-assessors">Currently assigned <span class="assigned-count">(3)</span></h2>
 
 		    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-application-assigned-table" />
 
@@ -92,7 +92,7 @@
 
 			<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
-			<h2 class="heading-large" id="current-assessors">Assign applications</h2>
+			<h2 class="govuk-heading-l" id="current-assessors">Assign applications</h2>
 
 			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'applications'}" />
 

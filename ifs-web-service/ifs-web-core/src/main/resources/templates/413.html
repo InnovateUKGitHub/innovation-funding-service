@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main tabindex="-1" id="content">
-        <h1 class="heading-large" th:text="${title}">Payload too large</h1>
+        <h1 class="govuk-heading-l" th:text="${title}">Payload too large</h1>
 
         <p th:if="${status}">
             <b>Response Status:</b> <span th:text="${status}">status-code</span>

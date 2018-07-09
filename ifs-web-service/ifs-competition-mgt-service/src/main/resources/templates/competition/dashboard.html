@@ -5,7 +5,7 @@
     <div class="grid-row">
         <div class="column-half">
             <th:block th:insert="fragments/layout :: page-title"
-                      th:with="pageTitle=${setPageTitle == null ? 'All competitions' : setPageTitle},size='heading-large'" />
+                      th:with="pageTitle=${setPageTitle == null ? 'All competitions' : setPageTitle},size='govuk-heading-l'" />
         </div>
         <div class="column-half alignright">
             <div class="form-search" th:if="${showSearch == null || showSearch == true}">
@@ -48,7 +48,7 @@
 
 <div th:fragment="dashboard-row">
     <div class="column-third">
-        <h3 class="heading-small">
+        <h3 class="govuk-heading-s">
             <a th:href="@{'/non-ifs-competition/setup/'+${competition.id}}"
                th:if="${nonIfs}">
                 <th:block th:insert="competition/dashboard :: competition-name" />

@@ -15,25 +15,25 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Invite assessors to panel',subTitle=${model.competitionName},size='heading-xlarge'"/>
-        <h2 class="heading-medium">Key statistics</h2>
+                  th:with="pageTitle='Invite assessors to panel',subTitle=${model.competitionName},size='govuk-heading-xl'"/>
+        <h2 class="govuk-heading-m">Key statistics</h2>
 
         <div class="grid-row">
             <div class="column-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessorsInvited}">60</span><br/>
+                    <span class="govuk-heading-l" th:text="${model.assessorsInvited}">60</span><br/>
                     <small>Invited</small>
                 </div>
             </div>
             <div class="column-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessorsAccepted}">23</span><br/>
+                    <span class="govuk-heading-l" th:text="${model.assessorsAccepted}">23</span><br/>
                     <small>Accepted</small>
                 </div>
             </div>
             <div class="column-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessorsDeclined}">3</span><br/>
+                    <span class="govuk-heading-l" th:text="${model.assessorsDeclined}">3</span><br/>
                     <small>Declined</small>
                 </div>
             </div>
@@ -66,7 +66,7 @@
 
         <div class="grid-row">
             <div class="column-three-quarters">
-                <h2 class="heading-small no-margin-top">Find registered assessors. Add them to the invite list using the checkboxes.</h2>
+                <h2 class="govuk-heading-s no-margin-top">Find registered assessors. Add them to the invite list using the checkboxes.</h2>
                 <br>
             </div>
         </div>
@@ -78,8 +78,8 @@
 
         <div class="grid-row sorting">
             <div class="column-one">
-                <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
-                <span class="heading-small">assessors</span>
+                <span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">20</span>
+                <span class="govuk-heading-s">assessors</span>
             </div>
         </div>
 

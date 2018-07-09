@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="your_finance (model, internalView)" th:with="question=${model.applicantQuestion.question}, userOrganisation=${model.currentApplicant.organisation}, readonly=${model.allReadOnly or model.complete}">
-    <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}"/>
+    <h2 class="govuk-heading-m no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}"/>
     <p ifs:utext="${question.description}"/>
     <fieldset>
-        <h2 class="heading-medium">Innovate UK funding</h2>
+        <h2 class="govuk-heading-m">Innovate UK funding</h2>
         <legend class="visuallyhidden">Innovate UK (TSB) contribution</legend>
         <p>Innovate UK is the new name for the Technology Strategy Board (TSB).</p>
 
@@ -13,7 +13,7 @@
         <p>All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this
             application will not be submitted into this competition.</p>
 
-        <h3 class="heading-small">Your project costs</h3>
+        <h3 class="govuk-heading-s">Your project costs</h3>
 
         <p>Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate
             UK</p>
@@ -52,7 +52,7 @@
 
 <th:block th:fragment="finance_fields (model, isApplicant)">
     <fieldset class="academic">
-        <h2 class="heading-medium" th:classappend="${isApplicant == 'true' ? ' no-margin' : ''}">Financial resources</h2>
+        <h2 class="govuk-heading-m" th:classappend="${isApplicant == 'true' ? ' no-margin' : ''}">Financial resources</h2>
         <legend class="visuallyhidden">Financial resources</legend>
         <p th:text="'The following costs are entered by the organisation from the summary of resources section on ' + (${isApplicant == 'true'} ? 'your ' : 'the ') + 'Je-S form'">The following costs are entered by the organisation from the summary of resources section on the Je-S form</p>
 
@@ -333,8 +333,8 @@
          removeName='remove_finance_document',
          saveName='upload_finance_document'">
     <div class="upload-section">
-        <h3 th:if="${viewmode=='edit'}" class="heading-small no-margin" th:text="${formInput.getDescription()}">Upload a pdf copy of the Je-S output form once you have a status of 'With Council'.</h3>
-        <h3 th:if="${viewmode=='readonly'}" class="heading-small no-margin" th:text="'Download Je-S form'">Download Je-S form</h3>
+        <h3 th:if="${viewmode=='edit'}" class="govuk-heading-s no-margin" th:text="${formInput.getDescription()}">Upload a pdf copy of the Je-S output form once you have a status of 'With Council'.</h3>
+        <h3 th:if="${viewmode=='readonly'}" class="govuk-heading-s no-margin" th:text="'Download Je-S form'">Download Je-S form</h3>
         <p th:if="${viewmode=='edit'}" ifs:utext="${question.description}"></p>
         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" th:with="autoSaveOff=true" />
     </div>

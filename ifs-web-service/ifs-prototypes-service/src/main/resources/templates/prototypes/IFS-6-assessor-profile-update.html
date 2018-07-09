@@ -20,7 +20,7 @@
       <a href="/prototypes/IFS-6-manage-assessors-active" class="link-back">Manage assessors</a>
     </div>
 
-    <h1 class="heading-xlarge" th:text="${param.action != null and param.action[0] == 'new'} ? 'Add a new assessor' : 'Edit assessor profile'">EDIT OR NEW ASSESOR PROFILE</h1>
+    <h1 class="govuk-heading-xl" th:text="${param.action != null and param.action[0] == 'new'} ? 'Add a new assessor' : 'Edit assessor profile'">EDIT OR NEW ASSESOR PROFILE</h1>
 
     <form action="#">
         <div class="form-group">
@@ -33,7 +33,7 @@
         </div>
 
         <th:block th:unless="${param.action != null and param.action[0] == 'new'}">
-            <h3 class="heading-small">Email address</h3>
+            <h3 class="govuk-heading-s">Email address</h3>
             <p><a href="#">adren.pimenta@innovateuk.test</a></p>
         </th:block>
 

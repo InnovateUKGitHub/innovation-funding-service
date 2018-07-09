@@ -15,20 +15,20 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="grid-row">
           <div class="column-two-thirds">
-              <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank details',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
+              <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank details',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
           </div>
           <div class="column-third alignright extra-margin">
-              <h2 class="bold-small blue-block">Bank details</h2>
+              <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Bank details</h2>
           </div>
         </div>
         <hr/>
         <p>This overview shows whether each partner has submitted their bank details and if an additional review is required. When all bank details have been approved, this section will be marked as complete.</p>
-        <h2 class="heading-medium">Partner progress</h2>
+        <h2 class="govuk-heading-m">Partner progress</h2>
 
         <ul class="task-list">
             <li th:each="partner : ${model.bankDetailsStatusResources}" th:class="${partner.bankDetailsStatus.name() == 'NOT_REQUIRED' ? 'read-only' : ''}">
                 <div class="task">
-                    <h3 class="heading-small">
+                    <h3 class="govuk-heading-s">
                         <th:block th:if="${isCompAdminUser or partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
                             <span th:text="${partner.organisationName}"/>
                         </th:block>

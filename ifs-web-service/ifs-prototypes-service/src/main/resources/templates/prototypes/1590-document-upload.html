@@ -24,13 +24,13 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 		<div class="success-alert extra-margin-bottom">
-			<h3 class="heading-small no-margin-top">These documents have been approved by Innovate UK</h3>
+			<h3 class="govuk-heading-s no-margin-top">These documents have been approved by Innovate UK</h3>
 		</div>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'submittedApproved'}">
 		<div class="success-alert extra-margin-bottom">
-			<h3 class="heading-small no-margin-top">The other documents have been reviewed and approved by Innovate UK</h3>
+			<h3 class="govuk-heading-s no-margin-top">The other documents have been reviewed and approved by Innovate UK</h3>
 		</div>
 	</th:block>
 
@@ -42,7 +42,7 @@
 
 		<div th:if="${param.status != null and param.status[0] == 'reject'}" th:remove="tag">
 			<div class="warning-alert extra-margin-bottom">
-				<h3 class="heading-small no-margin-top">We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.</h3>
+				<h3 class="govuk-heading-s no-margin-top">We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.</h3>
 			</div>
 		</div>
 
@@ -67,7 +67,7 @@
 
 			<div class="upload-section">
 
-				<h2 class="heading-medium no-margin">Collaboration agreement</h2>
+				<h2 class="govuk-heading-m no-margin">Collaboration agreement</h2>
 
 				<p class="form-hint">The collaboration agreement covers how the consortium will work together on the project. It must be signed by all partners.</p>
 
@@ -122,7 +122,7 @@
 
 			<div class="upload-section">
 
-				<h2 class="heading-medium no-margin">Exploitation plan</h2>
+				<h2 class="govuk-heading-m no-margin">Exploitation plan</h2>
 				<p class="form-hint">The plan aims to confirm the benefits realisation that the project hopes to achieve. You should describe the partner activities that will exploit the results of the project.</p>
 
 				<details>
@@ -205,7 +205,7 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Submit documents</h2>
+					<h2 class="govuk-heading-m no-margin">Submit documents</h2>
 
 					<p>Are you sure that you want to send these documents to Innovate UK for review? If we need further information we will contact the Project Manager.</p>
 

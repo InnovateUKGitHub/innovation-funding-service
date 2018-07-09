@@ -14,11 +14,11 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application details',subTitle=${model.general.competition.name},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application details',subTitle=${model.general.competition.name},size='govuk-heading-xl'" />
 
         <form th:if="${model.editable}"
               th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
@@ -29,7 +29,7 @@
 
             <fieldset>
                 <legend>
-                    <h2 class="heading-medium">Project duration in months</h2>
+                    <h2 class="govuk-heading-m">Project duration in months</h2>
                 </legend>
                 <div class="form-group" th:classappend="${#fields.hasErrors('minProjectDuration')} ? 'form-group-error'">
                     <label class="form-label" for="minProjectDuration">
@@ -74,7 +74,7 @@
             <div class="form-group" th:classappend="${#fields.hasErrors('useResubmissionQuestion')} ? 'form-group-error'">
                 <fieldset class="inline">
                     <legend id="useResubmissionQuestion">
-                        <h2 class="heading-medium">Include the resubmission question?</h2>
+                        <h2 class="govuk-heading-m">Include the resubmission question?</h2>
                         <th:block th:if="${#fields.hasErrors('useResubmissionQuestion')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('useResubmissionQuestion')}" th:text="${err}"></span>
                         </th:block>
@@ -107,7 +107,7 @@
 
         <th:block th:unless="${model.editable}">
 
-            <h2 class="heading-medium">Project duration in months</h2>
+            <h2 class="govuk-heading-m">Project duration in months</h2>
             <dl class="application-question-list grid-row">
                 <dt class="column-third">Minimum</dt>
                 <dd class="column-two-thirds"

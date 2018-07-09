@@ -14,7 +14,7 @@
     <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Interviews you have agreed to attend',subTitle=|${model.competitionTitle}|,size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Interviews you have agreed to attend',subTitle=|${model.competitionTitle}|,size='govuk-heading-xl'" />
 
         <div class="grid-row">
             <div class="column-one-half competition details">
@@ -36,7 +36,7 @@
             <p class="extra-margin">Please click on the links below to review the applications and all feedback before the interview.</p>
 
                 <div class="progress-list">
-                    <h2 class="heading-medium no-margin">Applications for interview panel (<span
+                    <h2 class="govuk-heading-m no-margin">Applications for interview panel (<span
                         th:text="${#lists.size(model.applications)}"/>)</h2>
 
                     <ul>
@@ -44,7 +44,7 @@
 
                             <th:block>
                                 <div class="task">
-                                    <a class="heading-small"
+                                    <a class="govuk-heading-s"
                                        th:href="@{~/application/{applicationId}/feedback(applicationId=${app.applicationId})}"
                                        th:text="${app.displayLabel}">Application name</a>
                                     <p th:text="${app.leadOrganisation}" class="no-margin"/>

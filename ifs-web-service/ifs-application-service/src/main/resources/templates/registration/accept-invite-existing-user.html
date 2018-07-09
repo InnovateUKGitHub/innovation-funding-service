@@ -11,10 +11,10 @@
             <th:block th:insert="fragments/layout :: phase-banner" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to collaborate',size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to collaborate',size='govuk-heading-xl'" />
                 <p>You have been invited to join an application in the competition '<a th:href="@{/competition/{competitionId}/overview(competitionId=${model.competitionId})}" th:text="${model.competitionName}"></a>'.</p>
                 <div>
-                    <h1 class="heading-large">Application details</h1>
+                    <h1 class="govuk-heading-l">Application details</h1>
                     <dl class="extra-margin-bottom">
                         <dt>Lead organisation:</dt>
                         <dd th:text="${model.leadOrganisationName}"></dd>
@@ -26,7 +26,7 @@
 
                     <p>Read the guidance on <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" target="_blank">how collaboration in the Innovation Funding Service works</a> (this link will open in a new window).</p>
 
-                    <h2 class="heading-medium">We have found an account with the invited email address</h2>
+                    <h2 class="govuk-heading-m">We have found an account with the invited email address</h2>
                     <p>Please sign in or continue to accept the invitation.</p>
                     <a th:href="@{/accept-invite-authenticated/confirm-invited-organisation}" class="button">Continue or sign in</a>
                     <p>If you do not wish to accept this invitation, please let the lead applicant know.</p>

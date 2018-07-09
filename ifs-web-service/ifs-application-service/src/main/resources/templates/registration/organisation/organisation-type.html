@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose your organisation type',subTitle='Create your account',size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose your organisation type',subTitle='Create your account',size='govuk-heading-xl'" />
         <p>You are participating in this competition as part of the organisation
             <strong>
                 <span th:if="${model.inviteOrganisationNameConfirmed}" th:text="${model.inviteOrganisationNameConfirmed}"></span>
@@ -20,7 +20,7 @@
             </strong>
         </p>
 
-        <h2 class="heading-medium">Choose your organisation type</h2>
+        <h2 class="govuk-heading-m">Choose your organisation type</h2>
 
         <form id="organisation-type-form" th:object="${form}" th:action="@{/organisation/create/new-account-organisation-type/}" method="POST">
             <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationType}')} ? 'form-group-error'">

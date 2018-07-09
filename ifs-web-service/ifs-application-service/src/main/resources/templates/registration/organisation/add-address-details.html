@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to ' + ${model.organisationTypeName} + ' organisation',linkClass='link-back',linkUrl='/organisation/create/find-organisation'" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Organisation address',subTitle='Create your account',size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Organisation address',subTitle='Create your account',size='govuk-heading-xl'" />
 
         <div class="message-alert">
             <p>
@@ -32,7 +32,7 @@
             <th:block th:with="formURL=${#strings.isEmpty(postcode) && #strings.isEmpty(selectedPostcode)} ? |/organisation/create/selected-organisation/${organisationId}| : |/organisation/create/selected-organisation/${organisationId}/${postcode}/${selectedPostcode}|">
                 <form th:action="@{${formURL}}" novalidate="novalidate" method="POST">
                     <input type="hidden" th:field="*{searchOrganisationId}" />
-                    <h2 class="heading-medium no-margin-bottom">Operating address</h2>
+                    <h2 class="govuk-heading-m no-margin-bottom">Operating address</h2>
                     <p>This is the address that your organisation works from</p>
                     <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
 

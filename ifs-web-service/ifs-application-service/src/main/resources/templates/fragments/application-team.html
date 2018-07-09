@@ -13,7 +13,7 @@
         <div class="extra-margin"
              th:each="organisation : ${model.organisations}">
 
-            <div class="heading-small" role="heading" aria-level="4">
+            <div class="govuk-heading-s" role="heading" aria-level="4">
                 <th:block th:text="${organisation.name}">Organisation name</th:block>
                 <th:block th:if="${organisation.lead}"> (Lead)</th:block>
                 <th:block th:unless="${organisation.lead}"> (Collaborator)</th:block>

@@ -15,12 +15,12 @@
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
+                <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
             <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionName)} ? |${model.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionId} : ${model.competitionName}|">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision notification',subTitle=${competitionTitle},size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision notification',subTitle=${competitionTitle},size='govuk-heading-xl'" />
             </th:block>
 
             <p>This email can be edited. It will be received by all applicants associated with each of the applications you selected.</p>
@@ -30,32 +30,32 @@
                   novalidate="novalidate"
                   method="POST">
 
-                <h2 class="heading-medium">Key statistics</h2>
+                <h2 class="govuk-heading-m">Key statistics</h2>
 
                 <ul class="grid-row">
                     <li th:if="${model.successfulRecipientsCount != null}" class="column-third">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="heading-large" th:text="${model.successfulRecipientsCount}">2</span><br/>
+                            <span class="govuk-heading-l" th:text="${model.successfulRecipientsCount}">2</span><br/>
                             <small>successful</small>
                         </div>
                     </li>
 
                     <li th:if="${model.unsuccessfulRecipientsCount != null}" class="column-third">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="heading-large" th:text="${model.unsuccessfulRecipientsCount}">3</span><br/>
+                            <span class="govuk-heading-l" th:text="${model.unsuccessfulRecipientsCount}">3</span><br/>
                             <small>unsuccessful</small>
                         </div>
                     </li>
 
                     <li th:if="${model.onHoldRecipientsCount != null}" class="column-third">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="heading-large" th:text="${model.onHoldRecipientsCount}">4</span><br/>
+                            <span class="govuk-heading-l" th:text="${model.onHoldRecipientsCount}">4</span><br/>
                             <small>on hold</small>
                         </div>
                     </li>
                 </ul>
 
-                <h2 class="heading-small">Recipients</h2>
+                <h2 class="govuk-heading-s">Recipients</h2>
                 <details>
                     <summary><span class="summary">Review list of recipients</span></summary>
                     <div class="panel table-overflow">

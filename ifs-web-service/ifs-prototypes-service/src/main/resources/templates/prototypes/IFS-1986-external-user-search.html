@@ -11,7 +11,7 @@
 <main tabindex="-1" id="content">
 
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkClass='link-back',linkUrl=@{/}"  />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Search external users',size='heading-large'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Search external users',size='govuk-heading-l'" />
 
 
     <form method="GET">
@@ -50,8 +50,8 @@
           <li><a th:href="@{/prototypes/IFS-1986-external-user-search-unregistered.html?searchTerm={searchTerm}&filterCategory={filterCategory}(searchTerm=${param.searchTerm},filterCategory=${param.filterCategory})}">Unregistered</a></li>
       </ul>
       <p id="result-count">
-          <span class="heading-xlarge no-margin">38</span>
-          <span class="heading-small">registered users</span>
+          <span class="govuk-heading-xl no-margin">38</span>
+          <span class="govuk-heading-s">registered users</span>
       </p>
       <div class="table-overflow">
           <table>
@@ -718,7 +718,7 @@ jQuery(document).ready(function(){
     jQuery("tbody").empty();
     if(filtered.length){
       hasResults(true);
-      jQuery('.heading-xlarge.no-margin').text(filtered.length)
+      jQuery('.govuk-heading-xl.no-margin').text(filtered.length)
       jQuery.each(filtered, function(index,value){
          var html = `
          <tr>

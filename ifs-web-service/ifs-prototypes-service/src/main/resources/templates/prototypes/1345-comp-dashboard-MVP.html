@@ -64,7 +64,7 @@
 
 	<div class="grid-row">
 		<div class="column-half">
-			<h1 class="heading-large">Competitions</h1>
+			<h1 class="govuk-heading-l">Competitions</h1>
 		</div>
 
 		<div class="column-half">
@@ -78,7 +78,7 @@
 
 		<form action="/prototypes/1345-comp-dashboard-MVP" method="GET">
 
-			<h2 class="heading-medium no-margin">Filter competitions</h2>
+			<h2 class="govuk-heading-m no-margin">Filter competitions</h2>
 
 			<div class="grid-row">
 				<div class="column-third">
@@ -161,21 +161,21 @@
 
 			<div th:if="${param.filterStatus != null and param.filterCompType[0] == '---' and param.filterInnovationArea[0] == '---'}" th:remove="tag">
 
-				<p><span class="heading-xlarge">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p>
+				<p><span class="govuk-heading-xl">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p>
 
 			</div>
 
 			<div th:if="${param.filterStatus != null and param.filterCompType[0] != '---' and param.filterInnovationArea[0] == '---'}" th:remove="tag">
-				<p><span class="heading-xlarge">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> with competition type <strong th:text="${param.filterCompType[0]}">COMP TYPE</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p>
+				<p><span class="govuk-heading-xl">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> with competition type <strong th:text="${param.filterCompType[0]}">COMP TYPE</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p>
 
 			</div>
 
 			<div th:if="${param.filterStatus != null and param.filterCompType[0] != '---' and param.filterInnovationArea[0] != '---'}" th:remove="tag">
-				<p><span class="heading-xlarge">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> with competition type <strong th:text="${param.filterCompType[0]}">COMP TYPE</strong> with innovation area <strong th:text="${param.filterInnovationArea[0]}">INNOVATION AREA</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p>
+				<p><span class="govuk-heading-xl">2</span> <strong>competitions</strong> with status <strong th:text="${param.filterStatus[0]}">STATUS</strong> with competition type <strong th:text="${param.filterCompType[0]}">COMP TYPE</strong> with innovation area <strong th:text="${param.filterInnovationArea[0]}">INNOVATION AREA</strong> - <a href="/prototypes/1345-comp-dashboard">Clear filters</a></p>
 			</div>
 
 			<div th:if="${param.filterStatus == null}" th:remove="tag">
-				<p><span class="heading-xlarge no-margin">14</span> <strong>competitions</strong></p>
+				<p><span class="govuk-heading-xl no-margin">14</span> <strong>competitions</strong></p>
 			</div>
 
 		</div>
@@ -196,7 +196,7 @@
 	<ul class="comp-list">
 		<li class="comp-status-draft">
 			<div class="column-two-thirds">
-				<h3 class="heading-small"><a href="/prototypes/2469-comp-setup?section=essential&#38;compStatus=draft">Solving problems with data</a></h3>
+				<h3 class="govuk-heading-s"><a href="/prototypes/2469-comp-setup?section=essential&#38;compStatus=draft">Solving problems with data</a></h3>
 				<p>Ref number: 14060000</p>
 			</div>
       <div class="column-third">
@@ -207,7 +207,7 @@
 		</li>
 		<li class="comp-status-ready">
 			<div class="column-two-thirds">
-				<h3 class="heading-small"><a href="/prototypes/2469-comp-setup?section=essential&#38;compStatus=ready">Connected digital additive manufacturing</a></h3>
+				<h3 class="govuk-heading-s"><a href="/prototypes/2469-comp-setup?section=essential&#38;compStatus=ready">Connected digital additive manufacturing</a></h3>
 				<p>Ref number: 14060001</p>
 			</div>
       <div class="column-third">
@@ -218,7 +218,7 @@
 		</li>
 		<li class="comp-status-closed">
 			<div class="column-two-thirds">
-				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=assessment">Portable renewable energy generation</a></h3>
+				<h3 class="govuk-heading-s"><a href="/prototypes/1968-dashboard?closed&#38;status=assessment">Portable renewable energy generation</a></h3>
 				<p>Ref number: 14060004</p>
 			</div>
       <div class="column-third">
@@ -229,7 +229,7 @@
 		</li>
 		<li class="comp-status-assess">
 			<div class="column-two-thirds">
-				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=assessment">Managing energy on marine vessels</a></h3>
+				<h3 class="govuk-heading-s"><a href="/prototypes/1968-dashboard?closed&#38;status=assessment">Managing energy on marine vessels</a></h3>
 				<p>Ref number: 14060002</p>
 			</div>
       <div class="column-third">
@@ -240,7 +240,7 @@
 		</li>
 		<li class="comp-status-panel">
 			<div class="column-two-thirds">
-				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=fundingPanel">Energy catalyst</a></h3>
+				<h3 class="govuk-heading-s"><a href="/prototypes/1968-dashboard?closed&#38;status=fundingPanel">Energy catalyst</a></h3>
 				<p>Ref number: 14060003</p>
 			</div>
       <div class="column-third">
@@ -251,7 +251,7 @@
 		</li>
 		<li class="comp-status-open">
 			<div class="column-two-thirds">
-				<h3 class="heading-small">The management and use of Biofuels</h3>
+				<h3 class="govuk-heading-s">The management and use of Biofuels</h3>
 				<p>Ref number: 14060001</p>
 			</div>
       <div class="column-third">
@@ -262,7 +262,7 @@
 		</li>
 		<li class="comp-status-open">
 			<div class="column-two-thirds">
-				<h3 class="heading-small"><a href="/prototypes/1968-dashboard">Technology inspired</a></h3>
+				<h3 class="govuk-heading-s"><a href="/prototypes/1968-dashboard">Technology inspired</a></h3>
 				<p>Ref number: 14060005</p>
 			</div>
       <div class="column-third">
@@ -273,7 +273,7 @@
 		</li>
 		<li class="comp-status-feedback">
 			<div class="column-two-thirds">
-				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=assessorFeedback">Finding value in complex biological data</a></h3>
+				<h3 class="govuk-heading-s"><a href="/prototypes/1968-dashboard?closed&#38;status=assessorFeedback">Finding value in complex biological data</a></h3>
 				<p>Ref number: 14060006</p>
 			</div>
       <div class="column-third">
@@ -284,7 +284,7 @@
 		</li>
 		<li class="comp-status-assess">
 			<div class="column-two-thirds">
-				<h3 class="heading-small"><a href="/prototypes/1968-dashboard?closed&#38;status=assessment">Childcare provision for parents</a></h3>
+				<h3 class="govuk-heading-s"><a href="/prototypes/1968-dashboard?closed&#38;status=assessment">Childcare provision for parents</a></h3>
 				<p>Ref number: 14060007</p>
 			</div>
       <div class="column-third">
@@ -295,7 +295,7 @@
 		</li>
 		<li class="comp-status-assess">
 			<div class="column-two-thirds">
-				<h3 class="heading-small">Driving UK Capability and Economic Impact through Low Carbon Propulsion Technologies</h3>
+				<h3 class="govuk-heading-s">Driving UK Capability and Economic Impact through Low Carbon Propulsion Technologies</h3>
 				<p>Ref number: 14060008</p>
 			</div>
       <div class="column-third">
@@ -306,7 +306,7 @@
 		</li>
 		<li class="comp-status-assess">
 			<div class="column-two-thirds">
-				<h3 class="heading-small">Game-changing technologies for aerospace</h3>
+				<h3 class="govuk-heading-s">Game-changing technologies for aerospace</h3>
 				<p>Ref number: 14060009</p>
 			</div>
       <div class="column-third">
@@ -317,7 +317,7 @@
 		</li>
 		<li class="comp-status-assess">
 			<div class="column-two-thirds">
-				<h3 class="heading-small">Solving problems with data</h3>
+				<h3 class="govuk-heading-s">Solving problems with data</h3>
 				<p>Ref number: 14060010</p>
 			</div>
       <div class="column-third">

@@ -138,7 +138,7 @@ the user fills in the CS Application section with custom questions
 
 the user marks the Finance section as complete if it's present
     [Arguments]  ${growthTable}
-    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=.heading-small a:contains("Finances")
+    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=.govuk-heading-s a:contains("Finances")
     Run Keyword If  '${status}' == 'PASS'  the user fills in the Finances questions  ${growthTable}
 
 the user opts no finances for EOI comp

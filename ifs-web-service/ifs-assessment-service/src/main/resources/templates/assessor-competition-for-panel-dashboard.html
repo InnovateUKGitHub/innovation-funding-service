@@ -16,7 +16,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem submitting some of your assessments.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There was a problem submitting some of your assessments.</h2>
             <ul class="error-summary-list">
                 <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
                     <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
@@ -28,7 +28,7 @@
         </div>
 
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},size='govuk-heading-xl'" />
 
         <div class="grid-row">
             <div class="column-one-half competition details">
@@ -50,7 +50,7 @@
         <div class="my-applications">
             <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                 <div class="progress-list">
-                    <h2 class="heading-medium no-margin">Applications for panel (<span
+                    <h2 class="govuk-heading-m no-margin">Applications for panel (<span
                         th:text="${#lists.size(model.applications)}"/>)</h2>
 
                     <ul>
@@ -60,8 +60,8 @@
 
                             <th:block>
                                 <div class="task">
-                                    <a th:if="${app.accepted}" class="heading-small" th:href="@{/review/{reviewId}/application/{appId}(reviewId=${app.reviewId}, appId=${app.applicationId})}" th:text="${app.displayLabel}">Application name</a>
-                                    <h3 th:unless="${app.accepted}" class="heading-small" th:text="${app.displayLabel}">Application name</h3>
+                                    <a th:if="${app.accepted}" class="govuk-heading-s" th:href="@{/review/{reviewId}/application/{appId}(reviewId=${app.reviewId}, appId=${app.applicationId})}" th:text="${app.displayLabel}">Application name</a>
+                                    <h3 th:unless="${app.accepted}" class="govuk-heading-s" th:text="${app.displayLabel}">Application name</h3>
                                     <p th:text="${app.leadOrganisation}" class="no-margin"/>
                                 </div>
 

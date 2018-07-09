@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application progress',linkClass='link-back',linkUrl=@{/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${model.applicationId},sortField=${model.sortField})}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm remove',size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm remove',size='govuk-heading-xl'" />
 
                 <form th:action="@{/assessment/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(
                       competitionId=${model.competitionId},

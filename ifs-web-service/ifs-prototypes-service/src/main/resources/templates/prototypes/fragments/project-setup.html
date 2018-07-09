@@ -54,7 +54,7 @@
     </fieldset>
 
     <div id="selected-address" class="panel extra-margin" style="display: none;">
-        <h3 class="heading-medium no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm project location')}">LOCATION TITLE</h3>
+        <h3 class="govuk-heading-m no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm project location')}">LOCATION TITLE</h3>
         <p><span class="street">Street</span> <br />
             <span class="street2"></span> <br />
             <span class="street3"></span> <br />
@@ -145,7 +145,7 @@
 
     <fieldset th:unless="${user == null}">
 
-        <h2 class="heading-medium no-margin-bottom">Company details</h2>
+        <h2 class="govuk-heading-m no-margin-bottom">Company details</h2>
 
         <legend class="visuallyhidden">Company details</legend>
 
@@ -169,7 +169,7 @@
     </fieldset>
 
     <fieldset>
-        <h2 class="heading-medium no-margin-bottom">Account details</h2>
+        <h2 class="govuk-heading-m no-margin-bottom">Account details</h2>
 
         <legend class="visuallyhidden">Account details</legend>
 
@@ -193,7 +193,7 @@
             <input class="form-control width-medium" id="bank-sort-code" name="bank-sort-code" value="" type="text" />
         </div>
 
-        <h2 class="heading-medium no-margin-bottom">Billing address</h2>
+        <h2 class="govuk-heading-m no-margin-bottom">Billing address</h2>
 
         <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
 
@@ -452,7 +452,7 @@
 
                 <th:block th:if="${queryType == 'query'}">
 
-                    <legend class="heading-medium">Post new query</legend>
+                    <legend class="govuk-heading-m">Post new query</legend>
 
                     <div class="form-group">
                         <label for="queryTitle" class="form-label-bold">Title</label>
@@ -483,7 +483,7 @@
 
                 <th:block th:if="${queryType == 'note'}">
 
-                    <legend class="heading-medium">New note</legend>
+                    <legend class="govuk-heading-m">New note</legend>
 
                     <div class="form-group">
                         <label for="noteTitle" class="form-label-bold">Title</label>
@@ -508,7 +508,7 @@
 
             <fieldset>
                 <div class="upload-section unstyled-view">
-                    <legend class="heading-small no-margin">Upload supporting documentation</legend>
+                    <legend class="govuk-heading-s no-margin">Upload supporting documentation</legend>
 
                     <input type="file" name="file" id="file" class="inputfile" />
                     <label for="file" class="button-secondary extra-margin">+ Upload</label>
@@ -537,11 +537,11 @@
 
             <hr />
 
-            <h2 class="heading-medium no-margin-bottom" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('queryTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">QUERY TITLE</h2>
+            <h2 class="govuk-heading-m no-margin-bottom" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('queryTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">QUERY TITLE</h2>
 
-            <h3 class="heading-small no-margin" th:text="${(param.section != null ? param.section[0] : 'NOT SET')}">SECTION TITLE</h3>
+            <h3 class="govuk-heading-s no-margin" th:text="${(param.section != null ? param.section[0] : 'NOT SET')}">SECTION TITLE</h3>
 
-            <p class="heading-small no-margin-top">Innovate UK - Finance team <small>26/06/2016 17:55</small></p>
+            <p class="govuk-heading-s no-margin-top">Innovate UK - Finance team <small>26/06/2016 17:55</small></p>
 
             <div th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('query') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">QUERY
             </div>
@@ -558,10 +558,10 @@
 
         <!-- <th:block th:if="${queryType == 'note'}">
             <div class="panel">
-                <p class="heading-small no-margin-top">Francis Delt - Finance team <small>27/06/2015 09:40</small></p>
+                <p class="govuk-heading-s no-margin-top">Francis Delt - Finance team <small>27/06/2015 09:40</small></p>
                 <p>I think I have found the document (attached) showing that they have done this before.</p>
 
-                <h4 class="heading-small">Supporting document</h4>
+                <h4 class="govuk-heading-s">Supporting document</h4>
                 <p><a href="#">Report1.doc</a></p>
             </div>
         </th:block> -->
@@ -572,11 +572,11 @@
 
   <!--  <th:block th:if="${param.action != null and param.action[0] == 'saveNote' or param.action != null and param.action[0] == 'newResponse'}" th:unless="${user == 'partner'}">
 
-        <h2 class="heading-medium no-margin-bottom" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteTitle == null}"></h2>
+        <h2 class="govuk-heading-m no-margin-bottom" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteTitle == null}"></h2>
 
-        <h2 class="heading-medium no-margin-bottom" th:unless="${param.noteTitle != null}">Administrative support costs</h2>
+        <h2 class="govuk-heading-m no-margin-bottom" th:unless="${param.noteTitle != null}">Administrative support costs</h2>
 
-        <p class="heading-small">Paul Deldt ABC - Finance team <small>27/06/2015 09:40</small></p>
+        <p class="govuk-heading-s">Paul Deldt ABC - Finance team <small>27/06/2015 09:40</small></p>
 
         <p th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteDetails') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteDetails == null}"></p>
 
@@ -597,9 +597,9 @@
     <th:block th:if="${param.action != null and param.action[0] == 'saveNote' or param.action != null and param.action[0] == 'saveNote' or param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}" th:unless="${queryType == 'query'}">
         <div class="extra-margin">
 
-            <h2 class="heading-medium no-margin-top" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteTitle == null}"></h2>
+            <h2 class="govuk-heading-m no-margin-top" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteTitle == null}"></h2>
 
-            <p class="heading-small no-margin">Paul Deldt - Finance team <small>27/06/2015 09:40</small></p>
+            <p class="govuk-heading-s no-margin">Paul Deldt - Finance team <small>27/06/2015 09:40</small></p>
 
             <p th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('noteDetails') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}" th:unless="${param.noteDetails == null}"></p>
 
@@ -621,7 +621,7 @@
 
             <div th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('response') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">
         </div>
-            <h4 class="heading-small">Supporting document</h4>
+            <h4 class="govuk-heading-s">Supporting document</h4>
             <p><a href="#">Report1.doc</a></p>
         </div>
 
@@ -643,7 +643,7 @@
 
             <fieldset>
 
-                <legend class="heading-medium" th:text="${(queryType == 'query' ? 'Respond to query' : 'Comment')}">RESPOND TITLE</legend>
+                <legend class="govuk-heading-m" th:text="${(queryType == 'query' ? 'Respond to query' : 'Comment')}">RESPOND TITLE</legend>
 
                 <div class="form-group">
                     <label for="response" class="form-label-bold" th:text="${(queryType == 'query' ? 'Response' : 'Add your comment')}">RESPONSE LABEL</label>
@@ -660,7 +660,7 @@
 
             <fieldset>
                 <div class="upload-section unstyled-view">
-                    <legend class="heading-small no-margin">Upload supporting documentation</legend>
+                    <legend class="govuk-heading-s no-margin">Upload supporting documentation</legend>
 
                     <input type="file" name="file" id="file" class="inputfile" />
                     <label for="file" class="button-secondary extra-margin">+ Upload</label>

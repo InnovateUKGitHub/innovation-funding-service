@@ -2,18 +2,18 @@
 <!-- =================== Comp setup section - Assessors (6) ============================== -->
 <th:block th:fragment="section-content">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
+        <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment',size='govuk-heading-xl'" />
 
     <form th:action="@{(${model.general.editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
           th:attr="data-competition=${model.general.competition.id},data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="assessors">
         <th:block th:if="${model.general.editable}" id="section-assessors-edit">
             <div class="form-group" th:classappend="${#fields.hasErrors('assessorCount')} ? 'form-group-error'">
                 <fieldset>
-                    <legend class="heading-small">
+                    <legend class="govuk-heading-s">
                         How many assessors are required for each application?
                         <th:block th:if="${#fields.hasErrors('assessorCount')}">
                               <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}"></span>
@@ -50,7 +50,7 @@
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('hasAssessmentPanel')} ? 'form-group-error'">
                 <fieldset class="inline">
-                    <legend class="heading-small">
+                    <legend class="govuk-heading-s">
                         Enable assessment panel for this competition?
                         <th:block th:if="${#fields.hasErrors('hasAssessmentPanel')}">
                             <span class="error-message" th:each="err : ${#fields.errors('hasAssessmentPanel')}" th:text="${err}" />
@@ -84,7 +84,7 @@
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('hasInterviewStage')} ? 'form-group-error'">
                 <fieldset class="inline">
-                    <legend class="heading-small">
+                    <legend class="govuk-heading-s">
                         Enable interview stage for this competition?
                         <th:block th:if="${#fields.hasErrors('hasInterviewStage')}">
                             <span class="error-message" th:each="err : ${#fields.errors('hasInterviewStage')}" th:text="${err}" />
@@ -118,7 +118,7 @@
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('assessorFinanceView')} ? 'form-group-error'">
                 <fieldset class="inline">
-                    <legend class="heading-small">
+                    <legend class="govuk-heading-s">
                         Assessor view of finances
                         <th:block th:if="${#fields.hasErrors('assessorFinanceView')}">
                             <span class="error-message" th:each="err : ${#fields.errors('assessorFinanceView')}" th:text="${err}" />

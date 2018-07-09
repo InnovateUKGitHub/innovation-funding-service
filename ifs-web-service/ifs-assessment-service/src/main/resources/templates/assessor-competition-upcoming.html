@@ -13,11 +13,11 @@
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Upcoming competition '${model.competitionName}'|,size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Upcoming competition '${model.competitionName}'|,size='govuk-heading-xl'" />
                 <p th:text="|You have agreed to be an assessor for the upcoming competition '${model.competitionName}'|">You have agreed to be an assessor for the upcoming competition 'My Competition'</p>
 
                 <section class="boxed" th:with="dateFormat=${model.assessmentPeriodDateFrom.year!=model.assessmentPeriodDateTo.year} ? 'd MMMM yyyy' : 'd MMMM'">
-                    <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,dateFormat)}: Assessment period|"></h2>
+                    <h2 class="govuk-heading-m no-margin" th:text="|${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,dateFormat)}: Assessment period|"></h2>
                     <p>Assessment period for reading, scoring, providing written comments and submitting to our online
                         service. Each assessor could receive up to 10 applications to assess. This depends on the
                         application response. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.</p>
@@ -27,7 +27,7 @@
                 </section>
 
                 <section>
-                    <h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: My Competition</h2>
+                    <h2 class="govuk-heading-m" th:text="|Competition details: ${model.competitionName}|">Competition details: My Competition</h2>
 
                     <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">View competition brief (opens in a new window)</a></p>
 

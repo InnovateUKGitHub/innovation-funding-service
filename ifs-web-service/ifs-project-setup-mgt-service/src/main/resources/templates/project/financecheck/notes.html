@@ -14,7 +14,7 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
                 <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem saving your comment.</h2>
+                    <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There was a problem saving your comment.</h2>
                     <p>Please review:</p>
                     <ul class="error-summary-list">
                         <th:block th:each="err : ${nonFormErrors}">
@@ -23,8 +23,8 @@
                     </ul>
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='heading-xlarge',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
-                <h2 class="heading-medium">Review notes</h2>
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+                <h2 class="govuk-heading-m">Review notes</h2>
                 <p>
                     Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
                 </p>
@@ -38,16 +38,16 @@
                 <ul>
                     <li th:each="note : ${model.getNotes()}">
                         <hr />
-                        <h2 class="heading-medium" th:text="${note.title}">Note Title</h2>
+                        <h2 class="govuk-heading-m" th:text="${note.title}">Note Title</h2>
                         <th:block th:each="(post, iteration : ${note.viewModelPosts})">
                             <div th:class="${iteration.index == 0} ? '' : 'panel'">
-                                <p class="heading-small no-margin">
+                                <p class="govuk-heading-s no-margin">
                                     <th:block th:text="${post.username}">Created by user</th:block>
                                     <small th:text="${#temporals.format(post.createdOn, 'hh:mma d MMMM yyyy')}">13:21 27 February 2017</small>
                                 </p>
                                 <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}">Content of the note.</p>
                                 <th:block th:unless="${post.attachments.isEmpty()}">
-                                    <h3 class="heading-small">Supporting documentation</h3>
+                                    <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul>
                                         <li th:each="attachment : ${post.attachments}">
                                             <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a>
@@ -60,7 +60,7 @@
                             <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="extra-margin button button-secondary">Comment</a>
                         </th:block>
                         <th:block th:if="${(model.noteId != null) and (note.id == model.noteId)}" th:with="baseUrl=@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl}, noteId=${model.noteId})}">
-                            <h2 class="heading-medium">Add your comment</h2>
+                            <h2 class="govuk-heading-m">Add your comment</h2>
                             <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}"
                                   method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                 <div class="form-group" th:classappend="${#fields.hasErrors('comment')} ? 'form-group-error'">
@@ -91,7 +91,7 @@
                                 </div>
                                 <div class="upload-section">
                                     <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                                        <h3 class="heading-small">Supporting documentation</h3>
+                                        <h3 class="govuk-heading-s">Supporting documentation</h3>
                                         <ul>
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                                 <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}">filename</a>
@@ -99,7 +99,7 @@
                                             </li>
                                         </ul>
                                     </th:block>
-                                    <h3 class="heading-small no-margin">Upload supporting documentation in pdf format</h3>
+                                    <h3 class="govuk-heading-s no-margin">Upload supporting documentation in pdf format</h3>
                                     <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
                                         <th:block th:if="${#fields.hasErrors('attachment')}">
                                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />

@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Set up your project',subTitle=${model.projectName},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Set up your project',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <div class="grid-row">
             <div class="column-half">
@@ -56,7 +56,7 @@
                 <!--/* ========================= Project Details ========================= */-->
                 <li th:classappend="${model.projectDetailsStatus.getSectionStatus()}">
                     <div class="task">
-                        <h2 class="heading-small">
+                        <h2 class="govuk-heading-s">
                             <a th:if="${model.projectDetailsSection.accessible and not model.projectComplete}"
                                th:href="@{/project/{id}/details(id=${model.projectId})}">Project details</a>
                             <a th:if="${model.projectComplete}" th:href="@{/project/{id}/readonly(id=${model.projectId})}">Project
@@ -74,7 +74,7 @@
                 <!--/* ========================= Monitoring Officer ========================= */-->
                 <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : 'waiting'}">
                     <div class="task">
-                        <h2 class="heading-small">
+                        <h2 class="govuk-heading-s">
                             <a th:if="${model.monitoringOfficerSection.accessible and not model.projectComplete}"
                                th:href="@{/project/{id}/monitoring-officer(id=${model.projectId})}">Monitoring Officer</a>
                             <a th:if="${model.projectComplete}"
@@ -95,7 +95,7 @@
                 <!--/* ========================= Bank Details ========================= */-->
                 <li class="read-only" th:if="${model.bankDetailsSection.notAccessible}">
                     <div class="task">
-                        <h2 class="heading-small">Bank details</h2>
+                        <h2 class="govuk-heading-s">Bank details</h2>
                         <p class="no-margin">We need bank details for those partners eligible for funding.</p>
                     </div>
                 </li>
@@ -103,7 +103,7 @@
                 <li th:if="${model.bankDetailsSection.accessibleOrNotRequired}"
                     th:classappend="${model.bankDetailsStatus.getSectionStatus()}">
                     <div class="task">
-                        <h2 class="heading-small">
+                        <h2 class="govuk-heading-s">
                             <a th:if="${model.bankDetailsSection.accessible and not model.projectComplete}"
                                th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
                             <a th:if="${model.projectComplete}"
@@ -117,7 +117,7 @@
                 <!--/* ========================= Finance Check ========================= */-->
                 <li th:class="${model.financeChecksSection.notAccessible} ? 'read-only'" th:classappend="${model.financeChecksStatus.getSectionStatus()}">
                     <div class="task">
-                        <h2 class="heading-small">
+                        <h2 class="govuk-heading-s">
                             <a th:if="${model.financeChecksSection.accessible}"
                                th:href="@{/project/{id}/finance-checks(id=${model.projectId})}">Finance
                                 checks</a>
@@ -137,7 +137,7 @@
                 <!--/* ========================= Spend Profile ========================= */-->
                 <li th:class="${model.spendProfileSection.notAccessible} ? 'read-only'" th:classappend="${model.spendProfileStatus.getSectionStatus()}">
                     <div class="task">
-                        <h2 class="heading-small">
+                        <h2 class="govuk-heading-s">
                             <a th:if="${model.spendProfileSection.accessible}"
                                th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile(id=${model.projectId}, organisationId=${model.getOrganisationId()})}">Spend
                                 profile</a>
@@ -151,7 +151,7 @@
                 <!--/* ========================= Other documents ========================= */-->
                 <li th:class="${model.otherDocumentsSection.notAccessible} ? 'read-only'" th:classappend="${model.otherDocumentsStatus.getSectionStatus()}">
                     <div class="task">
-                        <h2 class="heading-small">
+                        <h2 class="govuk-heading-s">
                             <a th:if="${model.otherDocumentsSection.accessible and not model.projectComplete}"
                                th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a>
                             <a th:if="${model.projectComplete}"
@@ -182,7 +182,7 @@
                 <!--/* TODO extra case to be outlined before GOL has been sent by internal user  */-->
                 <li th:class="${model.grantOfferLetterSection.notAccessible} ? 'read-only'" th:classappend="${model.grantOfferLetterStatus.getSectionStatus()}">
                     <div class="task">
-                        <h2 class="heading-small">
+                        <h2 class="govuk-heading-s">
                             <a th:if="${model.grantOfferLetterSection.accessible}"
                                th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a>
                             <th:block th:if="${model.grantOfferLetterSection.notAccessible}">Grant offer letter</th:block>

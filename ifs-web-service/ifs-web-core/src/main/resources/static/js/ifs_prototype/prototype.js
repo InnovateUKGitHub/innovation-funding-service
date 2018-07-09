@@ -35,7 +35,7 @@ jQuery(document).ready(function(){
 
     function addPartner(){
         var html =  '<li>\
-            <h2 class="heading-medium">Partner Organisation <span></span></h2>\
+            <h2 class="govuk-heading-m">Partner Organisation <span></span></h2>\
             <p>The lead organisation will be the lead partner throughout the application and project.Add members of your own organisation to contribute to this application.</p>\
           <label class="form-label" for="full-name-f1">Organisation name</label>\
           <input class="form-control js-organisation-name" placeholder="Your partner company Ltd."  id="full-name-f1" type="text">\

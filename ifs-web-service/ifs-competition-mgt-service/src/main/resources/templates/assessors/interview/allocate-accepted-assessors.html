@@ -14,12 +14,12 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle='Allocate applications to assessors',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+                  th:with="pageTitle='Allocate applications to assessors',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'"/>
 
         <div class="grid-row sorting">
             <div class="column-half">
-                <span class="heading-xlarge" th:text="${model.pagination.totalCount}">20</span>
-                <span class="heading-small">assessors</span>
+                <span class="govuk-heading-xl" th:text="${model.pagination.totalCount}">20</span>
+                <span class="govuk-heading-s">assessors</span>
             </div>
         </div>
 

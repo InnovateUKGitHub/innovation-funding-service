@@ -15,33 +15,33 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Other documents',subTitle=${model.projectName},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Other documents',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <div th:if="${model.isShowApprovedMessage()}" class="success-alert">
             <th:block th:if="${model.collaborationAgreementRequired}">
-                <h2 class="heading-small no-margin">These documents have been approved by Innovate UK.</h2>
+                <h2 class="govuk-heading-s no-margin">These documents have been approved by Innovate UK.</h2>
             </th:block>
             <th:block th:unless="${model.collaborationAgreementRequired}">
-                <h2 class="heading-small no-margin">This document has been approved by Innovate UK.</h2>
+                <h2 class="govuk-heading-s no-margin">This document has been approved by Innovate UK.</h2>
             </th:block>
         </div>
 
         <div th:if="${model.isShowGenericRejectionMessage()}" class="warning-alert">
             <th:block th:if="${model.collaborationAgreementRequired}">
-                <h2 class="heading-small no-margin">We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.</h2>
+                <h2 class="govuk-heading-s no-margin">We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.</h2>
             </th:block>
             <th:block th:unless="${model.collaborationAgreementRequired}">
-                <h2 class="heading-small no-margin">We are unable to approve your document and have returned it to you. A member of Innovate UK will be in touch to discuss our requirements.</h2>
+                <h2 class="govuk-heading-s no-margin">We are unable to approve your document and have returned it to you. A member of Innovate UK will be in touch to discuss our requirements.</h2>
             </th:block>
         </div>
 
         <div th:if="${model.isShowRejectionMessages()}" class="warning-alert">
             <th:block th:if="${model.collaborationAgreementRequired}">
-                <h2 class="heading-small">These documents have been returned to the project team, the following reason was
+                <h2 class="govuk-heading-s">These documents have been returned to the project team, the following reason was
                     given;</h2>
             </th:block>
             <th:block th:unless="${model.collaborationAgreementRequired}">
-                <h2 class="heading-small">This document has been returned to the project team, the following reason was
+                <h2 class="govuk-heading-s">This document has been returned to the project team, the following reason was
                     given;</h2>
             </th:block>
             <ul class="list list-bullet">
@@ -76,7 +76,7 @@
         </th:block>
 
         <div th:if="${model.collaborationAgreementRequired}" class="upload-section">
-            <h2 class="heading-medium no-margin">Collaboration agreement</h2>
+            <h2 class="govuk-heading-m no-margin">Collaboration agreement</h2>
             <p class="form-hint">The collaboration agreement covers how the consortium will work together on the project. It
                 must be signed by all partners.</p>
             <details>
@@ -134,7 +134,7 @@
         </div>
 
         <div class="upload-section">
-            <h2 class="heading-medium no-margin">Exploitation plan</h2>
+            <h2 class="govuk-heading-m no-margin">Exploitation plan</h2>
             <p class="form-hint">This is a confirmation of the business plan that your project hopes to achieve.
                 You should describe the partner activities that will exploit the results of the project.</p>
             <details>

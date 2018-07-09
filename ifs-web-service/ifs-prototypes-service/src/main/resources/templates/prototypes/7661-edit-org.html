@@ -21,7 +21,7 @@
 
         <!-- HARDCODED PROTOTYPE HTML -->
 
-        <h1 class="heading-xlarge">
+        <h1 class="govuk-heading-xl">
           <span class="heading-secondary">0102468: Technology inspired</span>
 
           <th:block th:if="${param.company != null and param.company[0] == 'empire'}">
@@ -65,7 +65,7 @@
         <th:block th:if="${param.company != null and param.company[0] == 'empire'}">
           <div class="table-display-stacked">
 
-            <h2 class="heading-medium">Empire Ltd, Lead organisation</h2>
+            <h2 class="govuk-heading-m">Empire Ltd, Lead organisation</h2>
 
             <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
               <thead>
@@ -97,7 +97,7 @@
         <th:block th:if="${param.company != null and param.company[0] == 'ludlow'}">
           <div class="table-display-stacked">
 
-            <h2 class="heading-medium">Ludlow</h2>
+            <h2 class="govuk-heading-m">Ludlow</h2>
 
             <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
               <thead>
@@ -129,7 +129,7 @@
         <th:block th:if="${param.company != null and param.company[0] == 'eggs'}">
           <div class="table-display-stacked">
 
-            <h2 class="heading-medium">EGGS</h2>
+            <h2 class="govuk-heading-m">EGGS</h2>
 
             <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
               <thead>
@@ -162,7 +162,7 @@
 
         <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
           <fieldset>
-            <legend class="heading-medium">Organisation</legend>
+            <legend class="govuk-heading-m">Organisation</legend>
             <div class="form-group">
               <label class="form-label-bold" for="new-org-name">Organisation name</label>
               <input class="form-control width-full" id="new-org-name" type="text" />
@@ -173,7 +173,7 @@
         <th:block th:if="${param.action != null and param.action[0] == 'addApplicant' or param.company != null and param.company[0] == 'newOrg'}">
 
           <fieldset class="table-display-stacked extra-margin-top">
-            <legend class="heading-medium">New applicant</legend>
+            <legend class="govuk-heading-m">New applicant</legend>
             <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
               <thead>
                 <tr>
@@ -227,7 +227,7 @@
 
         <div class="modal-update-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
             <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
-            <h2 class="heading-medium no-margin">Update organisation</h2>
+            <h2 class="govuk-heading-m no-margin">Update organisation</h2>
             <p>Invites will be sent to all new applicants.</p>
             <p>You should not remove applicants without discussing this action with them first. They will not receive any notification about their removal.</p>
             <hr />
@@ -252,7 +252,7 @@
         <div class="modal-overlay js-close" aria-hidden="true"></div>
         <div class="modal-new-organisation" role="dialog" aria-hidden="true">
           <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
-          <h2 class="heading-medium no-margin">Add organisation and invite applicants</h2>
+          <h2 class="govuk-heading-m no-margin">Add organisation and invite applicants</h2>
           <p>All applicants that have been added to this organisation will be added at this point.</p>
           <hr />
 
@@ -270,7 +270,7 @@
 
         <div class="modal-delete-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
             <button class="js-close close" type="button" aria-label="Close Popup">X</button>
-            <h2 class="heading-medium no-margin">Delete organisation</h2>
+            <h2 class="govuk-heading-m no-margin">Delete organisation</h2>
             <p>Are you sure you wish to remove this organisation from the application. The innovate funding system will not inform collaborators of their removal, this action should be discussed with all applicants beforehand.</p>
             <p>This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
             <hr />

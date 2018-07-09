@@ -20,27 +20,27 @@
 
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Invite assessors to interview panel'}, ${null})" />
 
-    <h2 class="heading-medium">Key statistics</h2>
+    <h2 class="govuk-heading-m">Key statistics</h2>
 
     <ul class="grid-row">
         <li class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large">3</span><br /><small>Invited</small>
+                <span class="govuk-heading-l">3</span><br /><small>Invited</small>
             </div>
         </li>
         <li class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large">1</span><br /><small>Accepted</small>
+                <span class="govuk-heading-l">1</span><br /><small>Accepted</small>
             </div>
         </li>
         <li class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large">0</span><br /><small>Rejected</small>
+                <span class="govuk-heading-l">0</span><br /><small>Rejected</small>
             </div>
         </li>
         <li class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large">14</span><br /><small>Assessors on invite list</small>
+                <span class="govuk-heading-l">14</span><br /><small>Assessors on invite list</small>
             </div>
         </li>
     </ul>
@@ -69,7 +69,7 @@
 	</ul>
 
 	<th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
-        <h2 class="heading-small">
+        <h2 class="govuk-heading-s">
             Find registered assessors to invite.
         </h2>
 
@@ -77,13 +77,13 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
-        <h2 class="heading-small">
+        <h2 class="govuk-heading-s">
             Invite assessors to interview panel.
         </h2>
 
         <div class="grid-row sorting">
             <div class="column-half">
-                <h2 class="heading-small">Invite list</h2>
+                <h2 class="govuk-heading-s">Invite list</h2>
             </div>
             <div class="column-half alignright">
                 <a href="/prototypes/IFS-2247-review-send" class="button">Review and send invites</a>
@@ -133,7 +133,7 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'overview'}">
-        <h2 class="heading-small">
+        <h2 class="govuk-heading-s">
             View assessors who have not yet responded or have declined the invite.
         </h2>
 
@@ -143,8 +143,8 @@
 
             <div class="grid-row sorting">
                 <div class="column-half">
-                    <span class="heading-xlarge no-margin">5</span>
-                    <span class="heading-small">assessors</span>
+                    <span class="govuk-heading-xl no-margin">5</span>
+                    <span class="govuk-heading-s">assessors</span>
                 </div>
             </div>
 
@@ -273,7 +273,7 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'accepted'}">
-        <h2 class="heading-small">
+        <h2 class="govuk-heading-s">
             View assessors who have accepted an invite to interview panel.
         </h2>
 
@@ -282,8 +282,8 @@
         <th:block th:if="${param.status != null and param.status[0] == 'invitesPending'}">
             <div class="grid-row sorting">
                 <div class="column-half">
-                    <span class="heading-xlarge no-margin">5</span>
-                    <span class="heading-small">assessors</span>
+                    <span class="govuk-heading-xl no-margin">5</span>
+                    <span class="govuk-heading-s">assessors</span>
                 </div>
             </div>
 

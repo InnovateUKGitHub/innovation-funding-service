@@ -14,7 +14,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle=${'Allocate applications to ' + model.user.getName()},subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+                  th:with="pageTitle=${'Allocate applications to ' + model.user.getName()},subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'"/>
 
         <div class="grid-row">
             <div class="column-half">

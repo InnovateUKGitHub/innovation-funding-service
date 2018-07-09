@@ -20,16 +20,16 @@
 
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assessor progress'}, ${'in assessment'})" />
 
-	<h2 class="heading-large no-margin">John Smith</h2>
+	<h2 class="govuk-heading-l no-margin">John Smith</h2>
 
-	<h3 class="heading-medium">Innovation area and skills</h3>
+	<h3 class="govuk-heading-m">Innovation area and skills</h3>
 
 	<div class="grid-row">
 		<div class="column-half">
-			<h4 class="heading-small">Innovation area</h4>
+			<h4 class="govuk-heading-s">Innovation area</h4>
 			<p>Advanceed materials, Biosciences, Materials</p>
 
-			<h4 class="heading-small">Skills areas</h4>
+			<h4 class="govuk-heading-s">Skills areas</h4>
 			<p>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</p>
 		</div>
 	</div>
@@ -38,10 +38,10 @@
 		<a href="#">Review assessor</a>
 	</p>
 	<p class="extra-margin">
-		<span class="heading-large">6</span> Total applications
+		<span class="govuk-heading-l">6</span> Total applications
 	</p>
 
-	<h2 class="no-margin heading-medium">Assigned(4)</h2>
+	<h2 class="no-margin govuk-heading-m">Assigned(4)</h2>
 
 	<p>You will need to confirm assignments before assessors are notified.</p>
 
@@ -51,7 +51,7 @@
 		<button class="js-close close" aria-label="Close Popup">X</button>
 		<div>
 
-			<h2 class="heading-medium no-margin">Are you sure you want to remove this application from the assessor?</h2>
+			<h2 class="govuk-heading-m no-margin">Are you sure you want to remove this application from the assessor?</h2>
 
 			<p>They have started the assessment of this application and their assessment will be permanently deleted if you click Remove.</p>
 
@@ -68,15 +68,15 @@
 		</div>
 	</div>
 
-	<h2 class="heading-medium">Rejected(1)</h2>
+	<h2 class="govuk-heading-m">Rejected(1)</h2>
 
 	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list4-table" />
 
-	<h2 class="heading-medium">Previously assigned(1)</h2>
+	<h2 class="govuk-heading-m">Previously assigned(1)</h2>
 
 	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list8-table" />
 
-	<h2 class="heading-medium">Applications</h2>
+	<h2 class="govuk-heading-m">Applications</h2>
 
 	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=false,sortByType=6" />
 

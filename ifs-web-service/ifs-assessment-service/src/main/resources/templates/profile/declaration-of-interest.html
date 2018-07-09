@@ -13,16 +13,16 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Declaration of interest',size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Declaration of interest',size='govuk-heading-xl'" />
 
-                <h2 class="heading-medium no-margin-bottom">Principal employer and role</h2>
+                <h2 class="govuk-heading-m no-margin-bottom">Principal employer and role</h2>
                 <p th:if="${model.principalEmployer}">
                     <th:block th:text="${model.principalEmployer}">ASDF solutions</th:block><br />
                     <th:block th:text="${model.role}">CEO</th:block>
                 </p>
                 <p th:unless="${model.principalEmployer}">Not answered</p>
 
-                <h2 class="heading-medium no-margin-bottom">Professional affiliations</h2>
+                <h2 class="govuk-heading-m no-margin-bottom">Professional affiliations</h2>
                 <p th:text="${model.professionalAffiliations}"
                    th:unless="${#strings.isEmpty(model.professionalAffiliations)}">
                     Professional affiliation
@@ -32,7 +32,7 @@
                     None declared
                 </p>
 
-                <h2 class="heading-medium no-margin-bottom">Appointments, directorships and consultancies</h2>
+                <h2 class="govuk-heading-m no-margin-bottom">Appointments, directorships and consultancies</h2>
                 <table class="extra-margin" th:unless="${#lists.isEmpty(model.appointments)}">
                     <thead>
                         <tr>
@@ -52,7 +52,7 @@
                     None declared
                 </p>
 
-                <h2 class="heading-medium no-margin-bottom">Other financial interests</h2>
+                <h2 class="govuk-heading-m no-margin-bottom">Other financial interests</h2>
 
                 <p th:if="${model.financialInterests}" th:text="${model.financialInterests}">Financial interests</p>
                 <p th:unless="${model.financialInterests}"
@@ -60,7 +60,7 @@
                     None declared
                 </p>
 
-                <h2 class="heading-medium no-margin-bottom">Close family member appointments, directorships and consultancies</h2>
+                <h2 class="govuk-heading-m no-margin-bottom">Close family member appointments, directorships and consultancies</h2>
                 <table class="extra-margin" th:unless="${#lists.isEmpty(model.familyAffiliations)}">
                     <thead>
                         <tr>
@@ -82,7 +82,7 @@
                     None declared
                 </p>
 
-                <h2 class="heading-medium no-margin-bottom">Close family members' other financial interests</h2>
+                <h2 class="govuk-heading-m no-margin-bottom">Close family members' other financial interests</h2>
                 <p th:if="${model.familyFinancialInterests}" th:text="${model.familyFinancialInterests}">Family members' financial interests</p>
                 <p th:unless="${model.familyFinancialInterests}"
                    th:text="${model.completed} ? 'None declared' : 'Not answered'">

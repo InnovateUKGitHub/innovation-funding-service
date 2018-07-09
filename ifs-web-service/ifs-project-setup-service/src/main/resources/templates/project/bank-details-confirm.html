@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit bank details',subTitle=${project.name},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit bank details',subTitle=${project.name},size='govuk-heading-xl'" />
 
         <form th:object="${form}" th:action="@{/project/{id}/bank-details(id=${project.id})}" method="post">
             <input type="hidden" th:field="*{accountNumber}"/>

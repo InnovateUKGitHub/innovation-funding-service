@@ -26,7 +26,7 @@
           <fieldset th:unless="${param.status != null and param.status[0] == 'readOnly'}">
           	<div class="form-group">
           		<label class="form-label" for="other-funding">
-          			<span class="heading-medium">Enter your funding level (maximum 50%)</span>
+          			<span class="govuk-heading-m">Enter your funding level (maximum 50%)</span>
           			<span class="form-hint">The maximum funding level is 50%. This is based on your organisation size and the project research area.</span>
           		</label>
           		<details>
@@ -47,7 +47,7 @@
           </th:block>
 
           <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-            <h2 class="heading-medium no-margin-bottom">Other funding for this project</h2>
+            <h2 class="govuk-heading-m no-margin-bottom">Other funding for this project</h2>
             	<fieldset>
             		<legend class="visuallyhidden">Other funding for this project</legend>
             		<p class="form-hint">Please tell us if you have applied for or received any other public sector funding for this project. You should also include details any offers of funding you have received.</p>
@@ -110,7 +110,7 @@
 
           <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
 
-            <h2 class="heading-medium extra-margin-top">Other funding for this project</h2>
+            <h2 class="govuk-heading-m extra-margin-top">Other funding for this project</h2>
 
             <table class="extra-margin-bottom">
               <thead>

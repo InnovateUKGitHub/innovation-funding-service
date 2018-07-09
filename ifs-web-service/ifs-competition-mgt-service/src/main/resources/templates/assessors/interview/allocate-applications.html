@@ -14,15 +14,15 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"
-                  th:with="pageTitle=${'Notify assessor'},subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+                  th:with="pageTitle=${'Notify assessor'},subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'"/>
 
-        <h2 class="heading-medium no-margin" th:text="${model.user.getName()}">Felix Wilson</h2>
+        <h2 class="govuk-heading-m no-margin" th:text="${model.user.getName()}">Felix Wilson</h2>
 
         <p>Review the allocated applications, edit the email and click notify. Feedback will then be released to the assessor.</p>
 
         <div class="grid-row sorting extra-margin">
-            <span class="heading-xlarge no-margin" th:text="${#lists.size(model.applications)}">4</span>
-            <span class="heading-small">applications</span>
+            <span class="govuk-heading-xl no-margin" th:text="${#lists.size(model.applications)}">4</span>
+            <span class="govuk-heading-s">applications</span>
         </div>
 
         <form method="POST"
@@ -72,7 +72,7 @@
                            th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
                 </div>
 
-                <h3 class="heading-small">Message</h3>
+                <h3 class="govuk-heading-s">Message</h3>
 
                 <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
 

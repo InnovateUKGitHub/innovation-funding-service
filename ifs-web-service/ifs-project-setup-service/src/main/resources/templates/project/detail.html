@@ -16,12 +16,12 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='govuk-heading-xl'" />
 
         <p th:if="${model.userLeadPartner and !model.allProjectDetailsFinanceContactsAndProjectLocationsAssigned}">Please supply the following details for your project and the team. We need these to set up your project.</p>
         <p th:if="${!model.userLeadPartner}">Please provide a finance contact. The lead applicant will provide your project information.</p>
 
-        <h2 class="heading-medium">Project information</h2>
+        <h2 class="govuk-heading-m">Project information</h2>
         <p th:if="${model.userLeadPartner}">You are providing these details as the lead on behalf of the overall project.</p>
         <p th:unless="${model.userLeadPartner}">The lead has provided these details on behalf of the overall project.</p>
 
@@ -80,7 +80,7 @@
 
         <!--/* If project setup location is enabled */-->
         <th:block th:if="${model.competition.locationPerPartner}">
-            <h2 class="heading-medium">Partner details</h2>
+            <h2 class="govuk-heading-m">Partner details</h2>
             <p>Each partner must provide a finance contact and a project location. We will contact the assigned person with any finance queries and assign the Monitoring Officer based on the location.</p>
 
             <table id="project-details-finance">
@@ -153,7 +153,7 @@
         </th:block>
 
         <th:block th:unless="${model.competition.locationPerPartner}">
-            <h2 class="heading-medium">Finance contacts</h2>
+            <h2 class="govuk-heading-m">Finance contacts</h2>
             <p>Each partner must provide a finance contact. We will contact them with any finance queries.</p>
 
             <table id="project-details-finance2">

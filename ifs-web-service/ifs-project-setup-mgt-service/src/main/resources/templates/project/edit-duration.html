@@ -15,7 +15,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We are unable to save your project details.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We are unable to save your project details.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             <ul class="list-bullet" th:if="${#fields.hasErrors('${form}')}">
                 <li>please check your project duration</li>
@@ -23,7 +23,7 @@
         </div>
 
       <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionName)} ? |${model.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionId} : ${model.competitionName}|">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${competitionTitle},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${competitionTitle},size='govuk-heading-xl'" />
       </th:block>
 
       <dl>

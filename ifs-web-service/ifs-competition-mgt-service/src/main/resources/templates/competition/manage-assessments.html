@@ -14,50 +14,50 @@
               th:with="linkTitle='Competition', linkClass='link-back', linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessments', size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessments', size='govuk-heading-xl'" />
 
-        <h2 class="heading-medium">Key statistics</h2>
+        <h2 class="govuk-heading-m">Key statistics</h2>
 
         <ul class="grid-row">
 
             <li class="column-fifth">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.totalAssessments}">50</span><br/>
+                    <span class="govuk-heading-l" th:text="${model.totalAssessments}">50</span><br/>
                     <small>Total assignments</small>
                 </div>
             </li>
 
             <li class="column-fifth">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessmentsAwaitingResponse}">25</span><br/>
+                    <span class="govuk-heading-l" th:text="${model.assessmentsAwaitingResponse}">25</span><br/>
                     <small>Assignments awaiting response</small>
                 </div>
             </li>
 
             <li class="column-fifth">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessmentsAccepted}">10</span><br/>
+                    <span class="govuk-heading-l" th:text="${model.assessmentsAccepted}">10</span><br/>
                     <small>Assignments accepted</small>
                 </div>
             </li>
 
             <li class="column-fifth">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessmentsStarted}">4</span><br/>
+                    <span class="govuk-heading-l" th:text="${model.assessmentsStarted}">4</span><br/>
                     <small>Assessments started</small>
                 </div>
             </li>
 
             <li class="column-fifth">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessmentsCompleted}">5</span><br/>
+                    <span class="govuk-heading-l" th:text="${model.assessmentsCompleted}">5</span><br/>
                     <small>Assessments completed</small>
                 </div>
             </li>
 
         </ul>
 
-        <h2 class="heading-medium">Actions</h2>
+        <h2 class="govuk-heading-m">Actions</h2>
 
         <ul class="link-list">
 

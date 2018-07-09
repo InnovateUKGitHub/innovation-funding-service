@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <th:block th:if="${model.submitted and !model.approved}">
             <div class="success-alert extra-margin-bottom">
@@ -30,20 +30,20 @@
         <p>This overview shows the spend profile status of each organisation in your project.</p>
 
         <th:block th:if="${model.submitted}">
-            <h2 class="heading-medium">Spend profile</h2>
+            <h2 class="govuk-heading-m">Spend profile</h2>
             <p th:if="${!model.approved}" >All spend profiles have been sent to Innovate UK and the Monitoring Officer assigned to this application.
                You may view these profiles.</p>
             <p th:if="${model.approved}" >All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
                 You may view these profiles.</p>
         </th:block>
 
-        <h2 class="heading-medium">Partner progress</h2>
+        <h2 class="govuk-heading-m">Partner progress</h2>
 
         <ul class="task-list">
             <li th:unless="${#lists.isEmpty(model.editablePartners)}"
                 th:each="partner : ${model.editablePartners}">
                 <div class="task">
-                    <h3 class="heading-small">
+                    <h3 class="govuk-heading-s">
                         <a th:if="${partner.value.showEditLinkToUser}"
                            th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.key})}"
                            th:text="${partner.value.organisationName}" />

@@ -13,25 +13,25 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept or reject application',size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept or reject application',size='govuk-heading-xl'" />
 
         <section class="boxed">
             <div class="grid-row">
                 <div class="column-half">
-                    <h2 class="heading-small no-margin">Title:</h2>
+                    <h2 class="govuk-heading-s no-margin">Title:</h2>
                     <p th:text="${model.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</p>
 
                     <th:block th:if="${model.projectSummary}">
-                        <h2 class="heading-small">Project summary:</h2>
+                        <h2 class="govuk-heading-s">Project summary:</h2>
                         <p th:text="${model.projectSummary}">This is the applicant response for project summary</p>
                     </th:block>
                 </div>
                 <div class="column-half">
-                    <h2 class="heading-small no-margin">Partners:</h2>
+                    <h2 class="govuk-heading-s no-margin">Partners:</h2>
                     <span th:each="partner : ${model.partners}">
                             <th:block th:text="${partner.name}">Wessex University</th:block>
                             <strong th:if="${partner.id.equals(model.leadPartner.id)}">(Lead)</strong>
@@ -47,7 +47,7 @@
             <div class="form-group" th:classappend="${#fields.hasErrors('reviewAccept')} ? 'form-group-error'">
                 <fieldset>
                     <legend id="reviewAccept">
-                        <h2 class="heading-medium">Choose your option</h2>
+                        <h2 class="govuk-heading-m">Choose your option</h2>
                         <th:block th:if="${#fields.hasErrors('reviewAccept')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('reviewAccept')}" th:text="${err}" />
                         </th:block>

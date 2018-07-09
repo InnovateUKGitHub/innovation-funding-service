@@ -12,13 +12,13 @@
             <th:block th:insert="fragments/layout :: phase-banner" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment interview panel',size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment interview panel',size='govuk-heading-xl'" />
                 <p th:text="|You have been invited to the assessment interview panel for: '${model.competitionName}'.|"></p>
 
                 <div class="grid-row">
                     <section class="column-half">
                         <div>
-                            <p class="heading-medium">Your email address is linked to an existing account.</p>
+                            <p class="govuk-heading-m">Your email address is linked to an existing account.</p>
                             <p>Please sign in with your existing account.</p>
                             <p><a th:href="@{/invite-accept/interview/{inviteHash}/accept(inviteHash=${model.panelInviteHash})}">Click here to sign in</a></p>
                         </div>

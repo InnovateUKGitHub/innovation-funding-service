@@ -26,7 +26,7 @@
 
         <!-- HARDCODED PROTOTYPE HTML -->
 
-        <h1 class="heading-xlarge">
+        <h1 class="govuk-heading-xl">
             <span class="heading-secondary">Start new application</span>
             Confirm organisation details
         </h1>
@@ -49,26 +49,26 @@
         </th:block>
 
         <th:block th:unless="${status == 'orgAdded'}">
-            <h3 class="heading-small">Organisation type</h3>
+            <h3 class="govuk-heading-s">Organisation type</h3>
             <p>Business</p>
 
-            <h3 class="heading-small">Registered name</h3>
+            <h3 class="govuk-heading-s">Registered name</h3>
             <p th:text="${type == 'collaborator' ? 'SPOONS' : 'CERCIS LIMITED' }">COMPANY NAME</p>
         </th:block>
 
         <th:block th:unless="${param.entry != null and param.entry[0] == 'manual'}">
             <th:block th:if="${status == 'orgAdded'}">
-                <h3 class="heading-small">Organisation type</h3>
+                <h3 class="govuk-heading-s">Organisation type</h3>
                 <p>Research</p>
 
-                <h3 class="heading-small">Registered name</h3>
+                <h3 class="govuk-heading-s">Registered name</h3>
                 <p>EGGS</p>
             </th:block>
 
-            <h3 class="heading-small">Registration number</h3>
+            <h3 class="govuk-heading-s">Registration number</h3>
             <p>05750811</p>
 
-            <h3 class="heading-small">Registered address</h3>
+            <h3 class="govuk-heading-s">Registered address</h3>
             <p>16 Queen Square
                 <br /> Bristol
                 <br /> BS1 4NT

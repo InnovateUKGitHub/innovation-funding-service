@@ -100,11 +100,11 @@ the counts of the open competition should be correct
     Should Be Equal As Integers    ${INVITED_COUNT}    ${Invited}
     ${ACCEPTED_COUNT}=    Get text    css=ul:nth-child(3) > li:nth-child(2) > div > span
     Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${Accepted}
-    ${STARTED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(1) .heading-large
+    ${STARTED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(1) .govuk-heading-l
     Should Be Equal As Integers    ${Applications started}    ${STARTED_COUNT}
-    ${BEYOND_50)_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(2) .heading-large
+    ${BEYOND_50)_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(2) .govuk-heading-l
     Should Be Equal As Integers    ${Applications_Beyond_50}    ${BEYOND_50)_COUNT}
-    ${SUBMITTED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(3) .heading-large
+    ${SUBMITTED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(3) .govuk-heading-l
     Should Be Equal As Integers    ${SUBMITTED_COUNT}    ${Applications submitted}
     ${APPLICATIONS_PER_ASSESSOR}=    Get text    css=ul:nth-child(3) > li:nth-child(3) > div > span
     Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    3

@@ -24,12 +24,12 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:if="${currentSectionIsHome}">
             <div class="error-summary" th:if="${#fields.hasErrors('${competitionSetupForm}')}">
-                <h2 class="heading-medium error-summary-heading">There is an error on this page.</h2>
+                <h2 class="govuk-heading-m error-summary-heading">There is an error on this page.</h2>
                 <ul class="error-summary-list">
                     <li th:each="err : ${#fields.errors('${competitionSetupForm}')}" th:text="${err}"></li>
                 </ul>
             </div>
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition setup',size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition setup',size='govuk-heading-xl'" />
         </th:block>
 
         <th:block th:insert="fragments/competition-setup :: comp-setup-navigation(${model.general.allSections}, ${model.general.currentSection}, ${model.general.competition}, ${readyToOpen})" th:if="${currentSectionIsHome}" />

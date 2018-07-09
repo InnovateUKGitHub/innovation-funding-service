@@ -18,7 +18,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert"
              aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There is a problem on this
                 page.</h2>
 
             <ul class="error-summary-list">
@@ -42,7 +42,7 @@
         <th:block
             th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
             <th:block th:insert="fragments/layout :: page-title"
-                      th:with="pageTitle=${model.title},subTitle=${model.application.name},size='heading-xlarge'"/>
+                      th:with="pageTitle=${model.title},subTitle=${model.application.name},size='govuk-heading-xl'"/>
         </th:block>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"

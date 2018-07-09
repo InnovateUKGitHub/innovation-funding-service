@@ -20,11 +20,11 @@
       <a href="/prototypes/IFS-6-manage-assessors-active" class="link-back">Back</a>
     </div>
 
-    <h1 class="heading-xlarge">Assessor profile</h1>
+    <h1 class="govuk-heading-xl">Assessor profile</h1>
 
     <th:block th:if="${param.deactivateAssessor != null}">
         <div class="message-alert">
-            <h2 class="heading-small no-margin">This assessor has been deactivated with the reason:</h2>
+            <h2 class="govuk-heading-s no-margin">This assessor has been deactivated with the reason:</h2>
             <p th:text="${param.deactivateAssessor[0]}">REASON</p>
             <th:block th:if="${param.rejectText != null}">
                 <p th:text="${param.rejectText[0]}"></p>
@@ -32,20 +32,20 @@
         </div>
     </th:block>
 
-    <h2 class="heading-medium">Assessor details</h2>
+    <h2 class="govuk-heading-m">Assessor details</h2>
 
-    <h3 class="heading-small">Name</h3>
+    <h3 class="govuk-heading-s">Name</h3>
     <p>Arden Pimenta</p>
 
-    <h3 class="heading-small">Address</h3>
+    <h3 class="govuk-heading-s">Address</h3>
 
-    <h3 class="heading-small">Phone number</h3>
+    <h3 class="govuk-heading-s">Phone number</h3>
     <p>01423 456789</p>
 
-    <h3 class="heading-small">Email address</h3>
+    <h3 class="govuk-heading-s">Email address</h3>
     <p><a href="#">adren.pimenta@innovateuk.test</a></p>
 
-    <h3 class="heading-small">Assessor type</h3>
+    <h3 class="govuk-heading-s">Assessor type</h3>
     <p>Academic</p>
 
     <ul class="inline-nav extra-margin-top">
@@ -55,21 +55,21 @@
     </ul>
 
     <th:block th:if="${param.tab == null or param.tab[0] == 'skills'}">
-        <h2 class="heading-medium">Innovation areas</h2>
+        <h2 class="govuk-heading-m">Innovation areas</h2>
 
         <th:block th:if="${param.version != null and param.version[0] == 'v1'}">
-            <h3 class="heading-small">Emerging and enabling</h3>
+            <h3 class="govuk-heading-s">Emerging and enabling</h3>
             <ul class="task-list no-margin">
                 <li>Creative industries</li>
                 <li>Digital industries</li>
             </ul>
-            <h3 class="heading-small">Health and life sciences</h3>
+            <h3 class="govuk-heading-s">Health and life sciences</h3>
             <ul class="task-list">
                 <li>Advanced therapies</li>
             </ul>
 
             <div class="upload-section" style="border: none;">
-                <h3 class="heading-small no-margin">Work history</h3>
+                <h3 class="govuk-heading-s no-margin">Work history</h3>
                 <p><a href="#">Assessor work history.pdf (opens in a new window)</a></p>
             </div>
         </th:block>
@@ -92,7 +92,7 @@
         </div>
 
         <div class="upload-section extra-margin-top" style="border: none">
-            <h3 class="heading-small no-margin">CV</h3>
+            <h3 class="govuk-heading-s no-margin">CV</h3>
             <div>
                 <p class="uploaded-file">
                     <a href="#">CV-for-assessor.pdf (opens in a new window)</a>
@@ -110,7 +110,7 @@
                         <form th:action="${#httpServletRequest.requestURI}">
                             <fieldset>
                                 <legend>
-                                    <h2 class="heading-medium no-margin">Deactivate assessor</h2>
+                                    <h2 class="govuk-heading-m no-margin">Deactivate assessor</h2>
                                 </legend>
 
                                 <p>Please select the reason for deactivating this assessor.</p>
@@ -157,7 +157,7 @@
                     <div class="panel">
                         <form th:action="${#httpServletRequest.requestURI}">
 
-                            <h2 class="heading-medium no-margin">Reactivate assessor</h2>
+                            <h2 class="govuk-heading-m no-margin">Reactivate assessor</h2>
                             <p>Are you sure you want to reactivate this assessor?</p>
 
                             <div class="extra-margin-top">
@@ -189,7 +189,7 @@
                 <form th:action="${#httpServletRequest.requestURI}">
                     <fieldset class="inline">
                         <legend>
-                            <h2 class="heading-medium no-margin">Deactivate assessor</h2>
+                            <h2 class="govuk-heading-m no-margin">Deactivate assessor</h2>
                         </legend>
 
                         <p>Please select the reason for deactivating this assessor</p>
@@ -216,7 +216,7 @@
                 <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
                 <form th:action="${#httpServletRequest.requestURI}">
 
-                    <h2 class="heading-medium no-margin">Reactivate assessor</h2>
+                    <h2 class="govuk-heading-m no-margin">Reactivate assessor</h2>
                     <p>Are you sure you want to reactivate this assessor?</p>
 
                     <div class="extra-margin-top">
@@ -234,15 +234,15 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'doi'}">
-        <h2 class="heading-medium">Declaration of interest</h2>
+        <h2 class="govuk-heading-m">Declaration of interest</h2>
 
-        <h3 class="heading-small no-margin-bottom">Principal employer and role</h3>
+        <h3 class="govuk-heading-s no-margin-bottom">Principal employer and role</h3>
         <p>University of Sheffield <br /> Professor</p>
 
-        <h3 class="heading-small no-margin-bottom">Professional affiliations</h3>
+        <h3 class="govuk-heading-s no-margin-bottom">Professional affiliations</h3>
         <p>None declared</p>
 
-        <h3 class="heading-small extra-margin-top">Appointments, directorships and consultancies</h3>
+        <h3 class="govuk-heading-s extra-margin-top">Appointments, directorships and consultancies</h3>
         <table>
             <thead>
             <tr>
@@ -262,10 +262,10 @@
             </tbody>
         </table>
 
-        <h3 class="heading-small">Other financial interests</h3>
+        <h3 class="govuk-heading-s">Other financial interests</h3>
         <p>None declared</p>
 
-        <h3 class="heading-small extra-margin-top">Close family members' appointments, directorships and consultancies</h3>
+        <h3 class="govuk-heading-s extra-margin-top">Close family members' appointments, directorships and consultancies</h3>
         <table>
             <thead>
                 <tr>
@@ -283,7 +283,7 @@
             </tbody>
         </table>
 
-        <h3 class="heading-small">Close family members' other financial interests</h3>
+        <h3 class="govuk-heading-s">Close family members' other financial interests</h3>
         <p>None declared</p>
 
     </th:block>

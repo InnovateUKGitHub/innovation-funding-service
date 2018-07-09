@@ -5,14 +5,14 @@
 <div th:fragment="prototype-comp-admin-page-title(subtitle, heading)">
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
         <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>
-        <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
+        <h1 class="govuk-heading-xl no-margin" th:text="${heading}">Title here</h1>
     </div>
 </div>
 
 <!-- ===================Comp admin Page title============================== -->
 <div th:fragment="prototype-comp-admin-page-title-subheading(subtitle, heading, subheading)">
 
-  <h1 class="heading-xlarge">
+  <h1 class="govuk-heading-xl">
 
     <span class="heading-secondary" th:text="${subtitle + (subheading != null ? ', '+subheading : '')}" th:unless="${param.comp != null}" >SUB TITLE</span>
 
@@ -52,7 +52,7 @@
         <div class="grid-row">
             <div class="column-two-thirds">
                 <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>
-                <h1 class="heading-xlarge no-margin"><span th:text="${heading}">Title here</span>
+                <h1 class="govuk-heading-xl no-margin"><span th:text="${heading}">Title here</span>
                     <th:block th:if="${partner == 'lead'}">
                         <small>(Lead partner)</small>
                     </th:block>
@@ -66,7 +66,7 @@
 
 
             <div class="column-third" th:unless="${subheading == 'createComp' or subheading == null}">
-                <h2 class="heading-small comp-status-label">
+                <h2 class="govuk-heading-s comp-status-label">
 
                     <div th:if="${param.status == null}" th:remove="tag">
                         <span th:text="${subheading}"></span>
@@ -181,17 +181,17 @@
     <section class="boxed">
         <p>Innovate UK is to invest up to £9 million in collaborative research and development to stimulate innovation in integrated transport solutions for local authorities. The aim of this competition is to meet user needs by connecting people and/or goods to transport products and services. New or improved systems will be tested in environment laboratories.</p>
 
-        <h2 class="heading-medium no-margin">Applications</h2>
+        <h2 class="govuk-heading-m no-margin">Applications</h2>
 
         <div class="grid-row">
             <div class="column-third">
-                <p><span class="heading-medium">6</span> Submitted</p>
+                <p><span class="govuk-heading-m">6</span> Submitted</p>
             </div>
             <div class="column-third">
-                <p><span class="heading-medium">6</span> In progress <small>(50% completed)</small></p>
+                <p><span class="govuk-heading-m">6</span> In progress <small>(50% completed)</small></p>
             </div>
             <div class="column-third">
-                <p><span class="heading-medium">24</span> Open</p>
+                <p><span class="govuk-heading-m">24</span> Open</p>
             </div>
         </div>
     </section>
@@ -203,14 +203,14 @@
         <div class="grid-row">
             <div class="column-half">
                 <ul>
-                    <li><span class="heading-medium">50</span> applications</li>
-                    <li><span class="heading-medium">25</span> assessors available</li>
+                    <li><span class="govuk-heading-m">50</span> applications</li>
+                    <li><span class="govuk-heading-m">25</span> assessors available</li>
                 </ul>
             </div>
             <div class="column-half">
                 <ul>
-                    <li><span class="heading-medium">22/12/15</span> assessment opened</li>
-                    <li><span class="heading-medium">27/12/15</span> assessment close</li>
+                    <li><span class="govuk-heading-m">22/12/15</span> assessment opened</li>
+                    <li><span class="govuk-heading-m">27/12/15</span> assessment close</li>
                 </ul>
             </div>
         </div>
@@ -254,7 +254,7 @@
 
         <form action="#" method="GET">
             <fieldset>
-                <legend class="heading-medium">Filter <span th:text="${filterTitle}">TITLE</span></legend>
+                <legend class="govuk-heading-m">Filter <span th:text="${filterTitle}">TITLE</span></legend>
 
                 <div class="grid-row">
                     <div class="column-third" th:unless="${type == 'fundingDecision'} or ${type == 'openApplications'} or ${type == 'notSubmittedApplications'} or ${type == 'manageNotifications'}">
@@ -393,15 +393,15 @@
             <div th:if="${param.filterInnovationArea == null}" th:remove="tag">
 
                 <div th:if="${type == null}" th:remove="tag">
-                    <h2><span class="heading-xlarge no-margin available">76</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
+                    <h2><span class="govuk-heading-xl no-margin available">76</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
                 </div>
 
                 <div th:if="${type != null}" th:unless="${type == 'notSubmittedApplications'}" th:remove="tag">
-                    <h2><span class="heading-xlarge no-margin available" th:text="${(type == 'openApplications' ? '22' : '4')}">76</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
+                    <h2><span class="govuk-heading-xl no-margin available" th:text="${(type == 'openApplications' ? '22' : '4')}">76</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
                 </div>
 
                 <div th:if="${type != null}" th:unless="${type != 'notSubmittedApplications'}" th:remove="tag">
-                    <h2><span class="heading-xlarge no-margin available">18</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
+                    <h2><span class="govuk-heading-xl no-margin available">18</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
                 </div>
 
             </div>
@@ -409,19 +409,19 @@
             <div th:if="${param.filterInnovationArea != null}" th:remove="tag">
 
                 <div th:if="${param.filterInnovationArea[0] != '---' and param.filterSearch[0] == ''}" th:remove="tag">
-                    <h4><span class="heading-xlarge available">5</span> <span th:text="${filterTitle}">TITLE</span> with the innovation area <strong th:text="${param.filterInnovationArea[0]}">INNOVATION AREA</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></h4>
+                    <h4><span class="govuk-heading-xl available">5</span> <span th:text="${filterTitle}">TITLE</span> with the innovation area <strong th:text="${param.filterInnovationArea[0]}">INNOVATION AREA</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></h4>
                 </div>
 
                 <div th:if="${param.filterInnovationArea[0] == '---' and param.filterSearch[0] != ''}" th:remove="tag">
-                    <h4><span class="heading-xlarge available">5</span> <span th:text="${filterTitle}">TITLE</span> with the term <strong th:text="${param.filterSearch[0]}">SEARCH TERM</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></h4>
+                    <h4><span class="govuk-heading-xl available">5</span> <span th:text="${filterTitle}">TITLE</span> with the term <strong th:text="${param.filterSearch[0]}">SEARCH TERM</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></h4>
                 </div>
 
                 <div th:if="${param.filterInnovationArea[0] != '---' and param.filterSearch[0] != ''}" th:remove="tag">
-                    <h4><span class="heading-xlarge available">5</span> <span th:text="${filterTitle}">TITLE</span>  with the innovation area <strong th:text="${param.filterInnovationArea[0]}">INNOVATION AREA</strong> and with the term <strong th:text="${param.filterSearch[0]}">SEARCH TERM</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></h4>
+                    <h4><span class="govuk-heading-xl available">5</span> <span th:text="${filterTitle}">TITLE</span>  with the innovation area <strong th:text="${param.filterInnovationArea[0]}">INNOVATION AREA</strong> and with the term <strong th:text="${param.filterSearch[0]}">SEARCH TERM</strong> - <a th:href="${#httpServletRequest.requestURI}">Clear filters</a></h4>
                 </div>
 
                 <div th:if="${param.filterInnovationArea[0] == '---' and param.filterSearch[0] == ''}" th:remove="tag">
-                    <h4><span class="heading-xlarge no-margin available">76</span> <strong th:text="${filterTitle}">TITLE</strong></h4>
+                    <h4><span class="govuk-heading-xl no-margin available">76</span> <strong th:text="${filterTitle}">TITLE</strong></h4>
                 </div>
 
             </div>
@@ -526,8 +526,8 @@
 
             <div th:if="${status == 'open'}" th:remove="tag">
                 <div class="comp-status open">
-                    <h2 class="heading-small">Competition open</h2>
-                    <p class="heading-large no-margin">Open until <br />20<sup>th</sup> March 2016</p>
+                    <h2 class="govuk-heading-s">Competition open</h2>
+                    <p class="govuk-heading-l no-margin">Open until <br />20<sup>th</sup> March 2016</p>
                 </div>
             </div>
 
@@ -535,29 +535,29 @@
 
                 <div th:if="${status == 'funders'}" th:remove="tag">
                     <div class="comp-status funders-panel">
-                        <h2 class="heading-small">Funders panel</h2>
-                        <p class="heading-large no-margin">15<sup>th</sup> September 2016</p>
+                        <h2 class="govuk-heading-s">Funders panel</h2>
+                        <p class="govuk-heading-l no-margin">15<sup>th</sup> September 2016</p>
                     </div>
                 </div>
 
                 <div th:if="${status == 'closed'}" th:remove="tag">
                     <div class="comp-status closed">
-                        <h2 class="heading-small">Competition closed</h2>
-                        <p class="heading-large no-margin">Date closed <br />15<sup>th</sup> September 2016</p>
+                        <h2 class="govuk-heading-s">Competition closed</h2>
+                        <p class="govuk-heading-l no-margin">Date closed <br />15<sup>th</sup> September 2016</p>
                     </div>
                 </div>
 
                 <div th:if="${status == 'assess'}" th:remove="tag">
                     <div class="comp-status in-assessment">
-                        <h2 class="heading-small">Competition in assessment</h2>
-                        <p class="heading-large no-margin">Assessment deadline <br />15<sup>th</sup> September 2016</p>
+                        <h2 class="govuk-heading-s">Competition in assessment</h2>
+                        <p class="govuk-heading-l no-margin">Assessment deadline <br />15<sup>th</sup> September 2016</p>
                     </div>
                 </div>
 
                 <div th:if="${status == 'prep'}" th:remove="tag">
                     <div class="comp-status prep">
-                        <h2 class="heading-small">Competition in prep</h2>
-                        <p class="heading-large no-margin">Open date <br />15<sup>th</sup> September 2016</p>
+                        <h2 class="govuk-heading-s">Competition in prep</h2>
+                        <p class="govuk-heading-l no-margin">Open date <br />15<sup>th</sup> September 2016</p>
                     </div>
                 </div>
 
@@ -573,7 +573,7 @@
     <div th:if="${status == 'closed'}" th:remove="tag">
         <div class="grid-row highlight-panel extra-margin">
             <div class="column-half">
-                <h3 class="heading-medium no-margin">The competition is now closed</h3>
+                <h3 class="govuk-heading-m no-margin">The competition is now closed</h3>
             </div>
             <div class="column-half alignright-button">
 
@@ -591,12 +591,12 @@
 
     <div th:if="${status == 'open'}" th:remove="tag">
 
-    <h2 class="heading-large">Applications</h2>
+    <h2 class="govuk-heading-l">Applications</h2>
 
         <div class="grid-row highlight-panel">
             <div class="column-half">
                 <h3>Overall applications</h3>
-                <p class="heading-xlarge no-margin">92</p>
+                <p class="govuk-heading-xl no-margin">92</p>
             </div>
             <div class="column-half alignright-button">
 
@@ -614,12 +614,12 @@
     </div>
 
      <div th:if="${status == 'assess'}" th:remove="tag">
-        <h2 class="heading-large"><a href="#">Rejected applications</a></h2>
+        <h2 class="govuk-heading-l"><a href="#">Rejected applications</a></h2>
 
         <div class="grid-row highlight-panel">
             <div class="column-half">
                 <h3>Total rejected applications</h3>
-                <p class="heading-xlarge no-margin">8</p>
+                <p class="govuk-heading-xl no-margin">8</p>
             </div>
             <div class="column-half alignright-button">
                 <a class="button" href="#">Allocate assessors</a>
@@ -632,28 +632,28 @@
 
             <div th:if="${status == 'closed'}" th:remove="tag">
 
-                <h2 class="heading-large underline">Application distribution</h2>
+                <h2 class="govuk-heading-l underline">Application distribution</h2>
                 <ul>
                     <li>
-                        <h3 class="heading-small"><a href="#">Submitted</a></h3>
-                        <strong class="heading-xlarge">121</strong>
+                        <h3 class="govuk-heading-s"><a href="#">Submitted</a></h3>
+                        <strong class="govuk-heading-xl">121</strong>
                         <p class="form-hint">Final submissions</p>
                     </li>
                     <li>
-                        <h3 class="heading-small"><a href="#">Confirmed assessors</a></h3>
-                        <strong class="heading-xlarge">41</strong>
+                        <h3 class="govuk-heading-s"><a href="#">Confirmed assessors</a></h3>
+                        <strong class="govuk-heading-xl">41</strong>
                     </li>
                     <li>
-                        <h3 class="heading-small">Applications per assessor</h3>
-                        <strong class="heading-xlarge">15</strong>
+                        <h3 class="govuk-heading-s">Applications per assessor</h3>
+                        <strong class="govuk-heading-xl">15</strong>
                     </li>
                 </ul>
 
-                <h2 class="heading-large underline">Incomplete applications</h2>
+                <h2 class="govuk-heading-l underline">Incomplete applications</h2>
                 <ul>
                     <li>
-                        <h3 class="heading-small"><a href="#">Applications not submitted</a></h3>
-                        <strong class="heading-xlarge">15</strong>
+                        <h3 class="govuk-heading-s"><a href="#">Applications not submitted</a></h3>
+                        <strong class="govuk-heading-xl">15</strong>
                     </li>
                 </ul>
 
@@ -661,40 +661,40 @@
 
             <div th:if="${status == 'open'}" th:remove="tag">
 
-                <h2 class="heading-large underline">Application breakdown</h2>
+                <h2 class="govuk-heading-l underline">Application breakdown</h2>
                 <ul>
                     <li>
-                        <h3 class="heading-small"><a href="#">Submitted</a></h3>
-                        <strong class="heading-xlarge">17</strong>
+                        <h3 class="govuk-heading-s"><a href="#">Submitted</a></h3>
+                        <strong class="govuk-heading-xl">17</strong>
                         <p class="form-hint">Final submissions</p>
                     </li>
                     <li>
-                        <h3 class="heading-small"><a href="#">In progress</a></h3>
-                        <strong class="heading-xlarge">52</strong>
+                        <h3 class="govuk-heading-s"><a href="#">In progress</a></h3>
+                        <strong class="govuk-heading-xl">52</strong>
                         <p class="form-hint">Over 50% complete</p>
                     </li>
                     <li>
-                        <h3 class="heading-small"><a href="#">Open</a></h3>
-                        <strong class="heading-xlarge">23</strong>
+                        <h3 class="govuk-heading-s"><a href="#">Open</a></h3>
+                        <strong class="govuk-heading-xl">23</strong>
                         <p class="form-hint">Opened applications</p>
                     </li>
                 </ul>
 
-                <h2 class="heading-large underline">Assessors</h2>
+                <h2 class="govuk-heading-l underline">Assessors</h2>
                 <ul>
                     <li>
-                        <h3 class="heading-small"><a href="#">Invited</a></h3>
-                        <strong class="heading-xlarge">17</strong>
+                        <h3 class="govuk-heading-s"><a href="#">Invited</a></h3>
+                        <strong class="govuk-heading-xl">17</strong>
                         <p class="form-hint">Pending invitations</p>
                     </li>
                     <li>
-                        <h3 class="heading-small"><a href="#">Accepted</a></h3>
-                        <strong class="heading-xlarge">21</strong>
+                        <h3 class="govuk-heading-s"><a href="#">Accepted</a></h3>
+                        <strong class="govuk-heading-xl">21</strong>
                         <p class="form-hint">Confirmed assessors</p>
                     </li>
                     <li>
-                        <h3 class="heading-small">Applications per assessor</h3>
-                        <strong class="heading-xlarge">23</strong>
+                        <h3 class="govuk-heading-s">Applications per assessor</h3>
+                        <strong class="govuk-heading-xl">23</strong>
                         <p class="form-hint">Predicted applications per confirmed assessor</p>
                     </li>
                 </ul>
@@ -714,22 +714,22 @@
 
             <div th:if="${status == 'assess'}" th:remove="tag">
 
-                <h2 class="heading-large underline">Assessments in progress</h2>
+                <h2 class="govuk-heading-l underline">Assessments in progress</h2>
                 <ul>
                     <li>
-                        <h3 class="heading-small"><a href="#">Unstarted</a></h3>
-                        <strong class="heading-xlarge">41</strong>
+                        <h3 class="govuk-heading-s"><a href="#">Unstarted</a></h3>
+                        <strong class="govuk-heading-xl">41</strong>
                     </li>
                     <li>
-                        <h3 class="heading-small"><a href="#">In progress</a></h3>
-                        <strong class="heading-xlarge">15</strong>
+                        <h3 class="govuk-heading-s"><a href="#">In progress</a></h3>
+                        <strong class="govuk-heading-xl">15</strong>
                     </li>
                     <li>
-                        <h3 class="heading-small">Submitted</h3>
-                        <strong class="heading-xlarge">84</strong>
+                        <h3 class="govuk-heading-s">Submitted</h3>
+                        <strong class="govuk-heading-xl">84</strong>
                     </li>
                     <li>
-                        <h3 class="heading-small"><a href="#">View all applications</a></h3>
+                        <h3 class="govuk-heading-s"><a href="#">View all applications</a></h3>
                     </li>
                 </ul>
             </div>
@@ -737,51 +737,51 @@
 
         </div>
         <div class="column-half">
-            <h2 class="heading-large underline">Assessors</h2>
+            <h2 class="govuk-heading-l underline">Assessors</h2>
 
             <ul class="comp-timeline-status">
                  <li th:class="${status == 'assess'} or ${status == 'closed'} or ${status == 'open'} ? 'done'">
-                    <h3 class="heading-small">Competition opens</h3>
+                    <h3 class="govuk-heading-s">Competition opens</h3>
                     <p>10 March 2016</p>
                 </li>
                  <li th:class="${status == 'assess'} or ${status == 'closed'}  ? 'done'">
-                    <h3 class="heading-small">Optional briefing</h3>
+                    <h3 class="govuk-heading-s">Optional briefing</h3>
                     <p>10 March 2016</p>
                 </li>
                  <li th:class="${status == 'assess'} or ${status == 'closed'}  ? 'done'">
-                    <h3 class="heading-small">Application deadline</h3>
+                    <h3 class="govuk-heading-s">Application deadline</h3>
                     <p>10 March 2016</p>
                 </li>
                 <li th:class="${status == 'assess'} or ${status == 'closed'}  ? 'done'">
-                    <h3 class="heading-small">Assessor briefing webinar</h3>
+                    <h3 class="govuk-heading-s">Assessor briefing webinar</h3>
                     <p>10 March 2016</p>
                 </li>
                 <li th:class="${status == 'assess'} ? 'done'">
-                    <h3 class="heading-small">Applications to assessors</h3>
+                    <h3 class="govuk-heading-s">Applications to assessors</h3>
                     <p>10 March 2016</p>
                 </li>
                 <li>
-                    <h3 class="heading-small">Assessor deadline</h3>
+                    <h3 class="govuk-heading-s">Assessor deadline</h3>
                     <p>10 March 2016</p>
                 </li>
                 <li>
-                    <h3 class="heading-small">Line drawing</h3>
+                    <h3 class="govuk-heading-s">Line drawing</h3>
                     <p>10 March 2016</p>
                 </li>
                 <li>
-                    <h3 class="heading-small">Feedback produced</h3>
+                    <h3 class="govuk-heading-s">Feedback produced</h3>
                     <p>10 March 2016</p>
                 </li>
                 <li>
-                    <h3 class="heading-small">Applicants informed</h3>
+                    <h3 class="govuk-heading-s">Applicants informed</h3>
                     <p>10 March 2016</p>
                 </li>
                 <li>
-                    <h3 class="heading-small">Feedback to successful applicants provided</h3>
+                    <h3 class="govuk-heading-s">Feedback to successful applicants provided</h3>
                     <p>10 March 2016</p>
                 </li>
                 <li>
-                    <h3 class="heading-small">Feedback to unsuccessful applicants provided</h3>
+                    <h3 class="govuk-heading-s">Feedback to unsuccessful applicants provided</h3>
                     <p>10 March 2016</p>
                 </li>
             </ul>
@@ -789,7 +789,7 @@
     </div>
 
     <div class="upload-section">
-        <h3 class="heading-small no-margin">Competition documents</h3>
+        <h3 class="govuk-heading-s no-margin">Competition documents</h3>
         <div class="uploaded-file"><a href="#">Competition-brief.pdf</a> (161.96kb)</div>
         <div class="uploaded-file"><a href="#">Guidance-for-applicants.pdf</a> (161.96kb)</div>
 
@@ -1793,11 +1793,11 @@
         <div class="column-quarter">
 
             <div class="boxed">
-                <p><span class="heading-medium">BBC</span><br />Lead applicant</p>
-                <p><span class="heading-medium">6 months</span><br />Duration</p>
-                <p><span class="heading-medium">120,000</span><br />Project cost</p>
-                <p><span class="heading-medium">60,000</span><br />Grant requested</p>
-                <p><span class="heading-medium">10,000</span><br />Other funding</p>
+                <p><span class="govuk-heading-m">BBC</span><br />Lead applicant</p>
+                <p><span class="govuk-heading-m">6 months</span><br />Duration</p>
+                <p><span class="govuk-heading-m">120,000</span><br />Project cost</p>
+                <p><span class="govuk-heading-m">60,000</span><br />Grant requested</p>
+                <p><span class="govuk-heading-m">10,000</span><br />Other funding</p>
             </div>
 
 

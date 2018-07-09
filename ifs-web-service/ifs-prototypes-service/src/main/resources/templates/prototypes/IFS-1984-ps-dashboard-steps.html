@@ -64,13 +64,13 @@
 
         <section id="section1">
 
-            <h2 class="heading-medium">To complete
+            <h2 class="govuk-heading-m">To complete
                     <th:block th:if="${param.status == null or param.status[0] == 'step1'}">(1)</th:block>
                     <th:block th:if="${param.status[0] == 'step2' or param.status[0] == 'step3' or param.status[0] == 'step5' or param.status[0] == 'step7'}">(1)</th:block>
                     <th:block th:if="${param.status[0] == 'step4' or param.status[0] == 'step5a' or param.status[0] == 'step6' or param.status[0] == 'step8' or param.status[0] == 'step9'}"></th:block>
             </h2>
 
-            <span class="heading-small">Current tasks</span>
+            <span class="govuk-heading-s">Current tasks</span>
 
             <th:block th:if="${param.status[0] == 'step4' or param.status[0] == 'step5a' or param.status[0] == 'step6'}">
                 <p>There are no current tasks to complete.<br />Your tasks require action from Innovate UK and will appear when they are ready.</p>
@@ -88,7 +88,7 @@
                 <ul>
                     <li class="require-action" th:if="${param.status == null or param.status[0] == 'step1'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-bank-details">Bank details</a>
                             </h2>
                             <p class="no-margin">
@@ -103,7 +103,7 @@
                     </li>
                     <li class="require-action" th:if="${param.status == null or param.status[0] == 'step1' or param.status[0] == 'step2'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-other-documents">Other documents</a>
                             </h2>
                             <p class="no-margin">
@@ -118,7 +118,7 @@
                     </li>
                     <li class="require-action" th:if="${param.status[0] == 'step3'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-finance-checks">Finance checks</a>
                             </h2>
                             <p class="no-margin">
@@ -133,7 +133,7 @@
                     </li>
                     <li class="require-action" th:if="${param.status[0] == 'step5'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-spend-profile">Spend profile</a>
                             </h2>
                             <p class="no-margin">
@@ -148,7 +148,7 @@
                     </li>
                     <li class="require-action" th:if="${param.status[0] == 'step7'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-ps-grant-offer-letter">Grant offer letter</a>
                             </h2>
                             <p class="no-margin">
@@ -164,7 +164,7 @@
                 </ul>
             </div>
 
-            <span class="heading-small" th:unless="${param.status[0] == 'step9'}">Pending tasks</span>
+            <span class="govuk-heading-s" th:unless="${param.status[0] == 'step9'}">Pending tasks</span>
 
             <th:block th:if="${param.status[0] == 'step7'}">
                 <p>There are no pending tasks to complete.</p>
@@ -178,7 +178,7 @@
                 <ul>
                     <li class="waiting" th:if="${param.status == null or param.status[0] == 'step1'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Monitoring Officer</a>
                             </h2>
                             <p class="no-margin">
@@ -193,7 +193,7 @@
                     </li>
                     <li class="waiting" th:if="${param.status[0] == 'step2'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Bank details</a>
                             </h2>
                             <p class="no-margin">
@@ -208,7 +208,7 @@
                     </li>
                     <li class="waiting" th:if="${param.status[0] == 'step3'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Other documents</a>
                             </h2>
                             <p class="no-margin">
@@ -223,7 +223,7 @@
                     </li>
                     <li class="waiting" th:if="${param.status == null or param.status[0] == 'step1' or param.status[0] == 'step2' or param.status[0] == 'step4'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Finance checks</a>
                             </h2>
                             <p class="no-margin">
@@ -238,7 +238,7 @@
                     </li>
                     <li class="waiting" th:if="${param.status == null or param.status[0] == 'step1' or param.status[0] == 'step2' or param.status[0] == 'step3' or param.status[0] == 'step4' or param.status[0] == 'step5a'  or param.status[0] == 'step6'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Spend profile</a>
                             </h2>
                             <p class="no-margin">
@@ -253,7 +253,7 @@
                     </li>
                     <li class="waiting" th:unless="${param.status[0] == 'step7' or param.status[0] == 'step9'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Grant offer letter</a>
                             </h2>
                             <p class="no-margin">
@@ -272,13 +272,13 @@
         </section>
 
         <section id="section2">
-            <h2 class="heading-medium">Completed tasks</h2>
+            <h2 class="govuk-heading-m">Completed tasks</h2>
 
             <div class="progress-list progress-list--individual-blocks">
                 <ul>
                     <li class="complete">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Project details</a>
                             </h2>
                             <p class="no-margin">
@@ -293,7 +293,7 @@
                     </li>
                     <li class="complete" th:unless="${param.status[0] == 'step1'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Monitoring officer</a>
                             </h2>
                             <p class="no-margin">
@@ -308,7 +308,7 @@
                     </li>
                     <li class="complete" th:unless="${param.status[0] == 'step1' or param.status[0] == 'step2'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Bank details</a>
                             </h2>
                             <p class="no-margin">
@@ -323,7 +323,7 @@
                     </li>
                     <li class="complete" th:unless="${param.status[0] == 'step1' or param.status[0] == 'step2' or param.status[0] == 'step3'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Other documents</a>
                             </h2>
                             <p class="no-margin">
@@ -338,7 +338,7 @@
                     </li>
                     <li class="complete" th:unless="${param.status[0] == 'step1' or param.status[0] == 'step2' or param.status[0] == 'step3' or param.status[0] == 'step4'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Finance checks</a>
                             </h2>
                             <p class="no-margin">
@@ -353,7 +353,7 @@
                     </li>
                     <li class="complete" th:if="${param.status[0] == 'step7' or param.status[0] == 'step8' or param.status[0] == 'step9'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Spend profile</a>
                             </h2>
                             <p class="no-margin">
@@ -368,7 +368,7 @@
                     </li>
                     <li class="complete" th:if="${param.status[0] == 'step9'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Grant offer letter</a>
                             </h2>
                             <p class="no-margin">

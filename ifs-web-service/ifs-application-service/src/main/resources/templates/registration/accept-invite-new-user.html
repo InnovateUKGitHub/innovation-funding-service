@@ -9,10 +9,10 @@
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to collaborate',size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to collaborate',size='govuk-heading-xl'" />
                 <p>You have been invited to join an application in the competition '<a th:href="@{/competition/{competitionId}/overview(competitionId=${model.competitionId})}" th:text="${model.competitionName}"></a>'.</p>
                 <div>
-                    <h1 class="heading-large">Application details</h1>
+                    <h1 class="govuk-heading-l">Application details</h1>
                     <dl class="extra-margin-bottom">
                         <dt>Lead organisation:</dt>
                         <dd th:text="${model.leadOrganisationName}"></dd>
@@ -25,7 +25,7 @@
 
                     <p>Read the guidance on <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" target="_blank">how collaboration in the Innovation Funding Service works</a> (this link will open in a new window).</p>
 
-                    <h2 class="heading-medium">Are you happy to accept the invitation to participate?</h2>
+                    <h2 class="govuk-heading-m">Are you happy to accept the invitation to participate?</h2>
                     <p>As you are new to the service, you will be taken through the account creation process.</p>
                     <a th:href="${model.inviteOrganisationExists} ? @{/accept-invite/confirm-invited-organisation} : @{/organisation/create/new-account-organisation-type}" class="button">Yes, accept invitation</a>
                     <p>If you do not wish to accept this invitation, please let the lead applicant know.</p>

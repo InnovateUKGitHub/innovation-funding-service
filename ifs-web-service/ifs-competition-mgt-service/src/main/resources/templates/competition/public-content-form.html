@@ -16,12 +16,12 @@
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post" enctype="multipart/form-data">
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem submitting the public content.</h2>
+                <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There was a problem submitting the public content.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
             <th:block th:with="competitionTitle=${#strings.isEmpty(model.competition.name)} ? |${model.competition.id} : $#{ifs.competition.no_title}| : |${model.competition.id} : ${model.competition.name}|">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.section.type.text},subTitle=${competitionTitle},size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.section.type.text},subTitle=${competitionTitle},size='govuk-heading-xl'" />
             </th:block>
 
             <!-- sections -->

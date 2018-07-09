@@ -5,7 +5,7 @@
 <th:block th:fragment="content-group(section, competitionId)">
     <div class="grid-row extra-margin-bottom" th:each="contentGroup : ${section.contentGroupsOrdered}">
         <div class="column-third">
-            <h3 class="heading-medium no-margin" th:text="${contentGroup.heading}"></h3>
+            <h3 class="govuk-heading-m no-margin" th:text="${contentGroup.heading}"></h3>
         </div>
         <div class="column-two-thirds">
             <div class="wysiwyg-styles" ifs:utext="${contentGroup.content}"></div>
@@ -22,11 +22,11 @@
 <!-- ===========================Front door - competition summary  ============================= -->
 <th:block th:fragment="summary(section, competitionId)">
     <section id="summary">
-        <h2 class="heading-medium">Summary</h2>
+        <h2 class="govuk-heading-m">Summary</h2>
         <div>
             <div class="grid-row extra-margin-bottom">
                 <div class="column-third">
-                    <h3 class="heading-medium no-margin">Description</h3>
+                    <h3 class="govuk-heading-m no-margin">Description</h3>
                 </div>
                 <div class="column-two-thirds">
                     <div class="wysiwyg-styles" ifs:utext="${section.description}"></div>
@@ -34,7 +34,7 @@
             </div>
             <div class="grid-row extra-margin-bottom">
                 <div class="column-third">
-                    <h3 class="heading-medium no-margin">Funding type</h3>
+                    <h3 class="govuk-heading-m no-margin">Funding type</h3>
                 </div>
                 <div class="column-two-thirds">
                     <p th:text="${section.fundingType}"></p>
@@ -42,7 +42,7 @@
             </div>
             <div class="grid-row extra-margin-bottom">
                 <div class="column-third">
-                    <h3 class="heading-medium no-margin">Project size</h3>
+                    <h3 class="govuk-heading-m no-margin">Project size</h3>
                 </div>
                 <div class="column-two-thirds">
                     <p th:text="${section.projectSize}"></p>
@@ -56,7 +56,7 @@
 <!-- ===========================Front door - competition eligibility  ============================ -->
 <th:block th:fragment="eligibility(section, competitionId)">
     <section id="eligibility">
-        <h2 class="heading-medium">Eligibility</h2>
+        <h2 class="govuk-heading-m">Eligibility</h2>
         <div>
             <th:block th:include="competition/section/fragments :: content-group(section=${section}, competitionId=${competitionId})"/>
         </div>
@@ -67,7 +67,7 @@
 <!-- ===========================Front door - competition scope  =================================== -->
 <th:block th:fragment="scope(section, competitionId)">
     <section id="scope">
-        <h2 class="heading-medium">Scope</h2>
+        <h2 class="govuk-heading-m">Scope</h2>
         <div>
             <th:block th:include="competition/section/fragments :: content-group(section=${section}, competitionId=${competitionId})"/>
         </div>
@@ -77,11 +77,11 @@
 <!-- ===========================Front door - competition dates ==================================== -->
 <th:block th:fragment="dates(section, competitionId)">
     <section id="dates">
-        <h2 class="heading-medium">Dates</h2>
+        <h2 class="govuk-heading-m">Dates</h2>
         <div>
             <dl class="standard-definition-list column-definition-list">
                 <th:block th:each="publicContentDate : ${section.sortedEvents}">
-                    <dt class="extra-margin"><span class="heading-medium" th:text="${publicContentDate.dateTimeFormatted}"></span></dt>
+                    <dt class="extra-margin"><span class="govuk-heading-m" th:text="${publicContentDate.dateTimeFormatted}"></span></dt>
                     <th:block th:if="${publicContentDate.mustBeStrong}">
                         <dd class="extra-margin"><strong th:text="${publicContentDate.content}"></strong></dd>
                     </th:block>
@@ -99,7 +99,7 @@
 <!-- ===========================Front door - competition how to apply  ============================ -->
 <th:block th:fragment="how-to-apply(section, competitionId)">
     <section id="how-to-apply">
-        <h2 class="heading-medium">How to apply</h2>
+        <h2 class="govuk-heading-m">How to apply</h2>
         <div>
             <th:block th:include="competition/section/fragments :: content-group(section=${section}, competitionId=${competitionId})"/>
         </div>
@@ -109,7 +109,7 @@
 <!-- ===========================Front door - competition supporting information  ================== -->
 <th:block th:fragment="supporting-information(section, competitionId)">
     <section id="supporting-information">
-        <h2 class="heading-medium">Supporting information</h2>
+        <h2 class="govuk-heading-m">Supporting information</h2>
         <div>
             <th:block th:include="competition/section/fragments :: content-group(section=${section}, competitionId=${competitionId})"/>
         </div>

@@ -5,17 +5,17 @@
 
 <th:block th:fragment="application_details">
 
-    <h2 class="heading-small">Project title</h2>
+    <h2 class="govuk-heading-s">Project title</h2>
     <div class="textarea-wrapped">
         <div class="readonly" th:text="${applicationTitle}" />
     </div>
 
-    <h2 class="heading-small">Research category</h2>
+    <h2 class="govuk-heading-s">Research category</h2>
     <div class="textarea-wrapped">
         <div class="readonly" th:text="${applicationResearchCategory}" />
     </div>
 
-    <h2 class="heading-small">Estimated timescales</h2>
+    <h2 class="govuk-heading-s">Estimated timescales</h2>
 
     <dl>
         <dt>Project start date:</dt>
@@ -34,10 +34,10 @@
         </dd>
     </dl>
 
-    <h2 class="heading-small">Lead organisation</h2>
+    <h2 class="govuk-heading-s">Lead organisation</h2>
     <div th:text="${leadOrganisation.getName()}"></div>
 
-    <h2 class="heading-small">Partners</h2>
+    <h2 class="govuk-heading-s">Partners</h2>
     <ul class="list list-bullet">
         <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
             <span th:text="${organisation.getName()}"></span>
@@ -48,7 +48,7 @@
 <!-- ===================== Textarea ======================!-->
 <th:block th:fragment="textarea">
 
-    <h2 class="heading-small" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
+    <h2 class="govuk-heading-s" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
     <div class="textarea-wrapped">
         <div class="readonly">
             <p th:text="${response?.value}" data-md-to-html=""></p>

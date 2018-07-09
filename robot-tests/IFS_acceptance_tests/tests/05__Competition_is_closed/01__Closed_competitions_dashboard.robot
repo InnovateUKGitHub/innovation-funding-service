@@ -75,11 +75,11 @@ Get The expected values from the invite page
     The user clicks the button/link    link=Competition
 
 the counts of the key statistics of the closed competition should be correct
-    ${INVITED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(1) .heading-large
+    ${INVITED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(1) .govuk-heading-l
     Should Be Equal As Integers    ${INVITED_COUNT}    ${Invited}
-    ${ACCEPTED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(2) .heading-large
+    ${ACCEPTED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(2) .govuk-heading-l
     Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${Accepted}
-    ${APPLICATIONS_PER_ASSESSOR}=    Get text    css=.extra-margin .column-third:nth-child(3) .heading-large
+    ${APPLICATIONS_PER_ASSESSOR}=    Get text    css=.extra-margin .column-third:nth-child(3) .govuk-heading-l
     Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    3
     ${APPLICATIONS_REQ}=    Get text    css=ul:nth-child(3) > li:nth-child(1) > div > span
     Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${APPLICATIONS_REQ}

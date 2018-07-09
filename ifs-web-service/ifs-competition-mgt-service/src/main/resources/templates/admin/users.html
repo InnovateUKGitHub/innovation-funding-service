@@ -14,7 +14,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage users',size='heading-large'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage users',size='govuk-heading-l'" />
 
         <p>You can view the status of all internal users and add new users.</p>
         <p><a th:href="@{/admin/invite-user}">Invite a new internal user</a></p>
@@ -25,7 +25,7 @@
         <p><a href="/">Invite a new internal user</a></p>
 
         <div class="search-filters extra-margin">
-          <h2 class="heading-medium">Search users</h2>
+          <h2 class="govuk-heading-m">Search users</h2>
           <div class="grid-row">
             <div class="column-two-thirds">
               <label class="form-label" for="search">Search for a name, job role, permission or email address</label>

@@ -15,23 +15,23 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We are unable to save your bank account details.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We are unable to save your bank account details.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
         <div class="grid-row">
             <div class="column-two-thirds">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=|${model.applicationId}: ${model.projectName}|,size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
             </div>
             <div class="column-third alignright extra-margin">
-                <h2 class="bold-small blue-block">Bank account</h2>
+                <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Bank account</h2>
             </div>
         </div>
 
         <hr/>
         <p>Bank account details have been submitted to Innovate UK for use during the project <strong th:text="|${model.projectName} (${model.applicationId})|">Machine Learning In Robots (10294856)</strong></p>
 
-        <h2 class="heading-medium">Finance contact</h2>
+        <h2 class="govuk-heading-m">Finance contact</h2>
 
         <p>
             <th:block th:unless="${#strings.isEmpty(model.financeContactName)}">
@@ -47,7 +47,7 @@
 
         <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
 
-            <h2 class="heading-medium no-margin-bottom">Company details</h2>
+            <h2 class="govuk-heading-m no-margin-bottom">Company details</h2>
             <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('organisationName')} ? 'form-group-error'">
                 <label class="form-label" for="organisationName">
                     <span class="form-label-bold">Company name</span>
@@ -85,7 +85,7 @@
                        data-switches-button-status="#modal-change-bank-details"/>
             </div>
 
-            <h2 class="heading-medium no-margin-bottom">Account details</h2>
+            <h2 class="govuk-heading-m no-margin-bottom">Account details</h2>
             <p class="form-hint">This is the bank account that the applicant will use for the duration of the project</p>
             <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('accountNumber')} ? 'form-group-error'">
                 <label class="form-label" for="accountNumber">
@@ -129,7 +129,7 @@
                        th:field="*{sortCode}"
                        data-switches-button-status="#modal-change-bank-details"/>
             </div>
-            <h2 class="heading-medium no-margin-bottom">Billing address</h2>
+            <h2 class="govuk-heading-m no-margin-bottom">Billing address</h2>
             <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
 
 

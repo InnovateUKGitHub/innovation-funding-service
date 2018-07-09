@@ -13,9 +13,9 @@
     <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Manage assessment panel',linkClass='link-back',linkUrl=@{/assessment/panel/competition/{id}(id=${model.competitionId})})" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign applications to panel',subTitle=|${model.competitionId}: ${model.competitionName}, ${model.competitionStatus}| ,size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign applications to panel',subTitle=|${model.competitionId}: ${model.competitionName}, ${model.competitionStatus}| ,size='govuk-heading-xl'" />
 
-        <h2 class="heading-medium">Assigned applications (<span id="application-count" th:text="${#lists.size(model.assignedApplications)}">0</span>)</h2>
+        <h2 class="govuk-heading-m">Assigned applications (<span id="application-count" th:text="${#lists.size(model.assignedApplications)}">0</span>)</h2>
 
         <div class="table-overflow" th:id="application-assigned">
             <table id="application-list">
@@ -46,7 +46,7 @@
         <form method="GET">
             <div class="search-filters extra-margin">
                 <fieldset>
-                    <legend class="heading-medium no-margin-top">Filter applications</legend>
+                    <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
                     <div class="grid-row">
                         <div class="column-two-thirds">
                             <label class="form-label" for="filterSearch">Search by application number</label>
@@ -63,8 +63,8 @@
             </div>
             <div class="grid-row sorting">
                 <div class="column-two-thirds">
-                    <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">22</span>
-                        <span class="heading-small">applications</span>
+                    <p><span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">22</span>
+                        <span class="govuk-heading-s">applications</span>
                     </p>
                 </div>
                 <div class="column-third alignright">

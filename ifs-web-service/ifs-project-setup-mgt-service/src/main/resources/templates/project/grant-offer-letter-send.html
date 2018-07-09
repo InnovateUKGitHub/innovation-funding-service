@@ -18,18 +18,18 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=${competitionTitle},size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=${competitionTitle},size='govuk-heading-xl'" />
         </th:block>
         <hr/>
 
         <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
             <div class="success-alert extra-margin-bottom">
-                <h2 class="heading-small no-margin-top">These documents have been approved.</h2>
+                <h2 class="govuk-heading-s no-margin-top">These documents have been approved.</h2>
             </div>
         </th:block>
 
         <div class="warning-alert" th:if="${model.getSignedGrantOfferLetterRejected()}">
-            <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+            <p class="govuk-heading-s no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
             <p>If you have not already done so, please contact the Project Manager to explain your decision.</p>
             <p>Reason for rejection:</p>
             <p th:text="${model.getGrantOfferLetterRejectionReason()}"></p>
@@ -46,7 +46,7 @@
             </th:block>
         </th:block>
 
-        <h2 class="heading-medium">Grant offer letter</h2>
+        <h2 class="govuk-heading-m">Grant offer letter</h2>
 
         <div class="upload-section">
         <form th:action="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}"
@@ -67,7 +67,7 @@
         </form>
         </div>
 
-        <h2 class="heading-medium">Annex</h2>
+        <h2 class="govuk-heading-m">Annex</h2>
         <p th:unless="${model.additionalContractFile}">The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
 
 
@@ -105,7 +105,7 @@
         </th:block>
 
         <th:block th:if="${model.isSentToProjectTeam()}">
-            <h2 class="heading-medium no-margin">Signed grant offer letter</h2>
+            <h2 class="govuk-heading-m no-margin">Signed grant offer letter</h2>
             <div class="upload-section">
                 <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
                     <p><a class="uploaded-file" target="_blank" th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename} + ' (opens in a new window)'">signed-offer-letter.PDF</a></p>
@@ -116,7 +116,7 @@
             </div>
         </th:block>
         <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}">
-            <h2 class="heading-medium">Confirm signed grant offer letter</h2>
+            <h2 class="govuk-heading-m">Confirm signed grant offer letter</h2>
             <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" id="gol-decision-form" method="post" novalidate="novalidate">
                 <div class="form-group">
                     <fieldset>

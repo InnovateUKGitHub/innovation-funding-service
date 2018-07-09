@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm operating address',subTitle='Create your account',size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm operating address',subTitle='Create your account',size='govuk-heading-xl'" />
 
         <div class="message-alert">
             <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
@@ -24,7 +24,7 @@
         <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" novalidate="novalidate" class="extra-margin">
             <input type="hidden" th:field="*{searchOrganisationId}" />
 
-            <h2 class="heading-medium no-margin">Operating address</h2>
+            <h2 class="govuk-heading-m no-margin">Operating address</h2>
             <p class="form-hint">This is the address your organisation works from</p>
 
             <fieldset>

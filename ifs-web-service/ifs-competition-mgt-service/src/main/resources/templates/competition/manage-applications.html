@@ -13,13 +13,13 @@
             <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Manage assessments',linkClass='link-back',linkUrl=@{/assessment/competition/{id}(id=${model.competitionId})})" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage applications' : 'Allocate Applications',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Manage applications' : 'Allocate Applications',subTitle=|${model.competitionId} : ${model.competitionName}, ${model.inAssessment ? 'in assessment' : 'competition closed'}|, size='govuk-heading-xl'" />
 
                 <p class="extra-margin">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
                 <form method="GET">
                     <div class="search-filters extra-margin">
                         <fieldset>
-                            <legend class="heading-medium no-margin-top">Filter applications</legend>
+                            <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
                             <div class="grid-row">
                                 <div class="column-two-thirds">
                                     <label class="form-label" for="filterSearch">Search by application number</label>

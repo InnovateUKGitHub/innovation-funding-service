@@ -20,25 +20,25 @@
 
 	<!-- <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'5436854: Technology inspired'}, ${'Application overview'}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" /> -->
 
-  <h1 class="heading-xlarge">
+  <h1 class="govuk-heading-xl">
     <span class="heading-secondary">5436854: Technology inspired<span th:text="${(param.closed != null ? ', competition closed' : ', competition open')}">COMP STATUS</span> </span>
     Application overview
   </h1>
 
 	<div>
 
-		<h2 class="heading-medium no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+		<h2 class="govuk-heading-m no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'removed'}">
 
 
-			<h3 class="heading-small">
+			<h3 class="govuk-heading-s">
 				Removed by
 			</h3>
 			<p>Peter Kault, 20 December 2016</p>
 
 
-			<h3 class="heading-small">
+			<h3 class="govuk-heading-s">
 				Reason for removal
 			</h3>
 			<p>
@@ -56,7 +56,7 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Reinstate application</h2>
+					<h2 class="govuk-heading-m no-margin">Reinstate application</h2>
 
 					<p>Are you sure that you wish to reinstate this application?</p>
 
@@ -85,20 +85,20 @@
 			<a href="/prototypes/634-print-application.html" rel="nofollow" target="_blank"><div class="icon icon-print"></div>Print application</a>
 		</div>
 
-		<h2 class="heading-medium">Appendices</h2>
+		<h2 class="govuk-heading-m">Appendices</h2>
 
 			<div class="form-group download">
-		        <h3 class="heading-small no-margin">View project management appendix:</h3>
+		        <h3 class="govuk-heading-s no-margin">View project management appendix:</h3>
 		        <a href="#">Project-plan.pdf (161.96 KB)</a>
 		    </div>
 
 		    <div class="form-group download">
-		        <h3 class="heading-small no-margin">View innovation appendix:</h3>
+		        <h3 class="govuk-heading-s no-margin">View innovation appendix:</h3>
 		        <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
 		    </div>
 
 		    <div class="form-group download">
-		        <h3 class="heading-small no-margin">View project team appendix:</h3>
+		        <h3 class="govuk-heading-s no-margin">View project team appendix:</h3>
 		        <a href="#">CVs-of-team.pdf (161.96 KB)</a>
 		    </div>
 
@@ -109,7 +109,7 @@
 			<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="extra-margin-bottom">
 				<form action="/prototypes/5698-draft-email" id="removeApp">
 					<fieldset>
-						<legend class="heading-medium">Remove application from assessment</legend>
+						<legend class="govuk-heading-m">Remove application from assessment</legend>
 					</fieldset>
 					<div class="form-group no-margin-bottom">
 						<label for="remove-application-reason">Please enter the reason for removing this application from assessment</label>

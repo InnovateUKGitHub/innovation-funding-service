@@ -21,7 +21,7 @@
         <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'form-group-error'">
             <fieldset>
                 <legend id="application.startDate">
-                    <span class="heading-medium">Estimated timescales</span>
+                    <span class="govuk-heading-m">Estimated timescales</span>
                     <span class="form-hint">When do you wish to start your project?</span>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')"  />
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')"  />
@@ -47,7 +47,7 @@
 
         <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'form-group-error'">
             <label for="application.researchCategory">
-                <span class="heading-medium">Research category</span>
+                <span class="govuk-heading-m">Research category</span>
                 <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
                 <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategory')" />
             </label>
@@ -67,7 +67,7 @@
              th:classappend="${#fields.hasErrors('*{__application.innovationArea__}')} ? 'form-group-error'">
 
             <label for="researchArea">
-                <span class="heading-medium">Innovation area</span>
+                <span class="govuk-heading-m">Innovation area</span>
                 <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
                 <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.innovationArea')" />
             </label>
@@ -120,7 +120,7 @@
         </div>
         <div id="resubmission-details">
             <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'form-group-error'">
-                <h2 class="heading-medium no-margin-top">Please provide the details of this previous application</h2>
+                <h2 class="govuk-heading-m no-margin-top">Please provide the details of this previous application</h2>
                 <label for="application.previousApplicationNumber">
                     <span class="form-label form-label-bold">Previous application number</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')"  />

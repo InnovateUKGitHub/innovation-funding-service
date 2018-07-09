@@ -13,11 +13,11 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to log you in to your account.</h2>
+                    <h2 class="govuk-heading-m error-summary-heading"  id="error-summary-heading">We were unable to log you in to your account.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Sign in successful',size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Sign in successful',size='govuk-heading-xl'" />
                 <p>Thank you for signing into the Innovation Funding Service.</p>
 
                 <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
@@ -25,7 +25,7 @@
                     <div class="form-group" th:classappend="${#fields.hasErrors('selectedRole')} ? form-group-error">
                         <fieldset class="inline">
                             <legend id="selectedRole">
-                                <span class="heading-small">Please choose the role you are signing in as today</span>
+                                <span class="govuk-heading-s">Please choose the role you are signing in as today</span>
                                 <th:block th:if="${#fields.hasErrors('selectedRole')}">
                                     <span class="error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
                                 </th:block>

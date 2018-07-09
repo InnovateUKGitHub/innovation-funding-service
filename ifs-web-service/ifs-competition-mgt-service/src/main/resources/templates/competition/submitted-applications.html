@@ -13,13 +13,13 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submitted applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submitted applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
-                <h2 class="heading-medium">Key statistics</h2>
+                <h2 class="govuk-heading-m">Key statistics</h2>
                 <ul class="grid-row extra-margin-bottom">
                     <li class="column-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="heading-medium" th:text="${#temporals.format(model.assessmentDeadline, 'd MMMM Y')}">17 November 2016</span>
+                            <span class="govuk-heading-m" th:text="${#temporals.format(model.assessmentDeadline, 'd MMMM Y')}">17 November 2016</span>
                             <br />
                             <small>Assessment deadline</small>
                         </div>
@@ -27,7 +27,7 @@
 
                     <li class="column-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="heading-large" th:text="${model.applicationsSubmitted}">18</span>
+                            <span class="govuk-heading-l" th:text="${model.applicationsSubmitted}">18</span>
                             <br />
                             <small>Applications submitted</small>
                         </div>
@@ -37,7 +37,7 @@
                 <form method="GET">
                    <div class="search-filters extra-margin">
                        <fieldset>
-                            <legend class="heading-medium no-margin-top">Filter applications</legend>
+                            <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
                             <div class="grid-row">
                                 <div class="column-two-thirds">
                                     <label class="form-label" for="filterSearch">Search by application number.</label>
@@ -54,8 +54,8 @@
                     </div>
                     <div class="grid-row sorting">
                         <div class="column-half">
-                            <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">22</span>
-                                <span class="heading-small">eligible applications</span>
+                            <p><span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">22</span>
+                                <span class="govuk-heading-s">eligible applications</span>
                             </p>
                         </div>
                         <div class="column-half alignright">

@@ -13,12 +13,12 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionStatus.displayName},subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionStatus.displayName},subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
         <div class="grid-row">
             <form th:action="@{/competition}" method="post">
                 <div class="column-two-thirds">
                     <div class="boxed">
-                        <h2 class="heading-medium no-margin-top">Competition information</h2>
+                        <h2 class="govuk-heading-m no-margin-top">Competition information</h2>
 
                         <dl class="standard-definition-list">
                             <dt>Competition type</dt>
@@ -61,7 +61,7 @@
                             </div>
                             <div class="column-third">
                                 <div class="highlight-panel highlight-panel-padded">
-                                    <span class="heading-large" th:text="${model.changesSinceLastNotify}">10</span><br/>
+                                    <span class="govuk-heading-l" th:text="${model.changesSinceLastNotify}">10</span><br/>
                                     <small>changes since last notification</small>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
 
                     <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
 
-                    <h2 class="heading-medium">Competition navigation</h2>
+                    <h2 class="govuk-heading-m">Competition navigation</h2>
                     <ul class="link-list">
                         <li th:with="linkTitle=${model.readOnly ? 'Applications: Submitted, ineligible' : 'Applications: All, submitted, ineligible'}">
                             <a class="disabled" aria-disabled="true"
@@ -143,12 +143,12 @@
                     </ul>
                 </div>
                 <div class="column-third">
-                    <h2 class="heading-medium no-margin-top">Competition milestones</h2>
+                    <h2 class="govuk-heading-m no-margin-top">Competition milestones</h2>
                     <ul class="timeline-status">
                         <th:block th:each="milestone : ${model.milestones}">
                             <li th:if="${milestone.milestoneType.presetDate}"
                                 th:class="${(milestone.passed ? 'done' : 'not-done')}">
-                                <h3 class="heading-small" th:text="${milestone.milestoneType.milestoneDescription}">
+                                <h3 class="govuk-heading-s" th:text="${milestone.milestoneType.milestoneDescription}">
                                     Milestone</h3>
                                 <p th:text="${milestone.dateTime} ? ${#temporals.format(milestone.dateTime, 'd MMMM yyyy')}">
                                     10 October 2017</p>

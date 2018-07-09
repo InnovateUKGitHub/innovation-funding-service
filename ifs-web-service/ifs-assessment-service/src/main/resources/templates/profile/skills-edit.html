@@ -15,12 +15,12 @@
             <main class="govuk-main-wrapper" id="main-content" role="main">
 
                 <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+                    <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your skills',size='heading-xlarge'" />
-                <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your skills',size='govuk-heading-xl'" />
+                <h2 class="govuk-heading-m no-margin-bottom">Innovation areas</h2>
 
                 <p class="form-hint">These innovation areas have been chosen as your current areas of expertise. They will influence the types
                     of competition you will be invited to assess. If you would like to amend them or add new ones please
@@ -39,7 +39,7 @@
                 <form th:action="@{/profile/skills/edit}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
                     <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'form-group-error'">
                         <label class="form-label" th:for="skillAreas">
-                            <span class="heading-medium">Skill areas</span>
+                            <span class="govuk-heading-m">Skill areas</span>
                             <th:block th:if="${#fields.hasErrors('skillAreas')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}"></span>
                             </th:block>
@@ -68,7 +68,7 @@
                     <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')} ? 'form-group-error'">
                         <fieldset>
                             <legend id="assessorType">
-                                <span class="heading-medium">Assessor type</span>
+                                <span class="govuk-heading-m">Assessor type</span>
                                 <th:block th:if="${#fields.hasErrors('assessorType')}">
                                     <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
                                 </th:block>

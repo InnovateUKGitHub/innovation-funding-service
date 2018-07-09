@@ -23,7 +23,7 @@
 
         <!-- HARDCODED PROTOTYPE HTML -->
 
-        <h1 class="heading-xlarge">
+        <h1 class="govuk-heading-xl">
             <span class="heading-secondary">Start new application</span>
             Enter organisation details
         </h1>
@@ -36,7 +36,7 @@
 
         <!--<p class="extra-margin">You can identify your organisation through Companies House or enter your details manually.</p>-->
 
-        <h2 class="heading-medium">Search on Companies House</h2>
+        <h2 class="govuk-heading-m">Search on Companies House</h2>
 
         <form action="/prototypes/IFS-3598-org-selected" method="get">
             <input type="hidden" name="_csrf" value="bf3eeee5911011ca0665b19a96010e9e8cc50df9f63431bfc8533dbac5a10e7c56194216ef592632eb371669dc4c99a413fe220e5f312fb9f7c476057981d2496bf6e538cc7ee198c3e88543acaa00bb985bfbee3c5d8c85ec6a982b57e3ce48">
@@ -51,7 +51,7 @@
                 <button type="submit" id="org-search" name="search-organisation" class="button">Search</button>
             </div>
 
-            <h2 class="heading-medium no-margin">Companies House search results</h2>
+            <h2 class="govuk-heading-m no-margin">Companies House search results</h2>
             <p class="form-hint">Select your organisation from the options below</p>
             <ul id="org-results" class="results-list panel" style="display: block">
                 <th:block th:unless="${type == 'collaborator'}">
@@ -101,7 +101,7 @@
 
 
             <input type="hidden" id="manualEntry" name="manualEntry" value="false">
-            <h2 class="heading-medium">Not on Companies House?</h2>
+            <h2 class="govuk-heading-m">Not on Companies House?</h2>
             <p>Enter your organisation details manually. You may need to supply additional details at a later point.</p>
 
             <details role="group">
@@ -109,7 +109,7 @@
                     <span class="summary">Enter details manually</span>
                 </summary>
                 <div class="panel" id="details-content-0" aria-hidden="true">
-                    <h2 class="heading-medium">Enter your organisation details</h2>
+                    <h2 class="govuk-heading-m">Enter your organisation details</h2>
 
                     <div class="form-group">
                         <label class="form-label" for="org-name">

@@ -26,7 +26,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLAccepted'}">
 		<div class="success-alert extra-margin-bottom">
-			<h2 class="heading-small no-margin-top">The grant offer letter has been received and accepted</h2>
+			<h2 class="govuk-heading-s no-margin-top">The grant offer letter has been received and accepted</h2>
 		</div>
 
 		<p>The grant offer letter provided by Innovate UK has been received. Your consortium has completed project setup and will soon be able to complete the process.</p>
@@ -34,7 +34,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLRejected'}">
 		<div class="warning-alert extra-margin-bottom">
-			<h3 class="heading-small">REJECT TEXT REQUIRED</h3>
+			<h3 class="govuk-heading-s">REJECT TEXT REQUIRED</h3>
 			<ul class="list list-bullet">
 				<li>TEXT REQUIRED</li>
 			</ul>
@@ -46,7 +46,7 @@
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
-        <h2 class="heading-small no-margin">Upload signed grant offer letter</h2>
+        <h2 class="govuk-heading-s no-margin">Upload signed grant offer letter</h2>
         The Project Manager is required to provide a signed copy of the grant offer letter.
         <details>
             <summary><span class="summary">What are the requirements for upload?</span></summary>
@@ -69,7 +69,7 @@
 
 
 	<div class="extra-margin-top">
-		<h2 class="heading-medium no-margin">Grant offer letter</h2>
+		<h2 class="govuk-heading-m no-margin">Grant offer letter</h2>
 
 		<th:block th:if="${param.status == null}">
 
@@ -96,7 +96,7 @@
 
     </div>
 
-    <h2 class="heading-medium">Annex</h2>
+    <h2 class="govuk-heading-m">Annex</h2>
     <p>The Annex contains any additional contracts that were agreed upon during the application. In signing the grant offer letter you also agree to any conditions stated in the annex.</p>
     <p>Any additional supporting materials should be uploaded to the Annex.</p>
     <p class="uploaded-file">No file currently uploaded</p>
@@ -104,7 +104,7 @@
 
 	 <th:block th:if="${param.status != null and param.status[0] == 'GOLDecision' or param.status != null and param.status[0] == 'GOLAccepted' or param.status != null and param.status[0] == 'GOLRejected'}">
 		<div class="extra-margin-top">
-			<h2 class="heading-medium no-margin">Signed grant offer letter</h2>
+			<h2 class="govuk-heading-m no-margin">Signed grant offer letter</h2>
 			<p><a href="#">signed-offer-letter.PDF</a></p>
 		</div>
 	</th:block>
@@ -118,7 +118,7 @@
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
 
-				<h2 class="heading-medium no-margin">Send grant offer letter</h2>
+				<h2 class="govuk-heading-m no-margin">Send grant offer letter</h2>
 
 				<p>The grant offer letter will now be sent to the applicants. The Project Manager will be informed of the availablity of the GOL by email.</p>
 
@@ -139,7 +139,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
 
-		<h2 class="heading-medium no-margin-bottom">Received GOL by post?</h2>
+		<h2 class="govuk-heading-m no-margin-bottom">Received GOL by post?</h2>
 		<p>If the grant offer letter has been received by post, please tick the box below.</p>
 
 		<div class="form-group">
@@ -155,7 +155,7 @@
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
 
-				<h2 class="heading-medium no-margin">Confirm receipt of posted grant offer letter</h2>
+				<h2 class="govuk-heading-m no-margin">Confirm receipt of posted grant offer letter</h2>
 
 				<p>The signed grant offer letter has been uploaded, and a decision can be made on whether the document meets the requirements of Innovate UK.</p>
 
@@ -175,7 +175,7 @@
 
 	<div th:if="${param.status != null and param.status[0] == 'GOLDecision'}" th:remove="tag">
 
-		<h2 class="heading-medium">Confirm receipt ofgrant offer letter</h2>
+		<h2 class="govuk-heading-m">Confirm receipt ofgrant offer letter</h2>
 		<p>Please review that these documents meet the requirements for the grant offer letter </p>
 
         <form action="/prototypes/IFS-807-app-readonly">

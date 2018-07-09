@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find external users',size='heading-large'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find external users',size='govuk-heading-l'" />
 
         <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div class="search-filters extra-margin">

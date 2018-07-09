@@ -13,7 +13,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit to lead partner',size='heading-medium'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit to lead partner',size='govuk-heading-m'" />
             <p>Are you sure you want to submit your spend profile to the lead partner?</p>
             <hr />
             <input type="submit" class="button" value="Submit"/>

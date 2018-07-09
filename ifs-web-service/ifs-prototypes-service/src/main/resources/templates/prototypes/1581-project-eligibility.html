@@ -27,7 +27,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'warning'}">
 		<div class="warning-alert">
-			<h2 class="heading-small no-margin-top">The funding amount is now greater than the amount allowable. This is due to increased project costs.</h2>
+			<h2 class="govuk-heading-s no-margin-top">The funding amount is now greater than the amount allowable. This is due to increased project costs.</h2>
 
 			<p>Agree a reduced project cost amount with the applicant.</p>
 
@@ -48,7 +48,7 @@
 		</div>
 	</th:block>
 
-	<h2 class="heading-medium">Finances overview</h2>
+	<h2 class="govuk-heading-m">Finances overview</h2>
 
 	<div class="table-overflow">
 		<table>
@@ -77,7 +77,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'grantChanged' or param.action != null and param.action[0] == 'grantChanged'}">
 		<div class="panel">
-			<h3 class="heading-medium no-margin-top">% Grant has been reduced from 55% to 40% </h3>
+			<h3 class="govuk-heading-m no-margin-top">% Grant has been reduced from 55% to 40% </h3>
 			<dl class="standard-definition-list">
 				<dt>Funding sought</dt>
 				<dd>&pound;180,399</dd>
@@ -92,7 +92,7 @@
 
 		<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
-			<h3 class="heading-medium">Project finance overview</h3>
+			<h3 class="govuk-heading-m">Project finance overview</h3>
 
 			<p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
 
@@ -105,7 +105,7 @@
 
 		<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 
-			<h3 class="heading-medium">Detailed finances</h3>
+			<h3 class="govuk-heading-m">Detailed finances</h3>
 
 			<p>These finances were submitted by the applicant during the application stage. They include all changes made during the eligibility checks.</p>
 
@@ -161,14 +161,14 @@
 
 		<div class="grid-row total-cost">
 	        <div class="column-half">
-	            <span class="heading-medium">Total project costs</span>
+	            <span class="govuk-heading-m">Total project costs</span>
 	        </div>
 	        <div class="column-half alignright">
-	            <input type="text" readonly="readonly" class="heading-medium width-full alignright" value="£ 286,283" />
+	            <input type="text" readonly="readonly" class="govuk-heading-m width-full alignright" value="£ 286,283" />
 	        </div>
 	    </div>
 
-	    <h3 class="heading-medium">Other funding</h3>
+	    <h3 class="govuk-heading-m">Other funding</h3>
 
 	    <th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-other-funding" />
 
@@ -218,7 +218,7 @@
 					        <button class="js-close close" aria-label="Close Popup">X</button>
 					        <div>
 
-								<h2 class="heading-medium no-margin">Change % grant</h2>
+								<h2 class="govuk-heading-m no-margin">Change % grant</h2>
 
 								<p>This will approve the applicant's project costs.</p>
 
@@ -267,7 +267,7 @@
 
 		<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
-		    <h3 class="heading-medium">Approve eligible costs</h3>
+		    <h3 class="govuk-heading-m">Approve eligible costs</h3>
 		    <p>After making any necessary changes, eligible costs should be approved.</p>
 		    <p>If changes are made, make sure the applicant has reviewed and understand all changes before you approve.</p>
 
@@ -294,7 +294,7 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="heading-medium no-margin">Approve eligible costs</h2>
+					<h2 class="govuk-heading-m no-margin">Approve eligible costs</h2>
 
 					<p>This partner will now be marked as eligible for this project.</p>
 

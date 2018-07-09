@@ -20,14 +20,14 @@
         </div>
 
         <div class="my-applications">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Dashboard',size='heading-large'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Dashboard',size='govuk-heading-l'" />
             <section th:unless="${model.projects.empty}" class="projects-in-setup">
                 <div class="progress-list">
-                    <h2 class="heading-medium">Set up your project</h2>
+                    <h2 class="govuk-heading-m">Set up your project</h2>
                     <ul>
                         <li th:each="projectView : ${model.projects}">
                             <div class="task">
-                                <h3 class="heading-small">
+                                <h3 class="govuk-heading-s">
                                     <a th:href="${projectView.linkUrl} + ${model.originQuery}"
                                        th:text="${projectView.title}">PROJECT NAME</a>
                                 </h3>
@@ -48,11 +48,11 @@
 
             <section class="in-progress" th:unless="${model.inProgress.empty}">
                 <div class="progress-list">
-                    <h2 class="heading-medium" th:text="${model.applicationInProgressText}"/>
+                    <h2 class="govuk-heading-m" th:text="${model.applicationInProgressText}"/>
                     <ul>
                         <li class="status-2-col" th:each="inProgressView : ${model.inProgress}" th:classappend="${inProgressView.assignedToMe ? 'assigned-to-me' : '' }">
                             <div class="task">
-                                <h3 class="heading-small">
+                                <h3 class="govuk-heading-s">
                                     <a th:href="${inProgressView.linkUrl}" th:text="${inProgressView.title}" />
                                 </h3>
                                 <ul class="application-details">
@@ -100,12 +100,12 @@
 
             <section class="previous-applications" th:unless="${model.previous.empty}">
                 <div class="progress-list">
-                    <h2 class="heading-medium">Previous applications</h2>
+                    <h2 class="govuk-heading-m">Previous applications</h2>
                     <ul>
                         <li th:each="previousView : ${model.previous}"
                             th:class="${previousView.approved} ? 'positive'">
                             <div class="task">
-                                <h3 class="heading-small">
+                                <h3 class="govuk-heading-s">
                                     <a th:href="${previousView.linkUrl} + ${model.originQuery}" th:text="${previousView.title}" />
                                 </h3>
                                 <ul class="application-details">

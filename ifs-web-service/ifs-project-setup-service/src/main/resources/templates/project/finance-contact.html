@@ -15,7 +15,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance contact',subTitle=${model.projectName},size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance contact',subTitle=${model.projectName},size='govuk-heading-xl'" />
                 <p>We will ask the finance contact to:</p>
 
                 <ul class="list list-bullet">
@@ -30,7 +30,7 @@
                     <div class="form-group extra-margin" id="finance-contact-section" th:classappend="${#fields.hasErrors('*') ? 'form-group-error' : ''}">
                         <fieldset>
                             <legend>
-                                <span class="heading-medium">Finance contact</span>
+                                <span class="govuk-heading-m">Finance contact</span>
                                 <th:block th:if="${#fields.hasErrors('*')}">
                                    <span class="error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}" />
                                </th:block>

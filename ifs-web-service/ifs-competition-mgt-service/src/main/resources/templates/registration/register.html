@@ -13,13 +13,13 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to create your account.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to create your account.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
         <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"  novalidate="novalidate">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create account',size='heading-large'"/>
-            <h2 class="heading-medium">Your details</h2>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create account',size='govuk-heading-l'"/>
+            <h2 class="govuk-heading-m">Your details</h2>
 
             <div class="form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'form-group-error'">
                 <label class="form-label" th:for="${#ids.next('firstName')}">
@@ -62,9 +62,9 @@
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
 
-            <h3 class="heading-small">Role</h3>
+            <h3 class="govuk-heading-s">Role</h3>
             <p th:text="${model.roleName}">Customer support</p>
-            <h3 class="heading-small">Email</h3>
+            <h3 class="govuk-heading-s">Email</h3>
             <p>
                 <span class="form-hint">You will need this to sign into your account.</span>
                 <th:block th:text="${model.email}">robertplant@innovateuk.org</th:block>

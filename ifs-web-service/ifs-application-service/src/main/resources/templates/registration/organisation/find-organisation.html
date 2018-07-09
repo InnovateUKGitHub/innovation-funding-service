@@ -17,7 +17,7 @@
         <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkClass='link-back',linkUrl='/organisation/create/lead-organisation-type'" />
 
         <th:block th:with="orgTitle=${organisationType.name}">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${orgTitle},subTitle='Create your account',size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${orgTitle},subTitle='Create your account',size='govuk-heading-xl'" />
         </th:block>
 
         <th:block th:unless="${organisationForm.research}">
@@ -25,7 +25,7 @@
                 <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
             </div>
             <p>You can identify your organisation through Companies House or enter your details manually.</p>
-            <h2 class="heading-medium">Search on Companies House</h2>
+            <h2 class="govuk-heading-m">Search on Companies House</h2>
         </th:block>
         <th:block th:if="${organisationForm.research}">
             <div class="message-alert">
@@ -51,7 +51,7 @@
                     <p class="form-hint">Choose your organisation:</p>
                 </th:block>
                 <th:block th:unless="${organisationForm.research}">
-                    <h2 class="heading-medium no-margin">Companies House search results</h2>
+                    <h2 class="govuk-heading-m no-margin">Companies House search results</h2>
                     <p class="form-hint">Select your organisation from the options below</p>
                 </th:block>
             </th:block>
@@ -75,13 +75,13 @@
             </ul>
             <th:block th:unless="${organisationForm.research}">
                 <input type="hidden" th:field="*{manualEntry}" />
-                <h2 class="heading-medium">Not on Companies House?</h2>
+                <h2 class="govuk-heading-m">Not on Companies House?</h2>
                 <p>Enter your organisation details manually. You may need to supply additional details at a later point.</p>
                 <th:block th:with="isOpen=${#strings.isEmpty('*{organisationSearchName}') or !#strings.isEmpty(organisationForm.organisationName) or !#strings.isEmpty(organisationForm.addressForm.postcodeInput) or organisationForm.addressForm.manualAddress or organisationForm.addressForm.triedToSearch}">
                     <details th:attr="open=${isOpen} ? 'open' : null ">
                         <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"><span class="summary">Enter details manually</span></summary>
                         <div class="panel" th:attr="aria-hidden=${isOpen} ? 'false' : null">
-                            <h2 class="heading-medium">Enter your organisation details</h2>
+                            <h2 class="govuk-heading-m">Enter your organisation details</h2>
                             <th:block th:insert="fragments/addresses :: organisation-name"  th:with="form=${organisationForm},addressType=${'organisation address'}"/>
                             <th:block th:insert="fragments/addresses :: company-address-details"  th:with="form=${organisationForm}, addressType=${'organisation address'}"/>
                             <button type="submit" name="save-organisation-details" class="button extra-margin">Continue</button>

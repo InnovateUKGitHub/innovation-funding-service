@@ -13,10 +13,10 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project location',subTitle=${model.projectName},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project location',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to save your project location.</h2>
+            <h2 class="govuk-heading-m error-summary-heading"  id="error-summary-heading">We are unable to save your project location.</h2>
             <ul class="error-summary-list">
                 <li th:each="err : ${#fields.errors('${form.*}')}">
                     <a href="#postcode" th:text="${err}">The error message</a>
@@ -27,7 +27,7 @@
         <p>We will assign a Monitoring Officer who will visit your project location.</p>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
-            <h2 class="heading-medium">Project location</h2>
+            <h2 class="govuk-heading-m">Project location</h2>
 
             <div class="form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'form-group-error'" >
                 <label class="form-label-bold" for="postcode">

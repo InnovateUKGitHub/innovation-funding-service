@@ -1,7 +1,7 @@
 <th:block th:fragment="invite-list(invites)" xmlns:th="http://www.w3.org/1999/html">
     <p>
-        <span class="heading-xlarge no-margin" th:text="${invites.size()}">38</span>
-        <span class="heading-small">users invited to collaborate</span>
+        <span class="govuk-heading-xl no-margin" th:text="${invites.size()}">38</span>
+        <span class="govuk-heading-s">users invited to collaborate</span>
     </p>
     <th:block th:insert="fragments/invited-users :: invites-table(invites=${invites})" />
 </th:block>

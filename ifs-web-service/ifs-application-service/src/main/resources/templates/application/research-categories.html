@@ -12,12 +12,12 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Research category',subTitle=${model.currentCompetitionName},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Research category',subTitle=${model.currentCompetitionName},size='govuk-heading-xl'" />
 
         <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
             <div class="form-group" th:classappend="${#fields.hasErrors('*{__researchCategoryChoice__}')} ? 'form-group-error'">
                 <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
-                    <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
+                    <h2 class="govuk-heading-s no-margin">What type of research are you undertaking in this project?</h2>
                     <p>The type of research affects the level of funding a business can receive under UK state aid rules.
                         Changing the research category will reset the funding level for all business participants.
                     </p>
@@ -25,7 +25,7 @@
 
                 <fieldset>
                     <legend class="extra-margin-bottom">
-                        <h2 class="heading-medium">Research category</h2>
+                        <h2 class="govuk-heading-m">Research category</h2>
                         <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a
                             href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
                             target="_blank">Innovate UK funding rules</a>.</span>

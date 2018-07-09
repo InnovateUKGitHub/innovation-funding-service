@@ -16,17 +16,17 @@
       <div class="grid-row">
           <div class="column-two-thirds">
             <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
             </th:block>
           </div>
           <div class="column-third alignright extra-margin">
-              <h2 class="bold-small blue-block">Finance Checks</h2>
+              <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Finance Checks</h2>
           </div>
       </div>
       <hr/>
 
         <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.projectId})}">
-          <h2 class="heading-medium no-margin">Generate spend profile</h2>
+          <h2 class="govuk-heading-m no-margin">Generate spend profile</h2>
             <p>This will generate a flat spend profile for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
             <p>Partners will be notified that they can now create their spend profile.</p>
                 <button class="button large extra-margin">Generate spend profile</button>

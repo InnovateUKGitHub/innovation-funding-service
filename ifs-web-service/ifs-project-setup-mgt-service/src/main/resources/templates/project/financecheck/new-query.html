@@ -15,19 +15,19 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to post a query.</h2>
+            <h2 class="govuk-heading-m error-summary-heading"  id="error-summary-heading">We are unable to post a query.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='heading-xlarge',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
-        <h2 class="heading-medium">Finance Contact</h2>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+        <h2 class="govuk-heading-m">Finance Contact</h2>
         <p>
             <th:block th:text="${model.financeContactName}">Finance Contact</th:block> <br />
             <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}">example@example.com</a> <br />
             <th:block th:text="${model.financeContactPhoneNumber}">0</th:block>
         </p>
 
-        <h2 class="heading-medium">Queries</h2>
+        <h2 class="govuk-heading-m">Queries</h2>
         <p>
             If you have a query with the finances, use this section to raise your query with the finance contact.
             You must confirm any finance changes with the contact before you approve.
@@ -35,7 +35,7 @@
 
         <form class="extra-margin" id="post-new-query-form" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
               th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
-                <h2 class="heading-medium">Post a new query</h2>
+                <h2 class="govuk-heading-m">Post a new query</h2>
                 <div class="form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'form-group-error'">
                     <label for="queryTitle">
                         <span class="form-label-bold">Title</span>
@@ -110,7 +110,7 @@
                 </div>
                 <div class="upload-section">
                     <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                        <h3 class="heading-small">Supporting documentation</h3>
+                        <h3 class="govuk-heading-s">Supporting documentation</h3>
                         <ul>
                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                 <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
@@ -118,7 +118,7 @@
                             </li>
                         </ul>
                     </th:block>
-                    <h3 class="heading-small no-margin-bottom">Upload supporting documentation in PDF format.</h3>
+                    <h3 class="govuk-heading-s no-margin-bottom">Upload supporting documentation in PDF format.</h3>
                     <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error': ''">
                         <th:block th:if="${#fields.hasErrors('attachment')}">
                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}"></span>

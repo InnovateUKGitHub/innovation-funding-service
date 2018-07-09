@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
     <th:block th:fragment="key-statistics(keyStatistics)">
-        <h2 class="heading-large">Key statistics</h2>
+        <h2 class="govuk-heading-l">Key statistics</h2>
 
         <ul class="grid-row">
             <li class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${keyStatistics.statOne}">1</span><br/>
+                    <span class="govuk-heading-l" th:text="${keyStatistics.statOne}">1</span><br/>
                     <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="READY_TO_OPEN">Assessors invited</small>
                         <small th:case="OPEN">Assessors invited</small>
@@ -20,7 +20,7 @@
 
             <li class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${keyStatistics.statTwo}">2</span><br/>
+                    <span class="govuk-heading-l" th:text="${keyStatistics.statTwo}">2</span><br/>
                     <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="READY_TO_OPEN">Invitations accepted</small>
                         <small th:case="OPEN">Invitations accepted</small>
@@ -34,7 +34,7 @@
 
             <li th:if="${keyStatistics.statThree != null}" class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${keyStatistics.statThree}">3</span><br/>
+                    <span class="govuk-heading-l" th:text="${keyStatistics.statThree}">3</span><br/>
                     <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="OPEN">Applications per assessor</small>
                         <small th:case="CLOSED">Assessors without applications</small>
@@ -49,7 +49,7 @@
         <ul class="grid-row extra-margin">
             <li th:if="${keyStatistics.statFour != null}" class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${keyStatistics.statFour}">4</span><br/>
+                    <span class="govuk-heading-l" th:text="${keyStatistics.statFour}">4</span><br/>
                     <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="OPEN">Applications started</small>
                         <small th:case="CLOSED">Assessors invited</small>
@@ -62,7 +62,7 @@
 
             <li th:if="${keyStatistics.statFive != null}" class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${keyStatistics.statFive}">5</span><br/>
+                    <span class="govuk-heading-l" th:text="${keyStatistics.statFive}">5</span><br/>
                     <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="OPEN">Applications beyond 50%</small>
                         <small th:case="CLOSED">Invitations accepted</small>
@@ -75,7 +75,7 @@
 
             <li th:if="${keyStatistics.statSix != null}" class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${keyStatistics.statSix}">6</span><br/>
+                    <span class="govuk-heading-l" th:text="${keyStatistics.statSix}">6</span><br/>
                     <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="OPEN">Applications submitted</small>
                         <small th:case="CLOSED">Applications per assessor</small>

@@ -3,11 +3,11 @@
 <th:block th:fragment="section-content">
 
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
+        <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding information',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding information',size='govuk-heading-xl'" />
 
     <form th:attr="data-competition=${model.general.competition.id},data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="additional"
           th:action="@{(${model.general.editable} ? '' : 'additional/edit')}"
@@ -77,7 +77,7 @@
                     &nbsp;
                 </div>
                 <div class="column-half">
-                    <p class="heading-small no-margin">Total: <span data-calculation-operations="+" data-calculation-fields="input[id*=funderBudget]" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatInteger(competitionSetupForm.totalFunding, 0, 'DEFAULT')}">£0</span></p>
+                    <p class="govuk-heading-s no-margin">Total: <span data-calculation-operations="+" data-calculation-fields="input[id*=funderBudget]" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatInteger(competitionSetupForm.totalFunding, 0, 'DEFAULT')}">£0</span></p>
 
                     <div class="alignright">
                         <input type="hidden" name="removeFunder" />
@@ -89,7 +89,7 @@
             <hr />
 
             <fieldset>
-                <legend class="heading-medium">Reporting fields</legend>
+                <legend class="govuk-heading-m">Reporting fields</legend>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('pafNumber')} ? 'form-group-error'">
                     <label class="form-label" for="pafNumber">

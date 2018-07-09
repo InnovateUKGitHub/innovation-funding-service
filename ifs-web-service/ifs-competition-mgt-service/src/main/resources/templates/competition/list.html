@@ -14,7 +14,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="grid-row">
             <div class="column-half">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competitions',size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competitions',size='govuk-heading-xl'" />
             </div>
             <div class="column-half">
                 <div class="alignright extra-margin">
@@ -27,7 +27,7 @@
             <ul class="comp-list">
                 <li th:each="competition: ${competitions}">
                     <div class="column-two-thirds">
-                        <h3 class="heading-small">
+                        <h3 class="govuk-heading-s">
                             <a th:href="@{'competition/setup/'+${competition.id}}"
                                th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP || competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}"
                                th:text="${#strings.isEmpty(competition.name)} ? #{ifs.competition.no_title} : ${competition.name}">

@@ -18,37 +18,37 @@
         <div class="grid-row">
             <div class="column-two-thirds">
                 <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
-                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='heading-xlarge'" />
+                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
                 </th:block>
             </div>
             <div class="column-third alignright extra-margin">
-                <h2 class="bold-small blue-block">Spend profile</h2>
+                <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Spend profile</h2>
             </div>
         </div>
         <hr/>
 
         <th:block th:if="${model.approved}">
             <div class="success-alert extra-margin-bottom">
-                <h2 class="heading-small no-margin-top">The spend profile has been approved.</h2>
+                <h2 class="govuk-heading-s no-margin-top">The spend profile has been approved.</h2>
             </div>
         </th:block>
 
         <th:block th:if="${model.empty}">
             <div class="warning-alert extra-margin-bottom">
-                <h2 class="heading-small no-margin-top">The spend profile is not generated.</h2>
+                <h2 class="govuk-heading-s no-margin-top">The spend profile is not generated.</h2>
             </div>
         </th:block>
 
         <th:block th:if="${model.rejected}">
             <div class="warning-alert extra-margin-bottom">
-                <h3 class="heading-small">The spend profile has been rejected.</h3>
+                <h3 class="govuk-heading-s">The spend profile has been rejected.</h3>
             </div>
         </th:block>
 
         <th:block th:unless="${model.empty}">
             <p>This overview details the spend profile of each partner.</p>
             <p>You can download each spend profile to enable sharing with the Monitoring Officer.</p>
-            <h2 class="heading-medium">Innovation Lead</h2>
+            <h2 class="govuk-heading-m">Innovation Lead</h2>
             <p th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}" >
                 Innovation Lead
             </p>
@@ -56,7 +56,7 @@
                 <p>The spend profile must be sent to Innovate UK for their review and approval.</p>
             </th:block>
 
-            <h2 class="heading-medium">Project spend profile</h2>
+            <h2 class="govuk-heading-m">Project spend profile</h2>
 
             <ul>
                 <li th:each="organisation : ${model.organisations}">
@@ -66,7 +66,7 @@
             </ul>
 
             <th:block th:if="${model.notApprovedOrRejected}">
-                <h2 class="heading-medium">Approved by Innovate UK</h2>
+                <h2 class="govuk-heading-m">Approved by Innovate UK</h2>
                 <div class="form-group">
                     <div class="multiple-choice">
                         <input id="approvedByLeadTechnologist" value="yes" type="checkbox" data-switches-button-status="#accept-profile" />

@@ -14,7 +14,7 @@
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assign applications to interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" />
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Review invite email',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Review invite email',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
             <div class="table-overflow">
                 <table>
@@ -51,15 +51,15 @@
                 </table>
             </div>
 
-            <h2 class="heading-medium">Email subject</h2>
+            <h2 class="govuk-heading-m">Email subject</h2>
 
             <p th:text="${model.subject}">Invitation to assess 'Sustainable living models for the future'.</p>
 
-            <h3 class="heading-small">Message</h3>
+            <h3 class="govuk-heading-s">Message</h3>
 
             <p th:utext="${model.content}" style="white-space: pre-wrap">Read-only email content</p>
 
-            <h3 class="heading-small">Additional text</h3>
+            <h3 class="govuk-heading-s">Additional text</h3>
 
             <div ifs:utext="${model.additionalText}" class="wysiwyg-styles">Additional text</div>
 

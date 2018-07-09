@@ -19,7 +19,7 @@
 
         <!-- HARDCODED PROTOTYPE HTML -->
 
-        <h1 class="heading-xlarge">
+        <h1 class="govuk-heading-xl">
           <span class="heading-secondary">Technology inspired</span>
           Application team
         </h1>
@@ -28,7 +28,7 @@
 
         <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
           <div class="message-alert">
-            <h2 class="heading-medium no-margin-bottom">As the lead applicant you can:</h2>
+            <h2 class="govuk-heading-m no-margin-bottom">As the lead applicant you can:</h2>
             <ul class="list-bullet">
               <li>add collaborating and contributing organisations and individuals</li>
               <li>manage organisations and individuals</li>
@@ -41,7 +41,7 @@
 
         <div class="table-display-stacked">
 
-          <h2 class="heading-medium">Empire Ltd, Lead organisation</h2>
+          <h2 class="govuk-heading-m">Empire Ltd, Lead organisation</h2>
 
           <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
             <thead>
@@ -75,7 +75,7 @@
 
         <div class="table-display-stacked" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">
 
-          <h2 class="heading-medium">Ludlow</h2>
+          <h2 class="govuk-heading-m">Ludlow</h2>
 
           <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
             <thead>
@@ -109,7 +109,7 @@
 
         <div class="table-display-stacked" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">
 
-          <h2 class="heading-medium">EGGS</h2>
+          <h2 class="govuk-heading-m">EGGS</h2>
 
           <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
             <thead>
@@ -156,7 +156,7 @@
 
         <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true" style="margin-top: -153px;">
             <button class="js-close close" type="button" aria-label="Close Popup">X</button>
-            <h2 class="heading-medium no-margin">Removing collaborator</h2>
+            <h2 class="govuk-heading-m no-margin">Removing collaborator</h2>
             <p>Are you sure you wish to remove this collaborator from this application.</p>
             <p>This step cannot be undone.</p>
             <hr />
@@ -175,7 +175,7 @@
 
         <div class="modal-submit-remove-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
             <button class="js-close close" type="button" aria-label="Close Popup">X</button>
-            <h2 class="heading-medium no-margin">Remove organisation and collaborator</h2>
+            <h2 class="govuk-heading-m no-margin">Remove organisation and collaborator</h2>
             <p>Are you sure you wish to remove this organisation from this application?</p>
             <p>This will remove all collaborators and delete the organisations financial details.</p>
             <hr />

@@ -5,7 +5,7 @@
            th:unless="${section.name.equals('Finances')}"
            th:with="appIsClosed=${!(currentApplication.isOpen() and isApplicant)}">
 
-      <h2 th:text="${section.name}" class="heading-medium" th:unless="${section.name.equals('Project details') and appIsClosed}"/>
+      <h2 th:text="${section.name}" class="govuk-heading-m" th:unless="${section.name.equals('Project details') and appIsClosed}"/>
 
       <!--/* (In e.g. internal view) show the 'report' version of the application details above the collapsible sections */-->
       <th:block th:if="${section.name.equals('Project details')}">
@@ -18,7 +18,7 @@
                       </div>
                   </div>
 
-                  <h2 th:text="${section.name}" class="heading-medium" />
+                  <h2 th:text="${section.name}" class="govuk-heading-m" />
 
           </th:block>
       </th:block>
@@ -65,9 +65,9 @@
                                 <div th:if="${formInput.getQuestion()} == ${item.question}" class="clear-floats">
                                     <div class="grid-row">
                                         <div class="column-half">
-                                            <h3 class="heading-small">Feedback</h3>
+                                            <h3 class="govuk-heading-s">Feedback</h3>
                                         </div>
-                                        <div class="column-half alignright heading-small">
+                                        <div class="column-half alignright govuk-heading-s">
                                             <th:block th:each="score : ${score}">
                                                 <th:block th:if="${formInput.getQuestion()} == ${score.question}">
                                                     Score <span th:text="${score.value}">Feedback score</span>/10
@@ -94,7 +94,7 @@
   </section>
 
   <section th:if="${hasFinanceSection}">
-      <h2 class="heading-medium">Finance</h2>
+      <h2 class="govuk-heading-m">Finance</h2>
       <div class="collapsible">
           <h3>Finances summary
               <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
@@ -112,14 +112,14 @@
                 <th:block ifs:global="${applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></th:block>
                 <th:block ifs:global="${applicationResearchParticipationViewModel}" th:replace="finance/finance-summary :: research_participation_alert" th:if="${(currentApplication.isOpen() and isApplicant)}"></th:block>
 
-                <h2 class="heading-small">Funding breakdown</h2>
+                <h2 class="govuk-heading-s">Funding breakdown</h2>
                 <th:block ifs:global="${applicationFundingBreakdownViewModel}" th:insert="finance/finance-summary :: financial_summary_table" />
               </div>
               <div th:unless="${fromApplicationService}">
                   <div th:replace="finance/finance-summary :: application_finances_summary (isApplicant=${isApplicant})"></div>
                   <div th:replace="finance/finance-summary :: research_participation_alert" th:if="${(currentApplication.isOpen() and isApplicant)}"></div>
 
-                  <h2 class="heading-small">Funding breakdown</h2>
+                  <h2 class="govuk-heading-s">Funding breakdown</h2>
                   <th:block th:insert="finance/finance-summary :: financial_summary_table" />
               </div>
           </div>
@@ -127,13 +127,13 @@
   </section>
 
     <section th:if="!${#lists.isEmpty(feedbackSummary)}">
-        <h2 class="heading-medium">Feedback summary</h2>
-        <h3 class="heading-small">Do you believe that this application is suitable for funding?</h3>
+        <h2 class="govuk-heading-m">Feedback summary</h2>
+        <h3 class="govuk-heading-s">Do you believe that this application is suitable for funding?</h3>
         <p th:if="${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">Yes</p>
         <p th:if="!${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">No</p>
-        <h3 class="heading-small">Your feedback</h3>
+        <h3 class="govuk-heading-s">Your feedback</h3>
         <p th:text="${feedbackSummary[0].getFundingDecision().getFeedback()}">Feedback text</p>
-        <h3 class="heading-small">Other comments</h3>
+        <h3 class="govuk-heading-s">Other comments</h3>
         <p th:text="${feedbackSummary[0].getFundingDecision().getComment()}">Feedback text</p>
     </section>
 

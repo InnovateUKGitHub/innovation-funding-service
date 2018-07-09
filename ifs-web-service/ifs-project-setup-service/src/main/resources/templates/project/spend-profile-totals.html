@@ -14,12 +14,12 @@
         <div class="grid-container">
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to send spend profiles.</h2>
+                <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">Unable to send spend profiles.</h2>
                 Please review
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${project.name},size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${project.name},size='govuk-heading-xl'" />
             <form th:object="${form}" th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST" >
 
                 <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -33,7 +33,7 @@
                     <dd th:text="${project.durationInMonths + ' months'}"></dd>
                 </dl>
             </div>
-            <h2 class="heading-medium">Project - Spend profile</h2>
+            <h2 class="govuk-heading-m">Project - Spend profile</h2>
             <p>This is the spend profile for your project.</p>
         </div>
 
@@ -91,7 +91,7 @@
             <div class="flex-table-after"></div>
         </div>
         <div class="grid-container">
-            <h2 class="heading-medium">Project costs for financial year</h2>
+            <h2 class="govuk-heading-m">Project costs for financial year</h2>
             <p>Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
             <table class="extra-margin-bottom" style="width: 50%;">
                 <thead>

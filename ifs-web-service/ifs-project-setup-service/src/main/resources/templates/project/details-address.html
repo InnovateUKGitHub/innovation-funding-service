@@ -14,11 +14,11 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to save your changes.</h2>
+                    <h2 class="govuk-heading-m error-summary-heading"  id="error-summary-heading">We were unable to save your changes.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project address',subTitle=${model.projectName},size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project address',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
                 <p>We will assign a Monitoring Officer who will visit your project at this address.</p>
 
@@ -26,7 +26,7 @@
                     <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}')}? 'form-group-error'">
                         <fieldset id="addressType">
                             <legend>
-                                <span class="heading-medium">Project address</span>
+                                <span class="govuk-heading-m">Project address</span>
                                 <th:block th:if="${#fields.hasErrors('*{addressType}')}">
                                     <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
                                 </th:block>

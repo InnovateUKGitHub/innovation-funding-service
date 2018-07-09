@@ -27,7 +27,7 @@
 		<div th:if="${param.unsuccessful == null}" th:remove="tag">
 
 			<div class="success-alert">
-				<h2 class="heading-small no-margin">Congratulations, your application has been successful.</h2>
+				<h2 class="govuk-heading-s no-margin">Congratulations, your application has been successful.</h2>
 				<p>Average scores and written feedback from each assessor can be found below.</p>
 		    </div>
 
@@ -36,13 +36,13 @@
 		<div th:if="${param.unsuccessful != null}" th:remove="tag">
 
 			<div class="warning-alert">
-		        <h2 class="heading-small no-margin">Your application has not been successful in this competition</h2>
+		        <h2 class="govuk-heading-s no-margin">Your application has not been successful in this competition</h2>
                 <p>Average scores and written feedback from each assessor can be found below.</p>
 		    </div>
 
 		</div>
 
-	    <h2 class="heading-medium">Overall scores</h2>
+	    <h2 class="govuk-heading-m">Overall scores</h2>
 		<table>
 			<tbody>
 			<tr>
@@ -79,7 +79,7 @@
 
 	<div th:if="${param.internal != null}" th:remove="tag">
 
-	<h2 class="heading-medium">Average scores</h2>
+	<h2 class="govuk-heading-m">Average scores</h2>
 
 		<table>
 			<thead>
@@ -218,7 +218,7 @@
 
 	</div>
 
-	<h2 th:class="(${param.internal != null} ? 'heading-medium' : 'heading-medium no-margin-bottom')">Application details</h2>
+	<h2 th:class="(${param.internal != null} ? 'govuk-heading-m' : 'govuk-heading-m no-margin-bottom')">Application details</h2>
 	<p class="form-hint" th:unless="${param.internal != null}">Assessors do not provide scores on these sections of the application.</p>
 
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-application-details-panel" />
@@ -228,7 +228,7 @@
 		<!-- <li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">Application details</h3>
+					<h3 class="govuk-heading-s">Application details</h3>
 				</div>
 				<div class="column-third">
 					<p class="form-hint no-margin">No feedback provided</p>
@@ -238,7 +238,7 @@
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">Project summary</h3>
+					<h3 class="govuk-heading-s">Project summary</h3>
 				</div>
 				<div class="column-third">
 					<p class="form-hint no-margin">No feedback provided</p>
@@ -248,7 +248,7 @@
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">Public description</h3>
+					<h3 class="govuk-heading-s">Public description</h3>
 				</div>
 				<div class="column-third">
 					<p class="form-hint no-margin">No feedback provided</p>
@@ -258,7 +258,7 @@
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">Scope</h3>
+					<h3 class="govuk-heading-s">Scope</h3>
 				</div>
 				<div class="column-third">
 			        In scope? 4/5 Yes
@@ -267,13 +267,13 @@
 		</li>
 	</ul>
 
-	<h2 th:class="(${param.internal != null} ? 'heading-medium' : 'heading-medium no-margin-bottom')">Application questions</h2>
+	<h2 th:class="(${param.internal != null} ? 'govuk-heading-m' : 'govuk-heading-m no-margin-bottom')">Application questions</h2>
 	<p class="form-hint" th:unless="${param.internal != null}">Each question has been assessed by several independent assessors. They have given a score out of 10 and written feedback.</p>
 	<ul class="list-overview">
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">1. Business opportunity</h3>
+					<h3 class="govuk-heading-s">1. Business opportunity</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
@@ -281,7 +281,7 @@
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">2. Potential market</h3>
+					<h3 class="govuk-heading-s">2. Potential market</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
@@ -289,7 +289,7 @@
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">3. Project exploitation</h3>
+					<h3 class="govuk-heading-s">3. Project exploitation</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
@@ -297,7 +297,7 @@
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">4. Economic benefit</h3>
+					<h3 class="govuk-heading-s">4. Economic benefit</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
@@ -305,7 +305,7 @@
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">5. Technical approach</h3>
+					<h3 class="govuk-heading-s">5. Technical approach</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
@@ -313,7 +313,7 @@
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">6. Innovation</h3>
+					<h3 class="govuk-heading-s">6. Innovation</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
@@ -324,11 +324,11 @@
 
 
 				<div class="column-two-thirds" th:with="link=${param.unsuccessful} ? '/prototypes/545-application-feedback-question7?unsuccessful' : '/prototypes/545-application-feedback-question7'" th:unless="${param.internal != null}">
-					<h3 class="heading-small"><a th:href="${link}">7. Risks</a></h3>
+					<h3 class="govuk-heading-s"><a th:href="${link}">7. Risks</a></h3>
 				</div>
 
 				<div class="column-two-thirds" th:with="link='/prototypes/545-application-feedback-question7?internal'" th:unless="${param.internal == null}">
-					<h3 class="heading-small"><a th:href="${link}">7. Risks</a></h3>
+					<h3 class="govuk-heading-s"><a th:href="${link}">7. Risks</a></h3>
 				</div>
 
 
@@ -338,7 +338,7 @@
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">8. Project team</h3>
+					<h3 class="govuk-heading-s">8. Project team</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
@@ -346,7 +346,7 @@
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">9. Funding</h3>
+					<h3 class="govuk-heading-s">9. Funding</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
@@ -354,7 +354,7 @@
 		<li class="section-status">
 			<div class="grid-row">
 				<div class="column-two-thirds">
-					<h3 class="heading-small">10. Adding value</h3>
+					<h3 class="govuk-heading-s">10. Adding value</h3>
 				</div>
 				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
@@ -372,7 +372,7 @@
 		</div>
 	</div>
 
-	<h2 class="heading-medium">Finances</h2>
+	<h2 class="govuk-heading-m">Finances</h2>
 
 	<div class="collapsible section-overview">
 
@@ -393,13 +393,13 @@
 	</div>
 
 
-	<h2 class="heading-medium">
+	<h2 class="govuk-heading-m">
 		Your assessors' feedback
 	</h2>
 
 	<ul class="boxed-list" th:with="recommend=${param.unsuccessful} ? No : Yes">
 		<li>
-			<h4 class="heading-small" th:text="${(param.internal != null ? 'Ray Browne':'Assessor 1')}">Assessor 1</h4>
+			<h4 class="govuk-heading-s" th:text="${(param.internal != null ? 'Ray Browne':'Assessor 1')}">Assessor 1</h4>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 
 			<div th:unless="${param.internal == null}" th:remove="tag">
@@ -408,15 +408,15 @@
 
 		</li>
 		<li>
-			<h4 class="heading-small" th:text="${(param.internal != null ? 'Julio Fario':'Assessor 4')}">Assessor 2</h4>
+			<h4 class="govuk-heading-s" th:text="${(param.internal != null ? 'Julio Fario':'Assessor 4')}">Assessor 2</h4>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 		</li>
 		<li>
-			<h4 class="heading-small" th:text="${(param.internal != null ? 'Colin Seabrook':'Assessor 5')}">Assessor 4</h4>
+			<h4 class="govuk-heading-s" th:text="${(param.internal != null ? 'Colin Seabrook':'Assessor 5')}">Assessor 4</h4>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 
 			<div th:unless="${param.internal == null}" th:remove="tag">
-				<h5 class="heading-small">Other comments</h5>
+				<h5 class="govuk-heading-s">Other comments</h5>
 				<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
 			</div>
 		</li>

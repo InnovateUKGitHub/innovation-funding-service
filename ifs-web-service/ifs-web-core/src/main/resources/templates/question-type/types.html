@@ -58,11 +58,11 @@
                th:for="formInput[__${formInput.id}__]"
                th:id="'form-label-'+${formInput.id}">
             <th:block th:if="${model.closed or model.summary}">
-                <span class="heading-small" th:if="${question.name} and ${question.name != 'Project summary'} and ${question.name != 'Public description'}"
+                <span class="govuk-heading-s" th:if="${question.name} and ${question.name != 'Project summary'} and ${question.name != 'Public description'}"
                       th:text="${question.name}" />
             </th:block>
             <th:block th:unless="${model.closed or model.summary}">
-              <span class="heading-small" th:if="${question.name}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
+              <span class="govuk-heading-s" th:if="${question.name}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
               <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
             </th:block>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
@@ -99,7 +99,7 @@
          removeName='remove_uploaded_file',
          saveName='upload_file'">
 
-        <h3 class="heading-small no-margin" th:text="${formInput.description}">Project management appendix</h3>
+        <h3 class="govuk-heading-s no-margin" th:text="${formInput.description}">Project management appendix</h3>
         <th:block th:if="${viewmode=='edit'}" th:insert="question-type/form-elements :: form-guidance-appendix (${formInput})" />
         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename}, ${inputField}, ${validationField}, ${mayRemove}, ${removeName}, ${saveName})" />
     </div>

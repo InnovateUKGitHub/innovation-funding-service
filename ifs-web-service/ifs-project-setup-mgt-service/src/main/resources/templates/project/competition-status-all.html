@@ -12,12 +12,12 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='govuk-heading-xl'" />
 
         <form method="GET">
             <div class="search-filters extra-margin">
                 <fieldset>
-                    <legend class="heading-medium no-margin-top">Filter projects</legend>
+                    <legend class="govuk-heading-m no-margin-top">Filter projects</legend>
                     <div class="grid-row">
                         <div class="column-two-thirds">
                             <label class="form-label" for="applicationSearchString">Search by application number.</label>
@@ -59,7 +59,7 @@
               <tbody class="cell-border-right">
                 <tr th:each="project : ${model.competitionProjectsStatusResource.projectStatusResources}">
                     <th scope="row">
-                      <div class="heading-small no-margin" th:text="${project.projectTitle}" />
+                      <div class="govuk-heading-s no-margin" th:text="${project.projectTitle}" />
                         <!--/*  origin must one of org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin */-->
                       <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" />
                       <small>

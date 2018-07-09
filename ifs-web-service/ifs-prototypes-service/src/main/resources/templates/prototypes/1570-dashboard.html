@@ -67,7 +67,7 @@
 
 					<div th:if="${param.status == null}" th:remove="tag">
 
-						<h2 class="heading-medium no-margin">Competition close</h2>
+						<h2 class="govuk-heading-m no-margin">Competition close</h2>
 
 						<div class="grid-row">
 
@@ -96,7 +96,7 @@
 
 				    <div th:if="${param.closed != null}" th:remove="tag">
 
-						<h2 class="heading-medium no-margin">
+						<h2 class="govuk-heading-m no-margin">
 						Assessment deadline
 						</h2>
 						<div class="grid-row">
@@ -134,7 +134,7 @@
 		<div class="grid-row constrain-width extra-margin ">
 			<div class="column-third">
 				<a href="/prototypes/1348-open-applications" class="button-dashboard highlight">
-					<p><span class="heading-large">22</span><br />Applications</p>
+					<p><span class="govuk-heading-l">22</span><br />Applications</p>
 				</a>
 			</div>
 		</div>
@@ -142,17 +142,17 @@
 		<div class="grid-row constrain-width extra-margin ">
 			<div class="column-third">
 				<p class="button-dashboard">
-					<span class="heading-large">12</span><br />Applications started
+					<span class="govuk-heading-l">12</span><br />Applications started
 				</p>
 			</div>
 			<div class="column-third">
 				<p class="button-dashboard">
-					<span class="heading-large">6</span><br />Applications in progress (beyond 50%)
+					<span class="govuk-heading-l">6</span><br />Applications in progress (beyond 50%)
 				</p>
 			</div>
 			<div class="column-third">
 				<p class="button-dashboard">
-					<span class="heading-large">4</span><br />Applications submitted
+					<span class="govuk-heading-l">4</span><br />Applications submitted
 				</p>
 			</div>
 		</div>
@@ -165,12 +165,12 @@
 
 			<div class="column-third">
 				<a class="button-dashboard highlight" th:href="${(param.status != null ? '/prototypes/1348-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-submitted-applications?closed')}">
-					<span class="heading-large">4</span><br />Applications submitted
+					<span class="govuk-heading-l">4</span><br />Applications submitted
 				</a>
 			</div>
 			<div class="column-third">
 				<a class="button-dashboard" th:href="${(param.status != null ? '/prototypes/1348-not-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-not-submitted-applications?closed')}">
-					<p><span class="heading-large">18</span><br />Applications not submitted</p>
+					<p><span class="govuk-heading-l">18</span><br />Applications not submitted</p>
 				</a>
 			</div>
 

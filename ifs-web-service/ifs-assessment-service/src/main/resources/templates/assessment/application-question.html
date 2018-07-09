@@ -15,12 +15,12 @@
             <main class="govuk-main-wrapper" id="main-content" role="main">
 
                 <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
+                    <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
                 <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
-                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.questionShortName},subTitle=${applicationName},size='heading-xlarge'" />
+                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.questionShortName},subTitle=${applicationName},size='govuk-heading-xl'" />
                 </th:block>
 
                 <form th:if="${responseRequired}"
@@ -36,7 +36,7 @@
                     <p class="form-hint" th:if="${model.scopeFormInputExists}">Please indicate whether this application is in scope for this competition.</p>
 
                     <div class="form-group">
-                        <h2 class="heading-medium">
+                        <h2 class="govuk-heading-m">
                             <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
                             <th:block th:text="${model.questionName}" />
                         </h2>
@@ -63,7 +63,7 @@
 
                 <th:block th:unless="${responseRequired}">
                     <div class="form-group">
-                        <h2 class="heading-medium">
+                        <h2 class="govuk-heading-m">
                             <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
                             <th:block th:text="${model.questionName}"  />
                         </h2>

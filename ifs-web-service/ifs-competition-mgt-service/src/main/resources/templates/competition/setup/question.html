@@ -15,11 +15,11 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${#strings.isEmpty(competitionSetupForm.question.shortTitle)} ? #{ifs.application.question.no_heading} : ${competitionSetupForm.question.shortTitle},subTitle=${competitionName},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${#strings.isEmpty(competitionSetupForm.question.shortTitle)} ? #{ifs.application.question.no_heading} : ${competitionSetupForm.question.shortTitle},subTitle=${competitionName},size='govuk-heading-xl'" />
 
         <p class="extra-margin" th:unless="${model.general.state.preventEdit}">
             You can edit this question for the applicant as well as the guidance for assessors. </p>

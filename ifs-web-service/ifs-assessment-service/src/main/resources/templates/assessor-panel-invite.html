@@ -13,15 +13,15 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+                    <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assessment panel for '${model.competitionName}'|,size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assessment panel for '${model.competitionName}'|,size='govuk-heading-xl'" />
                 <p>You are invited to the assessment panel for the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
                 <section class="boxed">
-                    <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.panelDate, 'd MMMM yyyy')}: assessment panel|">
+                    <h2 class="govuk-heading-m no-margin" th:text="|${#temporals.format(model.panelDate, 'd MMMM yyyy')}: assessment panel|">
                         21 March 2017: assessment panel
                     </h2>
                     <p>Are you available to take part in this assessment panel? <br>
@@ -29,7 +29,7 @@
                 </section>
 
                 <section>
-                    <h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
+                    <h2 class="govuk-heading-m" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
 
                     <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief (opens in a new window)</a></p>
                     <br>
@@ -39,7 +39,7 @@
                     <div class="form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'form-group-error'">
                         <fieldset>
                             <legend id="acceptInvitation">
-                                <span class="heading-medium">Are you able to attend the assessment panel?</span>
+                                <span class="govuk-heading-m">Are you able to attend the assessment panel?</span>
                                 <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
                                     <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
                                 </th:block>

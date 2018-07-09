@@ -39,7 +39,7 @@
     <!-- ===========================Form: organisation_size =========================== -->
     <th:block th:fragment="organisation_size(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
         <div class="message-alert extra-margin-bottom" th:if="${model.organisationSizeAlert}">
-            <h2 class="heading-small no-margin">Organisation size determines funding</h2>
+            <h2 class="govuk-heading-s no-margin">Organisation size determines funding</h2>
             <p>The organisation size is used to calculate your funding level in the application.</p>
             <p>Changing this selection will reset your funding level.</p>
         </div>
@@ -227,7 +227,7 @@
 
     <!-- ===========================Form: your_finance =========================== -->
     <th:block th:fragment="your_finance (model, internalView)">
-        <h2 class="heading-medium no-margin" th:text="${#strings.replace(model.question.name,'{organisationName}',
+        <h2 class="govuk-heading-m no-margin" th:text="${#strings.replace(model.question.name,'{organisationName}',
         model.currentApplicant.organisation.name)}" />
         <p ifs:utext="${model.question.description}" />
 
@@ -250,13 +250,13 @@
 
         <div class="grid-row total-cost">
             <div class="column-half">
-                <label for="total-cost" class="heading-medium">'<th:block th:text="${model.currentApplicant.organisation.name}"></th:block>' Total project costs</label>
+                <label for="total-cost" class="govuk-heading-m">'<th:block th:text="${model.currentApplicant.organisation.name}"></th:block>' Total project costs</label>
             </div>
             <div class="column-half alignright">
                 <input type="text"
                        id="total-cost"
                        readonly="readonly"
-                       class="heading-medium width-full alignright"
+                       class="govuk-heading-m width-full alignright"
                        data-calculation-fields="[id*=section-total]"
                        data-calculation-operations="+"
                        th:value="'£' + ${#numbers.formatInteger(organisationFinanceTotal, 0, 'DEFAULT')}"/>
@@ -266,7 +266,7 @@
 
     <!-- ===========================View: assessor_detailed_finance =========================== -->
     <th:block th:fragment="assessment_detailed_finance(model, internalView)">
-        <h2 class="heading-medium">Detailed finances</h2>
+        <h2 class="govuk-heading-m">Detailed finances</h2>
 
         <section class="collapsible" th:each="projectCostSection : ${detailedCostings.defaultProjectCostSections}">
             <h2>
@@ -284,13 +284,13 @@
 
         <div class="grid-row total-cost">
             <div class="column-half">
-                <label for="total-cost" class="heading-medium">Total project costs</label>
+                <label for="total-cost" class="govuk-heading-m">Total project costs</label>
             </div>
             <div class="column-half alignright">
                 <input type="text"
                        id="total-cost"
                        readonly="readonly"
-                       class="heading-medium width-full alignright"
+                       class="govuk-heading-m width-full alignright"
                        data-calculation-fields="[id*=section-total]"
                        data-calculation-operations="+"
                        th:value="'£' + ${#numbers.formatInteger(organisationFinanceTotal, 0, 'DEFAULT')}"/>
@@ -392,7 +392,7 @@
                 </div>
                 <h4 class="alignright section-total-summary">
                     Total labour costs
-                    <span class="heading-small"
+                    <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
                           th:text="'£'+${costCategory.total != null ? #numbers.formatInteger(costCategory.total, 0, 'DEFAULT') : '0'}"></span>
                 </h4>
@@ -557,7 +557,7 @@
                             </tr>
                             <tr>
                                 <td class="form-group download">
-                                    <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
+                                    <h3 class="govuk-heading-s no-margin">Download the overhead calculation spreadsheet</h3>
                                     <ul>
                                         <li>Download as an Excel document <a href="/files/overheads.xlsx">overhead calculation spreadsheet.xlsx (16KB)</a></li>
                                         <li>Download as an Open Office document <a href="/files/overheads.ods">overhead calculation spreadsheet.ods (10KB)</a></li>
@@ -642,7 +642,7 @@
                 <p th:unless="${internalView}">There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
                 <h4 class="alignright section-total-summary">
                     Total overhead costs
-                    <span class="heading-small"
+                    <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
                           th:text="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£' + ${#numbers.formatInteger(costCategory?.total,0, 'DEFAULT')} : '£0'"></span>
                 </h4>
@@ -656,7 +656,7 @@
 
             </div>
             <div th:unless="${overheadCosts?.useTotalOption}" id="overhead-custom-percentage">
-                <h3 class="heading-medium">Custom overhead costs</h3>
+                <h3 class="govuk-heading-m">Custom overhead costs</h3>
                 <p>
                     If you feel your overhead costs are higher than 20% you may calculate a value using an Innovate UK model.
                     The model shows you which types of indirect costs associated with your project you may claim. For support with this option,
@@ -697,7 +697,7 @@
 
                 <!--/* Applicants' view of Overheads */-->
                 <th:block th:unless="${internalView}">
-                    <h3 class="heading-medium">Calculate overheads</h3>
+                    <h3 class="govuk-heading-m">Calculate overheads</h3>
                     <p>
                         If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadsheet available below.
                         The model shows you which types of indirect costs associated with your project you may claim.
@@ -705,14 +705,14 @@
                         This will assess the appropriateness of your claim if your grant application is successful.
                     </p>
                     <div class="form-group download">
-                        <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
+                        <h3 class="govuk-heading-s no-margin">Download the overhead calculation spreadsheet</h3>
                         <ul>
                             <li>Download as an Excel document <a href="/files/overheads.xlsx">overhead calculation spreadsheet.xlsx (16KB)</a></li>
                             <li>Download as an Open Office document <a href="/files/overheads.ods">overhead calculation spreadsheet.ods (10KB)</a></li>
                         </ul>
                     </div>
                     <div class="upload-section extra-margin">
-                        <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
+                        <h3 class="govuk-heading-s no-margin">Upload your completed spreadsheet</h3>
                         <div class="form-group">
                             <input type="hidden"
                                    name="fileoverheadid"
@@ -861,7 +861,7 @@
                 </div>
                 <h4 class="alignright section-total-summary">
                     Total materials costs
-                    <span class="heading-small"
+                    <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
                           th:text="'£' + ${#numbers.formatInteger(costCategory.total, 0,'DEFAULT')}"></span>
                 </h4>
@@ -1013,7 +1013,7 @@
             </p>
             <h4 class="alignright section-total-summary">
                 Total capital usage costs
-                <span class="heading-small"
+                <span class="govuk-heading-s"
                       th:attr="data-mirror='#section-total-'+${subSection.id}"
                       th:text="'£' + ${costCategory.total &lt; 0 ? 0 : #numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></span>
             </h4>
@@ -1226,7 +1226,7 @@
             </p>
             <h4 class="alignright section-total-summary">
                 Total subcontracting costs
-                <span class="heading-small"
+                <span class="govuk-heading-s"
                       th:attr="data-mirror='#section-total-'+${subSection.id}"
                       th:text="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></span>
             </h4>
@@ -1376,7 +1376,7 @@
                 </div>
                 <h4 class="alignright section-total-summary">
                     Total travel and subsistence costs
-                    <span class="heading-small"
+                    <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
                           th:text="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></span>
                 </h4>
@@ -1534,7 +1534,7 @@
                 </div>
                 <h4 class="alignright section-total-summary">
                     Total other costs
-                    <span class="heading-small"
+                    <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
                           th:text="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></span>
                 </h4>
@@ -1594,7 +1594,7 @@
     <!-- ===========================Form: Other funding=========================== -->
     <th:block th:fragment="other_funding (model)" th:with="question=${model.question}, costCategory=${model.costCategory}, viewmode=${model.viewmode}, subSection=${model.section}, readonly=${model.readonly}">
         <th:block th:if="${readonly}">
-            <h2 class="heading-medium">Other funding for this project</h2>
+            <h2 class="govuk-heading-m">Other funding for this project</h2>
             <th:block th:if="${costCategory.otherPublicFunding?.equals('No')}">
                 <p>No other funding</p>
             </th:block>
@@ -1627,7 +1627,7 @@
         </th:block>
         <th:block th:unless="${readonly}">
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')} ? 'form-group-error'">
-                <h2 th:text="${question.name}" class="heading-medium"></h2>
+                <h2 th:text="${question.name}" class="govuk-heading-m"></h2>
                 <fieldset class="inline" id="otherFundingShowHideToggle">
                     <legend th:id="|formInput[cost-otherPublicFunding]|">
                         <span class="visuallyhidden" th:text="${question.name}"></span>

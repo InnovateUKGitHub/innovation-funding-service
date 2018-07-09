@@ -14,21 +14,21 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+                    <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept application',size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept application',size='govuk-heading-xl'" />
 
                 <h2 class="visually-hidden">Application details</h2>
                 <div class="boxed">
                     <div class="grid-row">
                         <div class="column-half">
-                            <p class="heading-small no-margin">Title:</p>
+                            <p class="govuk-heading-s no-margin">Title:</p>
                             <p th:text="${model.applicationName}"></p>
                         </div>
                         <div class="column-half">
-                            <p class="heading-small no-margin">Partners:</p>
+                            <p class="govuk-heading-s no-margin">Partners:</p>
                             <ul class="list list-bullet">
                                 <li th:each="partner : ${model.partners}">
                                     <th:block th:text="${partner.name}"></th:block>
@@ -40,12 +40,12 @@
 
 
                     <th:block th:if="${model.projectSummary}">
-                        <h3 class="heading-small no-margin">Project summary:</h3>
+                        <h3 class="govuk-heading-s no-margin">Project summary:</h3>
                         <p th:text="${model.projectSummary}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response for project summary.</p>
                     </th:block>
                 </div>
 
-                <h2 class="heading-medium">Review the project summary above to make sure:</h2>
+                <h2 class="govuk-heading-m">Review the project summary above to make sure:</h2>
                 <ul class="list list-bullet">
                     <li>you do not have a conflict of interest with this application</li>
                     <li>the application fits within your area of expertise</li>
@@ -56,7 +56,7 @@
                     <div class="form-group" th:classappend="${#fields.hasErrors('assessmentAccept')} ? 'form-group-error'">
                         <fieldset>
                             <legend id="assessmentAccept">
-                                <h2 class="heading-medium">Select your ability to assess this application</h2>
+                                <h2 class="govuk-heading-m">Select your ability to assess this application</h2>
                                 <th:block th:if="${#fields.hasErrors('assessmentAccept')}">
                                     <span class="error-message"  th:each="err : ${#fields.errors('assessmentAccept')}" th:text="${err}" />
                                 </th:block>

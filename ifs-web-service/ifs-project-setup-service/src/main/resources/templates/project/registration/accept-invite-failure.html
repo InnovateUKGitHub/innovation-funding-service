@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=#{registration.INVITE_FAILURE},size='heading-large'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=#{registration.INVITE_FAILURE},size='govuk-heading-l'" />
         <div th:each="failureMessageKey:${failureMessageKeys}">
             <p th:text="#{${failureMessageKey.errorKey}}"></p>
         </div>

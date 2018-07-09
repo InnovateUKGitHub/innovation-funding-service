@@ -15,19 +15,19 @@
             <main class="govuk-main-wrapper" id="main-content" role="main">
 
                 <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-                    <h2 class="heading-medium error-summary-heading">We were unable to save your changes.</h2>
+                    <h2 class="govuk-heading-m error-summary-heading">We were unable to save your changes.</h2>
                     <ul class="error-summary-list">
                         <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
                     </ul>
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your skills',size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your skills',size='govuk-heading-xl'" />
                 <p>Before you can assess we need you to provide some additional information about your skills. We can then allocate you applications relevant to your expertise and skills.</p>
 
                 <form th:action="@{/profile/skills}" method="post" th:object="${form}" class="extra-margin">
                     <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'form-group-error'">
                         <label class="form-label" th:for="skillAreas">
-                            <span class="heading-large">Skill areas</span>
+                            <span class="govuk-heading-l">Skill areas</span>
                             <th:block th:if="${#fields.hasErrors('skillAreas')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}" />
                             </th:block>
@@ -54,7 +54,7 @@
                     <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')} ? 'form-group-error'">
                         <fieldset class="inline">
                             <legend>
-                                <span class="heading-large">Assessor type</span>
+                                <span class="govuk-heading-l">Assessor type</span>
                                 <th:block th:if="${#fields.hasErrors('assessorType')}">
                                     <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
                                 </th:block>

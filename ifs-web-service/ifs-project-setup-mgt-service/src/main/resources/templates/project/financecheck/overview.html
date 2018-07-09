@@ -15,10 +15,10 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="grid-row">
             <div class="column-two-thirds">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=|${model.overview.projectId} : ${model.overview.projectName}|,size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=|${model.overview.projectId} : ${model.overview.projectName}|,size='govuk-heading-xl'" />
             </div>
             <div class="column-third alignright extra-margin">
-                <h2 class="bold-small blue-block">Finance checks</h2>
+                <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Finance checks</h2>
             </div>
         </div>
 
@@ -26,12 +26,12 @@
 
         <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
 
-        <h3 class="heading-medium">Finances summary</h3>
+        <h3 class="govuk-heading-m">Finances summary</h3>
         <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
 
         <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>
 
-        <h3 class="heading-medium">Project cost breakdown</h3>
+        <h3 class="govuk-heading-m">Project cost breakdown</h3>
         <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})">
     </main>
 </div>

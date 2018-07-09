@@ -63,7 +63,7 @@
              th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'form-group-error'">
 
 
-            <h2 th:text="${question.getName()}" class="heading-medium" />
+            <h2 th:text="${question.getName()}" class="govuk-heading-m" />
             <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" />
@@ -231,17 +231,17 @@
     <!-- ===========================Research Participation alert messages =========================== -->
     <th:block th:fragment="research_participation_alert">
         <div th:unless="${researchParticipationPercentage &gt; maxResearchPercentage}" class="success-alert">
-            <h2 class="heading-small no-margin">The research participation levels of this project are within the required range.</h2>
+            <h2 class="govuk-heading-s no-margin">The research participation levels of this project are within the required range.</h2>
         </div>
         <div th:if="${researchParticipationPercentage &gt; maxResearchPercentage}" class="warning-alert">
-            <h2 class="heading-small no-margin">Maximum research participation exceeded</h2>
+            <h2 class="govuk-heading-s no-margin">Maximum research participation exceeded</h2>
             <p>Please seek confirmation that the project is still eligible for funding.</p>
         </div>
     </th:block>
 
     <!-- ===========================Finances Overview =========================== -->
     <th:block th:fragment="project-finance-overview(overview)">
-        <h3 class="heading-medium">Overview</h3>
+        <h3 class="govuk-heading-m">Overview</h3>
         <div class="table-overflow extra-margin-bottom">
             <table>
                 <thead>

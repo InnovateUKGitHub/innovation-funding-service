@@ -69,7 +69,7 @@
                 </p>
             </div>
 
-            <h3 class="heading-large">$title - $titleSuffix</h3>
+            <h3 class="govuk-heading-l">$title - $titleSuffix</h3>
 
             <noscript>
                 <div class="content">

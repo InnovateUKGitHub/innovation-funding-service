@@ -3,7 +3,7 @@
     <th:block th:unless="${editable}">
         <fieldset>
             <legend class="visuallyhidden">Application question</legend>
-            <h2 class="heading-medium extra-margin">Application question</h2>
+            <h2 class="govuk-heading-m extra-margin">Application question</h2>
 
             <dl class="application-question-list grid-row">
                 <dt class="column-third">Question heading</dt>
@@ -49,7 +49,7 @@
         <fieldset
             th:if="${question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null}">
             <legend class="visuallyhidden">Assessment of this question</legend>
-            <h2 class="heading-medium extra-margin">Assessment of this question</h2>
+            <h2 class="govuk-heading-m extra-margin">Assessment of this question</h2>
 
             <dl class="application-question-list grid-row">
                 <th:block th:if="${question.scored != null}">
@@ -100,7 +100,7 @@
     </th:block>
     <th:block th:if="${editable}">
 
-        <h2 class="heading-medium extra-margin">Application question</h2>
+        <h2 class="govuk-heading-m extra-margin">Application question</h2>
 
         <input type="hidden"
                th:name="question.questionId"
@@ -308,7 +308,7 @@
                 <input type="hidden" name="competitionSetupForm.question.type"
                        th:value="${T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}"/>
 
-                <h2 class="heading-medium extra-margin">Assessment of this question</h2>
+                <h2 class="govuk-heading-m extra-margin">Assessment of this question</h2>
 
                 <th:block th:if="${question.researchCategoryQuestion != null}">
 
@@ -491,7 +491,7 @@
                         <div class="form-group">
 
                             <input type="hidden" name="removeGuidanceRow"/>
-                            <h3 class="heading-small">Guidance table</h3>
+                            <h3 class="govuk-heading-s">Guidance table</h3>
                             <table id="guidance-table" class="assessed-guidance"
                                    th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
                                 <thead>

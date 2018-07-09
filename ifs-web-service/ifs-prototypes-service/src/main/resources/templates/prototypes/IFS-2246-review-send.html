@@ -23,7 +23,7 @@
 
     <th:block th:if="${param.status != null and param.status[0] == 'error'}">
         <div class="error-summary" role="alert" aria-labelledby="error-upload-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-upload-heading">
+            <h2 class="govuk-heading-m error-summary-heading" id="error-upload-heading">
                 There is a problem on this page.
             </h2>
             <ul class="error-summary-list">
@@ -54,8 +54,8 @@
 
     <th:block th:if="${param.status == null or param.status[0] != 'resendInvites'}">
         <div class="grid-row sorting extra-margin">
-            <span class="heading-xlarge no-margin">4</span>
-            <span class="heading-small">applications</span>
+            <span class="govuk-heading-xl no-margin">4</span>
+            <span class="govuk-heading-s">applications</span>
         </div>
     </th:block>
 
@@ -192,7 +192,7 @@
             </div>
 
             <div class="form-group">
-              <h3 class="heading-small no-margin">Message</h3>
+              <h3 class="govuk-heading-s no-margin">Message</h3>
               <p class="form-hint" style="white-space: pre-wrap">Competition: [competition title]
 Application number: [application number]
 Project title: [project title]

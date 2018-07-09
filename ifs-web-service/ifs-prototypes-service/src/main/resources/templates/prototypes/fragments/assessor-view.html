@@ -4,7 +4,7 @@
 <!-- ===========================Your profile  =========================== -->
 <div th:fragment="prototype-assessor-profile">
 
-    <h2 class="heading-medium">Your contract</h2>
+    <h2 class="govuk-heading-m">Your contract</h2>
 
     <ul class="list list-bullet">
       <li><a href="/prototypes/1178-assessor-profile-skills?version=v2">your skills</a></li>
@@ -13,7 +13,7 @@
       <li><a href="/prototypes/6656-travel">travel and subsistence rates</a></li>
     </ul>
 
-    <h2 class="heading-medium">Your profile</h2>
+    <h2 class="govuk-heading-m">Your profile</h2>
     <ul class="list list-bullet">
         <li>
             <a href="/prototypes/1178-assessor-profile-details">your details</a>
@@ -54,7 +54,7 @@
             </div>
         </div>
         <div th:if="${url == ''}" th:remove="tag">
-            <h2 class="heading-small no-margin" style="margin-top: 5px" th:text="${link}">Title text</h2>
+            <h2 class="govuk-heading-s no-margin" style="margin-top: 5px" th:text="${link}">Title text</h2>
         </div>
         <div th:if="${url != ''}" th:remove="tag">
              <a th:href="${url}" class="link-back" th:text="${link}">Link text</a>
@@ -66,7 +66,7 @@
 <div th:fragment="prototype-assessor-page-title(subtitle, heading)">
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
         <p class="subtitle no-margin" th:text="${subtitle}">Subtitle here</p>
-        <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
+        <h1 class="govuk-heading-xl no-margin" th:text="${heading}">Title here</h1>
     </div>
 </div>
 
@@ -96,7 +96,7 @@
     </div>
 
     <div th:if="${question == 'yesno'}">
-        <h2 class="heading-small">Is the application in scope?</h2>
+        <h2 class="govuk-heading-s">Is the application in scope?</h2>
         <fieldset class="inline">
             <legend class="visuallyhidden">Is the application in scope?</legend>
             <div class="form-group">
@@ -656,18 +656,18 @@
 <!-- ===================Assessor dashboard============================== -->
 <div th:fragment="prototype-assessor-dashboard-invites">
     <!--<div class="invite-to-assess">-->
-        <!--<h2 class="heading-medium">Invitations to assess (<span>1</span>)</h2>-->
+        <!--<h2 class="govuk-heading-m">Invitations to assess (<span>1</span>)</h2>-->
         <!--<ul class="boxed-list">-->
             <!--<li>-->
                 <!--<div class="grid-row">-->
                     <!--<div class="column-two-thirds">-->
-                        <!--<h3 class="heading-medium">-->
+                        <!--<h3 class="govuk-heading-m">-->
                         <!--<a href="/prototypes/865-assessor-comp-invite">Technology inspired</a>-->
                         <!--</h3>-->
                         <!--<p>You have been asked to assess this competition. Please respond</p>-->
                     <!--</div>-->
                     <!--<div class="column-third">-->
-                        <!--<h3 class="heading-medium">Assessment period</h3>-->
+                        <!--<h3 class="govuk-heading-m">Assessment period</h3>-->
                         <!--<dl class="standard-definition-list reduced-width">-->
                           <!--<dt>Begins</dt>-->
                           <!--<dd>15 November 2017</dd>-->
@@ -682,15 +682,15 @@
     <!--</div>-->
 
     <div class="progress-list">
-        <h3 class="heading-medium">Invitations to assess (<span>1</span>)</h3>
+        <h3 class="govuk-heading-m">Invitations to assess (<span>1</span>)</h3>
         <ul>
             <li class="status-2-col">
                 <div class="task">
-                    <h4 class="heading-small"><a href="/prototypes/865-assessor-comp-invite">Technology inspired</a></h4>
+                    <h4 class="govuk-heading-s"><a href="/prototypes/865-assessor-comp-invite">Technology inspired</a></h4>
                     <p>You have been asked to assess this competition. Please respond.</p>
                 </div>
                 <div class="assessment-period">
-                    <h4 class="heading-small no-margin">Assessment period</h4>
+                    <h4 class="govuk-heading-s no-margin">Assessment period</h4>
                     <dl class="standard-definition-list reduced-width">
                         <dt>Begins</dt>
                         <dd>15 November 2017</dd>
@@ -706,17 +706,17 @@
 
 <div th:fragment="prototype-assessor-dashboard-invite-accepted">
     <!--<div class="invite-to-assess">-->
-        <!--<h2 class="heading-medium">Upcoming competitions to assess</h2>-->
+        <!--<h2 class="govuk-heading-m">Upcoming competitions to assess</h2>-->
         <!--<ul class="boxed-list">-->
             <!--<li>-->
                 <!--<div class="grid-row">-->
                     <!--<div class="column-two-thirds">-->
-                        <!--<h3 class="heading-medium"><a href="/prototypes/4083-upcoming-comp">An example competition</a></h3>-->
+                        <!--<h3 class="govuk-heading-m"><a href="/prototypes/4083-upcoming-comp">An example competition</a></h3>-->
                         <!--<p class="form-hint">Upcoming competition</p>-->
                         <!--<p class="no-margin">Applications allocated 15 April</p>-->
                     <!--</div>-->
                     <!--<div class="column-third">-->
-                        <!--<h3 class="heading-medium">Assessment period</h3>-->
+                        <!--<h3 class="govuk-heading-m">Assessment period</h3>-->
                         <!--<dl class="standard-definition-list reduced-width">-->
                           <!--<dt>Begins</dt>-->
                           <!--<dd>15 April 2017</dd>-->
@@ -731,15 +731,15 @@
     <!--</div>-->
 
     <div class="progress-list">
-        <h3 class="heading-medium">Upcoming competitions to assess (<span>1</span>)</h3>
+        <h3 class="govuk-heading-m">Upcoming competitions to assess (<span>1</span>)</h3>
         <ul>
             <li>
                 <div class="task">
-                    <h4 class="heading-small"><a href="/prototypes/4083-upcoming-comp">An example competition</a></h4>
+                    <h4 class="govuk-heading-s"><a href="/prototypes/4083-upcoming-comp">An example competition</a></h4>
                     <p class="no-margin">Applications allocated 15 April</p>
                 </div>
                 <div class="assessment-period">
-                    <h4 class="heading-small">Assessment period</h4>
+                    <h4 class="govuk-heading-s">Assessment period</h4>
                     <dl class="standard-definition-list reduced-width">
                         <dt>Begins</dt>
                         <dd>15 November 2017</dd>
@@ -754,12 +754,12 @@
 </div>
 
 <div th:fragment="prototype-assessor-dashboard-competitions">
-    <!--<h2 class="heading-medium">Competitions for assessment (<span>1</span>)</h2>-->
+    <!--<h2 class="govuk-heading-m">Competitions for assessment (<span>1</span>)</h2>-->
     <!--<ul class="boxed-list">-->
         <!--<li>-->
             <!--<div class="grid-row">-->
                 <!--<div class="column-two-thirds">-->
-                    <!--<h2 class="heading-medium">-->
+                    <!--<h2 class="govuk-heading-m">-->
                     <!--<a href="/prototypes/871-assessor-comp-dashboard">Technology inspired</a>-->
                     <!--</h2>-->
                     <!--<p class="form-hint">Assessment progress:</p>-->
@@ -790,11 +790,11 @@
     <!--</ul>-->
 
     <div class="progress-list">
-        <h3 class="heading-medium no-margin-top">Competitions for assessment (<span>2</span>)</h3>
+        <h3 class="govuk-heading-m no-margin-top">Competitions for assessment (<span>2</span>)</h3>
         <ul>
             <li>
                 <div class="task">
-                    <h4 class="heading-small"><a href="/prototypes/871-assessor-comp-dashboard">A new innovative solution to energy</a></h4>
+                    <h4 class="govuk-heading-s"><a href="/prototypes/871-assessor-comp-dashboard">A new innovative solution to energy</a></h4>
                     <div class="action-required">
                       <strong>2 applications to be assessed</strong>
                     </div>
@@ -809,7 +809,7 @@
             </li>
             <li>
                 <div class="task">
-                    <h4 class="heading-small"><a href="/prototypes/871-assessor-comp-dashboard">A new innovative solution to electronics</a></h4>
+                    <h4 class="govuk-heading-s"><a href="/prototypes/871-assessor-comp-dashboard">A new innovative solution to electronics</a></h4>
                     <div class="action-required">
                       <strong>1 application awaiting acceptance &nbsp;|&nbsp; 2 applications to be assessed</strong>
                     </div>
@@ -828,7 +828,7 @@
 </div>
 
 <div th:fragment="prototype-assessor-dashboard-invites-empty">
-    <h2 class="heading-medium">Competitions for assessment (0)</h2>
+    <h2 class="govuk-heading-m">Competitions for assessment (0)</h2>
     <ul class="boxed-list">
         <li>
             <p class="form-hint">When you have upcoming competitions they will appear here.</p>
@@ -847,7 +847,7 @@
         <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
 
             <button class="js-close close" aria-label="Close Popup">X</button>
-            <h3 class="heading-medium no-margin">Are you sure you want to submit these assessments?</h3>
+            <h3 class="govuk-heading-m no-margin">Are you sure you want to submit these assessments?</h3>
             <p>Once you have submitted them you will no longer be able to edit or view the assessments.</p>
             <div>
                 <input type="hidden" name="status" value="accept" />
@@ -857,11 +857,11 @@
         </div>
 
         <div class="progress-list">
-          <h2 class="heading-medium">Applications for assessment (<span>3</span>)</h2>
+          <h2 class="govuk-heading-m">Applications for assessment (<span>3</span>)</h2>
             <ul>
                 <li class="status-2-col" th:unless="${param.status != null and param.status[0] == 'reject' or param.status != null and param.status[0] == 'accept'}">
                   <div class="task">
-                    <h3 class="heading-small">
+                    <h3 class="govuk-heading-s">
                         <a href="/prototypes/868-accept-reject-application">Using natural gas to heat homes</a>
                     </h3>
                     <strong>Empire Gas Ltd</strong>
@@ -883,7 +883,7 @@
                     <!--<li>-->
                         <!--<div class="grid-row">-->
                             <!--<div class="column-assessment-details">-->
-                                <!--<h3 class="heading-medium">-->
+                                <!--<h3 class="govuk-heading-m">-->
                                     <!--<a href="#">Security for the Internet of Things</a>-->
                                 <!--</h3>-->
                                 <!--<div><p>Ludlow</p></div>-->
@@ -907,7 +907,7 @@
                     <li th:if="${param.status != null and param.status[0] == 'accept'}">
 
                         <div class="task">
-                          <h3 class="heading-small">
+                          <h3 class="govuk-heading-s">
                               <a href="/prototypes/984-assessor-application-overview">Using natural gas to heat homes</a>
                           </h3>
                           <strong>Empire Gas Ltd</strong>
@@ -925,7 +925,7 @@
                               <input id="assessment-submit-checkbox" type="checkbox" value="" aria-labelledby="application-1" />
                             </label>
                           </div>
-                          <h4 class="heading-small"><a href="#" id="application-1">Using natural gas to heat homes</a></h4>
+                          <h4 class="govuk-heading-s"><a href="#" id="application-1">Using natural gas to heat homes</a></h4>
                           <strong>Empire Gas Ltd</strong>
                         </div>
                         <div class="status">
@@ -952,7 +952,7 @@
                             </div>
                           </th:block>
 
-                          <h3 class="heading-small">
+                          <h3 class="govuk-heading-s">
                               <a href="/prototypes/984-assessor-application-overview" id="application-2">A new innovative solution</a>
                           </h3>
                           <strong>Empire Gas Ltd</strong>
@@ -988,11 +988,11 @@
         </div>
         <!--all the submitted assessments-->
         <div class="progress-list">
-            <h2 class="heading-medium">Submitted assessment (<span>1</span>)</h2>
+            <h2 class="govuk-heading-m">Submitted assessment (<span>1</span>)</h2>
             <ul>
                 <li class="positive status-2-col">
                     <div class="task">
-                      <h4 class="heading-small">Mobile Phone Data for Logistics Analytics</h4>
+                      <h4 class="govuk-heading-s">Mobile Phone Data for Logistics Analytics</h4>
                       <strong>Empire Ltd</strong>
                     </div>
 
@@ -1079,9 +1079,9 @@
 
 <!-- ===================Assessor terms and conditions============================== -->
 <div th:fragment="prototype-assessor-terms">
-    <h2 class="heading-medium no-margin">1. Interpretation </h2>
+    <h2 class="govuk-heading-m no-margin">1. Interpretation </h2>
 
-    <h3 class="heading-small"> 1.1 In this contract the following words shall mean: </h3>
+    <h3 class="govuk-heading-s"> 1.1 In this contract the following words shall mean: </h3>
 
     <p>"the Condition(s)" mean the standard terms and conditions of contract for Services as set out in this document;</p>
     <p>"Charging Rates" shall be construed as those excluding Value Added Tax;</p>
@@ -1095,22 +1095,22 @@
     <p>"person" includes a corporation;</p>
     <p>"the Services" means the services to be supplied under the Contract.</p>
 
-    <h3 class="heading-small">1,2 References to “Contract” mean this contract (and include the Schedules and Annexes). References to “Clauses” and “Schedules” mean clauses of and schedules to this Contract. The provisions of the Schedules shall be binding on the parties as if set out in full in this Contract. </h3>
+    <h3 class="govuk-heading-s">1,2 References to “Contract” mean this contract (and include the Schedules and Annexes). References to “Clauses” and “Schedules” mean clauses of and schedules to this Contract. The provisions of the Schedules shall be binding on the parties as if set out in full in this Contract. </h3>
 
-    <h3 class="heading-small">1.3 Reference to the singular include the plural and vice versa and references to any gender include both genders. References to a person include any individual, firm, unincorporated association or body corporate. </h3>
+    <h3 class="govuk-heading-s">1.3 Reference to the singular include the plural and vice versa and references to any gender include both genders. References to a person include any individual, firm, unincorporated association or body corporate. </h3>
 
-    <h2 class="heading-medium">2. Services</h2>
+    <h2 class="govuk-heading-m">2. Services</h2>
 
     <p>In consideration of payment by the Contracting Authority of a sum of the appropriate amount(s) shown in the competition specific Letter of Engagement , excluding VAT, (“the Contract Price”), the Contractor shall provide the “Services”, which include acting as “Project Assessor” as defined in the TSB Assessor Guidelines and as defined in Annex A.</p>
 
-    <h3 class="heading-small">3. Commencement and term</h3>
+    <h3 class="govuk-heading-s">3. Commencement and term</h3>
 
     <p>3.1 This Agreement shall commence on the date this Agreement is signed and shall continue for a period up to 12 months unless it is either:</p>
     <p>3.1.1 extended for such additional periods as are agreed by the Parties;</p>
     <p>Or</p>
     <p>3.1.2 terminated early in accordance with the terms of this Agreement.</p>
 
-    <h3 class="heading-small">4. Contractor's obligations</h3>
+    <h3 class="govuk-heading-s">4. Contractor's obligations</h3>
 
     <p>4.1 The Contractor shall provide the Services with due diligence and to the satisfaction and requirements of the Contracting Authority in accordance with the methods and programme of work contained at Annex A.</p>
     <p>4.2 The Contractor undertakes to make itself available, on receipt of reasonable notice which, save where it is not practicable to do so, will be of not less than 5 working days, to attend and participate in any assessment briefings, training and other meetings arranged by the TSB to enable the better performance of the Services by the TSB.</p>
@@ -1118,16 +1118,16 @@
     <p>4.4 In accordance with the Contractor’s obligation to provide an objective assessment of the application concerned, such feedback must be provided on the score sheets provided with all comments to be made in a de-personalised and constructive style.</p>
     <p>4.5 Promptly following completion of the assessment process concerned and upon receipt of instructions from the Competition Official of the TSB to do the same, the Contractor shall destroy all applicable assessment information in its possession.</p>
 
-    <h3 class="heading-small">5. Assignment and sub-contracting</h3>
+    <h3 class="govuk-heading-s">5. Assignment and sub-contracting</h3>
 
     <p>5.1 The Contractor shall not give, bargain, sell, assign, sub-contract or otherwise dispose of the Contract or any part thereof without the previous consent in writing of the Contracting Authority.</p>
 
-    <h3 class="heading-small">6. Management and communications</h3>
+    <h3 class="govuk-heading-s">6. Management and communications</h3>
 
     <p>6.1 The Contractor shall perform the Services under the direction of the appropriate representative of the Contracting Authority.</p>
     <p>6.2 Any direction by the Contracting Authority may be given by Anne Dixon, as the authorised officer of the Contracting Authority whose address is as above and e-mail contact details are: anne.dixon@innovateuk.gov.uk; or such other person whose appointment is notified to the Contractor in writing from time to time.</p>
 
-    <h3 class="heading-small">7. Confidentiality</h3>
+    <h3 class="govuk-heading-s">7. Confidentiality</h3>
 
     <p>7.1 The Contractor undertakes to keep secret and confidential any information which the Contracting Authority may reasonably regard as being of a confidential nature that it may receive from the Contracting Authority and subject always to the remainder of this Clause 7, and shall not disclose any Confidential Information, such information being information that falls within the types of information which have been designated as confidential by either party or that ought to be considered as confidential (however it is conveyed or on whatever media it is stored) including information which relates to the business affairs, property, assets, trading practices, goods, the Services, developments, trade secrets, intellectual property rights, know-how, personnel, customers and suppliers of either party, all personal data and sensitive personal data within the meaning of the Data Protection Act 1998, the relevant application and all commercially sensitive information, without the Contracting Authority's prior written consent provided that:</p>
     <p>7.1.1 the Contractor shall not be prevented from using any general knowledge, experience or skills which were in its possession prior to the commencement of this Contract; and</p>
@@ -1141,7 +1141,7 @@
     <p>7.3 The obligations contained in Condition 7.1 above shall continue without limitation in point of time. In the event that the Contractor fails to comply with this Condition 7.3 the Contracting Authority reserves the right to terminate the Agreement by notice in writing in accordance with Clause 10.</p>
     <p>7.4 The Contractor undertakes to use all information provided to it as part of its consideration of an application solely for the purpose of assessing such application and shall keep confidential all information disclosed to it by the Contractor.</p>
 
-    <h3 class="heading-small">8. Invoices and payment</h3>
+    <h3 class="govuk-heading-s">8. Invoices and payment</h3>
 
     <p>8.1 On presentation of a correct invoice quoting the Contracting Authority purchase order or contract number and confirming that the Contract has been performed, the TSB shall pay the Contract Price to the Contractor. Payment shall normally be made within 30 days of receipt by the TSB of the invoice.</p>
     <p>8.2 Invoices shall show the period and the amount of the Services for which the payment is claimed together with the agreed Charging Rates.</p>
@@ -1149,7 +1149,7 @@
     <p>8.4 In consideration of the Contractor providing the Services to the satisfaction and requirements of the Contracting Authority and submitting invoices to the Technology Programme Delivery Manager, the Contracting Authority shall undertake to pay the Contract Price and in addition, an amount equal to the value of the Contractor’s liability to Value Added Tax properly chargeable on the value of the Services provided under the Contract.</p>
     <p>8.5 the Contracting Authority shall reimburse the Contractor’s necessary travelling and subsistence, mailing and telephone expenses properly and necessarily incurred in the provision of the Services, up to a maximum sum of £500, together with an amount equal to the Contractor’s liability to Value Added Tax properly chargeable on the amount of these expenses. The Travel and subsistence rates are attached at Annex B.</p>
 
-    <h3 class="heading-small">9. Performance</h3>
+    <h3 class="govuk-heading-s">9. Performance</h3>
 
     <p>9.1 The Services shall be provided in accordance with the Contract to the satisfaction of the Contracting Authority, or its authorised representative.</p>
     <p>9.2 If any part of the Services provided is found to be inadequate or in any way differing from the Contract, other than as a result of default or negligence on the part of the Contracting Authority or its authorised representative, the Contractor shall at his own expense re-schedule and perform the work correctly within such reasonable time as may be specified.</p>
@@ -1158,7 +1158,7 @@
     <p>9.5 The time of commitment shall be of the essence and failure to commence the provision of the Services within the time promised or specified shall entitle the Contracting Authority (at its option) to be released from any obligation to accept and pay for the Services or to cancel all or part of the Services, in either case without prejudice to the other rights and remedies of the Contracting Authority.</p>
     <p>9.6 The services must be delivered in accordance with the specific competition Assessor Guidance and associated scoring matrices. Failure to deliver the services in this way will be construed as non-performance of the Services under the terms of this Contract.</p>
 
-    <h3 class="heading-small" id="end-of-terms">10. Termination</h3>
+    <h3 class="govuk-heading-s" id="end-of-terms">10. Termination</h3>
 
     <p>10.1 This Contract may be terminated by either party giving to the other party at least 30 days notice in writing without further liability. For the avoidance of doubt, in the event that such termination happens, liability for Services will arise only up to the point of termination.</p>
     <p>10.2 Notwithstanding the provisions of clause 3, the Contracting Authority may terminate the Contract with immediate effect with no liability to make any further payment to the Contractor (other than in respect of amounts accrued prior to the date of termination) if at any time the Contractor:</p>
@@ -1171,7 +1171,7 @@
     <p>10.27 is guilty of any fraud or dishonesty or acts in any manner which in the opinion of the Contracting Authority brings or is likely to bring the Contractor or the Contracting Authority into disrepute or is materially adverse to the interests of the Contracting Authority.</p>
     <p>10.3 The rights of the Contracting Authority under clause 10.2 are without prejudice to any other rights that it might have at law to terminate the Contract or to accept any breach of this Contract on the part of the Contractor as having brought the Contract to an end. Any delay by the Contracting Authority in exercising its rights to terminate shall not constitute a waiver thereof.</p>
 
-    <h3 class="heading-small">11. Conflict of interest</h3>
+    <h3 class="govuk-heading-s">11. Conflict of interest</h3>
 
     <p>11.1 The Contractor shall ensure that there is no conflict of interest as to be likely to prejudice his independence and objectivity in performing the Contract and undertakes that upon becoming aware of any such conflict of interest during the performance of the Contract (whether the conflict existed before the award of the Contract or arises during its performance) he shall immediately notify the TSB in writing of the same, giving particulars of its nature and the circumstances in which it exists or arises and shall furnish such further information as the TSB may reasonably require.</p>
     <p>11.2 Where the TSB is of the opinion that the conflict of interest notified to it under paragraph (1) above is capable of being avoided or removed, the TSB may require the Contractor to take such steps as will, in its opinion, avoid, or as the case may be, remove the conflict and:</p>
@@ -1179,7 +1179,7 @@
     <p>11.2.2) if, in the opinion of the TSB, compliance does not avoid or remove the conflict, The TSB may determine the Contract and recover from the Contractor the amount of any loss resulting from such determination.</p>
     <p>11.3 Where the TSB is of the opinion that the conflict of interest which existed at the time of the award of the Contract could have been discovered with the application by the Contractor of due diligence and ought to have been disclosed as required by the tender documents pertaining to it, the TSB may determine the Contract immediately for breach of a fundamental condition and, without prejudice to any other rights, recover from the Contractor the amount of any loss resulting from such determination.</p>
 
-    <h3 class="heading-small">12. Law and jurisdiction</h3>
+    <h3 class="govuk-heading-s">12. Law and jurisdiction</h3>
     <p>This Contract shall be governed by and interpreted in accordance with English Law and the parties submit to the exclusive jurisdiction of the English courts </p>
 
 
@@ -1188,7 +1188,7 @@
 <!-- ===================Trvel and subsistence============================== -->
 <div th:fragment="prototype-travel-subsistence">
 
-    <h2 class="heading-medium">
+    <h2 class="govuk-heading-m">
       Travel and subsistence rates for non-civil service contracted personnel
     </h2>
 
@@ -1216,7 +1216,7 @@
     </table>
 
 
-    <h2 class="heading-medium">
+    <h2 class="govuk-heading-m">
       24 hour / overnight subsistence
     </h2>
 
@@ -1270,7 +1270,7 @@
       </tbody>
     </table>
 
-    <h2 class="heading-medium">
+    <h2 class="govuk-heading-m">
       Public transport
     </h2>
 
@@ -1278,7 +1278,7 @@
 
     <p>Please confirm any significant travel costs with Innovate UK before you book. We may be able to pre-book travel on your behalf.</p>
 
-    <h2 class="heading-medium">
+    <h2 class="govuk-heading-m">
       Mileage rates
     </h2>
 

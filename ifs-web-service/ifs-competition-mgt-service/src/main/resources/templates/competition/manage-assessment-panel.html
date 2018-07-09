@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{id}(id=${model.competitionId})})" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessment panel',subTitle=|${model.competitionId}: ${model.competitionName}, competition ${#strings.toLowerCase(model.competitionStatus.displayName)} |,size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessment panel',subTitle=|${model.competitionId}: ${model.competitionName}, competition ${#strings.toLowerCase(model.competitionStatus.displayName)} |,size='govuk-heading-xl'" />
 
         <p class="form-hint">If you make any changes on this page, you must confirm them in order to make them visible on the assessors' dashboards.</p>
 
@@ -28,29 +28,29 @@
            </div>
         </div>
 
-        <h2 class="heading-medium">Key statistics</h2>
+        <h2 class="govuk-heading-m">Key statistics</h2>
 
         <ul class="grid-row">
             <li class="column-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessorsInvited}"></span><br /><small>Assessors pending</small>
+                    <span class="govuk-heading-l" th:text="${model.assessorsInvited}"></span><br /><small>Assessors pending</small>
                 </div>
             </li>
 
             <li class="column-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.assessorsAccepted}"></span><br /><small>Assessors accepted</small>
+                    <span class="govuk-heading-l" th:text="${model.assessorsAccepted}"></span><br /><small>Assessors accepted</small>
                 </div>
             </li>
 
             <li class="column-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.applicationsInPanel}"></span><br /><small>Applications assigned to panel</small>
+                    <span class="govuk-heading-l" th:text="${model.applicationsInPanel}"></span><br /><small>Applications assigned to panel</small>
                 </div>
             </li>
         </ul>
 
-        <h2 class="heading-medium">Panel navigation</h2>
+        <h2 class="govuk-heading-m">Panel navigation</h2>
 
         <ul class="link-list">
             <li><a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors to attend</a></li>

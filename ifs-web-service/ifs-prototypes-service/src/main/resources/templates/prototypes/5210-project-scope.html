@@ -19,7 +19,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup" style="padding-top: 20px">
 		<p class="subtitle no-margin">Connected digital additive manufacturing</p>
-		<h1 class="heading-xlarge no-margin">
+		<h1 class="govuk-heading-xl no-margin">
 			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">Edit 'Scope'</th:block>
 			<th:block th:if="${param.status == null}">Scope</th:block>
 		</h1>
@@ -30,7 +30,7 @@
 	<form>
 		<fieldset>
 			<legend class="visuallyhidden">Application question</legend>
-			<h2 class="heading-medium extra-margin">Application question</h2>
+			<h2 class="govuk-heading-m extra-margin">Application question</h2>
 
 			<th:block th:if="${param.status == null}">
 				<dl class="application-question-list grid-row">
@@ -112,7 +112,7 @@ Once you have submitted your application, you should not change this section unl
 				</div>
 				<div class="form-group">
 					<fieldset class="inline">
-						<h3 class="heading-small">Appendix</h3>
+						<h3 class="govuk-heading-s">Appendix</h3>
 						<legend class="visuallyhidden">Appendix</legend>
 						<label class="block-label selection-button-radio" for="appendix-yes">
 							<input id="appendix-yes" name="appendix-group" value="Yes" type="radio" />
@@ -128,7 +128,7 @@ Once you have submitted your application, you should not change this section unl
 		</fieldset>
 		<fieldset>
 			<legend class="visuallyhidden">Assessment of this question</legend>
-			<h2 class="heading-medium extra-margin">Assessment of this question</h2>
+			<h2 class="govuk-heading-m extra-margin">Assessment of this question</h2>
 
 			<th:block th:if="${param.status == null}">
 				<dl class="application-question-list grid-row">
@@ -141,7 +141,7 @@ Once you have submitted your application, you should not change this section unl
 			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
 				<div class="form-group">
 					<fieldset class="inline">
-						<h3 class="heading-small">Research category question</h3>
+						<h3 class="govuk-heading-s">Research category question</h3>
 						<legend class="visuallyhidden">Research category question</legend>
 						<label class="block-label selection-button-radio" for="research-question-yes">
 							<input id="research-question-yes" name="research-question-group" value="Yes" type="radio" checked="checked" />
@@ -155,7 +155,7 @@ Once you have submitted your application, you should not change this section unl
 				</div>
 				<div class="form-group">
 					<fieldset class="inline">
-						<h3 class="heading-small">Scored</h3>
+						<h3 class="govuk-heading-s">Scored</h3>
 						<legend class="visuallyhidden">Scored</legend>
 						<label class="block-label selection-button-radio" for="scored-yes">
 							<input id="scored-yes" name="scored-group" value="Yes" type="radio" />
@@ -169,7 +169,7 @@ Once you have submitted your application, you should not change this section unl
 				</div>
 				<div class="form-group">
 					<fieldset class="inline">
-						<h3 class="heading-small">Scope 'Y/N' question</h3>
+						<h3 class="govuk-heading-s">Scope 'Y/N' question</h3>
 						<legend class="visuallyhidden">Scope 'Y/N' question</legend>
 						<label class="block-label selection-button-radio" for="scope-question-yes">
 							<input id="scope-question-yes" name="scope-question-group" value="Yes" type="radio" checked="checked" />
@@ -191,7 +191,7 @@ Your assessment of the project scope should be based upon the competition brief.
 					</textarea>
 				</div>
 				<div class="form-group">
-					<h3 class="heading-small">Guidance table</h3>
+					<h3 class="govuk-heading-s">Guidance table</h3>
 					<table>
 						<thead>
 						<tr>

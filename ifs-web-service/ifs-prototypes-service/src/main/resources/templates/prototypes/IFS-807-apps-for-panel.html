@@ -19,7 +19,7 @@
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
-    <h1 class="heading-xlarge">Technology inspired</h1>
+    <h1 class="govuk-heading-xl">Technology inspired</h1>
 
     <div class="grid-row">
         <div class="column-half">
@@ -40,12 +40,12 @@
     <div class="my-applications">
 
         <div class="progress-list">
-            <h2 class="heading-medium no-margin-top" th:text="${param.status != null and param.status[0] == 'noApplications' ? 'Applications for panel (0)' : 'Applications for panel (3)'}">Applications for panel (3)</h2>
+            <h2 class="govuk-heading-m no-margin-top" th:text="${param.status != null and param.status[0] == 'noApplications' ? 'Applications for panel (0)' : 'Applications for panel (3)'}">Applications for panel (3)</h2>
             <ul>
                 <th:block th:unless="${param.status != null and param.status[0] == 'noApplications'}">
                     <li class="status-2-col">
                         <div class="task">
-                            <h3 class="heading-small"><a href="#">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</a></h3>
+                            <h3 class="govuk-heading-s"><a href="#">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</a></h3>
                             <p>Wessex University</p>
                         </div>
                         <div class="status">
@@ -55,7 +55,7 @@
                     </li>
                     <li class="status-2-col">
                         <div class="task">
-                            <h3 class="heading-small"><a href="#">Mobility problems and the potential for internet enabled zimmer frame</a></h3>
+                            <h3 class="govuk-heading-s"><a href="#">Mobility problems and the potential for internet enabled zimmer frame</a></h3>
                             <p>Plymouth University</p>
                         </div>
                         <div class="status">
@@ -65,7 +65,7 @@
                     </li>
                     <li class="status-2-col">
                         <div class="task">
-                            <h3 class="heading-small"><a href="#">Modifying internal domestic plumbing systems to enhance fire prevention in the home</a></h3>
+                            <h3 class="govuk-heading-s"><a href="#">Modifying internal domestic plumbing systems to enhance fire prevention in the home</a></h3>
                             <p>Horizon Ltd</p>
                         </div>
                         <div class="status">
@@ -77,7 +77,7 @@
                 <th:block th:if="${param.status != null and param.status[0] == 'noApplications'}">
                     <li class="status-2-col">
                         <div class="task">
-                            <h3 class="heading-small">No applications have been assigned to this panel.</h3>
+                            <h3 class="govuk-heading-s">No applications have been assigned to this panel.</h3>
                         </div>
                     </li>
                 </th:block>

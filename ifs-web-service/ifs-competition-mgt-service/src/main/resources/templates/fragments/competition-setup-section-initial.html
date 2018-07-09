@@ -2,11 +2,11 @@
 <!-- =================== Comp setup section - Initial Details (1) ============================== -->
 <th:block th:fragment="section-content">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
+        <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Initial details',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Initial details',size='govuk-heading-xl'" />
     <div class="panel">
         This will create a new competition. You will be able to add more details later on.
     </div>
@@ -135,7 +135,7 @@
             <div class="form-group" th:classappend="${#fields.hasErrors('openingDate*')} ? 'form-group-error'">
                 <fieldset>
                     <legend id="openingDate">
-                      <span class="heading-small">Opening date</span>
+                      <span class="govuk-heading-s">Opening date</span>
                       <th:block th:if="${#fields.hasErrors('openingDate*')}">
                           <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}"></span>
                       </th:block>
@@ -235,7 +235,7 @@
 
             <div class="form-group" th:classappend="${#fields.hasErrors('stateAid')} ? 'form-group-error'">
                 <fieldset class="inline">
-                    <legend id="stateAid" class="heading-small">
+                    <legend id="stateAid" class="govuk-heading-s">
                         State aid
                         <th:block th:if="${#fields.hasErrors('stateAid')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('stateAid')}" th:text="${err}"></span>

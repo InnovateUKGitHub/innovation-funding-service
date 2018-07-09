@@ -14,7 +14,7 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" data-ignore-errors="true" aria-labelledby="error-summary-heading" tabindex="-1">
-                  <h2 class="heading-medium error-summary-heading">We were unable to save your changes.</h2>
+                  <h2 class="govuk-heading-m error-summary-heading">We were unable to save your changes.</h2>
                   <ul class="error-summary-list">
                       <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
                           <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
@@ -30,7 +30,7 @@
                       </li>
                   </ul>
                 </div>
-                  <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your declaration of interest',size='heading-xlarge extra-margin-bottom'" />
+                  <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your declaration of interest',size='govuk-heading-xl extra-margin-bottom'" />
                 <p>We need to record if you, or an immediate family member, is connected to a body which has any financial interests.</p>
 
                 <p>Please complete the sections below declaring to the best of your knowledge, all active interests currently held.
@@ -38,10 +38,10 @@
 
                 <hr />
 
-                <h2 class="heading-large">Your affiliations (financial interests)</h2>
+                <h2 class="govuk-heading-l">Your affiliations (financial interests)</h2>
 
                 <form th:action="@{/profile/declaration/edit}" method="post" th:object="${form}" novalidate="novalidate">
-                    <h3 class="heading-medium no-margin">Principal employer and role</h3>
+                    <h3 class="govuk-heading-m no-margin">Principal employer and role</h3>
 
                     <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('principalEmployer')} ? 'form-group-error'">
                         <label class="form-label-bold" th:for="${#ids.next('principalEmployer')}">
@@ -94,7 +94,7 @@
 
                     <div class="form-group" th:classappend="${#fields.hasErrors('hasAppointments')} ? 'form-group-error'">
                         <fieldset class="inline">
-                            <legend class="heading-small">
+                            <legend class="govuk-heading-s">
                                 Do you hold any appointments or directorships?
                                 <th:block th:if="${#fields.hasErrors('hasAppointments')}">
                                     <span class="error-message" th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}"></span>
@@ -181,7 +181,7 @@
 
                     <div class="form-group" th:classappend="${#fields.hasErrors('hasFinancialInterests')} ? 'form-group-error'">
                         <fieldset class="inline">
-                            <legend class="heading-small">
+                            <legend class="govuk-heading-s">
                                 Do you have any other financial interests?
                                 <th:block th:if="${#fields.hasErrors('hasFinancialInterests')}">
                                     <span class="error-message"
@@ -237,11 +237,11 @@
                         </fieldset>
                     </div>
 
-                    <h3 class="heading-medium">Family member affiliations</h3>
+                    <h3 class="govuk-heading-m">Family member affiliations</h3>
 
                     <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyAffiliations')} ? 'form-group-error'">
                         <fieldset class="inline">
-                            <legend class="heading-small">
+                            <legend class="govuk-heading-s">
                                 Do any of your immediate family members have any appointments or directorships?
                                 <th:block th:if="${#fields.hasErrors('hasFamilyAffiliations')}">
                                     <span class="error-message"
@@ -349,7 +349,7 @@
 
                     <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyFinancialInterests')} ? 'form-group-error'">
                         <fieldset class="inline">
-                            <legend class="heading-small">
+                            <legend class="govuk-heading-s">
                                 Do any of your immediate family members have any other financial interests?
                                 <th:block th:if="${#fields.hasErrors('hasFamilyFinancialInterests')}">
                                     <span class="error-message"

@@ -55,15 +55,15 @@
 
         <section id="section1">
 
-            <h2 class="heading-medium">To complete (2)</h2>
+            <h2 class="govuk-heading-m">To complete (2)</h2>
 
-            <span class="heading-small">Current tasks</span>
+            <span class="govuk-heading-s">Current tasks</span>
 
             <div class="progress-list progress-list--individual-blocks">
                 <ul>
                     <li class="require-action">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Bank details</a>
                             </h2>
                             <p class="no-margin">
@@ -78,7 +78,7 @@
                     </li>
                     <li class="require-action">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Other documents</a>
                             </h2>
                             <p class="no-margin">
@@ -94,13 +94,13 @@
                 </ul>
             </div>
 
-            <span class="heading-small">Pending tasks</span>
+            <span class="govuk-heading-s">Pending tasks</span>
 
             <div class="progress-list progress-list--individual-blocks">
                 <ul>
                     <li class="waiting" th:if="${param.status == null or param.status[0] == 'detailsNotComplete'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Project details</a>
                             </h2>
                             <p class="no-margin">
@@ -115,7 +115,7 @@
                     </li>
                     <li class="waiting">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Finance checks</a>
                             </h2>
                             <p class="no-margin">
@@ -130,7 +130,7 @@
                     </li>
                     <li class="waiting">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Spend profile</a>
                             </h2>
                             <p class="no-margin">
@@ -145,7 +145,7 @@
                     </li>
                     <li class="waiting">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Grant offer letter</a>
                             </h2>
                             <p class="no-margin">
@@ -164,13 +164,13 @@
         </section>
 
         <section id="section2">
-            <h2 class="heading-medium">Completed tasks</h2>
+            <h2 class="govuk-heading-m">Completed tasks</h2>
 
             <div class="progress-list progress-list--individual-blocks">
                 <ul>
                     <li class="complete" th:if="${param.status != null and param.status[0] == 'detailsComplete'}">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="/prototypes/IFS-1984-project-details">Project details</a>
                             </h2>
                             <p class="no-margin">
@@ -185,7 +185,7 @@
                     </li>
                     <li class="complete">
                         <div class="task">
-                            <h2 class="heading-small">
+                            <h2 class="govuk-heading-s">
                                 <a href="#">Monitoring officer</a>
                             </h2>
                             <p class="no-margin">

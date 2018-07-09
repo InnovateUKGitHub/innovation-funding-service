@@ -13,11 +13,11 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to interview panel',subTitle=|${model.competitionName}|,size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invitation to interview panel',subTitle=|${model.competitionName}|,size='govuk-heading-xl'" />
 
         <p>You have been invited to the interview panel for <strong th:text="|${model.competitionName}|">'Technology inspired'</strong>.</p>
 
@@ -30,7 +30,7 @@
             <div class="form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'form-group-error'">
                 <fieldset>
                     <legend id="acceptInvitation">
-                        <span class="heading-medium">Are you able to attend the interview panel?</span>
+                        <span class="govuk-heading-m">Are you able to attend the interview panel?</span>
                         <br>
                         <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
                             <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />

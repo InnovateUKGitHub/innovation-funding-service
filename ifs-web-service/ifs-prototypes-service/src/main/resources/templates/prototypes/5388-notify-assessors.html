@@ -20,17 +20,17 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<p class="subtitle">Technology inspired, (12345A)</p>
-	<h1 class="heading-xlarge no-margin">Notify assessors</h1>
+	<h1 class="govuk-heading-xl no-margin">Notify assessors</h1>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'incomplete'}">
 
 		<p class="extra-margin">
-			<span id="submitted" class="heading-large">23</span> Submitted
+			<span id="submitted" class="govuk-heading-l">23</span> Submitted
 
-			<span id="assessors" class="heading-large extra-margin-left">60</span> Assessors
+			<span id="assessors" class="govuk-heading-l extra-margin-left">60</span> Assessors
 		</p>
 
-		<h2 class="heading-small">The following applications require additional assessors</h2>
+		<h2 class="govuk-heading-s">The following applications require additional assessors</h2>
 
 		<p>Required Assessors for each application: 5</p>
 
@@ -43,14 +43,14 @@
 	<th:block th:unless="${param.status != null and param.status[0] == 'incomplete'}">
 
 		<p class="extra-margin">
-			<span id="submitted" class="heading-large">23</span> Submitted
+			<span id="submitted" class="govuk-heading-l">23</span> Submitted
 
-			<span id="assessors" class="heading-large extra-margin-left">60</span> Assessors
+			<span id="assessors" class="govuk-heading-l extra-margin-left">60</span> Assessors
 
-			<span id="assignments" class="heading-large extra-margin-left">115</span> Assignments
+			<span id="assignments" class="govuk-heading-l extra-margin-left">115</span> Assignments
 		</p>
 
-		<h2 class="heading-small">All applications have been allocated the minimum number of assessments</h2>
+		<h2 class="govuk-heading-s">All applications have been allocated the minimum number of assessments</h2>
 
 		<p>You will need to confirm assignments before assessors are notified.</p>
 
@@ -66,7 +66,7 @@
 		<button class="js-close close" aria-label="Close Popup">X</button>
 		<div>
 
-			<h2 class="heading-medium no-margin">Notify assessors</h2>
+			<h2 class="govuk-heading-m no-margin">Notify assessors</h2>
 
 			<p>Notifying the assessors will inform them of the applications that have been assigned to them. if you are unsure of any of the allocations please review before notifying the assessors.</p>
 

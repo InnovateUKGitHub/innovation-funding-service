@@ -13,12 +13,12 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
         <div class="grid-row">
             <div class="column-two-thirds">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You have an application in progress',size='heading-large'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You have an application in progress',size='govuk-heading-l'" />
                 <p>You have already started an application in this competition. Do you want to continue with your existing application or create a new one in the same competition?</p>
             </div>
         </div>

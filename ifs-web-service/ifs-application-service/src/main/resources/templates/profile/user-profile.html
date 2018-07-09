@@ -13,21 +13,21 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Profile',size='heading-large'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Profile',size='govuk-heading-l'" />
 
         <hr/>
 
-        <h2 class="heading-medium no-margin-bottom">Your details <small class="list-indent"><a href="/profile/edit"> Edit your details</a></small></h2>
-        <h3 class="heading-small">Your organisation</h3>
+        <h2 class="govuk-heading-m no-margin-bottom">Your details <small class="list-indent"><a href="/profile/edit"> Edit your details</a></small></h2>
+        <h3 class="govuk-heading-s">Your organisation</h3>
         <p th:text="${model.organisationName}" />
 
-        <h3 class="heading-small">Organisation type</h3>
+        <h3 class="govuk-heading-s">Organisation type</h3>
         <p th:text="${model.organisationTypeName}" />
 
-        <h3 class="heading-small">Registration number</h3>
+        <h3 class="govuk-heading-s">Registration number</h3>
         <p th:text="${model.registrationNumber}" />
 
-        <h3 class="heading-small">Address</h3>
+        <h3 class="govuk-heading-s">Address</h3>
         <div th:text="${model.addressLine1}" />
         <div th:text="${model.addressLine2}" />
         <div th:text="${model.addressLine3}" />
@@ -35,15 +35,15 @@
         <div th:text="${model.county}" />
         <div th:text="${model.postcode}" />
 
-        <h3 class="heading-small">Your name</h3>
+        <h3 class="govuk-heading-s">Your name</h3>
         <p>
             <th:block th:text="${model.name}" />
         </p>
-        <h3 class="heading-small">Phone number</h3>
+        <h3 class="govuk-heading-s">Phone number</h3>
         <p th:text="${model.phoneNumber}" />
-        <h3 class="heading-small">Email address</h3>
+        <h3 class="govuk-heading-s">Email address</h3>
         <p th:text="${model.emailAddress}" />
-        <h3 class="heading-small">Email preferences</h3>
+        <h3 class="govuk-heading-s">Email preferences</h3>
         <p th:if="${model.allowMarketingEmails}">You have asked for updates on Innovate UK competitions by email.</p>
         <p th:unless="${model.allowMarketingEmails}">You have asked that we do not keep you updated on Innovate UK competitions by email.</p>
         <th:block th:insert="fragments/layout :: main-content-end" />

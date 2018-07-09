@@ -13,10 +13,10 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assign applications to interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invites to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invites to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to upload your file.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to upload your file.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
@@ -38,8 +38,8 @@
 
         <div class="grid-row sorting extra-margin">
             <div class="column-half">
-                <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
-                <span class="heading-small">applications</span>
+                <span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">20</span>
+                <span class="govuk-heading-s">applications</span>
             </div>
         </div>
 
@@ -122,7 +122,7 @@
                        th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
             </div>
 
-            <h3 class="heading-small">Message</h3>
+            <h3 class="govuk-heading-s">Message</h3>
             <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
 
             <div class="form-group extra-margin">

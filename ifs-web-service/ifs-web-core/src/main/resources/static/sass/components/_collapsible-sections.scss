@@ -81,7 +81,7 @@
   }
 
   > h2{
-    &.heading-medium {
+    &.govuk-heading-m {
       margin: 0;
 
       button{
@@ -145,7 +145,7 @@
       @extend %toggle-button;
       padding-right:2px;
 
-      &.heading-medium{
+      &.govuk-heading-m{
         @include govuk-font(24);
         font-weight: bold;
       }

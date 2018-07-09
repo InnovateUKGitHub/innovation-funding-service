@@ -21,33 +21,33 @@
 
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Manage funding applications'}, ${null})" />
 
-  <h2 class="heading-medium">Key statistics</h2>
+  <h2 class="govuk-heading-m">Key statistics</h2>
 
   <div class="grid-row extra-margin-bottom">
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">287</span><br />
+        <span class="govuk-heading-l">287</span><br />
         <small>applications</small>
       </div>
 		</div>
 
 		<div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">3</span><br />
+        <span class="govuk-heading-l">3</span><br />
         <small>applications being funded</small>
       </div>
 		</div>
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">281</span><br />
+        <span class="govuk-heading-l">281</span><br />
         <small>applications not being funded</small>
       </div>
     </div>
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large">3</span><br />
+        <span class="govuk-heading-l">3</span><br />
         <small>applications on hold</small>
       </div>
     </div>
@@ -57,14 +57,14 @@
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '284' : '0')}">0</span><br />
+        <span class="govuk-heading-l" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '284' : '0')}">0</span><br />
         <small>applications notified of decision</small>
       </div>
   	</div>
 
     <div class="column-quarter">
       <div class="highlight-panel">
-        <span class="heading-large" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '287' : '3')}">287</span><br />
+        <span class="govuk-heading-l" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '287' : '3')}">287</span><br />
         <small>applications awaiting a decision</small>
       </div>
   	</div>
@@ -80,7 +80,7 @@
 			        <button class="js-close close" aria-label="Close Popup">X</button>
 			        <div>
 
-						<h2 class="heading-medium no-margin">Notify applicants</h2>
+						<h2 class="govuk-heading-m no-margin">Notify applicants</h2>
 
 						<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
 

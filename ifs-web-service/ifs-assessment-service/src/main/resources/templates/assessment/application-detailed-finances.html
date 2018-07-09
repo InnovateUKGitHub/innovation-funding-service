@@ -14,12 +14,12 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
-                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finances',subTitle=${applicationName},size='heading-xlarge'" />
+                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finances',subTitle=${applicationName},size='govuk-heading-xl'" />
                 </th:block>
 
-                <h2 class="heading-medium" th:text="${applicationOrganisation.name} + ' (' + (${leadOrganisation} ? 'Lead ' : '') + 'Partner)'">Finances overview</h2>
+                <h2 class="govuk-heading-m" th:text="${applicationOrganisation.name} + ' (' + (${leadOrganisation} ? 'Lead ' : '') + 'Partner)'">Finances overview</h2>
 
-                <h2 class="heading-medium">Finances overview</h2>
+                <h2 class="govuk-heading-m">Finances overview</h2>
                 <div class="table-overflow">
                     <table class="table-overview">
                         <thead>

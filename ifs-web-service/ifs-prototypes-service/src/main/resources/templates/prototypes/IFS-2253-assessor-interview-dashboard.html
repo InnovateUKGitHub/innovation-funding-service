@@ -18,9 +18,9 @@
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
-    <h1 class="heading-xlarge">Assessor dashboard</h1>
+    <h1 class="govuk-heading-xl">Assessor dashboard</h1>
 
-    <h2 class="heading-medium">Your details</h2>
+    <h2 class="govuk-heading-m">Your details</h2>
 
     <ul class="list list-bullet">
         <li><a href="#">personal skills</a></li>
@@ -32,11 +32,11 @@
 
     <div class="my-applications cf extra-margin-top">
         <div class="progress-list">
-            <h2 class="heading-medium no-margin-top">Competitions for assessment (1)</h2>
+            <h2 class="govuk-heading-m no-margin-top">Competitions for assessment (1)</h2>
             <ul>
                 <li>
                     <div class="task">
-                        <h3 class="heading-small"><a href="#">Sustainable living models for the future</a></h3>
+                        <h3 class="govuk-heading-s"><a href="#">Sustainable living models for the future</a></h3>
                         <div class="action-required">
                             <strong>
                                 <span class="pending-applications">3</span> applications awaiting acceptance |
@@ -55,11 +55,11 @@
         </div>
 
         <div class="progress-list">
-            <h2 class="heading-medium no-margin-top">Invitations to interview panel (1)</h2>
+            <h2 class="govuk-heading-m no-margin-top">Invitations to interview panel (1)</h2>
             <ul>
                 <li th:unless="${param.status != null and param.status[0] == 'noApplications'}">
                     <div class="task">
-                        <h3 class="heading-small"><a href="/prototypes/IFS-2252-interview-yes-no">Technology inspired</a></h3>
+                        <h3 class="govuk-heading-s"><a href="/prototypes/IFS-2252-interview-yes-no">Technology inspired</a></h3>
                         <div class="action-required">
                             You have been asked to attend an interview panel for this competition. Please respond.
                         </div>
@@ -67,7 +67,7 @@
                 </li>
                 <li th:if="${param.status != null and param.status[0] == 'noApplications'}">
                     <div class="task">
-                        <h3 class="heading-small"><a href="/prototypes/IFS-2252-interview-yes-no">Technology inspired</a></h3>
+                        <h3 class="govuk-heading-s"><a href="/prototypes/IFS-2252-interview-yes-no">Technology inspired</a></h3>
                         <div class="action-required">
                             <strong>
                                 <span class="pending-applications">0</span> applications awaiting review  |
@@ -81,11 +81,11 @@
     </div>
 
     <div class="progress-list" th:unless="${param.status != null and param.status[0] == 'noApplications'}">
-        <h2 class="heading-medium no-margin-top">Interviews you have agreed to attend (3)</h2>
+        <h2 class="govuk-heading-m no-margin-top">Interviews you have agreed to attend (3)</h2>
         <ul>
             <li>
                 <div class="task">
-                    <h3 class="heading-small"><a href="/prototypes/IFS-2254-apps-for-interview">Photonics for health</a></h3>
+                    <h3 class="govuk-heading-s"><a href="/prototypes/IFS-2254-apps-for-interview">Photonics for health</a></h3>
                     <div class="action-required">
                         <strong>
                             <span class="pending-applications">3</span> applications awaiting review
@@ -95,7 +95,7 @@
             </li>
             <li>
                 <div class="task">
-                    <h3 class="heading-small"><a href="/prototypes/IFS-2254-apps-for-interview">Photonics for health</a></h3>
+                    <h3 class="govuk-heading-s"><a href="/prototypes/IFS-2254-apps-for-interview">Photonics for health</a></h3>
                     <div class="action-required">
                         Applications awaiting review will be added here.
                     </div>

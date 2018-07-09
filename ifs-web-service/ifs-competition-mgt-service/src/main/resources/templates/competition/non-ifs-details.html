@@ -14,11 +14,11 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem on this page.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There was a problem on this page.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Non-IFS competition details',size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Non-IFS competition details',size='govuk-heading-xl'" />
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="POST"

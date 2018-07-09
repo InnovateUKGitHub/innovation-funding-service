@@ -14,25 +14,25 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title"
-                          th:with="pageTitle='Assign applications to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+                          th:with="pageTitle='Assign applications to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'"/>
 
                 <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+                    <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <h2 class="heading-medium">Key statistics</h2>
+                <h2 class="govuk-heading-m">Key statistics</h2>
 
                 <div class="grid-row">
                     <div class="column-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="heading-large" th:text="${model.applicationsInCompetition}">45</span><br/>
+                            <span class="govuk-heading-l" th:text="${model.applicationsInCompetition}">45</span><br/>
                             <small>Applications in competition</small>
                         </div>
                     </div>
                     <div class="column-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="heading-large" th:text="${model.applicationsInPanel}">23</span><br/>
+                            <span class="govuk-heading-l" th:text="${model.applicationsInPanel}">23</span><br/>
                             <small>Assigned to interview panel</small>
                         </div>
                     </div>
@@ -62,8 +62,8 @@
 
                     <div class="grid-row sorting">
                         <div class="column-half">
-                            <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
-                            <span class="heading-small">applications on invite list</span>
+                            <span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">20</span>
+                            <span class="govuk-heading-s">applications on invite list</span>
                         </div>
 
                         <div class="column-half alignright" th:if="${!#lists.isEmpty(model.applications)}">

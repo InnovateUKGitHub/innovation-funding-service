@@ -14,11 +14,11 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${registrationForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to create your account.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to create your account.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(registrationForm)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',subTitle='Create your account',size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',subTitle='Create your account',size='govuk-heading-xl'" />
 
         <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}" novalidate="novalidate">
             <div class="panel">

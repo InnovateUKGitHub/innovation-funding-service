@@ -14,7 +14,7 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to save your target start date.</h2>
+                    <h2 class="govuk-heading-m error-summary-heading"  id="error-summary-heading">We are unable to save your target start date.</h2>
                     <ul class="error-summary-list">
                         <li th:each="err : ${#fields.errors('${form.*}')}">
                             <a href="#projectStartDate_month" th:text="${err}">The error message</a>
@@ -22,7 +22,7 @@
                     </ul>
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Target start date',subTitle=${model.projectName},size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Target start date',subTitle=${model.projectName},size='govuk-heading-xl'" />
                 <p>The project can only start when:</p>
 
                 <ol class="list list-number">
@@ -35,7 +35,7 @@
                     <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate')} ? 'form-group-error'">
                         <fieldset>
                             <legend id="projectStartDate">
-                                <span class="heading-medium">Target start date</span>
+                                <span class="govuk-heading-m">Target start date</span>
                                 <th:block th:if="${#fields.hasErrors('projectStartDate')}">
                                     <span class="error-message" th:each="err : ${#fields.errors('projectStartDate')}" th:text="${err}" />
                                 </th:block>
@@ -47,7 +47,7 @@
 
                     <p>You can change your target start date up until the spend profile is generated.</p>
 
-                    <h2 class="heading-medium">Project duration</h2>
+                    <h2 class="govuk-heading-m">Project duration</h2>
                     <p>
                         <span th:text="|${model.projectDurationInMonths} months|">9 months</span>
                     </p>

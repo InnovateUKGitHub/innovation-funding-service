@@ -46,11 +46,11 @@
 <th:block th:fragment="application_details (applicationName, applicationStartDate, applicationDurationInMonths, applicationOrganisations, pendingOrganisationNames, leadOrganisation)">
     <div class="grid-row">
         <div class="column-half">
-            <h3 class="heading-small">Project title</h3>
+            <h3 class="govuk-heading-s">Project title</h3>
             <p th:text="${applicationName}" />
-            <h3 class="heading-small">Lead organisation</h3>
+            <h3 class="govuk-heading-s">Lead organisation</h3>
             <p th:text="${leadOrganisation.name}" />
-            <h3 class="heading-small">Partners</h3>
+            <h3 class="govuk-heading-s">Partners</h3>
             <ul class="list list-bullet">
                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                     <span th:text="${organisation.getName()}"></span>
@@ -62,7 +62,7 @@
             </ul>
         </div>
         <div class="column-half">
-            <h3 class="heading-small">Project timescales</h3>
+            <h3 class="govuk-heading-s">Project timescales</h3>
             <p>Project start date:<br/>
             <th:block th:if="${applicationStartDate}" th:text="${#temporals.format(applicationStartDate, 'd/M/yyyy')}" />
             </p>
@@ -123,9 +123,9 @@
 <!-- ======== Assessment - reject assessment form for modal and non-js page ======= -->
 <div th:fragment="assessment-reject-application-form (assessmentId)">
     <form action="#" th:action="@{/{assessmentId}/reject(assessmentId=${assessmentId})}" method="post" th:object="${form}" novalidate="novalidate">
-        <h2 class="heading-medium no-margin">Reject assessment</h2>
+        <h2 class="govuk-heading-m no-margin">Reject assessment</h2>
         <div class="error-summary" th:if="${#fields.hasErrors('global')}">
-            <h2 class="heading-medium error-summary-heading">We were unable to reject the assessment.</h2>
+            <h2 class="govuk-heading-m error-summary-heading">We were unable to reject the assessment.</h2>
             <ul class="error-summary-list">
                 <li th:each="err : ${#fields.errors('global')}" th:text="${err}"></li>
             </ul>
@@ -184,7 +184,7 @@
     <div class="modal-submit-assessments" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
 
-        <h2 class="heading-medium no-margin">You are about to submit your assessments.</h2>
+        <h2 class="govuk-heading-m no-margin">You are about to submit your assessments.</h2>
         <p>You will not be able to edit after you submit. Are you sure you want to continue?</p>
         <hr />
         <div>

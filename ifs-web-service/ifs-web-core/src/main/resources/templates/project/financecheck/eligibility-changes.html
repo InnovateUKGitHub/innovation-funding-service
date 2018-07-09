@@ -13,11 +13,11 @@
     <th:block th:unless="${model.internal}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"  />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Changes to finances',subTitle=${model.projectName},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Changes to finances',subTitle=${model.projectName},size='govuk-heading-xl'" />
         <hr/>
 
         <th:block th:fragment="summary" th:with="summaryModel=${model.financeCheckEligibility}">
-            <h2 class="heading-medium">Project finances</h2>
+            <h2 class="govuk-heading-m">Project finances</h2>
             <div class="table-overflow">
                 <table class="table-overview" id="project-finance-changes-total">
                     <thead>
@@ -43,7 +43,7 @@
         </th:block>
 
         <th:block th:fragment="section_changes" th:with="sectionDiffs=${model.sectionDifferences}">
-            <h2 class="heading-medium">Section changes</h2>
+            <h2 class="govuk-heading-m">Section changes</h2>
             <div class="table-overflow">
                 <table class="table-overview" id="project-finance-changes-section">
                     <thead>
@@ -69,7 +69,7 @@
         </th:block>
 
         <th:block th:fragment="row_changes">
-            <h2 class="heading-medium">Changes from submitted finances</h2>
+            <h2 class="govuk-heading-m">Changes from submitted finances</h2>
             <div class="table-overflow">
                 <table class="project-changes" id="project-finance-changes-submitted">
                     <thead>

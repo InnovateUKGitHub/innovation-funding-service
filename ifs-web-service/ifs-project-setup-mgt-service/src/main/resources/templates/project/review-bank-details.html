@@ -14,31 +14,31 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
         <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
             <div class="grid-row">
                 <div class="column-two-thirds">
-                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank Details',subTitle=|${model.applicationId}: ${model.projectName}|,size='heading-xlarge'" />
+                    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank Details',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
                 </div>
                 <div class="column-third alignright extra-margin">
-                        <h2 class="bold-small blue-block">Bank account</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Bank account</h2>
                 </div>
             </div>
             <hr/>
 
             <th:block th:if="${model.approved}">
                 <div class="success-alert">
-                    <h2 class="heading-small no-margin-top">The bank details provided have been approved.</h2>
+                    <h2 class="govuk-heading-s no-margin-top">The bank details provided have been approved.</h2>
                 </div>
             </th:block>
             <th:block th:unless="${model.approved}">
                 <p>The bank account details below have been submitted to Innovate UK by <th:block th:text="${model.organisationName}" /> for use during the project <th:block th:text="${model.projectName}" />. These details are now undergoing an internal review. </p>
             </th:block>
 
-            <h2 class="heading-medium">Finance contact</h2>
+            <h2 class="govuk-heading-m">Finance contact</h2>
             <p>
                 <th:block th:unless="${#strings.isEmpty(model.financeContactName)}">
                         <th:block th:text="${model.financeContactName}" /><br/>
@@ -51,7 +51,7 @@
                 </th:block>
             </p>
 
-            <h2 class="heading-medium"><th:block th:text="${model.organisationName}" /> - Account details</h2>
+            <h2 class="govuk-heading-m"><th:block th:text="${model.organisationName}" /> - Account details</h2>
             <table>
                 <thead>
                     <tr>

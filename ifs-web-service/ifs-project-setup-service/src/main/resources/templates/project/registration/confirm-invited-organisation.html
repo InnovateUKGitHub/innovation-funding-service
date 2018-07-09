@@ -12,17 +12,17 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',size='heading-large'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',size='govuk-heading-l'" />
 
-        <h2 class="heading-medium no-margin-bottom">Business organisation</h2>
+        <h2 class="govuk-heading-m no-margin-bottom">Business organisation</h2>
         <fieldset>
             <legend class="visuallyhidden">Business organisation</legend>
             <div class="form-block">
-                <h3 class="heading-small">Organisation name</h3>
+                <h3 class="govuk-heading-s">Organisation name</h3>
                 <p th:text="${organisation.name}">Nomensa</p>
-                <h3 class="heading-small">Registration number</h3>
+                <h3 class="govuk-heading-s">Registration number</h3>
                 <p th:text="${organisation.companyHouseNumber}">0123456789</p>
-                <h3 class="heading-small">Address</h3>
+                <h3 class="govuk-heading-s">Address</h3>
                 <div th:text="${organisationAddress?.addressLine1}"></div>
                 <div th:text="${organisationAddress?.addressLine2}"></div>
                 <div th:text="${organisationAddress?.addressLine3}"></div>

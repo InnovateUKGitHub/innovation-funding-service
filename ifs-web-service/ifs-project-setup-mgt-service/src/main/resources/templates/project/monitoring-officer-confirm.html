@@ -15,7 +15,7 @@
 		<div class="grid-row">
 			<div class="column-two-thirds">
 				<th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
-					<th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='heading-xlarge'" />
+					<th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
 				</th:block>
 			</div>
 			<div class="column-third alignright extra-margin">
@@ -30,7 +30,7 @@
 					<input type="hidden" th:field="*{emailAddress}" />
 					<input type="hidden" th:field="*{phoneNumber}" />
 
-					<h2 class="heading-large">Assign Monitoring Officer</h2>
+					<h2 class="govuk-heading-l">Assign Monitoring Officer</h2>
 			<p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will be visible to all members of the consortium.</p>
 			<div class="grid-row">
 				<div class="column-half">

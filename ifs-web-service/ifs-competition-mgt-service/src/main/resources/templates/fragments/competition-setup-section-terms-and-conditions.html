@@ -2,11 +2,11 @@
 <!-- =================Section: Terms and Conditions (3) =========================== -->
 <th:block th:fragment="section-content">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
+        <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition terms and conditions',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition terms and conditions',size='govuk-heading-xl'" />
 
     <p>These are the terms and conditions applicants must accept for this competition.</p>
 

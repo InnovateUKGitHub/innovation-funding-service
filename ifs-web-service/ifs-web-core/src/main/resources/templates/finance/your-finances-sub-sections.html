@@ -4,7 +4,7 @@
     <!-- ===========================Your finances section view =========================== -->
     <th:block th:fragment="finance(model)">
         <div class="your-finances">
-            <h2 class="heading-medium no-margin-bottom">Finances</h2>
+            <h2 class="govuk-heading-m no-margin-bottom">Finances</h2>
             <div class="message-alert">
                 <p>Only members from your organisation will be able to see a breakdown of your finances.</p>
             </div>
@@ -25,7 +25,7 @@
             </ul>
         </div>
 
-        <h2 class="heading-medium">Finance summary</h2>
+        <h2 class="govuk-heading-m">Finance summary</h2>
         <p>This is a breakdown of your project costs and sources of funding for this project.</p>
 
         <th:block th:insert="finance/your-finances-sub-sections :: your_finance_summary (${model})" />
@@ -47,7 +47,7 @@
         </th:block>
 
         <fieldset th:unless="${model.financeOverviewRows.isEmpty()}">
-            <legend class="heading-medium no-margin-bottom">Financial overview</legend>
+            <legend class="govuk-heading-m no-margin-bottom">Financial overview</legend>
             <span class="form-hint">Details relating to your organisation over the last financial year.</span><br>
             <div class="grid-row">
                 <div class="column-two-thirds">
@@ -124,7 +124,7 @@
         <th:block th:if="${model.showSectionAsNotRequired(childSection)}">
             <li class="read-only">
                 <div class="task">
-                    <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
+                    <h3 class="govuk-heading-s" th:text="${childSection.section.name}"></h3>
                 </div>
                 <div class="task-status"><span>No action required</span></div>
             </li>
@@ -133,7 +133,7 @@
             <li>
                 <th:block th:if="${model.showSectionAsLink(childSection)}">
                     <div class="task">
-                        <h3 class="heading-small">
+                        <h3 class="govuk-heading-s">
                             <th:block th:unless="${model.allReadOnly}">
                                 <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id},sectionId=${childSection.section.id})}"
                                    th:text="${childSection.section.name}"></a>
@@ -147,7 +147,7 @@
                 </th:block>
                 <th:block th:if="${model.showSectionAsLockedFunding(childSection)}">
                     <div class="task full-width">
-                        <h3 class="heading-small" th:text="${childSection.section.name}"></h3>
+                        <h3 class="govuk-heading-s" th:text="${childSection.section.name}"></h3>
                         <p>
                             <th:block th:if="${model.userIsLeadApplicant}">
                                 You must select a research category in
@@ -225,7 +225,7 @@
     </th:block>
 
     <th:block th:fragment="overview_finances(model, internalView)">
-        <h2 class="heading-medium">Funding rules for this competition</h2>
+        <h2 class="govuk-heading-m">Funding rules for this competition</h2>
         <th:block th:each="formInputViewModel : ${model.formInputViewModels}" th:with="formInput=${formInputViewModel.formInput}">
             <th:block th:if="${formInput.type.displayableFinancialSummaryType}"  th:with="model=${model.openSectionViewModel}" >
                 <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),

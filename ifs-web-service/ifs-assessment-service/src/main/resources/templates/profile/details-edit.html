@@ -15,14 +15,14 @@
             <main class="govuk-main-wrapper" id="main-content" role="main">
 
                 <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to update your account.</h2>
+                    <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to update your account.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your details',size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your details',size='govuk-heading-xl'" />
 
                 <form th:action="@{/profile/details/edit}" method="post" th:object="${form}" novalidate="novalidate">
-                    <h2 class="heading-medium">Your details</h2>
+                    <h2 class="govuk-heading-m">Your details</h2>
                     <div class="form-group" th:classappend="${#fields.hasErrors('firstName')}? 'form-group-error'">
                         <label class="form-label" th:for="firstName">
                             <span class="form-label-bold">First name</span>
@@ -143,7 +143,7 @@
                     </div>
 
                     <div class="form-group">
-                        <h3 class="heading-small">Email</h3>
+                        <h3 class="govuk-heading-s">Email</h3>
                         <p class="form-hint">
                             Your email address cannot be changed in the system.<br />
                             <strong th:text="${model.email}">jsmith@assessor.co.uk</strong>

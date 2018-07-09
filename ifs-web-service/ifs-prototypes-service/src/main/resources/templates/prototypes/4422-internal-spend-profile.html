@@ -25,17 +25,17 @@
 
 	<!-- <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" /> -->
 
-	<h2 class="heading-medium">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
+	<h2 class="govuk-heading-m">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'accepted'}">
 		<div class="success-alert extra-margin-bottom">
-			<h2 class="heading-small no-margin-top">The spend profile has been approved.</h2>
+			<h2 class="govuk-heading-s no-margin-top">The spend profile has been approved.</h2>
 		</div>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'reject'}">
 		<div class="warning-alert extra-margin-bottom">
-			<h3 class="heading-small">REJECT TEXT REQUIRED</h3>
+			<h3 class="govuk-heading-s">REJECT TEXT REQUIRED</h3>
 			<ul class="list list-bullet">
 				<li>TEXT REQUIRED</li>
 			</ul>
@@ -47,19 +47,19 @@
 
 	<p>You can download the spend profile of each project partner here so that you can share it with the Monitoring Officer.</p>
 
-	<h2 class="heading-medium">Innovation Lead</h2>
+	<h2 class="govuk-heading-m">Innovation Lead</h2>
 
 	<p>
 		Paul Davidson
 	</p>
 
-	<h2 class="heading-medium">Project spend profile</h2>
+	<h2 class="govuk-heading-m">Project spend profile</h2>
 	<a href="#">Competition-soend-profile.csv</a>
 
 
 	<div th:if="${param.status == null}" th:remove="tag">
 
-		<h2 class="heading-medium">Approved by Innovation Lead</h2>
+		<h2 class="govuk-heading-m">Approved by Innovation Lead</h2>
 		<p>The spend profile must be sent to the Innovation Lead for their review and approval.</p>
 
 		<div class="form-group">
@@ -80,7 +80,7 @@
         <button class="js-close close" aria-label="Close Popup">X</button>
         <div>
 
-			<h2 class="heading-medium no-margin">Approved by Innovation Lead</h2>
+			<h2 class="govuk-heading-m no-margin">Approved by Innovation Lead</h2>
 
 			<p>The project spend profile has been appoved and accepted by the Innovation Lead, by confirming the Project Manager will be notified of this decision via email.</p>
 
@@ -101,7 +101,7 @@
         <button class="js-close close" aria-label="Close Popup">X</button>
         <div>
 
-			<h2 class="heading-medium no-margin">Reject spend profile</h2>
+			<h2 class="govuk-heading-m no-margin">Reject spend profile</h2>
 
 			<p>Rejecting will return access to this section to all project partners.</p>
 

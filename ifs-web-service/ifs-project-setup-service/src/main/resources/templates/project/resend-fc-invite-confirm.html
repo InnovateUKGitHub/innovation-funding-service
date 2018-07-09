@@ -13,8 +13,8 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <form th:action="@{/project/{projectId}/details/finance-contact(projectId=${model.projectId})}" method="POST" >
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Resend invite to team member',size='heading-xlarge'" />
-            <h2 class="heading-medium no-margin">Resend invite to team member</h2>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Resend invite to team member',size='govuk-heading-xl'" />
+            <h2 class="govuk-heading-m no-margin">Resend invite to team member</h2>
             <p>They will be resent an email inviting them to join the project.</p>
             <hr />
             <input type="hidden" id="resend-fc-invite" name="resend-fc-invite" th:value="${model.inviteId}"/>

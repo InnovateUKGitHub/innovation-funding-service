@@ -18,7 +18,7 @@
         <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'non-ifs'}, counts=${model.counts}, tabs=${model.tabs})" />
 
         <section>
-            <h2 class="heading-medium"
+            <h2 class="govuk-heading-m"
                 th:text="'Non-IFS competitions ('+${model.counts.nonIfsCount}+')'"></h2>
             <ul class="list-overview">
                 <li class="grid-row" th:each="competition : ${model.getAllCompetitions()}">

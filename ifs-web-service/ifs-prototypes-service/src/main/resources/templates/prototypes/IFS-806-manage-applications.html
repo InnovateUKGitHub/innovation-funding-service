@@ -21,11 +21,11 @@
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired'}, ${'Assign applications to panel'}, ${'competition closed'})" />
 
-    <h2 class="heading-medium">Assigned applications (<span id="application-count">0</span>)</h2>
+    <h2 class="govuk-heading-m">Assigned applications (<span id="application-count">0</span>)</h2>
 
     <th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-application-list-table" th:with="type='assigned'"/>
 
-    <!-- <h2 class="heading-medium">Available applications</h2> -->
+    <!-- <h2 class="govuk-heading-m">Available applications</h2> -->
 
     <div class="search-filters extra-margin">
         <fieldset>

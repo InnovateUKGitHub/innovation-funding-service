@@ -15,7 +15,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project Manager',subTitle=${model.projectName},size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project Manager',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
                 <p>As lead partner you must choose a Project Manager who will be responsible for setting up your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
 
@@ -23,7 +23,7 @@
                     <fieldset>
                         <div class="form-group" id="project-manager-section" th:classappend="${#fields.hasErrors('*') ? 'form-group-error' : ''}">
                             <legend>
-                                <span class="heading-medium">Project Manager</span>
+                                <span class="govuk-heading-m">Project Manager</span>
                                 <th:block th:if="${#fields.hasErrors('*')}">
                                     <span class="error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}"></span>
                                 </th:block>

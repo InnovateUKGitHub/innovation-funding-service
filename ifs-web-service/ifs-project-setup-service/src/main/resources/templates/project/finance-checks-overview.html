@@ -13,15 +13,15 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks(projectId=${project.id})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=${project.name},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance overview',subTitle=${project.name},size='govuk-heading-xl'" />
         <p>This is the financial overview of all partners in this collaboration, each partner will be going through finance checks. The overview provides the progress of all partners through this section, as well as a view of their finances during review.</p>
 
-        <h3 class="heading-medium">Finances summary</h3>
+        <h3 class="govuk-heading-m">Finances summary</h3>
         <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
 
         <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})" />
 
-        <h3 class="heading-medium">Project cost breakdown</h3>
+        <h3 class="govuk-heading-m">Project cost breakdown</h3>
 
         <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})" />
 

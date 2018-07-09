@@ -11,7 +11,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Innovation areas',subTitle=${model.currentCompetitionName},size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Innovation areas',subTitle=${model.currentCompetitionName},size='govuk-heading-xl'" />
                 <p>Choose the primary innovation area for your project. This will help us to select suitable assessors for your application.</p>
 
                 <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">

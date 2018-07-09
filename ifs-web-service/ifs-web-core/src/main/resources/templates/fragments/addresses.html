@@ -36,7 +36,7 @@
         </fieldset>
         <fieldset id="address-details" class="extra-margin" th:if="${form.addressForm.selectedPostcodeIndex != null or form.addressForm.manualAddress}">
             <input type="hidden" th:field="*{addressForm.manualAddress}" />
-            <legend class="heading-medium" th:if="${addressType}" th:text="|Your ${addressType}|">ADDRESS TYPE</legend>
+            <legend class="govuk-heading-m" th:if="${addressType}" th:text="|Your ${addressType}|">ADDRESS TYPE</legend>
             <legend class="visuallyhidden" th:unless="${addressType}">Address details</legend>
             <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave} ? 'form-group-error'">
                 <label class="form-label" for="addressForm.selectedPostcode.addressLine1">
@@ -131,7 +131,7 @@
     <fieldset>
         <legend class="visuallyhidden" th:text="${selectedOrganisation.name} + ''">? Organisation</legend>
         <div class="form-block">
-            <h3 class="heading-small">Organisation name</h3>
+            <h3 class="govuk-heading-s">Organisation name</h3>
             <p th:text="${selectedOrganisation.name}"></p>
         </div>
     </fieldset>
@@ -142,22 +142,22 @@
         <legend class="visuallyhidden" th:text="${organisationType.name} + ''">? Organisation</legend>
         <div class="form-block">
             <th:block th:if="${showOrgType}">
-                <h3 class="heading-small">Organisation type</h3>
+                <h3 class="govuk-heading-s">Organisation type</h3>
                 <p th:text="${organisationType.name}">Business</p>
             </th:block>
 
-            <h3 class="heading-small">Registered name</h3>
+            <h3 class="govuk-heading-s">Registered name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
 
             <th:block th:unless="${organisationForm.research}">
                 <th:block th:if="${selectedOrganisation?.organisationSearchId}">
-                    <h3 class="heading-small">Registration number</h3>
+                    <h3 class="govuk-heading-s">Registration number</h3>
                     <p th:text="${selectedOrganisation?.organisationSearchId}"></p>
                 </th:block>
             </th:block>
 
             <div th:if="${selectedOrganisation?.organisationAddress != null}">
-                <h3 class="heading-small">Registered Address</h3>
+                <h3 class="govuk-heading-s">Registered Address</h3>
                 <div th:text="${selectedOrganisation?.organisationAddress?.addressLine1}"></div>
                 <div th:text="${selectedOrganisation?.organisationAddress?.addressLine2}"></div>
                 <div th:text="${selectedOrganisation?.organisationAddress?.addressLine3}"></div>
@@ -169,7 +169,7 @@
             <div th:if="${confirmDetails == true
                             and organisationForm.useSearchResultAddress == false
                             and organisationForm.addressForm.selectedPostcode != null}">
-                <h3 class="heading-small">Operating Address</h3>
+                <h3 class="govuk-heading-s">Operating Address</h3>
                 <div th:text="${organisationForm.addressForm.selectedPostcode?.addressLine1}"></div>
                 <div th:text="${organisationForm.addressForm.selectedPostcode?.addressLine2}"></div>
                 <div th:text="${organisationForm.addressForm.selectedPostcode?.addressLine3}"></div>
@@ -184,13 +184,13 @@
 <th:block th:fragment="business-details">
     <fieldset>
         <div class="form-block">
-            <h3 class="heading-small">Organisation name</h3>
+            <h3 class="govuk-heading-s">Organisation name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
 
-            <h3 th:if="${business?.companyNumber}" class="heading-small">Registration number</h3>
+            <h3 th:if="${business?.companyNumber}" class="govuk-heading-s">Registration number</h3>
             <p th:if="${business?.companyNumber}" th:text="${business.companyNumber}"></p>
 
-            <h3 class="heading-small">Address</h3>
+            <h3 class="govuk-heading-s">Address</h3>
             <div>
                 <div th:text="${business?.officeAddress?.addressLine1}"></div>
                 <div th:text="${business?.officeAddress?.addressLine2}"></div>

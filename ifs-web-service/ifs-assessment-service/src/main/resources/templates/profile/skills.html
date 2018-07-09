@@ -14,13 +14,13 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your skills',size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your skills',size='govuk-heading-xl'" />
                 <p>These innovation areas have been chosen as your current areas of expertise. They will influence the types
                     of competition you will be invited to assess. If you would like to amend them or add new ones please
                     contact Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.
                 </p>
 
-                <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
+                <h2 class="govuk-heading-m no-margin-bottom">Innovation areas</h2>
 
                 <ul class="list list-bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
                   <th:block th:each="innovationSectorEntry : ${model.innovationAreas}"
@@ -31,11 +31,11 @@
                   </th:block>
                 </ul>
 
-                <h2 class="heading-medium">Skill areas</h2>
+                <h2 class="govuk-heading-m">Skill areas</h2>
                 <p id="skillAreas"
                    th:text="${model.skillAreas} ? (${model.skillAreas} != '' ? ${model.skillAreas} : 'None declared') : 'Not answered'" />
 
-                <h2 class="heading-medium">Assessor type</h2>
+                <h2 class="govuk-heading-m">Assessor type</h2>
                 <p id="assessorType"
                    th:text="${model.assessorType} ? ${model.assessorType.displayName} : 'Not answered'" />
 

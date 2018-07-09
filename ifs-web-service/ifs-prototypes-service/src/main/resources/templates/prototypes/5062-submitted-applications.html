@@ -27,18 +27,18 @@
 
   <th:block th:if="${param.status != null and param.status[0] == 'decision' or param.comp != null and param.comp[0] == 'Inform'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Funding decision'}, ${null})" />
 
-      <h2 class="heading-medium">Key statistics</h2>
+      <h2 class="govuk-heading-m">Key statistics</h2>
 
 			<div class="grid-row" th:unless="${param.status != null and param.status[0] == 'decision' or param.status != null and param.status[0] == 'feedback'}">
 				<div class="column-quarter">
           <div class="highlight-panel">
-            <span class="heading-medium">17 November 2016</span><br />
+            <span class="govuk-heading-m">17 November 2016</span><br />
             <small>assessment deadline</small>
           </div>
 			 	</div>
 			 	<div class="column-quarter">
           <div class="highlight-panel">
-            <span class="heading-medium">4</span><br />
+            <span class="govuk-heading-m">4</span><br />
             <small>applications submitted</small>
           </div>
 				</div>
@@ -51,28 +51,28 @@
         <div class="grid-row extra-margin-bottom">
           <div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">287</span><br />
+              <span class="govuk-heading-l">287</span><br />
               <small>applications</small>
             </div>
   				</div>
 
   				<div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">2</span><br />
+              <span class="govuk-heading-l">2</span><br />
               <small>applications being funded</small>
             </div>
   				</div>
 
           <div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">281</span><br />
+              <span class="govuk-heading-l">281</span><br />
               <small>applications not being funded</small>
             </div>
           </div>
 
           <div class="column-quarter">
             <div class="highlight-panel">
-              <span class="heading-large">3</span><br />
+              <span class="govuk-heading-l">3</span><br />
               <small>applications on hold</small>
             </div>
           </div>
@@ -88,7 +88,7 @@
 			        <button class="js-close close" aria-label="Close Popup">X</button>
 			        <div>
 
-						<h2 class="heading-medium no-margin">Notify applicants</h2>
+						<h2 class="govuk-heading-m no-margin">Notify applicants</h2>
 
 						<p>Are you sure you wish to inform applicants if they have been successful in gaining funding.</p>
 
@@ -122,7 +122,7 @@
 
       <div class="grid-row sorting">
         <div class="column-one">
-          <h2><span class="heading-xlarge no-margin" id="applications-selected">287</span> applications</h2>
+          <h2><span class="govuk-heading-xl no-margin" id="applications-selected">287</span> applications</h2>
         </div>
       </div>
 

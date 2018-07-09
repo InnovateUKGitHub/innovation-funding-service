@@ -3,7 +3,7 @@
 
 <!-- ========Applicant view - sign in - create account content====== -->
 <div th:fragment="prototype-signin(url)">
-    <h1 class="heading-large">Sign in</h1>
+    <h1 class="govuk-heading-l">Sign in</h1>
     <form action="#" method="GET">
         <fieldset>
             <legend class="visuallyhidden">Sign in</legend>
@@ -34,7 +34,7 @@
 
 <!-- ========Applicant view - sign in makeover====== -->
 <div th:fragment="prototype-signinnew(url)">
-    <h1 class="heading-large">Sign into Innovation Funding Service</h1>
+    <h1 class="govuk-heading-l">Sign into Innovation Funding Service</h1>
     <p>Enter the email address and password you used to create your Innovation Funding Service account.</p>
     <div class="grid-row">
         <section class="column-half">
@@ -63,7 +63,7 @@
 
 <!-- ========Applicant view - sign in - create account content====== -->
 <div th:fragment="prototype-signin-create-acc(url)">
-    <h1 class="heading-large">New to this service?</h1>
+    <h1 class="govuk-heading-l">New to this service?</h1>
     <p>If you haven’t used this service before you must <a href="/prototypes/643-create-acc-business-lead">create an account</a>, even if you already have an existing account with Innovate UK.</p>
 
     <p>When you create an account you can:</p>
@@ -98,7 +98,7 @@
 <div th:fragment="prototype-subheader(link, url)">
     <div class="sub-header">
         <div th:if="${url == ''} and ${link != ''}" th:remove="tag">
-            <h2 class="heading-small no-margin" style="margin-top: 5px" th:text="${link}">Title text</h2>
+            <h2 class="govuk-heading-s no-margin" style="margin-top: 5px" th:text="${link}">Title text</h2>
         </div>
         <div th:if="${url != ''}" th:remove="tag">
              <a th:href="${url}" class="link-back" th:text="${link}">Link text</a>
@@ -108,7 +108,7 @@
 
 <!-- ===================Assessor Page title============================== -->
 <div th:fragment="prototype-applicant-page-title(subtitle, heading)">
-  <h1 class="heading-xlarge">
+  <h1 class="govuk-heading-xl">
     <span class="heading-secondary" th:text="${(subtitle == null ? 'Technology inspired' : subtitle )}">COMP DETAILS</span>
     <th:block th:text="${heading}" />
   </h1>
@@ -138,7 +138,7 @@
         <div th:if="${subtitle == 'noStatus'}" th:remove="tag">
             <p class="subtitle no-margin">Machine learning in robots</p>
         </div>
-        <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
+        <h1 class="govuk-heading-xl no-margin" th:text="${heading}">Title here</h1>
     </div>
 </div>
 
@@ -146,7 +146,7 @@
 
 <!-- ===================Create account form details============================== -->
 <div th:fragment="prototype-applicant-create-acc(url)">
-    <h2 class="heading-medium">Your details</h2>
+    <h2 class="govuk-heading-m">Your details</h2>
     <form>
         <fieldset>
             <legend class="visuallyhidden">Your details</legend>
@@ -182,7 +182,7 @@
                 <input class="form-control" id="phone-number" name="phone-number" type="text" />
             </div>
             <div class="form-group">
-                <h3 class="heading-small">Email</h3>
+                <h3 class="govuk-heading-s">Email</h3>
                 <p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong>andy.jones@nomensa.com</strong></p>
             </div>
             <div class="form-group">
@@ -213,11 +213,11 @@
 <div th:fragment="prototype-application-details-panel">
     <section class="boxed">
 
-        <!-- <h2 class="heading-medium no-margin">Application details</h2> -->
+        <!-- <h2 class="govuk-heading-m no-margin">Application details</h2> -->
 
         <div class="grid-row">
             <div class="column-half">
-                <h3 class="heading-small">Project title</h3>
+                <h3 class="govuk-heading-s">Project title</h3>
 
                 <th:block th:if="${status == 'closed' and user == 'admin'}">
                   <p>The potential for glucose based contact lens monitoring in the management of type two diabetes</p>
@@ -235,13 +235,13 @@
                   <p th:if="${param.status != null and param.status[0] == 'notSubmitted'}">Not submitted</p>
                 </th:block>
 
-                <h3 class="heading-small">Application number</h3>
+                <h3 class="govuk-heading-s">Application number</h3>
                 <p>3456</p>
 
-                <h3 class="heading-small">Lead organisation</h3>
+                <h3 class="govuk-heading-s">Lead organisation</h3>
                 <p>Aptrans Ltd</p>
 
-                <h3 class="heading-small">Partners</h3>
+                <h3 class="govuk-heading-s">Partners</h3>
                 <ul class="list list-bullet">
                     <li>Biotech Corp</li>
                     <li>University of Cardiff</li>
@@ -249,11 +249,11 @@
             </div>
 
             <div class="column-half">
-                <h3 class="heading-small">Project timescales</h3>
+                <h3 class="govuk-heading-s">Project timescales</h3>
                 <p>Project start date: <br />4 November 2016</p>
                 <p>Duration: <br />51 months</p>
 
-                <h3 class="heading-small extra-margin">Total project cost</h3>
+                <h3 class="govuk-heading-s extra-margin">Total project cost</h3>
                 <p>£203,567</p>
             </div>
         </div>
@@ -263,7 +263,7 @@
 
 <!-- ===================Finances summary============================== -->
 <div th:fragment="prototype-finances-summary">
-    <h2 class="heading-medium">Finance summaries</h2>
+    <h2 class="govuk-heading-m">Finance summaries</h2>
 
     <div th:unless="${hideText != null}" th:remove="tag">
         <p>This is the level of cost detail that the assessors will see during the assessment process</p>
@@ -375,7 +375,7 @@
 
 <!-- ===================Finances cost breakdown============================== -->
 <div th:fragment="prototype-project-cost-breakdown">
-    <h2 class="heading-medium extra-margin">Project cost breakdown</h2>
+    <h2 class="govuk-heading-m extra-margin">Project cost breakdown</h2>
 
     <div class="form-group">
         <div style="overflow: auto;">
@@ -514,7 +514,7 @@
 <!-- ===================Finances elibility success============================== -->
 <div th:fragment="prototype-eligibility-success">
     <div class="success-alert">
-        <h2 class="heading-small no-margin">The participation levels of this project are within the required range.</h2>
+        <h2 class="govuk-heading-s no-margin">The participation levels of this project are within the required range.</h2>
         <p>This application can be submitted with these project costs.</p>
     </div>
 </div>
@@ -523,7 +523,7 @@
 <!-- ===================Finances elibility warning============================== -->
 <div th:fragment="prototype-eligibility-warning">
     <div class="warning-alert">
-        <h2 class="heading-small no-margin">The participation levels of this project are not within the required range</h2>
+        <h2 class="govuk-heading-s no-margin">The participation levels of this project are not within the required range</h2>
         <p>You will not be able to submit this application until the research participation is 30% or less.</p>
     </div>
 </div>
@@ -531,7 +531,7 @@
 <!-- ===================Finances elibility warning============================== -->
 <div th:fragment="prototype-warning-incomplete">
     <div class="warning-alert">
-        <h2 class="heading-small no-margin">You have not completed your finances</h2>
+        <h2 class="govuk-heading-s no-margin">You have not completed your finances</h2>
         <ul class="list list-bullet">
             <li>This application cannot be submitted unless finances have been marked as complete by all partners</li>
             <li><a href="/prototypes/631-finances-overview">Return to the finances section to complete your finances</a></li>
@@ -541,7 +541,7 @@
 
 <!-- =============================Appendix content question 5============================== -->
 <div th:fragment="appendix-question5" th:remove="tag" >
-    <h3 class="heading-small no-margin">Project management appendix</h3>
+    <h3 class="govuk-heading-s no-margin">Project management appendix</h3>
     <p>If you need to provide more information to support your answer, you can include an appendix, e.g. a project plan</p>
     <details>
         <summary><span class="summary">What should I include in the project management appendix?</span></summary>
@@ -566,7 +566,7 @@
 
 <!-- =============================Appendix content question 6============================== -->
 <div th:fragment="appendix-question6" th:remove="tag" >
-    <h3 class="heading-small no-margin">Innovate appendix</h3>
+    <h3 class="govuk-heading-s no-margin">Innovate appendix</h3>
     <p>If you need to provide more information to support your answer, you can include an appendix, e.g. a diagram of your innovation</p>
     <details>
         <summary><span class="summary">What should I include in the innovation appendix?</span></summary>
@@ -589,7 +589,7 @@
 
 <!-- =============================Appendix content question 8============================== -->
 <div th:fragment="appendix-question8" th:remove="tag" >
-    <h3 class="heading-small no-margin">Project team appendix</h3>
+    <h3 class="govuk-heading-s no-margin">Project team appendix</h3>
     <p>If you need to provide more information to support your answer, you can include an appendix, e.g. details of subcontractors</p>
     <details>
         <summary><span class="summary">What should I include in the innovation appendix?</span></summary>
@@ -612,7 +612,7 @@
 
 <!-- =============================Appendix content question 8 jes============================== -->
 <th:block th:fragment="appendix-question8-jes">
-    <h3 class="heading-small no-margin">Upload a pdf copy of the Je-S form once you have a status of 'With Council'</h3>
+    <h3 class="govuk-heading-s no-margin">Upload a pdf copy of the Je-S form once you have a status of 'With Council'</h3>
     <details>
         <summary><span class="summary">How do I create my Je-S output?</span></summary>
         <div class="panel">
@@ -626,7 +626,7 @@
 
 <!-- =============================Appendix content question 8 jes============================== -->
 <div th:fragment="appendix-academic-download" th:remove="tag" >
-    <h3 class="heading-small no-margin">Upload a pdf copy of the Je-S output confirming a status of 'With Council'</h3>
+    <h3 class="govuk-heading-s no-margin">Upload a pdf copy of the Je-S output confirming a status of 'With Council'</h3>
     <details>
         <summary><span class="summary">How do I create my Je-S output?</span></summary>
         <div class="panel">
@@ -712,7 +712,7 @@
     <div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'} or ${param.status != null} and ${param.status[0] == 'assessorFeedback'}" th:remove="tag">
 
         <div class="upload-section">
-            <h3 class="heading-small no-margin">Assessor feedback</h3>
+            <h3 class="govuk-heading-s no-margin">Assessor feedback</h3>
             <p>Upload the assessor feedback page</p>
             <label for="file" class="button-secondary extra-margin">+ Upload</label>
         </div>
@@ -722,13 +722,13 @@
     <div th:if="${param.status != null} and (${param.status[0] == 'successfulFeedback'} or ${param.status[0] == 'unsuccessfulFeedback'} or ${param.status[0] == 'setup'})" th:remove="tag">
 
         <div class="form-group download extra-margin">
-            <h3 class="heading-small no-margin">View your application feedback:</h3>
+            <h3 class="govuk-heading-s no-margin">View your application feedback:</h3>
             <a href="#">10294856feedback.pdf (161.96 KB)</a>
         </div>
 
     </div>
 
-    <h2 class="heading-medium">Details</h2>
+    <h2 class="govuk-heading-m">Details</h2>
 
     <div class="collapsible section-overview">
 
@@ -738,17 +738,17 @@
             <div class="question">
                 <div class="form-group">
 
-                    <h3 class="heading-small">Project title</h3>
+                    <h3 class="govuk-heading-s">Project title</h3>
                     <p>A novel solution to an old problem</p>
 
-                    <h3 class="heading-small">Estimated timescales</h3>
+                    <h3 class="govuk-heading-s">Estimated timescales</h3>
                     <p>Project start date: 01/03/2016</p>
                     <p>Duration: 51 months</p>
 
-                    <h3 class="heading-small">Lead organisation</h3>
+                    <h3 class="govuk-heading-s">Lead organisation</h3>
                     <p>Empire Ltd</p>
 
-                    <h3 class="heading-small">Partners</h3>
+                    <h3 class="govuk-heading-s">Partners</h3>
 
                     <ul class="list list-bullet">
                         <li>Empire Ltd</li>
@@ -783,7 +783,7 @@
 
             <div class="question">
                 <div class="form-group">
-                    <h3 class="heading-small">How does your project align with the scope of this competition?</h3>
+                    <h3 class="govuk-heading-s">How does your project align with the scope of this competition?</h3>
                     <p>The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
                 </div>
             </div>
@@ -791,7 +791,7 @@
 
     </div>
 
-    <h2 class="heading-medium">Application questions</h2>
+    <h2 class="govuk-heading-m">Application questions</h2>
 
     <div class="collapsible section-overview">
 
@@ -800,7 +800,7 @@
         <div class="question">
             <div class="form-group">
 
-                <h3 class="heading-small">What is the business opportunity that your project addresses?</h3>
+                <h3 class="govuk-heading-s">What is the business opportunity that your project addresses?</h3>
 
                 <p>Within the Industry one issue has caused progress in the field to be stifled. Up until now any advancement has been made by working around this anomaly.</p>
 
@@ -810,9 +810,9 @@
 
                     <div class="grid-row extra-margin-top">
                         <div class="column-half">
-                            <h3 class="heading-small">Feedback</h3>
+                            <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright heading-small ">
+                        <div class="column-half alignright govuk-heading-s ">
                             Score 5/10
                         </div>
                     </div>
@@ -834,7 +834,7 @@
         <div class="question">
             <div class="form-group">
 
-                <h2 class="heading-small">What is the size of the potential market for your project?</h2>
+                <h2 class="govuk-heading-s">What is the size of the potential market for your project?</h2>
 
                 <p> The issue affects the entire field, the market value of which is significant, and accounts for a percentage of its annual overhead. A tool to reduce that amount by a significant proportion would be taken up by the entire industry. </p>
 
@@ -846,9 +846,9 @@
 
                     <div class="grid-row extra-margin-top">
                         <div class="column-half">
-                            <h3 class="heading-small">Feedback</h3>
+                            <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright heading-small ">
+                        <div class="column-half alignright govuk-heading-s ">
                             Score 6/10
                         </div>
                     </div>
@@ -873,7 +873,7 @@
         <div class="question">
             <div class="form-group">
 
-                <h2 class="heading-small">How will you exploit and market your project?</h2>
+                <h2 class="govuk-heading-s">How will you exploit and market your project?</h2>
 
                 <p>The issue affects the entire field, the market value of which is significant, and accounts for a percentage of its annual overhead. A tool to reduce that amount by a significant proportion would be taken up by the entire industry.</p>
 
@@ -885,9 +885,9 @@
 
                     <div class="grid-row extra-margin-top">
                         <div class="column-half">
-                            <h3 class="heading-small">Feedback</h3>
+                            <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright heading-small ">
+                        <div class="column-half alignright govuk-heading-s ">
                             Score 8/10
                         </div>
                     </div>
@@ -910,7 +910,7 @@
             <div class="question">
                 <div class="form-group">
 
-                    <h3 class="heading-small">What economic, social and environmental benefits do you expect your project to deliver and when?</h3>
+                    <h3 class="govuk-heading-s">What economic, social and environmental benefits do you expect your project to deliver and when?</h3>
 
                     <p> The tool will give the consortium the leading edge on the technology as currently no one else is close to considering developing a solution.</p>
 
@@ -922,9 +922,9 @@
 
                         <div class="grid-row extra-margin-top">
                             <div class="column-half">
-                                <h3 class="heading-small">Feedback</h3>
+                                <h3 class="govuk-heading-s">Feedback</h3>
                             </div>
-                            <div class="column-half alignright heading-small ">
+                            <div class="column-half alignright govuk-heading-s ">
                                 Score 3/10
                             </div>
                         </div>
@@ -946,13 +946,13 @@
 
         <div class="question">
             <div class="form-group">
-                <h3 class="heading-small">What technical approach will you use and how will you manage your project?</h3>
+                <h3 class="govuk-heading-s">What technical approach will you use and how will you manage your project?</h3>
                 <p>Our Academic partner has developed a technique to identify the precise cause of the issue and have been able to demonstrate it at a small scale. Taking this information they will scale up the experiment to a percentage of industrial scale to confirm.</p>
 
                 <p>We will take this data and engineer a solution to isolate the problem we will then collude with our fabrication partner to design and prototype a tool to correct the obstacle.</p>
 
                 <div class="form-group download">
-                    <h3 class="heading-small no-margin">View project management appendix:</h3>
+                    <h3 class="govuk-heading-s no-margin">View project management appendix:</h3>
                     <a href="#">Project-plan.pdf (161.96 KB)</a>
                 </div>
 
@@ -960,9 +960,9 @@
 
                     <div class="grid-row extra-margin-top">
                         <div class="column-half">
-                            <h3 class="heading-small">Feedback</h3>
+                            <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright heading-small ">
+                        <div class="column-half alignright govuk-heading-s ">
                             Score 5/10
                         </div>
                     </div>
@@ -984,12 +984,12 @@
 
         <div class="question">
             <div class="form-group">
-                <h3 class="heading-small">What is innovative about your project?
+                <h3 class="govuk-heading-s">What is innovative about your project?
 </h3>
                 <p>The project is based on Manchester?s novel IP that, for the first time, allows SLM to be conducted without any need for anchors/supports. A search of the literature has established that the advances proposed in this project on which RAMP are based are not available via any commercially available process. In addition, the development and supply of tailored materials by Empire and a dedicated high temperature rig by Ludlow will involve further, critical degrees of innovation that will help to build a portfolio of IP to enhance commercial exploitation. NB. RAMP does not simply reduce stresses by working at higher temperatures; it involves a novel step based on manufacturing engineering and material science that completely eliminates stresses.</p>
 
                 <div class="form-group download">
-                    <h3 class="heading-small no-margin">View innovation appendix:</h3>
+                    <h3 class="govuk-heading-s no-margin">View innovation appendix:</h3>
                     <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
                 </div>
 
@@ -997,9 +997,9 @@
 
                     <div class="grid-row extra-margin-top">
                         <div class="column-half">
-                            <h3 class="heading-small">Feedback</h3>
+                            <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright heading-small ">
+                        <div class="column-half alignright govuk-heading-s ">
                             Score 8/10
                         </div>
                     </div>
@@ -1022,7 +1022,7 @@
         <div class="question">
             <div class="form-group" th:unless="${param.status != null and param.status[0] == 'notSubmitted'}">
 
-                <h3 class="heading-small">What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h3>
+                <h3 class="govuk-heading-s">What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h3>
 
                 <p>Three principal risks exist at this stage:</p>
 
@@ -1038,9 +1038,9 @@
 
                     <div class="grid-row extra-margin-top">
                         <div class="column-half">
-                            <h3 class="heading-small">Feedback</h3>
+                            <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright heading-small ">
+                        <div class="column-half alignright govuk-heading-s ">
                             Score 5/10
                         </div>
                     </div>
@@ -1062,7 +1062,7 @@
         <div class="question">
             <div class="form-group">
 
-                <h3 class="heading-small">Does your project team have the skills, experience and facilities to deliver this project?</h3>
+                <h3 class="govuk-heading-s">Does your project team have the skills, experience and facilities to deliver this project?</h3>
 
                 <p>The team consists of: Us - We have been supplying engineering solutions to the industry for a number of years and have been principal deliverers for various advancements within the field. We are a suitably sized team capable of developing flexible solutions to a wide variety of clients internationally.</p>
 
@@ -1071,7 +1071,7 @@
                 <p>The Fabricators ? Are a leading team within complex engineering fabrication. They have work on multiple high budget engineering solutions and consist of a team of people with many years? experience in a range of industries</p>
 
                 <div class="form-group download">
-                    <h3 class="heading-small no-margin">View project team appendix:</h3>
+                    <h3 class="govuk-heading-s no-margin">View project team appendix:</h3>
                     <a href="#">CVs-of-team.pdf (161.96 KB)</a>
                 </div>
 
@@ -1079,9 +1079,9 @@
 
                     <div class="grid-row extra-margin-top">
                         <div class="column-half">
-                            <h3 class="heading-small">Feedback</h3>
+                            <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright heading-small ">
+                        <div class="column-half alignright govuk-heading-s ">
                             Score 5/10
                         </div>
                     </div>
@@ -1103,7 +1103,7 @@
 
         <div class="question">
             <div class="form-group">
-                <h3 class="heading-small">What will your project cost?</h3>
+                <h3 class="govuk-heading-s">What will your project cost?</h3>
                 <p>The amount of money needed to complete this project is large.</p>
                 <p>The academic phase will require the acquisition of several pieces of lab equipment and the employ of additional graduates to ensure the experiments run smoothly.</p>
                 <p>The Materials and use of the fabricators equipment will account for approximately some of the budget.</p>
@@ -1113,9 +1113,9 @@
 
                     <div class="grid-row extra-margin-top">
                         <div class="column-half">
-                            <h3 class="heading-small">Feedback</h3>
+                            <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright heading-small ">
+                        <div class="column-half alignright govuk-heading-s ">
                             Score 5/10
                         </div>
                     </div>
@@ -1136,7 +1136,7 @@
 
         <div class="question">
             <div class="form-group">
-                <h3 class="heading-small">How does financial support from Innovate UK and its funding partners add value?</h3>
+                <h3 class="govuk-heading-s">How does financial support from Innovate UK and its funding partners add value?</h3>
                 <p>Although steps are under way to get this project off the ground, investment by Innovate UK will stimulate Industry leads to supply additional resource funding and use of their facilities as required to advance the progress of this project.</p>
                 <p>UK Investment will ensure that we are able to retain the onward manufacture internally instead of needing to create international deals taking work and profit out of the country.</p>
 
@@ -1144,9 +1144,9 @@
 
                     <div class="grid-row extra-margin-top">
                         <div class="column-half">
-                            <h3 class="heading-small">Feedback</h3>
+                            <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright heading-small ">
+                        <div class="column-half alignright govuk-heading-s ">
                             Score 5/10
                         </div>
                     </div>
@@ -1164,7 +1164,7 @@
 
     </div>
 
-    <h2 class="heading-medium">Finances</h2>
+    <h2 class="govuk-heading-m">Finances</h2>
 
     <div class="collapsible section-overview">
 
@@ -1185,16 +1185,16 @@
     </div>
 
     <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
-        <h2 class="heading-medium">Feedback summary</h2>
+        <h2 class="govuk-heading-m">Feedback summary</h2>
 
-        <h3 class="heading-small">Do you believe that this application is suitable for funding?</h3>
+        <h3 class="govuk-heading-s">Do you believe that this application is suitable for funding?</h3>
         <p>Yes</p>
 
-        <h3 class="heading-small">Your feedback</h3>
+        <h3 class="govuk-heading-s">Your feedback</h3>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda corporis hic illo modi ullam. Autem ipsam labore magnam pariatur qui quisquam quos voluptatum.</p>
         <p>Aliquam explicabo illo libero reiciendis repellendus tempora.</p>
 
-        <h3 class="heading-small">Other comments</h3>
+        <h3 class="govuk-heading-s">Other comments</h3>
         <p>Quisque est sem, consectetur et urna pulvinar, tincidunt vestibulum justo. Fusce vel mauris at ligula lacinia fringilla. Nam in faucibus dolor, quis hendrerit leo. Sed a turpis tortor.</p>
     </th:block>
 
@@ -1341,7 +1341,7 @@
 
 <div th:fragment="prototype-spend-year-totals">
 
-    <h2 class="heading-medium">Project costs for financial year</h2>
+    <h2 class="govuk-heading-m">Project costs for financial year</h2>
 
     <p>Your submitted spend profile will be used as the base for your project spend over the following financial years.
 </p>

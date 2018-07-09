@@ -14,14 +14,14 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to create your account.</h2>
+                    <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to create your account.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create assessor account',size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create assessor account',size='govuk-heading-xl'" />
 
                 <form th:action="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
-                    <h2 class="heading-medium">Your details</h2>
+                    <h2 class="govuk-heading-m">Your details</h2>
                     <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
                         <label class="form-label" for="firstName">
                             <span class="form-label-bold">First name</span>
@@ -85,7 +85,7 @@
                     </div>
 
                     <div class="form-group">
-                        <p class="heading-small">Email</p>
+                        <p class="govuk-heading-s">Email</p>
                         <p class="form-hint">You will need this to sign into your account.
                             If this is not your preferred email address please contact support@innovateuk.gov.uk.<br />
                             <strong th:text="${model.email}"></strong>

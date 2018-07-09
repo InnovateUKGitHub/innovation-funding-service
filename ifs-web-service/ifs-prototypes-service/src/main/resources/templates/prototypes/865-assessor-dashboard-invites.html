@@ -16,12 +16,12 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup">
-        <h1 class="heading-large">Assessor dashboard</h1>
+        <h1 class="govuk-heading-l">Assessor dashboard</h1>
     </div>
 
     <th:block th:if="${param.user != null and param.user[0] == 'assessor'}">
         <div class="message-alert extra-margin-bottom">
-            <h2 class="heading-small no-margin">Complete your assessor account</h2>
+            <h2 class="govuk-heading-s no-margin">Complete your assessor account</h2>
             <p>You must complete your profile before we can assign you applications.</p>
             <ul class="list list-bullet extra-margin-top">
                 <li>
@@ -40,7 +40,7 @@
 
     <th:block th:unless="${param.user != null and param.user[0] == 'assessor'}">
         <div class="success-alert extra-margin-bottom">
-            <h2 class="heading-small no-margin">Assessor account complete</h2>
+            <h2 class="govuk-heading-s no-margin">Assessor account complete</h2>
         </div>
     </th:block>
 

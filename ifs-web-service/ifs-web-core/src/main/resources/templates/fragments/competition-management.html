@@ -5,7 +5,7 @@
 <!--/* competition status with blue block */-->
 <th:block th:fragment="competition-status(competition)">
     <th:block th:unless="${competition == 'setup'}">
-      <h2 th:switch="${competition.competitionStatus.name()}" class="bold-small blue-block">
+      <h2 th:switch="${competition.competitionStatus.name()}" class="govuk-heading-s govuk-!-margin-0 blue-block">
           <th:block th:case="'NOT_STARTED'">Competition not yet started</th:block>
           <th:block th:case="'OPEN'">Competition open</th:block>
           <th:block th:case="'IN_ASSESSMENT'">In assessment</th:block>
@@ -15,7 +15,7 @@
           <th:block th:case="*">test2</th:block>
       </h2>
     </th:block>
-    <h2 th:if="${competition == 'setup'}" class="bold-small blue-block">Competition Setup</h2>
+    <h2 th:if="${competition == 'setup'}" class="govuk-heading-s govuk-!-margin-0 blue-block">Competition Setup</h2>
 </th:block>
 
 

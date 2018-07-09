@@ -17,12 +17,12 @@
             <th:block th:if="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to Non-IFS competition details',linkClass='link-back',linkUrl=@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem publishing the public content.</h2>
+                <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There was a problem publishing the public content.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
             <th:block th:with="competitionTitle=${#strings.isEmpty(model.competition.name)} ? |${model.competition.id} : $#{ifs.competition.no_title}| : |${model.competition.id} : ${model.competition.name}|">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Public content',subTitle=${competitionTitle},size='heading-xlarge'" />
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Public content',subTitle=${competitionTitle},size='govuk-heading-xl'" />
             </th:block>
 
             <div class="message-alert" th:if="${model.hasBeenPublished()}">
@@ -35,7 +35,7 @@
             <ul class="task-list extra-margin">
                 <li th:each="section : ${model.sections}">
                     <div class="task">
-                        <h2 class="heading-small">
+                        <h2 class="govuk-heading-s">
                             <a th:text="${section.type.text}" th:href="@{/competition/setup/public-content/{sectionPath}/{competitionId}{edit}(competitionId=${model.competition.id},sectionPath=${section.type.path},edit=${model.isSectionComplete(section) ? '' : '/edit'})}"></a>
                         </h2>
                     </div>

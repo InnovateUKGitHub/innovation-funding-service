@@ -20,12 +20,12 @@
 
   <!-- <th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Finances'})" /> -->
 
-  <h1 class="heading-xlarge">
+  <h1 class="govuk-heading-xl">
     <span class="heading-secondary">5436854: Technology inspired<span th:text="${(param.closed != null ? ', competition closed' : ', competition open')}">COMP STATUS</span> </span>
     Aptrans Ltd <small>(Lead partner)</small>
   </h1>
 
-	<h2 class="heading-medium">Detailed finances</h2>
+	<h2 class="govuk-heading-m">Detailed finances</h2>
   <p>These finances were orginally submitted by the applicant.</p>
 
 	<div class="collapsible section-overview extra-margin">
@@ -68,7 +68,7 @@
 	</div>
 
 
-	<h3 class="heading-medium">Other funding</h3>
+	<h3 class="govuk-heading-m">Other funding</h3>
 
 	<p>This refers to other public funding that you have told us about.</p>
 
@@ -96,7 +96,7 @@
 
   <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
 
-    <h2 class="heading-medium">Organisation's projected growth</h2>
+    <h2 class="govuk-heading-m">Organisation's projected growth</h2>
 
     <div class="grid-row">
       <div class="column-half">

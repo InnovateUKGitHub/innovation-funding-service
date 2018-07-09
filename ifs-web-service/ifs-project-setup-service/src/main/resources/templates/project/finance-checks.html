@@ -13,7 +13,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId})}">
         <div th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem saving your response.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There was a problem saving your response.</h2>
             Please review
             <ul class="error-summary-list">
                 <th:block th:each="err : ${nonFormErrors}">
@@ -22,7 +22,7 @@
             </ul>
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance checks',subTitle=${model.projectName},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance checks',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <th:block th:if="${model.isApproved()}">
             <div class="success-alert extra-margin-bottom">
@@ -62,7 +62,7 @@
                     </div>
             </th:block>
 
-            <h2 class="heading-medium">Queries</h2>
+            <h2 class="govuk-heading-m">Queries</h2>
 
             <div class="collapsible" th:classappend="${model.isSingleQuery() ? 'collapsible-expanded' : ''}">
                 <th:block th:each="query : ${model.getPendingQueries()}">
@@ -73,7 +73,7 @@
                     <div class="collapsible-content">
                         <th:block th:each="(post, iteration : ${query.viewModelPosts})">
                             <div th:class="${iteration.index == 0} ? '' : 'panel'">
-                                <div class="heading-small no-margin">
+                                <div class="govuk-heading-s no-margin">
                                     <th:block th:text="${post.username}">Created by user</th:block>
                                     <small>
                                         <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
@@ -82,7 +82,7 @@
                                 </div>
                                 <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
                                 <th:block th:unless="${post.attachments.isEmpty()}">
-                                    <h3 class="heading-small">Supporting documentation</h3>
+                                    <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul>
                                         <li th:each="attachment : ${post.attachments}">
                                             <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a>
@@ -97,7 +97,7 @@
                         <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                             <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
                                 enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
-                                    <h2 class="heading-medium">Respond to query</h2>
+                                    <h2 class="govuk-heading-m">Respond to query</h2>
                                     <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
                                         <label for="response-1">
                                             <span class="form-label-bold">Response</span>
@@ -126,7 +126,7 @@
                                     </div>
                                     <div class="upload-section">
                                         <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                                            <h3 class="heading-small no-margin">Supporting documentation</h3>
+                                            <h3 class="govuk-heading-s no-margin">Supporting documentation</h3>
                                             <ul>
                                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                                     <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
@@ -134,7 +134,7 @@
                                                 </li>
                                             </ul>
                                         </th:block>
-                                        <h3 class="heading-small">Upload supporting documentation in pdf format</h3>
+                                        <h3 class="govuk-heading-s">Upload supporting documentation in pdf format</h3>
                                         <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
                                             <th:block th:if="${#fields.hasErrors('attachment')}">
                                                 <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
@@ -168,7 +168,7 @@
                     <div class="collapsible-content">
                         <th:block th:each="(post, iteration : ${query.viewModelPosts})">
                             <div th:class="${iteration.index == 0} ? '' : 'panel'">
-                                <div class="heading-small no-margin">
+                                <div class="govuk-heading-s no-margin">
                                     <th:block th:text="${post.username}">Created by user</th:block>
                                     <small>
                                         <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
@@ -177,7 +177,7 @@
                                 </div>
                                 <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
                                 <th:block th:unless="${post.attachments.isEmpty()}">
-                                    <h3 class="heading-small">Supporting documentation</h3>
+                                    <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul>
                                         <li th:each="attachment : ${post.attachments}">
                                             <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a>
@@ -192,7 +192,7 @@
                         <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                             <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
                                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
-                                <h2 class="heading-medium">Respond to query</h2>
+                                <h2 class="govuk-heading-m">Respond to query</h2>
                                 <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
                                     <label for="response-2">
                                         <span class="form-label-bold">Response</span>
@@ -221,7 +221,7 @@
                                 </div>
                                 <div class="upload-section">
                                     <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                                        <h3 class="heading-small no-margin">Supporting documentation</h3>
+                                        <h3 class="govuk-heading-s no-margin">Supporting documentation</h3>
                                         <ul>
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                                 <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
@@ -229,7 +229,7 @@
                                             </li>
                                         </ul>
                                     </th:block>
-                                    <h3 class="heading-small">Upload supporting documentation in pdf format</h3>
+                                    <h3 class="govuk-heading-s">Upload supporting documentation in pdf format</h3>
                                     <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
                                         <th:block th:if="${#fields.hasErrors('attachment')}">
                                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
@@ -261,7 +261,7 @@
                     <div class="collapsible-content">
                         <th:block th:each="(post, iteration : ${query.viewModelPosts})">
                             <div th:class="${iteration.index == 0} ? '' : 'panel'">
-                                <div class="heading-small no-margin">
+                                <div class="govuk-heading-s no-margin">
                                     <th:block th:text="${post.username}">Created by user</th:block>
                                     <small>
                                         <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
@@ -270,7 +270,7 @@
                                 </div>
                                 <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
                                 <th:block th:unless="${post.attachments.isEmpty()}">
-                                    <h3 class="heading-small">Supporting documentation</h3>
+                                    <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul>
                                         <li th:each="attachment : ${post.attachments}">
                                             <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a>
@@ -285,7 +285,7 @@
                         <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                             <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
                                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
-                                <h2 class="heading-medium">Respond to query</h2>
+                                <h2 class="govuk-heading-m">Respond to query</h2>
                                 <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
                                     <label for="response-3">
                                         <span class="form-label-bold">Response</span>
@@ -314,7 +314,7 @@
                                 </div>
                                 <div class="upload-section">
                                     <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                                        <h3 class="heading-small no-margin">Supporting documentation</h3>
+                                        <h3 class="govuk-heading-s no-margin">Supporting documentation</h3>
                                         <ul>
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                                 <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
@@ -322,7 +322,7 @@
                                             </li>
                                         </ul>
                                     </th:block>
-                                    <h3 class="heading-small">Upload supporting documentation in pdf format</h3>
+                                    <h3 class="govuk-heading-s">Upload supporting documentation in pdf format</h3>
                                     <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
                                         <th:block th:if="${#fields.hasErrors('attachment')}">
                                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />

@@ -21,13 +21,13 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<h1 class="heading-xlarge" th:text="${(param.edit == null ? 'Create assessor account':'Edit your details')}">Create assessor account</h1>
+	<h1 class="govuk-heading-xl" th:text="${(param.edit == null ? 'Create assessor account':'Edit your details')}">Create assessor account</h1>
 
 	<!-- <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p> -->
 
 	<form>
 		<fieldset th:unless="${param.edit != null and param.edit[0] == 'address'}">
-			<legend class="heading-medium visuallyhidden">Your details</legend>
+			<legend class="govuk-heading-m visuallyhidden">Your details</legend>
 			<div class="form-group">
 				<label class="form-label" for="title">
 					<span class="form-label-bold">Title</span>
@@ -93,7 +93,7 @@
 
 			<div th:if="${param.edit == null}" th:remove="tag">
 				<div class="form-group">
-					<h3 class="heading-small">Email</h3>
+					<h3 class="govuk-heading-s">Email</h3>
 					<p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong>jsmith@assessor.co.uk</strong></p>
 				</div>
 				<div class="form-group">
@@ -121,7 +121,7 @@
 
 			<div th:if="${param.edit != null}" th:remove="tag">
 				<div class="form-group">
-					<h3 class="heading-small">Email</h3>
+					<h3 class="govuk-heading-s">Email</h3>
 					<p class="form-hint">Your email address cannot be changed in the system<br /><strong>jsmith@assessor.co.uk</strong></p>
 				</div>
 				<p>To change your email address please contact Innovate UK: phone <strong>0300 321 4357</strong></p>
@@ -131,7 +131,7 @@
 
     <!--<th:block th:if="${param.edit != null}">-->
       <!--<fieldset id="address-details" class="extra-margin" style="display: block;">-->
-        <!--<legend class="heading-medium">Your address</legend>-->
+        <!--<legend class="govuk-heading-m">Your address</legend>-->
         <!--<div class="form-group">-->
           <!--<label class="form-label" for="street">-->
             <!--<span class="form-label-bold">Street</span>-->

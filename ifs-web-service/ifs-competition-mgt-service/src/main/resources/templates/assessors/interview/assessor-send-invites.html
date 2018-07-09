@@ -14,14 +14,14 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Invite assessors to attend',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invite to assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invite to assessors',subTitle=${model.competitionName},size='govuk-heading-xl'" />
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <h2 class="heading-medium no-margin">Recipients</h2>
+        <h2 class="govuk-heading-m no-margin">Recipients</h2>
 
         <p th:text="${#strings.listJoin(model.recipients, ', ')}">Paul Plum, Felix Wilson</p>
 
@@ -41,7 +41,7 @@
                        th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
             </div>
 
-            <h3 class="heading-small">Message</h3>
+            <h3 class="govuk-heading-s">Message</h3>
             <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
 
             <div class="form-group extra-margin">
