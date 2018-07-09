@@ -74,13 +74,14 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             Integer month = milestone.getMonth();
             Integer year = milestone.getYear();
             String fieldName = "milestone-" + milestone.getMilestoneNameType().toUpperCase();
-            if(!validTimeOfMiddayMilestone(milestone) && errors.isEmpty()) {
-                errors.add(fieldError(fieldName, "", "error.milestone.invalid"));
+            String fieldValidationError = milestone.getMilestoneType().getMilestoneDescription();
+            if(!validTimeOfMiddayMilestone(milestone)) {
+                errors.add(fieldError(fieldName, "", "error.milestone.invalid", fieldValidationError));
             }
 
             boolean dateFieldsIncludeNull = (day == null || month == null || year == null);
-            if((dateFieldsIncludeNull || !isMilestoneDateValid(day, month, year)) && errors.isEmpty()) {
-                errors.add(fieldError(fieldName, "", "error.milestone.invalid"));
+            if((dateFieldsIncludeNull || !isMilestoneDateValid(day, month, year))) {
+                errors.add(fieldError(fieldName, "", "error.milestone.invalid", fieldValidationError));
             }
         });
         return errors;
