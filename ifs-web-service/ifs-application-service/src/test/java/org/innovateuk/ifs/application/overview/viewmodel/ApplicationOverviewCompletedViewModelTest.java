@@ -29,14 +29,13 @@ public class ApplicationOverviewCompletedViewModelTest {
     @Before
     public void setup() throws Exception {
         Set<Long> sectionsMarkedAsComplete = asSet(1L, 2L);
-        Boolean allQuestionsCompleted = Boolean.FALSE;
         Future<Set<Long>> markedAsComplete = mock(Future.class);
         when(markedAsComplete.get()).thenReturn(sectionsMarkedAsComplete);
 
         Set<Long> completedSections = asSet(1L, 2L);
         Boolean userFinanceSectionCompleted = Boolean.FALSE;
 
-        viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, allQuestionsCompleted, markedAsComplete, userFinanceSectionCompleted);
+        viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, markedAsComplete, userFinanceSectionCompleted);
         viewModel.setCompletedSections(completedSections);
     }
 
