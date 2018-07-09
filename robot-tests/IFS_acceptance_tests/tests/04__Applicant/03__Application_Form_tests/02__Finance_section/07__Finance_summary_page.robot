@@ -99,12 +99,24 @@ Green check should show when the finances are complete
     When the user clicks the button/link  link=Finances overview
     Then Green check should be visible
 
+Finance overview shows as incomplete
+    [Documentation]  IFS-3820
+    Given The user clicks the button/link  link=Application overview
+    Then the user should see the element   jQuery=li:contains("Finances overview") .task-status-incomplete
+
 Collaborator marks finances as complete
     [Documentation]    INFUND-8397  IFS-2879
     [Tags]  HappyPath
     Given log in as a different user                     &{collaborator1_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     Then the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a  no
+
+Finances overview shows as complete once all collaborators have marked as complete
+    [Documentation]  IFS-3820
+    Given the academic user marks finances as complete
+    And log in as a different user        &{lead_applicant_credentials}
+    When the user clicks the button/link  link=${OPEN_COMPETITION_APPLICATION_2_NAME}
+    Then the user should see the element  jQuery=li:contains("Finances overview") .task-status-complete
     [Teardown]  logout as user
 
 Alert shows If the academic research participation is too high
@@ -317,13 +329,15 @@ Lead enters a valid research participation value
 
 the user checks Your Funding section for the project
     [Arguments]  ${Application}
+    the user clicks the button/link  link=Your funding
     ${Research_category_selected}=  run keyword and return status without screenshots  Element Should Be Visible  link=Your funding
     Run Keyword if  '${Research_category_selected}' == 'False'  the user selects research area via Your Funding section  ${Application}
     Run Keyword if  '${Research_category_selected}' == 'True'  the user fills in the funding information with bigger amount  ${Application}
 
 the user selects research area via Your Funding section
     [Arguments]  ${Application}
-    the applicant completes the application details  ${Application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant completes the application details  ${Application}  ${tomorrowday}  ${month}  ${nextyear}
+    then the user selects research category          Feasibility studies
     the user fills in the funding information with bigger amount  ${Application}
 
 the user fills in the funding information with bigger amount
@@ -394,3 +408,11 @@ the user navigates to the finances of the application
     the user navigates to the page   ${allApplicationsForRTOComp}
     the user clicks the button/link  link=${application_ids["Networking home IOT devices"]}
     the user expands the section     Finances summary
+
+the academic user marks finances as complete
+    log in as a different user                &{collaborator2_credentials}
+    the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    the user clicks the button/link            link=Your project costs
+    the user selects the checkbox              termsAgreed
+    the user clicks the button/link            jQuery=button:contains("Mark as complete")
+    the user enters the project location

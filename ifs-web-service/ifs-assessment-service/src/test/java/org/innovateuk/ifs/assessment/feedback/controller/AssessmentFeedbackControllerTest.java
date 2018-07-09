@@ -320,7 +320,10 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .withSection(financeSectionResource.getId())
                 .build();
 
+        // The next question should be skipped since it's within the Finance section
         setupQuestionNavigation(questionResource.getId(), of(previousQuestionResource), of(nextQuestionResource));
+        // There is also no navigation from the question following that
+        when(questionService.getNextQuestion(nextQuestionResource.getId())).thenReturn(empty());
 
         List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA);
         setupApplicantResponses(applicationId, applicationFormInputs);
