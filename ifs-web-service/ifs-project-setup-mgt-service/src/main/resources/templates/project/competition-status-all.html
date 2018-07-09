@@ -34,7 +34,7 @@
     <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
 
     <th:block th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources) && param.applicationSearchString == null}">
-        <div><p>There are currently no active projects in this competition.</p></div>
+        <p>There are currently no active projects in this competition.</p>
     </th:block>
 
     <th:block th:unless="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
