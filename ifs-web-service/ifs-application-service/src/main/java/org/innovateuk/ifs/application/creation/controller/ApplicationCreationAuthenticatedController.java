@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
@@ -39,17 +41,21 @@ public class ApplicationCreationAuthenticatedController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RegistrationCookieService registrationCookieService;
+
     @GetMapping("/{competitionId}")
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) long competitionId,
-                       UserResource user) {
+                       UserResource user,
+                       HttpServletResponse response) {
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
         if (Boolean.TRUE.equals(userHasApplication)) {
             model.addAttribute(COMPETITION_ID, competitionId);
             model.addAttribute(FORM_NAME, new ApplicationCreationAuthenticatedForm());
             return "create-application/confirm-new-application";
         } else {
-            return redirectToOrganisationCreation();
+            return redirectToOrganisationCreation(competitionId, response);
         }
     }
 
@@ -57,11 +63,12 @@ public class ApplicationCreationAuthenticatedController {
     public String post(@PathVariable(COMPETITION_ID) long competitionId,
                        @Valid @ModelAttribute(FORM_NAME) ApplicationCreationAuthenticatedForm form,
                        BindingResult bindingResult,
-                       ValidationHandler validationHandler) {
+                       ValidationHandler validationHandler,
+                       HttpServletResponse response) {
         Supplier<String> failureView = () -> "create-application/confirm-new-application";
         Supplier<String> successView = () -> {
             if (form.getCreateNewApplication()) {
-                return redirectToOrganisationCreation();
+                return redirectToOrganisationCreation(competitionId, response);
             }
             // redirect to dashboard
             return "redirect:/";
@@ -70,7 +77,9 @@ public class ApplicationCreationAuthenticatedController {
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
-    private String redirectToOrganisationCreation() {
+    private String redirectToOrganisationCreation(long competitionId, HttpServletResponse response) {
+        registrationCookieService.deleteAllRegistrationJourneyCookies(response);
+        registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
         return "redirect:/organisation/create/initialize";
     }
 

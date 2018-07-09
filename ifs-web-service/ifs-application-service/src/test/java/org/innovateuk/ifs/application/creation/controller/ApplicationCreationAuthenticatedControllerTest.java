@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.creation.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -22,6 +23,9 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private RegistrationCookieService registrationCookieService;
 
     @Override
     protected ApplicationCreationAuthenticatedController supplyControllerUnderTest() {
@@ -44,6 +48,8 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/organisation/create/initialize"));
 
+        verify(registrationCookieService).deleteAllRegistrationJourneyCookies(any());
+        verify(registrationCookieService).saveToCompetitionIdCookie(eq(1L), any());
         verify(userService, only()).userHasApplicationForCompetition(loggedInUser.getId(), 1L);
     }
 
@@ -63,6 +69,10 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
                 .param("createNewApplication", "1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/organisation/create/initialize"));
+
+        verify(registrationCookieService).deleteAllRegistrationJourneyCookies(any());
+        verify(registrationCookieService).saveToCompetitionIdCookie(eq(1L), any());
+
     }
 
     @Test
