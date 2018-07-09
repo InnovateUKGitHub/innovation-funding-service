@@ -290,7 +290,7 @@ public class ApplicationAjaxController {
     public String updateTimeDetails( Model model ) {
         model.addAttribute("updateDate", TimeZoneUtil.toUkTimeZone(now()));
         model.addAttribute("lastUpdatedText", "by you");
-        return "question-type/form-elements :: updateTimeDetailsAjax";
+        return "question-type/form-elements :: updateTimeDetails";
     }
 
     @GetMapping(value = "/add_cost/{" + QUESTION_ID + "}")

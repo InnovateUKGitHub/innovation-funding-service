@@ -225,13 +225,13 @@ IFS.core.autoSave = (function () {
               autoSaveInfo.html('Saved!')
 
               // update the update details section if it exists
-              if (form.attr('data-autosave') === 'application' && jQuery('.update-details')) {
+              if (form.attr('data-autosave') === 'application' && formGroup.find('.update-details').length !== 0) {
                 var applicationId = jQuery('#application_id').val()
                 var url = '/application/' + applicationId + '/form/update_time_details'
                 // do a replace of the updatedetails based on return of ajax request to correct time and author
                 jQuery.get(url, function (fragment) {
                   if (fragment) {
-                    jQuery('.update-details').replaceWith(fragment)
+                    formGroup.find('.update-details').replaceWith(fragment)
                   }
                 })
               }

@@ -245,7 +245,7 @@
                 <span class="textarea-footer"></span>
                 <th:block th:if="${model.hasResponse}">
                     <span class="update-label">Last updated: </span>
-                    <th:block th:insert="question-type/form-elements :: updateTimeDetails(${model.response.getUpdateDate()}, ${model.lastUpdatedText})"/>
+                    <th:block th:insert="question-type/form-elements :: updateTimeDetails" th:with="updateDate=${model.response.getUpdateDate()},lastUpdatedText=${model.lastUpdatedText}" />
                 </th:block>
 
                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" />
@@ -429,15 +429,11 @@
       </th:block>
 </th:block>
 
-<th:block th:fragment="updateTimeDetails(updateDate, lastUpdatedText)">
+<th:block th:fragment="updateTimeDetails">
       <span class="update-details">
           <th:block th:insert="fragments/elements :: pretty-date (date=${updateDate})"/>
           <th:block th:text="${lastUpdatedText}"></th:block>
       </span>
-</th:block>
-
-<th:block th:fragment="updateTimeDetailsAjax">
-      <th:block th:insert="question-type/form-elements :: updateTimeDetails(${updateDate}, ${lastUpdatedText})"/>
 </th:block>
 
 <!-- ========================= Mark as complete buttons =========================== -->
