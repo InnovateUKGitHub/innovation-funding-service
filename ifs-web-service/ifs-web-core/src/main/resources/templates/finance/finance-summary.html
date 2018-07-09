@@ -197,7 +197,22 @@
                     <td class="numeric">0</td>
                 </tr>
                 <tr>
-                    <th scope="row">Total</th>
+                    <th scope="row">Total
+                        <div th:if="${currentApplication.isOpen() and model.userIsLeadApplicant}">
+                            <th:block th:if="${model.isYourFinancesInCompleteForAnOrganisations}">
+                                <img class="table-total-tick" width="20" height="20"
+                                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-alert.png')}"
+                                     alt="has not yet marked the Finances as complete" />
+                                <span class="visuallyhidden">Incomplete</span>
+                            </th:block>
+                            <th:block th:if="${!model.isYourFinancesInCompleteForAnOrganisations}">
+                                <img class="table-total-tick" width="20" height="17"
+                                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-tick.png')}"
+                                     alt="has marked the Finances as complete"/>
+                                <span class="visuallyhidden">Complete</span>
+                            </th:block>
+                        </div>
+                    </th>
                     <td class="numeric">
                         <strong>&pound;<th:block th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" /></strong>
                     </td>
