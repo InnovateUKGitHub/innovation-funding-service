@@ -14,7 +14,7 @@ import javax.persistence.*;
  * @see Process
  */
 @Entity
-class ProcessHistory extends AuditableEntity {
+public class ProcessHistory extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,7 +26,7 @@ class ProcessHistory extends AuditableEntity {
 
     private final String processStateName;
 
-    ProcessHistory() {
+    public ProcessHistory() {
         this.process = null;
         this.processStateName = null;
     }
