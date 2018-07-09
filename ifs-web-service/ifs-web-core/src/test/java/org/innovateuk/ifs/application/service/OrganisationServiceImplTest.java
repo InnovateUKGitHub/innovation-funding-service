@@ -30,7 +30,9 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     private ProcessRoleService processRoleService;
 
     @Override
-    protected OrganisationService supplyServiceUnderTest() { return new OrganisationServiceImpl(); }
+    protected OrganisationService supplyServiceUnderTest() {
+        return new OrganisationServiceImpl(organisationRestService, companyHouseRestService, processRoleService);
+    }
 
     @Test
     public void testGetOrganisationById() throws Exception {
