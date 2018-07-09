@@ -31,6 +31,7 @@ public class ApplicationFeedbackViewModel {
     private final InterviewFeedbackViewModel interviewFeedbackViewModel;
     private final boolean projectWithdrawn;
     private final ApplicationSummaryOrigin origin;
+    private final String originQuery;
     private final String backUrl;
 
     public ApplicationFeedbackViewModel(ApplicationResource application,
@@ -48,6 +49,7 @@ public class ApplicationFeedbackViewModel {
                                         InterviewFeedbackViewModel interviewFeedbackViewModel,
                                         boolean projectWithdrawn,
                                         ApplicationSummaryOrigin origin,
+                                        String originQuery,
                                         String backUrl) {
         this.application = application;
         this.competition = competition;
@@ -64,6 +66,7 @@ public class ApplicationFeedbackViewModel {
         this.interviewFeedbackViewModel = interviewFeedbackViewModel;
         this.projectWithdrawn = projectWithdrawn;
         this.origin = origin;
+        this.originQuery = originQuery;
         this.backUrl = backUrl;
     }
 
@@ -125,6 +128,10 @@ public class ApplicationFeedbackViewModel {
 
     public ApplicationSummaryOrigin getOrigin() {
         return origin;
+    }
+
+    public String getOriginQuery() {
+        return originQuery;
     }
 
     public String getBackUrl() {
