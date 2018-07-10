@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 /**
  * TODO class comment
  */
-@Component
 public class ProcessHistoryRepositoryProvider implements ApplicationContextAware {
 
 

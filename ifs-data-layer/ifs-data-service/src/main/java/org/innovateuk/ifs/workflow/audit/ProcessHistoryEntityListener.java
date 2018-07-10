@@ -17,6 +17,8 @@ public class ProcessHistoryEntityListener {
     @PreUpdate
     public void preUpdate(Process process) {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-        processHistoryRepository.save(new ProcessHistory(process));
+        if (processHistoryRepository != null) {
+            processHistoryRepository.save(new ProcessHistory(process));
+        }
     }
 }
