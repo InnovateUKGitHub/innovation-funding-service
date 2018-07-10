@@ -26,7 +26,7 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
 
     @Autowired
     private UserMapper userMapper;
-    @PersistenceContext
+    @Autowired
     private EntityManager em;
 
     protected UserResource getSteveSmith() {
