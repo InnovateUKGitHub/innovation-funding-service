@@ -25,7 +25,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -187,7 +186,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testYourFinancesInCompleteForAnOrganisations() {
+    public void testYourFinancesCompleteForAllOrganisations() {
         List<SectionResource> eachOrganisationFinanceSections = newSectionResource().build(1);
         List<OrganisationResource> organisations = newOrganisationResource().build(3);
 
@@ -204,11 +203,11 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
         OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
 
         assertEquals(application, viewModel.getApplication().getCurrentApplication());
-        assertEquals(Boolean.TRUE, viewModel.getYourFinancesInCompleteForAnOrganisations());
+        assertEquals(false, viewModel.getYourFinancesCompleteForAllOrganisations());
     }
 
     @Test
-    public void testYourFinancesCompleteForAllOrganisations() {
+    public void testYourFinancesInCompleteForAnOrganisations() {
         List<SectionResource> eachOrganisationFinanceSections = newSectionResource().build(1);
         List<OrganisationResource> organisations = newOrganisationResource().build(3);
 
@@ -225,6 +224,6 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
         OpenSectionViewModel viewModel = (OpenSectionViewModel) result;
 
         assertEquals(application, viewModel.getApplication().getCurrentApplication());
-        assertEquals(Boolean.FALSE, viewModel.getYourFinancesInCompleteForAnOrganisations());
+        assertEquals(true, viewModel.getYourFinancesCompleteForAllOrganisations());
     }
 }

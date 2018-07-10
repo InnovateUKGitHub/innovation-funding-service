@@ -32,7 +32,7 @@ public class ApplicationFinanceSummaryViewModel {
     private final BigDecimal financeTotal;
     private final Map<Long, Set<Long>> completedSectionsByOrganisation;
     private final Long eachCollaboratorFinanceSectionId;
-    private final Boolean yourFinancesInCompleteForAnOrganisations;
+    private final boolean yourFinancesCompleteForAllOrganisations;
 
     public ApplicationFinanceSummaryViewModel(ApplicationResource currentApplication,
                                               Boolean hasFinanceSection,
@@ -50,7 +50,7 @@ public class ApplicationFinanceSummaryViewModel {
                                               BigDecimal financeTotal,
                                               Map<Long, Set<Long>> completedSectionsByOrganisation,
                                               Long eachCollaboratorFinanceSectionId,
-                                              Boolean yourFinancesInCompleteForAnOrganisations) {
+                                              boolean yourFinancesCompleteForAllOrganisations) {
         this.currentApplication = currentApplication;
         this.hasFinanceSection = hasFinanceSection;
         this.financeTotalPerType = financeTotalPerType;
@@ -67,7 +67,7 @@ public class ApplicationFinanceSummaryViewModel {
         this.financeTotal = financeTotal;
         this.completedSectionsByOrganisation = completedSectionsByOrganisation;
         this.eachCollaboratorFinanceSectionId = eachCollaboratorFinanceSectionId;
-        this.yourFinancesInCompleteForAnOrganisations = yourFinancesInCompleteForAnOrganisations;
+        this.yourFinancesCompleteForAllOrganisations = yourFinancesCompleteForAllOrganisations;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -138,7 +138,7 @@ public class ApplicationFinanceSummaryViewModel {
         return eachCollaboratorFinanceSectionId;
     }
 
-    public Boolean getYourFinancesInCompleteForAnOrganisations() {
-        return yourFinancesInCompleteForAnOrganisations;
+    public boolean getYourFinancesCompleteForAllOrganisations() {
+        return yourFinancesCompleteForAllOrganisations;
     }
 }

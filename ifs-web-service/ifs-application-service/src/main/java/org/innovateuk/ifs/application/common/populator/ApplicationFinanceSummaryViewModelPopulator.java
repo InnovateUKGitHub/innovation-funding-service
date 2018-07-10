@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
-
 @Component
 public class ApplicationFinanceSummaryViewModelPopulator {
 
@@ -90,7 +88,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
         Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
 
-        Boolean yourFinancesInCompleteForAnOrganisations = getYourFinancesInCompleteForAnOrganisations(
+        boolean yourFinancesCompleteForAllOrganisations = getYourFinancesCompleteForAllOrganisations(
                 completedSectionsByOrganisation, financeSectionId);
 
         return new ApplicationFinanceSummaryViewModel(
@@ -110,7 +108,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 organisationFinanceOverview.getTotal(),
                 completedSectionsByOrganisation,
                 eachCollaboratorFinanceSectionId,
-                yourFinancesInCompleteForAnOrganisations
+                yourFinancesCompleteForAllOrganisations
         );
     }
 
@@ -126,14 +124,14 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         );
     }
 
-    private Boolean getYourFinancesInCompleteForAnOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
-                                                                Long financeSectionId) {
+    private boolean getYourFinancesCompleteForAllOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                                               Long financeSectionId) {
         if (financeSectionId == null) {
             return false;
         }
         return completedSectionsByOrganisation.keySet()
                 .stream()
-                .anyMatch(id -> !completedSectionsByOrganisation.get(id).contains(financeSectionId));
+                .noneMatch(id -> !completedSectionsByOrganisation.get(id).contains(financeSectionId));
     }
 
     private Long getEachCollaboratorFinanceSectionId(List<SectionResource> eachOrganisationFinanceSections) {
