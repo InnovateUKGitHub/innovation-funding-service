@@ -3,8 +3,10 @@ package org.innovateuk.ifs.management.application.view.service;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.AppendixResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
@@ -19,9 +21,7 @@ import org.innovateuk.ifs.management.application.view.populator.ApplicationOverv
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverviewIneligibilityViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManageApplicationViewModel;
 import org.innovateuk.ifs.management.navigation.NavigationOrigin;
-import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -35,7 +35,8 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
  * Implementation of {@link CompetitionManagementApplicationService}
@@ -50,12 +51,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     private ApplicationService applicationService;
 
     @Autowired
-    private ApplicationModelPopulator applicationModelPopulator;
-
-    @Autowired
-    private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
-
-    @Autowired
     private ApplicationOverviewIneligibilityModelPopulator applicationOverviewIneligibilityModelPopulator;
 
     @Autowired
@@ -66,9 +61,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
 
     @Autowired
     private FileEntryRestService fileEntryRestService;
-
-    @Autowired
-    private ProcessRoleService processRoleService;
 
     @Autowired
     private SummaryViewModelFragmentPopulator summaryPopulator;

@@ -58,9 +58,6 @@ public class ApplicationModelPopulator {
     protected FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Autowired
-    protected ApplicationModelPopulator applicationModelPopulator;
-
-    @Autowired
     protected OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
@@ -245,7 +242,7 @@ public class ApplicationModelPopulator {
                                                                  List<ProcessRoleResource> userApplicationRoles,
                                                                  final Optional<Boolean> markAsCompleteEnabled) {
         organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
-        applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
+        addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
     }
 }
 
