@@ -47,7 +47,7 @@ public class ApplicationSummaryViewModelPopulator {
         this.projectService = projectService;
     }
 
-    public ApplicationSummaryViewModel populate (long applicationId, UserResource user, ApplicationForm form) {
+    public ApplicationSummaryViewModel populate (long applicationId, UserResource user, ApplicationForm form, boolean isSupport) {
 
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -67,7 +67,8 @@ public class ApplicationSummaryViewModelPopulator {
                 applicationReadyForSubmit,
                 summaryViewModel,
                 userIsLeadApplicant,
-                projectWithdrawn);
+                projectWithdrawn,
+                isSupport);
     }
 
 
