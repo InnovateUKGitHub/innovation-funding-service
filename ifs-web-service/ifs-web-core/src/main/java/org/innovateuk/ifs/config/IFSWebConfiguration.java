@@ -16,7 +16,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.resource.ContentVersionStrategy;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Configuration
-public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
+public class IFSWebConfiguration implements WebMvcConfigurer {
     public static final int CACHE_PERIOD = 60 * 60 * 24 * 60;
 
     @Autowired
@@ -33,7 +33,6 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        super.addInterceptors(registry);
         registry.addInterceptor(getMenuLinksHandlerInterceptor());
         registry.addInterceptor(getGoogleAnalyticsHandlerInterceptor());
     }
@@ -53,20 +52,17 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
                 .resourceChain(true)
                 .addResolver(versionResourceResolver);
 
-        super.addResourceHandlers(registry);
     }
 
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        super.addArgumentResolvers(argumentResolvers);
         argumentResolvers.add(new ValidationHandlerMethodArgumentResolver());
         argumentResolvers.add(getLoggedInUserMethodArgumentResolver());
     }
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        super.addFormatters(registry);
         registry.addFormatter(new RejectionReasonFormatter());
         registry.addFormatter(new EthnicityFormatter());
     }

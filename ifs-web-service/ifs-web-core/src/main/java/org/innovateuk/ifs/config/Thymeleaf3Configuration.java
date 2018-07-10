@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
@@ -30,7 +30,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 @ConditionalOnClass({SpringTemplateEngine.class})
 @EnableConfigurationProperties({ThymeleafProperties.class})
 @AutoConfigureAfter({WebMvcAutoConfiguration.class})
-public class Thymeleaf3Configuration extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+public class Thymeleaf3Configuration implements WebMvcConfigurer, ApplicationContextAware {
 
     @Autowired
     private ThymeleafProperties properties;
