@@ -13,10 +13,11 @@ ext.testIfsDatasourceUrl="jdbc:mysql://ifs-finance-database:3307/ifs_finance_tes
 ext.testIfsDatasourceUsername="root"
 ext.testIfsDatasourcePassword="password"
 
-project.ext['spring.flyway.url']='jdbc:mysql://ifs-finance-database:3307?characterEncoding=utf8'
-project.ext['spring.flyway.schemas']='ifs_finance'
-project.ext['spring.flyway.user']='root'
-project.ext['spring.flyway.password']="password"
+project.ext['flyway.url']='jdbc:mysql://ifs-finance-database:3307?characterEncoding=utf8'
+project.ext['flyway.schemas']='ifs_finance'
+project.ext['flyway.user']='root'
+project.ext['flyway.password']="password"
+project.ext['flyway.table']="schema_version"
 
 def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
-project.ext['spring.flyway.locations']=flywayPatchesPath + "/migration"
+project.ext['flyway.locations']=flywayPatchesPath + "/migration"
