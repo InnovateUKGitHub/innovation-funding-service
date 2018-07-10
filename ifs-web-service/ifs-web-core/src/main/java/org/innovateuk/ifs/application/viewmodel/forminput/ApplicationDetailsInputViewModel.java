@@ -13,6 +13,7 @@ public class ApplicationDetailsInputViewModel extends AbstractFormInputViewModel
 
     private ApplicationResource application;
     private CompetitionResource competition;
+    // TODO: IFS-2123 remove selectedResearchCategoryName when all competitions have the new Applicant menu
     private String selectedResearchCategoryName;
     private String selectedInnovationAreaName;
     private AssignButtonsViewModel assignButtonsViewModel;
@@ -93,4 +94,13 @@ public class ApplicationDetailsInputViewModel extends AbstractFormInputViewModel
     public boolean isCanMarkAsComplete() {
         return assignButtonsViewModel != null && assignButtonsViewModel.isAssignedToCurrentUser();
     }
+
+    public boolean getApplicationIsClosed() {
+        return !competition.isOpen() || !application.isOpen();
+    }
+
+    public boolean getApplicationIsReadOnly() {
+        return !competition.isOpen() || !application.isOpen();
+    }
+
 }

@@ -178,7 +178,8 @@ the finance table should be correct
 Lead applicant marks the finances as complete
     Log in as a different user                       &{lead_applicant_credentials}
     the user clicks the button/link                  link=Academic robot test application
-    the applicant completes the application details  Academic robot test application  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant completes the application details  Academic robot test application  ${tomorrowday}  ${month}  ${nextyear}
+    then the user selects research category  Feasibility studies
     the user navigates to Your-finances page  Academic robot test application
     the user marks the finances as complete          Academic robot test application  labour costs  n/a  no
 

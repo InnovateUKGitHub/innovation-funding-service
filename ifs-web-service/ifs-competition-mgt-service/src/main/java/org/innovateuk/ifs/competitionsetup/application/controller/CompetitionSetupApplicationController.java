@@ -18,6 +18,7 @@ import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupSubsec
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -393,10 +394,10 @@ public class CompetitionSetupApplicationController {
     private String getQuestionPage(Model model, CompetitionResource competitionResource, Long questionId, boolean isEditable, CompetitionSetupForm form) {
         ServiceResult<String> view = competitionSetupQuestionService.getQuestion(questionId).andOnSuccessReturn(
                 questionResource -> {
-                    CompetitionSetupQuestionType type = questionResource.getType();
+                    QuestionSetupType type = questionResource.getType();
                     CompetitionSetupSubsection setupSubsection;
 
-                    if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
+                    if (type.equals(QuestionSetupType.ASSESSED_QUESTION)) {
                         setupSubsection = CompetitionSetupSubsection.QUESTIONS;
                     } else {
                         setupSubsection = CompetitionSetupSubsection.PROJECT_DETAILS;
