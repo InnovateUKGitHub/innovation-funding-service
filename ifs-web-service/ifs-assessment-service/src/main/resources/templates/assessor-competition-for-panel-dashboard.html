@@ -30,8 +30,8 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},size='govuk-heading-xl'" />
 
-        <div class="grid-row">
-            <div class="column-one-half competition details">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half competition details">
                 <dl class="govuk-list govuk-!-font-size-16">
                     <dt>Competition:</dt>
                     <dd th:text="${model.competitionTitle}"></dd>
@@ -42,7 +42,7 @@
                 </dl>
             </div>
 
-            <div class="column-one-half">
+            <div class="govuk-grid-column-one-half">
                 <p class="govuk-body"><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">View competition brief (opens in a new window)</a></p>
             </div>
         </div>

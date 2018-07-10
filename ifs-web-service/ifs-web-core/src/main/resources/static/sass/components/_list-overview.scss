@@ -14,7 +14,7 @@
       border-bottom: 1px solid $govuk-border-colour;
     }
 
-    &.grid-row {
+    &.govuk-grid-row {
       min-height: 30px;
       margin: 0
     }
@@ -37,13 +37,17 @@
     }
   }
 
-  .grid-row {
-    .column-third {
+  .govuk-grid-row {
+    .govuk-grid-column-one-third {
       padding: 12px 15px 0 20px;
     }
 
-    .column-two-thirds {
+    .govuk-grid-column-two-thirds {
       padding-left: 20px;
+    }
+
+    .govuk-body {
+      margin: 5px 0 12px;
     }
   }
 }

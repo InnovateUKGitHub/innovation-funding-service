@@ -6,7 +6,7 @@
 
     <h2 class="govuk-heading-m">Key statistics</h2>
 
-    <div class="grid-row">
+    <div class="govuk-govuk-grid-row">
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="govuk-heading-l">5</span><br />
@@ -234,15 +234,15 @@
 
 <!-- =========================== Tables of data =========================== -->
 <th:block th:fragment="prototype-assessor-list-table">
-    <div class="grid-row sorting extra-margin">
-        <div class="column-half">
+    <div class="govuk-govuk-grid-row sorting extra-margin">
+        <div class="govuk-grid-column-one-half">
             <span class="govuk-heading-xl no-margin">20</span>
             <span class="govuk-heading-s">assessors</span>
         </div>
     </div>
 
-    <div class="grid-row sorting">
-        <div class="column-half select-all">
+    <div class="govuk-govuk-grid-row sorting">
+        <div class="govuk-grid-column-one-half select-all">
             <div class="multiple-choice">
                 <input type="checkbox" data-select-all="" id="select-all-check">
                 <label for="select-all-check">
@@ -253,7 +253,7 @@
                       <span data-count-selected="" class="applications-selected">0</span> assessors selected
                   </span>
         </div>
-        <div class="column-half select-all alignright">
+        <div class="govuk-grid-column-one-half select-all alignright">
             <form method="get">
                 <input type="hidden" name="tab" value="invite">
                 <button class="button" name="addSelected" data-submit-el="" disabled="disabled" th:formaction="${#httpServletRequest.requestURI}">
@@ -649,7 +649,7 @@
 
         <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
 
-            <div class="grid-row">
+            <div class="govuk-govuk-grid-row">
                 <div class="column-three-quarters">
                     <h2 class="govuk-heading-s no-margin-top">Find registered assessors. Add them to the invite list using the tickboxes.</h2>
                 </div>
@@ -658,7 +658,7 @@
             <th:block th:if="${invite == 'assessor-comp'}">
                 <form method="GET">
                   <div class="search-filters extra-margin">
-                      <div class="grid-row">
+                      <div class="govuk-govuk-grid-row">
                         <div class="column-two-thirds">
                           <label class="form-label" for="filterInnovationArea">Innovation area</label>
                           <select name="innovationArea" id="filterInnovationArea" class="form-control extra-margin-bottom">
@@ -718,7 +718,7 @@
                           </select>
                           <a href="?page=0">Clear all filters</a>
                         </div>
-                        <div class="column-third">
+                        <div class="govuk-grid-column-one-third">
                             <button class="button">Filter</button>
                         </div>
                     </div>
@@ -737,7 +737,7 @@
 
         <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
 
-            <div class="grid-row">
+            <div class="govuk-govuk-grid-row">
                 <div class="column-three-quarters">
                     <h2 class="govuk-heading-s no-margin-top extra-margin-bottom">
                         <th:block th:if="${invite == null}">Invite one or more people to become an assessor for this panel assessment</th:block>
@@ -796,11 +796,11 @@
                 </details>
             </div>
 
-            <div class="grid-row sorting">
-              <div class="column-half">
+            <div class="govuk-govuk-grid-row sorting">
+              <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-s">Invite list</h2>
               </div>
-              <div class="column-half alignright">
+              <div class="govuk-grid-column-one-half alignright">
                 <a href="/prototypes/IFS-707-review-send" class="button">Review and send invites</a>
               </div>
             </div>
@@ -879,7 +879,7 @@
 
         <th:block th:if="${param.tab != null and param.tab[0] == 'overview'}">
 
-            <div class="grid-row">
+            <div class="govuk-govuk-grid-row">
 
                 <div class="column-three-quarters">
 
@@ -893,15 +893,15 @@
 
 <th:block th:if="${param.tab != null and param.tab[0] == 'overview' and param.view == null or param.view != null and param.view[0] == 'application'}">
 
-    <div class="grid-row sorting">
-        <div class="column-half">
+    <div class="govuk-govuk-grid-row sorting">
+        <div class="govuk-grid-column-one-half">
             <span class="govuk-heading-xl no-margin">5</span>
             <span class="govuk-heading-s">assessors</span>
         </div>
     </div>
 
-    <div class="grid-row sorting">
-        <div class="column-half select-all">
+    <div class="govuk-govuk-grid-row sorting">
+        <div class="govuk-grid-column-one-half select-all">
             <div class="multiple-choice">
                 <input type="checkbox" data-select-all="" id="select-all-check">
                 <label for="select-all-check">
@@ -912,7 +912,7 @@
                   <span data-count-selected="" class="applications-selected">0</span> assessors selected
               </span>
         </div>
-        <div class="column-half select-all alignright">
+        <div class="govuk-grid-column-one-half select-all alignright">
             <form method="get">
                 <input type="hidden" id="status" name="status" value="resendInvites" />
                 <button class="button" name="addSelected" data-submit-el="" disabled="disabled" formaction="/prototypes/IFS-707-review-send">
@@ -1026,8 +1026,8 @@
 
     <h3 class="govuk-heading-s extra-margin-bottom">View assessors who have accepted to participate in the assessment panel.</h3>
 
-    <div class="grid-row sorting">
-        <div class="column-half">
+    <div class="govuk-govuk-grid-row sorting">
+        <div class="govuk-grid-column-one-half">
             <span class="govuk-heading-xl no-margin">5</span>
             <span class="govuk-heading-s">assessors</span>
         </div>
@@ -1087,7 +1087,7 @@
 <!-- =========================== Manage assessors assign =========================== -->
 
 <div th:fragment="prototype-assessor-assign">
-    <div class="grid-row">
+    <div class="govuk-govuk-grid-row">
         <div class="column-two-thirds">
 
             <h1 class="govuk-heading-xl no-margin-bottom">Assign assessor</h1>
@@ -1106,14 +1106,14 @@
 
                 <th:block th:unless="${site == 'rc'}">
 
-                    <div class="grid-row extra-margin-bottom">
-                        <div class="column-half">
+                    <div class="govuk-govuk-grid-row extra-margin-bottom">
+                        <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Innovation area</h3>
                             <ul class="govuk-list govuk-list--bullet">
                                 <li>Advanced materials</li>
                             </ul>
                         </div>
-                        <div class="column-half">
+                        <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Partners</h3>
                             <ul class="govuk-list govuk-list--bullet">
                                 <li>Aptrans Ltd (Lead)</li>
@@ -1136,7 +1136,7 @@
             </th:block>
 
         </div>
-        <div class="column-third aligncentre">
+        <div class="govuk-grid-column-one-third aligncentre">
             <ul>
                 <li>
                     <h3 class="govuk-heading-xl no-margin-bottom" id="assessors-remaining">3</h3>
@@ -1147,11 +1147,11 @@
     </div>
 
     <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
-        <div class="grid-row extra-margin-bottom">
-            <div class="column-half">
+        <div class="govuk-govuk-grid-row extra-margin-bottom">
+            <div class="govuk-grid-column-one-half">
                 <a href="#">View application details</a>
             </div>
-            <div class="column-half alignright">
+            <div class="govuk-grid-column-one-half alignright">
                 <a href="/prototypes/4607-manage-assessors?view=application&#38;tab=assign&#38;action=notify" class="button button-secondary">Return to assign tab</a>
             </div>
         </div>
@@ -1184,8 +1184,8 @@
         <h2 class="govuk-heading-s dark-view">Assessors</h2>
 
         <div class="search-filters">
-            <div class="grid-row">
-                <div class="column-half">
+            <div class="govuk-govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
 
                     <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
 
@@ -1202,7 +1202,7 @@
                             <th:block th:insert="prototypes/fragments/comp-admin :: prototype-innovation-area-options" />
                         </select>
                 </div>
-                <div class="column-half" th:unless="${site == 'rc'}">
+                <div class="govuk-grid-column-one-half" th:unless="${site == 'rc'}">
                     <label for="filterType">Type</label>
 
                     <select name="filterType" id="filterType" class="form-control">
@@ -1220,21 +1220,21 @@
                 </div>
             </div>
 
-            <div class="grid-row extra-margin">
-                <div class="column-half">
+            <div class="govuk-govuk-grid-row extra-margin">
+                <div class="govuk-grid-column-one-half">
                     <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
                     <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
                 </div>
 
-                <div class="column-half">
+                <div class="govuk-grid-column-one-half">
 
-                    <div class="grid-row">
-                        <div class="column-half">
+                    <div class="govuk-govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
                             <div class="extra-margin-top">
                                 <a th:href="${#httpServletRequest.requestURI}">Clear all filters</a>
                             </div>
                         </div>
-                        <div class="column-half alignright">
+                        <div class="govuk-grid-column-one-half alignright">
                             <button class="button">Filter</button>
                         </div>
                     </div>
@@ -1290,21 +1290,21 @@
         <h2 class="govuk-heading-s dark-view">Applications</h2>
 
         <div class="search-filters extra-margin-top">
-            <div class="grid-row">
-                <div class="column-half">
+            <div class="govuk-govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
                     <label class="form-label" for="filterSearch">Filter by keyword</label>
                     <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
                 </div>
 
-                <div class="column-half">
+                <div class="govuk-grid-column-one-half">
 
-                    <div class="grid-row">
-                        <div class="column-half">
+                    <div class="govuk-govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
                             <div class="extra-margin-top">
                                 <a th:href="${#httpServletRequest.requestURI}">Clear all filters</a>
                             </div>
                         </div>
-                        <div class="column-half alignright">
+                        <div class="govuk-grid-column-one-half alignright">
                             <button class="button">Filter</button>
                         </div>
                     </div>
@@ -1363,14 +1363,14 @@
 <!-- =========================== Application list table =========================== -->
 <div th:fragment="prototype-application-list-table">
 
-    <div class="grid-row sorting" th:unless="${type=='assigned' or type=='reviewPermissions'}">
+    <div class="govuk-govuk-grid-row sorting" th:unless="${type=='assigned' or type=='reviewPermissions'}">
         <div class="column-two-thirds">
             <h2>
                 <span class="govuk-heading-xl">20</span>
                 <span class="govuk-heading-s">Applications</span>
             </h2>
         </div>
-        <div class="column-third alignright">
+        <div class="govuk-grid-column-one-third alignright">
             <label for="sort-by">Sort by</label>
             <select name="sort-by" id="sort-by" class="form-control width-large">
                 <option value="Application no.">Application number</option>

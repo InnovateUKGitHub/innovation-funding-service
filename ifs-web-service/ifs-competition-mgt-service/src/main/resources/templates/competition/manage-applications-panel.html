@@ -47,12 +47,12 @@
             <div class="search-filters extra-margin">
                 <fieldset>
                     <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
-                    <div class="grid-row">
-                        <div class="column-two-thirds">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-two-thirds">
                             <label class="form-label" for="filterSearch">Search by application number</label>
                             <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
                         </div>
-                        <div class="column-third">
+                        <div class="govuk-grid-column-one-third">
                             <button class="button" type="submit">Filter</button>
                         </div>
                     </div>
@@ -61,13 +61,13 @@
                     <a href="?" th:href="'?sort=' + ${model.sorting}">Clear</a>
                 </div>
             </div>
-            <div class="grid-row sorting">
-                <div class="column-two-thirds">
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-two-thirds">
                     <p class="govuk-body"><span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">22</span>
                         <span class="govuk-heading-s">applications</span>
                     </p>
                 </div>
-                <div class="column-third alignright">
+                <div class="govuk-grid-column-one-third alignright">
                     <label for="sort-by">Sort by</label>
                     <select id="sort-by" name="sort" class="js-auto-submit form-control">
                         <option value="id" th:selected="${(model.sorting == 'id')}">Application number</option>

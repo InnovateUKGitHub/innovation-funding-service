@@ -2,12 +2,12 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
 <div th:fragment="comp-dashboard-header(searchQuery)">
-    <div class="grid-row">
-        <div class="column-half">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
             <th:block th:insert="fragments/layout :: page-title"
                       th:with="pageTitle=${setPageTitle == null ? 'All competitions' : setPageTitle},size='govuk-heading-l'" />
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
             <div class="form-search" th:if="${showSearch == null || showSearch == true}">
                 <label class="govuk-visually-hidden" for="searchQuery">Search for:</label>
                 <input th:type="${searchType == 'applications' ? 'number' : 'text'}"
@@ -47,7 +47,7 @@
 </div>
 
 <div th:fragment="dashboard-row">
-    <div class="column-third">
+    <div class="govuk-grid-column-one-third">
         <h3 class="govuk-heading-s">
             <a th:href="@{'/non-ifs-competition/setup/'+${competition.id}}"
                th:if="${nonIfs}">
@@ -80,13 +80,13 @@
             </th:block>
         </h3>
     </div>
-    <div class="column-two-thirds">
-        <div class="column-third"><p class="govuk-body" th:text="${competition.competitionTypeName}"></p></div>
-        <div class="column-third">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-grid-column-one-third"><p class="govuk-body" th:text="${competition.competitionTypeName}"></p></div>
+        <div class="govuk-grid-column-one-third">
             <p class="govuk-body" th:unless="${competition.innovationAreaNames.size() > 5}" th:text="${#strings.setJoin(competition.innovationAreaNames, ', ')}"></p>
             <p class="govuk-body" th:if="${competition.innovationAreaNames.size() > 5}">Multiple innovation areas</p>
         </div>
-        <div class="column-third"><p class="govuk-body" th:text="${cell4}"></p></div>
+        <div class="govuk-grid-column-one-third"><p class="govuk-body" th:text="${cell4}"></p></div>
     </div>
 </div>
 

@@ -58,11 +58,11 @@
 
 
 
-	<div class="grid-row extra-margin" th:unless="${param.status != null and param.status[0] == 'accepted'}">
-		<div class="column-half">
+	<div class="govuk-grid-row extra-margin" th:unless="${param.status != null and param.status[0] == 'accepted'}">
+		<div class="govuk-grid-column-one-half">
 			<a href="/prototypes/2650-review-bank-details" class="button-link">Cancel bank account changes</a>
 		</div>
-		<div class="column-half alignright">
+		<div class="govuk-grid-column-one-half alignright">
 			<a href="/prototypes/2650-review-bank-details" data-js-modal="modal-change-bank-details" class="button">Update bank account details</a>
 		</div>
 

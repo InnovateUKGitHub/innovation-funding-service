@@ -36,8 +36,8 @@
             </div>
         </details>
 
-        <div class="grid-row sorting extra-margin">
-            <div class="column-half">
+        <div class="govuk-grid-row sorting extra-margin">
+            <div class="govuk-grid-column-one-half">
                 <span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">20</span>
                 <span class="govuk-heading-s">applications</span>
             </div>
@@ -82,8 +82,8 @@
                                     </div>
                                 </th:block>
                                 <th:block th:if="${app.hasAttachment()}">
-                                    <div class="grid-row">
-                                        <div class="column-two-thirds">
+                                    <div class="govuk-grid-row">
+                                        <div class="govuk-grid-column-two-thirds">
                                             <!--/* empty file input so that spring form is complete */-->
                                             <input type="file" name="feedback" class="govuk-visually-hidden">
                                             <a th:text="${app.filename}"
@@ -91,7 +91,7 @@
                                                target="_blank">Uploaded-file.pdf</a>
                                             <p class="form-hint">(opens in a new window)</p>
                                         </div>
-                                        <div class="column-third">
+                                        <div class="govuk-grid-column-one-third">
                                             <button name="removeFeedbackApplicationId" th:value="${app.applicationId}" class="button button-clear">Remove</button>
                                         </div>
                                     </div>

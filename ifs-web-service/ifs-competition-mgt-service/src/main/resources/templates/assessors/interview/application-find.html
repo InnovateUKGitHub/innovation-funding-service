@@ -18,14 +18,14 @@
 
         <h2 class="govuk-heading-m">Key statistics</h2>
 
-        <div class="grid-row">
-            <div class="column-quarter">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
                     <span class="govuk-heading-l" th:text="${model.applicationsInCompetition}">45</span><br/>
                     <small>Applications in competition</small>
                 </div>
             </div>
-            <div class="column-quarter">
+            <div class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
                     <span class="govuk-heading-l" th:text="${model.applicationsInPanel}">23</span><br/>
                     <small>Assigned to interview panel</small>
@@ -58,7 +58,7 @@
         </div>
         <div data-selection-limit-exceeded-block=""></div>
 
-        <div class="grid-row sorting">
+        <div class="govuk-grid-row sorting">
             <div class="column-one">
                 <span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">20</span>
                 <span class="govuk-heading-s">applications not yet invited</span>
@@ -72,8 +72,8 @@
               autocomplete="off"
               th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
-            <div class="grid-row sorting">
-                <div class="column-half select-all">
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half select-all">
                     <div class="multiple-choice">
                         <input type="checkbox"
                                data-select-all=""
@@ -88,7 +88,7 @@
                         <span data-count-selected="" th:text="${#lists.size(interviewAssignmentApplicationSelectionForm.selectedIds)}"></span> applications selected
                     </span>
                 </div>
-                <div class="column-half select-all alignright">
+                <div class="govuk-grid-column-one-half select-all alignright">
                     <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAssignmentApplicationSelectionForm.selectedIds)}">
                         Add selected to invite list
                     </button>

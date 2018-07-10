@@ -227,8 +227,8 @@
 
         </th:block>
 
-        <div class="grid-row form-footer extra-margin-top">
-          <div class="column-half">
+        <div class="govuk-grid-row form-footer extra-margin-top">
+          <div class="govuk-grid-column-one-half">
 
             <th:block th:if="${param.status == null and param.categoryGroup == null}">
               <a href="/prototypes/5452-application-details?status=readOnly">Mark application details as complete</a>
@@ -243,7 +243,7 @@
             </th:block>
 
           </div>
-          <div class="column-half alignright">
+          <div class="govuk-grid-column-one-half alignright">
             <span th:text="${(param.status != null and param.status[0] == 'readOnly' ? 'Marked as complete' : 'Last saved')}">Last saved</span> 15 January 03:34 by you
           </div>
         </div>

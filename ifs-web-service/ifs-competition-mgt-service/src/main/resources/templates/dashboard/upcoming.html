@@ -21,7 +21,7 @@
             <h2 class="govuk-heading-m"
                 th:text="'In preparation ('+${inPrepComps == null ? '0' : inPrepComps.size()}+')'"></h2>
             <ul class="govuk-list list-overview">
-                <li class="grid-row section" th:each="competition : ${inPrepComps}">
+                <li class="govuk-grid-row section" th:each="competition : ${inPrepComps}">
                     <th:block
                         th:insert="competition/dashboard :: dashboard-row"
                         th:with="competition=${competition},
@@ -35,7 +35,7 @@
             <h2 class="govuk-heading-m"
                 th:text="'Ready to open ('+${readyToOpenComps == null ? 0 : readyToOpenComps.size()}+')'"></h2>
             <ul class="govuk-list list-overview">
-                <li class="grid-row section" th:each="competition : ${readyToOpenComps}">
+                <li class="govuk-grid-row section" th:each="competition : ${readyToOpenComps}">
                     <th:block
                         th:insert="competition/dashboard :: dashboard-row"
                         th:with="competition=${competition},

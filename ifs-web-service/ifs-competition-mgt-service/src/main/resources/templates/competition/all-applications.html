@@ -16,8 +16,8 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='All applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
                 <h2 class="govuk-heading-m">Key statistics</h2>
-                <ul class="grid-row extra-margin-bottom">
-                    <li class="column-quarter">
+                <ul class="govuk-grid-column-one-quarter extra-margin-bottom">
+                    <li class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l" th:text="${model.totalNumberOfApplications}">22</span>
                             <br />
@@ -25,7 +25,7 @@
                         </div>
                     </li>
 
-                    <li class="column-quarter">
+                    <li class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l" th:text="${model.applicationsStarted}">12</span>
                             <br />
@@ -33,7 +33,7 @@
                         </div>
                     </li>
 
-                    <li class="column-quarter">
+                    <li class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l" th:text="${model.applicationsInProgress}">6</span>
                             <br />
@@ -41,7 +41,7 @@
                         </div>
                     </li>
 
-                    <li class="column-quarter">
+                    <li class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l" th:text="${model.applicationsSubmitted}">4</span>
                             <br />
@@ -53,13 +53,13 @@
                     <div class="search-filters extra-margin">
                         <fieldset>
                             <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
-                            <div class="grid-row">
-                                <div class="column-two-thirds">
+                            <div class="govuk-grid-column-one-quarter">
+                                <div class="govuk-grid-column-two-thirds">
                                     <label class="form-label" for="filterSearch">Search by application number.</label>
                                     <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
                                 </div>
 
-                                <div class="column-third">
+                                <div class="govuk-grid-column-one-third">
                                     <button class="button">Filter</button>
                                 </div>
                             </div>
@@ -68,13 +68,13 @@
                             <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
                         </div>
                     </div>
-                    <div class="grid-row sorting">
-                        <div class="column-half">
+                    <div class="govuk-grid-column-one-quarter sorting">
+                        <div class="govuk-grid-column-one-half">
                             <p class="govuk-body"><span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">22</span>
                                 <span class="govuk-heading-s">applications</span>
                             </p>
                         </div>
-                        <div class="column-half alignright">
+                        <div class="govuk-grid-column-one-half alignright">
                             <label for="sort-by">Sort by</label>
                             <select id="sort-by" name="sort" class="js-auto-submit form-control">
                                 <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>

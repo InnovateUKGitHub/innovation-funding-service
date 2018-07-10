@@ -6,8 +6,8 @@
         <div class="success-alert extra-margin-bottom">Application details are marked as complete</div>
     </th:block>
 
-    <div class="grid-row">
-        <div class="column-half">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
             <dl class="govuk-list govuk-!-font-size-16">
                 <dt>Competition name</dt>
                 <dd th:text="${competition.name}"></dd>
@@ -33,7 +33,7 @@
                 </th:block>
             </dl>
         </div>
-        <div class="column-half">
+        <div class="govuk-grid-column-one-half">
             <th:block th:if="${showApplicationTeamLink}">
                 <ul class="govuk-list govuk-list--bullet">
                     <li>

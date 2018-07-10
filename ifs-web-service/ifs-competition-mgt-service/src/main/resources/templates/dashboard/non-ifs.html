@@ -21,7 +21,7 @@
             <h2 class="govuk-heading-m"
                 th:text="'Non-IFS competitions ('+${model.counts.nonIfsCount}+')'"></h2>
             <ul class="govuk-list list-overview">
-                <li class="grid-row" th:each="competition : ${model.getAllCompetitions()}">
+                <li class="govuk-grid-row" th:each="competition : ${model.getAllCompetitions()}">
                     <th:block
                         th:insert="competition/dashboard :: dashboard-row(nonIfs=${true})"
                         th:with="competition=${competition},

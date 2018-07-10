@@ -421,11 +421,11 @@
 
 <div th:fragment="prototype-post-query(queryType, user)">
 
-    <div class="grid-row extra-margin-top">
-      <div class="column-half">
+    <div class="govuk-grid-row extra-margin-top">
+      <div class="govuk-grid-column-one-half">
         <a th:href="${#httpServletRequest.requestURI + '?action=newQuery'}" id="post-new-query" th:unless="${param.action != null and param.action[0] == 'newQuery' or user == 'partner'}" class="button button-large" th:text="${(queryType == 'query' ? 'Post a new query' : 'Create a new note')}">QUERY TYPE</a>
       </div>
-      <div class="column-half">
+      <div class="govuk-grid-column-one-half">
         <fieldset th:unless="${queryType == 'note' or user == 'partner'}">
 
            <div class="form-group alignright">
@@ -521,9 +521,9 @@
 
             <input type="hidden" id="action" name="action" th:value="${(queryType == 'query' ? 'postQuery' : 'saveNote')}" />
 
-            <div class="grid-row">
-                <div class="column-half"><button class="button button-large no-margin" th:text="${(queryType == 'query' ? 'Post Query' : 'Save note')}">Save note</button></div>
-                <div class="column-half alignright"><a th:href="${#httpServletRequest.requestURI + '?action=cancelQuery'}">Cancel</a></div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half"><button class="button button-large no-margin" th:text="${(queryType == 'query' ? 'Post Query' : 'Save note')}">Save note</button></div>
+                <div class="govuk-grid-column-one-half alignright"><a th:href="${#httpServletRequest.requestURI + '?action=cancelQuery'}">Cancel</a></div>
 
             </div>
         </form>
@@ -681,9 +681,9 @@
 
             <input type="hidden" id="action" name="action" value="postResponse" />
 
-            <div class="grid-row extra-margin">
-                <div class="column-half"><button class="button button-large no-margin" th:text="${(queryType == 'query' ? 'Post response' : 'Save comment')}">Post response</button></div>
-                <div class="column-half alignright"><a th:href="${#httpServletRequest.requestURI}">Cancel</a></div>
+            <div class="govuk-grid-row extra-margin">
+                <div class="govuk-grid-column-one-half"><button class="button button-large no-margin" th:text="${(queryType == 'query' ? 'Post response' : 'Save comment')}">Post response</button></div>
+                <div class="govuk-grid-column-one-half alignright"><a th:href="${#httpServletRequest.requestURI}">Cancel</a></div>
 
             </div>
         </form>

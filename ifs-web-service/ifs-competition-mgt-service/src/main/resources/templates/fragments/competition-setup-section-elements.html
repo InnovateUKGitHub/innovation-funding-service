@@ -5,43 +5,43 @@
             <legend class="govuk-visually-hidden">Application question</legend>
             <h2 class="govuk-heading-m extra-margin">Application question</h2>
 
-            <dl class="application-question-list grid-row">
-                <dt class="column-third">Question heading</dt>
-                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.shortTitle)}">None</dd>
-                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.shortTitle)}"
+            <dl class="application-question-list govuk-grid-row">
+                <dt class="govuk-grid-column-one-third">Question heading</dt>
+                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.shortTitle)}">None</dd>
+                <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.shortTitle)}"
                     th:text="${question.shortTitle}"></dd>
-                <dt class="column-third">Question title</dt>
-                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.title)}">None</dd>
-                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.title)}"
+                <dt class="govuk-grid-column-one-third">Question title</dt>
+                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.title)}">None</dd>
+                <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.title)}"
                     th:text="${question.title}"></dd>
-                <dt class="column-third">Question subtitle</dt>
-                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.subTitle)}">None</dd>
-                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.subTitle)}"
+                <dt class="govuk-grid-column-one-third">Question subtitle</dt>
+                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.subTitle)}">None</dd>
+                <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.subTitle)}"
                     th:text="${question.subTitle}"></dd>
-                <dt class="column-third">Guidance title</dt>
-                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.guidanceTitle)}">None</dd>
-                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.guidanceTitle)}"
+                <dt class="govuk-grid-column-one-third">Guidance title</dt>
+                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidanceTitle)}">None</dd>
+                <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.guidanceTitle)}"
                     th:text="${question.guidanceTitle}"></dd>
-                <dt class="column-third">Guidance</dt>
-                <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.guidance)}">None</dd>
-                <dd class="column-two-thirds wysiwyg-styles" th:unless="${#strings.isEmpty(question.guidance)}"
+                <dt class="govuk-grid-column-one-third">Guidance</dt>
+                <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidance)}">None</dd>
+                <dd class="govuk-grid-column-two-thirds wysiwyg-styles" th:unless="${#strings.isEmpty(question.guidance)}"
                     ifs:utext="${question.guidance}"></dd>
-                <dt class="column-third">Max word count</dt>
-                <dd class="column-two-thirds" th:text="${question.maxWords}"></dd>
+                <dt class="govuk-grid-column-one-third">Max word count</dt>
+                <dd class="govuk-grid-column-two-thirds" th:text="${question.maxWords}"></dd>
                 <th:block th:if="${question.appendix != null}">
-                    <dt class="column-third">Appendix</dt>
-                    <dd class="column-two-thirds" th:if="${question.appendix}">Yes</dd>
-                    <dd class="column-two-thirds" th:unless="${question.appendix}">No</dd>
+                    <dt class="govuk-grid-column-one-third">Appendix</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:if="${question.appendix}">Yes</dd>
+                    <dd class="govuk-grid-column-two-thirds" th:unless="${question.appendix}">No</dd>
                     <th:block th:if="${question.appendix}">
-                        <dt class="column-third">Accepted appendix file types</dt>
-                        <dd class="column-two-thirds">
+                        <dt class="govuk-grid-column-one-third">Accepted appendix file types</dt>
+                        <dd class="govuk-grid-column-two-thirds">
                             <ul>
                                 <li th:each="fileType : ${question.allowedFileTypes}"
                                     th:text="${fileType.displayName}"></li>
                             </ul>
                         </dd>
-                        <dt class="column-third">Appendix guidance</dt>
-                        <dd class="column-two-thirds wysiwyg-styles" ifs:utext="${question.appendixGuidance}"></dd>
+                        <dt class="govuk-grid-column-one-third">Appendix guidance</dt>
+                        <dd class="govuk-grid-column-two-thirds wysiwyg-styles" ifs:utext="${question.appendixGuidance}"></dd>
                     </th:block>
                 </th:block>
             </dl>
@@ -51,49 +51,49 @@
             <legend class="govuk-visually-hidden">Assessment of this question</legend>
             <h2 class="govuk-heading-m extra-margin">Assessment of this question</h2>
 
-            <dl class="application-question-list grid-row">
+            <dl class="application-question-list govuk-grid-row">
                 <th:block th:if="${question.scored != null}">
-                    <dt class="column-third">Scored</dt>
-                    <dd class="column-two-thirds" th:text="${question.scored ? 'Yes' : 'No'}"></dd>
+                    <dt class="govuk-grid-column-one-third">Scored</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${question.scored ? 'Yes' : 'No'}"></dd>
                     <th:block th:if="${question.scored}">
-                        <dt class="column-third">Out of</dt>
-                        <dd class="column-two-thirds" th:text="${question.scoreTotal}"></dd>
+                        <dt class="govuk-grid-column-one-third">Out of</dt>
+                        <dd class="govuk-grid-column-two-thirds" th:text="${question.scoreTotal}"></dd>
                     </th:block>
                 </th:block>
 
                 <th:block th:if="${question.writtenFeedback != null}">
-                    <dt class="column-third">Written feedback</dt>
-                    <dd class="column-two-thirds" th:text="${question.writtenFeedback ? 'Yes' : 'No'}"></dd>
+                    <dt class="govuk-grid-column-one-third">Written feedback</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${question.writtenFeedback ? 'Yes' : 'No'}"></dd>
                     <th:block th:if="${question.writtenFeedback}">
-                        <dt class="column-third">Guidance title</dt>
-                        <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.assessmentGuidanceTitle)}">
+                        <dt class="govuk-grid-column-one-third">Guidance title</dt>
+                        <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.assessmentGuidanceTitle)}">
                             None
                         </dd>
-                        <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.assessmentGuidanceTitle)}"
+                        <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.assessmentGuidanceTitle)}"
                             th:text="${question.assessmentGuidanceTitle}"></dd>
-                        <dt class="column-third">Guidance</dt>
-                        <dd class="column-two-thirds">
+                        <dt class="govuk-grid-column-one-third">Guidance</dt>
+                        <dd class="govuk-grid-column-two-thirds">
                             <p class="govuk-body" th:text="${question.assessmentGuidance}">Your score should be based on the following:</p>
-                            <dl class="grid-row extra-margin">
+                            <dl class="govuk-grid-row extra-margin">
                                 <th:block th:each="score : ${question.guidanceRows}">
-                                    <dt class="column-quarter"
+                                    <dt class="govuk-grid-column-one-quarter"
                                         th:text="${score.subject != null ? score.subject.replace(',', '-') : score.subject}"></dt>
-                                    <dd class="column-three-quarters" th:text="${score.justification}"></dd>
+                                    <dd class="govuk-grid-column-three-quarters" th:text="${score.justification}"></dd>
                                 </th:block>
                             </dl>
                         </dd>
-                        <dt class="column-third">Max word count</dt>
-                        <dd class="column-two-thirds" th:text="${question.assessmentMaxWords}"></dd>
+                        <dt class="govuk-grid-column-one-third">Max word count</dt>
+                        <dd class="govuk-grid-column-two-thirds" th:text="${question.assessmentMaxWords}"></dd>
                     </th:block>
                 </th:block>
 
                 <th:block th:if="${question.researchCategoryQuestion != null}">
-                    <dt class="column-third">Research category question</dt>
-                    <dd class="column-two-thirds" th:text="${question.researchCategoryQuestion ? 'Yes' : 'No'}"></dd>
+                    <dt class="govuk-grid-column-one-third">Research category question</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${question.researchCategoryQuestion ? 'Yes' : 'No'}"></dd>
                 </th:block>
                 <th:block th:if="${question.scope != null}">
-                    <dt class="column-third">Scope 'Y/N' question</dt>
-                    <dd class="column-two-thirds" th:text="${question.scope ? 'Yes' : 'No'}"></dd>
+                    <dt class="govuk-grid-column-one-third">Scope 'Y/N' question</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${question.scope ? 'Yes' : 'No'}"></dd>
                 </th:block>
             </dl>
         </fieldset>

@@ -107,14 +107,14 @@
 
         </form>
         <th:block th:unless="${model.editable}">
-            <dl class="application-question-list grid-row">
-                <dt class="column-third">Finances form</dt>
-                <dd class="column-two-thirds" th:text="${competitionSetupForm.applicationFinanceType.name}" />
+            <dl class="application-question-list govuk-grid-column-one-quarter">
+                <dt class="govuk-grid-column-one-third">Finances form</dt>
+                <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.applicationFinanceType.name}" />
                 <th:block th:unless="${model.subsection.noneFinanceCompetition}">
-                    <dt class="column-third">Include project growth table</dt>
-                    <dd class="column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
-                    <dt class="column-full no-margin">Funding rules for this competition</dt>
-                    <dd class="column-full wysiwyg-styles" ifs:utext="${competitionSetupForm.fundingRules}" />
+                    <dt class="govuk-grid-column-one-third">Include project growth table</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
+                    <dt class="govuk-grid-column-full no-margin">Funding rules for this competition</dt>
+                    <dd class="govuk-grid-column-full wysiwyg-styles" ifs:utext="${competitionSetupForm.fundingRules}" />
                 </th:block>
             </dl>
             <div class="extra-margin">

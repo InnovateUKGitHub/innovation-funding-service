@@ -3,11 +3,11 @@
 
 <!-- ===========================Front door - repeating content group  =========================== -->
 <th:block th:fragment="content-group(section, competitionId)">
-    <div class="grid-row extra-margin-bottom" th:each="contentGroup : ${section.contentGroupsOrdered}">
-        <div class="column-third">
+    <div class="govuk-grid-row extra-margin-bottom" th:each="contentGroup : ${section.contentGroupsOrdered}">
+        <div class="govuk-grid-column-one-third">
             <h3 class="govuk-heading-m no-margin" th:text="${contentGroup.heading}"></h3>
         </div>
-        <div class="column-two-thirds">
+        <div class="govuk-grid-column-two-thirds">
             <div class="wysiwyg-styles" ifs:utext="${contentGroup.content}"></div>
             <th:block th:if="${section.hasAttachment(contentGroup.id)}">
                 <div>
@@ -24,27 +24,27 @@
     <section id="summary">
         <h2 class="govuk-heading-m">Summary</h2>
         <div>
-            <div class="grid-row extra-margin-bottom">
-                <div class="column-third">
+            <div class="govuk-grid-row extra-margin-bottom">
+                <div class="govuk-grid-column-one-third">
                     <h3 class="govuk-heading-m no-margin">Description</h3>
                 </div>
-                <div class="column-two-thirds">
+                <div class="govuk-grid-column-two-thirds">
                     <div class="wysiwyg-styles" ifs:utext="${section.description}"></div>
                 </div>
             </div>
-            <div class="grid-row extra-margin-bottom">
-                <div class="column-third">
+            <div class="govuk-grid-row extra-margin-bottom">
+                <div class="govuk-grid-column-one-third">
                     <h3 class="govuk-heading-m no-margin">Funding type</h3>
                 </div>
-                <div class="column-two-thirds">
+                <div class="govuk-grid-column-two-thirds">
                     <p class="govuk-body" th:text="${section.fundingType}"></p>
                 </div>
             </div>
-            <div class="grid-row extra-margin-bottom">
-                <div class="column-third">
+            <div class="govuk-grid-row extra-margin-bottom">
+                <div class="govuk-grid-column-one-third">
                     <h3 class="govuk-heading-m no-margin">Project size</h3>
                 </div>
-                <div class="column-two-thirds">
+                <div class="govuk-grid-column-two-thirds">
                     <p class="govuk-body" th:text="${section.projectSize}"></p>
                 </div>
             </div>

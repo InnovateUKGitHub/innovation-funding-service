@@ -40,8 +40,8 @@
                             <tr>
                                 <th class="width-30-percent" scope="col">Applicant</th>
                                 <th class="width-40-percent" scope="col">Email</th>
-                                <th class="width-15-percent" scope="col"><span class="visually-hidden">Additional details</span></th>
-                                <th class="width-15-percent alignright" scope="col"><span class="visually-hidden">Actions</span></th>
+                                <th class="width-15-percent" scope="col"><span class="govuk-visually-hidden">Additional details</span></th>
+                                <th class="width-15-percent alignright" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -68,7 +68,7 @@
                                 th:classappend="((${#fields.hasErrors('stagedInvite.name')}) or (${#fields.hasErrors('stagedInvite.email')})) ? 'form-group-error'">
                                 <td class="form-group" th:classappend="${#fields.hasErrors('stagedInvite.name')} ? 'form-group-error'">
                                     <label for="stagedInvite.name">
-                                        <span class="visually-hidden">Applicant name</span>
+                                        <span class="govuk-visually-hidden">Applicant name</span>
                                         <th:block th:if="${#fields.hasErrors('stagedInvite.name')}">
                                             <span th:each="err : ${#fields.errors('stagedInvite.name')}"
                                                   th:text="${err}"
@@ -84,7 +84,7 @@
                                 </td>
                                 <td class="form-group" th:classappend="${#fields.hasErrors('stagedInvite.email')} ? 'form-group-error'">
                                     <label for="stagedInvite.email">
-                                        <span class="visually-hidden">Applicant email</span>
+                                        <span class="govuk-visually-hidden">Applicant email</span>
                                         <th:block th:if="${#fields.hasErrors('stagedInvite.email')}">
                                             <span th:each="err : ${#fields.errors('stagedInvite.email')}"
                                                   th:text="${err}"

@@ -23,8 +23,8 @@
 
     <!-- <h2 class="govuk-heading-l" th:text="${param.name != null ? param.name[0] : 'John Smith'}">ASSESSOR NAME</h2> -->
 
-    <div class="grid-row">
-        <div class="column-half">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
             <dl class="govuk-list">
                 <dt>Assessor type</dt>
                 <dd>Academic</dd>
@@ -36,7 +36,7 @@
             <!-- <a th:href="${'/prototypes/5229-assessor-profile?comp=assessment&#38;name=' + name }">View assessor profile</a> -->
         </div>
 
-        <div class="column-half">
+        <div class="govuk-grid-column-one-half">
             <dl class="govuk-list">
                 <dt>Innovation areas</dt>
                 <dd>
@@ -74,13 +74,13 @@
             <div class="search-filters">
                 <fieldset>
                     <legend class="govuk-visually-hidden">Filter applications</legend>
-                    <div class="grid-row">
+                    <div class="govuk-grid-row">
                         <div class="column-two-thirds">
                             <label class="form-label" for="filterSearch">Search by application number</label>
                             <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" value="">
                             <a href="?">Clear</a>
                         </div>
-                        <div class="column-third">
+                        <div class="govuk-grid-column-one-third">
                             <button class="button">Filter</button>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
             </div>
         </form> -->
 
-        <div class="grid-row sorting">
+        <div class="govuk-grid-row sorting">
             <div class="column-two-thirds">
                 <h2>
                     <span class="govuk-heading-xl">5</span>
@@ -97,8 +97,8 @@
             </div>
         </div>
 
-        <div class="grid-row sorting">
-            <div class="column-half select-all">
+        <div class="govuk-grid-row sorting">
+            <div class="govuk-grid-column-one-half select-all">
                 <div class="multiple-choice">
                     <input type="checkbox" data-select-all="" id="select-all-check">
                     <label for="select-all-check">
@@ -109,7 +109,7 @@
                               <span data-count-selected="" class="applications-selected">0</span> applications selected
                           </span>
             </div>
-            <div class="column-half select-all alignright">
+            <div class="govuk-grid-column-one-half select-all alignright">
                 <form method="get">
                     <input type="hidden" name="name" th:value="${name}">
                     <button class="button" name="addSelected" data-submit-el="" disabled="disabled" formaction="/prototypes/IFS-2248-review-send">
@@ -243,7 +243,7 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'assigned'}">
-        <div class="grid-row sorting">
+        <div class="govuk-grid-row sorting">
             <div class="column-two-thirds">
                 <h2>
                     <span class="govuk-heading-xl">4</span>

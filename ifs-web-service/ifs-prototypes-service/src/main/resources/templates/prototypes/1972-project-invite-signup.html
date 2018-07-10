@@ -38,15 +38,15 @@
 
     </div>-->
 
-	<div class="grid-row">
-		<section class="column-half">
+	<div class="govuk-grid-row">
+		<section class="govuk-grid-column-one-half">
 
 		    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/1972-join-project'})"  th:unless="${param.status != null and param.status[0] == 'accVerified'}"/>
 
             <th:block th:insert="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/675-dashboard?status=projectSetup&#38;user=nonLead&#38;action=accVerified'})"  th:unless="${param.status == null or param.status[0] != 'accVerified'}"/>
 
 		</section>
-		<section class="column-half">
+		<section class="govuk-grid-column-one-half">
 
 			<th:block th:insert="prototypes/fragments/applicant-view :: prototype-signin-create-acc(${'/prototypes/1972-join-project?action=signUp'})" />
 

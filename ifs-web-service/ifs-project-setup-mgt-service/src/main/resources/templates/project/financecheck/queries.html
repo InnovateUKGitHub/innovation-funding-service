@@ -42,8 +42,8 @@
         <p class="govuk-body">
             Raise finance queries to the organisation in this section. You should confirm any changes to finances with the finance contact before you approve them. If the query button is disabled, the organisation has not yet appointed a finance contact.
         </p>
-        <div class="grid-row extra-margin-bottom">
-            <div class="column-half">
+        <div class="govuk-grid-row extra-margin-bottom">
+            <div class="govuk-grid-column-one-half">
                 <th:block th:if="${model.financeContact.isPresent()}">
                     <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="button button-large">Post a new query</a>
                 </th:block>
@@ -52,7 +52,7 @@
                     <button disabled="disabled" class="button button-large">Post a new query</button>
                 </th:block>
             </div>
-            <div class="column-half">
+            <div class="govuk-grid-column-one-half">
                 <fieldset>
                     <div class="alignright">
                         <label for="querySection">Query section</label>
@@ -154,11 +154,11 @@
                                 </div>
                             </div>
                             <input type="hidden" id="action" value="postResponse">
-                            <div class="grid-row">
-                                <div class="column-half">
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-one-half">
                                     <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
                                 </div>
-                                <div class="column-half alignright">
+                                <div class="govuk-grid-column-one-half alignright">
                                     <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>
                                 </div>
                             </div>

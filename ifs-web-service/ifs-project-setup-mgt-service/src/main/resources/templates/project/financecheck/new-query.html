@@ -130,11 +130,11 @@
                 </div>
                 <hr />
                 <input type="hidden" id="action" value="postQuery">
-                <div class="grid-row">
-                    <div class="column-half">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-half">
                         <button type="submit" id="post-query" data-content-on-submit="Please wait..." class="button button-large no-margin">Post query</button>
                     </div>
-                    <div class="column-half alignright">
+                    <div class="govuk-grid-column-one-half alignright">
                         <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>
                     </div>
                 </div>

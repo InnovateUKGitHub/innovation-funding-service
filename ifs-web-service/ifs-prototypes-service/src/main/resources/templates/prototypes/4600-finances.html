@@ -42,7 +42,7 @@
 
   <ul class="govuk-list list-overview">
     <li class="section-status assigned-to-me">
-      <div class="grid-row">
+      <div class="govuk-grid-row">
         <div class="column-two-thirds">
           <h3 class="govuk-heading-s"><a href="/prototypes/4600-your-finances">Your project costs</a></h3>
         </div>
@@ -50,14 +50,14 @@
       </div>
     </li>
     <li class="funding assigned-to-me">
-      <div class="grid-row">
+      <div class="govuk-grid-row">
         <div class="column-two-thirds">
           <h3 class="govuk-heading-s"><a href="/prototypes/4600-your-org">Your organisation size</a></h3>
         </div>
       </div>
     </li>
     <li class="funding" th:classappend="${(param.status != null and param.status[0] == 'initialView' ? '' : 'assigned-to-me')}" >
-      <div class="grid-row">
+      <div class="govuk-grid-row">
         <div class="column-one">
 
           <th:block th:if="${param.status != null and param.status[0] == 'initialView'}">
@@ -75,21 +75,21 @@
 
 
     <li class="no-funding hidden">
-      <div class="grid-row">
-        <div class="column-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
           <h3 class="govuk-heading-s">Your organisation size</h3>
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
           <span class="form-hint">Not required</span>
         </div>
       </div>
     </li>
     <li class="no-funding hidden">
-      <div class="grid-row">
-        <div class="column-half">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
           <h3 class="govuk-heading-s">Your funding</h3>
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
           <span class="form-hint">Not required</span>
         </div>
       </div>

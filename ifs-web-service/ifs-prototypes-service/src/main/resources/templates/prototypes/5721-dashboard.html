@@ -20,7 +20,7 @@
                           <th:block th:if="${param.status != null and param.status[0] == 'Inform'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Inform'}, ${null})" />
                             <th:block th:if="${param.status != null and param.status[0] == 'ready'}" th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Ready to open'}, ${null})" />
                               <div class="no-constrain-width justify-left">
-                                <div class="grid-row">
+                                <div class="govuk-grid-row">
                                   <div class="column-two-thirds">
                                     <div class="boxed">
                                       <h2 class="govuk-heading-m no-margin-top">Competition information</h2>
@@ -43,17 +43,17 @@
                                       </p>
                                     </div>
                                     <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                      <div class="grid-row extra-margin">
-                                        <div class="column-third dashboard-actions">
+                                      <div class="govuk-grid-row extra-margin">
+                                        <div class="govuk-grid-column-one-third dashboard-actions">
                                           <a href="#" class="button">Notify assessors</a>
                                         </div>
-                                        <div class="column-third">
+                                        <div class="govuk-grid-column-one-third">
                                           <div class="highlight-panel">
                                             <span class="govuk-heading-l">10</span><br />
                                             <small>changes since last notification</small>
                                           </div>
                                         </div>
-                                        <!-- <div class="column-third">
+                                        <!-- <div class="govuk-grid-column-one-third">
                                           <div class="highlight-panel">
                                             <span class="govuk-heading-l">2</span><br />
                                             <small>days since last notification</small>
@@ -62,8 +62,8 @@
                                       </div>
                                     </th:block>
                                     <h2 class="govuk-heading-m">Key statistics</h2>
-                                    <ul class="govuk-list grid-row">
-                                      <li class="column-third">
+                                    <ul class="govuk-list govuk-grid-row">
+                                      <li class="govuk-grid-column-one-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open' or param.status[0] == 'ready'}">
                                             <span class="govuk-heading-l">10</span><br /><small>Assessors invited</small>
@@ -82,7 +82,7 @@
                                           </th:block>
                                         </div>
                                       </li>
-                                      <li class="column-third">
+                                      <li class="govuk-grid-column-one-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open' or param.status[0] == 'ready'}">
                                             <span class="govuk-heading-l">4</span><br /><small>Invitations accepted</small>
@@ -101,7 +101,7 @@
                                           </th:block>
                                         </div>
                                       </li>
-                                      <li class="column-third">
+                                      <li class="govuk-grid-column-one-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
                                             <span class="govuk-heading-l">5</span><br /><small>Applications per assessor</small>
@@ -121,8 +121,8 @@
                                         </div>
                                       </li>
                                     </ul>
-                                    <ul class="govuk-list grid-row extra-margin">
-                                      <li class="column-third">
+                                    <ul class="govuk-list govuk-grid-row extra-margin">
+                                      <li class="govuk-grid-column-one-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
                                             <span class="govuk-heading-l">12</span><br /><small>Applications started</small>
@@ -141,7 +141,7 @@
                                           </th:block>
                                         </div>
                                       </li>
-                                      <li class="column-third">
+                                      <li class="govuk-grid-column-one-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
                                             <span class="govuk-heading-l">6</span><br /><small>Applications (beyond 50%)</small>
@@ -160,7 +160,7 @@
                                           </th:block>
                                         </div>
                                       </li>
-                                      <li class="column-third">
+                                      <li class="govuk-grid-column-one-third">
                                         <div class="highlight-panel">
                                           <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
                                             <span class="govuk-heading-l">4</span><br /><small>Applications submitted</small>
@@ -195,13 +195,13 @@
                                         <a th:href="${(param.status != null ? '/prototypes/5062-submitted-applications?status=decision&#38;comp=' + param.status[0] : '')}" class="" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Input and review funding decision</a>
                                       </li>
                                     </ul>
-                                    <!-- <div class="grid-row dashboard-actions">
-                                      <div class="column-third">
+                                    <!-- <div class="govuk-grid-row dashboard-actions">
+                                      <div class="govuk-grid-column-one-third">
                                         <a th:href="${(param.status != null ? '/prototypes/5062-submitted-applications?status=feedback&#38;comp=' + param.status[0] : '')}" class="button" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Feedback</a>
                                       </div>
                                     </div> -->
                                   </div>
-                                  <div class="column-third">
+                                  <div class="govuk-grid-column-one-third">
                                     <h2 class="govuk-heading-m extra-margin-top">Competition milestones</h2>
                                     <ul class="comp-timeline-status">
                                       <li class="done">
@@ -283,7 +283,7 @@
                               </div>
                               <!--
                                 <th:block th:if="${param.status == null or param.status[0] == 'Open'}">
-                                    <div class="grid-row">
+                                    <div class="govuk-grid-row">
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Submission date</h2>
                                             <p class="govuk-body">18 October 2016</p>
@@ -303,7 +303,7 @@
                                     </div>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                                    <div class="grid-row">
+                                    <div class="govuk-grid-row">
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Allocate assesors</h2>
                                             <p class="govuk-body">18 October 2016</p>
@@ -319,7 +319,7 @@
                                     </div>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                    <div class="grid-row">
+                                    <div class="govuk-grid-row">
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Assessor accepts</h2>
                                             <p class="govuk-body">18 October 2016</p>
@@ -339,7 +339,7 @@
                                     </div>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-                                    <div class="grid-row">
+                                    <div class="govuk-grid-row">
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Line draw</h2>
                                             <p class="govuk-body">18 October 2016</p>
@@ -359,7 +359,7 @@
                                     </div>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-                                    <div class="grid-row">
+                                    <div class="govuk-grid-row">
                                         <div class="column-quarter">
                                             <h2 class="govuk-heading-m no-margin-bottom">Funders panel</h2>
                                             <p class="govuk-body">18 October 2016</p>
@@ -391,14 +391,14 @@
                                     <a href="#" class="button button-large">Notify assessors</a>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
-                                    <div class="grid-row">
+                                    <div class="govuk-grid-row">
                                         <div class="column-quarter">
                                             <a href="#" class="button button-large width-full aligncentre">Export panel sheet</a>
                                         </div>
                                         <div class="column-quarter">
                                             <a href="#" class="button button-large width-full aligncentre">Update assessors</a>
                                         </div>
-                                        <div class="column-half">
+                                        <div class="govuk-grid-column-one-half">
                                             <p class="govuk-body"><span class="govuk-heading-l">5</span> changes since last update</p>
                                         </div>
                                     </div>

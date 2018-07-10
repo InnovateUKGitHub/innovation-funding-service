@@ -32,22 +32,22 @@
 
                 <h2 class="govuk-heading-m">Key statistics</h2>
 
-                <ul class="govuk-list grid-row">
-                    <li th:if="${model.successfulRecipientsCount != null}" class="column-third">
+                <ul class="govuk-list govuk-grid-row">
+                    <li th:if="${model.successfulRecipientsCount != null}" class="govuk-grid-column-one-third">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l" th:text="${model.successfulRecipientsCount}">2</span><br/>
                             <small>successful</small>
                         </div>
                     </li>
 
-                    <li th:if="${model.unsuccessfulRecipientsCount != null}" class="column-third">
+                    <li th:if="${model.unsuccessfulRecipientsCount != null}" class="govuk-grid-column-one-third">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l" th:text="${model.unsuccessfulRecipientsCount}">3</span><br/>
                             <small>unsuccessful</small>
                         </div>
                     </li>
 
-                    <li th:if="${model.onHoldRecipientsCount != null}" class="column-third">
+                    <li th:if="${model.onHoldRecipientsCount != null}" class="govuk-grid-column-one-third">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l" th:text="${model.onHoldRecipientsCount}">4</span><br/>
                             <small>on hold</small>

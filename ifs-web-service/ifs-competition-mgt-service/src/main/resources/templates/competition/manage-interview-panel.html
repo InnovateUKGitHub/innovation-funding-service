@@ -15,20 +15,20 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage interview panel',subTitle=|${model.competitionId}: ${model.competitionName}, competition ${#strings.toLowerCase(model.competitionStatus.displayName)} |,size='govuk-heading-xl'" />
 
-        <ul class="govuk-list grid-row">
-            <li class="column-quarter">
+        <ul class="govuk-list govuk-grid-row">
+            <li class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
                     <span class="govuk-heading-l" th:text="${model.keyStats.applicationsAssigned}"></span><br /><small>Applications assigned</small>
                 </div>
             </li>
 
-            <li class="column-quarter">
+            <li class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
                     <span class="govuk-heading-l" th:text="${model.keyStats.respondedToFeedback}"></span><br /><small>Applicants responded to feedback</small>
                 </div>
             </li>
 
-            <li class="column-quarter">
+            <li class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
                     <span class="govuk-heading-l" th:text="${model.keyStats.assessorsAccepted}"></span><br /><small>Assessors accepted</small>
                 </div>

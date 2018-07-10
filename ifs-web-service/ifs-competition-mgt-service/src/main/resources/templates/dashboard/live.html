@@ -34,7 +34,7 @@
               <h2 class="govuk-heading-m"
                   th:text="'Open ('+${openComps == null ? '0' : openComps.size()}+')'"></h2>
               <ul class="govuk-list list-overview">
-                  <li class="grid-row section" th:each="competition : ${openComps}">
+                  <li class="govuk-grid-row section" th:each="competition : ${openComps}">
                       <th:block
                           th:insert="competition/dashboard :: dashboard-row"
                           th:with="competition=${competition},
@@ -48,7 +48,7 @@
               <h2 class="govuk-heading-m"
                   th:text="'Closed ('+${closedComps == null ? '0' : closedComps.size()}+')'"></h2>
               <ul class="govuk-list list-overview">
-                  <li class="grid-row section" th:each="competition : ${closedComps}">
+                  <li class="govuk-grid-row section" th:each="competition : ${closedComps}">
                       <th:block
                           th:insert="competition/dashboard :: dashboard-row"
                           th:with="competition=${competition},
@@ -62,7 +62,7 @@
               <h2 class="govuk-heading-m"
                   th:text="'In assessment ('+${inAssesmentComps == null ? '0' : inAssesmentComps.size()}+')'"></h2>
               <ul class="govuk-list list-overview">
-                  <li class="grid-row section" th:each="competition : ${inAssesmentComps}">
+                  <li class="govuk-grid-row section" th:each="competition : ${inAssesmentComps}">
                       <th:block
                           th:insert="competition/dashboard :: dashboard-row"
                           th:with="competition=${competition},
@@ -77,7 +77,7 @@
               <h2 class="govuk-heading-m"
                   th:text="'Panel ('+${panelComps == null ? '0' : panelComps.size()}+')'"></h2>
               <ul class="govuk-list list-overview">
-                  <li class="grid-row section" th:each="competition : ${panelComps}">
+                  <li class="govuk-grid-row section" th:each="competition : ${panelComps}">
                       <th:block
                           th:insert="competition/dashboard :: dashboard-row"
                           th:with="competition=${competition},
@@ -92,7 +92,7 @@
               <h2 class="govuk-heading-m"
                   th:text="'Inform ('+${informComps == null ? '0' : informComps.size()}+')'"></h2>
               <ul class="govuk-list list-overview">
-                  <li class="grid-row section" th:each="competition : ${informComps}">
+                  <li class="govuk-grid-row section" th:each="competition : ${informComps}">
                       <th:block
                           th:insert="competition/dashboard :: dashboard-row"
                           th:with="competition=${competition},

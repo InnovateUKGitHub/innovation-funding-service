@@ -25,14 +25,14 @@
             <div class="search-filters extra-margin">
                 <fieldset>
                     <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
-                    <div class="grid-row">
-                        <div class="column-third">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-third">
                             <div class="form-group">
                                 <label class="form-label" for="stringFilter">Search by application number.</label>
                                 <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:field="*{stringFilter}" />
                             </div>
                         </div>
-                        <div class="column-third">
+                        <div class="govuk-grid-column-one-third">
                             <div class="form-group">
                                 <label class="form-label" for="sendFilter">Sent</label>
                                 <select name="sendFilter" id="sendFilter" class="form-control" th:field="*{sendFilter}">
@@ -42,7 +42,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="column-third">
+                        <div class="govuk-grid-column-one-third">
                             <div class="form-group">
                                 <label class="form-label" for="fundingFilter">Funding</label>
                                 <select name="fundingFilter" id="fundingFilter" class="form-control" th:field="*{fundingFilter}">
@@ -54,8 +54,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="grid-row">
-                        <div class="column-one alignright">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-full alignright">
                             <button class="button no-margin">Filter</button>
                         </div>
                     </div>
@@ -73,8 +73,8 @@
         <div data-selection-limit-exceeded-block=""></div>
 
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"  data-multipage-select="" th:attr="data-total-checkboxes=${model.keyStatistics.statThree}" autocomplete="off"><!--/* todo: total checkboxes attribute ? */-->
-            <div class="grid-row sorting">
-                <div class="column-half">
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half">
                     <div class="select-all">
                         <fieldset>
                             <legend class="govuk-visually-hidden">Select applications</legend>
@@ -91,7 +91,7 @@
                         </fieldset>
                     </div>
                 </div>
-                <div class="column-half">
+                <div class="govuk-grid-column-one-half">
                     <fieldset class="mark-applications">
                         <button class="button button-notification extra-margin-top" data-submit-el="" type="submit" name="write-and-send-email"
                                 th:attr="disabled=${#lists.isEmpty(selectionForm.ids)}">Write and send email</button>

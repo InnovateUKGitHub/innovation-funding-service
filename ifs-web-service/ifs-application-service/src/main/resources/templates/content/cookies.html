@@ -9,8 +9,8 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main class="govuk-main-wrapper" id="main-content" role="main">
-    <div class="grid-row">
-        <div class="column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Cookies',size='govuk-heading-xl'" />
             <div class="inner">
                 <div class="summary">
@@ -186,7 +186,7 @@
                 </table>
             </div>
         </div>
-        <div class="column-one-third">
+        <div class="govuk-grid-column-one-third">
             <th:block th:insert="content/fragments :: content-menu(current=${'cookies'})" />
         </div>
     </div>

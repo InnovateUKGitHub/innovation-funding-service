@@ -20,8 +20,8 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept or reject application',size='govuk-heading-xl'" />
 
         <section class="boxed">
-            <div class="grid-row">
-                <div class="column-half">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
                     <h2 class="govuk-heading-s no-margin">Title:</h2>
                     <p class="govuk-body" th:text="${model.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</p>
 
@@ -30,7 +30,7 @@
                         <p class="govuk-body" th:text="${model.projectSummary}">This is the applicant response for project summary</p>
                     </th:block>
                 </div>
-                <div class="column-half">
+                <div class="govuk-grid-column-one-half">
                     <h2 class="govuk-heading-s no-margin">Partners:</h2>
                     <span th:each="partner : ${model.partners}">
                             <th:block th:text="${partner.name}">Wessex University</th:block>

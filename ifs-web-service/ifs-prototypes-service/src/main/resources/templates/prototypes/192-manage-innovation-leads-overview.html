@@ -31,7 +31,7 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage innovation leads',subTitle='Home and industrial efficiency programme', size='govuk-heading-xl'" />
 
     <h2 class="govuk-heading-m">Key statistics</h2>
-    <div class="grid-row">
+    <div class="govuk-grid-row">
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="govuk-heading-l lead-count">1</span><br>
@@ -63,7 +63,7 @@
         <!-- filter -->
         <form class="filter-form extra-margin">
             <div class="search-filters">
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-two-thirds">
                         <label for="filter">Innovation Area</label>
                         <select id="filter" class="form-control extra-margin-bottom">
@@ -75,7 +75,7 @@
                         </select>
                         <a href="/prototypes/192-manage-innovation-leads-overview.html">Clear all filters</a>
                     </div>
-                    <div class="column-third">
+                    <div class="govuk-grid-column-one-third">
                         <button class="button" id="filter-button">Filter</button>
                     </div>
                 </div>
@@ -84,8 +84,8 @@
 
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <!-- list -->
-            <div class="grid-row sorting">
-                <div class="column-half">
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half">
                     <p class="govuk-body">
                         <span class="govuk-heading-xl total-count"></span>
                         <span class="govuk-heading-s">Innovation leads</span>

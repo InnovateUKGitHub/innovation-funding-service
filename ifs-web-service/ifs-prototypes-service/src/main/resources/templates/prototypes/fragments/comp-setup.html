@@ -716,8 +716,8 @@
             <legend class="govuk-visually-hidden">Funding information</legend>
 
 
-            <div class="grid-row" id="co-funder-row-1">
-                <div class="column-half">
+            <div class="govuk-grid-row" id="co-funder-row-1">
+                <div class="govuk-grid-column-one-half">
                     <div class="form-group">
                         <label class="form-label" for="comp-co-funder-1">
                             <span class="form-label-bold">Funder</span>
@@ -726,7 +726,7 @@
                     </div>
                 </div>
 
-                <div class="column-half">
+                <div class="govuk-grid-column-one-half">
                     <div class="form-group">
                         <label class="form-label" for="comp-co-funders-budget-1">
                             <span class="form-label-bold">Budget</span>
@@ -738,8 +738,8 @@
 
             <th:block th:if="${param.action != null and param.action[0] == 'addCofunder'}">
 
-                <div class="grid-row" id="co-funder-row-2">
-                    <div class="column-half">
+                <div class="govuk-grid-row" id="co-funder-row-2">
+                    <div class="govuk-grid-column-one-half">
                         <div class="form-group">
                             <label class="form-label govuk-visually-hidden" for="comp-co-funder-2">
                                 <span class="form-label-bold">Funder</span>
@@ -748,7 +748,7 @@
                         </div>
                     </div>
 
-                    <div class="column-half">
+                    <div class="govuk-grid-column-one-half">
                         <div class="form-group">
                             <label class="form-label govuk-visually-hidden" for="comp-co-funders-budget-2">
                                 <span class="form-label-bold">Budget</span>
@@ -761,11 +761,11 @@
 
             </th:block>
 
-            <div class="grid-row">
-                <div class="column-half">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
                     &nbsp;
                 </div>
-                <div class="column-half">
+                <div class="govuk-grid-column-one-half">
                     <p class="govuk-heading-s no-margin">Total: &pound; <span th:text="${(param.action != null and param.action[0] == 'addCofunder' ? '1,300,000' : '0')}">TOTAL</span></p>
 
                     <div class="alignright">
@@ -925,11 +925,11 @@
         </fieldset>
 
 
-        <div class="grid-row ">
-            <div class="column-half">
+        <div class="govuk-grid-row ">
+            <div class="govuk-grid-column-one-half">
                  <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready' )}" />
             </div>
-            <div class="column-half alignright">
+            <div class="govuk-grid-column-one-half alignright">
                 <a th:href="@{'?section=eligibility&#38;action=new-stream'}" id="add-stream" style="display: none">Add stream</a>
             </div>
         </div>
@@ -971,7 +971,7 @@
         <h3 class="govuk-heading-s">Project size (&pound;)</h3>
         <p class="govuk-body">This indicates the size of the project based on the budget</p>
 
-        <div class="grid-row">
+        <div class="govuk-grid-row">
             <div class="column-quarter">
                 <div class="form-group">
                     <label class="form-label" th:for="${'stream-'+streamNo+'-project-size-from'}">
@@ -993,7 +993,7 @@
         <h3 class="govuk-heading-s">Project length (months)</h3>
         <p class="govuk-body">This indicates the length of the project in months (max 36)</p>
 
-        <div class="grid-row">
+        <div class="govuk-grid-row">
             <div class="column-quarter">
                 <div class="form-group">
                     <label class="form-label" th:for="${'stream-'+streamNo+'-project-length-from'}">
@@ -1422,7 +1422,7 @@
 
     <li>
 
-        <div class="grid-row">
+        <div class="govuk-grid-row">
             <div class="column-three-quarters">
                 <h2 class="govuk-heading-m" th:text="${questionNo+'. '+questionTitle}"></h2>
             </div>
@@ -1435,7 +1435,7 @@
 
             <div class="extra-margin-bottom">
 
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-quarter">
                         <h3 class="govuk-heading-s">Question title</h3>
                     </div>
@@ -1444,7 +1444,7 @@
                     </div>
                 </div>
 
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-quarter">
                         <h3 class="govuk-heading-s">Question subtitle</h3>
                     </div>
@@ -1453,7 +1453,7 @@
                     </div>
                 </div>
 
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-quarter">
                         <h3 class="govuk-heading-s">Guidance title</h3>
                     </div>
@@ -1462,7 +1462,7 @@
                     </div>
                 </div>
 
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-quarter">
                         <h3 class="govuk-heading-s">Guidance</h3>
                     </div>
@@ -1476,7 +1476,7 @@
                     </div>
                 </div>
 
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-quarter">
                         <h3 class="govuk-heading-s">Words</h3>
                     </div>
@@ -1485,7 +1485,7 @@
                     </div>
                 </div>
 
-                <div class="grid-row">
+                <div class="govuk-grid-row">
                     <div class="column-quarter">
                         <h3 class="govuk-heading-s">Appendix</h3>
                     </div>
@@ -1538,8 +1538,8 @@
                     <input class="form-control width-medium" th:id="${'question-'+ questionNo +'-word-count'}" th:name="${'question-'+ questionNo +'-word-count'}" value="400" />
                 </div>
 
-                <div class="grid-row">
-                     <div class="column-half">
+                <div class="govuk-grid-row">
+                     <div class="govuk-grid-column-one-half">
                         <fieldset class="inline">
                             <legend class="form-label-bold">Is the answer scored?</legend>
                             <label class="block-label selection-button-radio" th:for="${'question-'+ questionNo +'-scored-yes'}">
@@ -1554,7 +1554,7 @@
                     </div>
 
 
-                    <div class="column-half">
+                    <div class="govuk-grid-column-one-half">
                         <fieldset class="inline">
                             <legend class="form-label-bold">Allow appendix?</legend>
                             <label class="block-label selection-button-radio" th:for="${'question-'+ questionNo +'-appendix-yes'}">
@@ -1642,11 +1642,11 @@
         <li><div class="task"><h2 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-supporting-information&amp;state=edit' : '?section=public-supporting-information&amp;state=edit')}">Supporting information</a></h2></div></li>
     </ul>
     <p class="govuk-body"><small>Last published 08:55am 12 December 2016</small></p>
-    <div class="grid-row">
-        <div class="column-half">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
             <a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="button">Return to setup overview</a>
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
             <a id="prototype-publish-content" href="#" class="button-secondary disabled no-margin">Publish public content</a>
         </div>
     </div>
@@ -1709,11 +1709,11 @@
             </fieldset>
         </form>
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="0">[Text]</a>
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
             <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-competition-information&amp;state=edit" class="button-secondary no-margin">Edit</a>
         </div>
     </div>
@@ -1799,11 +1799,11 @@
             </fieldset>
         </form>
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="1">[Text]</a>
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
             <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-summary&amp;state=edit" class="button-secondary no-margin">Edit</a>
         </div>
     </div>
@@ -2068,11 +2068,11 @@
         </div>
 
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="2">[Text]</a>
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
             <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-eligibility&amp;state=edit" class="button-secondary no-margin">Edit</a>
         </div>
     </div>
@@ -2288,11 +2288,11 @@
             <a href="#">+ add new section</a>
         </div>
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="3">[Text]</a>
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
             <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-scope&amp;state=edit" class="button-secondary no-margin">Edit</a>
         </div>
     </div>
@@ -2403,11 +2403,11 @@
             <a href="#">+ add new event</a>
         </div>
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="4">[Text]</a>
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
             <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-dates&amp;state=edit" class="button-secondary no-margin">Edit</a>
         </div>
     </div>
@@ -2655,11 +2655,11 @@
             <a href="#">+ add new section</a>
         </div>
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="5">[Text]</a>
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
             <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-how-to-apply&amp;state=edit" class="button-secondary no-margin">Edit</a>
         </div>
     </div>
@@ -2747,11 +2747,11 @@
             <a href="#">+ add new section</a>
         </div>
     </th:block>
-    <div class="grid-row extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row extra-margin">
+        <div class="govuk-grid-column-one-half">
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="6">[Text]</a>
         </div>
-        <div class="column-half alignright">
+        <div class="govuk-grid-column-one-half alignright">
             <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-supporting-information&amp;state=edit" class="button-secondary no-margin">Edit</a>
         </div>
     </div>

@@ -35,7 +35,7 @@
   @include govuk-media-query(tablet) {
     .my-applications {
       .in-progress {
-        .grid-row {
+        .govuk-grid-row {
           margin: 5px 0 0 12px;
         }
       }
@@ -101,7 +101,7 @@
       margin: 20px 0 55px 0;
     }
 
-    .column-half + .column-half {
+    .govuk-grid-column-one-half + .govuk-grid-column-one-half {
       padding: 0 20px 0 0;
       text-align:right;
     }
@@ -109,14 +109,14 @@
 
   @include media-down(tablet) {
     .boxed-list {
-      .column-half + .column-half {
+      .govuk-grid-column-one-half + .govuk-grid-column-one-half {
         text-align:left;
         padding: 15px 15px;
       }
     }
   }
 
-  //.grid-row {
+  //.govuk-grid-row {
   //  .row {
   //    @include grid-column(1);
   //  }
@@ -137,11 +137,11 @@
   }
 
   .collapsible {
-    .column-three-quarters {
+    .govuk-grid-column-three-quarters {
       padding-left: 30px;
     }
 
-    .column-full {
+    .govuk-grid-column-full {
       padding: 0 18px;
     }
 
@@ -169,7 +169,7 @@
   .my-applications {
     .in-progress {
       li {
-        .grid-row {
+        .govuk-grid-row {
           margin: 0 -15px;
         }
       }

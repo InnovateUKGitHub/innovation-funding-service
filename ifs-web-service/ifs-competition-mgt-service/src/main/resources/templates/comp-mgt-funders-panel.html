@@ -20,14 +20,14 @@
             <div class="search-filters extra-margin">
                 <fieldset>
                     <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
-                    <div class="grid-row">
-                        <div class="column-half">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
                             <div class="form-group">
                                 <label class="form-label" for="stringFilter">Search by application number</label>
                                 <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:value="*{stringFilterValue}"/>
                             </div>
                         </div>
-                        <div class="column-half">
+                        <div class="govuk-grid-column-one-half">
                             <div class="form-group">
                                 <label class="form-label" for="fundingFilter">Funding decision</label>
                                 <select name="fundingFilter" id="fundingFilter" class="form-control" th:field="*{fundingFilter}">
@@ -40,8 +40,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="grid-row">
-                        <div class="column-one alignright">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-full alignright">
                             <button class="button no-margin">Filter</button>
                         </div>
                     </div>
@@ -62,8 +62,8 @@
         </div>
         <div data-selection-limit-exceeded-block=""></div>
 
-        <div class="grid-row sorting">
-            <div class="column-half">
+        <div class="govuk-grid-row sorting">
+            <div class="govuk-grid-column-one-half">
                 <h3><span class="govuk-heading-xl no-margin" th:text="${results.totalElements}" /> applications</h3>
             </div>
         </div>
@@ -72,8 +72,8 @@
               data-multipage-select=""
               th:attr="data-total-checkboxes=${results.totalElements}"
               autocomplete="off">
-            <div class="grid-row sorting">
-                <div class="column-half">
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half">
                     <div class="select-all">
                         <fieldset>
                             <legend class="govuk-visually-hidden">Select applications</legend>
@@ -87,7 +87,7 @@
                         </fieldset>
                     </div>
                 </div>
-                <div class="column-half">
+                <div class="govuk-grid-column-one-half">
                     <fieldset class="mark-applications">
                         <legend class="govuk-visually-hidden">Mark selected applications</legend>
                         <h3>Mark application as:</h3>

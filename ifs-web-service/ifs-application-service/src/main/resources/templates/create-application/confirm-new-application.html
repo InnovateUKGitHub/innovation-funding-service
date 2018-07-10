@@ -16,14 +16,14 @@
             <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
-        <div class="grid-row">
-            <div class="column-two-thirds">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You have an application in progress',size='govuk-heading-l'" />
                 <p class="govuk-body">You have already started an application in this competition. Do you want to continue with your existing application or create a new one in the same competition?</p>
             </div>
         </div>
-        <div class="grid-row">
-            <div class="column-full">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
                 <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
                     <div class="form-group" th:classappend="${#fields.hasErrors('createNewApplication')} ? 'form-group-error'">
                     <fieldset>

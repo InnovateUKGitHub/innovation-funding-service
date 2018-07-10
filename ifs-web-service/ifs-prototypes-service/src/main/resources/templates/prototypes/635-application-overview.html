@@ -19,8 +19,8 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Application overview'})" />
 
-	<div class="grid-row">
-    <div class="column-half">
+	<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
 
       <dl class="dl-left extra-margin-bottom">
         <dd>Application number:</dd>
@@ -38,7 +38,7 @@
 
       <th:block th:insert="prototypes/fragments/layout :: prototype-application-progress" />
     </div>
-    <div class="column-half">
+    <div class="govuk-grid-column-one-half">
         <ul class="govuk-list govuk-list--bullet">
           <li><a href="/prototypes/632-organisation-collaborator-overview">view team members and add collaborators</a></li>
           <li><a href="#">view conditions of grant offer</a></li>

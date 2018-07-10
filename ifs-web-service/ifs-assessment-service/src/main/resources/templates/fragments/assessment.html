@@ -44,8 +44,8 @@
 
 <!-- =================== Application details ============================== -->
 <th:block th:fragment="application_details (applicationName, applicationStartDate, applicationDurationInMonths, applicationOrganisations, pendingOrganisationNames, leadOrganisation)">
-    <div class="grid-row">
-        <div class="column-half">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
             <h3 class="govuk-heading-s">Project title</h3>
             <p class="govuk-body" th:text="${applicationName}" />
             <h3 class="govuk-heading-s">Lead organisation</h3>
@@ -61,7 +61,7 @@
                 </li>
             </ul>
         </div>
-        <div class="column-half">
+        <div class="govuk-grid-column-one-half">
             <h3 class="govuk-heading-s">Project timescales</h3>
             <p class="govuk-body">Project start date:<br/>
             <th:block th:if="${applicationStartDate}" th:text="${#temporals.format(applicationStartDate, 'd/M/yyyy')}" />

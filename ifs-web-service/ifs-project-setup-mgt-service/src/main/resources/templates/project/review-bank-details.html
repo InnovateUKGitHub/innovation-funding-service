@@ -19,11 +19,11 @@
         </div>
 
         <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
-            <div class="grid-row">
-                <div class="column-two-thirds">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank Details',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
                 </div>
-                <div class="column-third alignright extra-margin">
+                <div class="govuk-grid-column-one-third alignright extra-margin">
                     <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Bank account</h2>
                 </div>
             </div>
@@ -87,11 +87,11 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="grid-row extra-margin" th:unless="${model.approved}">
-                <div class="column-half">
+            <div class="govuk-grid-row extra-margin" th:unless="${model.approved}">
+                <div class="govuk-grid-column-one-half">
                     <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}">Change bank account details</a>
                 </div>
-                <div class="column-half alignright">
+                <div class="govuk-grid-column-one-half alignright">
                     <button data-js-modal="modal-partner-approve-bank-details" class="no-margin-right button">Approve bank account details</button>
                 </div>
                 <th:block th:insert="fragments/modals :: modal-overlay" />

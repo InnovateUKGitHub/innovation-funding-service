@@ -101,48 +101,48 @@
 					</table>
 				</div> -->
 
-        <div class="grid-row">
-          <div class="column-one-third">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third">
             <div class="form-group">
               <label class="form-label-bold" for="doi-appointments-organisation">Organisation</label>
               <input type="text" id="doi-appointments-organisation" name="doi-appointments-organisation" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Aptrans Ltd' : '')}" />
             </div>
           </div>
-          <div class="column-one-third">
+          <div class="govuk-grid-column-one-third">
             <div class="form-group">
               <label class="form-label-bold" for="doi-appointments-position">Position</label>
               <input type="text" id="doi-appointments-position" name="doi-appointments-position" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Executive consultant' : '')}" />
             </div>
           </div>
-          <div class="column-one-third extra-margin-top alignright">
+          <div class="govuk-grid-column-one-third extra-margin-top alignright">
             <div class="form-group">
               <a href="#">Remove</a>
             </div>
           </div>
         </div>
 
-        <!-- <div class="grid-row section-divide">
-          <div class="column-one-third">
+        <!-- <div class="govuk-grid-row section-divide">
+          <div class="govuk-grid-column-one-third">
             <div class="form-group">
               <label class="form-label-bold" for="doi-appointments-organisation">Organisation</label>
               <input type="text" id="doi-appointments-organisation" name="doi-appointments-organisation" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Aptrans Ltd' : '')}" />
             </div>
           </div>
-          <div class="column-one-third">
+          <div class="govuk-grid-column-one-third">
             <div class="form-group">
               <label class="form-label-bold" for="doi-appointments-position">Position</label>
               <input type="text" id="doi-appointments-position" name="doi-appointments-position" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Executive consultant' : '')}" />
             </div>
           </div>
-          <div class="column-one-third extra-margin-top alignright">
+          <div class="govuk-grid-column-one-third extra-margin-top alignright">
             <div class="form-group">
               <a href="#">Remove</a>
             </div>
           </div>
         </div> -->
 
-        <div class="grid-row section-divide">
-          <div class="column-full alignright">
+        <div class="govuk-grid-row section-divide">
+          <div class="govuk-grid-column-full alignright">
             <a href="#">Add another position</a>
           </div>
         </div>
@@ -225,7 +225,7 @@
 
 			</div> -->
       <div id="add-family" class="extra-margin-bottom govuk-visually-hidden">
-        <div class="grid-row">
+        <div class="govuk-grid-row">
           <div class="column-one-quarter">
             <div class="form-group">
               <label class="form-label-bold" for="doi-family-relation">Relation</label>
@@ -251,8 +251,8 @@
           </div>
         </div>
 
-        <div class="grid-row section-divide">
-          <div class="column-full alignright">
+        <div class="govuk-grid-row section-divide">
+          <div class="govuk-grid-column-full alignright">
             <a href="#">Add another family member</a>
           </div>
         </div>

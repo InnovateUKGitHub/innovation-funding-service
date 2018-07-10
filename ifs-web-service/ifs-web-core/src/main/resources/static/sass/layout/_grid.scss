@@ -39,7 +39,7 @@
   @extend %wide-page
 }
 
-.grid-row {
+.govuk-grid-row {
   &.sorting {
     border-bottom: 1px solid $govuk-secondary-text-colour;
     margin: 0;

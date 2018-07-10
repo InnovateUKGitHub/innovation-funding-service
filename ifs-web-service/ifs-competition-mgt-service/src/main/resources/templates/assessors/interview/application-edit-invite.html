@@ -75,12 +75,12 @@
                                         <button id="upload-applicant-resend-file" class="button-secondary" th:attr="data-for-file-upload=${fieldName}">Save</button>
                                     </div>
                                     <div class="grid-row file-toggle" th:style="${model.hasAttachment()} ? 'display:block' : 'display:none'" >
-                                        <div class="column-two-thirds">
+                                        <div class="govuk-grid-column-two-thirds">
                                             <!--/* empty file input so that spring form is complete */-->
                                             <input type="file" name="feedback" class="govuk-visually-hidden">
                                             <span th:text="${model.feedbackFilename}" id="file-name">Uploaded-file.pdf</span>
                                         </div>
-                                        <div class="column-third">
+                                        <div class="govuk-grid-column-one-third">
                                             <button style="padding:0" id="remove-applicant-resend-file" class="button button-clear">Remove</button>
                                         </div>
                                     </div>

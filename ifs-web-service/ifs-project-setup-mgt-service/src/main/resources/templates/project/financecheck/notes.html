@@ -28,8 +28,8 @@
                 <p class="govuk-body">
                     Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
                 </p>
-                <div class="grid-row extra-margin">
-                    <div class="column-half">
+                <div class="govuk-grid-row extra-margin">
+                    <div class="govuk-grid-column-one-half">
                         <a id="post-new-note" th:href="@{{baseUrl}/new-note(baseUrl=${baseUrl})}" class="button button-large">Create a new note</a>
                     </div>
                 </div>
@@ -110,8 +110,8 @@
                                     </div>
                                 </div>
                                 <input type="hidden" id="action" value="postComment">
-                                <div class="grid-row extra-margin">
-                                    <div class="column-half">
+                                <div class="govuk-grid-row extra-margin">
+                                    <div class="govuk-grid-column-one-half">
                                         <button class="button button-large no-margin" data-content-on-submit="Please wait...">Save comment</button>
                                         <a class="button button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
                                     </div>

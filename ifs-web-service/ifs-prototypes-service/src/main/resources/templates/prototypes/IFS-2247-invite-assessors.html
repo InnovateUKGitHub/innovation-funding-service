@@ -22,7 +22,7 @@
 
     <h2 class="govuk-heading-m">Key statistics</h2>
 
-    <ul class="govuk-list grid-row">
+    <ul class="govuk-list govuk-grid-row">
         <li class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="govuk-heading-l">3</span><br /><small>Invited</small>
@@ -81,11 +81,11 @@
             Invite assessors to interview panel.
         </h2>
 
-        <div class="grid-row sorting">
-            <div class="column-half">
+        <div class="govuk-grid-row sorting">
+            <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-s">Invite list</h2>
             </div>
-            <div class="column-half alignright">
+            <div class="govuk-grid-column-one-half alignright">
                 <a href="/prototypes/IFS-2247-review-send" class="button">Review and send invites</a>
             </div>
         </div>
@@ -141,15 +141,15 @@
 
         <th:block th:if="${param.status != null and param.status[0] == 'invitesPending'}">
 
-            <div class="grid-row sorting">
-                <div class="column-half">
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half">
                     <span class="govuk-heading-xl no-margin">5</span>
                     <span class="govuk-heading-s">assessors</span>
                 </div>
             </div>
 
-            <div class="grid-row sorting">
-                <div class="column-half select-all">
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half select-all">
                     <div class="multiple-choice">
                         <input type="checkbox" data-select-all="" id="select-all-check">
                         <label for="select-all-check">
@@ -160,7 +160,7 @@
                   <span data-count-selected="" class="applications-selected">0</span> assessors selected
               </span>
                 </div>
-                <div class="column-half select-all alignright">
+                <div class="govuk-grid-column-one-half select-all alignright">
                     <form method="get">
                         <input type="hidden" id="status" name="status" value="resendInvites" />
                         <button class="button" name="addSelected" data-submit-el="" disabled="disabled" formaction="/prototypes/IFS-2247-review-send">
@@ -280,8 +280,8 @@
         <p class="govuk-body" th:unless="${param.status != null and param.status[0] == 'invitesPending'}">There are no assessors who have accepted invites to this assessment panel.</p>
 
         <th:block th:if="${param.status != null and param.status[0] == 'invitesPending'}">
-            <div class="grid-row sorting">
-                <div class="column-half">
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half">
                     <span class="govuk-heading-xl no-margin">5</span>
                     <span class="govuk-heading-s">assessors</span>
                 </div>

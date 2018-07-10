@@ -38,15 +38,15 @@
 
     </div>-->
 
-	<div class="grid-row">
+	<div class="govuk-grid-row">
 
-		<section class="column-half">
+		<section class="govuk-grid-column-one-half">
 
 			<th:block th:insert="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/650-create-application?status'})"  th:unless="${param.user != null and param.user[0] == 'assessor'}" />
       <th:block th:if="${param.user != null and param.user[0] == 'assessor'}" th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})" />
 
 		</section>
-    <section class="column-half">
+    <section class="govuk-grid-column-one-half">
 
 			<th:block th:insert="prototypes/fragments/applicant-view :: prototype-signin-create-acc(${'/prototypes/643-create-acc-business-lead'})" />
 

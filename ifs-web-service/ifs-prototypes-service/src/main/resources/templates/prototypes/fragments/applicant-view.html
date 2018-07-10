@@ -36,8 +36,8 @@
 <div th:fragment="prototype-signinnew(url)">
     <h1 class="govuk-heading-l">Sign into Innovation Funding Service</h1>
     <p class="govuk-body">Enter the email address and password you used to create your Innovation Funding Service account.</p>
-    <div class="grid-row">
-        <section class="column-half">
+    <div class="govuk-grid-row">
+        <section class="govuk-grid-column-one-half">
             <form action="#" method="GET">
                 <fieldset>
                     <legend class="govuk-visually-hidden">Sign in</legend>
@@ -215,8 +215,8 @@
 
         <!-- <h2 class="govuk-heading-m no-margin">Application details</h2> -->
 
-        <div class="grid-row">
-            <div class="column-half">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
                 <h3 class="govuk-heading-s">Project title</h3>
 
                 <th:block th:if="${status == 'closed' and user == 'admin'}">
@@ -248,7 +248,7 @@
                 </ul>
             </div>
 
-            <div class="column-half">
+            <div class="govuk-grid-column-one-half">
                 <h3 class="govuk-heading-s">Project timescales</h3>
                 <p class="govuk-body">Project start date: <br />4 November 2016</p>
                 <p class="govuk-body">Duration: <br />51 months</p>
@@ -698,7 +698,7 @@
 <!-- ========Applicant view - feedback score======= -->
 
 <div th:fragment="prototype-feedback-score">
-    <div class="column-third" th:text="${(score != null ? 'Average score ' + score + ' / 10' : ' ')}">
+    <div class="govuk-grid-column-one-third" th:text="${(score != null ? 'Average score ' + score + ' / 10' : ' ')}">
         SCORE here
     </div>
 </div>
@@ -808,11 +808,11 @@
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
-                    <div class="grid-row extra-margin-top">
-                        <div class="column-half">
+                    <div class="govuk-grid-row extra-margin-top">
+                        <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright govuk-heading-s ">
+                        <div class="govuk-grid-column-one-half alignright govuk-heading-s ">
                             Score 5/10
                         </div>
                     </div>
@@ -844,11 +844,11 @@
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
-                    <div class="grid-row extra-margin-top">
-                        <div class="column-half">
+                    <div class="govuk-grid-row extra-margin-top">
+                        <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright govuk-heading-s ">
+                        <div class="govuk-grid-column-one-half alignright govuk-heading-s ">
                             Score 6/10
                         </div>
                     </div>
@@ -883,11 +883,11 @@
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
-                    <div class="grid-row extra-margin-top">
-                        <div class="column-half">
+                    <div class="govuk-grid-row extra-margin-top">
+                        <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright govuk-heading-s ">
+                        <div class="govuk-grid-column-one-half alignright govuk-heading-s ">
                             Score 8/10
                         </div>
                     </div>
@@ -920,11 +920,11 @@
 
                     <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
-                        <div class="grid-row extra-margin-top">
-                            <div class="column-half">
+                        <div class="govuk-grid-row extra-margin-top">
+                            <div class="govuk-grid-column-one-half">
                                 <h3 class="govuk-heading-s">Feedback</h3>
                             </div>
-                            <div class="column-half alignright govuk-heading-s ">
+                            <div class="govuk-grid-column-one-half alignright govuk-heading-s ">
                                 Score 3/10
                             </div>
                         </div>
@@ -958,11 +958,11 @@
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
-                    <div class="grid-row extra-margin-top">
-                        <div class="column-half">
+                    <div class="govuk-grid-row extra-margin-top">
+                        <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright govuk-heading-s ">
+                        <div class="govuk-grid-column-one-half alignright govuk-heading-s ">
                             Score 5/10
                         </div>
                     </div>
@@ -995,11 +995,11 @@
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
-                    <div class="grid-row extra-margin-top">
-                        <div class="column-half">
+                    <div class="govuk-grid-row extra-margin-top">
+                        <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright govuk-heading-s ">
+                        <div class="govuk-grid-column-one-half alignright govuk-heading-s ">
                             Score 8/10
                         </div>
                     </div>
@@ -1036,11 +1036,11 @@
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
-                    <div class="grid-row extra-margin-top">
-                        <div class="column-half">
+                    <div class="govuk-grid-row extra-margin-top">
+                        <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright govuk-heading-s ">
+                        <div class="govuk-grid-column-one-half alignright govuk-heading-s ">
                             Score 5/10
                         </div>
                     </div>
@@ -1077,11 +1077,11 @@
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
-                    <div class="grid-row extra-margin-top">
-                        <div class="column-half">
+                    <div class="govuk-grid-row extra-margin-top">
+                        <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright govuk-heading-s ">
+                        <div class="govuk-grid-column-one-half alignright govuk-heading-s ">
                             Score 5/10
                         </div>
                     </div>
@@ -1111,11 +1111,11 @@
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
-                    <div class="grid-row extra-margin-top">
-                        <div class="column-half">
+                    <div class="govuk-grid-row extra-margin-top">
+                        <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright govuk-heading-s ">
+                        <div class="govuk-grid-column-one-half alignright govuk-heading-s ">
                             Score 5/10
                         </div>
                     </div>
@@ -1142,11 +1142,11 @@
 
                 <th:block th:if="${param.action != null and param.action[0] == 'feedback'}">
 
-                    <div class="grid-row extra-margin-top">
-                        <div class="column-half">
+                    <div class="govuk-grid-row extra-margin-top">
+                        <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Feedback</h3>
                         </div>
-                        <div class="column-half alignright govuk-heading-s ">
+                        <div class="govuk-grid-column-one-half alignright govuk-heading-s ">
                             Score 5/10
                         </div>
                     </div>

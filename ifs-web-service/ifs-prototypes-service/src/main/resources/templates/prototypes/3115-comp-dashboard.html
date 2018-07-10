@@ -16,12 +16,12 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div class="grid-row">
-		<div class="column-half">
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-one-half">
 			<h1 class="govuk-heading-xl">All competitions</h1>
 		</div>
 
-		<div class="column-half alignright">
+		<div class="govuk-grid-column-one-half alignright">
 			<form role="search" method="get" id="searchform" class="form-search" th:action="@{${#httpServletRequest.requestURI}}">
 				<input type="hidden" id="searchComps" name="section" value="search" />
 			  	<label class="govuk-visually-hidden" for="searchQuery">Search for:</label>

@@ -17,8 +17,8 @@
         <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div class="search-filters extra-margin">
                 <fieldset>
-                    <div class="grid-row">
-                        <div class="column-half">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
                             <div class="form-group">
                                 <label class="form-label" for="searchString">
                                 <span class="form-label">Look for</span>
@@ -35,7 +35,7 @@
                                        name="searchString">
                             </div>
                         </div>
-                        <div class="column-half">
+                        <div class="govuk-grid-column-one-half">
                             <div class="form-group">
                                 <label class="form-label" for="searchCategory">in</label>
                                 <select th:field="*{searchCategory}" class="form-control" id="searchCategory" name="searchCategory">
@@ -47,11 +47,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="grid-row">
-                        <div class="column-half">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
                             <a href="?">Clear</a>
                         </div>
-                        <div class="column-half alignright">
+                        <div class="govuk-grid-column-one-half alignright">
                             <button type="submit" th:name="${tab == 'invites' ? 'pending' : 'active'}" class="button no-margin">Search</button>
                         </div>
                     </div>

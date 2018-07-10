@@ -39,7 +39,7 @@
 
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='dashboard', status=${(param.closed != null ? 'closed' : 'open')}" />
 
-	<div class="grid-row constrain-width">
+	<div class="govuk-grid-row constrain-width">
 		<div class="column-two-thirds">
 
 			<dl class="standard-definition-list">
@@ -61,14 +61,14 @@
 
 		</div>
 
-		<div class="column-third">
+		<div class="govuk-grid-column-one-third">
 			<div class="boxed">
 
 					<div th:if="${param.closed == null}" th:remove="tag">
 
 						<h2 class="govuk-heading-m no-margin">In assessment</h2>
 
-						<div class="grid-row">
+						<div class="govuk-grid-row">
 
 							<div class="column-two-thirds">
 								<p class="govuk-body">
@@ -77,7 +77,7 @@
 								</p>
 							</div>
 
-							<div class="column-third">
+							<div class="govuk-grid-column-one-third">
 								<div class="deadline" style="text-align: center;">
 						            <div class="pie-container">
 						                <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
@@ -112,14 +112,14 @@
 									Project setup
 								</div>
 							</h2>
-							<div class="grid-row">
+							<div class="govuk-grid-row">
 								<div class="column-two-thirds">
 									<p class="govuk-body">
 										12:00 <br />
 										12th April 2016
 									</p>
 								</div>
-								<div class="column-third">
+								<div class="govuk-grid-column-one-third">
 									<div class="deadline" style="text-align: center; margin-top: 10px;">
 										<div class="pie-container">
 											<div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
@@ -143,26 +143,26 @@
 
 	<div th:if="${param.closed == null}" th:remove="tag">
 
-		<div class="grid-row constrain-width extra-margin ">
-			<div class="column-third">
+		<div class="govuk-grid-row constrain-width extra-margin ">
+			<div class="govuk-grid-column-one-third">
 				<a href="/prototypes/1348-open-applications" class="button-dashboard highlight">
 					<p class="govuk-body"><span class="govuk-heading-l">22</span><br />Applications</p>
 				</a>
 			</div>
 		</div>
 
-		<div class="grid-row constrain-width extra-margin ">
-			<div class="column-third">
+		<div class="govuk-grid-row constrain-width extra-margin ">
+			<div class="govuk-grid-column-one-third">
 				<p class="button-dashboard">
 					<span class="govuk-heading-l">12</span><br />Applications started
 				</p>
 			</div>
-			<div class="column-third">
+			<div class="govuk-grid-column-one-third">
 				<p class="button-dashboard">
 					<span class="govuk-heading-l">6</span><br />Applications in progress (beyond 50%)
 				</p>
 			</div>
-			<div class="column-third">
+			<div class="govuk-grid-column-one-third">
 				<p class="button-dashboard">
 					<span class="govuk-heading-l">4</span><br />Applications submitted
 				</p>
@@ -173,16 +173,16 @@
 
 	<div th:if="${param.closed != null}" th:remove="tag">
 
-		<div class="grid-row extra-margin constrain-width">
+		<div class="govuk-grid-row extra-margin constrain-width">
 
 			<div th:unless="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
 
-				<div class="column-third">
+				<div class="govuk-grid-column-one-third">
 					<a class="button-dashboard highlight" th:href="${'/prototypes/1348-submitted-applications?status=' + {param.status}}">
 						<span class="govuk-heading-l">4</span><br />Applications submitted
 					</a>
 				</div>
-				<div class="column-third">
+				<div class="govuk-grid-column-one-third">
 					<a th:href="${'/prototypes/1348-not-submitted-applications?status=' + {param.status}}" class="button-dashboard">
 						<p class="govuk-body"><span class="govuk-heading-l">18</span><br />Applications not submitted</p>
 					</a>
@@ -192,17 +192,17 @@
 
 
 			<div th:if="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
-				<div class="column-third">
+				<div class="govuk-grid-column-one-third">
 					<a class="button-dashboard highlight" th:href="${'/prototypes/1998-application-feedback?status=' + {param.status}}">
 						<span class="govuk-heading-l">4</span><br />Applications requiring feedback
 					</a>
 				</div>
-				<div class="column-third">
+				<div class="govuk-grid-column-one-third">
 					<a class="button-dashboard highlight" th:href="${'/prototypes/2000-project-setup?status=' + {param.status}}">
 						<span class="govuk-heading-l">3</span><br />Projects being setup
 					</a>
 				</div>
-				<div class="column-third">
+				<div class="govuk-grid-column-one-third">
 					<a th:href="${'/prototypes/1348-not-submitted-applications?status=' + {param.status}}" class="button-dashboard">
 						<p class="govuk-body"><span class="govuk-heading-l">18</span><br />Applications not submitted</p>
 					</a>

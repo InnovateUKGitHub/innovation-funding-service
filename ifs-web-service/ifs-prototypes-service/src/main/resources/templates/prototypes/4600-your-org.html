@@ -121,8 +121,8 @@
               <legend th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="govuk-heading-m no-margin-bottom">Financial overview</legend>
               <span th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="form-hint">Details relating to your organisation over the last financial year.</span><br th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
               <h2 th:if="${param.status != null and param.status[0] == 'readOnly'}" class="govuk-heading-s">Financial overview</h2>
-              <div class="grid-row">
-                <div class="column-half">
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
                   <table class="extra-margin-bottom">
                     <thead>
                       <tr>

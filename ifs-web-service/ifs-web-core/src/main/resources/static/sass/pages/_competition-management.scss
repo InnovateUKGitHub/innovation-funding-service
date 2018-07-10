@@ -5,7 +5,7 @@
   @extend %wide-page;
 }
 
-.grid-row {
+.govuk-grid-row {
   &.sort-by {
     border-bottom:1px solid $govuk-secondary-text-colour;
     padding: 30px 0 5px;

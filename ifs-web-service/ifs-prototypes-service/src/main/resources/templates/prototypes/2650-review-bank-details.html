@@ -134,11 +134,11 @@
 		</tbody>
 	</table>
 
-	<div class="grid-row  extra-margin" th:unless="${param.status != null and param.status[0] == 'accepted'}">
-		<div class="column-half">
+	<div class="govuk-grid-row  extra-margin" th:unless="${param.status != null and param.status[0] == 'accepted'}">
+		<div class="govuk-grid-column-one-half">
 			<a th:href="${param.status != null and param.status[0] == 'noCompHouse' ? '/prototypes/2652-change-bank-details?status=noCompHouse':'/prototypes/2652-change-bank-details'}" class="button-link">Change bank account details</a>
 		</div>
-		<div class="column-half alignright">
+		<div class="govuk-grid-column-one-half alignright">
 			<a href="#" data-js-modal="modal-update-bank-details" class="button">Approve bank account details</a>
 		</div>
 

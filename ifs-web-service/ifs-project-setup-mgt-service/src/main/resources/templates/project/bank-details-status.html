@@ -13,11 +13,11 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div class="grid-row">
-          <div class="column-two-thirds">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
               <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank details',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
           </div>
-          <div class="column-third alignright extra-margin">
+          <div class="govuk-grid-column-one-third alignright extra-margin">
               <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Bank details</h2>
           </div>
         </div>

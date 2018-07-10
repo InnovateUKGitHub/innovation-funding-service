@@ -18,20 +18,20 @@
 
                 <h2 class="govuk-heading-m">Key statistics</h2>
 
-                <div class="grid-row">
-                    <div class="column-quarter">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l" th:text="${model.assessorsInvited}">60</span><br/>
                             <small>Invited</small>
                         </div>
                     </div>
-                    <div class="column-quarter">
+                    <div class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l" th:text="${model.assessorsAccepted}">23</span><br/>
                             <small>Accepted</small>
                         </div>
                     </div>
-                    <div class="column-quarter">
+                    <div class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l" th:text="${model.assessorsDeclined}">3</span><br/>
                             <small>Declined</small>
@@ -64,8 +64,8 @@
                     </li>
                 </ul>
 
-                <div class="grid-row">
-                    <div class="column-three-quarters">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-three-quarters">
                         <h2 class="govuk-heading-s no-margin-top">View assessors who have not yet responded or have declined the invite.</h2>
                     </div>
                 </div>
@@ -74,8 +74,8 @@
                     <div class="search-filters extra-margin">
                         <fieldset>
                             <legend class="govuk-heading-m no-margin-top">Filter assessors</legend>
-                            <div class="grid-row">
-                                <div class="column-third">
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-one-third">
                                     <div class="form-group">
                                         <label class="form-label" for="filterInnovationArea">Innovation area</label>
                                         <select name="innovationArea" id="filterInnovationArea" class="form-control" th:field="*{innovationArea}">
@@ -86,7 +86,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="column-third">
+                                <div class="govuk-grid-column-one-third">
                                      <div class="form-group">
                                          <label class="form-label" for="filterStatus">Status</label>
                                          <select name="status" id="filterStatus" class="form-control" th:field="*{status}">
@@ -96,7 +96,7 @@
                                          </select>
                                      </div>
                                 </div>
-                                <div class="column-third">
+                                <div class="govuk-grid-column-one-third">
                                      <div class="form-group">
                                          <label class="form-label" for="filterContract">Contract and DOI</label>
                                          <select name="compliant" id="filterContract" class="form-control" th:field="*{compliant}">
@@ -107,9 +107,9 @@
                                      </div>
                                 </div>
                             </div>
-                            <div class="grid-row">
+                            <div class="govuk-grid-row">
                                 <input type="hidden" name="filterChanged" value="1"/>
-                                <div class="column-one alignright">
+                                <div class="govuk-grid-column-full alignright">
                                     <button class="button no-margin" type="submit">Filter</button>
                                 </div>
                             </div>
@@ -125,8 +125,8 @@
                 </div>
                 <div data-selection-limit-exceeded-block=""></div>
 
-                <div class="grid-row sorting">
-                    <div class="column-half">
+                <div class="govuk-grid-row sorting">
+                    <div class="govuk-grid-column-one-half">
                         <span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">20</span>
                         <span class="govuk-heading-s">assessors</span>
                     </div>
@@ -139,8 +139,8 @@
                       autocomplete="off"
                       th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
-                    <div class="grid-row sorting">
-                        <div class="column-half select-all">
+                    <div class="govuk-grid-row sorting">
+                        <div class="govuk-grid-column-one-half select-all">
                             <div class="multiple-choice">
                                 <input type="checkbox"
                                        data-select-all=""
@@ -154,7 +154,7 @@
                             <span class="form-hint">
                             <span data-count-selected="" th:text="${#lists.size(overviewSelectionForm.selectedInviteIds)}"></span> assessors selected</span>
                         </div>
-                        <div class="column-half select-all alignright">
+                        <div class="govuk-grid-column-one-half select-all alignright">
                             <button class="button" name="resendInvites" data-submit-el="" th:attr="disabled=${#lists.isEmpty(overviewSelectionForm.selectedInviteIds)}">
                                 Resend invites
                             </button>

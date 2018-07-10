@@ -14,9 +14,9 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionStatus.displayName},subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
-        <div class="grid-row">
+        <div class="govuk-grid-row">
             <form th:action="@{/competition}" method="post">
-                <div class="column-two-thirds">
+                <div class="govuk-grid-column-two-thirds">
                     <div class="boxed">
                         <h2 class="govuk-heading-m no-margin-top">Competition information</h2>
 
@@ -50,8 +50,8 @@
                     </div>
 
                     <th:block th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
-                        <div class="grid-row extra-margin">
-                            <div class="column-third dashboard-actions">
+                        <div class="govuk-grid-row extra-margin">
+                            <div class="govuk-grid-column-one-third dashboard-actions">
                                 <button type="submit"
                                         th:unless="${model.readOnly}"
                                         th:formaction="@{/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}"
@@ -59,7 +59,7 @@
                                         class="button button-large">Notify assessors
                                 </button>
                             </div>
-                            <div class="column-third">
+                            <div class="govuk-grid-column-one-third">
                                 <div class="highlight-panel highlight-panel-padded">
                                     <span class="govuk-heading-l" th:text="${model.changesSinceLastNotify}">10</span><br/>
                                     <small>changes since last notification</small>
@@ -142,7 +142,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="column-third">
+                <div class="govuk-grid-column-one-third">
                     <h2 class="govuk-heading-m no-margin-top">Competition milestones</h2>
                     <ul class="timeline-status">
                         <th:block th:each="milestone : ${model.milestones}">

@@ -24,12 +24,12 @@
                     <div class="search-filters extra-margin">
                         <fieldset>
                             <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
-                            <div class="grid-row">
-                                <div class="column-half">
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-one-half">
                                     <label class="form-label" for="filterSearch">Search by application number.</label>
                                     <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:field="*{filterSearch}"/>
                                 </div>
-                                <div class="column-half">
+                                <div class="govuk-grid-column-one-half">
                                     <label class="form-label" for="filterInform">Informed</label>
                                     <select name="filterInform" id="filterInform" class="form-control extra-margin-bottom" th:field="*{filterInform}">
                                         <option value="">All</option>
@@ -38,8 +38,8 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="grid-row">
-                                <div class="column-one alignright">
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-full alignright">
                                     <button class="button no-margin" type="submit">Filter</button>
                                 </div>
                             </div>
@@ -48,13 +48,13 @@
                             <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
                         </div>
                     </div>
-                    <div class="grid-row sorting">
-                        <div class="column-half">
+                    <div class="govuk-grid-row sorting">
+                        <div class="govuk-grid-column-one-half">
                             <p class="govuk-body"><span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">22</span>
                                 <span class="govuk-heading-s">applications</span>
                             </p>
                         </div>
-                        <div class="column-half alignright">
+                        <div class="govuk-grid-column-one-half alignright">
                             <label for="sort-by">Sort by</label>
                             <select id="sort-by" name="sort" class="js-auto-submit form-control">
                                 <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>

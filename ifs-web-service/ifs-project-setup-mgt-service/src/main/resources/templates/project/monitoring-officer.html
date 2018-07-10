@@ -19,13 +19,13 @@
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
-            <div class="grid-row">
-                <div class="column-two-thirds">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
                     <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
                         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
                     </th:block>
                 </div>
-                <div class="column-third alignright extra-margin">
+                <div class="govuk-grid-column-one-third alignright extra-margin">
                     <th:block th:insert="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" />
                 </div>
             </div>
@@ -38,7 +38,7 @@
                 </div>
             </th:block>
 
-            <div class="column-half">
+            <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-l">Monitoring Officer</h2>
                 <form th:action="@{/project/{projectId}/monitoring-officer/confirm(projectId=${model.projectId})}" th:object="${form}" method="post" th:with="readonly=${model.readOnly}" novalidate="novalidate">
 
@@ -126,7 +126,7 @@
                     <th:block th:insert="fragments/modals :: modal-assign-mo" />
                 </form>
             </div>
-            <div class="column-half">
+            <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-l">Supporting information</h2>
 
                 <th:block th:if="${model.projectTitle}">

@@ -25,7 +25,7 @@
 
       <h2 class="govuk-heading-m">Key statistics</h2>
 
-      <ul class="govuk-list grid-row">
+      <ul class="govuk-list govuk-grid-row">
 
         <li class="column-fifth">
           <div class="highlight-panel">
@@ -62,7 +62,7 @@
       <h2 class="govuk-heading-m">Actions</h2>
 
       <th:block th:if="${param.comp != null and param.comp[0] == 'Closed'}">
-        <ul class="govuk-list grid-row">
+        <ul class="govuk-list govuk-grid-row">
 
           <li class="column-fifth dashboard-actions">
             <a class="button" th:href="${(param.comp != null ? '/prototypes/5472-assign-assessors?comp=' + param.comp[0] : '/prototypes/5472-assign-assessors?comp=Open')}">Allocate assessors</a>
@@ -75,7 +75,7 @@
         </ul>
       </th:block>
 
-      <ul class="grid-row" th:unless="${param.comp != null and param.comp[0] == 'Closed'}">
+      <ul class="govuk-grid-row" th:unless="${param.comp != null and param.comp[0] == 'Closed'}">
 
         <li class="column-fifth dashboard-actions">
           <a class="button" th:href="${(param.comp != null ? '/prototypes/5389-manage-assessors?comp=' + param.comp[0] : '/prototypes/5389-manage-assessors?comp=Open')}">Manage assessors</a>

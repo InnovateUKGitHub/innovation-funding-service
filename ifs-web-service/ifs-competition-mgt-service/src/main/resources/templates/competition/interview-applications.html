@@ -17,7 +17,7 @@
                   th:with="pageTitle=${'Allocate applications to ' + model.user.getName()},subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'"/>
 
         <div class="grid-row">
-            <div class="column-half">
+            <div class="govuk-grid-column-one-half">
                 <dl class="govuk-list">
                     <dt>Assessor type</dt>
                     <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.profile.getBusinessType()))}">Assessor type</dd>
@@ -28,7 +28,7 @@
                 </dl>
             </div>
 
-            <div class="column-half">
+            <div class="govuk-grid-column-one-half">
                 <dl class="govuk-list">
                     <dt>Innovation areas</dt>
                     <dd>

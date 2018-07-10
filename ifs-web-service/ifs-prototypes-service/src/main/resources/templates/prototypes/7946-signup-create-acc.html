@@ -19,7 +19,7 @@
   <div th:include="prototypes/fragments/applicant-view :: prototype-signinnew(${'/prototypes/650-create-application?status'})" th:remove="tag" th:unless="${param.user != null and param.user[0] == 'assessor'}" />
   <th:block th:if="${param.user != null and param.user[0] == 'assessor'}" th:include="prototypes/fragments/applicant-view :: prototype-signinnew(${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})" />
 
-  <div class="grid-row">
+  <div class="govuk-grid-row">
     <div class="column-two-thirds">
       <details class="extra-margin-top">
         <summary><span class="summary">Need help signing in or creating an account?</span></summary>

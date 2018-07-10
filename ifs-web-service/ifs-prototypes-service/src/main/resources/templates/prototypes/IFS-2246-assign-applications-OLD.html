@@ -20,7 +20,7 @@
 
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Assign applications to interview panel'}, ${null})" />
 
-    <ul class="govuk-list grid-row">
+    <ul class="govuk-list govuk-grid-row">
         <li class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="govuk-heading-l">60</span><br /><small>Applications in competition</small>
@@ -51,8 +51,8 @@
 		</li>
 	</ul>
 
-    <div class="grid-row sorting extra-margin">
-        <div class="column-half">
+    <div class="govuk-grid-row sorting extra-margin">
+        <div class="govuk-grid-column-one-half">
             <th:block th:if="${param.tab == null or param.tab[0] == 'assign'}">
                 <span class="govuk-heading-xl no-margin">60</span>
                 <span class="govuk-heading-s">applications in competition</span>
@@ -65,8 +65,8 @@
     </div>
 
     <th:block th:if="${param.tab == null or param.tab[0] == 'assign'}">
-        <div class="grid-row sorting">
-            <div class="column-half select-all">
+        <div class="govuk-grid-row sorting">
+            <div class="govuk-grid-column-one-half select-all">
                 <div class="multiple-choice">
                     <input type="checkbox" data-select-all="" id="select-all-check">
                     <label for="select-all-check">
@@ -77,7 +77,7 @@
                           <span data-count-selected="" class="applications-selected">0</span> applications selected
                       </span>
             </div>
-            <div class="column-half select-all alignright">
+            <div class="govuk-grid-column-one-half select-all alignright">
                 <form method="get">
                     <button class="button" name="addSelected" data-submit-el="" disabled="disabled" formaction="/prototypes/IFS-2246-review-send">
                         Add selected to invite list

@@ -15,8 +15,8 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage innovation leads',subTitle=${model.competitionName}, size='govuk-heading-xl'" />
 
                 <h2 class="govuk-heading-m">Key statistics</h2>
-                <div class="grid-row">
-                    <div class="column-quarter">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l lead-count" th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}">1</span><br>
                             <small>Innovation leads added</small>
@@ -49,8 +49,8 @@
                     </ul>
 
                         <!-- list -->
-                        <div class="grid-row sorting">
-                            <div class="column-half">
+                        <div class="govuk-grid-row sorting">
+                            <div class="govuk-grid-column-one-half">
                                 <p class="govuk-body">
                                     <span class="govuk-heading-xl total-count" th:text="${#lists.size(model.availableInnovationLeads)}"></span>
                                     <span class="govuk-heading-s">Innovation leads</span>

@@ -21,7 +21,7 @@
                     <fieldset>
                         <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
                         <div class="grid-row">
-                            <div class="column-two-thirds">
+                            <div class="govuk-grid-column-two-thirds">
                                 <label class="form-label" for="filter">Status</label>
                                 <select class="form-control" id="filter" name="filter">
                                     <option id="all" th:href="@{/competition/{cid}/applications/previous?filter=}" value="ALL" th:selected="${(param.filter != null) and (param.filter[0] == 'ALL')}">All</option>
@@ -30,7 +30,7 @@
                                     <option id="ineligable" th:href="@{/competition/{cid}/applications/previous?filter=}" value="INELIGIBLE" th:selected="${(param.filter != null) and (param.filter[0] == 'INELIGIBLE')}">Ineligible</option>
                                 </select>
                             </div>
-                            <div class="column-third">
+                            <div class="govuk-grid-column-one-third">
                                 <button class="button">Filter</button>
                             </div>
                         </div>
@@ -42,7 +42,7 @@
             </form>
 
             <div class="grid-row sorting">
-                <div class="column-full">
+                <div class="govuk-grid-column-full">
                     <span class="govuk-heading-xl no-margin" th:text="${model.unsuccessfulApplicationsSize}">6</span>
                     <span class="govuk-heading-s">applications</span>
                 </div>

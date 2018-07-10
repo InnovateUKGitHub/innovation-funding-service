@@ -226,41 +226,41 @@
 
 	<ul class="govuk-list list-overview extra-margin">
 		<!-- <li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">Application details</h3>
 				</div>
-				<div class="column-third">
+				<div class="govuk-grid-column-one-third">
 					<p class="form-hint no-margin">No feedback provided</p>
 				</div>
 			</div>
 		</li> -->
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">Project summary</h3>
 				</div>
-				<div class="column-third">
+				<div class="govuk-grid-column-one-third">
 					<p class="form-hint no-margin">No feedback provided</p>
 				</div>
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">Public description</h3>
 				</div>
-				<div class="column-third">
+				<div class="govuk-grid-column-one-third">
 					<p class="form-hint no-margin">No feedback provided</p>
 				</div>
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">Scope</h3>
 				</div>
-				<div class="column-third">
+				<div class="govuk-grid-column-one-third">
 			        In scope? 4/5 Yes
 			    </div>
 			</div>
@@ -271,7 +271,7 @@
 	<p class="form-hint" th:unless="${param.internal != null}">Each question has been assessed by several independent assessors. They have given a score out of 10 and written feedback.</p>
 	<ul class="govuk-list list-overview">
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">1. Business opportunity</h3>
 				</div>
@@ -279,7 +279,7 @@
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">2. Potential market</h3>
 				</div>
@@ -287,7 +287,7 @@
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">3. Project exploitation</h3>
 				</div>
@@ -295,7 +295,7 @@
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">4. Economic benefit</h3>
 				</div>
@@ -303,7 +303,7 @@
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">5. Technical approach</h3>
 				</div>
@@ -311,7 +311,7 @@
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">6. Innovation</h3>
 				</div>
@@ -319,7 +319,7 @@
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 
 
 
@@ -336,7 +336,7 @@
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">8. Project team</h3>
 				</div>
@@ -344,7 +344,7 @@
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">9. Funding</h3>
 				</div>
@@ -352,7 +352,7 @@
 			</div>
 		</li>
 		<li class="section-status">
-			<div class="grid-row">
+			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<h3 class="govuk-heading-s">10. Adding value</h3>
 				</div>
@@ -361,11 +361,11 @@
 		</li>
 	</ul>
 
-	<div class="grid-row extra-margin">
+	<div class="govuk-grid-row extra-margin">
 		<div class="column-two-thirds">
 			&nbsp;
 		</div>
-		<div class="column-third">
+		<div class="govuk-grid-column-one-third">
 			<p class="govuk-body">
 				Average overall: <strong th:text="${score}+'0%'" class="heading-">SCORE</strong>
 			</p>

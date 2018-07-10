@@ -21,8 +21,8 @@
                     94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes
                 </h2>
 
-                <div class="grid-row extra-margin">
-                    <div class="column-quarter">
+                <div class="govuk-grid-column-one-quarter extra-margin">
+                    <div class="govuk-grid-column-one-quarter">
                         <h3 class="govuk-heading-s">Partners</h3>
                         <ul>
                             <li th:unless="${#strings.isEmpty(model.leadOrganisation)}"
@@ -31,7 +31,7 @@
                             <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Biotech Corp.</li>
                         </ul>
                     </div>
-                    <div class="column-quarter">
+                    <div class="govuk-grid-column-one-quarter">
                         <h3 class="govuk-heading-s">Innovation area</h3>
                         <span th:text="${model.applicationInnovationArea} ? ${model.applicationInnovationArea} : 'Not listed'"></span>
                     </div>
@@ -179,8 +179,8 @@
                 <div class="search-filters extra-margin">
                     <form action="#" method="GET">
                         <fieldset>
-                            <div class="grid-row">
-                                <div class="column-two-thirds">
+                            <div class="govuk-grid-column-one-quarter">
+                                <div class="govuk-grid-column-two-thirds">
                                     <div class="form-group">
                                         <label class="form-label" for="filterInnovationArea">Innovation area</label>
                                         <select th:field="${model.filterInnovationArea}"
@@ -199,7 +199,7 @@
                                     </div>
                                     <a href="?">Clear all filters</a>
                                 </div>
-                                <div class="column-third">
+                                <div class="govuk-grid-column-one-third">
                                     <button class="button">Filter</button>
                                 </div>
                             </div>
@@ -207,8 +207,8 @@
                     </form>
                 </div>
 
-                <div class="grid-row sorting">
-                    <div class="column-two-thirds">
+                <div class="govuk-grid-column-one-quarter sorting">
+                    <div class="govuk-grid-column-two-thirds">
                         <p class="govuk-body"><span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">20</span> <span class="govuk-heading-s">Assessors</span></p>
                     </div>
                 </div>

@@ -22,7 +22,7 @@
 
     <h2 class="govuk-heading-m">Key statistics</h2>
 
-    <ul class="govuk-list grid-row">
+    <ul class="govuk-list govuk-grid-row">
         <li class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="govuk-heading-l">60</span><br /><small>Applications in competition</small>
@@ -61,8 +61,8 @@
     </th:block>
 
     <th:block th:unless="${param.tab != null and param.tab[0] == 'invite'} and ${param.status != null and param.status[0] == 'removeAll'}">
-        <div class="grid-row sorting extra-margin">
-            <div class="column-half">
+        <div class="govuk-grid-row sorting extra-margin">
+            <div class="govuk-grid-column-one-half">
                 <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
                     <span class="govuk-heading-xl no-margin">60</span>
                     <span class="govuk-heading-s">applications in competition</span>
@@ -77,7 +77,7 @@
                 </th:block>
             </div>
             <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
-                <div class="column-half alignright" th:unless="${param.tab != null and param.tab[0] == 'invite'} and ${param.status != null and param.status[0] == 'removeAll'}">
+                <div class="govuk-grid-column-one-half alignright" th:unless="${param.tab != null and param.tab[0] == 'invite'} and ${param.status != null and param.status[0] == 'removeAll'}">
                     <a href="/prototypes/IFS-2246-review-send" class="button">
                         Review and send invites
                     </a>
@@ -86,8 +86,8 @@
         </div>
 
         <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
-            <div class="grid-row sorting">
-                <div class="column-half select-all">
+            <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-column-one-half select-all">
                     <div class="multiple-choice">
                         <input type="checkbox" data-select-all="" id="select-all-check">
                         <label for="select-all-check">
@@ -98,7 +98,7 @@
                         <span data-count-selected="" class="applications-selected">0</span> applications selected
                     </span>
                 </div>
-                <div class="column-half select-all alignright">
+                <div class="govuk-grid-column-one-half select-all alignright">
                     <form method="get" th:action="${#httpServletRequest.requestURI}">
                         <input type="hidden" name="tab" value="invite"/>
                         <button class="button" name="addSelected" data-submit-el="" disabled="disabled">

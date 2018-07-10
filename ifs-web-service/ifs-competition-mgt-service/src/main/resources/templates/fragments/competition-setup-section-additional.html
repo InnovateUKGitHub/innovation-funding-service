@@ -15,22 +15,22 @@
 
         <fieldset th:if="${model.general.editable}">
             <legend class="govuk-visually-hidden">Funding information</legend>
-            <div class="grid-row">
-                <div class="column-half">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
                     <div class="form-group">
                         <span class="form-label-bold">Funder</span>
                     </div>
                 </div>
 
-                <div class="column-half">
+                <div class="govuk-grid-column-one-half">
                     <div class="form-group">
                         <span class="form-label-bold">Budget</span>
                     </div>
                 </div>
             </div>
 
-            <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
-                <div class="column-half">
+            <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="govuk-grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
+                <div class="govuk-grid-column-one-half">
                     <div class="form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funder')} ? 'form-group-error'">
                         <label class="form-label" th:for="funders[__${iteration.index}__].funder">
                             <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
@@ -46,7 +46,7 @@
                     </div>
                 </div>
 
-                <div class="column-half">
+                <div class="govuk-grid-column-one-half">
                     <div class="form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')} ? 'form-group-error'">
                         <label class="form-label" th:for="funders[__${iteration.index}__].funderBudget">
                             <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}">
@@ -72,11 +72,11 @@
             </div>
 
 
-            <div class="grid-row" id="dynamic-row-pointer">
-                <div class="column-half">
+            <div class="govuk-grid-row" id="dynamic-row-pointer">
+                <div class="govuk-grid-column-one-half">
                     &nbsp;
                 </div>
-                <div class="column-half">
+                <div class="govuk-grid-column-one-half">
                     <p class="govuk-heading-s no-margin">Total: <span data-calculation-operations="+" data-calculation-fields="input[id*=funderBudget]" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatInteger(competitionSetupForm.totalFunding, 0, 'DEFAULT')}">£0</span></p>
 
                     <div class="alignright">

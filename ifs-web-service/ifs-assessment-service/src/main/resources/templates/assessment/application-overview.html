@@ -18,8 +18,8 @@
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment overview',subTitle=${applicationName},size='govuk-heading-xl'" />
                 </th:block>
 
-                <div class="grid-row extra-margin-bottom">
-                    <div class="column-half">
+                <div class="govuk-grid-row extra-margin-bottom">
+                    <div class="govuk-grid-column-one-half">
                         <dl class="govuk-list govuk-!-font-size-16">
                             <dt>Application number:</dt>
                             <dd th:text="${model.applicationId}"/>

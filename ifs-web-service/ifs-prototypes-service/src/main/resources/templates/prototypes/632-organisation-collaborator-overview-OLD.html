@@ -53,13 +53,13 @@
             <p class="govuk-body">Are you sure you wish to remove this collaborator from this application.</p>
             <p class="govuk-body">This step cannot be undone.</p>
             <hr />
-            <div class="grid-row extra-margin">
+            <div class="govuk-grid-row extra-margin">
                 <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
                     <input type="hidden" value="6" name="applicationInviteId" />
-                    <div class="column-half">
+                    <div class="govuk-grid-column-one-half">
                         <button type="button" class="js-close buttonlink large">Cancel</button>
                     </div>
-                    <div class="column-half alignright-button">
+                    <div class="govuk-grid-column-one-half alignright-button">
                         <button class="button" name="publish" value="publish" type="submit">Remove</button>
                     </div>
                 </form>
@@ -72,13 +72,13 @@
             <p class="govuk-body">Are you sure you wish to remove this organisation from this application?</p>
             <p class="govuk-body">This will remove all collaborators and delete the organisations financial details.</p>
             <hr />
-            <div class="grid-row extra-margin">
+            <div class="govuk-grid-row extra-margin">
                 <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
                     <input type="hidden" value="6" name="applicationInviteId" />
-                    <div class="column-half">
+                    <div class="govuk-grid-column-one-half">
                         <button type="button" class="js-close buttonlink large">Cancel</button>
                     </div>
-                    <div class="column-half alignright-button">
+                    <div class="govuk-grid-column-one-half alignright-button">
                         <button class="button" name="publish" value="publish" type="submit">Remove organisation and collaborator</button>
                     </div>
                 </form>

@@ -190,13 +190,13 @@ IFS.competitionManagement.repeater = (function () {
         // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
         idCount = parseInt(jQuery('.funder-row[id^=funder-row-]').last().attr('id').split('funder-row-')[1], 10) + 1
       }
-      var html = '<div class="grid-row funder-row" id="funder-row-' + idCount + '">' +
-                    '<div class="column-half">' +
+      var html = '<div class="govuk-grid-row funder-row" id="funder-row-' + idCount + '">' +
+                    '<div class="govuk-grid-column-one-half">' +
                       '<div class="form-group">' +
                         '<input type="text" maxlength="255" data-maxlength-errormessage="Funders has a maximum length of 255 characters" class="form-control width-x-large" id="' + idCount + '-funder" name="funders[' + count + '].funder" value="">' +
                       '</div>' +
                     '</div>' +
-                    '<div class="column-half">' +
+                    '<div class="govuk-grid-column-one-half">' +
                       '<div class="form-group">' +
                         '<input type="number" min="0" class="form-control width-x-large" id="' + idCount + '-funderBudget" name="funders[' + count + '].funderBudget" value=""><input required="required" type="hidden" id="' + idCount + '-coFunder" name="funders[' + count + '].coFunder" value="true">' +
                         '<button class="button button-clear" name="remove-funder" value="' + count + '" data-remove-row="cofunder">Remove</button>' +

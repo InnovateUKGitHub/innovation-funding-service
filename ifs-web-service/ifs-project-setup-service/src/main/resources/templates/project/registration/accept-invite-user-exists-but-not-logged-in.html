@@ -15,8 +15,8 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Join a project',size='govuk-heading-xl'" />
 
         <p class="govuk-body">You have been invited to join a project</p>
-        <div class="grid-row">
-            <div class="column-half">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
                 <p class="govuk-body">You already have an account with us. Please sign in with your existing account.</p>
                 <p class="govuk-body"><a th:href="@{/registration/accept-invite-user-exist-show-project}">Sign into the Innovation Funding Service.</a></p>
             </div>

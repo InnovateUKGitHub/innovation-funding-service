@@ -12,13 +12,13 @@
         <th:block th:insert="fragments/layout :: phase-banner" />
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
-            <div class="grid-row">
-                <div class="column-two-thirds">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
                     <th:block th:with="competitionTitle=${#strings.isEmpty(competitionSummary.name)} ? |${competitionSummary.id} : $#{ifs.competition.no_title}| : |${competitionSummary.id} : ${competitionSummary.name}|">
                         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
                     </th:block>
                 </div>
-                <div class="column-third alignright extra-margin">
+                <div class="govuk-grid-column-one-third alignright extra-margin">
                     <th:block th:insert="fragments/competition-management :: competition-status(competition=${competitionSummary})" />
                 </div>
             </div>

@@ -542,20 +542,19 @@ table.project-changes{
         margin-bottom: 0;
         margin-right: 0;
 
-        .column-half,
-        .column-third{
+        .govuk-grid-column-one-half,
+        .govuk-grid-column-one-third{
           padding-left: 0;
         }
       }
 
-      .grid-row{
+      .govuk-grid-row{
         margin: 0;
       }
 
-      .column-one,
-      .column-half,
-      .column-quarter,
-      .column-third{
+      .govuk-grid-column-one-half,
+      .govuk-grid-column-one-quarter,
+      .govuk-grid-column-one-third{
         width: 100%;
         clear: both;
         padding: 0;
@@ -586,8 +585,8 @@ table.project-changes{
 /* @include media($min-width: 1700px){
 	.full-width{
 		.info-area{
-			.column-quarter,
-			.column-third{
+			.govuk-grid-column-one-quarter,
+			.govuk-grid-column-one-third{
 				width: 50%;
 				clear: none;
 			}

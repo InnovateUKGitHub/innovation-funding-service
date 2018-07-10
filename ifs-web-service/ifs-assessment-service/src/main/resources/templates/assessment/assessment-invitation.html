@@ -20,14 +20,14 @@
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept application',size='govuk-heading-xl'" />
 
-                <h2 class="visually-hidden">Application details</h2>
+                <h2 class="govuk-visually-hidden">Application details</h2>
                 <div class="boxed">
-                    <div class="grid-row">
-                        <div class="column-half">
+                    <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-half">
                             <p class="govuk-heading-s no-margin">Title:</p>
                             <p class="govuk-body" th:text="${model.applicationName}"></p>
                         </div>
-                        <div class="column-half">
+                        <div class="govuk-grid-column-one-half">
                             <p class="govuk-heading-s no-margin">Partners:</p>
                             <ul class="govuk-list govuk-list--bullet">
                                 <li th:each="partner : ${model.partners}">

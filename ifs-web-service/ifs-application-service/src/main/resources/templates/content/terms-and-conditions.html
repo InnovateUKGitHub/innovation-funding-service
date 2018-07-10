@@ -12,8 +12,8 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div class="grid-row">
-            <div class="column-two-thirds">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions',size='govuk-heading-xl'" />
 
                 <h2 class="govuk-heading-l">1. Terms of use</h2>
@@ -92,7 +92,7 @@
                 <p class="govuk-body">You should check these terms and conditions regularly. We can update them at any time without notice. We will post a notification of any material changes we make on our website.</p>
                 <p class="govuk-body">You agree to any changes if you continue to use the Innovate UK website after the terms and conditions have been updated.</p>
             </div>
-            <div class="column-one-third">
+            <div class="govuk-grid-column-one-third">
                 <th:block th:insert="content/fragments :: content-menu(current=${'terms'})" />
             </div>
         </div>
