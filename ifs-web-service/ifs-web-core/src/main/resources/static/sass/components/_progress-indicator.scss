@@ -33,9 +33,9 @@
   height:30px;
 
   .progress-totals {
+    @include govuk-font(14);
     position: absolute;
     color:$govuk-secondary-text-colour;
-    font-size:15px;
     display:block; // overwriting the aria-hidden="true" as we do want this for non-assisted technlogy users but not for screen readers
     bottom:-40px;
   }
@@ -76,6 +76,7 @@
 
 .progress {
   div {
+    @include govuk-font(19);
     position: absolute;
     right:-37px;
     width:70px;
@@ -85,8 +86,7 @@
     background:#000;
     text-indent: 0;
     top:47px;
-    color:#fff;
-    font-size:18px;
+    color:govuk-colour("white");
     z-index:1;
 
     &:before {
@@ -95,7 +95,7 @@
       display: block;
       width:100%;
       text-align: center;
-      top:-28px;
+      top:-10px;
       color:#000;
       font-size: 40px;
       content: "\25A0";
