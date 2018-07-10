@@ -19,6 +19,20 @@ version project.version
 apply plugin: 'idea'
 apply plugin: 'io.spring.dependency-management'
 
+def zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
+
+if (zipkinEnabled) {
+    apply plugin: 'io.spring.dependency-management'
+
+    ext {
+        zipkinLogTraceLevel = 'WARN'
+    }
+} else  {
+    ext {
+        zipkinLogTraceLevel = 'ERROR'
+    }
+}
+
 bootRepackage {
     enabled = false
 }

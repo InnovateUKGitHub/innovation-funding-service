@@ -28,7 +28,6 @@ def isSysIntEnv() {
 }
 
 apply from: "gradle-support/openshift-support.gradle"
-apply from: "gradle-support/zipkin-support.gradle"
 
 if (!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
