@@ -31,7 +31,7 @@ public class ProcessHistory extends AuditableEntity {
         this.processStateName = null;
     }
 
-    public ProcessHistory(Process process) {
+    ProcessHistory(Process process) {
         if (process == null) throw new NullPointerException("process cannot be null");
 
         this.process = process;

@@ -5,20 +5,24 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 /**
- * TODO class comment
+ * Provides a static reference to a {@link ProcessHistoryRepository}.
  */
 @Component
-public class ProcessHistoryRepositoryProvider implements ApplicationContextAware {
+class ProcessHistoryRepositoryProvider implements ApplicationContextAware {
 
-    private static volatile ApplicationContext applicationContext;
+    private static ApplicationContext applicationContext;
 
-    public static Optional<ProcessHistoryRepository> processHistoryRepository() {
-        return Optional.ofNullable(applicationContext == null ?
-                null : ProcessHistoryRepositoryProvider.applicationContext.getBean(ProcessHistoryRepository.class));
-
+    static ProcessHistoryRepository processHistoryRepository() {
+        if (applicationContext == null) {
+            throw new IllegalStateException("null applicationContext in ProcessHistoryRepositoryProvider");
+        }
+        ProcessHistoryRepository processHistoryRepository =
+                ProcessHistoryRepositoryProvider.applicationContext.getBean(ProcessHistoryRepository.class);
+        if (processHistoryRepository == null) {
+            throw new IllegalStateException("No ProcessHistoryRepository found in application context: " + applicationContext);
+        }
+        return processHistoryRepository;
     }
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.workflow.audit;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.PreUpdate;
@@ -11,13 +13,17 @@ import static org.innovateuk.ifs.workflow.audit.ProcessHistoryRepositoryProvider
  */
 public class ProcessHistoryEntityListener {
 
+    private static final Log LOG = LogFactory.getLog(ProcessHistoryEntityListener.class);
+
     @PreUpdate
     public void preUpdate(Process process) {
         try {
-            processHistoryRepository().ifPresent(r -> r.save(new ProcessHistory(process)));
+            processHistoryRepository().save(new ProcessHistory(process));
         }
         catch (IllegalStateException e) {
-            // TODO log -- this is to workaround issues running unit tests in bamboo
+            // this is to workaround issues when running unit tests in bamboo in cases where
+            // the application context has been invalidated
+            LOG.warn("Exception saving ProcessHistory", e);
         }
     }
 }
