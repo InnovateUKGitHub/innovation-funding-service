@@ -73,12 +73,12 @@
                                        th:text="${childSection.getName()}" />
                                 </h3>
                             </div>
-                            <th:block th:if="${childSection.id.equals(model.financeSectionId)}">
-                                <div th:unless="${model.completed.userFinanceSectionCompleted}"
+                            <th:block th:if="${model.user.userIsLeadApplicant or childSection.id.equals(model.financeSectionId)}">
+                                <div th:unless="${model.isFinanceSectionComplete(childSection)}"
                                      class="task-status-incomplete">
                                     <span>Incomplete</span>
                                 </div>
-                                <div th:if="${model.completed.userFinanceSectionCompleted}"
+                                <div th:if="${model.isFinanceSectionComplete(childSection)}"
                                      class="task-status-complete">
                                     <span>Complete</span>
                                 </div>

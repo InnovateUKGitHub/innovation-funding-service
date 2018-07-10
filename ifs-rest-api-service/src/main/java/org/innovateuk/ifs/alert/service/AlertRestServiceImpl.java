@@ -40,7 +40,7 @@ public class AlertRestServiceImpl extends BaseRestService implements AlertRestSe
         return getWithRestResultAnonymous(alertRestURL + "/findAllVisible", ParameterizedTypeReferences.alertResourceListType());
     }
 
-    public RestResult<List<AlertResource>> findAllVisibleFallback( Throwable e) {
+    public RestResult<List<AlertResource>> findAllVisibleFallback(Throwable e) {
         LOG.info("Calling Alerts Fallback:",e);
         return RestResult.restSuccess(Collections.emptyList());
     }
@@ -51,7 +51,7 @@ public class AlertRestServiceImpl extends BaseRestService implements AlertRestSe
         return getWithRestResultAnonymous(alertRestURL + "/findAllVisible/" + type.name(), ParameterizedTypeReferences.alertResourceListType());
     }
 
-    public RestResult<List<AlertResource>> findAllVisibleByTypeFallback( Throwable e) {
+    public RestResult<List<AlertResource>> findAllVisibleByTypeFallback(AlertType type, Throwable e) {
         LOG.info("Calling Alerts Fallback:",e);
         return RestResult.restSuccess(Collections.emptyList());
     }

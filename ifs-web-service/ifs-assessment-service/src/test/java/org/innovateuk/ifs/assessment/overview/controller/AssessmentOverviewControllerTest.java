@@ -377,8 +377,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .withCompetition(competitionResource.getId())
                 .build();
 
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
-        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
+        ProcessRoleResource assessorRole = newProcessRoleResource().withUser(assessor).build();
 
         SortedSet<OrganisationResource> orgSet = setupOrganisations();
         List<ApplicationFinanceResource> appFinanceList = setupFinances(applicationResource, orgSet);
@@ -386,6 +385,13 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .withApplicationId(applicationResource.getId())
                 .withOrganisationFinances(appFinanceList)
                 .build();
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
+        when(processRoleService.findProcessRolesByApplicationId(applicationResource.getId())).thenReturn(asList(assessorRole));
+        when(organisationService.getApplicationOrganisations(asList(assessorRole))).thenReturn(orgSet);
+        when(organisationService.getApplicationLeadOrganisation(asList(assessorRole))).thenReturn(Optional.ofNullable(newOrganisationResource().build()));
+
 
         AssessmentFinancesSummaryViewModel expectedViewModel = new AssessmentFinancesSummaryViewModel(
                 assessmentResource.getId(), applicationResource.getId(), "Application name", 3, 50);
