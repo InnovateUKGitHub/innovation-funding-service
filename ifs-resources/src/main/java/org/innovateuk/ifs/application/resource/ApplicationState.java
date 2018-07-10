@@ -33,6 +33,11 @@ public enum ApplicationState implements ProcessState, IdentifiableEnum<Applicati
             INELIGIBLE_INFORMED,
             WITHDRAWN);
 
+/*    public static final ImmutableSet<ApplicationState> submittedApprovedOrRejectedStates = Sets.immutableEnumSet(
+            SUBMITTED,
+            APPROVED,
+            REJECTED);*/
+
     public static final ImmutableSet<ApplicationState> inProgressStates = Sets.immutableEnumSet(
             CREATED,
             OPEN);

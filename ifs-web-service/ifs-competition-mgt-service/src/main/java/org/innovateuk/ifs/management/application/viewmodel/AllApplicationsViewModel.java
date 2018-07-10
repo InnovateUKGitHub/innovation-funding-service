@@ -15,6 +15,7 @@ public class AllApplicationsViewModel extends BaseApplicationsViewModel<AllAppli
     private int applicationsSubmitted;
     private String backTitle;
     private String backURL;
+    private boolean isSupport;
 
     public AllApplicationsViewModel(long competitionId,
                                     String competitionName,
@@ -27,7 +28,8 @@ public class AllApplicationsViewModel extends BaseApplicationsViewModel<AllAppli
                                     List<AllApplicationsRowViewModel> applications,
                                     Pagination pagination,
                                     String backTitle,
-                                    String backURL) {
+                                    String backURL,
+                                    boolean isSupport) {
         super(competitionId, competitionName, applications, pagination, sorting, filter);
         this.totalNumberOfApplications = totalNumberOfApplications;
         this.applicationsStarted = applicationsStarted;
@@ -35,6 +37,7 @@ public class AllApplicationsViewModel extends BaseApplicationsViewModel<AllAppli
         this.applicationsSubmitted = applicationsSubmitted;
         this.backTitle = backTitle;
         this.backURL = backURL;
+        this.isSupport = isSupport;
     }
 
     public int getTotalNumberOfApplications() {
@@ -59,5 +62,9 @@ public class AllApplicationsViewModel extends BaseApplicationsViewModel<AllAppli
 
     public String getBackTitle() {
         return backTitle;
+    }
+
+    public boolean isSupport() {
+        return isSupport;
     }
 }

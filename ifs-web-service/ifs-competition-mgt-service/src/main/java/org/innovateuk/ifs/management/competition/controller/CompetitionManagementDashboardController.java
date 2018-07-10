@@ -11,6 +11,7 @@ import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearc
 import org.innovateuk.ifs.management.dashboard.viewmodel.*;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +147,8 @@ public class CompetitionManagementDashboardController {
                 new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
                                                         matchedApplications.getTotalElements(),
                                                         new Pagination(matchedApplications, "search?" + existingQueryString),
-                                                        trimmedSearchString);
+                                                        trimmedSearchString,
+                                                        user.hasRole(Role.SUPPORT));
         model.addAttribute("model", viewModel);
 
         return TEMPLATE_PATH + "application-search";

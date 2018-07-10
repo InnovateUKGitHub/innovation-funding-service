@@ -68,6 +68,7 @@ public class InviteOrganisationPermissionRules {
 
     @PermissionRule(value = "READ", description = "a support user, consortium member and the lead applicant can view the invites of all organisations")
     public boolean consortiumCanViewAnyInviteOrganisation(InviteOrganisationResource inviteOrganisation, UserResource user) {
+        //return isApplicationCollaboratorOrIsLeadApplicant(inviteOrganisation, user);
         return isApplicationCollaboratorOrIsLeadApplicant(inviteOrganisation, user) || user.hasRole(SUPPORT);
     }
 

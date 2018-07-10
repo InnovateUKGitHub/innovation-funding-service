@@ -10,7 +10,10 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -27,7 +30,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/application")
 public class ApplicationSummaryController {
 
-
+    private UserService userService;
     private ApplicationService applicationService;
     private CompetitionService competitionService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
@@ -37,7 +40,8 @@ public class ApplicationSummaryController {
     }
 
     @Autowired
-    public ApplicationSummaryController(ApplicationService applicationService, CompetitionService competitionService, InterviewAssignmentRestService interviewAssignmentRestService, ApplicationTeamModelPopulator applicationTeamModelPopulator, ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
+    public ApplicationSummaryController(UserService userService, ApplicationService applicationService, CompetitionService competitionService, InterviewAssignmentRestService interviewAssignmentRestService, ApplicationTeamModelPopulator applicationTeamModelPopulator, ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
+        this.userService = userService;
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
@@ -59,11 +63,25 @@ public class ApplicationSummaryController {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
+
+        boolean isSupport = isSupport(user);
         if (competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview) {
+        //if (!isSupport && (competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview)) {
             return redirectToFeedback(applicationId, queryParams);
         }
+
+        if (isSupport) {
+            ProcessRoleResource leadProcessRoleResource = userService.getLeadApplicantProcessRoleOrNull(applicationId);
+            UserResource leadUser = userService.findById(leadProcessRoleResource.getUser());
+            user = leadUser;
+        }
+
         model.addAttribute("model", applicationSummaryViewModelPopulator.populate(applicationId, user, form));
         return "application-summary";
+    }
+
+    private boolean isSupport(UserResource user) {
+        return user.hasRole(Role.SUPPORT);
     }
 
     private String redirectToFeedback(long applicationId, MultiValueMap<String, String> queryParams) {
