@@ -27,7 +27,7 @@
 
 	<form>
 		<fieldset th:unless="${param.edit != null and param.edit[0] == 'address'}">
-			<legend class="govuk-heading-m visuallyhidden">Your details</legend>
+			<legend class="govuk-heading-m govuk-visually-hidden">Your details</legend>
 			<div class="form-group">
 				<label class="form-label" for="title">
 					<span class="form-label-bold">Title</span>
@@ -139,14 +139,14 @@
           <!--<input class="form-control" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>-->
         <!--</div>-->
         <!--<div class="form-group">-->
-          <!--<label class="form-label visuallyhidden" for="street-2">-->
+          <!--<label class="form-label govuk-visually-hidden" for="street-2">-->
             <!--<span class="form-label-bold">Street line 2</span>-->
           <!--</label>-->
           <!--<input class="form-control" id="street-2" name="street-2" type="text" />-->
         <!--</div>-->
         <!--<div class="form-group">-->
           <!--<label class="form-label" for="street-2">-->
-            <!--<span class="form-label-bold visuallyhidden">Street line 3</span>-->
+            <!--<span class="form-label-bold govuk-visually-hidden">Street line 3</span>-->
           <!--</label>-->
           <!--<input class="form-control" id="street-3" name="street-2" type="text" />-->
         <!--</div>-->

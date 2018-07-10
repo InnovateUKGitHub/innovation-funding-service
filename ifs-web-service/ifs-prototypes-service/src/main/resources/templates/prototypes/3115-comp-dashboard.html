@@ -24,7 +24,7 @@
 		<div class="column-half alignright">
 			<form role="search" method="get" id="searchform" class="form-search" th:action="@{${#httpServletRequest.requestURI}}">
 				<input type="hidden" id="searchComps" name="section" value="search" />
-			  	<label class="visuallyhidden" for="searchQuery">Search for:</label>
+			  	<label class="govuk-visually-hidden" for="searchQuery">Search for:</label>
 			  	<input type="search" value="" name="searchQuery" id="searchQuery" class="search-query" placeholder="Search competitions" required="required" />
 			  	<input type="submit" id="searchsubmit" value="Search" class="btn" />
 			</form>

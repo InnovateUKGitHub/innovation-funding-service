@@ -5,7 +5,7 @@
     <p ifs:utext="${question.description}"/>
     <fieldset>
         <h2 class="govuk-heading-m">Innovate UK funding</h2>
-        <legend class="visuallyhidden">Innovate UK (TSB) contribution</legend>
+        <legend class="govuk-visually-hidden">Innovate UK (TSB) contribution</legend>
         <p class="govuk-body">Innovate UK is the new name for the Technology Strategy Board (TSB).</p>
 
         <p class="govuk-body">To receive Innovate UK funding, your academic organisation must apply for funding through the Je-S system. To find out more about the Je-S requirements and processes please go to the <a href="https://je-s.rcuk.ac.uk/" rel="external">Je-S website</a>.</p>
@@ -53,7 +53,7 @@
 <th:block th:fragment="finance_fields (model, isApplicant)">
     <fieldset class="academic">
         <h2 class="govuk-heading-m" th:classappend="${isApplicant == 'true' ? ' no-margin' : ''}">Financial resources</h2>
-        <legend class="visuallyhidden">Financial resources</legend>
+        <legend class="govuk-visually-hidden">Financial resources</legend>
         <p class="govuk-body" th:text="'The following costs are entered by the organisation from the summary of resources section on ' + (${isApplicant == 'true'} ? 'your ' : 'the ') + 'Je-S form'">The following costs are entered by the organisation from the summary of resources section on the Je-S form</p>
 
         <div class="grid-row">
@@ -143,7 +143,7 @@
 
     <fieldset>
 
-        <legend class="visuallyhidden">Directly allocated</legend>
+        <legend class="govuk-visually-hidden">Directly allocated</legend>
         <strong>Directly allocated</strong>
         <hr class="underline"/>
 
@@ -224,7 +224,7 @@
     <hr class="underline"/>
 
     <fieldset>
-        <legend class="visuallyhidden">Indirect costs</legend>
+        <legend class="govuk-visually-hidden">Indirect costs</legend>
         <div class="grid-row">
             <div class="form-group border-top"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')} ? 'form-group-error'">
                 <label class="form-label column-third" th:for="formInput[cost- + ${academicFinance.indirectCosts?.id} + -cost]">
@@ -248,7 +248,7 @@
     </fieldset>
 
     <fieldset>
-        <legend class="visuallyhidden">Exceptions</legend>
+        <legend class="govuk-visually-hidden">Exceptions</legend>
 
         <strong>Exceptions</strong>
         <hr class="underline"/>

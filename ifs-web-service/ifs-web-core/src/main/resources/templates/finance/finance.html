@@ -376,7 +376,7 @@
                             <th id="labour-days" scope="col" class="numeric width-small-medium">Days to be spent by all staff at this grade</th>
                             <th scope="col" class="numeric width-medium">Total costs</th>
                             <th scope="col" class="width-small">
-                                <span class="visuallyhidden">Actions</span>
+                                <span class="govuk-visually-hidden">Actions</span>
                             </th>
                         </tr>
                         </thead>
@@ -414,7 +414,7 @@
                 th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-grossEmployeeCost]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-labourDays]}')})) ? 'form-group-error'">
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-role]|">
-                        <span class="visuallyhidden">Role within project</span>
+                        <span class="govuk-visually-hidden">Role within project</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" />
                     </label>
                     <input type="text"
@@ -428,7 +428,7 @@
                 </td>
                 <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-grossEmployeeCost]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-grossEmployeeCost]|">
-                        <span class="visuallyhidden">Gross employee cost</span>
+                        <span class="govuk-visually-hidden">Gross employee cost</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-grossEmployeeCost'})" />
                     </label>
                     <input type="number"
@@ -454,7 +454,7 @@
                 </td>
                 <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-labourDays]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-labourDays]|">
-                        <span class="visuallyhidden">Days to be spent by all staff at this grade</span>
+                        <span class="govuk-visually-hidden">Days to be spent by all staff at this grade</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-labourDays'})" />
                     </label>
                     <input type="number"
@@ -510,7 +510,7 @@
                             <tr>
                                 <th scope="col">20% of labour costs</th>
                                 <th scope="col" class="alignright">
-                                    <span class="visuallyhidden">total overhead costs</span>
+                                    <span class="govuk-visually-hidden">total overhead costs</span>
                                 </th>
                             </tr>
                             </tbody>
@@ -553,7 +553,7 @@
                             <tbody>
                             <tr>
                                 <th scope="col">Calculated overheads</th>
-                                <th scope="col"><span class="visuallyhidden">Total calculated overheads</span></th>
+                                <th scope="col"><span class="govuk-visually-hidden">Total calculated overheads</span></th>
                             </tr>
                             <tr>
                                 <td class="form-group download">
@@ -582,7 +582,7 @@
         <th:block th:if="${(viewmode == 'edit')}">
             <div class="form-group">
                 <fieldset>
-                    <legend class="visuallyhidden">Overhead costs</legend>
+                    <legend class="govuk-visually-hidden">Overhead costs</legend>
                     <div class="multiple-choice" data-target="overhead-none">
                         <input th:id="${'cost-overheads-'+overheadCosts?.id+'-rateType_0'}"
                                type="radio"
@@ -843,7 +843,7 @@
                                 <th id="materials-cost" scope="col" class="numeric width-medium">Cost per item (&pound;)</th>
                                 <th id="materials-total" scope="col" class="numeric width-medium">Total</th>
                                 <th scope="col">
-                                    <span class="visuallyhidden">Actions</span>
+                                    <span class="govuk-visually-hidden">Actions</span>
                                 </th>
                             </tr>
                             </thead>
@@ -881,7 +881,7 @@
                 th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')})) ? 'form-group-error'">
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-item]|">
-                        <span class="visuallyhidden">Item</span>
+                        <span class="govuk-visually-hidden">Item</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-item'})" />
                     </label>
                     <input type="text"
@@ -895,7 +895,7 @@
                 </td>
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-quantity]|">
-                        <span class="visuallyhidden">Quantity</span>
+                        <span class="govuk-visually-hidden">Quantity</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-quantity'})" />
                     </label>
                     <input type="number"
@@ -913,7 +913,7 @@
                 </td>
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-cost]|">
-                        <span class="visuallyhidden">Cost per item</span>
+                        <span class="govuk-visually-hidden">Cost per item</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
                     </label>
                     <input type="number"
@@ -931,7 +931,7 @@
                 </td>
                 <td>
                     <label th:for="${'cost-materials-'+costIdentifier+'-materialTotal'}">
-                        <span class="visuallyhidden">Total</span>
+                        <span class="govuk-visually-hidden">Total</span>
                     </label>
                     <input type="text"
                            class="alignright form-control width-full"
@@ -1360,7 +1360,7 @@
                             <th id="travel-times" class="numeric">Number of times</th>
                             <th id="travel-cost" class="numeric">Cost each (&pound;)</th>
                             <th id="travel-total" class="numeric">Total</th>
-                            <th><span class="visuallyhidden">Actions</span></th>
+                            <th><span class="govuk-visually-hidden">Actions</span></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -1399,7 +1399,7 @@
                 th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')})) ? 'form-group-error'">
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-item]|">
-                        <span class="visuallyhidden">Purpose of journey or description of subsistence cost</span>
+                        <span class="govuk-visually-hidden">Purpose of journey or description of subsistence cost</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-item'})" />
                     </label>
                     <input type="text"
@@ -1413,7 +1413,7 @@
                 </td>
                 <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-quantity]|">
-                        <span class="visuallyhidden">Number of times</span>
+                        <span class="govuk-visually-hidden">Number of times</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-quantity'})"  />
                     </label>
                     <input type="number"
@@ -1431,7 +1431,7 @@
                 </td>
                 <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-cost]|">
-                        <span class="visuallyhidden">Cost each (&pound;)</span>
+                        <span class="govuk-visually-hidden">Cost each (&pound;)</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
                     </label>
                     <input type="number"
@@ -1449,7 +1449,7 @@
                 </td>
                 <td class="numeric">
                     <label th:for="${'cost-travel-'+costIdentifier+'-travelCostTotal'}">
-                        <span class="visuallyhidden">Total</span>
+                        <span class="govuk-visually-hidden">Total</span>
                     </label>
                     <input type="text"
                            th:name="${'travel-travelCostTotal-' + question.id + '-' + costIdentifier}"
@@ -1519,7 +1519,7 @@
                         <tr>
                             <th id="other_costs-description" scope="col" >Description and justification of the cost</th>
                             <th id="other_costs-cost" scope="col" class="numeric">Estimated cost (&pound;)</th>
-                            <th scope="col"><span class="visuallyhidden">Actions</span></th>
+                            <th scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -1554,14 +1554,14 @@
             th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')})) ? 'form-group-error'">
             <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'form-group-error'">
                 <label th:for="|formInput[cost-${costIdentifier}-description]|">
-                    <span class="visuallyhidden">Description and justification of the cost</span>
+                    <span class="govuk-visually-hidden">Description and justification of the cost</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
                 </label>
                 <th:block th:insert="question-type/form-elements :: form-finance-textarea (type='other_costs', id=${costIdentifier}, name='description', value=${cost.description},readonly=false,required=true)"  />
             </td>
             <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'form-group-error'"  >
                 <label th:for="|formInput[cost-${costIdentifier}-cost]|">
-                    <span class="visuallyhidden">Estimated cost (&pound;)</span>
+                    <span class="govuk-visually-hidden">Estimated cost (&pound;)</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})"  />
                 </label>
                 <input type="number"
@@ -1630,7 +1630,7 @@
                 <h2 th:text="${question.name}" class="govuk-heading-m"></h2>
                 <fieldset class="inline" id="otherFundingShowHideToggle">
                     <legend th:id="|formInput[cost-otherPublicFunding]|">
-                        <span class="visuallyhidden" th:text="${question.name}"></span>
+                        <span class="govuk-visually-hidden" th:text="${question.name}"></span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-otherPublicFunding'})" />
@@ -1669,7 +1669,7 @@
                                         <th scope="col" id="other-funding-source">Source of funding</th>
                                         <th scope="col" id="other-funding-date" class="width-medium">Date secured</th>
                                         <th scope="col" id="other-funding-amount" class="width-medium">Funding amount (&pound;)</th>
-                                        <th scope="col"><span class="visuallyhidden">Actions</span></th>
+                                        <th scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -1705,7 +1705,7 @@
             <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
                 <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-fundingSource]|">
-                        <span class="visuallyhidden">Source of funding</span>
+                        <span class="govuk-visually-hidden">Source of funding</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
                     </label>
                     <input type="text"
@@ -1720,7 +1720,7 @@
                 </td>
                 <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-securedDate]|">
-                        <span class="visuallyhidden">Date secured</span>
+                        <span class="govuk-visually-hidden">Date secured</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
                     </label>
                     <input type="text"
@@ -1738,7 +1738,7 @@
 
                 <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'form-group-error' : ''">
                     <label th:for="|formInput[cost-${costIdentifier}-fundingAmount]|">
-                        <span class="visuallyhidden">Funding amount (&pound;)</span>
+                        <span class="govuk-visually-hidden">Funding amount (&pound;)</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
                     </label>
                     <input class="form-control width-medium"

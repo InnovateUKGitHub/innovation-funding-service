@@ -36,7 +36,7 @@
                         <th>Project title</th>
                         <th>Lead organisation</th>
                         <th class="numeric">Assessors</th>
-                        <th class="alignright"><span class="visuallyhidden">Remove</span></th>
+                        <th class="alignright"><span class="govuk-visually-hidden">Remove</span></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -56,7 +56,7 @@
                 </table>
             </div>
             <fieldset class="extra-margin">
-                <legend class="visuallyhidden">Email assessor</legend>
+                <legend class="govuk-visually-hidden">Email assessor</legend>
                 <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
                     <label class="form-label-bold" th:for="${#ids.next('subject')}">
                         <span>Email subject</span>

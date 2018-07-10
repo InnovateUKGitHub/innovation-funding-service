@@ -28,7 +28,7 @@
                     <div class="form-group" th:classappend="${#fields.hasErrors('createNewApplication')} ? 'form-group-error'">
                     <fieldset>
                         <legend id="createNewApplication">
-                            <span class="visuallyhidden">Create a new application?</span>
+                            <span class="govuk-visually-hidden">Create a new application?</span>
                             <th:block th:if="${#fields.hasErrors('createNewApplication')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('createNewApplication')}" th:text="${err}"></span>
                              </th:block>

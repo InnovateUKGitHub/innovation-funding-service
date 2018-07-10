@@ -81,12 +81,12 @@
             </div>
             <fieldset>
                 <legend id="innovationAreaCategoryIdsLegend">
-                    <span class="visuallyhidden">Innovation areas</span>
+                    <span class="govuk-visually-hidden">Innovation areas</span>
                 </legend>
             <th:block th:each="innovationAreaCategoryId,status : ${competitionSetupForm.innovationAreaCategoryIds}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')} ? 'form-group-error'" th:id="innovation-row-__${status.index}__">
                     <label class="form-label" th:for="innovationAreaCategoryIds[__${status.index}__]">
-                        <span class="form-label-bold" th:classappend="${status.index > 0} ? 'visuallyhidden': ''">Innovation area</span>
+                        <span class="form-label-bold" th:classappend="${status.index > 0} ? 'govuk-visually-hidden': ''">Innovation area</span>
                         <th:block th:if="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')}">
                               <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
                         </th:block>

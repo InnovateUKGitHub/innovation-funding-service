@@ -76,11 +76,11 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <label for="name-finance-contact" class="visuallyhidden">name</label>
+                                                <label for="name-finance-contact" class="govuk-visually-hidden">name</label>
                                                 <input type="text" class="form-control width-full" th:value="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'form-control-error'" name="name" id="name-finance-contact" th:attr="data-required-errormessage=#{validation.project.invite.name.required}" required="required"/>
                                             </td>
                                             <td>
-                                                <label for="email-finance-contact" class="visuallyhidden">email</label>
+                                                <label for="email-finance-contact" class="govuk-visually-hidden">email</label>
                                                 <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail')} ? 'form-control-error'" name="inviteEmail" id="email-finance-contact" th:attr="data-required-errormessage=#{validation.project.invite.email.required}" required="required"/>
                                             </td>
                                             <td class="alignright">

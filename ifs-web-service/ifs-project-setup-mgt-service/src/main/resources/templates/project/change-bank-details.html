@@ -134,7 +134,7 @@
 
 
             <fieldset id="address-details" class="extra-margin">
-                <legend class="visuallyhidden">Address details</legend>
+                <legend class="govuk-visually-hidden">Address details</legend>
                 <div class="form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine1')} ? 'form-group-error'">
                     <label class="form-label" for="addressForm.selectedPostcode.addressLine1">
                         <span class="form-label-bold">Street</span>
@@ -150,7 +150,7 @@
                            th:field="*{addressForm.selectedPostcode.addressLine1}" />
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine2')} ? 'form-group-error'">
-                    <label class="form-label visuallyhidden" for="addressForm.selectedPostcode.addressLine2">
+                    <label class="form-label govuk-visually-hidden" for="addressForm.selectedPostcode.addressLine2">
                         <span class="form-label-bold">Street line 2</span>
                         <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.addressLine2')}">
                           <span class="error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine2')}" th:text="${err}"></span>
@@ -160,7 +160,7 @@
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine3')} ? 'form-group-error'">
                     <label class="form-label" for="addressForm.selectedPostcode.addressLine3">
-                        <span class="visuallyhidden">Street line 3</span>
+                        <span class="govuk-visually-hidden">Street line 3</span>
                         <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.addressLine3')}">
                           <span class="error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine3')}" th:text="${err}"></span>
                         </th:block>

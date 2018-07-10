@@ -29,7 +29,7 @@
 
             <fieldset>
               <legend id="useSearchResultAddress">
-                  <span class="visuallyhidden">Operating address</span>
+                  <span class="govuk-visually-hidden">Operating address</span>
                   <th:block th:if="${#fields.hasErrors('*{useSearchResultAddress}')}">
                       <span class="error-message" th:each="err : ${#fields.errors('*{useSearchResultAddress}')}" th:text="${err}"></span>
                   </th:block>

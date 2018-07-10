@@ -76,7 +76,7 @@
                 <div class="column-half">
                     <div class="select-all">
                         <fieldset>
-                            <legend class="visuallyhidden">Select applications</legend>
+                            <legend class="govuk-visually-hidden">Select applications</legend>
                             <div class="multiple-choice">
                                 <input th:disabled="${selectAllDisabled || selectionLimitWarning}" th:checked="${selectionForm.isAllSelected()}" class="select-all" id="select-all-1" value="select-all" type="checkbox" data-select-all="" />
                                 <label for="select-all-1">
@@ -89,7 +89,7 @@
                 </div>
                 <div class="column-half">
                     <fieldset class="mark-applications">
-                        <legend class="visuallyhidden">Mark selected applications</legend>
+                        <legend class="govuk-visually-hidden">Mark selected applications</legend>
                         <h3>Mark application as:</h3>
                         <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Successful</button>
                         <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='UNFUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Unsuccessful</button>

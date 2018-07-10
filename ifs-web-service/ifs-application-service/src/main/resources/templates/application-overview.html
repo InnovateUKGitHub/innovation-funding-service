@@ -20,8 +20,8 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='govuk-heading-xl'" />
         </th:block>
 
-        <div class="grid-row">
-            <div class="column-half">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
                 <dl class="govuk-list govuk-!-font-size-16">
                     <dt>Application number:</dt>
                     <dd th:text="${model.currentApplication.id}"/>
@@ -40,7 +40,7 @@
                 <div th:include="fragments/elements :: progress-indicator"
                      th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="extra-margin"/>
             </div>
-            <div class="column-half">
+            <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
                     <th:block th:unless="${model.currentCompetition.useNewApplicantMenu}">
                         <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.currentApplication.id})}">view and manage contributors and collaborators</a></li>
@@ -48,14 +48,13 @@
                     <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}">view the grant terms and conditions</a></li>
                 </ul>
             </div>
-
-            <div class="column-one extra-margin-bottom">
-                <div class="message-alert" th:if="${model.completedQuestionsPercentage == 100 and !model.currentApplication.submitted and model.user.userIsLeadApplicant}">
-                    <p class="govuk-body">Now your application is complete, you need to review and then submit.</p>
-                </div>
+        </div>
+        <div class="extra-margin-bottom"
+             th:if="${model.completedQuestionsPercentage == 100 and !model.currentApplication.submitted and model.user.userIsLeadApplicant}">
+            <div class="message-alert">
+                <p class="govuk-body">Now your application is complete, you need to review and then submit.</p>
             </div>
         </div>
-
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post" class="application-overview">
             <th:block th:each="section,iteration : ${model.section.sections.values()}">
                 <section th:id="'section-'+${section.id}">

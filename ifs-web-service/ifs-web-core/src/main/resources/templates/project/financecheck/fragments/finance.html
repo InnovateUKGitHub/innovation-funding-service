@@ -70,7 +70,7 @@
             <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
 
             <fieldset class="inline" id="otherFundingShowHideToggle">
-                <legend class="visuallyhidden" th:text="${question.getName()}" />
+                <legend class="govuk-visually-hidden" th:text="${question.getName()}" />
 
                 <div class="multiple-choice" data-target="other-funding-table">
                     <input type="radio"
@@ -109,7 +109,7 @@
                                 <th id="other-funding-source">Source of funding</th>
                                 <th id="other-funding-date" class="width-medium">Date secured</th>
                                 <th id="other-funding-amount" class="width-medium">Funding amount (£)</th>
-                                <th th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"><span class="visuallyhidden">Actions</span></th>
+                                <th th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"><span class="govuk-visually-hidden">Actions</span></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -145,7 +145,7 @@
             <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
                 <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-fundingSource')}">
                     <label th:for="${'cost-other_funding-'+costIdentifier+'-source'}">
-                        <span class="visuallyhidden">Source of funding</span>
+                        <span class="govuk-visually-hidden">Source of funding</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
                     </label>
                     <input type="text"
@@ -161,7 +161,7 @@
                 </td>
                 <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-securedDate')}">
                     <label th:for="${'cost-other_funding-'+costIdentifier+'-date'}">
-                        <span class="visuallyhidden">Date secured</span>
+                        <span class="govuk-visually-hidden">Date secured</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
                     </label>
                     <input type="text"
@@ -180,7 +180,7 @@
 
                 <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-fundingAmount')}">
                   <label th:for="${'cost-other_funding-'+costIdentifier+'-fundingAmount'}">
-                    <span class="visuallyhidden">Funding amount (&pound;)</span>
+                    <span class="govuk-visually-hidden">Funding amount (&pound;)</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
                   </label>
                     <input class="form-control width-medium"

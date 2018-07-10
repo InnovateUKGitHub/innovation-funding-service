@@ -74,7 +74,7 @@
 <div th:fragment="prototype-assessor-feedback">
     <div th:if="${question == null}">
         <fieldset>
-            <legend class="visuallyhidden">Question score</legend>
+            <legend class="govuk-visually-hidden">Question score</legend>
             <div class="form-group">
             <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
             <select class="form-control width-medium" name="assessor-question-score" id="assessor-question-score">
@@ -98,7 +98,7 @@
     <div th:if="${question == 'yesno'}">
         <h2 class="govuk-heading-s">Is the application in scope?</h2>
         <fieldset class="inline">
-            <legend class="visuallyhidden">Is the application in scope?</legend>
+            <legend class="govuk-visually-hidden">Is the application in scope?</legend>
             <div class="form-group">
                 <label class="block-label selection-button-radio" for="assessor-question-confirmation-yes">
                 <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
@@ -115,7 +115,7 @@
     <div th:replace="prototypes/fragments/assessor-view :: ${'prototype-assessor-guidance-' + questionTitle}"  th:remove="tag" />
 
      <fieldset class="extra-margin-top">
-        <legend class="visuallyhidden">Question feedback</legend>
+        <legend class="govuk-visually-hidden">Question feedback</legend>
         <div class="form-group">
             <div class="form-group">
 

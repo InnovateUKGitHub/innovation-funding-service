@@ -29,7 +29,7 @@
 
 	<form>
 		<fieldset>
-			<legend class="visuallyhidden">Application question</legend>
+			<legend class="govuk-visually-hidden">Application question</legend>
 			<h2 class="govuk-heading-m extra-margin">Application question</h2>
 
 			<th:block th:if="${param.status == null}">
@@ -100,7 +100,7 @@
 				<div class="form-group">
 					<fieldset class="inline">
 						<h3 class="govuk-heading-s">Appendix</h3>
-						<legend class="visuallyhidden">Appendix</legend>
+						<legend class="govuk-visually-hidden">Appendix</legend>
 						<label class="block-label selection-button-radio" for="appendix-yes">
 							<input id="appendix-yes" name="appendix-group" value="Yes" type="radio" th:disabled="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 							Yes
@@ -114,7 +114,7 @@
 			</th:block>
 		</fieldset>
 		<fieldset>
-			<legend class="visuallyhidden">Assessment of this question</legend>
+			<legend class="govuk-visually-hidden">Assessment of this question</legend>
 			<h2 class="govuk-heading-m extra-margin">Assessment of this question</h2>
 			<th:block th:if="${param.status == null}">
 
@@ -148,7 +148,7 @@
 				<div class="form-group">
 					<fieldset class="inline">
 						<h3 class="govuk-heading-s">Scored</h3>
-						<legend class="visuallyhidden">Scored</legend>
+						<legend class="govuk-visually-hidden">Scored</legend>
 						<label class="block-label selection-button-radio" for="scored-yes">
 							<input id="scored-yes" name="scored-group" value="Yes" type="radio" checked="checked" th:disabled="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 							Yes
@@ -168,7 +168,7 @@
 				<div class="form-group">
 					<fieldset class="inline">
 						<h3 class="govuk-heading-s">Written feedback</h3>
-						<legend class="visuallyhidden">Written feedback</legend>
+						<legend class="govuk-visually-hidden">Written feedback</legend>
 						<label class="block-label selection-button-radio" for="feedback-yes">
 							<input id="feedback-yes" name="feedback-group" value="Yes" type="radio" checked="checked" th:disabled="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 							Yes
@@ -190,10 +190,10 @@
 					<table>
 						<thead>
 							<tr>
-								<th>Score<span class="visuallyhidden"> from</span></th>
-								<th><span class="visuallyhidden">Score to</span></th>
+								<th>Score<span class="govuk-visually-hidden"> from</span></th>
+								<th><span class="govuk-visually-hidden">Score to</span></th>
 								<th>Justification</th>
-								<th><span class="visuallyhidden">Action</span></th>
+								<th><span class="govuk-visually-hidden">Action</span></th>
 							</tr>
 						</thead>
 						<tbody>

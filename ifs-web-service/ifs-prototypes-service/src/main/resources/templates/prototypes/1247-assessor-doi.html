@@ -37,7 +37,7 @@
 	<form>
 		<fieldset>
 			<h3 class="govuk-heading-m no-margin">Principal employer and role</h3>
-			<legend class="visuallyhidden">Principal employer and role</legend>
+			<legend class="govuk-visually-hidden">Principal employer and role</legend>
 			<p class="form-hint extra-margin-bottom">Tell us about your current employer and position</p>
 
 			<div class="form-group">
@@ -59,7 +59,7 @@
 
 		<fieldset class="extra-margin">
 			<h2 class="govuk-heading-s no-margin">Do you have any appointments, directorships or consultancies?</h2>
-			<legend class="visuallyhidden">Do you have any appointments, directorships or consultancies?</legend>
+			<legend class="govuk-visually-hidden">Do you have any appointments, directorships or consultancies?</legend>
 
 			<div class="form-group">
 				<fieldset class="inline">
@@ -75,7 +75,7 @@
 			</div>
 
 
-			<div class="visuallyhidden extra-margin-bottom" id="add-appointments">
+			<div class="govuk-visually-hidden extra-margin-bottom" id="add-appointments">
 
 				<!-- <div class="table-overflow">
 					<table>
@@ -166,7 +166,7 @@
 					</fieldset>
 				</div>
 
-				<div id="add-pecuniary" class="visuallyhidden extra-margin-bottom">
+				<div id="add-pecuniary" class="govuk-visually-hidden extra-margin-bottom">
 					<label for="doi-pecuniary" class="form-label-bold">Please describe these interests?</label>
 					<textarea name="doi-pecuniary" id="doi-pecuniary" cols="30" rows="3" class="form-control width-full" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus rerum velit, alias fugit aliquam rem eveniet, deleniti praesentium non, quos vel dicta animi. Est dolores, quibusdam cum saepe suscipit! Itaque.' : '')}">
 					</textarea>
@@ -180,7 +180,7 @@
 
 		<fieldset>
 			<h3 class="govuk-heading-s no-margin">Do any of your close family members have any appointments, directorships or consultancies?</h3>
-			<legend class="visuallyhidden">Do any of your close family members have any appointments, directorships or consultancies?</legend>
+			<legend class="govuk-visually-hidden">Do any of your close family members have any appointments, directorships or consultancies?</legend>
 
 			<div class="form-group">
 				<fieldset class="inline">
@@ -195,7 +195,7 @@
 				</fieldset>
 			</div>
 
-			<!-- <div id="add-family" class="extra-margin-bottom visuallyhidden">
+			<!-- <div id="add-family" class="extra-margin-bottom govuk-visually-hidden">
 
 				<table>
 					<thead>
@@ -224,7 +224,7 @@
 				</table>
 
 			</div> -->
-      <div id="add-family" class="extra-margin-bottom visuallyhidden">
+      <div id="add-family" class="extra-margin-bottom govuk-visually-hidden">
         <div class="grid-row">
           <div class="column-one-quarter">
             <div class="form-group">
@@ -262,7 +262,7 @@
 
 		<fieldset>
 			<h3 class="govuk-heading-s no-margin">Do any of your close family members have any other financial interests?</h3>
-			<legend class="visuallyhidden">Do any of your close family members have any other financial interests?</legend>
+			<legend class="govuk-visually-hidden">Do any of your close family members have any other financial interests?</legend>
 
 			<p class="form-hint">Do any of your close family members have a position or investment in a company from which you can benefit financially?</p>
 
@@ -279,7 +279,7 @@
 				</fieldset>
 			</div>
 
-			<div class="form-group visuallyhidden extra-margin-bottom" id="add-family-pecuniary">
+			<div class="form-group govuk-visually-hidden extra-margin-bottom" id="add-family-pecuniary">
 				<label for="doi-close-pecuniary" class="form-label-bold">Please describe these interests</label>
 				<textarea name="doi-close-pecuniary" id="doi-close-pecuniary" cols="30" rows="3" class="form-control width-full"><div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">N/A</div></textarea>
 			</div>
@@ -327,23 +327,23 @@
   jQuery(document).ready(function(){
 
     if ( jQuery('#appointments-1').is(':checked')) {
-      jQuery('#add-appointments').removeClass('visuallyhidden');
+      jQuery('#add-appointments').removeClass('govuk-visually-hidden');
     }else{
-      jQuery('#add-appointments').addClass('visuallyhidden');
+      jQuery('#add-appointments').addClass('govuk-visually-hidden');
     }
 
     if ( jQuery('#pecuniary-1').is(':checked')) {
-      jQuery('#add-pecuniary').removeClass('visuallyhidden');
+      jQuery('#add-pecuniary').removeClass('govuk-visually-hidden');
     }else{
-      jQuery('#add-pecuniary').addClass('visuallyhidden');
+      jQuery('#add-pecuniary').addClass('govuk-visually-hidden');
     }
 
   	jQuery('input[name=appointments-group]').on('click',function(e){
 
   		if ( jQuery(this).val() == 'Yes' ) {
-  			jQuery('#add-appointments').removeClass('visuallyhidden');
+  			jQuery('#add-appointments').removeClass('govuk-visually-hidden');
   		}else{
-  			jQuery('#add-appointments').addClass('visuallyhidden');
+  			jQuery('#add-appointments').addClass('govuk-visually-hidden');
   		}
 
   	});
@@ -351,9 +351,9 @@
   	jQuery('input[name=pecuniary-group]').on('click',function(e){
 
   		if ( jQuery(this).val() == 'Yes' ) {
-  			jQuery('#add-pecuniary').removeClass('visuallyhidden');
+  			jQuery('#add-pecuniary').removeClass('govuk-visually-hidden');
   		}else{
-  			jQuery('#add-pecuniary').addClass('visuallyhidden');
+  			jQuery('#add-pecuniary').addClass('govuk-visually-hidden');
   		}
 
   	});
@@ -361,9 +361,9 @@
   	jQuery('input[name=family-group]').on('click',function(e){
 
   		if ( jQuery(this).val() == 'Yes' ) {
-  			jQuery('#add-family').removeClass('visuallyhidden');
+  			jQuery('#add-family').removeClass('govuk-visually-hidden');
   		}else{
-  			jQuery('#add-family').addClass('visuallyhidden');
+  			jQuery('#add-family').addClass('govuk-visually-hidden');
   		}
 
   	});
@@ -371,9 +371,9 @@
   	jQuery('input[name=family-pecuniary-group]').on('click',function(e){
 
   		if ( jQuery(this).val() == 'Yes' ) {
-  			jQuery('#add-family-pecuniary').removeClass('visuallyhidden');
+  			jQuery('#add-family-pecuniary').removeClass('govuk-visually-hidden');
   		}else{
-  			jQuery('#add-family-pecuniary').addClass('visuallyhidden');
+  			jQuery('#add-family-pecuniary').addClass('govuk-visually-hidden');
   		}
 
   	});

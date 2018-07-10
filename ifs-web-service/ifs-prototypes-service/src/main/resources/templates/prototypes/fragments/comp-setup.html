@@ -16,7 +16,7 @@
 
 <div th:fragment="prototype-comp-setup-navigation">
 
-    <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
+    <div th:class="${(param.section != null ? 'govuk-visually-hidden' : '')}">
 
         <ul class="task-list">
             <li id="section-1"><div class="task"><h3 class="govuk-heading-s"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=essential&amp;status=done' : '?section=essential')}">Initial details</a></h3></div><div class="task-status-complete"><span>Completed</span></div></li>
@@ -527,7 +527,7 @@
 
         <fieldset id="section-1-edit">
 
-            <legend class="visuallyhidden">Initial details</legend>
+            <legend class="govuk-visually-hidden">Initial details</legend>
 
             <div class="form-group">
                 <label class="form-label" for="compTitle">
@@ -601,7 +601,7 @@
             </div>
             <div class="form-group" id="innovation-area2-form-group">
                 <label class="form-label" for="compInnovationArea2">
-                    <span class="form-label-bold visuallyhidden">Innovation area</span>
+                    <span class="form-label-bold govuk-visually-hidden">Innovation area</span>
                 </label>
                 <select class="form-control width-x-large" id="compInnovationArea2" name="compInnovationArea2" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
@@ -633,7 +633,7 @@
 
             <fieldset class="form-group">
                 <h3 class="govuk-heading-s no-margin">Opening date</h3>
-                <legend class="visuallyhidden">Opening date</legend>
+                <legend class="govuk-visually-hidden">Opening date</legend>
                 <p class="form-hint">You are able to edit this date if needed in the milestones section.</p>
                 <div class="date-group">
                     <div class="day">
@@ -713,7 +713,7 @@
 
     <form>
         <fieldset id="section-2-edit">
-            <legend class="visuallyhidden">Funding information</legend>
+            <legend class="govuk-visually-hidden">Funding information</legend>
 
 
             <div class="grid-row" id="co-funder-row-1">
@@ -741,7 +741,7 @@
                 <div class="grid-row" id="co-funder-row-2">
                     <div class="column-half">
                         <div class="form-group">
-                            <label class="form-label visuallyhidden" for="comp-co-funder-2">
+                            <label class="form-label govuk-visually-hidden" for="comp-co-funder-2">
                                 <span class="form-label-bold">Funder</span>
                             </label>
                         <input class="form-control width-x-large" id="comp-co-funder-2" name="comp-co-funder-1" value="ATI" />
@@ -750,7 +750,7 @@
 
                     <div class="column-half">
                         <div class="form-group">
-                            <label class="form-label visuallyhidden" for="comp-co-funders-budget-2">
+                            <label class="form-label govuk-visually-hidden" for="comp-co-funders-budget-2">
                                 <span class="form-label-bold">Budget</span>
                             </label>
                             <input class="form-control width-large" id="comp-co-funders-budget-2" name="comp-co-funders-budget-2" value="800,000" />
@@ -883,7 +883,7 @@
 
     <form>
         <fieldset id="section-3-edit">
-            <legend class="visuallyhidden">Eligibility</legend>
+            <legend class="govuk-visually-hidden">Eligibility</legend>
 
             <div class="form-group">
                 <fieldset class="inline">
@@ -1588,15 +1588,15 @@
 
     <tr>
         <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score-from'}">Score from</label>
+            <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-score-from'}">Score from</label>
             <input class="form-control width-small" th:id="${'group' + rowNo + '-score-from'}" th:name="${'group' + rowNo + '-score-from'}" th:value="${scoreFrom}" type="number" />
         </td>
         <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score-to'}">Score to</label>
+            <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-score-to'}">Score to</label>
             <input class="form-control width-small" th:id="${'group' + rowNo + '-score-to'}" th:name="${'group' + rowNo + '-score-to'}" th:value="${scoreTo}" type="number" />
         </td>
         <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
+            <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
             <input class="form-control width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
         </td>
         <td>
@@ -1612,11 +1612,11 @@
 
     <tr>
         <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-score'}">Score</label>
+            <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-score'}">Score</label>
             <input class="form-control width-small" th:id="${'group' + rowNo + '-score'}" th:name="${'group' + rowNo + '-score'}" th:value="${score}" type="text" />
         </td>
         <td>
-            <label class="visuallyhidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
+            <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
             <input class="form-control width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
         </td>
         <td>

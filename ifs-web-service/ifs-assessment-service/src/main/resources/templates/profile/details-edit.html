@@ -68,7 +68,7 @@
 
 
                     <fieldset class="extra-margin">
-                        <legend class="visuallyhidden">Address details</legend>
+                        <legend class="govuk-visually-hidden">Address details</legend>
                         <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'form-group-error'">
                             <label class="form-label" for="addressForm.addressLine1">
                                 <span class="form-label-bold">Street</span>
@@ -79,7 +79,7 @@
                             <input class="form-control" th:attr="data-required-errormessage=#{validation.standard.addressline1.required}" required="required" th:field="*{addressForm.addressLine1}" th:errorclass="form-control-error" type="text" />
                         </div>
                         <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine2}')} ? 'form-group-error'">
-                            <label class="form-label visuallyhidden" for="addressForm.addressLine2">
+                            <label class="form-label govuk-visually-hidden" for="addressForm.addressLine2">
                                 <span class="form-label-bold">Street line 2</span>
                                 <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine2}')}">
                                       <span class="error-message" th:each="err : ${#fields.errors('addressForm.addressLine2')}" th:text="${err}"></span>
@@ -89,7 +89,7 @@
                         </div>
                         <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine3}')} ? 'form-group-error'">
                             <label class="form-label" for="addressForm.addressLine3">
-                                <span class="form-label-bold visuallyhidden">Street line 3</span>
+                                <span class="form-label-bold govuk-visually-hidden">Street line 3</span>
                                 <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine3}')}">
                                       <span class="error-message" th:each="err : ${#fields.errors('addressForm.addressLine3')}" th:text="${err}"></span>
                                 </th:block>

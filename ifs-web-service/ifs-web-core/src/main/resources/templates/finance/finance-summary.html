@@ -147,13 +147,13 @@
                                     <img class="table-tick" width="20" height="17"
                                         th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-tick.png')}"
                                         alt="has marked the Finances as complete"/>
-                                    <span class="visuallyhidden">Complete</span>
+                                    <span class="govuk-visually-hidden">Complete</span>
                                 </th:block>
                                 <th:block th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
                                     <img class="table-tick" width="20" height="20"
                                         th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/ifs-images/icons/icon-alert.png')}"
                                         alt="has not yet marked the Finances as complete" />
-                                    <span class="visuallyhidden">Incomplete</span>
+                                    <span class="govuk-visually-hidden">Incomplete</span>
                                 </th:block>
                             </th:block>
                         </div>

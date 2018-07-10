@@ -9,7 +9,7 @@
         </div>
         <div class="column-half alignright">
             <div class="form-search" th:if="${showSearch == null || showSearch == true}">
-                <label class="visuallyhidden" for="searchQuery">Search for:</label>
+                <label class="govuk-visually-hidden" for="searchQuery">Search for:</label>
                 <input th:type="${searchType == 'applications' ? 'number' : 'text'}"
                        th:value="${searchQuery}"
                        th:name="${searchType == 'applications' ? 'searchString' : 'searchQuery'}"

@@ -124,7 +124,7 @@
             <div class="form-group" th:classappend="${#fields.hasErrors('termsAndConditions')} ? 'form-group-error'">
                 <fieldset>
                     <legend>
-                        <span class="visuallyhidden">Terms and conditions</span>
+                        <span class="govuk-visually-hidden">Terms and conditions</span>
                         <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
                     </legend>
                     <div class="multiple-choice">

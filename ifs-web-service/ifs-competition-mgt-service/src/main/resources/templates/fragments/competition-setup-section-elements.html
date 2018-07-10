@@ -2,7 +2,7 @@
 <div th:fragment="application-question(question, editable)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:unless="${editable}">
         <fieldset>
-            <legend class="visuallyhidden">Application question</legend>
+            <legend class="govuk-visually-hidden">Application question</legend>
             <h2 class="govuk-heading-m extra-margin">Application question</h2>
 
             <dl class="application-question-list grid-row">
@@ -48,7 +48,7 @@
         </fieldset>
         <fieldset
             th:if="${question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null}">
-            <legend class="visuallyhidden">Assessment of this question</legend>
+            <legend class="govuk-visually-hidden">Assessment of this question</legend>
             <h2 class="govuk-heading-m extra-margin">Assessment of this question</h2>
 
             <dl class="application-question-list grid-row">
@@ -496,10 +496,10 @@
                                    th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
                                 <thead>
                                 <tr>
-                                    <th scope="col">Score <span class="visuallyhidden"> from</span></th>
-                                    <th scope="col"><span class="visuallyhidden">Score to</span></th>
+                                    <th scope="col">Score <span class="govuk-visually-hidden"> from</span></th>
+                                    <th scope="col"><span class="govuk-visually-hidden">Score to</span></th>
                                     <th scope="col">Justification</th>
-                                    <th scope="col"><span class="visuallyhidden">Action</span></th>
+                                    <th scope="col"><span class="govuk-visually-hidden">Action</span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -512,7 +512,7 @@
                                             th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')} ? 'form-group-error'">
                                             <label class="form-label"
                                                    th:for="guidanceRows[__${iteration.index}__].scoreFrom">
-                                                <span class="visuallyhidden">Score from</span>
+                                                <span class="govuk-visually-hidden">Score from</span>
                                                 <th:block
                                                     th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}">
                                                     <span class="error-message"
@@ -534,7 +534,7 @@
                                             th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')} ? 'form-group-error'">
                                             <label class="form-label"
                                                    th:for="guidanceRows[__${iteration.index}__].scoreTo">
-                                                <span class="visuallyhidden">Score to</span>
+                                                <span class="govuk-visually-hidden">Score to</span>
                                                 <th:block
                                                     th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}">
                                                     <span class="error-message"
@@ -555,7 +555,7 @@
                                             th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')} ? 'form-group-error'">
                                             <label class="form-label"
                                                    th:for="guidanceRows[__${iteration.index}__].justification">
-                                                <span class="visuallyhidden">Justification</span>
+                                                <span class="govuk-visually-hidden">Justification</span>
                                                 <th:block
                                                     th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}">
                                                     <span class="error-message"
@@ -591,7 +591,7 @@
                                 <tr>
                                     <th scope="col">Subject</th>
                                     <th scope="col">Justification</th>
-                                    <th scope="col"><span class="visuallyhidden">Action</span></th>
+                                    <th scope="col"><span class="govuk-visually-hidden">Action</span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -603,7 +603,7 @@
                                             th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')} ? 'form-group-error'">
                                             <label class="form-label"
                                                    th:for="${'guidanceRow-'+iteration.index+'-subject'}">
-                                                <span class="visuallyhidden">Subject</span>
+                                                <span class="govuk-visually-hidden">Subject</span>
                                                 <th:block
                                                     th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}">
                                                     <span class="error-message"
@@ -624,7 +624,7 @@
                                             th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')} ? 'form-group-error'">
                                             <label class="form-label"
                                                    th:for="${'guidanceRow-'+iteration.index+'-justification'}">
-                                                <span class="visuallyhidden">Justification</span>
+                                                <span class="govuk-visually-hidden">Justification</span>
                                                 <th:block
                                                     th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')}">
                                                     <span class="error-message"

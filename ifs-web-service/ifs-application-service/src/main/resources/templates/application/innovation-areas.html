@@ -18,7 +18,7 @@
                     <div class="form-group" th:classappend="${#fields.hasErrors('*{__innovationAreaChoice__}')} ? 'form-group-error'">
                         <fieldset>
                             <legend class="extra-margin-bottom">
-                                <span class="visuallyhidden">
+                                <span class="govuk-visually-hidden">
                                     Choose the primary innovation area for your project. This will help us to select suitable assessors for your application.
                                 </span>
                                 <th:block th:if="${#fields.hasErrors('innovationAreaChoice')}">

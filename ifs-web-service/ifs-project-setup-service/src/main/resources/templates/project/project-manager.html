@@ -65,16 +65,16 @@
                                 <tbody>
                                     <tr>
                                         <th scope="row">
-                                            <span class="visuallyhidden">invitee</span>
+                                            <span class="govuk-visually-hidden">invitee</span>
                                         </th>
                                         <td>
                                             <label for="name-project-manager">
-                                              <span class="visuallyhidden">name</span>
+                                              <span class="govuk-visually-hidden">name</span>
                                             </label>
                                             <input type="text" class="form-control width-full" th:value="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'form-control-error'" name="name" id="name-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.name.required}"/>
                                         </td>
                                         <td>
-                                            <label for="email-project-manager" class="visuallyhidden">email</label>
+                                            <label for="email-project-manager" class="govuk-visually-hidden">email</label>
                                             <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail')} ? 'form-control-error'" name="inviteEmail" id="email-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.email.required}"/>
                                         </td>
                                         <td class="alignright">

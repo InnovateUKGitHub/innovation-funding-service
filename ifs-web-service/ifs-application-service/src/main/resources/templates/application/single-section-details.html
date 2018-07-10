@@ -40,7 +40,7 @@
             </th:block>
             <div th:if="${model.completed.completedOrMarkedAsComplete(question, section)}"
                  class="task-status-complete">
-                <span class="visuallyhidden" th:text="${section.name}"></span>
+                <span class="govuk-visually-hidden" th:text="${section.name}"></span>
                 <span>Complete</span>
             </div>
         </li>

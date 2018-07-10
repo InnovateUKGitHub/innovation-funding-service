@@ -126,7 +126,7 @@
                                 <tr>
                                     <th scope="col" id="aria-position-org">Organisation</th>
                                     <th scope="col" id="aria-position-pos">Position</th>
-                                    <th scope="col"><span class="visuallyhidden">Action</span></th>
+                                    <th scope="col"><span class="govuk-visually-hidden">Action</span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -277,7 +277,7 @@
                                     <th scope="col" id="aria-family-rel">Relation</th>
                                     <th scope="col" id="aria-family-org">Organisation</th>
                                     <th scope="col" id="aria-family-pos">Position</th>
-                                    <th scope="col"><span class="visuallyhidden">Action</span></th>
+                                    <th scope="col"><span class="govuk-visually-hidden">Action</span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -403,7 +403,7 @@
                     <div class="form-group" th:classappend="${#fields.hasErrors('accurateAccount')} ? 'form-group-error'">
                         <fieldset>
                             <legend>
-                                <span class="visuallyhidden">Confirm declaration of interest</span>
+                                <span class="govuk-visually-hidden">Confirm declaration of interest</span>
                                 <th:block th:if="${#fields.hasErrors('accurateAccount')}">
                                   <span class="error-message"  th:each="err : ${#fields.errors('accurateAccount')}" th:text="${err}"></span>
                                 </th:block>

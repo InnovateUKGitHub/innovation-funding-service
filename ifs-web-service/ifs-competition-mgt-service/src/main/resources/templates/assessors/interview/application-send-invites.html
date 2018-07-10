@@ -85,7 +85,7 @@
                                     <div class="grid-row">
                                         <div class="column-two-thirds">
                                             <!--/* empty file input so that spring form is complete */-->
-                                            <input type="file" name="feedback" class="visuallyhidden">
+                                            <input type="file" name="feedback" class="govuk-visually-hidden">
                                             <a th:text="${app.filename}"
                                                th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
                                                target="_blank">Uploaded-file.pdf</a>

@@ -91,7 +91,7 @@
     <h2 class="govuk-heading-s no-margin">Is this application in scope?</h2>
     <fieldset class="inline">
         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
-        <legend class="visuallyhidden" th:id="formInput[__${field.id}__]" >Is this application in scope?</legend>
+        <legend class="govuk-visually-hidden" th:id="formInput[__${field.id}__]" >Is this application in scope?</legend>
             <div class="multiple-choice" th:each="option : ${ { true, false } }"
                  th:attr="data-required-errormessage=#{validation.assessor.scope.invalidScope}"
                  required="required">

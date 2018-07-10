@@ -35,10 +35,10 @@
             </th:block>
         </td>
         <td th:case="'NOT_STARTED'" class="status">
-            <span class="visuallyhidden">Stage is not yet available</span>
+            <span class="govuk-visually-hidden">Stage is not yet available</span>
         </td>
         <td th:case="'NOT_REQUIRED'" class="status na">
-            <span class="visuallyhidden">Not required for this partner</span>
+            <span class="govuk-visually-hidden">Not required for this partner</span>
         </td>
         <td th:case="'PENDING'" class="status waiting">
           <th:block th:if="${url}">

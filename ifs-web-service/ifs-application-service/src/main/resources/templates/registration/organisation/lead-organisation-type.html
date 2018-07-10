@@ -38,7 +38,7 @@
             <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-group-error'">
                 <fieldset>
                     <legend class="extra-margin-bottom" id="organisationTypeId">
-                        <span class="visuallyhidden">Please select your organisation type</span>
+                        <span class="govuk-visually-hidden">Please select your organisation type</span>
                         <th:block th:if="${#fields.hasErrors('*{organisationTypeId}')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>
                         </th:block>

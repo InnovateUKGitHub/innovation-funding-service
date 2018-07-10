@@ -88,7 +88,7 @@
             <div class="progress" th:attr="aria-valuenow=${percentage}" aria-valuemin="0" aria-valuemax="100" role="progressbar" th:style="'width:'+${percentage}+'%'">
                 <div>
                     <th:block th:text="${percentage}+'%'" />
-                    <span class="visuallyhidden"> Complete</span>
+                    <span class="govuk-visually-hidden"> Complete</span>
                 </div>
             </div>
             <div aria-hidden="true" class="progress-totals progress-totals--max">100%</div>
@@ -141,7 +141,7 @@
     <div class="form-group" th:classappend="${#fields.hasErrors('termsAgreed')} ? 'form-group-error'">
         <fieldset>
             <legend>
-                <span class="visuallyhidden">Terms and conditions</span>
+                <span class="govuk-visually-hidden">Terms and conditions</span>
                 <th:block th:if="${#fields.hasErrors('termsAgreed')}">
                     <span class="error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
                 </th:block>
