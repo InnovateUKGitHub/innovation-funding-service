@@ -64,6 +64,9 @@ public class ApplicationFinance extends Finance {
     }
 
     private Integer getMaximum(GrantClaimMaximum grantClaimMaximum) {
+        if (getOrganisationSize() == null) {
+            return grantClaimMaximum.getDef();
+        }
         switch (getOrganisationSize()) {
             case SMALL:
                 return grantClaimMaximum.getSmall();
@@ -72,7 +75,7 @@ public class ApplicationFinance extends Finance {
             case LARGE:
                 return grantClaimMaximum.getLarge();
             default:
-                return grantClaimMaximum.getDef();
+                throw new IllegalStateException("Unexpected organisation size: " + getOrganisationSize());
         }
     }
 
