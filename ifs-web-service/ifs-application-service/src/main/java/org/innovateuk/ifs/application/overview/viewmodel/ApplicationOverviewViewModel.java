@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.overview.viewmodel;
 
-import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -27,7 +26,6 @@ public class ApplicationOverviewViewModel {
     private ApplicationOverviewCompletedViewModel completed;
     private ApplicationOverviewSectionViewModel section;
     private List<ResearchCategoryResource> researchCategories;
-    private ApplicationForm form;
 
     public ApplicationOverviewViewModel(Long applicationId,
                                         String applicationName,
@@ -42,8 +40,7 @@ public class ApplicationOverviewViewModel {
                                         ApplicationOverviewAssignableViewModel assignable,
                                         ApplicationOverviewCompletedViewModel completed,
                                         ApplicationOverviewSectionViewModel section,
-                                        List<ResearchCategoryResource> researchCategories,
-                                        ApplicationForm form) {
+                                        List<ResearchCategoryResource> researchCategories) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.applicationState = applicationState;
@@ -58,7 +55,6 @@ public class ApplicationOverviewViewModel {
         this.completed = completed;
         this.section = section;
         this.researchCategories = researchCategories;
-        this.form = form;
     }
 
     public Long getApplicationId() {
@@ -117,7 +113,4 @@ public class ApplicationOverviewViewModel {
         return section;
     }
 
-    public ApplicationForm getForm() {
-        return form;
-    }
 }

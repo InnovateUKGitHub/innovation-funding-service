@@ -93,8 +93,7 @@ public class ApplicationOverviewModelPopulator {
                 assignableViewModel,
                 completedViewModel,
                 sectionViewModel,
-                researchCategories,
-                form);
+                researchCategories);
     }
 
     private Long getYourFinancesSectionId(ApplicationResource application) {
