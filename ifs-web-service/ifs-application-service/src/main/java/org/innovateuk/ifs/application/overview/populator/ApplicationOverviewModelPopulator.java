@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.application.overview.populator;
 
+import org.innovateuk.ifs.application.common.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.overview.viewmodel.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -27,14 +26,13 @@ import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
  * view model for the application overview page
  */
 @Component
-public class ApplicationOverviewModelPopulator {
+public class ApplicationOverviewModelPopulator extends AbstractApplicationModelPopulator {
 
     private CompetitionService competitionService;
     private ProcessRoleService processRoleService;
     private OrganisationService organisationService;
-    private SectionService sectionService;
     private ProjectService projectService;
-    private CategoryRestService categoryRestService;
+    private SectionService sectionService;
     private ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator;
     private ApplicationOverviewCompletedDetailsModelPopulator applicationOverviewCompletedDetailsModelPopulator;
     private ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator;
@@ -45,7 +43,6 @@ public class ApplicationOverviewModelPopulator {
                                              OrganisationService organisationService,
                                              SectionService sectionService,
                                              ProjectService projectService,
-                                             CategoryRestService categoryRestService,
                                              ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator,
                                              ApplicationOverviewCompletedDetailsModelPopulator applicationOverviewCompletedDetailsModelPopulator,
                                              ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator,
@@ -55,7 +52,6 @@ public class ApplicationOverviewModelPopulator {
         this.organisationService = organisationService;
         this.sectionService = sectionService;
         this.projectService = projectService;
-        this.categoryRestService = categoryRestService;
         this.applicationOverviewSectionModelPopulator = applicationOverviewSectionModelPopulator;
         this.applicationOverviewCompletedDetailsModelPopulator = applicationOverviewCompletedDetailsModelPopulator;
         this.applicationOverviewAssignableModelPopulator = applicationOverviewAssignableModelPopulator;
@@ -77,8 +73,6 @@ public class ApplicationOverviewModelPopulator {
 
         int completedQuestionsPercentage = application.getCompletion() == null ? 0 : application.getCompletion().intValue();
 
-        List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
-
         return new ApplicationOverviewViewModel(
                 application.getId(),
                 application.getName(),
@@ -92,8 +86,7 @@ public class ApplicationOverviewModelPopulator {
                 userViewModel,
                 assignableViewModel,
                 completedViewModel,
-                sectionViewModel,
-                researchCategories);
+                sectionViewModel);
     }
 
     private Long getYourFinancesSectionId(ApplicationResource application) {
@@ -105,4 +98,5 @@ public class ApplicationOverviewModelPopulator {
                 .map(SectionResource::getId)
                 .orElse(null);
     }
+
 }

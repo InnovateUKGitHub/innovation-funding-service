@@ -1,34 +1,57 @@
-package org.innovateuk.ifs.application.overview.populator;
+package org.innovateuk.ifs.application.common.populator;
 
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.springframework.stereotype.Component;
+import org.innovateuk.ifs.util.CollectionFunctions;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
-@Component
-public class ApplicationOverviewCompletedDetailsModelPopulator {
+public abstract class AbstractApplicationModelPopulator {
 
     private SectionService sectionService;
     private QuestionService questionService;
 
-    public ApplicationOverviewCompletedDetailsModelPopulator(SectionService sectionService, QuestionService questionService) {
+    public AbstractApplicationModelPopulator() {
+    }
+
+    public AbstractApplicationModelPopulator(SectionService sectionService, QuestionService questionService) {
         this.sectionService = sectionService;
         this.questionService = questionService;
     }
 
-    public ApplicationOverviewCompletedViewModel populate(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+    protected Map<Long, List<QuestionResource>> getSectionQuestions(Long competitionId) {
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
+        List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
 
+        List<QuestionResource> questions = questionService.findByCompetition(competitionId);
+
+        return parentSections.stream()
+                .collect(Collectors.toMap(
+                        SectionResource::getId,
+                        s -> getQuestionsBySection(s.getQuestions(), questions)
+                ));
+    }
+
+    protected Map<Long, SectionResource> getSections(Long competitionId) {
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
+        List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
+
+        return parentSections.stream().collect(CollectionFunctions.toLinkedMap(SectionResource::getId,
+                        Function.identity()));
+    }
+
+    protected ApplicationOverviewCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
@@ -64,5 +87,9 @@ public class ApplicationOverviewCompletedDetailsModelPopulator {
                 .filter(section -> section.getType().equals(FINANCE))
                 .map(SectionResource::getId)
                 .anyMatch(id -> completedSectionsByOrganisation.get(userOrganisation.getId()).contains(id));
+    }
+
+    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
+        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 }

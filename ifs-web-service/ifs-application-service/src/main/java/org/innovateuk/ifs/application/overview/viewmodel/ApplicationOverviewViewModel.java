@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.application.overview.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
-import java.util.List;
 
 /**
  * View model for the application overview
@@ -25,22 +24,16 @@ public class ApplicationOverviewViewModel {
     private ApplicationOverviewAssignableViewModel assignable;
     private ApplicationOverviewCompletedViewModel completed;
     private ApplicationOverviewSectionViewModel section;
-    private List<ResearchCategoryResource> researchCategories;
+
+
 
     public ApplicationOverviewViewModel(Long applicationId,
                                         String applicationName,
                                         ApplicationState applicationState,
-                                        boolean isApplicationSubmitted,
-                                        boolean projectWithdrawn,
-                                        CompetitionResource currentCompetition,
-                                        OrganisationResource userOrganisation,
-                                        Integer completedQuestionsPercentage,
-                                        Long financeSectionId,
-                                        ApplicationOverviewUserViewModel user,
-                                        ApplicationOverviewAssignableViewModel assignable,
-                                        ApplicationOverviewCompletedViewModel completed,
-                                        ApplicationOverviewSectionViewModel section,
-                                        List<ResearchCategoryResource> researchCategories) {
+                                        boolean isApplicationSubmitted, boolean projectWithdrawn, CompetitionResource currentCompetition,
+                                        OrganisationResource userOrganisation, Integer completedQuestionsPercentage, Long financeSectionId,
+                                        ApplicationOverviewUserViewModel user, ApplicationOverviewAssignableViewModel assignable,
+                                        ApplicationOverviewCompletedViewModel completed, ApplicationOverviewSectionViewModel section) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.applicationState = applicationState;
@@ -54,7 +47,6 @@ public class ApplicationOverviewViewModel {
         this.assignable = assignable;
         this.completed = completed;
         this.section = section;
-        this.researchCategories = researchCategories;
     }
 
     public Long getApplicationId() {
@@ -89,10 +81,6 @@ public class ApplicationOverviewViewModel {
         return completedQuestionsPercentage;
     }
 
-    public List<ResearchCategoryResource> getResearchCategories() {
-        return researchCategories;
-    }
-
     public Long getFinanceSectionId() {
         return financeSectionId;
     }
@@ -113,4 +101,10 @@ public class ApplicationOverviewViewModel {
         return section;
     }
 
+    public boolean isFinanceSectionComplete(SectionResource section) {
+        if (section.getId().equals(financeSectionId)) {
+            return completed.getUserFinanceSectionCompleted();
+        }
+        return completed.getSectionsMarkedAsComplete().contains(financeSectionId);
+    }
 }
