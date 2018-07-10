@@ -9,7 +9,6 @@ apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'idea'
-apply plugin: 'io.spring.dependency-management'
 
 group 'innovateuk'
 version project.version

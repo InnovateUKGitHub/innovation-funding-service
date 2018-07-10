@@ -4,26 +4,13 @@ apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
+apply from: rootProject.file("gradle-support/zipkin-support.gradle")
+
+apply plugin: 'idea'
 
 group 'innovateuk'
 version project.version
 
-apply plugin: 'idea'
-apply plugin: 'io.spring.dependency-management'
-
-def zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
-
-if (zipkinEnabled) {
-    apply plugin: 'io.spring.dependency-management'
-
-    ext {
-        zipkinLogTraceLevel = 'WARN'
-    }
-} else  {
-    ext {
-        zipkinLogTraceLevel = 'ERROR'
-    }
-}
 
 dependencies {
     compile project(":ifs-commons")

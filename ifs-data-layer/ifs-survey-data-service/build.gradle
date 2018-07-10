@@ -18,7 +18,6 @@ apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
-apply plugin: 'io.spring.dependency-management'
 
 project.version = surveyDataServiceVersion
 tagDocker.tag = surveyDataServiceVersion

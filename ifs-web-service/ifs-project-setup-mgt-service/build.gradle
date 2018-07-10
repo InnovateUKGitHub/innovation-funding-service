@@ -14,7 +14,6 @@ group 'innovateuk'
 version project.version
 
 apply plugin: 'idea'
-apply plugin: 'io.spring.dependency-management'
 
 project.version = projectSetupMgtServiceVersion
 tagDocker.tag = projectSetupMgtServiceVersion

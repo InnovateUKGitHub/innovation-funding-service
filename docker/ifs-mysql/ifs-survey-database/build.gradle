@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/mysql-support.gradle")
+apply from: rootProject.file("docker/ifs-mysql/mysql-support.gradle")
 
 ext.sqlContainer = "ifs-survey-database"
 ext.testSchema = "ifs_survey_test"
