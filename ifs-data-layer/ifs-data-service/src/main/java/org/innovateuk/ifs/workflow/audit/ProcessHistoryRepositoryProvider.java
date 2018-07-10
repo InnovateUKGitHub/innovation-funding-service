@@ -1,26 +1,27 @@
 package org.innovateuk.ifs.workflow.audit;
 
-import org.innovateuk.ifs.workflow.domain.Process;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 /**
- * {@code EntityListener} to create new {@link ProcessHistory}s whenever a {@link Process} is updated.
+ * TODO class comment
  */
 @Component
-public class ProcessHistoryRepositoryProvider {
+public class ProcessHistoryRepositoryProvider implements ApplicationContextAware {
 
-    private static ProcessHistoryRepository processHistoryRepository;
+    private static ApplicationContext applicationContext;
 
     public static ProcessHistoryRepository processHistoryRepository() {
-        if (ProcessHistoryRepositoryProvider.processHistoryRepository == null) {
-            throw new IllegalStateException("processHistoryRepository not autowired in ProcessEntityListener");
+        if (ProcessHistoryRepositoryProvider.applicationContext == null) {
+            throw new IllegalStateException("applicationContext not autowired in ProcessEntityListener");
         }
-        return ProcessHistoryRepositoryProvider.processHistoryRepository;
+        return ProcessHistoryRepositoryProvider.applicationContext.getBean(ProcessHistoryRepository.class);
     }
 
-    @Autowired
-    public void setProcessHistoryRepository(ProcessHistoryRepository processHistoryRepository) {
-        ProcessHistoryRepositoryProvider.processHistoryRepository = processHistoryRepository;
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        ProcessHistoryRepositoryProvider.applicationContext = applicationContext;
     }
 }
