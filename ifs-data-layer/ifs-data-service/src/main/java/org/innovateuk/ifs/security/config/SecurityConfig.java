@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.security.config;
 
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,7 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private StatelessAuthenticationFilter statelessAuthenticationFilter;
+    private UserAuthenticationService userAuthenticationService;
 
     @Value("${management.contextPath}")
     private String monitoringEndpoint;
@@ -45,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
             .exceptionHandling().and()
-            .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore( new StatelessAuthenticationFilter(userAuthenticationService), UsernamePasswordAuthenticationFilter.class)
             .headers()
                 .addHeaderWriter(new StaticHeadersWriter("server","server"))
                 .cacheControl();
