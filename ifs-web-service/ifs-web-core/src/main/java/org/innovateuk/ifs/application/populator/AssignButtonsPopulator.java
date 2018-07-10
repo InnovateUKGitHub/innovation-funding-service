@@ -35,7 +35,6 @@ public class AssignButtonsPopulator {
                 .map(ApplicantQuestionStatusResource::getAssignee).findAny().orElse(null));
         viewModel.setLeadApplicant(resource.getApplicants().stream().filter(ApplicantResource::isLead).findAny().orElse(null));
         viewModel.setCurrentApplicant(resource.getCurrentApplicant());
-        //viewModel.setCurrentUser(resource.getCurrentUser());
         viewModel.setAssignableApplicants(resource.getApplicants());
         viewModel.setPendingAssignableUsers(pendingInvitations(resource.getApplication()));
         viewModel.setHideAssignButtons(hideAssignButtons);

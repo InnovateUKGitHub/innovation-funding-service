@@ -6,8 +6,6 @@ import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.viewmodel.forminput.FileUploadInputViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,12 +38,6 @@ public class FileUploadPopulator extends AbstractFormInputPopulator<FileUploadIn
 
     }
 
-/*    private boolean isReadOnlyViewMode(FileUploadInputViewModel viewModel, AbstractApplicantResource resource) {
-        return viewModel.isReadonly() || viewModel.isComplete()
-                || !isAssignedToCurrentApplicant(viewModel.getApplicantQuestion(), resource.getCurrentApplicant(), resource.getCurrentUser());
-
-    }*/
-
     private boolean leadApplicantAndUnassigned(ApplicantQuestionResource applicantQuestion, ApplicantResource currentApplicant) {
         return applicantQuestion.getApplicantQuestionStatuses().stream().noneMatch(status -> status.getAssignee() != null) && currentApplicant.isLead();
     }
@@ -54,16 +46,6 @@ public class FileUploadPopulator extends AbstractFormInputPopulator<FileUploadIn
         return applicantQuestion.allAssignedStatuses().anyMatch(status -> status.getAssignee().isSameUser(currentApplicant))
                 || leadApplicantAndUnassigned(applicantQuestion, currentApplicant);
     }
-
-/*    private boolean isAssignedToCurrentApplicant(ApplicantQuestionResource applicantQuestion, ApplicantResource currentApplicant, UserResource currentUser) {
-
-        if (currentUser.hasRole(Role.SUPPORT)) {
-            return false;
-        } else {
-            return applicantQuestion.allAssignedStatuses().anyMatch(status -> status.getAssignee().isSameUser(currentApplicant))
-                    || leadApplicantAndUnassigned(applicantQuestion, currentApplicant);
-        }
-    }*/
 
     @Override
     protected FileUploadInputViewModel createNew() {

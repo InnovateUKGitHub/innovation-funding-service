@@ -8,10 +8,15 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.dashboard.service.CompetitionDashboardSearchService;
-import org.innovateuk.ifs.management.dashboard.viewmodel.*;
+import org.innovateuk.ifs.management.dashboard.viewmodel.ApplicationSearchDashboardViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.DashboardTabsViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.LiveDashboardViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.NonIFSDashboardViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.PreviousDashboardViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.ProjectSetupDashboardViewModel;
+import org.innovateuk.ifs.management.dashboard.viewmodel.UpcomingDashboardViewModel;
 import org.innovateuk.ifs.management.navigation.Pagination;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +33,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static java.util.stream.Collectors.joining;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 @Controller
 public class CompetitionManagementDashboardController {
@@ -148,7 +154,7 @@ public class CompetitionManagementDashboardController {
                                                         matchedApplications.getTotalElements(),
                                                         new Pagination(matchedApplications, "search?" + existingQueryString),
                                                         trimmedSearchString,
-                                                        user.hasRole(Role.SUPPORT));
+                                                        user.hasRole(SUPPORT));
         model.addAttribute("model", viewModel);
 
         return TEMPLATE_PATH + "application-search";

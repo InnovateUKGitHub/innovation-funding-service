@@ -6,8 +6,6 @@ import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,17 +28,12 @@ public class ApplicationDetailsPopulator extends AbstractFormInputPopulator<Appl
     @Override
     protected void populate(AbstractApplicantResource resource, ApplicationDetailsInputViewModel viewModel) {
         viewModel.setReadonly(viewModel.isReadonly() || !resource.getCurrentApplicant().isLead());
-        //viewModel.setReadonly(viewModel.isReadonly() || !isLeadOrSupport(resource.getCurrentUser()));
         viewModel.setApplication(resource.getApplication());
         viewModel.setCompetition(resource.getCompetition());
         viewModel.setSelectedResearchCategoryName(resource.getApplication().getResearchCategory().getName());
         viewModel.setSelectedInnovationAreaName(resource.getApplication().getInnovationArea().getName());
         viewModel.setAssignButtonsViewModel(assignButtonsPopulator.populate(resource, viewModel.getApplicantQuestion(), viewModel.isComplete()));
     }
-
-/*    private boolean isLeadOrSupport(UserResource currentUser) {
-        return currentUser.hasAnyRoles(Role.LEADAPPLICANT, Role.SUPPORT);
-    }*/
 
     @Override
     public void addToForm(ApplicationForm form, ApplicationDetailsInputViewModel viewModel) {

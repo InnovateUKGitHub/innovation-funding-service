@@ -195,11 +195,6 @@ public class ApplicationResource {
         return ApplicationState.submittedAndFinishedStates.contains(applicationState);
     }
 
-/*    @JsonIgnore
-    public boolean isSubmittedApprovedOrRejected() {
-        return ApplicationState.submittedApprovedOrRejectedStates.contains(applicationState);
-    }*/
-
     @JsonIgnore
     public boolean isWithdrawn() { return ApplicationState.WITHDRAWN.equals(applicationState); }
 

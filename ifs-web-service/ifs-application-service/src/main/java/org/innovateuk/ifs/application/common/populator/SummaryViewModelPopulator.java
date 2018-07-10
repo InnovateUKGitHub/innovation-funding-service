@@ -11,7 +11,11 @@ import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGene
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
@@ -27,14 +31,17 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -128,8 +135,6 @@ public class SummaryViewModelPopulator {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
 
-        //Optional<OrganisationResource> userOrganisation = getUserOrganisation(applicationId, user);
-
         List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
                 competition.getId(), APPLICATION).getSuccess();
 
@@ -206,16 +211,6 @@ public class SummaryViewModelPopulator {
                 applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), competition.getId())
         );
     }
-
-/*    private Optional<OrganisationResource> getUserOrganisation(long applicationId, UserResource user) {
-
-        if (user.hasRole(Role.SUPPORT)) {
-            return Optional.of(applicationService.getLeadOrganisation(applicationId));
-        } else {
-            List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
-            return organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
-        }
-    }*/
 
     private ApplicationOverviewCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
