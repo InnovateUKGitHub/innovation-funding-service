@@ -14,8 +14,7 @@
         </div>
 
         <h2 class="heading-medium">Finances summary</h2>
-        <th:block th:replace="finance/finance-summary :: application_finances_summary (yourFinancesInCompleteForAnOrganisations = ${model.yourFinancesInCompleteForAnOrganisations})" />
-        <!--/* <div class="icon icon-information"></div><span>Please provide your financial breakdown in the <a th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Your finances</a> section.</span> */-->
+        <th:block th:insert="finance/finance-summary :: application_finances_summary (yourFinancesInCompleteForAnOrganisations = ${model.yourFinancesInCompleteForAnOrganisations})" />
         <h2 class="heading-medium">Project cost breakdown</h2>
         <th:block th:insert="finance/finance-summary :: financial_summary_table" />
         <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
