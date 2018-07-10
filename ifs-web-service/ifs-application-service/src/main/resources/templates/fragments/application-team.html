@@ -2,52 +2,84 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
 <th:block th:fragment="application_team(model, question)">
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
+          data-autosave="application" enctype="multipart/form-data"
+          th:with="appIsClosed=${applicationIsClosed}, readonly=${applicationIsReadOnly}"
+          novalidate="novalidate">
 
-    <!--/* Question page view */-->
-    <th:block
-        th:unless="${model.summary}"
-        th:insert="application-team/team :: page-body" />
+        <div class="question">
+            <!--/* To disable submission on pressing return (INFUND-6892) */-->
+            <th:block th:unless="${model.allReadOnly}">
+                <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
+            </th:block>
 
-    <!--/* Summary view */-->
-    <th:block th:if="${model.summary}">
-        <div class="extra-margin"
-             th:each="organisation : ${model.organisations}">
+            <!--/* Question page view */-->
+            <th:block
+                th:unless="${model.summary}"
+                th:insert="application-team/team :: page-body (model=${model})" />
 
-            <div class="heading-small" role="heading" aria-level="4">
-                <th:block th:text="${organisation.name}">Organisation name</th:block>
-                <th:block th:if="${organisation.lead}"> (Lead)</th:block>
-                <th:block th:unless="${organisation.lead}"> (Collaborator)</th:block>
+            <!--/* Summary view */-->
+            <th:block th:if="${model.summary}">
+                <div class="extra-margin"
+                     th:each="organisation : ${model.organisations}">
+
+                    <div class="heading-small" role="heading" aria-level="4">
+                        <th:block th:text="${organisation.name}">Organisation name</th:block>
+                        <th:block th:if="${organisation.lead}"> (Lead)</th:block>
+                        <th:block th:unless="${organisation.lead}"> (Collaborator)</th:block>
+                    </div>
+                    <div class="font-xsmall" role="heading" aria-level="5"><strong>Organisation type</strong></div>
+                    <p class="font-xsmall" th:text="${organisation.type}">Research and technology organisations (RTOs)</p>
+                    <table class="table-overflow">
+                        <thead>
+                        <tr>
+                            <th class="width-30-percent" scope="col">Applicant</th>
+                            <th class="width-50-percent" scope="col">Email</th>
+                            <th scope="col"><span class="visually-hidden">Additional details</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="applicant : ${organisation.applicants}">
+                            <td th:text="${applicant.name}">Steve Smith</td>
+                            <td th:text="${applicant.email}">steve.smith@empire.com</td>
+                            <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </th:block>
+
+            <!--/* Applicant buttons */-->
+            <div class="extra-margin">
+                <!--/* 'Mark as complete' / 'Edit' links */-->
+                <th:block
+                  th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model})" />
+                <!--/* 'Return and edit' link on the Application summary */-->
+                <th:block th:if="${model.summary}"
+                          th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})" />
             </div>
-            <div class="font-xsmall" role="heading" aria-level="5"><strong>Organisation type</strong></div>
-            <p class="font-xsmall" th:text="${organisation.type}">Research and technology organisations (RTOs)</p>
-            <table class="table-overflow">
-                <thead>
-                <tr>
-                    <th class="width-30-percent" scope="col">Applicant</th>
-                    <th class="width-50-percent" scope="col">Email</th>
-                    <th scope="col"><span class="visually-hidden">Additional details</span></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="applicant : ${organisation.applicants}">
-                    <td th:text="${applicant.name}">Steve Smith</td>
-                    <td th:text="${applicant.email}">steve.smith@empire.com</td>
-                    <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </th:block>
 
-    <!--/* Applicant buttons */-->
-    <div class="extra-margin">
-        <!--/* 'Mark as complete' / 'Edit' links */-->
-        <th:block
-                  th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})" />
-        <!--/* 'Return and edit' link on the Application summary */-->
-        <th:block th:if="${model.summary}"
-                  th:insert="question-type/form-elements :: form-edit-question-button (model=${model},question=${question})" />
-    </div>
+            <!--/* Hidden fields */-->
+            <input type="hidden" id="application_id" th:value="${applicationId}"/>
+            <input type="hidden" id="competition_id" th:value="${competitionId}"/>
+
+            <input type="hidden" id="cacheTest" value=""/>
+        </div>
+
+        <th:block th:unless="${model.summary}">
+            <th:block th:if="${applicationIsReadOnly}">
+                <a th:href="${backURL}" class="button-secondary"
+                   th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
+            </th:block>
+            <th:block th:unless="${applicationIsReadOnly}">
+                <button id="application-question-save"
+                        type="submit"
+                        class="button app-submit-btn"
+                        name="submit-section">Save and return to application overview
+                </button>
+            </th:block>
+        </th:block>
+    </form>
 </th:block>
 
 </html>

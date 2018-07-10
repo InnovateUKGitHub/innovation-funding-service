@@ -110,7 +110,7 @@ Other costs
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
-    log in and create new application if there is not one already with complete application details  Robot test application  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
+    log in and create new application if there is not one already with complete application details  Robot test application  ${tomorrowday}  ${month}  ${nextyear}
 
 the Applicant fills in the Labour costs for two rows
     the user clicks the button/link            jQuery=button:contains("Labour")
