@@ -76,7 +76,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
     @Test
     public void createUser() throws Exception {
-        final Long organisationId = 9999L;
+        final long organisationId = 9999L;
 
         final UserResource userResource = newUserResource().build();
         when(registrationServiceMock.createUser(userResource)).thenReturn(serviceSuccess(userResource));
@@ -113,8 +113,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
     @Test
     public void createUserWithCompetitionId() throws Exception {
-        final Long organisationId = 9999L;
-        final Long competitionId = 8888L;
+        final long organisationId = 9999L;
+        final long competitionId = 8888L;
 
         final UserResource userResource = newUserResource().build();
         when(registrationServiceMock.createUser(userResource)).thenReturn(serviceSuccess(userResource));
@@ -223,7 +223,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
     @Test
     public void deactivateUser() throws Exception {
-        final Long userId = 9999L;
+        final long userId = 9999L;
 
         when(registrationServiceMock.deactivateUser(userId)).thenReturn(serviceSuccess());
 
@@ -237,7 +237,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
     @Test
     public void reactivateUser() throws Exception {
-        final Long userId = 9999L;
+        final long userId = 9999L;
 
         when(registrationServiceMock.activateUser(userId)).thenReturn(serviceSuccess());
 
@@ -278,7 +278,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
     @Test
     public void grantRole() throws Exception {
-        Long userId = 1L;
+        long userId = 1L;
         Role grantRole = Role.APPLICANT;
 
         when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess());

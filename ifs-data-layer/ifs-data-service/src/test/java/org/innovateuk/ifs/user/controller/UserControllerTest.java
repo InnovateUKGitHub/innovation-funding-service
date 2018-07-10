@@ -383,7 +383,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void grantRole() throws Exception {
-        Long userId = 1L;
+        long userId = 1L;
         Role grantRole = Role.APPLICANT;
 
         when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess());
