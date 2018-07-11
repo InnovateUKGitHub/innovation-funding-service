@@ -86,6 +86,7 @@ public class AssessorRegistrationController {
                                     ValidationHandler validationHandler) {
 
         addAddressOptions(registrationForm);
+        registrationForm.getAddressForm().setTriedToSave(true);
 
         Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
 
