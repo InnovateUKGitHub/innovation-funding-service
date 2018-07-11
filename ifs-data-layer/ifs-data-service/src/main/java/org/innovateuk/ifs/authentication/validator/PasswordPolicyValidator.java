@@ -44,6 +44,7 @@ public class PasswordPolicyValidator {
 
     private List<ExclusionRule> exclusionRules;
     private List<ExclusionRulePatternGenerator> exclusionRulePatternGenerators;
+    private Long organisationId;
 
     /**
      * A class representing a facet of a User that we wish to exclude from their password e.g. first name, last name,
@@ -133,9 +134,14 @@ public class PasswordPolicyValidator {
     }
 
     private List<String> getOrganisationNamesForUser(UserResource user) {
+        if (user.getId() == null && organisationId != null) {
+            Organisation organisation = organisationRepository.findOne(organisationId);
+            return asList(organisation.getName());
+        }
         return organisationRepository.findByUsersId(user.getId()).stream()
                 .filter(organisation -> organisation.getName() != null)
-                .map(Organisation::getName).collect(Collectors.toList());
+                .map(Organisation::getName)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -145,8 +151,8 @@ public class PasswordPolicyValidator {
      * @param userResource
      * @return
      */
-    public ServiceResult<Void> validatePassword(String password, UserResource userResource) {
-
+    public ServiceResult<Void> validatePassword(String password, UserResource userResource, Long organisationId) {
+        this.organisationId = organisationId;
         List<ServiceResult<Void>> exclusionResults = flattenLists(simpleMap(exclusionRules, rule ->
                 simpleMap(exclusionRulePatternGenerators, patternGenerator -> {
 

@@ -95,31 +95,31 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
     public void testValidatePasswordStopsUserUsingFullName() {
 
         UserResource user = newUserResource().withFirstName("Bobby").withLastName("Smith").build();
-        ServiceResult<Void> result = validator.validatePassword("B0bbySmith", user);
+        ServiceResult<Void> result = validator.validatePassword("B0bbySmith", user, null);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
 
         // try some different permutations of full name
-        assertTrue(validator.validatePassword("Bobby Smith", user).
+        assertTrue(validator.validatePassword("Bobby Smith", user, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("B0bby sm1th", user).
+        assertTrue(validator.validatePassword("B0bby sm1th", user, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("sm1thB0bBy ", user).
+        assertTrue(validator.validatePassword("sm1thB0bBy ", user, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("sst5m1th  B0bBYdef", user).
+        assertTrue(validator.validatePassword("sst5m1th  B0bBYdef", user, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
 
         // try some success cases
-        assertTrue(validator.validatePassword("Something different", user).isSuccess());
-        assertTrue(validator.validatePassword("Babby Smoth", user).isSuccess());
+        assertTrue(validator.validatePassword("Something different", user, null).isSuccess());
+        assertTrue(validator.validatePassword("Babby Smoth", user, null).isSuccess());
     }
 
     @Test
     public void testValidatePasswordStopsUserUsingFullNameButNotWhenVeryShort() {
 
         UserResource user = newUserResource().withFirstName("Jo").withLastName("Om").build();
-        assertTrue(validator.validatePassword("jolomo 123", user).isSuccess());
-        assertTrue(validator.validatePassword("Joomla", user).isSuccess());
+        assertTrue(validator.validatePassword("jolomo 123", user, null).isSuccess());
+        assertTrue(validator.validatePassword("Joomla", user, null).isSuccess());
     }
 
     @Test
@@ -128,22 +128,22 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         UserResource user = newUserResource().withFirstName("William").withLastName("Shatner").build();
 
         // assert that the user gets the appropriate error back indicating they used first name
-        assertTrue(validator.validatePassword("William", user).
+        assertTrue(validator.validatePassword("William", user, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("w1LLiaM", user).
+        assertTrue(validator.validatePassword("w1LLiaM", user, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("123w1LLiaM456", user).
+        assertTrue(validator.validatePassword("123w1LLiaM456", user, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
 
         // try a success case
-        assertTrue(validator.validatePassword("w1LLster", user).isSuccess());
+        assertTrue(validator.validatePassword("w1LLster", user, null).isSuccess());
     }
 
     @Test
     public void testValidatePasswordStopsUserUsingFirstNameButNotWhenVeryShort() {
 
         UserResource user = newUserResource().withFirstName("Jo").withLastName("Shatner").build();
-        assertTrue(validator.validatePassword("joomla", user).isSuccess());
+        assertTrue(validator.validatePassword("joomla", user, null).isSuccess());
     }
 
     @Test
@@ -152,11 +152,11 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         UserResource user = newUserResource().withFirstName("William").withLastName("Shatner").build();
 
         // assert that the user gets the appropriate error back indicating they used last name
-        assertTrue(validator.validatePassword("Shatner", user).
+        assertTrue(validator.validatePassword("Shatner", user, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("sh4tner", user).
+        assertTrue(validator.validatePassword("sh4tner", user, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
-        assertTrue(validator.validatePassword("123sh4tner456", user).
+        assertTrue(validator.validatePassword("123sh4tner456", user, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME)));
     }
 
@@ -164,7 +164,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
     public void testValidatePasswordStopsUserUsingLastNameButNotWhenVeryShort() {
 
         UserResource user = newUserResource().withFirstName("William").withLastName("Lo").build();
-        assertTrue(validator.validatePassword("highlow", user).isSuccess());
+        assertTrue(validator.validatePassword("highlow", user, null).isSuccess());
     }
 
     @Test
@@ -190,15 +190,15 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
                 build();
 
         // assert that the user gets the appropriate error back indicating they used Organisation name
-        assertTrue(validator.validatePassword("Empire Ltd", userResource).
+        assertTrue(validator.validatePassword("Empire Ltd", userResource, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
-        assertTrue(validator.validatePassword("EGGS", userResource).
+        assertTrue(validator.validatePassword("EGGS", userResource, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
-        assertTrue(validator.validatePassword("123Empire Ltd456", userResource).
+        assertTrue(validator.validatePassword("123Empire Ltd456", userResource, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
-        assertTrue(validator.validatePassword("456eggs456", userResource).
+        assertTrue(validator.validatePassword("456eggs456", userResource, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
-        assertTrue(validator.validatePassword("456eggsempire ltd456", userResource).
+        assertTrue(validator.validatePassword("456eggsempire ltd456", userResource, null).
                 getFailure().is(badRequestError(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME)));
     }
 
@@ -221,7 +221,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
                 withFirstName("Steve").
                 withLastName("Smith").
                 build();
-        assertTrue(validator.validatePassword("jenny", userResource).isSuccess());
+        assertTrue(validator.validatePassword("jenny", userResource, null).isSuccess());
     }
 
     @Test
@@ -242,7 +242,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
                 withLastName("Lo").
                 build();
 
-        assertTrue(validator.validatePassword("highlow", userResource).isSuccess());
+        assertTrue(validator.validatePassword("highlow", userResource, null).isSuccess());
     }
 
     @Test
@@ -261,6 +261,6 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
                 withLastName("Lo").
                 build();
 
-        assertTrue(validator.validatePassword("highlow", userResource).isSuccess());
+        assertTrue(validator.validatePassword("highlow", userResource, null).isSuccess());
     }
 }
