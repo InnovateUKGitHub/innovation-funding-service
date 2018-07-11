@@ -50,8 +50,6 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
         return new AssessmentReviewApplicationSummaryViewModel(viewModel, competition, assessmentDetails(applicationId, user, viewModel));
     }
 
-
-
     private AssessmentReviewFeedbackViewModel assessmentDetails(long applicationId, UserResource user, SummaryViewModel viewModel) {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         if (isAssessorForApplication(userApplicationRoles, user)) {

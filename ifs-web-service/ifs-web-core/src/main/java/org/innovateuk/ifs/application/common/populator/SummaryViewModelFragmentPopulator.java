@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
@@ -28,7 +27,10 @@ import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -102,7 +104,6 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
         Map<Long, List<QuestionResource>> sectionQuestions = getSectionQuestions(competition.getId());
-        ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
 
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
@@ -148,7 +149,6 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
                 application,
                 getSections(competition.getId()),
                 sectionQuestions,
-                scores,
                 getQuestionFormInputs(sectionQuestions, competition.getId()),
                 mappedResponses,
                 questionAssignees,

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -23,7 +22,6 @@ public class SummaryViewModel {
     private final ApplicationResource currentApplication;
     private final Map<Long, SectionResource> sections;
     private final Map<Long, List<QuestionResource>> sectionQuestions;
-    private final ApplicationAssessmentAggregateResource scores;
     private final Map<Long, List<FormInputResource>> questionFormInputs;
     private final Map<Long, FormInputResponseResource> responses;
     private final Map<Long, QuestionStatusResource> questionAssignees;
@@ -41,7 +39,6 @@ public class SummaryViewModel {
     public SummaryViewModel(ApplicationResource currentApplication,
                             Map<Long, SectionResource> sections,
                             Map<Long, List<QuestionResource>> sectionQuestions,
-                            ApplicationAssessmentAggregateResource scores,
                             Map<Long, List<FormInputResource>> questionFormInputs,
                             Map<Long, FormInputResponseResource> responses,
                             Map<Long, QuestionStatusResource> questionAssignees,
@@ -58,7 +55,6 @@ public class SummaryViewModel {
         this.currentApplication = currentApplication;
         this.sections = sections;
         this.sectionQuestions = sectionQuestions;
-        this.scores = scores;
         this.questionFormInputs = questionFormInputs;
         this.responses = responses;
         this.questionAssignees = questionAssignees;
@@ -84,10 +80,6 @@ public class SummaryViewModel {
 
     public Map<Long, List<QuestionResource>> getSectionQuestions() {
         return sectionQuestions;
-    }
-
-    public ApplicationAssessmentAggregateResource getScores() {
-        return scores;
     }
 
     public Map<Long, List<FormInputResource>> getQuestionFormInputs() {
