@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to application start',linkClass='link-back',linkUrl=${competitionId != null ? '/application/create/start-application/'+competitionId : '/competition/search'},currentApplication=${currentApplication}" />
 
     <div th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
       <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
