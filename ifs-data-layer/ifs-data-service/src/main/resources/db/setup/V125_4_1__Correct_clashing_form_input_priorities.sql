@@ -1,3 +1,10 @@
+-- IFS-3914 - correcting form_inputs with clashing priority levels.  This script will run an update to form_input priorities
+-- with clashing levels to increment the priority of the higher-id form input and to run multiple times in case that
+-- increment then causes it to clash with an already-higher priority form input (e.g. if 2 form inputs for the same question
+-- and scope had priority level 0, the one with thre higher id would be incremented to 1.  This may however then cause it to clash
+-- with another form input of priority 1 on the same question and scope, and so running this update again will move this
+-- already-priority 1 form input up to 2, and so on and so on until no further clashes remain
+
 DELIMITER //
 
 CREATE PROCEDURE deduplicate_priorities()
