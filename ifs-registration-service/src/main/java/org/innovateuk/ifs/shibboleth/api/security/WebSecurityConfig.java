@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Order(SecurityProperties.BASIC_AUTH_ORDER)
+@Order(SecurityProperties.BASIC_AUTH_ORDER - 2)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
