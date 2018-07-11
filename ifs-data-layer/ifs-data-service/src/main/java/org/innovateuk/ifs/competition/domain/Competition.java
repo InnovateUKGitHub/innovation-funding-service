@@ -122,7 +122,7 @@ public class Competition implements ProcessActivity {
     private GrantTermsAndConditions termsAndConditions;
 
     @OneToMany(mappedBy="competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<GrantClaimMaximum> grantClaimMaximums;
+    private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
 
     private boolean locationPerPartner = true;
 
