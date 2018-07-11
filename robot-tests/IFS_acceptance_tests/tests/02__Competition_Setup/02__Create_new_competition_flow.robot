@@ -719,7 +719,7 @@ The Applicant is able to apply to the competition once is Open
     [Tags]  HappyPath  MySQL
     [Setup]  the competition moves to Open state    ${competitionId}
     Given log in as a different user                &{lead_applicant_credentials}
-    And logged in user applies to competition       ${competitionTitle}  ${lead_applicant}
+    And logged in user applies to competition       ${competitionTitle}  1
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link         id=org-search
     And the user clicks the button/link         link=INNOVATE LTD

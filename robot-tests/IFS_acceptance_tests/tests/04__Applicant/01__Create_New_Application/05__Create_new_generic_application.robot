@@ -15,7 +15,7 @@ ${competitionName}  Generic competition for TsnCs
 User can edit the assesed question
     [Documentation]    IFS-747
     [Tags]  HappyPath
-    [Setup]  logged in user applies to competition  ${openGenericCompetition}
+    [Setup]  logged in user applies to competition  ${openGenericCompetition} 1
      And the user clicks the button/link           jQuery = span:contains("Enter details manually")
      #Here again - Keyword?
          Then the user enters text to a text field     name = organisationName    Top of the Popps
@@ -52,7 +52,7 @@ Applicant Applies to Generic competition and is able to see the Ts&Cs
     [Documentation]  IFS-1012  IFS-2879
     [Tags]
     [Setup]  Log in as a different user             becky.mason@gmail.com  ${short_password}
-    Given logged in user applies to competition     ${competitionName}
+    Given logged in user applies to competition     ${competitionName} 1
     When the user clicks the button/link            link=Application details
     Then the user fills in the Application details  Application Ts&Cs  ${tomorrowday}  ${month}  ${nextyear}
     When the user clicks the button/link            link=View the grant terms and conditions
