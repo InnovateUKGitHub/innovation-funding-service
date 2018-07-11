@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.workflow.audit.ProcessHistoryEntityListener;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
