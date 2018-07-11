@@ -3,12 +3,12 @@ package org.innovateuk.ifs.form.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
         return withArray((name, object) -> setField("type", name, object), type);
     }
 
-    public QuestionBuilder withQuestionSetupType(CompetitionSetupQuestionType... type) {
+    public QuestionBuilder withQuestionSetupType(QuestionSetupType... type) {
         return withArray((name, object) -> setField("questionSetupType", name, object), type);
     }
 

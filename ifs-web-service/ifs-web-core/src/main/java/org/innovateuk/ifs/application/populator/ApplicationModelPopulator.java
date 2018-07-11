@@ -193,7 +193,7 @@ public class ApplicationModelPopulator {
 
         if(hasFinanceSection) {
             Optional<Long> optionalOrganisationId = Optional.ofNullable(organisationId);
-            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId, optionalOrganisationId);
+            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
 
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
             // NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.
