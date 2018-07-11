@@ -207,11 +207,13 @@ the user follows the flow to register their organisation
     the user enters text to a text field    id=organisationSearchName    Innovate
     the user clicks the button/link         id=org-search
     the user clicks the button/link         link=INNOVATE LTD
+    the user selects the checkbox           address-same
+    the user clicks the button/link         jQuery=.button:contains("Save and continue")
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${email}  ${password}
-    Wait Until Page Contains Element Without Screenshots    link=terms and conditions
+    Wait Until Page Contains Element Without Screenshots    jQuery = a:contains("Terms and conditions")
     Input Text                     id=firstName  ${first_name}
     Input Text                     id=lastName  ${last_name}
     Input Text                     id=phoneNumber  23232323

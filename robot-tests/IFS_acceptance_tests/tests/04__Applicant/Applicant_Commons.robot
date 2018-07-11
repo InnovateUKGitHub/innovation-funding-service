@@ -341,12 +341,13 @@ the applicant edits the "economic benefit" question
     the user should see the element    name=mark_as_complete
 
 logged in user applies to competition
-    [Arguments]  ${competition}
-    the user navigates to the page  ${frontDoor}
+    [Arguments]  ${competition}      #${applicant}   #Why is this here?
+    the user navigates to the page      ${frontDoor}
     navigate to next page if not found  ${competition}
-    the user clicks the button/link  link=${competition}
-    the user clicks the button/link  link=Start new application
-    the user clicks the button/link  id=application-question-save
+    the user clicks the button/link     link=${competition}
+    the user clicks the button/link     jQuery = a:contains("Start new application")
+    the user selects the radio button   organisationTypeId  1
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
 
 navigate to next page if not found
     [Arguments]  ${competition}

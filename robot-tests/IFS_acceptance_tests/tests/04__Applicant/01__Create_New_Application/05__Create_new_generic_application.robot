@@ -16,6 +16,19 @@ User can edit the assesed question
     [Documentation]    IFS-747
     [Tags]  HappyPath
     [Setup]  logged in user applies to competition  ${openGenericCompetition}
+     And the user clicks the button/link           jQuery = span:contains("Enter details manually")
+     #Here again - Keyword?
+         Then the user enters text to a text field     name = organisationName    Top of the Popps
+         When the user clicks the button/link          jQuery = button:contains("Continue")
+        And the user enters text to a text field      id = addressForm.postcodeInput    BS14NT
+        And the user clicks the button/link           jQuery = .button:contains("Find UK address")
+        And the user clicks the button/link           jQuery = .button:contains("Find UK address")
+        Then the user should see the element          css=#select-address-block
+        And the user clicks the button/link           css=#select-address-block > button
+        And the user clicks the button/link           jQuery = button:contains("Continue")
+        And the user clicks the button/link           jQuery = button:contains("Save and continue")
+        And the user clicks the button/link           jQuery = button:contains("Save and return to application overview")
+    #To here
     Given the user should not see the element  a:contains("7.")  # This comp has only 1 question
     When the user clicks the button/link  link=1. Generic question title
     Then the user should see the element  jQuery=button:contains("Mark as complete")
@@ -34,6 +47,7 @@ Requesting the id of this Competition and moving to Open
     Set suite variable  ${competitionId}
     The competition moves to Open state  ${competitionId}
 
+#Below is currently failing
 Applicant Applies to Generic competition and is able to see the Ts&Cs
     [Documentation]  IFS-1012  IFS-2879
     [Tags]
