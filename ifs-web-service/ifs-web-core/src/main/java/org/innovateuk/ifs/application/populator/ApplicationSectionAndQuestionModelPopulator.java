@@ -12,7 +12,6 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -21,9 +20,7 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -44,7 +41,7 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class ApplicationSectionAndQuestionModelPopulator {
+public class ApplicationSectionAndQuestionModelPopulator extends AbstractApplicationModelPopulator{
     public static final String MODEL_ATTRIBUTE_FORM = "form";
 
     @Autowired
@@ -202,7 +199,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         }
         List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), user.getId());
         questionService.removeNotifications(notifications);
-        List<ApplicationInviteResource> pendingAssignableUsers = pendingInvitations(application);
+        List<ApplicationInviteResource> pendingAssignableUsers = pendingInvitations(application.getId());
 
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);
@@ -297,16 +294,6 @@ public class ApplicationSectionAndQuestionModelPopulator {
             return true;
         }
         return false;
-    }
-
-    private List<ApplicationInviteResource> pendingInvitations(ApplicationResource application) {
-        RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(application.getId());
-
-        return pendingAssignableUsersResult.handleSuccessOrFailure(
-                failure -> new ArrayList<>(0),
-                success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                        .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
-                        .collect(Collectors.toList()));
     }
 
     private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {

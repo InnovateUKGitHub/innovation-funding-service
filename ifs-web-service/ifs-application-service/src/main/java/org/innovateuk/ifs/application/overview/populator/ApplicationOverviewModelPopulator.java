@@ -1,12 +1,17 @@
 package org.innovateuk.ifs.application.overview.populator;
 
-import org.innovateuk.ifs.application.common.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.overview.viewmodel.*;
+import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewAssignableViewModel;
+import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
+import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewUserViewModel;
+import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewViewModel;
+import org.innovateuk.ifs.application.populator.AbstractApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationCompletedModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -34,7 +39,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
     private ProjectService projectService;
     private SectionService sectionService;
     private ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator;
-    private ApplicationOverviewCompletedDetailsModelPopulator applicationOverviewCompletedDetailsModelPopulator;
+    private ApplicationCompletedModelPopulator applicationCompletedModelPopulator;
     private ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator;
     private ApplicationOverviewUserModelPopulator applicationOverviewUserModelPopulator;
 
@@ -44,7 +49,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
                                              SectionService sectionService,
                                              ProjectService projectService,
                                              ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator,
-                                             ApplicationOverviewCompletedDetailsModelPopulator applicationOverviewCompletedDetailsModelPopulator,
+                                             ApplicationCompletedModelPopulator applicationCompletedModelPopulator,
                                              ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator,
                                              ApplicationOverviewUserModelPopulator applicationOverviewUserModelPopulator) {
         this.competitionService = competitionService;
@@ -53,7 +58,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
         this.sectionService = sectionService;
         this.projectService = projectService;
         this.applicationOverviewSectionModelPopulator = applicationOverviewSectionModelPopulator;
-        this.applicationOverviewCompletedDetailsModelPopulator = applicationOverviewCompletedDetailsModelPopulator;
+        this.applicationCompletedModelPopulator = applicationCompletedModelPopulator;
         this.applicationOverviewAssignableModelPopulator = applicationOverviewAssignableModelPopulator;
         this.applicationOverviewUserModelPopulator = applicationOverviewUserModelPopulator;
     }
@@ -67,7 +72,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
 
         ApplicationOverviewUserViewModel userViewModel = applicationOverviewUserModelPopulator.populate(application, userId);
         ApplicationOverviewAssignableViewModel assignableViewModel = applicationOverviewAssignableModelPopulator.populate(application, userOrganisation, userId);
-        ApplicationOverviewCompletedViewModel completedViewModel = applicationOverviewCompletedDetailsModelPopulator.populate(application, userOrganisation);
+        ApplicationCompletedViewModel completedViewModel = applicationCompletedModelPopulator.populate(application, userOrganisation);
         ApplicationOverviewSectionViewModel sectionViewModel = applicationOverviewSectionModelPopulator.populate(competition, application, userId);
         Long yourFinancesSectionId = getYourFinancesSectionId(application);
 

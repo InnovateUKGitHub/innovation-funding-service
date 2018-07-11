@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.overview.viewmodel;
+package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -10,15 +10,15 @@ import java.util.concurrent.Future;
 /**
  * View model for the application overview - users
  */
-public class ApplicationOverviewCompletedViewModel {
+public class ApplicationCompletedViewModel {
     private Set<Long> sectionsMarkedAsComplete;
     private Future<Set<Long>> markedAsComplete;
     private Set<Long> completedSections;
     private Boolean userFinanceSectionCompleted;
 
-    public ApplicationOverviewCompletedViewModel(Set<Long> sectionsMarkedAsComplete,
-                                                 Future<Set<Long>> markedAsComplete,
-                                                 Boolean userFinanceSectionCompleted) {
+    public ApplicationCompletedViewModel(Set<Long> sectionsMarkedAsComplete,
+                                         Future<Set<Long>> markedAsComplete,
+                                         Boolean userFinanceSectionCompleted) {
         this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
         this.markedAsComplete = markedAsComplete;
         this.userFinanceSectionCompleted = userFinanceSectionCompleted;

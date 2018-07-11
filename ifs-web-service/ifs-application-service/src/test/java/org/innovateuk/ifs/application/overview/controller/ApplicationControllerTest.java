@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.feedback.populator.FeedbackNavigationPopul
 import org.innovateuk.ifs.application.overview.populator.*;
 import org.innovateuk.ifs.application.overview.viewmodel.*;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationCompletedModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -102,7 +103,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
     @Spy
     @InjectMocks
-    private ApplicationOverviewCompletedDetailsModelPopulator applicationOverviewCompletedDetailsModelPopulator;
+    private ApplicationCompletedModelPopulator applicationCompletedModelPopulator;
 
     @Spy
     @InjectMocks

@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.application.overview.populator;
+package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
+import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -17,24 +17,24 @@ import java.util.concurrent.Future;
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 
 @Component
-public class ApplicationOverviewCompletedDetailsModelPopulator {
+public class ApplicationCompletedModelPopulator {
 
     private SectionService sectionService;
     private QuestionService questionService;
 
-    public ApplicationOverviewCompletedDetailsModelPopulator(SectionService sectionService, QuestionService questionService) {
+    public ApplicationCompletedModelPopulator(SectionService sectionService, QuestionService questionService) {
         this.sectionService = sectionService;
         this.questionService = questionService;
     }
 
-    public ApplicationOverviewCompletedViewModel populate(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+    public ApplicationCompletedViewModel populate(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
 
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
         boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation.get(), completedSectionsByOrganisation);
 
-        ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, markedAsComplete, userFinanceSectionCompleted);
+        ApplicationCompletedViewModel viewModel = new ApplicationCompletedViewModel(sectionsMarkedAsComplete, markedAsComplete, userFinanceSectionCompleted);
         userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));
         return viewModel;
     }

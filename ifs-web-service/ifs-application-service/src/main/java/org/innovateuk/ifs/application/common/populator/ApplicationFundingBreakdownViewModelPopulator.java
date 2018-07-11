@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -14,9 +13,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -25,13 +22,12 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinanceModelPopulator {
+public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinanceModelPopulator{
 
     private OrganisationRestService organisationRestService;
     private FinanceService financeService;
@@ -126,16 +122,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
 
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {
         return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
-    }
-
-    private List<ApplicationInviteResource> pendingInvitations(final Long applicationId) {
-        final RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(applicationId);
-
-        return pendingAssignableUsersResult.handleSuccessOrFailure(
-                failure -> new ArrayList<>(0),
-                success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                        .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
-                        .collect(Collectors.toList()));
     }
 
     private List<String> getPendingOrganisationNames(List<OrganisationResource> applicationOrganisations, Long applicationId) {

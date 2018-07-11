@@ -9,12 +9,9 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -43,6 +40,9 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
     @Autowired
     private FinanceOverviewPopulator financeOverviewPopulator;
+
+    @Autowired
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Override
     public BaseSectionViewModel populateModel(ApplicationForm form, Model model, BindingResult bindingResult, ApplicantSectionResource applicantSection) {
@@ -114,7 +114,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         List<String> activeApplicationOrganisationNames = applicantSection.allOrganisations().map(OrganisationResource::getName).collect(Collectors.toList());
 
-        List<String> pendingOrganisationNames = pendingInvitations(applicantSection.getApplication()).stream()
+        List<String> pendingOrganisationNames = applicationSectionAndQuestionModelPopulator.pendingInvitations(applicantSection.getApplication().getId()).stream()
             .map(ApplicationInviteResource::getInviteOrganisationName)
             .distinct()
             .filter(orgName -> StringUtils.hasText(orgName)
@@ -126,17 +126,6 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
                 .filter(ApplicantResource::isLead)
                 .map(ApplicantResource::getOrganisation)
                 .findAny().orElse(null));
-    }
-
-
-    private List<ApplicationInviteResource> pendingInvitations(ApplicationResource application) {
-        RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(application.getId());
-
-        return pendingAssignableUsersResult.handleSuccessOrFailure(
-            failure -> new ArrayList<>(0),
-            success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
-                .collect(Collectors.toList()));
     }
 
     private void addCompletedDetails(OpenSectionViewModel openSectionViewModel, ApplicantSectionResource applicantSection) {

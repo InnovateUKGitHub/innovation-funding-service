@@ -3,10 +3,8 @@ package org.innovateuk.ifs.application.forms.populator;
 import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.application.forms.viewmodel.QuestionOrganisationDetailsViewModel;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.application.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -23,7 +21,7 @@ import java.util.stream.Collectors;
  * Populating viewModel for Organisation Details
  */
 @Component
-public class OrganisationDetailsViewModelPopulator {
+public class OrganisationDetailsViewModelPopulator extends AbstractApplicationModelPopulator {
 
     @Autowired
     protected InviteRestService inviteRestService;
@@ -70,15 +68,5 @@ public class OrganisationDetailsViewModelPopulator {
                 .filter(applicant -> applicant.getProcessRole().getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .map(ApplicantResource::getOrganisation)
                 .findFirst();
-    }
-
-    private List<ApplicationInviteResource> pendingInvitations(final Long applicationId) {
-        final RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(applicationId);
-
-        return pendingAssignableUsersResult.handleSuccessOrFailure(
-                failure -> new ArrayList<>(0),
-                success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                        .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
-                        .collect(Collectors.toList()));
     }
 }

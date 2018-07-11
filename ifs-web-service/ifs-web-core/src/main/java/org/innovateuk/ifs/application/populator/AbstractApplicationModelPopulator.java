@@ -1,11 +1,16 @@
-package org.innovateuk.ifs.application.common.populator;
+package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 
@@ -21,13 +26,17 @@ public abstract class AbstractApplicationModelPopulator {
 
     private SectionService sectionService;
     private QuestionService questionService;
+    private InviteRestService inviteRestService;
 
     public AbstractApplicationModelPopulator() {
     }
 
-    public AbstractApplicationModelPopulator(SectionService sectionService, QuestionService questionService) {
+    public AbstractApplicationModelPopulator(SectionService sectionService,
+                                             QuestionService questionService,
+                                             InviteRestService inviteRestService) {
         this.sectionService = sectionService;
         this.questionService = questionService;
+        this.inviteRestService = inviteRestService;
     }
 
     protected Map<Long, List<QuestionResource>> getSectionQuestions(Long competitionId) {
@@ -51,13 +60,13 @@ public abstract class AbstractApplicationModelPopulator {
                         Function.identity()));
     }
 
-    protected ApplicationOverviewCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+    protected ApplicationCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
         boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation.get(), completedSectionsByOrganisation);
 
-        ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, markedAsComplete, userFinanceSectionCompleted);
+        ApplicationCompletedViewModel viewModel = new ApplicationCompletedViewModel(sectionsMarkedAsComplete, markedAsComplete, userFinanceSectionCompleted);
         userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));
         return viewModel;
     }
@@ -91,5 +100,15 @@ public abstract class AbstractApplicationModelPopulator {
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
+    }
+
+    protected List<ApplicationInviteResource> pendingInvitations(Long applicationId) {
+        RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(applicationId);
+
+        return pendingAssignableUsersResult.handleSuccessOrFailure(
+                failure -> new ArrayList<>(0),
+                success -> success.stream().flatMap(item -> item.getInviteResources().stream())
+                        .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
+                        .collect(Collectors.toList()));
     }
 }

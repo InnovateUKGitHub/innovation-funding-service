@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.overview.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -22,7 +23,7 @@ public class ApplicationOverviewViewModel {
     private Long financeSectionId;
     private ApplicationOverviewUserViewModel user;
     private ApplicationOverviewAssignableViewModel assignable;
-    private ApplicationOverviewCompletedViewModel completed;
+    private ApplicationCompletedViewModel completed;
     private ApplicationOverviewSectionViewModel section;
 
 
@@ -33,7 +34,7 @@ public class ApplicationOverviewViewModel {
                                         boolean isApplicationSubmitted, boolean projectWithdrawn, CompetitionResource currentCompetition,
                                         OrganisationResource userOrganisation, Integer completedQuestionsPercentage, Long financeSectionId,
                                         ApplicationOverviewUserViewModel user, ApplicationOverviewAssignableViewModel assignable,
-                                        ApplicationOverviewCompletedViewModel completed, ApplicationOverviewSectionViewModel section) {
+                                        ApplicationCompletedViewModel completed, ApplicationOverviewSectionViewModel section) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.applicationState = applicationState;
@@ -93,7 +94,7 @@ public class ApplicationOverviewViewModel {
         return assignable;
     }
 
-    public ApplicationOverviewCompletedViewModel getCompleted() {
+    public ApplicationCompletedViewModel getCompleted() {
         return completed;
     }
 

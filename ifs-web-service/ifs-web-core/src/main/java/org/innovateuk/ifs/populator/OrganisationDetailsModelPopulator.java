@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.populator;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.application.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +24,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  * View model for Organisation Details
  */
 @Component
-public class OrganisationDetailsModelPopulator {
+public class OrganisationDetailsModelPopulator extends AbstractApplicationModelPopulator{
 
     @Autowired
     protected InviteRestService inviteRestService;
@@ -74,15 +71,5 @@ public class OrganisationDetailsModelPopulator {
                 simpleFindFirst(userApplicationRoles, uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()));
 
         return leadApplicantRole.flatMap(role -> simpleFindFirst(organisations, org -> org.getId().equals(role.getOrganisationId())));
-    }
-
-    private List<ApplicationInviteResource> pendingInvitations(final Long applicationId) {
-        final RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(applicationId);
-
-        return pendingAssignableUsersResult.handleSuccessOrFailure(
-                failure -> new ArrayList<>(0),
-                success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                        .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
-                        .collect(Collectors.toList()));
     }
 }
