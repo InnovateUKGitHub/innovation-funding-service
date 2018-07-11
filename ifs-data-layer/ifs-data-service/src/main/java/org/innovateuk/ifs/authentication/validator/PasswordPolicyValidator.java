@@ -151,9 +151,26 @@ public class PasswordPolicyValidator {
      * @param userResource
      * @return
      */
+    public ServiceResult<Void> validatePassword(String password, UserResource userResource) {
+        List<ServiceResult<Void>> exclusionResults = getExclusionResults(password, userResource);
+        return returnSuccessOrCollateFailures(exclusionResults);
+    }
+
+    /**
+     * Validate the password for organisationId, returning a list of errors if one or more exclusions were found
+     *
+     * @param password
+     * @param userResource
+     * @return
+     */
     public ServiceResult<Void> validatePassword(String password, UserResource userResource, Long organisationId) {
         this.organisationId = organisationId;
-        List<ServiceResult<Void>> exclusionResults = flattenLists(simpleMap(exclusionRules, rule ->
+        List<ServiceResult<Void>> exclusionResults = getExclusionResults(password, userResource);
+        return returnSuccessOrCollateFailures(exclusionResults);
+    }
+
+    private List<ServiceResult<Void>> getExclusionResults(String password, UserResource userResource) {
+        return flattenLists(simpleMap(exclusionRules, rule ->
                 simpleMap(exclusionRulePatternGenerators, patternGenerator -> {
 
                     List<String> excludedWords = rule.exclusionSupplier.apply(userResource);
@@ -166,8 +183,6 @@ public class PasswordPolicyValidator {
                     }
                 })
         ));
-
-        return returnSuccessOrCollateFailures(exclusionResults);
     }
 
     private ServiceResult<Void> returnSuccessOrCollateFailures(List<ServiceResult<Void>> exclusionResults) {

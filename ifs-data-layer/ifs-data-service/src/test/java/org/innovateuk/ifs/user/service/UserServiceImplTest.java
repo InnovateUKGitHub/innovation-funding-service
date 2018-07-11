@@ -120,7 +120,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
         when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
-        when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource, null)).thenReturn(serviceSuccess());
+        when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(serviceSuccess());
         when(idpServiceMock.updateUserPassword("myuid", "mypassword")).thenReturn(serviceSuccess("mypassword"));
 
         service.changePassword("myhash", "mypassword").getSuccess();
@@ -138,7 +138,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(serviceSuccess(token));
         when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
-        when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource, null)).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
+        when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
 
         ServiceResult<Void> result = service.changePassword("myhash", "mypassword");
         assertTrue(result.isFailure());
@@ -157,7 +157,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(userMapperMock.mapToResource(user)).thenReturn(userResource);
 
-        when(passwordPolicyValidatorMock.validatePassword(password, userResource, null)).thenReturn(serviceSuccess());
+        when(passwordPolicyValidatorMock.validatePassword(password, userResource)).thenReturn(serviceSuccess());
         when(idpServiceMock.updateUserPassword(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
 
         ServiceResult<Void> result = service.changePassword("myhash", password);

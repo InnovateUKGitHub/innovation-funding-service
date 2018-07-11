@@ -196,7 +196,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(profileRepositoryMock.findOne(userToCreate.getProfileId())).thenReturn(userProfile);
         when(profileRepositoryMock.save(any(Profile.class))).thenReturn(userProfile);
-        when(passwordPolicyValidatorMock.validatePassword("Passw0rd123", userToCreateResource.toUserResource(), null)).thenReturn(serviceSuccess());
+        when(passwordPolicyValidatorMock.validatePassword("Passw0rd123", userToCreateResource.toUserResource())).thenReturn(serviceSuccess());
         when(userMapperMock.mapToDomain(userToCreateResource.toUserResource())).thenReturn(userToCreate);
         when(addressMapperMock.mapToDomain(userToCreateResource.getAddress())).thenReturn(
                 newAddress().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build());
@@ -314,7 +314,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate, organisationIdinviteservice)).thenReturn(serviceSuccess());
+        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate, organisationId)).thenReturn(serviceSuccess());
 
         UserResource result = service.createOrganisationUser(organisationId, userToCreate).getSuccess();
 
