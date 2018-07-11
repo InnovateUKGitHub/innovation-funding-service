@@ -83,15 +83,15 @@ include::{snippets}/question/get-previous-question-by-section/curl-request.adoc[
 
 === Get the question by competition and setup question type
 ==== Request
-include::{snippets}/question/get-question-by-competition-id-and-competition-setup-question-type/http-request.adoc[]
-include::{snippets}/question/get-question-by-competition-id-and-competition-setup-question-type/path-parameters.adoc[]
+include::{snippets}/question/get-question-by-competition-id-and-question-setup-type/http-request.adoc[]
+include::{snippets}/question/get-question-by-competition-id-and-question-setup-type/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/question/get-question-by-competition-id-and-competition-setup-question-type/http-response.adoc[]
-include::{snippets}/question/get-question-by-competition-id-and-competition-setup-question-type/response-fields.adoc[]
+include::{snippets}/question/get-question-by-competition-id-and-question-setup-type/http-response.adoc[]
+include::{snippets}/question/get-question-by-competition-id-and-question-setup-type/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/question/get-question-by-competition-id-and-competition-setup-question-type/curl-request.adoc[]
+include::{snippets}/question/get-question-by-competition-id-and-question-setup-type/curl-request.adoc[]
 
 === Get the question by competition and form input type
 ==== Request
