@@ -45,7 +45,7 @@
                                     <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
                                       <div class="govuk-grid-row extra-margin">
                                         <div class="govuk-grid-column-one-third dashboard-actions">
-                                          <a href="#" class="button">Notify assessors</a>
+                                          <a href="#" class="govuk-button">Notify assessors</a>
                                         </div>
                                         <div class="govuk-grid-column-one-third">
                                           <div class="highlight-panel">
@@ -197,7 +197,7 @@
                                     </ul>
                                     <!-- <div class="govuk-grid-row dashboard-actions">
                                       <div class="govuk-grid-column-one-third">
-                                        <a th:href="${(param.status != null ? '/prototypes/5062-submitted-applications?status=feedback&#38;comp=' + param.status[0] : '')}" class="button" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Feedback</a>
+                                        <a th:href="${(param.status != null ? '/prototypes/5062-submitted-applications?status=feedback&#38;comp=' + param.status[0] : '')}" class="govuk-button" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'Closed' or param.status != null and param.status[0] == 'assessment' or param.status != null and param.status[0] == 'panel' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Feedback</a>
                                       </div>
                                     </div> -->
                                   </div>
@@ -221,7 +221,7 @@
                                         <p class="govuk-body">31 October 2016</p>
                                         <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
                                           <div class="aligncentre">
-                                            <a href="#" class="button">Notify assessors</a>
+                                            <a href="#" class="govuk-button">Notify assessors</a>
                                           </div>
                                         </th:block>
                                       </li>
@@ -238,7 +238,7 @@
                                         <p class="govuk-body">17 November 2016</p>
                                         <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
                                           <div class="aligncentre">
-                                            <a href="#" class="button">Close assessment</a>
+                                            <a href="#" class="govuk-button">Close assessment</a>
                                           </div>
                                         </th:block>
                                       </li>
@@ -259,12 +259,12 @@
                                         <p class="govuk-body">05 December 2016</p>
                                         <th:block th:if="${param.status != null and param.status[0] == 'panel'}" th:unless="${param.action != null and param.action[0] == 'notify'}">
                                           <div class="aligncentre">
-                                            <a href="#" class="button disabled">Manage funding notifications</a>
+                                            <a href="#" class="govuk-button disabled">Manage funding notifications</a>
                                           </div>
                                         </th:block>
                                         <th:block th:if="${param.action != null and param.action[0] == 'notify' or param.status != null and param.status[0] == 'Inform'}">
                                           <div class="aligncentre">
-                                            <a href="/prototypes/1561-funding-notifications?comp=panel" class="button">Manage funding notifications</a>
+                                            <a href="/prototypes/1561-funding-notifications?comp=panel" class="govuk-button">Manage funding notifications</a>
                                           </div>
                                         </th:block>
                                       </li>
@@ -273,7 +273,7 @@
                                         <p class="govuk-body">10 December 2016</p>
                                         <th:block th:if="${param.status != null and param.status[0] == 'Inform'}" th:unless="${param.action != null and param.action[0] == 'feedback-sent'}">
                                           <div class="aligncentre">
-                                            <a href="/prototypes/1561-inform-release-feedback?comp=Inform" class="button">Release feedback</a>
+                                            <a href="/prototypes/1561-inform-release-feedback?comp=Inform" class="govuk-button">Release feedback</a>
                                           </div>
                                         </th:block>
                                       </li>
@@ -388,15 +388,15 @@
                                     <dd>Jess Smith</dd>
                                 </dl>
                                 <th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-                                    <a href="#" class="button button-large">Notify assessors</a>
+                                    <a href="#" class="govuk-button button-large">Notify assessors</a>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
                                     <div class="govuk-grid-row">
                                         <div class="column-quarter">
-                                            <a href="#" class="button button-large width-full aligncentre">Export panel sheet</a>
+                                            <a href="#" class="govuk-button button-large width-full aligncentre">Export panel sheet</a>
                                         </div>
                                         <div class="column-quarter">
-                                            <a href="#" class="button button-large width-full aligncentre">Update assessors</a>
+                                            <a href="#" class="govuk-button button-large width-full aligncentre">Update assessors</a>
                                         </div>
                                         <div class="govuk-grid-column-one-half">
                                             <p class="govuk-body"><span class="govuk-heading-l">5</span> changes since last update</p>
@@ -404,10 +404,10 @@
                                     </div>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-                                    <a href="#" class="button button-large">Export panel sheet</a>
+                                    <a href="#" class="govuk-button button-large">Export panel sheet</a>
                                 </th:block>
                                 <th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-                                    <a href="#" class="button button-large">Export panel sheet</a>
+                                    <a href="#" class="govuk-button button-large">Export panel sheet</a>
                                 </th:block>
                                 <h2 class="govuk-heading-m">Review progress</h2>
                                 <th:block th:if="${param.status == null or param.status[0] == 'Open'}">

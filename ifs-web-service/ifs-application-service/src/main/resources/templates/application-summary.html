@@ -53,9 +53,9 @@
                         <div class="message-alert">
                             <p class="govuk-body">You will not be able to make changes to your application or resubmit after this point.</p>
                         </div>
-                        <a th:if="${model.applicationReadyForSubmit}" id="submit-application-button" class="button extra-margin" data-js-modal="modal-confirm-submit-application"
+                        <a th:if="${model.applicationReadyForSubmit}" id="submit-application-button" class="govuk-button extra-margin" data-js-modal="modal-confirm-submit-application"
                            th:href="@{/application/{id}/confirm-submit(id=${model.currentApplication.getId()})}">Submit application</a>
-                        <button disabled="disabled" class="button extra-margin" th:unless="${model.applicationReadyForSubmit}">Submit application</button>
+                        <button disabled="disabled" class="govuk-button extra-margin" th:unless="${model.applicationReadyForSubmit}">Submit application</button>
                     </th:block>
 
                     <th:block th:unless="${model.userIsLeadApplicant}">

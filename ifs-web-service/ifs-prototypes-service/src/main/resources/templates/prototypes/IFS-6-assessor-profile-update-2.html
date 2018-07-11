@@ -50,14 +50,14 @@
             <th:block th:if="${param.action != null and param.action[0] == 'new'}">
                 <input type="hidden" name="tab" value="pending" />
                 <input type="hidden" name="pending" value="1" />
-                <button class="button" formaction="/prototypes/IFS-6-manage-assessors-active">Send invite</button>
+                <button class="govuk-button" formaction="/prototypes/IFS-6-manage-assessors-active">Send invite</button>
             </th:block>
 
             <th:block th:unless="${param.action != null and param.action[0] == 'new'}">
-                <button class="button" formaction="/prototypes/IFS-6-assessor-profile">Save and return</button>
+                <button class="govuk-button" formaction="/prototypes/IFS-6-assessor-profile">Save and return</button>
             </th:block>
 
-            <a href="#" class="button button-clear">Cancel</a>
+            <a href="#" class="govuk-button button-clear">Cancel</a>
         </div>
 
     </form>

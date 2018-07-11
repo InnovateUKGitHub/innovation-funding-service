@@ -65,7 +65,7 @@ Clicking the ineligible button
 Cancel marking the application as ineligible
     [Documentation]  INFUND-7370 IFS-986
     [Tags]  HappyPath  InnovationLead
-    When the user clicks the button/link      jQuery=.button:contains("Cancel")
+    When the user clicks the button/link      jQuery=.govuk-button:contains("Cancel")
     Then the user should not see the element  css=[aria-hidden="false"] [id="ineligibleReason"]
 
 Client side validation - mark an application as ineligible
@@ -82,7 +82,7 @@ Marking an application as ineligible moves it to the ineligible view
     [Tags]  HappyPath  InnovationLead
     Given the user clicks the button/link       jQuery=h2 button:contains("Mark application as ineligible")
     Then the user enters text to a text field   id=ineligibleReason  This is the reason of why this application is ineligible
-    When the user clicks the button/link        jQuery=.button:contains("Mark application as ineligible")
+    When the user clicks the button/link        jQuery=.govuk-button:contains("Mark application as ineligible")
     Then the user should be redirected to the correct page  ${ineligibleApplications}
     And the user should see the element         jQuery=td:contains("${ineligibleApplication}")
     And the user should not see the element     jQuery=td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
@@ -99,8 +99,8 @@ Filter ineligible applications
     [Setup]  log in as a different user        &{Comp_admin1_credentials}
     Given the user navigates to the page       ${ineligibleApplications}
     When the user selects the option from the drop-down menu  No  id=filterInform
-    When the user clicks the button/link       jQuery=.button:contains("Filter")
-    Then the user should see the element       jQuery=td:contains("${ineligibleApplication}") ~ td .button:contains("Inform applicant")
+    When the user clicks the button/link       jQuery=.govuk-button:contains("Filter")
+    Then the user should see the element       jQuery=td:contains("${ineligibleApplication}") ~ td .govuk-button:contains("Inform applicant")
     And the user should not see the element    jQuery=td:contains("Informed ineligible application") ~ td span:contains("Informed")
     When the user clicks the button/link       jQuery=a:contains("Clear all filters")
     Then the user should see the element       jQuery=td:contains("Informed ineligible application") ~ td span:contains("Informed")

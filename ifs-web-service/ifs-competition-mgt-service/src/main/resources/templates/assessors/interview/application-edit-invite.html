@@ -81,7 +81,7 @@
                                             <span th:text="${model.feedbackFilename}" id="file-name">Uploaded-file.pdf</span>
                                         </div>
                                         <div class="govuk-grid-column-one-third">
-                                            <button style="padding:0" id="remove-applicant-resend-file" class="button button-clear">Remove</button>
+                                            <button style="padding:0" id="remove-applicant-resend-file" class="button-clear">Remove</button>
                                         </div>
                                     </div>
                                     <input type="hidden" id="remove-file" name="removeFile" th:value="${model.hasAttachment()}" />
@@ -129,9 +129,9 @@
                 </p>
 
                 <div class="extra-margin">
-                    <button type="submit" class="button">Resend invite</button>
+                    <button type="submit" class="govuk-button">Resend invite</button>
                     <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view(competitionId=${model.competitionId}, applicationId=${model.applicationId})}"
-                       class="button button-clear">Cancel</a>
+                       class="button-clear">Cancel</a>
                 </div>
 
             </form>

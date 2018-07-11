@@ -82,7 +82,7 @@
           <div class="extra-margin">
             <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
               <input type="hidden" name="status" value="readOnly" />
-              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="button" disabled="disabled" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
+              <button type="submit" name="mark_as_complete" id="mark_as_complete" class="govuk-button" disabled="disabled" th:formaction="@{${#httpServletRequest.requestURI}}">Mark as complete
               </button>
             </th:block>
 

@@ -29,7 +29,7 @@ Competition dashboard
     And The user should see the text in the page    Smart infrastructure
     And the user should see the element    link=View and update competition setup
     #The following checks test if the correct buttons are disabled
-    And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
+    And the user should see the element    jQuery=.govuk-button--disabled[aria-disabled="true"]:contains("Input and review funding decision")
 
 Milestones for the closed competitions
     [Documentation]    INFUND-7561
@@ -56,7 +56,7 @@ Invite Assessors
 Notify Assessors
     [Documentation]  INFUND-6458 INFUND-7362
     [Tags]
-    When The user clicks the button/link    jQuery=.button:contains("Notify assessors")
+    When The user clicks the button/link    jQuery=.govuk-button:contains("Notify assessors")
     Then the user should see the text in the page    In assessment
     [Teardown]  Reset competition's milestone
 
@@ -75,11 +75,11 @@ Get The expected values from the invite page
     The user clicks the button/link    link=Competition
 
 the counts of the key statistics of the closed competition should be correct
-    ${INVITED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(1) .govuk-heading-l
+    ${INVITED_COUNT}=    Get text    css=.extra-margin .govuk-grid-column-one-third:nth-child(1) .govuk-heading-l
     Should Be Equal As Integers    ${INVITED_COUNT}    ${Invited}
-    ${ACCEPTED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(2) .govuk-heading-l
+    ${ACCEPTED_COUNT}=    Get text    css=.extra-margin .govuk-grid-column-one-third:nth-child(2) .govuk-heading-l
     Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${Accepted}
-    ${APPLICATIONS_PER_ASSESSOR}=    Get text    css=.extra-margin .column-third:nth-child(3) .govuk-heading-l
+    ${APPLICATIONS_PER_ASSESSOR}=    Get text    css=.extra-margin .govuk-grid-column-one-third:nth-child(3) .govuk-heading-l
     Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    3
     ${APPLICATIONS_REQ}=    Get text    css=ul:nth-child(3) > li:nth-child(1) > div > span
     Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${APPLICATIONS_REQ}

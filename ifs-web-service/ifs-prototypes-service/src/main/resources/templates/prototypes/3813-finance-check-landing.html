@@ -52,7 +52,7 @@
         <input type="hidden" id="action" name="action" value="newResponse" />
         <input type="hidden" id="query" name="query" value="Test query" />
         <hr />
-        <button class="button button-secondary" th:unless="${param.status != null and param.status[0] == 'approved'}">Respond</button>
+        <button class="govuk-button button-secondary" th:unless="${param.status != null and param.status[0] == 'approved'}">Respond</button>
     </form>
 
     <th:block th:insert="prototypes/fragments/project-setup :: prototype-post-query('query','partner')" th:if="${param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}"/>

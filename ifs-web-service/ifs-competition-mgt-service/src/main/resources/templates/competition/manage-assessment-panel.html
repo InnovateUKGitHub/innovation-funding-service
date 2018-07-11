@@ -21,7 +21,7 @@
             <div class="govuk-grid-column-one-quarter">
                 <!--/* TODO not sure we actually need to be in a form */-->
                <form th:action="@{/competition}" method="post">
-               <button class="button width-full" type="submit"
+               <button class="govuk-button width-full" type="submit"
                        th:disabled="${!model.pendingReviewNotifications}"
                        th:formaction="@{/assessment/panel/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}">Confirm actions</button>
                </form>

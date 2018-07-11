@@ -60,7 +60,7 @@
         <li class="width-full">
             <ul class="tabular-list__rowinternal">
                 <li class="width-half"><span th:unless="${site == 'rc'}">Contract and DOI: <strong th:text="${doi}">Yes</strong></span></li>
-                <li class="width-half alignright"><a href="#" class="button button-secondary add-to-invite">+ Add to invite list</a></li>
+                <li class="width-half alignright"><a href="#" class="button-secondary add-to-invite">+ Add to invite list</a></li>
             </ul>
         </li>
     </ul> -->
@@ -82,7 +82,7 @@
             <strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
         </li>
 
-        <li class="width-10-percent alignright"><a href="#" class="button button-secondary add-to-invite">Add</a></li>
+        <li class="width-10-percent alignright"><a href="#" class="button-secondary add-to-invite">Add</a></li>
     </ul>
 
 </div>
@@ -129,7 +129,7 @@
         <li class="width-20-percent alignright">
 
             <th:block th:if="${status == null}">
-                <a th:href="${'/prototypes/4607-manage-assessors-invite?status=invite-individual&#38;name='+name+'&#38;version=v2'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" class="button invite-individual">Invite individual</a>
+                <a th:href="${'/prototypes/4607-manage-assessors-invite?status=invite-individual&#38;name='+name+'&#38;version=v2'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" class="govuk-button invite-individual">Invite individual</a>
             </th:block>
 
             <th:block th:if="${status != null}">
@@ -175,16 +175,16 @@
 
                     <th:block th:if="${type != null and type == 'assign'}">
                         <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;row='+ row + '&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors + '&#38;org=' + org + '&#38;name=' + name + '&#38;action=application-assigned'}"
-                            class="button button-secondary alignright">Assign</a>
+                            class="button-secondary alignright">Assign</a>
                     </th:block>
 
                     <th:block th:if="${type != null and type == 'remove'}">
                         <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;row='+ row + '&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors + '&#38;org=' + org + '&#38;name=' + name + '&#38;action=remove-assigned'}"
-                            class="button button-secondary alignright">Remove</a>
+                            class="button-secondary alignright">Remove</a>
                     </th:block>
 
                     <th:block th:if="${type == null}">
-                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors}" class="button button-secondary alignright" th:text="${button}">BUTTON TEXT</a>
+                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors}" class="button-secondary alignright" th:text="${button}">BUTTON TEXT</a>
                     </th:block>
 
                 </li>
@@ -256,7 +256,7 @@
         <div class="govuk-grid-column-one-half select-all alignright">
             <form method="get">
                 <input type="hidden" name="tab" value="invite">
-                <button class="button" name="addSelected" data-submit-el="" disabled="disabled" th:formaction="${#httpServletRequest.requestURI}">
+                <button class="govuk-button" name="addSelected" data-submit-el="" disabled="disabled" th:formaction="${#httpServletRequest.requestURI}">
                     Add selected to invite list
                 </button>
             </form>
@@ -719,7 +719,7 @@
                           <a href="?page=0">Clear all filters</a>
                         </div>
                         <div class="govuk-grid-column-one-third">
-                            <button class="button">Filter</button>
+                            <button class="govuk-button">Filter</button>
                         </div>
                     </div>
                   </div>
@@ -788,7 +788,7 @@
                             <div>
                                 <input type="hidden" name="status" value="invite-new" />
                                 <input type="hidden" name="tab" value="invite" />
-                                <a class="button no-margin " id="prototype-add-assessors">Add assessors to list</a>
+                                <a class="govuk-button no-margin " id="prototype-add-assessors">Add assessors to list</a>
                             </div>
 
                         </form>
@@ -801,7 +801,7 @@
                 <h2 class="govuk-heading-s">Invite list</h2>
               </div>
               <div class="govuk-grid-column-one-half alignright">
-                <a href="/prototypes/IFS-707-review-send" class="button">Review and send invites</a>
+                <a href="/prototypes/IFS-707-review-send" class="govuk-button">Review and send invites</a>
               </div>
             </div>
 
@@ -814,7 +814,7 @@
                             <th scope="col" class="width-large">Innovation area</th>
                             <th scope="col">Contract and DOI</th>
                             <td scope="col" class="alignright">
-                              <button name="removeAll" class="buttonlink alignright">
+                              <button name="removeAll" class="button-clear alignright">
                                     Remove all from list
                                 </button>
                             </td>
@@ -915,7 +915,7 @@
         <div class="govuk-grid-column-one-half select-all alignright">
             <form method="get">
                 <input type="hidden" id="status" name="status" value="resendInvites" />
-                <button class="button" name="addSelected" data-submit-el="" disabled="disabled" formaction="/prototypes/IFS-707-review-send">
+                <button class="govuk-button" name="addSelected" data-submit-el="" disabled="disabled" formaction="/prototypes/IFS-707-review-send">
                     Resend invites
                 </button>
             </form>
@@ -1152,14 +1152,14 @@
                 <a href="#">View application details</a>
             </div>
             <div class="govuk-grid-column-one-half alignright">
-                <a href="/prototypes/4607-manage-assessors?view=application&#38;tab=assign&#38;action=notify" class="button button-secondary">Return to assign tab</a>
+                <a href="/prototypes/4607-manage-assessors?view=application&#38;tab=assign&#38;action=notify" class="button-secondary">Return to assign tab</a>
             </div>
         </div>
     </th:block>
 
     <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'assessor'}">
         <div class="alignright extra-margin-bottom">
-            <a href="/prototypes/4607-manage-assessors?view=assessor&#38;tab=assign&#38;action=notify" class="button button-secondary">Return to assign tab</a>
+            <a href="/prototypes/4607-manage-assessors?view=assessor&#38;tab=assign&#38;action=notify" class="button-secondary">Return to assign tab</a>
         </div>
     </th:block>
 
@@ -1235,7 +1235,7 @@
                             </div>
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
-                            <button class="button">Filter</button>
+                            <button class="govuk-button">Filter</button>
                         </div>
                     </div>
 
@@ -1305,7 +1305,7 @@
                             </div>
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
-                            <button class="button">Filter</button>
+                            <button class="govuk-button">Filter</button>
                         </div>
                     </div>
 

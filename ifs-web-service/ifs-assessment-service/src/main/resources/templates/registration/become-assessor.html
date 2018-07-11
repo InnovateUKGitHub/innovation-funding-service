@@ -16,7 +16,7 @@
                 <p class="govuk-body">Welcome to Innovate UK’s assessment service.</p>
                 <p class="govuk-body">Please create your account. Once your account is created you will need to sign in before you can accept invitations to assess.</p>
 
-                <a th:href="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" class="button button-large">Create account</a>
+                <a th:href="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" class="govuk-button">Create account</a>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
             </main>

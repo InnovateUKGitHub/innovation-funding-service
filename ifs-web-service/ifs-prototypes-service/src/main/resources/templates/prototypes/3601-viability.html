@@ -178,7 +178,7 @@
 			</fieldset>
 
 			<div class="extra-margin">
-				<button data-js-modal="change-org-size" id="change-org-button" class="button" disabled="disabled">Change organisation size</button>
+				<button data-js-modal="change-org-size" id="change-org-button" class="govuk-button" disabled="disabled">Change organisation size</button>
 			</div>
 
 			<div class="change-org-size" role="dialog" aria-hidden="true" style="margin-top: -174px;">
@@ -221,11 +221,11 @@
 
 		        	<div class="alignright-button">
 
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+						<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
 						<input type="hidden" id="status" name="status" value="orgSizeChanged" />
 
-		        		<button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Change organisation size</button>
+		        		<button class="govuk-button" th:formaction="@{${#httpServletRequest.requestURI}}">Change organisation size</button>
 		        	</div>
 
 		        </div>
@@ -275,8 +275,8 @@
     </div>
 
 	<div class="extra-margin">
-    	<a href="/prototypes/3807-finance-queries" class="button button-secondary">Queries</a>
-    	<a href="/prototypes/3990-finance-notes" class="button button-secondary">Notes</a>
+    	<a href="/prototypes/3807-finance-queries" class="govuk-button button-secondary">Queries</a>
+    	<a href="/prototypes/3990-finance-notes" class="govuk-button button-secondary">Notes</a>
     </div>
 
     <th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
@@ -303,7 +303,7 @@
             </div>
 
 			<div class="extra-margin">
-				<button data-js-modal="confirm-viability-modal" id="confirm-viability" class="button" disabled="disabled">Confirm viability</button>
+				<button data-js-modal="confirm-viability-modal" id="confirm-viability" class="govuk-button" disabled="disabled">Confirm viability</button>
 			</div>
 
 			<div class="confirm-viability-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
@@ -320,7 +320,7 @@
 
 			        	<div class="alignright-button">
 
-							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+							<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
 							<input type="hidden" id="status" name="status" value="approved" />
 
@@ -332,7 +332,7 @@
 								<input type="hidden" name="compName" th:value="${param.compName[0]}" />
 							</th:block>
 
-							<button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Confirm viability</button>
+							<button class="govuk-button" th:formaction="@{${#httpServletRequest.requestURI}}">Confirm viability</button>
 
 
 			        	</div>
@@ -345,7 +345,7 @@
 	<hr />
 
 	<div class="extra-margin">
-		<a href="/prototypes/1199-project-finances" class="button button-secondary" th:text="${(param.status != null and param.status[0] == 'approved'? 'Return to finance checks' : 'Save and return to finance checks')}">RETURN BUTTON TEXT</a>
+		<a href="/prototypes/1199-project-finances" class="govuk-button button-secondary" th:text="${(param.status != null and param.status[0] == 'approved'? 'Return to finance checks' : 'Save and return to finance checks')}">RETURN BUTTON TEXT</a>
 	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

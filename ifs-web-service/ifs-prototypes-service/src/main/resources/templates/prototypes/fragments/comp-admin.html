@@ -307,7 +307,7 @@
                       </div>
 
                       <div th:class="${(type == 'submittedApplications' or type == 'openApplications' or type == 'notSubmittedApplications' ? 'govuk-grid-column-one-third' : 'govuk-grid-column-full alignright-button')}">
-                          <button class="button">Filter</button>
+                          <button class="govuk-button">Filter</button>
                       </div>
 
                     </th:block>
@@ -357,7 +357,7 @@
                           </th:block>
 
                           <div class="govuk-grid-column-one-half alignright">
-                            <button class="button" th:formaction="${#httpServletRequest.requestURI}">Filter</button>
+                            <button class="govuk-button" th:formaction="${#httpServletRequest.requestURI}">Filter</button>
                           </div>
 
                       </div>
@@ -375,7 +375,7 @@
                         <a href="#">Clear all filters</a>
                       </div>
                       <div class="govuk-grid-column-one-third">
-                        <button class="button">Filter</button>
+                        <button class="govuk-button">Filter</button>
                       </div>
                     </div>
 
@@ -578,11 +578,11 @@
             <div class="govuk-grid-column-one-half alignright-button">
 
                 <div th:if="${param.invitesSent == null}" th:remove="tag">
-                    <a class="button" href="/prototypes/1381-application-allocation">Allocate assessors</a>
+                    <a class="govuk-button" href="/prototypes/1381-application-allocation">Allocate assessors</a>
                 </div>
 
                 <div th:if="${param.invitesSent != null}" th:remove="tag">
-                    <a class="button" href="/prototypes/1373-manage-applications">Manage applications</a>
+                    <a class="govuk-button" href="/prototypes/1373-manage-applications">Manage applications</a>
                 </div>
 
             </div>
@@ -601,11 +601,11 @@
             <div class="govuk-grid-column-one-half alignright-button">
 
                 <div th:if="${param.invitesSent == null}" th:remove="tag">
-                    <a href="/prototypes/863-invite-assessors" class="button">Invite assessors</a>
+                    <a href="/prototypes/863-invite-assessors" class="govuk-button">Invite assessors</a>
                 </div>
 
                 <div th:if="${param.invitesSent != null}" th:remove="tag">
-                    <a href="/prototypes/863-manage-invites" class="button">Manage assessor invites</a>
+                    <a href="/prototypes/863-manage-invites" class="govuk-button">Manage assessor invites</a>
                 </div>
 
             </div>
@@ -622,7 +622,7 @@
                 <p class="govuk-heading-xl no-margin">8</p>
             </div>
             <div class="govuk-grid-column-one-half alignright-button">
-                <a class="button" href="#">Allocate assessors</a>
+                <a class="govuk-button" href="#">Allocate assessors</a>
             </div>
         </div>
     </div>
@@ -701,11 +701,11 @@
                 <p class="govuk-body extra-margin">
 
                     <div th:if="${param.invitesSent == null}" th:remove="tag">
-                        <a href="/prototypes/863-invite-assessors" class="button">Invite assessors</a>
+                        <a href="/prototypes/863-invite-assessors" class="govuk-button">Invite assessors</a>
                     </div>
 
                     <div th:if="${param.invitesSent != null}" th:remove="tag">
-                        <a href="/prototypes/863-manage-invites" class="button">Manage assessor invites</a>
+                        <a href="/prototypes/863-manage-invites" class="govuk-button">Manage assessor invites</a>
                     </div>
 
                 </p>

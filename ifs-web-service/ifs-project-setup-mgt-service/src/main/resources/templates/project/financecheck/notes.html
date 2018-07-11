@@ -30,7 +30,7 @@
                 </p>
                 <div class="govuk-grid-row extra-margin">
                     <div class="govuk-grid-column-one-half">
-                        <a id="post-new-note" th:href="@{{baseUrl}/new-note(baseUrl=${baseUrl})}" class="button button-large">Create a new note</a>
+                        <a id="post-new-note" th:href="@{{baseUrl}/new-note(baseUrl=${baseUrl})}" class="govuk-button">Create a new note</a>
                     </div>
                 </div>
 
@@ -57,7 +57,7 @@
                             </div>
                         </th:block>
                         <th:block th:if="${model.noteId == null}">
-                            <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="extra-margin button button-secondary">Comment</a>
+                            <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="extra-margin button-secondary">Comment</a>
                         </th:block>
                         <th:block th:if="${(model.noteId != null) and (note.id == model.noteId)}" th:with="baseUrl=@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl}, noteId=${model.noteId})}">
                             <h2 class="govuk-heading-m">Add your comment</h2>
@@ -95,7 +95,7 @@
                                         <ul>
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                                 <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}">filename</a>
-                                                <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
+                                                <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button><br />
                                             </li>
                                         </ul>
                                     </th:block>
@@ -112,8 +112,8 @@
                                 <input type="hidden" id="action" value="postComment">
                                 <div class="govuk-grid-row extra-margin">
                                     <div class="govuk-grid-column-one-half">
-                                        <button class="button button-large no-margin" data-content-on-submit="Please wait...">Save comment</button>
-                                        <a class="button button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
+                                        <button class="govuk-button no-margin" data-content-on-submit="Please wait...">Save comment</button>
+                                        <a class="button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
                                     </div>
                                 </div>
                             </form>

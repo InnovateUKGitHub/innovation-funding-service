@@ -82,14 +82,14 @@
     }
   }
 
-  .button {
+  .govuk-button {
     &[name="submit_assessments"] {
       margin: 15px 0 0 0;
     }
   }
 
   .modal-confirm-submit {
-    .button {
+    .govuk-button {
       &[name="submit_assessments"] {
         margin: 0;
       }

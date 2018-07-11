@@ -32,12 +32,12 @@ Non-registered assessor: Accept invitation
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     When the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link     jQuery=button:contains("Confirm")
-    Then the user should see the element    jQuery=.button:contains("Create account")
+    Then the user should see the element    jQuery=.govuk-button:contains("Create account")
 
 User can navigate back to Become an Assessor page
     [Documentation]    INFUND-4145
     [Tags]
-    When the user clicks the button/link           jQuery=.button:contains("Create account")
+    When the user clicks the button/link           jQuery=.govuk-button:contains("Create account")
     Then the user should see the element           jQuery=.govuk-heading-s:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
     And the user clicks the button/link            jQuery=.link-back:contains("Back")
     And the user should see the element            jQuery=h1:contains("Become an assessor for Innovate UK")
@@ -45,7 +45,7 @@ User can navigate back to Become an Assessor page
 Create assessor account: server-side validations
     [Documentation]    INFUND-1478
     [Tags]    HappyPath
-    Given the user clicks the button/link  jQuery=.button:contains("Create account")
+    Given the user clicks the button/link  jQuery=.govuk-button:contains("Create account")
     When the user clicks the button/link   jQuery=button:contains("Continue")
     Then the user should see an error      Please enter a first name.
     And the user should see an error       Please enter a last name.

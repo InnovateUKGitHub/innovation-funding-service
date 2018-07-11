@@ -71,7 +71,7 @@
                                         <td th:text="${innovationLeadUsers.name}">Alexis Kinney</td>
                                         <td class="alignright">
                                             <form method="post" th:action="@{/competition/setup/{competitionId}/remove-innovation-lead/{userId}(competitionId=${model.competitionId},userId=${innovationLeadUsers.id})}">
-                                                <button class="button button-secondary no-margin">Remove <span class="govuk-visually-hidden"><th:block th:text="${innovationLeadUsers.name}" /> as Innovation Lead</span></button>
+                                                <button class="button-secondary no-margin">Remove <span class="govuk-visually-hidden"><th:block th:text="${innovationLeadUsers.name}" /> as Innovation Lead</span></button>
                                             </form>
                                         </td>
                                     </tr>

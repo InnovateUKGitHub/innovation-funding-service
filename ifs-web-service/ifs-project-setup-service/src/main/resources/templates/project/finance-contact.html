@@ -52,7 +52,7 @@
                                     data-js-modal="modal-resend-finance-contact"
                                     th:attr="data-modal-form-action=@{/project/{projectId}/details/finance-contact?resend-fc-invite={userId}(projectId=${model.projectId},userId=${user.id})},data-modal-input-resend-fc-invite=${user.id},data-modal-input-organisation=${model.organisationId}"
                                     th:href="@{/project/{projectId}/details/finance-contact/confirm?resend-fc-invite={userId}&organisation={orgId}(projectId=${model.projectId},userId=${user.id}, orgId=${model.organisationId})}"
-                                    class="button button-clear no-margin">
+                                    class="button-clear no-margin">
                                     Resend invite
                                 </a>
                             </div>
@@ -84,7 +84,7 @@
                                                 <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail')} ? 'form-control-error'" name="inviteEmail" id="email-finance-contact" th:attr="data-required-errormessage=#{validation.project.invite.email.required}" required="required"/>
                                             </td>
                                             <td class="alignright">
-                                                <button class="buttonlink no-margin-bottom" name="invite-fc" id="invite-finance-contact">Invite to project</button>
+                                                <button class="button-clear no-margin-bottom" name="invite-fc" id="invite-finance-contact">Invite to project</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -97,7 +97,7 @@
 
                     <p class="govuk-body">You can change your finance contact up until your grant offer letter is generated.</p>
 
-                    <button class="button extra-margin" type="submit"  name="save-fc" id="save">Save finance contact</button>
+                    <button class="govuk-button extra-margin" type="submit"  name="save-fc" id="save">Save finance contact</button>
                 </form>
 
 

@@ -92,7 +92,7 @@ IFS.competitionManagement.repeater = (function () {
       // change name attributes and empty values
       newRow.find('[name]').prop('name', 'innovationAreaCategoryIds[' + count + ']').val('')
       // add remove button
-      newRow.append('<button data-remove-row="innovationArea" value="' + count + '" class="buttonlink" type="button">Remove</button>')
+      newRow.append('<button data-remove-row="innovationArea" value="' + count + '" class="button-clear" type="button">Remove</button>')
 
       rows.last().after(newRow)
 
@@ -127,7 +127,7 @@ IFS.competitionManagement.repeater = (function () {
                         '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="contentGroups-' + idCount + '.attachment" value="' + count + '">Save</button>' +
                         '<p class="uploaded-file">No file currently uploaded</p>' +
                     '</div>' +
-                    '<button type="button" class="buttonlink no-margin" data-remove-row="contentGroup">Remove section</button>' +
+                    '<button type="button" class="button-clear no-margin" data-remove-row="contentGroup">Remove section</button>' +
                   '</div>'
       if (rows.length) {
         rows.last().after(html)
@@ -172,7 +172,7 @@ IFS.competitionManagement.repeater = (function () {
                     '</label>' +
                     '<textarea cols="30" rows="5" id="dates[' + idCount + '].content" name="dates[' + count + '].content" data-editor="html" class="width-full form-control-error" required="required" th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}"></textarea>' +
                 '</div>' +
-                '<div class="form-group"><button class="buttonlink" type="button" data-remove-row="dateContentGroup">Remove event</button></div>' +
+                '<div class="form-group"><button class="button-clear" type="button" data-remove-row="dateContentGroup">Remove event</button></div>' +
             '</div>'
       if (rows.length) {
         rows.last().after(html)
@@ -199,7 +199,7 @@ IFS.competitionManagement.repeater = (function () {
                     '<div class="govuk-grid-column-one-half">' +
                       '<div class="form-group">' +
                         '<input type="number" min="0" class="form-control width-x-large" id="' + idCount + '-funderBudget" name="funders[' + count + '].funderBudget" value=""><input required="required" type="hidden" id="' + idCount + '-coFunder" name="funders[' + count + '].coFunder" value="true">' +
-                        '<button class="button button-clear" name="remove-funder" value="' + count + '" data-remove-row="cofunder">Remove</button>' +
+                        '<button class="button-clear" name="remove-funder" value="' + count + '" data-remove-row="cofunder">Remove</button>' +
                       '</div>' +
                     '</div>' +
                   '</div>'
@@ -236,7 +236,7 @@ IFS.competitionManagement.repeater = (function () {
               '<label class="form-label" for="guidanceRows[' + idCount + '].justification"><span class="govuk-visually-hidden">Justification</span></label>' +
               '<textarea required="required" rows="3" class="form-control width-full" data-maxlength-errormessage="Justification has a maximum length of 255 characters." data-required-errormessage="Please enter a justification." id="guidanceRows[' + idCount + '].justification" name="' + (isAssessed ? '' : 'question.') + 'guidanceRows[' + count + '].justification"></textarea>' +
             '</td>' +
-            '<td><button class="buttonlink alignright remove-guidance-row" name="remove-guidance-row" data-remove-row="guidance" value="' + count + '">Remove</button></td>'
+            '<td><button class="button-clear alignright remove-guidance-row" name="remove-guidance-row" data-remove-row="guidance" value="' + count + '">Remove</button></td>'
       html += '</tr>'
       table.find('tbody').append(html)
     },

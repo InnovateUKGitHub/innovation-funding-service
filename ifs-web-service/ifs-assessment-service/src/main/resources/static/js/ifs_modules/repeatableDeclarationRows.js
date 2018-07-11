@@ -48,7 +48,7 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           'data-required-errormessage="Please enter a position." required="required" />' +
           '</td>' +
           '<td>' +
-          '<button class="remove-another-row buttonlink" name="removeAppointment" type="button" value="0">Remove</button>' +
+          '<button class="remove-another-row button-clear" name="removeAppointment" type="button" value="0">Remove</button>' +
           '</td>' +
           '</tr>')
       } else {
@@ -75,7 +75,7 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           'data-required-errormessage="Please enter a position." required="required" />' +
           '</td>' +
           '<td>' +
-          '<button class="remove-another-row buttonlink" name="removeFamilyMemberAffiliation" type="button" value="1">Remove</button>' +
+          '<button class="remove-another-row button-clear" name="removeFamilyMemberAffiliation" type="button" value="1">Remove</button>' +
           '</td>' +
           '</tr>')
       }

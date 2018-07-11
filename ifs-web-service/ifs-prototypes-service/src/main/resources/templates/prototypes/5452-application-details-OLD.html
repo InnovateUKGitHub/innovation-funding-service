@@ -175,7 +175,7 @@
             </dl>
         </th:block>
         <div class="extra-margin extra-margin-bottom">
-            <!--<button type="submit" name="mark_as_complete" class="buttonlink" value="9">Mark as complete</button>-->
+            <!--<button type="submit" name="mark_as_complete" class="button-clear" value="9">Mark as complete</button>-->
             <a th:href="${param.status != null and param.status[0] == 'readOnly' ? '/prototypes/5452-application-details' : '/prototypes/5452-application-details?status=readOnly'}" th:text="${param.status != null and param.status[0] == 'readOnly' ? 'Edit application details' : 'Mark application details as complete'}"></a>
         </div>
 

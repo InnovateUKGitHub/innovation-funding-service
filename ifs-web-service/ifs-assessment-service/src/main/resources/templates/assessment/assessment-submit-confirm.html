@@ -20,8 +20,8 @@
 
                 <div>
                     <input type="hidden" th:field="*{assessmentIds}" />
-                    <button type="submit" class="button">Yes I want to submit the assessments</button>
-                    <a class="button button-clear" th:href="@{/assessor/dashboard/competition/{id}(id=${competitionId})}">Cancel</a>
+                    <button type="submit" class="govuk-button">Yes I want to submit the assessments</button>
+                    <a class="button-clear" th:href="@{/assessor/dashboard/competition/{id}(id=${competitionId})}">Cancel</a>
                 </div>
             </form>
         </main>

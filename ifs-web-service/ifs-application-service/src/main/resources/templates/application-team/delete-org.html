@@ -32,7 +32,7 @@
                 with them beforehand.</p>
 
             <div>
-                <button class="button"
+                <button class="govuk-button"
                         name="deleteOrganisation"
                         type="submit">
                     Delete organisation
@@ -40,7 +40,7 @@
                 <a th:href="${model.inviteOrganisationId} ?
                 @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, inviteOrganisation=${model.inviteOrganisationId})} :
                 @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, organisation=${model.organisationId})}"
-                   class="buttonlink">
+                   class="button-clear">
                     Cancel
                 </a>
             </div>

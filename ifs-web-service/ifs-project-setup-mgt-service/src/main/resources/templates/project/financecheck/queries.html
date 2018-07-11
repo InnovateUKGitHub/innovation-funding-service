@@ -45,11 +45,11 @@
         <div class="govuk-grid-row extra-margin-bottom">
             <div class="govuk-grid-column-one-half">
                 <th:block th:if="${model.financeContact.isPresent()}">
-                    <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="button button-large">Post a new query</a>
+                    <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-button">Post a new query</a>
                 </th:block>
 
                 <th:block th:unless="${model.financeContact.isPresent()}">
-                    <button disabled="disabled" class="button button-large">Post a new query</button>
+                    <button disabled="disabled" class="govuk-button">Post a new query</button>
                 </th:block>
             </div>
             <div class="govuk-grid-column-one-half">
@@ -97,7 +97,7 @@
                     </th:block>
                     <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
                         <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="extra-margin button">Respond</a>
-                        <a class="button button-clear width-full no-padding-left"
+                        <a class="button-clear width-full no-padding-left"
                            data-js-modal="modal-confirm-mark-resolved"
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}"
                            th:attr="data-modal-form-action=@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}">
@@ -139,7 +139,7 @@
                                     <ul>
                                         <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                             <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
-                                            <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
+                                            <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                                         </li>
                                     </ul>
                                 </th:block>
@@ -156,7 +156,7 @@
                             <input type="hidden" id="action" value="postResponse">
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-one-half">
-                                    <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
+                                    <button class="button no-margin" data-content-on-submit="Please wait...">Post response</button>
                                 </div>
                                 <div class="govuk-grid-column-one-half alignright">
                                     <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>

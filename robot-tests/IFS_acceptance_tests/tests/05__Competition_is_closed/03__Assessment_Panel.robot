@@ -56,8 +56,8 @@ Assement panel link is deactivated if the assessment panel is not set
     [Documentation]  IFS-786 INF-2637
     [Tags]  HappyPath
     Given The user clicks the button/link  link=${CLOSED_COMPETITION_NAME}
-    Then the user should see the element   jQuery=.disabled:contains("Manage assessment panel")
-    And the user should see the element    jQuery=.disabled:contains("Manage interview panel")
+    Then the user should see the element   jQuery=.govuk-button--disabled:contains("Manage assessment panel")
+    And the user should see the element    jQuery=.govuk-button--disabled:contains("Manage interview panel")
 
 Confirm changes button unavailable before sending invite
     [Documentation]  IFS-1125
@@ -109,7 +109,7 @@ Assessor recieves the invite to panel
     [Setup]  the user clicks the button/link  link=Invite
     Given the user clicks the button/link     link=Review and send invites
     When the user clicks the button/link      jQuery=button:contains("Send invite")
-    Then the user should see the element      jQuery=.column-quarter:contains("3") small:contains("Invited")
+    Then the user should see the element      jQuery=.govuk-grid-column-one-quarter:contains("3") small:contains("Invited")
     And the user reads his email              ${assessor_ben_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
     And the user reads his email              ${assessor_joel_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
 
@@ -163,10 +163,10 @@ Comp Admin can see the rejected and accepted invitation
     [Setup]  Log in as a different user        &{Comp_admin1_credentials}
     Given the user navigates to the page       ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/pending-and-declined
     And the user should see the element        jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite declined")
-    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Declined")
+    And the user should see the element        jQuery=.govuk-grid-column-one-quarter:contains(1) small:contains("Declined")
     When the user clicks the button/link       link=Accepted
     Then the user should see the element       jQuery=td:contains("${assessor_ben}") ~ td:contains("Materials, process and manufacturing design technologies")
-    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Accepted")
+    And the user should see the element        jQuery=.govuk-grid-column-one-quarter:contains(1) small:contains("Accepted")
     When the user clicks the button/link       link=Pending and declined
     Then the user should not see the element   jQuery=td:contains("${assessor_ben}")
 
@@ -184,7 +184,7 @@ Assign application link decativated if competition is in close state
     [Tags]
     [Setup]  Log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
-    Then the user should see the element  jQuery=.disabled:contains("Assign applications to panel")
+    Then the user should see the element  jQuery=.govuk-button--disabled:contains("Assign applications to panel")
 
 Assign application link activate if competition is in panel state
     [Documentation]   IFS-25
@@ -209,7 +209,7 @@ Filter by application number
     [Documentation]  IFS-2049
     [Tags]
     Given the user enters text to a text field     id=filterSearch   ${Neural_network_application}
-    When the user clicks the button/link           jQuery=.button:contains("Filter")
+    When the user clicks the button/link           jQuery=.govuk-button:contains("Filter")
     Then the user should see the element           jQuery=td:contains("${Neural_network_application}")
     And the user should not see the element        jQuery=td:contains("${computer_vision_application}")
     When the user clicks the button/link           jQuery=a:contains("Clear")

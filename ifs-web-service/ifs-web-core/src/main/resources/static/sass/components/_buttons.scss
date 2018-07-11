@@ -1,0 +1,101 @@
+@import "govuk-frontend/settings/all";
+@import "govuk-frontend/tools/all";
+@import "govuk-frontend/helpers/all";
+
+
+// Button styling and overrides
+
+table {
+  .govuk-button {
+    &:last-child {
+      margin-right: 3px;
+    }
+  }
+}
+
+.button-secondary{
+  @extend .govuk-button;
+  @include box-shadow(0 2px 0 darken(govuk-colour("grey-3"), 15%));
+  background-color: govuk-colour("grey-3");
+  color: $govuk-text-colour;
+
+  // Ensure that any global link styles are overridden
+  &:link,
+  &:visited,
+  &:active,
+  &:hover {
+    color: $govuk-text-colour;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: darken(govuk-colour("grey-3"), 5%);
+  }
+}
+
+.button-warning{
+  @extend .govuk-button;
+  @include box-shadow(0 2px 0 darken($ifs-warning-button-colour, 15%));
+  background-color: $ifs-warning-button-colour;
+
+  &:hover,
+  &:focus {
+    background-color: darken($ifs-warning-button-colour, 5%);
+  }
+}
+
+.button-clear {
+  @extend .govuk-button;
+  background-color: transparent;
+  @include box-shadow(none);
+  color: govuk-colour("blue");
+  text-decoration: underline;
+  padding: 0;
+
+  &:hover,
+  &:focus {
+    background-color: transparent;
+    color: #000;
+    text-decoration: none;
+  }
+
+  @include is-ie8() {
+    border-bottom: none;
+  }
+}
+
+.alignright-button {
+  @include govuk-clearfix;
+  text-align:right;
+
+  a {
+    line-height:45px;
+
+    &.govuk-button {
+      line-height:1;
+    }
+  }
+
+  a,
+  button,
+  [role="button"] {
+    display:inline-block;
+    margin:0 5px 0 0;
+
+    &:last-child {
+      margin-right:0;
+    }
+  }
+}
+
+@include media-down(mobile) {
+  .alignright-button {
+    a,
+    button,
+    [role="button"] {
+      margin:0 0 5px;
+      display: block;
+      text-align: center;
+    }
+  }
+}

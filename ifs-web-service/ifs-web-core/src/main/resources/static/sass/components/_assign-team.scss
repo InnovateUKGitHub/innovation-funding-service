@@ -54,7 +54,7 @@
     display: inline;
 
     button {
-      @extend .buttonlink;
+      @extend .button-clear;
 
       &[aria-expanded] {
         > ::after {
@@ -92,11 +92,12 @@
       button {
         padding: 0;
         margin: 0 5px 0 0;
+        border: none;
         text-align: left;
       }
     }
 
-    .buttonlink {
+    .button-clear {
       padding: 0;
       margin: 0 5px 0 0;
       text-align: left;

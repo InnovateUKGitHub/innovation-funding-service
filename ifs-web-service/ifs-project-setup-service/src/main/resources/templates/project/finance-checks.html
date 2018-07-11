@@ -92,7 +92,7 @@
                             </div>
                         </th:block>
                         <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                            <a id="post-new-response-1" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.Id})}" class="extra-margin button">Respond</a>
+                            <a id="post-new-response-1" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.Id})}" class="extra-margin govuk-button">Respond</a>
                         </th:block>
                         <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                             <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
@@ -130,7 +130,7 @@
                                             <ul>
                                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                                     <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
-                                                    <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
+                                                    <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                                                 </li>
                                             </ul>
                                         </th:block>
@@ -147,7 +147,7 @@
                                 <input type="hidden" id="action-1" value="postResponse">
                                 <div class="govuk-grid-row">
                                     <div class="govuk-grid-column-one-half">
-                                        <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
+                                        <button class="govuk-button no-margin" data-content-on-submit="Please wait...">Post response</button>
                                     </div>
                                     <div class="govuk-grid-column-one-half alignright">
                                         <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}">Cancel</a>
@@ -187,7 +187,7 @@
                             </div>
                         </th:block>
                         <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                            <a id="post-new-response-2" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top button">Respond</a>
+                            <a id="post-new-response-2" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top govuk-button">Respond</a>
                         </th:block>
                         <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                             <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
@@ -225,7 +225,7 @@
                                         <ul>
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                                 <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
-                                                <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
+                                                <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                                             </li>
                                         </ul>
                                     </th:block>
@@ -242,7 +242,7 @@
                                 <input type="hidden" id="action-2" value="postResponse">
                                 <div class="govuk-grid-row">
                                     <div class="govuk-grid-column-one-half">
-                                        <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
+                                        <button class="govuk-button no-margin" data-content-on-submit="Please wait...">Post response</button>
                                     </div>
                                     <div class="govuk-grid-column-one-half alignright">
                                         <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}">Cancel</a>
@@ -280,7 +280,7 @@
                             </div>
                         </th:block>
                         <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                            <a id="post-new-response-3" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top button">Respond</a>
+                            <a id="post-new-response-3" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top govuk-button">Respond</a>
                         </th:block>
                         <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                             <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
@@ -318,7 +318,7 @@
                                         <ul>
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                                 <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
-                                                <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
+                                                <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                                             </li>
                                         </ul>
                                     </th:block>

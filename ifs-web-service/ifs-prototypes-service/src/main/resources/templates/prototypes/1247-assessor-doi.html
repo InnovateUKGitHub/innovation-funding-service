@@ -301,14 +301,14 @@
 				<input type="hidden" name="user" value="assessor" />
 			</th:block>
 
-			<button class="button button-large extra-margin" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites':'/prototypes/1176-assessor-contracts')}" th:unless="${param.status != null and param.status[0] == 'edit'}">Save and continue</button>
+			<button class="govuk-button button-large extra-margin" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites':'/prototypes/1176-assessor-contracts')}" th:unless="${param.status != null and param.status[0] == 'edit'}">Save and continue</button>
 
 		</div>
 
 		<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
 			<div class="extra-margin">
-			  <button class="button button-large" formaction="/prototypes/5230-assessor-doi?version=v2">Save and return to your declaration of interest</button>
-			  <a href="/prototypes/5230-assessor-doi?version=v2" class="button-link-style">Cancel</a>
+			  <button class="govuk-button button-large" formaction="/prototypes/5230-assessor-doi?version=v2">Save and return to your declaration of interest</button>
+			  <a href="/prototypes/5230-assessor-doi?version=v2" class="govuk-button-link-style">Cancel</a>
 			</div>
 		</div>
 

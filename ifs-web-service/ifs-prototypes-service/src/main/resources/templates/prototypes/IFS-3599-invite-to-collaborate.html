@@ -50,11 +50,11 @@
                     <p class="govuk-body">As this email address is new to the service, you will need to create an account.</p>
 
                     <th:block th:unless="${status == 'orgAdded'}">
-                        <a href="/prototypes/IFS-3598-choose-org?type=collaborator" class="button">Yes, accept invitation</a>
+                        <a href="/prototypes/IFS-3598-choose-org?type=collaborator" class="govuk-button">Yes, accept invitation</a>
                     </th:block>
 
                     <th:block th:if="${status == 'orgAdded'}">
-                        <a href="/prototypes/IFS-3598-org-selected?type=collaborator&#38;user=new&#38;status=orgAdded" class="button">Yes, accept invitation</a>
+                        <a href="/prototypes/IFS-3598-org-selected?type=collaborator&#38;user=new&#38;status=orgAdded" class="govuk-button">Yes, accept invitation</a>
                     </th:block>
 
                 </th:block>
@@ -63,7 +63,7 @@
                     <h2 class="govuk-heading-m">We have found an account with the invited email address</h2>
                     <p class="govuk-body">Please sign in to accept the invitation and continue with your application.</p>
 
-                    <a th:href="${status == 'orgAdded' ? '/prototypes/IFS-3599-signin-collab-with' : '/prototypes/IFS-3599-signin-collab-without'} + ${'-org?type=' + type + '&user=' + user + '&status=' + status}" class="button">Sign in</a>
+                    <a th:href="${status == 'orgAdded' ? '/prototypes/IFS-3599-signin-collab-with' : '/prototypes/IFS-3599-signin-collab-without'} + ${'-org?type=' + type + '&user=' + user + '&status=' + status}" class="govuk-button">Sign in</a>
 
                 </th:block>
 

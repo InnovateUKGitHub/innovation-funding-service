@@ -115,8 +115,8 @@
                             </th:block>
                         </th:block>
                         <div class="alignright-button" th:unless="${summaryModel.isExternalView() || summaryModel.isApproved()}">
-                            <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button button-secondary">Edit</a>
-                            <button th:if="${viewmode=='edit'}" name="save-eligibility" class="button">Save</button>
+                            <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button-secondary">Edit</a>
+                            <button th:if="${viewmode=='edit'}" name="save-eligibility" class="govuk-button">Save</button>
                         </div>
                     </form>
                 </div>
@@ -174,17 +174,17 @@
                         <option value="RED">Red</option>
                     </select>
                 </div>
-                <button type="button" data-js-modal="modal-confirm-eligibility" class="button" id="confirm-button">Approve eligible costs</button>
+                <button type="button" data-js-modal="modal-confirm-eligibility" class="govuk-button" id="confirm-button">Approve eligible costs</button>
                 <th:block th:insert="fragments/modals :: modal-confirm-eligibility" />
                 <hr/>
             </th:block>
 
             <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Return to finance checks</button>
-            <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}" th:classappend="${summaryModel.isApproved() ? 'extra-large-margin' : ''}">Return to finance checks</a>
+            <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}" th:classappend="${summaryModel.isApproved() ? 'extra-large-margin' : ''}">Return to finance checks</a>
         </form>
         <div class="extra-margin" th:unless="${summaryModel.isExternalView()}">
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}" class="button button-secondary">Queries</a>
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="button button-secondary">Notes</a>
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}" class="button-secondary">Queries</a>
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="button-secondary">Notes</a>
         </div>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

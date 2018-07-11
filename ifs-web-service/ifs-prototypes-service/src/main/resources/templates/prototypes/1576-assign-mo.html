@@ -101,7 +101,7 @@
 					<input type="hidden" id="status" name="status" value="setup" />
 
 
-					<a href="#" class="button" data-js-modal="modal-assign-mo" th:unless="${param.status != null and param.status[0] == 'edit'}">Assign Monitoring Officer</a>
+					<a href="#" class="govuk-button" data-js-modal="modal-assign-mo" th:unless="${param.status != null and param.status[0] == 'edit'}">Assign Monitoring Officer</a>
 
 					<a href="/prototypes/1576-assign-mo" th:unless="${param.status == null or param.status[0] != 'edit'}">Change Monitoring Officer</a>
 
@@ -124,7 +124,7 @@
 				            	</div>
 				            	<div class="govuk-grid-column-one-half alignright-button">
 				            		<input type="hidden" id="stage" name="stage" value="1" />
-				            		<button formaction="/prototypes/4151-admin-competition-dash" class="button">Assign Monitoring Officer</button>
+				            		<button formaction="/prototypes/4151-admin-competition-dash" class="govuk-button">Assign Monitoring Officer</button>
 				            	</div>
 				            </div>
 

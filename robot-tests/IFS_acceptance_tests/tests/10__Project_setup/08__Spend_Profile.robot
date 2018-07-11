@@ -125,7 +125,7 @@ Project finance sends a query to lead organisation
     When the user clicks the button/link      link=Post a new query
     And the user enters text to a text field  id=queryTitle  Eligibility query's title
     And the user enters text to a text field  css=.editor    Eligibility query
-    Then the user clicks the button/link      jQuery=.button:contains("Post query")
+    Then the user clicks the button/link      jQuery=.govuk-button:contains("Post query")
 
 Lead partner responds to query
     [Documentation]    IFS-2062
@@ -134,7 +134,7 @@ Lead partner responds to query
     Given the user navigates to the page       ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/finance-checks
     When the user clicks the button/link       link=Respond
     When the user enters text to a text field  css=.editor  Responding to finance query
-    Then the user clicks the button/link       jQuery=.button:contains("Post response")
+    Then the user clicks the button/link       jQuery=.govuk-button:contains("Post response")
 
 Project Finance goes through the Generate Spend Profile tab to generate the Spend Profile and should not see query responses flagged
     [Documentation]    INFUND-5194, INFUND-5987, IFS-2062, IFS-2016
@@ -213,7 +213,7 @@ Lead Partner can see Spend profile summary
 Lead partner can edit his spend profile with invalid values and see the error messages
     [Documentation]  INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148 INFUND-6146
     [Tags]
-    When the user clicks the button/link       jQuery=.button:contains("Edit spend profile")
+    When the user clicks the button/link       jQuery=.govuk-button:contains("Edit spend profile")
     Then the user should see the element       jQuery=th:contains("Labour") + td input
     When the user enters text to a text field  jQuery=th:contains("Labour") + td input   520
     And the user moves focus to the element    jQuery=th:contains("Overheads") + td input
@@ -222,9 +222,9 @@ Lead partner can edit his spend profile with invalid values and see the error me
     And the user should see the element        jQuery=th:contains("Labour") ~ .fix-right.cell-error input[data-calculation-rawvalue="3495"]
     # Project costs for financial year are instantly reflecting the financial values INFUND-3971, INFUND-6148
     And the user should see the element        jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£56,289")
-    When the user clicks the button/link       jQuery=.button:contains("Save and return to spend profile overview")
+    When the user clicks the button/link       jQuery=.govuk-button:contains("Save and return to spend profile overview")
     Then the user should see the element       jQuery=.error-summary:contains("Your total costs are higher than the eligible project costs.")
-    When the user clicks the button/link       jQuery=.button:contains("Edit spend profile")
+    When the user clicks the button/link       jQuery=.govuk-button:contains("Edit spend profile")
     Then the user enters text to a text field  jQuery=th:contains("Labour") + td input  10
     And the user should not see the element   jQuery=.form-group-error th:contains("Labour")
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  -55
@@ -233,7 +233,7 @@ Lead partner can edit his spend profile with invalid values and see the error me
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  35.25
     And the user moves focus to the element    jQuery=th:contains("Overheads") ~ td:nth-child(5)
     Then the user should see the element       jQuery=.error-summary-list li:contains("This field can only accept whole numbers")
-    When the user clicks the button/link       jQuery=.button:contains("Save and return to spend profile overview")
+    When the user clicks the button/link       jQuery=.govuk-button:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  0
     And the user moves focus to the element    css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
@@ -243,7 +243,7 @@ Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
     [Tags]    HappyPath
     Given the user navigates to the page       ${external_spendprofile_summary}/review
-    When the user clicks the button/link       jQuery=.button:contains("Edit spend profile")
+    When the user clicks the button/link       jQuery=.govuk-button:contains("Edit spend profile")
     And the user should see the element        css=table [type="number"]    # checking here that the table is not read-only
     Then the user should see the element       jQuery=th:contains("Labour") + td input
     When the user enters text to a text field  jQuery=th:contains("Labour") + td input  14
@@ -253,7 +253,7 @@ Lead partner can edit his spend profile with valid values
     And the user moves focus to the element    jQuery=th:contains("Subcontracting") ~ td:nth-child(7) input
     Then the user should see the element       jQuery=th:contains("Subcontracting") ~ td.fix-right input[data-calculation-rawvalue="90000"]
     And the user should not see the element    jQuery=.error-summary:contains("Unable to save spend profile")
-    When the user clicks the button/link       jQuery=.button:contains("Save and return to spend profile overview")
+    When the user clicks the button/link       jQuery=.govuk-button:contains("Save and return to spend profile overview")
     Then the user should not see the element   jQuery=.error-summary:contains("Your total costs are higher than the eligible project costs.")
 
 Project Manager can see Spend Profile in Progress
@@ -325,7 +325,7 @@ Non-lead partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
     When the user clicks the button/link           link=Submit to lead partner
-    And the user clicks the button/link            jQuery=.button:contains("Submit")
+    And the user clicks the button/link            jQuery=.govuk-button:contains("Submit")
     Then the user should see the text in the page  We have reviewed and confirmed your project costs
     And the user should not see the element        css=table a[type="number"]    # checking here that the table has become read-only
 
@@ -348,7 +348,7 @@ Project Manager doesn't have the option to send spend profiles until all partner
     When the user clicks the button/link             link=Set up your project
     Then the user should see the element             jQuery=li.require-action:nth-child(5)
     When the user clicks the button/link        link=Spend profile
-    Then the user should not see the element    jQuery=.button:contains("Review spend profiles")
+    Then the user should not see the element    jQuery=.govuk-button:contains("Review spend profiles")
     #The complete name of the button is anyways not selected. Please use the short version of it.
 
 Academic partner can view spend profile page
@@ -381,12 +381,12 @@ Academic partner can see the alternative academic view of the spend profile
 Academic partner spend profile server side validations
     [Documentation]    INFUND-5846
     [Tags]
-    Given the user clicks the button/link            jQuery=.button:contains("Edit spend profile")
+    Given the user clicks the button/link            jQuery=.govuk-button:contains("Edit spend profile")
     When the user enters text to a text field        css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    -1    # Directly incurredStaff
     And the user enters text to a text field         css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    3306  # Travel and subsistence
     And the user moves focus to the element          css=.spend-profile-table tbody .form-group-row:nth-child(7) td:nth-of-type(6) input
     Then the user should see the text in the page    Your total costs are higher than your eligible costs.
-    When the user clicks the button/link              jQuery=.button:contains("Save and return to spend profile overview")
+    When the user clicks the button/link              jQuery=.govuk-button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page     This field should be 0 or higher.
 
 Academic partner spend profile client side validations
@@ -409,8 +409,8 @@ Academic partner spend profile client side validations
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
-    Then the user should see the element    jQuery=.button:contains("Edit spend profile")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Save and return to spend profile overview")
+    Then the user should see the element    jQuery=.govuk-button:contains("Edit spend profile")
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    1
 
@@ -418,7 +418,7 @@ Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
     When the user clicks the button/link           link=Submit to lead partner
-    And the user clicks the button/link            jQuery=button.button:contains("Submit")
+    And the user clicks the button/link            jQuery=button.govuk-button:contains("Submit")
     Then the user should see the text in the page  We have reviewed and confirmed your project costs
     And the user should not see the element        css=table a[type="number"]    # checking here that the table has become read-only
 
@@ -443,16 +443,16 @@ Project Manager can view partners' spend profiles
     And the user goes back to the previous page
     And the user clicks the button/link             link=${Meembee_Name}
     And the user should see the text in the page    We have reviewed and confirmed your project costs
-    And the user should not see the element         jQuery=.button:contains("Edit")
+    And the user should not see the element         jQuery=.govuk-button:contains("Edit")
     And the user should not see the element         css=[name="mark-as-complete"]
     And the user goes back to the previous page
     And the user clicks the button/link             link=${Zooveo_Name}
     And the user should see the text in the page    We have reviewed and confirmed your project costs
-    And the user should not see the element         jQuery=.button:contains("Edit")
+    And the user should not see the element         jQuery=.govuk-button:contains("Edit")
     And the user should not see the element         css=[name="mark-as-complete"]
     And the user goes back to the previous page
     When the user should see all spend profiles as complete
-    Then the user should see the element            jQuery=.button:contains("Review and send total project spend profile")
+    Then the user should see the element            jQuery=.govuk-button:contains("Review and send total project spend profile")
 
 Partners are not able to see the spend profile summary page
     [Documentation]    INFUND-3766
@@ -467,7 +467,7 @@ Project Manager can view combined spend profile
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
-    When the user clicks the button/link     jQuery=.button:contains("Review and send total project spend profile")
+    When the user clicks the button/link     jQuery=.govuk-button:contains("Review and send total project spend profile")
     Then the user should see the text in the page    This is the spend profile for your project.
     And the user should see the text in the page     Your submitted spend profile will be used as the base for your project spend over the following financial years.
 
@@ -484,22 +484,22 @@ Project Manager can see the button Allow edits
     Then the user should see the element    jQuery=.task-list li:nth-child(1):contains("Complete")
     And the user should see the element     jQuery=.task-list li:nth-child(2):contains("Complete")
     Then the user clicks the button/link    link=${Meembee_Name}
-    And the user should see the element     jQuery=.button:contains("Allow edits")
+    And the user should see the element     jQuery=.govuk-button:contains("Allow edits")
 
 Other partners cannot enable edit-ability by themselves
     [Documentation]    INFUND-6350
     [Tags]
     [Setup]  log in as a different user       ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
     When the user navigates to the page       ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Meembee_Id}/spend-profile/review
-    Then the user should not see the element  jQuery=.button:contains("Allow edits")
+    Then the user should not see the element  jQuery=.govuk-button:contains("Allow edits")
 
 PM can return edit rights to partners
     [Documentation]    INFUND-6350
     [Tags]    HappyPath
     [Setup]  log in as a different user      ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     Given the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Meembee_Id}/spend-profile/review
-    When the user clicks the button/link     jQuery=.button:contains("Allow edits")
-    And the user clicks the button/link      jQuery=.button:contains("Allow partner to edit")
+    When the user clicks the button/link     jQuery=.govuk-button:contains("Allow edits")
+    And the user clicks the button/link      jQuery=.govuk-button:contains("Allow partner to edit")
     Then the user navigates to the page      ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
     And the user should see the element      jQuery=.task-list li:nth-child(2):contains("In progress")
 
@@ -510,16 +510,16 @@ Partner can receive edit rights to his SP
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
     Then the user should see the element    css=li.require-action:nth-child(5)
     When the user clicks the button/link    link=Spend profile
-    Then the user should see the element    jQuery=.button:contains("Edit spend profile")
+    Then the user should see the element    jQuery=.govuk-button:contains("Edit spend profile")
     When the user clicks the button/link    link=Submit to lead partner
-    And the user clicks the button/link     jQuery=button.button:contains("Submit")
+    And the user clicks the button/link     jQuery=button.govuk-button:contains("Submit")
 
 Project Manager can send the project's spend profiles
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
-    When the user clicks the button/link     jQuery=.button:contains("Review and send total project spend profile")
+    When the user clicks the button/link     jQuery=.govuk-button:contains("Review and send total project spend profile")
     Then the user clicks the button/link     link=Send project spend profile
     And the user should see the element      jQuery=button:contains("Cancel")
     When the user clicks the button/link     id=submit-send-all-spend-profiles
@@ -561,7 +561,7 @@ Project Finance is able to see Spend Profile approval page
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     And the user clicks the button/link      css=#table-project-status tbody tr:nth-child(5) td.status.action:nth-child(6) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
-    And the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
+    And the user should see the element    jQuery=#content div.govuk-grid-row div.govuk-grid-column-one-third.alignright.extra-margin h2:contains("Spend profile")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been approved")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been rejected")
     And the user should see the text in the page  Innovation Lead
@@ -574,7 +574,7 @@ Project Finance is able to see Spend Profile approval page
     Then the element should be disabled    css=#accept-profile
     When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    css=#accept-profile
-    And the user should see the element    jQuery=#content .button.button.button-warning:contains("Reject")
+    And the user should see the element    jQuery=#content .govuk-button.govuk-button.govuk-button-warning:contains("Reject")
 
 Check if project details are editable
    [Documentation]    IFS-1577, IFS-1578, IFS-1579
@@ -587,12 +587,12 @@ Comp Admin is able to see Spend Profile approval page
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
-    Then the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
+    Then the user should see the element    jQuery=#content div.govuk-grid-row div.govuk-grid-column-one-third.alignright.extra-margin h2:contains("Spend profile")
     And the element should be disabled    css=#accept-profile
-    And the user should see the element    jQuery=#content .button-warning:contains("Reject")
+    And the user should see the element    jQuery=#content .govuk-button-warning:contains("Reject")
     And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page  Peter Freeman
-    When the user clicks the button/link    jQuery=#content .button-warning:contains("Reject")
+    When the user clicks the button/link    jQuery=#content .govuk-button-warning:contains("Reject")
     Then the user should see the text in the page    You should contact the Project Manager to explain why the spend profile is being returned.
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
@@ -637,12 +637,12 @@ Project Finance is able to Reject Spend Profile
     [Tags]
     [Setup]    Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
-    And the user should see the element      jQuery=#content .button.button.button-warning:contains("Reject")
-    When the user clicks the button/link     jQuery=#content .button.button.button-warning:contains("Reject")
+    And the user should see the element      jQuery=#content .govuk-button.govuk-button.govuk-button-warning:contains("Reject")
+    When the user clicks the button/link     jQuery=#content .govuk-button.govuk-button.govuk-button-warning:contains("Reject")
     Then the user should see the text in the page    You should contact the Project Manager to explain why the spend profile is being returned.
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
-    When the user clicks the button/link    jQuery=#content .button.button.button-warning:contains("Reject")
+    When the user clicks the button/link    jQuery=#content .govuk-button.govuk-button.govuk-button-warning:contains("Reject")
     And the user clicks the button/link    jQuery=.modal-reject-profile button:contains('Reject')
 
 Status updates to a cross for the internal user's table
@@ -682,7 +682,7 @@ Lead partner no longer has the 'submitted' view of the spend profiles
     And the user clicks the button/link    link=Spend profile
     Then the user should not see the element    jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been sent to Innovate UK.")
     And the user should see the text in the page    This overview shows the spend profile status of each organisation in your project.
-    And the user should see the element    jQuery=.button:contains("Review and send total project spend profile")
+    And the user should see the element    jQuery=.govuk-button:contains("Review and send total project spend profile")
 
 Lead partner can return edit rights to other project partners
     [Documentation]    INFUND-6977
@@ -694,8 +694,8 @@ Lead partner can edit own spend profile and mark as complete
     [Documentation]    INFUND-6977, INFUNF-7409
     When the user clicks the button/link    link=${Katz_name}
     And the user should see the text in the page    Your spend profile is marked as complete
-    And the user clicks the button/link    jQuery=.button:contains("Edit spend profile")
-    And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Edit spend profile")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Save and return to spend profile overview")
     And the user clicks the button/link    css=[name="mark-as-complete"]
 
 Industrial partner receives edit rights and can submit their spend profile
@@ -708,7 +708,7 @@ Industrial partner receives edit rights and can submit their spend profile
     And the user goes back to the previous page
     When the user clicks the button/link    link=Spend profile
     And the user clicks the button/link     link=Submit to lead partner
-    And the user clicks the button/link     jQuery=button.button:contains("Submit")
+    And the user clicks the button/link     jQuery=button.govuk-button:contains("Submit")
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
     And the user clicks the button/link    link=Set up your project
@@ -725,7 +725,7 @@ Academic partner receives edit rights and can submit their spend profile
     And the user goes back to the previous page
     And the user clicks the button/link    link=Spend profile
     When the user clicks the button/link   link=Submit to lead partner
-    And the user clicks the button/link    jQuery=button.button:contains("Submit")
+    And the user clicks the button/link    jQuery=button.govuk-button:contains("Submit")
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
     And the user clicks the button/link    link=Set up your project
@@ -737,7 +737,7 @@ Lead partner can send the combined spend profile
     [Documentation]    INFUND-6977
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
-    When the user clicks the button/link     jQuery=.button:contains("Review and send total project spend profile")
+    When the user clicks the button/link     jQuery=.govuk-button:contains("Review and send total project spend profile")
     Then the user clicks the button/link     link=Send project spend profile
     And the user should see the element      jQuery=button:contains("Cancel")
     When the user clicks the button/link     id=submit-send-all-spend-profiles
@@ -852,8 +852,8 @@ project finance reviews Finance checks
 the user returns edit rights for the organisation
     [Arguments]    ${org_name}
     the user clicks the button/link  link=${org_name}
-    the user clicks the button/link  jQuery=.button:contains("Allow edits")
-    the user clicks the button/link  jQuery=.button:contains("Allow partner to edit")
+    the user clicks the button/link  jQuery=.govuk-button:contains("Allow edits")
+    the user clicks the button/link  jQuery=.govuk-button:contains("Allow partner to edit")
     the user should see the text in the page    In progress
 
 check if project manager, project address and finance contact fields are editable

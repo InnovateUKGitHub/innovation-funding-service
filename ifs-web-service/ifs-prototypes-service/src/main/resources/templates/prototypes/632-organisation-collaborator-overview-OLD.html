@@ -44,7 +44,7 @@
             <li><a href="mailto:John@io.systems">John Dull</a> <small>(pending)</small> - <small><a href="#" data-js-modal="modal-submit-remove-collaborator">Remove</a></small></li>
         </ul>
 
-        <p class="govuk-body"><a href="./633-application-invite.html" class="button">Invite new contributors</a></p>
+        <p class="govuk-body"><a href="./633-application-invite.html" class="govuk-button">Invite new contributors</a></p>
 
 
         <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true" style="margin-top: -153px;">
@@ -57,10 +57,10 @@
                 <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
                     <input type="hidden" value="6" name="applicationInviteId" />
                     <div class="govuk-grid-column-one-half">
-                        <button type="button" class="js-close buttonlink large">Cancel</button>
+                        <button type="button" class="js-close button-clear large">Cancel</button>
                     </div>
                     <div class="govuk-grid-column-one-half alignright-button">
-                        <button class="button" name="publish" value="publish" type="submit">Remove</button>
+                        <button class="govuk-button" name="publish" value="publish" type="submit">Remove</button>
                     </div>
                 </form>
             </div>
@@ -76,10 +76,10 @@
                 <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
                     <input type="hidden" value="6" name="applicationInviteId" />
                     <div class="govuk-grid-column-one-half">
-                        <button type="button" class="js-close buttonlink large">Cancel</button>
+                        <button type="button" class="js-close button-clear large">Cancel</button>
                     </div>
                     <div class="govuk-grid-column-one-half alignright-button">
-                        <button class="button" name="publish" value="publish" type="submit">Remove organisation and collaborator</button>
+                        <button class="govuk-button" name="publish" value="publish" type="submit">Remove organisation and collaborator</button>
                     </div>
                 </form>
             </div>

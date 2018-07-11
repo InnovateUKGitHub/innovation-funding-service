@@ -169,7 +169,7 @@
                                             />
                                         </td>
                                         <td class="alignright width-20-percent">
-                                            <button class="buttonlink remove-another-row"
+                                            <button class="button-clear remove-another-row"
                                                     name="removeNewUser"
                                                     th:value="${iterStat.index}"
                                                     type="submit">
@@ -181,11 +181,11 @@
                                 </table>
 
                                 <p class="alignright extra-margin">
-                                    <button class="buttonlink" data-repeatable-rowcontainer="#invite-table tbody" name="addNewUser" type="submit">Add another assessor in this area</button>
+                                    <button class="button-clear" data-repeatable-rowcontainer="#invite-table tbody" name="addNewUser" type="submit">Add another assessor in this area</button>
                                 </p>
 
                                 <div class="alignright extra-margin-top">
-                                    <button type="submit" name="inviteNewUsers" class="button no-margin">Add assessors to list</button>
+                                    <button type="submit" name="inviteNewUsers" class="govuk-button no-margin">Add assessors to list</button>
                                 </div>
                             </div>
                         </form>
@@ -200,7 +200,7 @@
                             <span class="govuk-heading-s">assessors</span>
                         </div>
                         <div class="govuk-grid-column-one-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">
-                            <a th:href="@{/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
+                            <a th:href="@{/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="govuk-button">Review and send invites</a>
                         </div>
                     </div>
 
@@ -213,7 +213,7 @@
                                 <th scope="col">Innovation area</th>
                                 <th scope="col">Contract and DOI</th>
                                 <td scope="col" class="alignright">
-                                    <button name="removeAll" class="buttonlink alignright"
+                                    <button name="removeAll" class="button-clear alignright"
                                             th:if="${!#lists.isEmpty(model.assessors)}">
                                         Remove all
                                     </button>
@@ -236,7 +236,7 @@
                                     <span class="no" th:unless="${assessor.compliant}">No</span>
                                 </td>
                                 <td class="alignright">
-                                    <button class="buttonlink alignright" name="remove" th:value="${assessor.email}">
+                                    <button class="button-clear alignright" name="remove" th:value="${assessor.email}">
                                         <span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove
                                     </button>
                                 </td>

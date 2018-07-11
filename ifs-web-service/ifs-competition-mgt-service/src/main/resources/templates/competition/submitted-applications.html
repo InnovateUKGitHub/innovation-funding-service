@@ -44,7 +44,7 @@
                                     <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
                                 </div>
                                 <div class="govuk-grid-column-one-third">
-                                    <button class="button">Filter</button>
+                                    <button class="govuk-button">Filter</button>
                                 </div>
                             </div>
                        </fieldset>
@@ -64,7 +64,7 @@
                                 <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>
                                 <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead</option>
                             </select>
-                            <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
+                            <button type="submit" class="button-secondary no-margin js-hidden">Sort</button>
                         </div>
                     </div>
                 </form>

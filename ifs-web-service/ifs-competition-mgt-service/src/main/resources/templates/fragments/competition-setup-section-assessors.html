@@ -159,7 +159,7 @@
                 </div>
             </div>
 
-            <button class="button">Done</button>
+            <button class="govuk-button">Done</button>
         </th:block>
 
        <th:block th:unless="${model.general.editable}" id="section-assessors-readonly">
@@ -180,7 +180,7 @@
                 <dd th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}"/>
             </dl>
 
-           <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
+           <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
         </th:block>
     </form>
 

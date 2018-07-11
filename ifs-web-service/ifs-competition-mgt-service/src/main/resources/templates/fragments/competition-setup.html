@@ -43,11 +43,11 @@
             <p class="govuk-body">Once you complete, this competition will be ready to open.</p>
             <a data-js-modal="complete-modal"
                th:disabled="${!setupReady}"
-               class="button no-margin-right" id="compCTA">Complete</a>
+               class="govuk-button no-margin-right" id="compCTA">Complete</a>
         </div>
         <div class="extra-margin"
              th:unless="${model.general.competition.competitionStatus.isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}">
-            <a data-js-modal="delete-modal" class="buttonlink">Delete competition</a>
+            <a data-js-modal="delete-modal" class="button-clear">Delete competition</a>
         </div>
     </th:block>
 </th:block>
@@ -55,7 +55,7 @@
 <!-- ===================Comp admin Page back button============================== -->
 <div th:fragment="setup-home">
     <div class="extra-margin">
-        <a class="button button-secondary" th:href="@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}">Return to setup overview</a>
+        <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}">Return to setup overview</a>
     </div>
 </div>
 
@@ -74,8 +74,8 @@
             <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-content" />
             <hr />
             <div>
-                <button class="button" type="submit">Remove assessor</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button class="govuk-button" type="submit">Remove assessor</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
 
@@ -98,8 +98,8 @@
         <p class="govuk-body">This will inform all applicants of the funding decision. If applicants are successful you cannot retract this decision.</p>
         <hr />
         <div>
-            <button name="send-emails" class="button">Send email to all applicants</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button name="send-emails" class="govuk-button">Send email to all applicants</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </div>
@@ -114,8 +114,8 @@
         <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
               th:action="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${model.general.competition.id})}">
             <div>
-                <button type="submit" class="button">Done</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button type="submit" class="govuk-button">Done</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>
@@ -134,8 +134,8 @@
         <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
               th:action="@{/competition/setup/{competitionId}/delete(competitionId=${model.general.competition.id})}">
             <div>
-                <button type="submit" class="button">Delete</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button type="submit" class="govuk-button">Delete</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>
@@ -155,8 +155,8 @@
         <hr />
         <form class="js-modal-url-target" method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div>
-                <button name="mark-as-successful" class="button">I'm sure</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button name="mark-as-successful" class="govuk-button">I'm sure</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>

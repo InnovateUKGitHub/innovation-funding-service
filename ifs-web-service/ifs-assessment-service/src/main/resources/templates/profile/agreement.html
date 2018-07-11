@@ -21,7 +21,7 @@
 
                 <form class="extra-margin" th:action="@{/profile/agreement}" method="post" th:unless="${model.currentAgreement}">
                     <p class="govuk-body">By creating an account with us you agree to the terms and conditions contained in this assessor agreement.</p>
-                    <button class="button button-large extra-margin-right" type="submit">Save and return to assessor dashboard</button>
+                    <button class="govuk-button extra-margin-right" type="submit">Save and return to assessor dashboard</button>
                     <a th:href="@{/assessor/dashboard}">Cancel</a>
                 </form>
 
@@ -31,7 +31,7 @@
                 </p>
 
                 <div class="extra-margin-top" th:if="${model.currentAgreement}">
-                    <a th:href="@{/assessor/dashboard}" class="button">Return to assessor dashboard</a>
+                    <a th:href="@{/assessor/dashboard}" class="govuk-button">Return to assessor dashboard</a>
                 </div>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />

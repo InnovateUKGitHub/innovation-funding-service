@@ -92,7 +92,7 @@
                                             <p class="form-hint">(opens in a new window)</p>
                                         </div>
                                         <div class="govuk-grid-column-one-third">
-                                            <button name="removeFeedbackApplicationId" th:value="${app.applicationId}" class="button button-clear">Remove</button>
+                                            <button name="removeFeedbackApplicationId" th:value="${app.applicationId}" class="button-clear">Remove</button>
                                         </div>
                                     </div>
                                 </th:block>
@@ -144,9 +144,9 @@
             </p>
 
             <div class="extra-margin">
-                <button type="submit" class="button">Send invite</button>
+                <button type="submit" class="govuk-button">Send invite</button>
                 <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}"
-                   class="button button-clear">Cancel</a>
+                   class="button-clear">Cancel</a>
             </div>
 
         </form>

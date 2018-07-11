@@ -31,7 +31,7 @@
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST" novalidate="novalidate">
                 <div class="form-footer">
                     <div class="form-footer__actions">
-                        <button class="buttonlink" data-js-modal="modal-confirm-reactivate-user" type="button">Reactivate user</button>
+                        <button class="button-clear" data-js-modal="modal-confirm-reactivate-user" type="button">Reactivate user</button>
                     </div>
                     <div class="form-footer__info" th:text="|Deactivated by ${model.user.modifiedBy} on ${#temporals.format(model.user.modifiedOn, 'd MMMM yyyy')}">
                         Deactivated by Susan Smith on 23rd March 2017

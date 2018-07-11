@@ -35,7 +35,7 @@ Summary:All the sections are present
     When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see that the element is disabled    id=submit-assessment-button
     And the user clicks the button/link    link=Intelligent Building
-    And the user clicks the button/link    jQuery=.button:contains("Review and complete your assessment")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Review and complete your assessment")
     Then the user should see the element    jQuery=h2:contains("Review assessment")
     And the user should see the element    jQuery=span:contains("Do you believe that this application is suitable for funding?")
     And the user should see the element    id=form-input-feedback
@@ -117,12 +117,12 @@ Summary:Funding Decision Validations
     ...
     ...    INFUND-5228
     [Tags]
-    When The user clicks the button/link    jQuery=.button:contains("Save assessment")
+    When The user clicks the button/link    jQuery=.govuk-button:contains("Save assessment")
     And The user should see an error    Please indicate your decision.
     And The user enters text to a text field    id=feedback    ${EMPTY}
     And The user enters text to a text field    id=comment    ${EMPTY}
     Then the user selects the radio button    fundingConfirmation    false
-    And The user clicks the button/link    jQuery=.button:contains("Save assessment")
+    And The user clicks the button/link    jQuery=.govuk-button:contains("Save assessment")
     Then The user should see an error    Please enter your feedback.
 
 Summary:Word count check(Your feedback)
@@ -136,10 +136,10 @@ Summary:Word count check(Your feedback)
     [Tags]    HappyPath
     [Setup]    browser validations have been disabled
     When the user enters multiple strings into a text field      id=feedback  t  5001
-    And the user clicks the button/link                          jQuery=.button:contains("Save assessment")
+    And the user clicks the button/link                          jQuery=.govuk-button:contains("Save assessment")
     Then the user should see an error                            This field cannot contain more than 5,000 characters.
     When the user enters multiple strings into a text field      id=feedback  w${SPACE}  102
-    And the user clicks the button/link                          jQuery=.button:contains("Save assessment")
+    And the user clicks the button/link                          jQuery=.govuk-button:contains("Save assessment")
     Then the user should see an error                            Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct                         Words remaining: -2
     When the user enters text to a text field                    id=feedback    Testing the feedback word count.
@@ -155,7 +155,7 @@ Summary:Word count check(Comments for InnovateUK)
     ...
     ...    INFUND-5179
     When the user enters multiple strings into a text field     id=comment  a${SPACE}  102
-    And the user clicks the button/link                         jQuery=.button:contains("Save assessment")
+    And the user clicks the button/link                         jQuery=.govuk-button:contains("Save assessment")
     Then the user should see an error                           Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct                        Words remaining: -2
     When the user enters text to a text field                   id=comment    Testing the comments word count.
@@ -175,7 +175,7 @@ User Saves the Assessment as Recommended
     [Tags]    HappyPath
     Given the user enters text to a text field               id=feedback  ${EMPTY}
     And the user selects the radio button                    fundingConfirmation    true
-    When The user clicks the button/link                     jQuery=.button:contains("Save assessment")
+    When The user clicks the button/link                     jQuery=.govuk-button:contains("Save assessment")
     Then The user should not see the text in the page        Please enter your feedback
     And The user should see the text in the page             Assessed
     And the user should see the element                      css=li:nth-child(7) .positive
@@ -194,10 +194,10 @@ User Saves the Assessment as Not Recommended
     [Setup]
     Given The user clicks the button/link                    link=Park living
     And the assessor adds score and feedback for every question  11  # value 11: is the number of questions to loop through to submit feedback
-    And the user clicks the button/link                      jQuery=.button:contains("Review and complete your assessment")
+    And the user clicks the button/link                      jQuery=.govuk-button:contains("Review and complete your assessment")
     When the user selects the radio button                   fundingConfirmation    false
     And the user enters text to a text field                 id=feedback    Negative feedback
-    And The user clicks the button/link                      jQuery=.button:contains("Save assessment")
+    And The user clicks the button/link                      jQuery=.govuk-button:contains("Save assessment")
     And The user should see the element                      css=li:nth-child(6) .negative
     And The user should see the element                      css=li:nth-child(6) input[type="checkbox"] ~ label
     And the application should have the correct status       css=.progress-list li:nth-child(6)    Assessed

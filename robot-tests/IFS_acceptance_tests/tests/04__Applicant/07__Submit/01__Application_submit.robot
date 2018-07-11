@@ -36,7 +36,7 @@ Submit button disabled when application is incomplete
     And the user should not see the element            jQuery=.message-alert:contains("Now your application is complete, you need to review and then submit.")
     And the user clicks the button/link                link=Your finances
     And the user clicks the button/link                link= Application overview
-    And the user clicks the button/link                jQuery=.button:contains("Review and submit")
+    And the user clicks the button/link                jQuery=.govuk-button:contains("Review and submit")
     Then the submit button should be disabled
     When the user clicks the button/link               jQuery= button:contains("Application details")
     Then the user should see the element               jQuery= div[id="collapsible-1"] button:contains("Mark as complete")+button:contains("Return and edit")
@@ -144,12 +144,12 @@ Applications are on Dashboard when Competition is Closed
 
 *** Keywords ***
 the applicant clicks Yes in the submit modal
-    the user clicks the button/link    jQuery=.button:contains("Submit application")
-    the user clicks the button/link    jQuery=.button:contains("Yes, I want to submit my application")
+    the user clicks the button/link    jQuery=.govuk-button:contains("Submit application")
+    the user clicks the button/link    jQuery=.govuk-button:contains("Yes, I want to submit my application")
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
-    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")
-    the user clicks the button/link    jQuery=.button:contains("Submit application")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.govuk-button:contains("Submit application")
+    the user clicks the button/link    jQuery=.govuk-button:contains("Submit application")
     the user clicks the button/link    jquery=button:contains("Cancel")
 
 The user can check that the sections are read only
@@ -160,9 +160,9 @@ The user can check that the sections are read only
     the user clicks the button/link    css=.section-overview section:nth-of-type(1) .collapsible:nth-of-type(4)
     the user should not see the element    jQuery=button:contains("Edit")
     the user clicks the button/link    css=.section-overview section:nth-of-type(2) .collapsible:nth-of-type(10)
-    the user should not see the element    jQuery=.button:contains("Edit")
+    the user should not see the element    jQuery=.govuk-button:contains("Edit")
     the user clicks the button/link    css=.section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
-    the user should not see the element    jQuery=.button:contains("Edit")
+    the user should not see the element    jQuery=.govuk-button:contains("Edit")
 
 the submit button should be disabled
     Element Should Be Disabled    jQuery=button:contains("Submit application")
@@ -177,8 +177,8 @@ the applicant marks the first section as complete
     the applicant completes the application details  ${application_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
 
 the applicant clicks the submit and then clicks the "close button" in the modal
-    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")
-    the user clicks the button/link    jQuery=.button:contains("Submit application")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.govuk-button:contains("Submit application")
+    the user clicks the button/link    jQuery=.govuk-button:contains("Submit application")
     the user clicks the button/link    jQuery=button:contains("Close")
 
 the user puts zero project costs

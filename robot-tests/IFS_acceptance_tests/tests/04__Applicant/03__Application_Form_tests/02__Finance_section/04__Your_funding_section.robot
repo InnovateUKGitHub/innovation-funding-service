@@ -136,7 +136,7 @@ Custom Suite Setup
 the user provides invalid value as percentage then he should see the error
     [Arguments]  ${error}  ${value}
     the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  ${value}
-    the user moves focus to the element   css=button.button[type="submit"]
+    the user moves focus to the element   css=button.govuk-button[type="submit"]
     the user should see a field error     ${error}
 
 Complete the org size section

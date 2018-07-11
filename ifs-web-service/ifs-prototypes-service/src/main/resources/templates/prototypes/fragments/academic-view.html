@@ -227,10 +227,10 @@
 
     <div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or user == 'partner' or type == 'partnerView' or type == 'checks'}">
         <th:block th:if="${param.status == null or param.status[0] != 'edit-academic'}">
-            <a th:href="@{'?status=edit-academic'}" class="button button-secondary">Edit</a>
+            <a th:href="@{'?status=edit-academic'}" class="govuk-button button-secondary">Edit</a>
         </th:block>
         <th:block th:if="${param.status != null and param.status[0] == 'edit-academic'}">
-            <a th:href="@{'?status=save-academic'}" class="button">Save</a>
+            <a th:href="@{'?status=save-academic'}" class="govuk-button">Save</a>
         </th:block>
     </div>
 

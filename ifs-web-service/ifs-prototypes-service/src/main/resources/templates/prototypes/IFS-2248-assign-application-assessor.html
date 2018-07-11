@@ -81,7 +81,7 @@
                             <a href="?">Clear</a>
                         </div>
                         <div class="govuk-grid-column-one-third">
-                            <button class="button">Filter</button>
+                            <button class="govuk-button">Filter</button>
                         </div>
                     </div>
                 </fieldset>
@@ -112,7 +112,7 @@
             <div class="govuk-grid-column-one-half select-all alignright">
                 <form method="get">
                     <input type="hidden" name="name" th:value="${name}">
-                    <button class="button" name="addSelected" data-submit-el="" disabled="disabled" formaction="/prototypes/IFS-2248-review-send">
+                    <button class="govuk-button" name="addSelected" data-submit-el="" disabled="disabled" formaction="/prototypes/IFS-2248-review-send">
                         Allocate
                     </button>
                 </form>
@@ -153,7 +153,7 @@
                     <td class="numeric">0</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td><span class="yes">Responded to feedback</span></td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a></td>
+                        <td><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a></td>
                     </th:block>
                 </tr>
                 <tr>
@@ -173,7 +173,7 @@
                     <td class="numeric">2</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td><strong>Pending</strong></td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a></td>
+                        <td><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a></td>
                     </th:block>
                 </tr>
                 <tr>
@@ -193,7 +193,7 @@
                     <td class="numeric">0</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td><strong>Pending</strong></td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a></td>
+                        <td><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a></td>
                     </th:block>
                 </tr>
                 <tr>
@@ -213,7 +213,7 @@
                     <td class="numeric">0</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td><span class="yes">Responded to feedback</span></td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a></td>
+                        <td><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a></td>
                     </th:block>
                 </tr>
                 <tr>
@@ -233,7 +233,7 @@
                     <td class="numeric">0</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td><span class="no">Rejected</span></td>
-                        <td><a href="#/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a></td>
+                        <td><a href="#/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a></td>
                     </th:block>
                 </tr>
                 </tbody>

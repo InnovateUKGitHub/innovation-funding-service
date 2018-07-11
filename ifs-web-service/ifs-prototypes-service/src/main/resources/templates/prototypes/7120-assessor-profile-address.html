@@ -77,7 +77,7 @@
 
 
 	<div class="extra-margin-top">
-		<a th:href="${(param.status != null and param.status[0] == 'edit' ? '?' : '/prototypes/865-assessor-dashboard-invites')}" class="button" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and return to your address' : 'Return to assessor dashboard')}">Return to assessor dashboard</a>
+		<a th:href="${(param.status != null and param.status[0] == 'edit' ? '?' : '/prototypes/865-assessor-dashboard-invites')}" class="govuk-button" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and return to your address' : 'Return to assessor dashboard')}">Return to assessor dashboard</a>
 		<a th:unless="${(param.status != null and param.status[0] == 'edit')}" href="?status=edit" class="button-secondary button-right">Edit</a>
 		<a th:if="${(param.status != null and param.status[0] == 'edit')}" href="?">Cancel</a>
 	</div>

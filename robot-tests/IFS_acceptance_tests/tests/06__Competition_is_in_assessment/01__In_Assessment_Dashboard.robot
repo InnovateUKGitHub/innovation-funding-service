@@ -18,7 +18,7 @@ In Assessment dashboard page
     And The user should see the text in the page    Digital manufacturing
     And the user should see the element             link=View and update competition setup
     #The following checks test if the correct buttons are disabled
-    And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
+    And the user should see the element    jQuery=.govuk-button--disabled[aria-disabled="true"]:contains("Input and review funding decision")
 
 Milestones for In Assessment competitions
     [Documentation]    INFUND-7561

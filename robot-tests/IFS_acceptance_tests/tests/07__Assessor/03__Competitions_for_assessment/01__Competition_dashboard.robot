@@ -64,7 +64,7 @@ User can view the competition brief
     And the user should see the text in the page         ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the element                  jQuery=.govuk-list li:contains("Competition opens")
     And the user should see the element                  jQuery=.govuk-list li:contains("Competition closes")
-    And the user should see the element                  jQuery=.button:contains("Start new application")
+    And the user should see the element                  jQuery=.govuk-button:contains("Start new application")
     [Teardown]    the user closes the competition brief
 
 Applications should have correct status and order
@@ -101,7 +101,7 @@ Reject an application for assessment
     And The user clicks the button/link                  jQuery=button:contains("Confirm")
     Then the user should see an error                    Please enter a reason.
     And the assessor fills all fields with valid inputs
-    And the user clicks the button/link                  jQuery=.button:contains("Confirm")
+    And the user clicks the button/link                  jQuery=.govuk-button:contains("Confirm")
     And the application for assessment should be removed
 
 Applications should not have a check-box when the status is Open

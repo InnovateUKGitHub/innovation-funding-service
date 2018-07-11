@@ -300,7 +300,7 @@ table{
   background: govuk-colour("grey-4");
   //padding: 20px 0;
 
-  .button{
+  .govuk-button{
     margin-right: 20px !important;
   }
 }
@@ -313,7 +313,7 @@ table{
       @extend .extra-margin;
     }
 
-    .button{
+    .govuk-button{
       margin-right: 10px;
     }
 	 }
@@ -343,7 +343,7 @@ table{
 
 .dashboard-internal{
   .dashboard-actions{
-    .button{
+    .govuk-button{
       //padding: em(10) em(15) em(5) em(15);
       //min-height: 80px;
       text-align: center;

@@ -60,10 +60,10 @@
 
 	<div class="govuk-grid-row extra-margin" th:unless="${param.status != null and param.status[0] == 'accepted'}">
 		<div class="govuk-grid-column-one-half">
-			<a href="/prototypes/2650-review-bank-details" class="button-link">Cancel bank account changes</a>
+			<a href="/prototypes/2650-review-bank-details" class="govuk-button-link">Cancel bank account changes</a>
 		</div>
 		<div class="govuk-grid-column-one-half alignright">
-			<a href="/prototypes/2650-review-bank-details" data-js-modal="modal-change-bank-details" class="button">Update bank account details</a>
+			<a href="/prototypes/2650-review-bank-details" data-js-modal="modal-change-bank-details" class="govuk-button">Update bank account details</a>
 		</div>
 
 		<div class="modal-change-bank-details" role="dialog" aria-hidden="true" style="margin-top: -174px;">
@@ -80,9 +80,9 @@
 
             	<div class="alignright-button">
 
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-					<a th:href="${param.status != null and param.status[0] == 'noCompHouse' ? '/prototypes/2650-review-bank-details?status=noCompHouse':'/prototypes/2650-review-bank-details'}" class="button">Update bank account details</a>
+					<a th:href="${param.status != null and param.status[0] == 'noCompHouse' ? '/prototypes/2650-review-bank-details?status=noCompHouse':'/prototypes/2650-review-bank-details'}" class="govuk-button">Update bank account details</a>
 
             	</div>
 

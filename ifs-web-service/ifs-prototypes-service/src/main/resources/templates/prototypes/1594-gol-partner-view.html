@@ -115,7 +115,7 @@
 		<div th:if="${param.status == null or param.status[0] == 'GOLRejected'}" th:remove="tag">
 
 			<div class="extra-margin">
-				<a href="#" data-js-modal="modal-send" class="button">Send to Innovate UK</a>
+				<a href="#" data-js-modal="modal-send" class="govuk-button">Send to Innovate UK</a>
 			</div>
 
 			<div class="modal-send" role="dialog" aria-hidden="true" style="margin-top: -174px;">
@@ -130,9 +130,9 @@
 
 		        	<div class="alignright-button">
 
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+						<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-		        		<a th:href="@{'?status=GOLSent&#38;user=nonLead'}" class="button">Confirm submission</a>
+		        		<a th:href="@{'?status=GOLSent&#38;user=nonLead'}" class="govuk-button">Confirm submission</a>
 		        	</div>
 
 		        </div>

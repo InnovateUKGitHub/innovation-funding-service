@@ -164,7 +164,7 @@ ol {
 
       &.selected {
         a,
-        .buttonlink {
+        .button-clear {
           @include media-down(mobile) {
             border-bottom: 1px solid $govuk-border-colour;
           }
@@ -178,7 +178,7 @@ ol {
       }
 
       a,
-      .buttonlink {
+      .button-clear {
         border: 1px solid transparent;
         padding: 10px 16px;
         display: block;

@@ -52,7 +52,7 @@
                     </div>
                     <div class="task-status">
                         <th>
-                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="buttonlink no-margin">Remove</button>
+                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="button-clear no-margin">Remove</button>
                         </th>
                     </div>
                 </th:block>
@@ -84,7 +84,7 @@
                     </div>
                     <div th:if="${model.multipleAssessedQuestionsLeft()}" class="task-status">
                         <th>
-                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="buttonlink no-margin">Remove</button>
+                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="button-clear no-margin">Remove</button>
                         </th>
                     </div>
                 </th:block>
@@ -92,7 +92,7 @@
         </ul>
         <th:form th:unless="${model.general.state.preventEdit}">
             <p class="govuk-body">
-                <button type="submit" name="createQuestion" class="buttonlink">Add question</button>
+                <button type="submit" name="createQuestion" class="button-clear">Add question</button>
             </p>
         </th:form>
 
@@ -119,7 +119,7 @@
 
         <div class="govuk-grid-column-one-quarter">
             <div class="govuk-grid-column-full extra-margin">
-                <button th:if="${model.general.editable}" th:disabled="${!model.allComplete}" class="button">Done</button>
+                <button th:if="${model.general.editable}" th:disabled="${!model.allComplete}" class="govuk-button">Done</button>
             </div>
         </div>
 

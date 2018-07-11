@@ -133,7 +133,7 @@
 
 		<div class="govuk-grid-row constrain-width extra-margin ">
 			<div class="govuk-grid-column-one-third">
-				<a href="/prototypes/1348-open-applications" class="button-dashboard highlight">
+				<a href="/prototypes/1348-open-applications" class="govuk-button-dashboard highlight">
 					<p class="govuk-body"><span class="govuk-heading-l">22</span><br />Applications</p>
 				</a>
 			</div>
@@ -141,17 +141,17 @@
 
 		<div class="govuk-grid-row constrain-width extra-margin ">
 			<div class="govuk-grid-column-one-third">
-				<p class="button-dashboard">
+				<p class="govuk-button-dashboard">
 					<span class="govuk-heading-l">12</span><br />Applications started
 				</p>
 			</div>
 			<div class="govuk-grid-column-one-third">
-				<p class="button-dashboard">
+				<p class="govuk-button-dashboard">
 					<span class="govuk-heading-l">6</span><br />Applications in progress (beyond 50%)
 				</p>
 			</div>
 			<div class="govuk-grid-column-one-third">
-				<p class="button-dashboard">
+				<p class="govuk-button-dashboard">
 					<span class="govuk-heading-l">4</span><br />Applications submitted
 				</p>
 			</div>
@@ -164,12 +164,12 @@
 		<div class="govuk-grid-row extra-margin constrain-width">
 
 			<div class="govuk-grid-column-one-third">
-				<a class="button-dashboard highlight" th:href="${(param.status != null ? '/prototypes/1348-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-submitted-applications?closed')}">
+				<a class="govuk-button-dashboard highlight" th:href="${(param.status != null ? '/prototypes/1348-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-submitted-applications?closed')}">
 					<span class="govuk-heading-l">4</span><br />Applications submitted
 				</a>
 			</div>
 			<div class="govuk-grid-column-one-third">
-				<a class="button-dashboard" th:href="${(param.status != null ? '/prototypes/1348-not-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-not-submitted-applications?closed')}">
+				<a class="govuk-button-dashboard" th:href="${(param.status != null ? '/prototypes/1348-not-submitted-applications?closed&#38;status=' + {param.status} : '/prototypes/1348-not-submitted-applications?closed')}">
 					<p class="govuk-body"><span class="govuk-heading-l">18</span><br />Applications not submitted</p>
 				</a>
 			</div>

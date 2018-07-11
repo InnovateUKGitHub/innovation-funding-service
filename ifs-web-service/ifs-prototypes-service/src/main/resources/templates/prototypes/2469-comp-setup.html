@@ -38,8 +38,8 @@
 		<th:block th:insert="prototypes/fragments/comp-setup :: ${'prototype-section-'+ (param.section == null ? 'index-page' : param.section[0])}" />
 
 		<div class="extra-margin" th:if="${param.section != null}">
-			<!--<a th:href="${#httpServletRequest.requestURI}" class="button button-secondary">Return to setup overview</a>-->
-			<a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="button button-secondary">Return to setup overview</a>
+			<!--<a th:href="${#httpServletRequest.requestURI}" class="govuk-button button-secondary">Return to setup overview</a>-->
+			<a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="govuk-button button-secondary">Return to setup overview</a>
 		</div>
 
 

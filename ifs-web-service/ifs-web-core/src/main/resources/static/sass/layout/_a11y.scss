@@ -12,21 +12,3 @@ body [aria-hidden="true"]{
   position: absolute;
   z-index: -1;
 }
-
-.buttonlink {
-  background:none;
-  border:none;
-  font: inherit;
-  cursor: pointer;
-  color: govuk-colour("blue");
-  line-height:1.25;
-  margin: 0px 15px 15px 0px;
-  text-decoration:underline;
-  padding: 0;
-
-  &.disabled{
-    text-decoration: none;
-    color: $govuk-secondary-text-colour;
- 	}
-
-}

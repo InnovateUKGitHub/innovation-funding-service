@@ -55,7 +55,7 @@
                                     <button th:id="|remove-contributor-${applicantStat.index}|"
                                             th:if="${applicant.removable and applicantStat.size > 1}"
                                             th:value="${applicant.applicationInviteId}"
-                                            class="buttonlink"
+                                            class="button-clear"
                                             name="removeInvite"
                                             type="submit">
                                         Remove
@@ -101,10 +101,10 @@
                                                     data-email-duplication-errormessage=#{email.already.in.invite}" />
                                 </td>
                                 <td>
-                                   <button class="button no-margin" name="executeStagedInvite" value="true" type="submit">Invite</button>
+                                   <button class="govuk-button no-margin" name="executeStagedInvite" value="true" type="submit">Invite</button>
                                 </td>
                                 <td class="alignright">
-                                    <button class="remove-another-row buttonlink"
+                                    <button class="remove-another-row button-clear"
                                             name="removeStagedInvite"
                                             value="true"
                                             type="submit">
@@ -116,7 +116,7 @@
                     </table>
 
                     <div th:unless="*{stagedInvite}">
-                        <button class="buttonlink"
+                        <button class="button-clear"
                                 data-repeatable-rowcontainer="#applicant-table tbody"
                                 data-applicant-table="update-org"
                                 type="submit"

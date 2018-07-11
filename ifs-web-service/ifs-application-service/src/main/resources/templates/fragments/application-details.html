@@ -57,7 +57,7 @@
                 <!--/* Input is used here to easily check if a Research Category has been selected for mark as complete validation */-->
                 <input type="hidden" th:field="*{__application.researchCategory.name__}" value="Research category has been selected"/>
             </div>
-            <button id="application.researchCategory" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}" type="submit">
+            <button id="application.researchCategory" class="button-clear" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}" type="submit">
                 <span th:text="${model.researchCategoryText}">Choose your research category</span>
             </button>
         </div>
@@ -76,7 +76,7 @@
                 <th:block th:unless="${model.noInnovationAreaApplicable}" th:text="${model.selectedInnovationAreaName}"/>
                 <th:block th:if="${model.noInnovationAreaApplicable}" th:text="#{ifs.application.no_innovation_area}"/>
             </div>
-            <button id="researchArea" class="buttonlink" name="submit-section-redirect"
+            <button id="researchArea" class="button-clear" name="submit-section-redirect"
                     th:value="${'/form/question/' + question.id + '/innovation-area'}" type="submit"
                     th:text="${model.innovationAreaText}">
                 Choose your innovation area

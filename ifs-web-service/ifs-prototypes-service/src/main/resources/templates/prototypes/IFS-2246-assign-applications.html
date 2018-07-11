@@ -78,7 +78,7 @@
             </div>
             <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
                 <div class="govuk-grid-column-one-half alignright" th:unless="${param.tab != null and param.tab[0] == 'invite'} and ${param.status != null and param.status[0] == 'removeAll'}">
-                    <a href="/prototypes/IFS-2246-review-send" class="button">
+                    <a href="/prototypes/IFS-2246-review-send" class="govuk-button">
                         Review and send invites
                     </a>
                 </div>
@@ -101,7 +101,7 @@
                 <div class="govuk-grid-column-one-half select-all alignright">
                     <form method="get" th:action="${#httpServletRequest.requestURI}">
                         <input type="hidden" name="tab" value="invite"/>
-                        <button class="button" name="addSelected" data-submit-el="" disabled="disabled">
+                        <button class="govuk-button" name="addSelected" data-submit-el="" disabled="disabled">
                             Add selected to invite list
                         </button>
                     </form>
@@ -145,7 +145,7 @@
                     <td>Ooba</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td><span class="yes">Responded to feedback</span></td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a>
+                        <td><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
                         </td>
                     </th:block>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
@@ -169,7 +169,7 @@
                     <td>Empire Ltd</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td>Awaiting response</td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a>
+                        <td><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
                         </td>
                     </th:block>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
@@ -193,7 +193,7 @@
                     <td>Ideas</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td>Awaiting response</td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a>
+                        <td><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
                         </td>
                     </th:block>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
@@ -217,7 +217,7 @@
                     <td>Wordpedia</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td><span class="yes">Responded to feedback</span></td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a>
+                        <td><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
                         </td>
                     </th:block>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
@@ -241,7 +241,7 @@
                     <td>Innovation</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td><span class="yes">Responded to feedback</span></td>
-                        <td><a href="#/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a>
+                        <td><a href="#/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
                         </td>
                     </th:block>
                 </tr>

@@ -47,7 +47,7 @@
 
 			<div class="extra-margin">
 
-				<a href="/prototypes/5698-removed-applications" class="button button-secondary" data-js-modal="modal-reinstate">Reinstate application</a>
+				<a href="/prototypes/5698-removed-applications" class="govuk-button button-secondary" data-js-modal="modal-reinstate">Reinstate application</a>
 
 			</div>
 
@@ -66,9 +66,9 @@
 
 	            	<div class="alignright-button">
 
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+						<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-	            		<a href="/prototypes/5698-removed-applications" class="button">Reinstate application</a>
+	            		<a href="/prototypes/5698-removed-applications" class="govuk-button">Reinstate application</a>
 	            	</div>
 
 		        </div>
@@ -103,7 +103,7 @@
 		    </div>
 
 		    <div class="extra-margin-top" th:unless="${param.status != null and param.status[0] == 'removeApp' or param.status != null and param.status[0] == 'removed'}">
-		    	<a th:href="@{'?status=removeApp#removeApp'}" class="button button-secondary">Remove application from assessment</a>
+		    	<a th:href="@{'?status=removeApp#removeApp'}" class="govuk-button button-secondary">Remove application from assessment</a>
 		    </div>
 
 			<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="extra-margin-bottom">
@@ -126,7 +126,7 @@
 							<a th:href="${#httpServletRequest.requestURI}">Cancel</a>
 						</div>
 						<div class="govuk-grid-column-one-half alignright">
-							<button class="button no-margin-right">Continue and draft email</button>
+							<button class="govuk-button no-margin-right">Continue and draft email</button>
 						</div>
 					</div>
 				</form>

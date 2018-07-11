@@ -39,7 +39,7 @@ The user should see the correct content in the confirm page
 The continue button should redirect to the overview page
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
-    When the user clicks the button/link           jQuery=.button:contains("Confirm and accept invitation")
+    When the user clicks the button/link           jQuery=.govuk-button:contains("Confirm and accept invitation")
     Then the user should see the text in the page  Application overview
 
 The user edits the name this should be changed in the View team page
@@ -74,10 +74,10 @@ the user should see the change in the view team members page
 Existing user creates a new application and invites a user from the same organisation
     the user navigates to the page        ${openCompetitionBusinessRTO_overview}
     the user clicks the button/link       jQuery=a:contains("Start new application")
-    the user clicks the button/link       jQuery=.button:contains("Continue")
+    the user clicks the button/link       jQuery=.govuk-button:contains("Continue")
     the user should see a field and summary error   Please select an option to continue.
     the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
-    the user clicks the button/link       jQuery=.button:contains("Continue")
+    the user clicks the button/link       jQuery=.govuk-button:contains("Continue")
     the user clicks the button/link       jQuery=a:contains("Update and add contributors from INNOVATE LTD")
     The user clicks the button/link       jQuery=button:contains("Add another contributor")
     The user enters text to a text field  name=stagedInvite.name    Olivier Giroud

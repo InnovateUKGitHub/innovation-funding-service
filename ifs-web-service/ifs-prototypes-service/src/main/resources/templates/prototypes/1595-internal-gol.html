@@ -85,7 +85,7 @@
 				<div id="upload-gol">
 			        <input type="file" name="file-gol" id="file-gol" class="inputfile" />
 			        <label for="file-gol" class="button-secondary extra-margin">+ Upload</label>
-			        <a th:href="${#httpServletRequest.requestURI}" class="button button-secondary extra-margin-top">Generate GOL</a>
+			        <a th:href="${#httpServletRequest.requestURI}" class="govuk-button button-secondary extra-margin-top">Generate GOL</a>
 				</div>
 			</th:block>
 
@@ -131,7 +131,7 @@
 
 	<div th:if="${param.status == null}" th:remove="tag">
 
-		<a href="#" data-js-modal="modal-send" class="button">Send to project team</a>
+		<a href="#" data-js-modal="modal-send" class="govuk-button">Send to project team</a>
 
 		<div class="modal-send" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
@@ -145,9 +145,9 @@
 
 	        	<div class="alignright-button">
 
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-	        		<a th:href="@{'?status=GOLSent'}" class="button">Send to project team</a>
+	        		<a th:href="@{'?status=GOLSent'}" class="govuk-button">Send to project team</a>
 	        	</div>
 
 	        </div>
@@ -168,7 +168,7 @@
 		    </label>
 	    </div>
 
-	    <button data-js-modal="modal-gol-by-post" id="gol-by-post-button" class="button" type="submit" disabled="disabled">Confirm GOL received by post</button>
+	    <button data-js-modal="modal-gol-by-post" id="gol-by-post-button" class="govuk-button" type="submit" disabled="disabled">Confirm GOL received by post</button>
 
 	    <div class="modal-gol-by-post" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
@@ -182,9 +182,9 @@
 
 	        	<div class="alignright-button">
 
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-	        		<a th:href="@{'?status=GOLDecision'}" class="button">Confirm</a>
+	        		<a th:href="@{'?status=GOLDecision'}" class="govuk-button">Confirm</a>
 	        	</div>
 
 	        </div>
@@ -197,9 +197,9 @@
 		<h2 class="govuk-heading-m">Confirm receipt of grant offer letter</h2>
 		<p class="govuk-body">Do the documents supplied meet the requirements for the grant offer letter?</p>
 
-		<a href="#" data-js-modal="modal-accept-gol" class="button">Accept grant offer letter</a>
+		<a href="#" data-js-modal="modal-accept-gol" class="govuk-button">Accept grant offer letter</a>
 
-		<a href="#" data-js-modal="modal-reject-gol" class="button button-warning large">Reject grant offer letter</a>
+		<a href="#" data-js-modal="modal-reject-gol" class="govuk-button button-warning large">Reject grant offer letter</a>
 
 		<div class="modal-accept-gol" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
@@ -213,9 +213,9 @@
 
 	        	<div class="alignright-button">
 
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-	        		<a th:href="@{'?status=GOLAccepted'}" class="button">Accept signed grant offer letter</a>
+	        		<a th:href="@{'?status=GOLAccepted'}" class="govuk-button">Accept signed grant offer letter</a>
 	        	</div>
 
 	        </div>
@@ -236,9 +236,9 @@
 
 	        	<div class="alignright-button">
 
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-	        		<a th:href="@{'?status=GOLRejected'}" class="button button-warning">Reject grant offer letter</a>
+	        		<a th:href="@{'?status=GOLRejected'}" class="govuk-button button-warning">Reject grant offer letter</a>
 	        	</div>
 
 	        </div>

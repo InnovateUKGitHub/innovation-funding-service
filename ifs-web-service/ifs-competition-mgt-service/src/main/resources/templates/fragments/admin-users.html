@@ -47,7 +47,7 @@
                 <td>
                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
                         <button type="submit"
-                                class="button button-secondary"
+                                class="button-secondary"
                                 data-js-modal="modal-resend-internal-user"
                                 th:attr="data-modal-form-action=@{/admin/users/pending/resend-invite},data-modal-input-invite-id=${invite.id}">Resend invite</button>
                     </form>

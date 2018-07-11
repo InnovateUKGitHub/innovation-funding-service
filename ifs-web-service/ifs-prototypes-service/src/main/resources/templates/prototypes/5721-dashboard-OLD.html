@@ -146,16 +146,16 @@
 	</dl>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'Closed'}">
-		<a href="#" class="button button-large">Notify assessors</a>
+		<a href="#" class="govuk-button button-large">Notify assessors</a>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'assessment'}">
 		<div class="govuk-grid-row">
 			<div class="column-quarter">
-				<a href="#" class="button button-large width-full aligncentre">Export panel sheet</a>
+				<a href="#" class="govuk-button button-large width-full aligncentre">Export panel sheet</a>
 			</div>
 			<div class="column-quarter">
-				<a href="#" class="button button-large width-full aligncentre">Update assessors</a>
+				<a href="#" class="govuk-button button-large width-full aligncentre">Update assessors</a>
 			</div>
 			<div class="govuk-grid-column-one-half">
 				<p class="govuk-body"><span class="govuk-heading-l">5</span> changes since last update</p>
@@ -164,11 +164,11 @@
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'panel'}">
-		<a href="#" class="button button-large">Export panel sheet</a>
+		<a href="#" class="govuk-button button-large">Export panel sheet</a>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'Inform'}">
-		<a href="#" class="button button-large">Export panel sheet</a>
+		<a href="#" class="govuk-button button-large">Export panel sheet</a>
 	</th:block>
 
 	<h2 class="govuk-heading-m">Review progress</h2>

@@ -292,7 +292,7 @@
         <button type="submit"
                 name="assign_question"
                 th:value="${question.id}+'_'+${model.assignedBy.processRole.id}"
-                th:class="'buttonlink'">Assign to lead for review
+                th:class="'button-clear'">Assign to lead for review
         </button>
       </th:block>
     </th:block>
@@ -440,13 +440,13 @@
                 type="submit"
                 name="mark_as_incomplete"
                 th:value="${question.id}"
-                class="buttonlink">Edit
+                class="button-clear">Edit
         </button>
         <button th:if="${!model.complete and model.canMarkAsComplete}"
             id="application-question-complete"
             type="submit"
             name="mark_as_complete"
-            class="buttonlink"
+            class="button-clear"
             th:value="${question.id}">Mark as complete
         </button>
     </th:block>
@@ -462,7 +462,7 @@
                 name="mark_section_as_complete"
                 th:value="${currentSection.getId()}"
                 id="mark-all-as-complete"
-                th:class="button">Mark all as complete
+                th:class="govuk-button">Mark all as complete
         </button>
         <button th:unless="${readonly}"
                 th:if="${completedSections?.contains(currentSection.id)}"
@@ -470,7 +470,7 @@
                 name="mark_section_as_incomplete"
                 th:value="${currentSection.getId()}"
                 id="edit-section"
-                th:class="buttonlink">Edit
+                th:class="button-clear">Edit
         </button>
     </th:block>
 </th:block>
@@ -478,7 +478,7 @@
 <!-- ========================= edit link =========================== -->
 
 <th:block th:fragment="form-edit-question-button (model, question)">
-    <button class="buttonlink"
+    <button class="button-clear"
             type="submit"
             name="edit_question"
             th:unless="${model.closed}"

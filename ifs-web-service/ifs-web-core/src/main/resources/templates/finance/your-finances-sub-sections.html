@@ -14,8 +14,8 @@
                 <summary><span class="summary">Not requesting funding</span></summary>
                 <div class="panel-indent">
                     <p class="govuk-body">If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
-                    <button th:unless="${model.notRequestingFunding}" class="button" name="not_requesting_funding">Not requesting funding</button>
-                    <button th:if="${model.notRequestingFunding}" class="button" name="requesting_funding">Requesting funding</button>
+                    <button th:unless="${model.notRequestingFunding}" class="govuk-button" name="not_requesting_funding">Not requesting funding</button>
+                    <button th:if="${model.notRequestingFunding}" class="govuk-button" name="requesting_funding">Requesting funding</button>
                 </div>
             </details>
             <ul class="task-list">
@@ -98,10 +98,10 @@
                 <div class="form-footer__actions">
                     <button id="mark-all-as-complete"
                             th:unless="${model.complete}"
-                            type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete
+                            type="submit" name="mark_section_as_complete" class="button-clear">Mark as complete
                     </button>
                     <button th:if="${model.complete}"
-                            type="submit" name="mark_section_as_incomplete" class="buttonlink"
+                            type="submit" name="mark_section_as_incomplete" class="button-clear"
                             th:text="${'Edit ' + #strings.toLowerCase(model.section.name)}">Edit
                     </button>
                 </div>
@@ -113,7 +113,7 @@
                 </a>
                 <button type="submit"
                    th:unless="${model.complete}"
-                   class="extra-margin button">
+                   class="extra-margin govuk-button">
                     Save and return to finances
                 </button>
             </div>

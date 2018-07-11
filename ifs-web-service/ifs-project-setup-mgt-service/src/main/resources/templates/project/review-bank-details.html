@@ -92,7 +92,7 @@
                     <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}">Change bank account details</a>
                 </div>
                 <div class="govuk-grid-column-one-half alignright">
-                    <button data-js-modal="modal-partner-approve-bank-details" class="no-margin-right button">Approve bank account details</button>
+                    <button data-js-modal="modal-partner-approve-bank-details" class="no-margin-right govuk-button">Approve bank account details</button>
                 </div>
                 <th:block th:insert="fragments/modals :: modal-overlay" />
                 <th:block th:insert="fragments/modals :: modal-partner-approve-bank-details" />

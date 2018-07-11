@@ -63,7 +63,7 @@
 
         <th:block th:if="${model.markAsComplete and !model.submitted}">
             <p class="govuk-body extra-margin">Please review each partner's spend profile once they are marked as complete.</p>
-            <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and send total project spend profile</a>
+            <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="govuk-button">Review and send total project spend profile</a>
         </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

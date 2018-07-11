@@ -132,7 +132,7 @@ Competition Admin can send or cancel sending the invitation to the applicants
     When the user clicks the button/link       link = Review and send invites
     Then the compAdmin uploads additional feedback for an application
     And the compAdmin removes uploaded feedback for an application
-    And the user clicks the button/link        css = .button[type = "submit"]     #Send invite
+    And the user clicks the button/link        css = .govuk-button[type = "submit"]     #Send invite
     Then the Competition Admin should see the assigned applications in the View status tab
     And the user checks for Key Statistics for assigned to interview panel
     Then the user reads his email              ${aaron_robertson_email}   Please attend an interview for an Innovate UK funding competition   Competition: Machine learning for transport infrastructure
@@ -151,7 +151,7 @@ CompAdmin view invite sent to the applicant and resend invite
     Then the compAdmin can cancel resend inivte to an applicant
     When the user clicks the button/link    jQuery = td:contains("${Neural_network_application}") ~ td div:nth-child(2):contains("Remove")
     Then the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  jQuery = div td:contains("${Neural_network_application}") ~ td:contains("testing_5MB.pdf")
-    And the user clicks the button/link     css = .button[type="submit"]  #Resend invite
+    And the user clicks the button/link     css = .govuk-button[type="submit"]  #Resend invite
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
@@ -159,7 +159,7 @@ Assessors accept the invitation to the interview panel
     Given log in as a different user         ${assessor_joel_email}   ${short_password}
     And the user clicks the button/link      jQuery = h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button   acceptInvitation  true
-    And the user clicks the button/link      css = .button[type="submit"]   #Confirm
+    And the user clicks the button/link      css = .govuk-button[type="submit"]   #Confirm
     Then the user navigates to the page      ${server}/assessment/assessor/dashboard
     And the user should not see the element  jQuery = h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     And the user should see the element      jQuery = h2:contains("Interviews you have agreed to attend") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
@@ -223,7 +223,7 @@ Applicant can remove the uploaded response
     And the user should see the element      jQuery = .message-alert p:contains("As the lead applicant you can respond to feedback. This response will be noted by the interview panel.")  #checking banner message befor uploading file.
     When the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link=testing_5MB.pdf
     Then the user should see the element     jQuery = .message-alert p:contains("Your response has been uploaded. This response will be noted by the interview panel.")  #checking banner message after uploading file.
-    When the user clicks the button/link     css = .button-secondary  #remove
+    When the user clicks the button/link     css = .govuk-button-secondary  #remove
     Then the user should see the element     jQuery = p:contains("No file currently uploaded") ~ label:contains("+ Upload")
     And the compAdmin checks the status for response uploaded applicantion
     And the user should see the element      jQuery = td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
@@ -248,7 +248,7 @@ CompAdmin allocate applications to assessor
     [Documentation]  IFS-3451  IFS-3485
     Given the user clicks the button/link    jQuery = tr:contains("${Neural_network_application}") label
     And the user clicks the button/link      jQuery = tr:contains("${computer_vision_application}") label
-    When the user clicks the button/link     css = .button[name="addSelected"]  #Allocate
+    When the user clicks the button/link     css = .govuk-button[name="addSelected"]  #Allocate
     Then the user should see the element     jQuery = td:contains("${Neural_network_application}") ~ td:contains("Remove")
     And the compAdmin can cancel allocating applications to assessor
     And the compAdmin removes the application from notify list
@@ -272,7 +272,7 @@ Assessor marks appplications as successful and releases competition feedback
     Given log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${SERVER}/management/competition/18/funding
     Then the user marks applications as successful and send funding decision email
-    And the user clicks the button/link       css = button.button.button-large  #Release feedback
+    And the user clicks the button/link       css = button.govuk-button.govuk-button-large  #Release feedback
 
 Applicant can still see their feedback once the comp feedback has been released
     [Documentation]  IFS-3542
@@ -309,7 +309,7 @@ the compAdmin navigates to the send invite email page
 
 the assessor declines the interview invitation and no longer sees the competition in the dashboard
     the user selects the radio button    acceptInvitation  false
-    the user clicks the button/link      css = .button[type = "submit"]   #Confirm
+    the user clicks the button/link      css = .govuk-button[type = "submit"]   #Confirm
     the user should see the element      jQuery = p:contains("Thank you for letting us know you are unable to assess applications for this interview.")
     the user navigates to the page       ${server}/assessment/assessor/dashboard
     the user should not see the element  jQuery = h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
@@ -335,9 +335,9 @@ the user checks for the key statistics for invite assessors
     ${Invited} =  Get Text  css = div:nth-child(1) > div > span
     ${Accepted} =  Get Text  css = div:nth-child(2) > div > span
     ${Declined} =  Get Text  css = div:nth-child(3) > div > span
-    the user should see the element      jQuery = .column-quarter:contains("${invited}") small:contains("Invited")
-    the user should see the element      jQuery = .column-quarter:contains("${accepted}") small:contains("Accepted")
-    the user should see the element      jQuery = .column-quarter:contains("${Declined}") small:contains("Declined")
+    the user should see the element      jQuery = .govuk-grid-column-one-quarter:contains("${invited}") small:contains("Invited")
+    the user should see the element      jQuery = .govuk-grid-column-one-quarter:contains("${accepted}") small:contains("Accepted")
+    the user should see the element      jQuery = .govuk-grid-column-one-quarter:contains("${Declined}") small:contains("Declined")
 
 the compAdmin uploads additional feedback for an application
     the user uploads the file          id = feedback[0]   ${too_large_pdf}  #checking for large file upload
@@ -370,12 +370,12 @@ the compAdmin removes the application from notify list
     the user clicks the button/link   jQuery = td:contains("${computer_vision_application}") ~ td:contains("Remove")
     the user clicks the button/link   link = Applications allocated for interview
     the user should see the element   jQuery = td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
-    the user clicks the button/link   css = .button[name="addSelected"]  #Allocate
+    the user clicks the button/link   css = .govuk-button[name="addSelected"]  #Allocate
 
 the compAdmin can cancel allocating applications to assessor
     the user clicks the button/link    link = Cancel
     the user navigates to the page     ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/unallocated-applications/${assessor_joel_id}
-    the user clicks the button/link    css = .button[name="addSelected"]  #Allocate
+    the user clicks the button/link    css = .govuk-button[name="addSelected"]  #Allocate
 
 the user checks for Manage interview panel key statistics
     ${applications_assigned} =  Get Text  css = ul li:nth-child(1) span
@@ -395,8 +395,8 @@ the user marks applications as successful and send funding decision email
     the user clicks the button/link       link = Competition
     the user clicks the button/link       link = Manage funding notifications
     the user selects the checkbox         select-all-1
-    the user clicks the button/link       css = button.button.button-notification.extra-margin-top   #Assessor clicks 'Write and send emails'
-    the user clicks the button/link       css = .button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       css = button.govuk-button.govuk-button-notification.extra-margin-top   #Assessor clicks 'Write and send emails'
+    the user clicks the button/link       css = .govuk-button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link       css = button[name="send-emails"]
     the user clicks the button/link       link = Competition
 

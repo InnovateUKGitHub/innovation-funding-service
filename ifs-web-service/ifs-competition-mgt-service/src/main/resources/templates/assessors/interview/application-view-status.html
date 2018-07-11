@@ -86,7 +86,7 @@
                         <td th:unless="${app.status == T(org.innovateuk.ifs.interview.resource.InterviewAssignmentState).SUBMITTED_FEEDBACK_RESPONSE}">Awaiting response</td>
                         <td>
                             <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
-                               class="button button-secondary">View invite</a>
+                               class="button-secondary">View invite</a>
                         </td>
 
                     </tr>

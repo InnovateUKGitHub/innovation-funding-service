@@ -49,7 +49,7 @@
                         <td th:text="${applicationInterview.leadOrganisation}">Ooba</td>
                         <td th:text="${applicationInterview.numberOfAssessors}" class="numeric">1</td>
                         <td class="alignright">
-                            <button class="buttonlink" name="remove" th:value="${applicationInterview.id}">Remove</button>
+                            <button class="button-clear" name="remove" th:value="${applicationInterview.id}">Remove</button>
                         </td>
                     </tr>
                     </tbody>
@@ -94,9 +94,9 @@
                     Email: competitions@innovateuk.ukri.org
                 </p>
 
-                <input type="submit" class="button" value="Notify"/>
+                <input type="submit" class="govuk-button" value="Notify"/>
 
-                <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}" class="button button-clear">
+                <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}" class="button-clear">
                     Cancel
                 </a>
             </fieldset>

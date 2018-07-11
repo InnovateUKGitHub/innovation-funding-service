@@ -137,11 +137,11 @@
                 for all partners. This will create their individual flat spend profiles. These spend profiles can be edited
                 during the project.</p>
             <button th:if="${model.showDisabledGenerateSpendProfilesButton}" disabled="disabled"
-                    class="button generate-spend-profile-main-button">Generate spend profile
+                    class="govuk-button generate-spend-profile-main-button">Generate spend profile
             </button>
             <a th:unless="${model.showDisabledGenerateSpendProfilesButton}"
                th:href="@{/project/{projectId}/finance-check/generate/confirm(projectId=${model.financeCheckSummaryResource.projectId})}"
-               data-js-modal="generate-spend-profile" class="button generate-spend-profile-main-button">Generate spend
+               data-js-modal="generate-spend-profile" class="govuk-button generate-spend-profile-main-button">Generate spend
                 profile</a>
             <th:block th:unless="${model.showDisabledGenerateSpendProfilesButton}"
                       th:insert="fragments/modals :: generate-spend-profile"/>

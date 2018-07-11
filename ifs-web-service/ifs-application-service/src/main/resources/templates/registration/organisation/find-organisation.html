@@ -44,7 +44,7 @@
                     </th:block>
                 </label>
                 <input class="form-control" th:field="*{organisationSearchName}" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-control-error'" type="text" value="" />
-                <button type="submit" id="org-search" name="search-organisation" class="button">Search</button>
+                <govuk-button type="submit" id="org-search" name="search-organisation" class="govuk-button">Search</button>
             </div>
             <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <th:block th:if="${organisationForm.research}">
@@ -84,7 +84,7 @@
                             <h2 class="govuk-heading-m">Enter your organisation details</h2>
                             <th:block th:insert="fragments/addresses :: organisation-name"  th:with="form=${organisationForm},addressType=${'organisation address'}"/>
                             <th:block th:insert="fragments/addresses :: company-address-details"  th:with="form=${organisationForm}, addressType=${'organisation address'}"/>
-                            <button type="submit" name="save-organisation-details" class="button extra-margin">Continue</button>
+                            <button type="submit" name="save-organisation-details" class="govuk-button extra-margin">Continue</button>
                         </div>
                     </details>
                 </th:block>

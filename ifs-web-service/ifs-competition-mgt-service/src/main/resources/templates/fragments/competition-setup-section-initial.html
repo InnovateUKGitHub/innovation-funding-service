@@ -102,7 +102,7 @@
                         <option th:each="(innovationArea : ${model.innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryIds[__${status.index}__] == innovationArea.id}">Innovation Area</option>
                     </select>
                     <input type="hidden" th:if="${model.general.state.setupAndLive}" th:field="${competitionSetupForm.innovationAreaCategoryIds}" />
-                    <button th:if="${status.index > 0}" data-remove-row="innovationArea" class="buttonlink no-margin" th:value="${status.index}" type="button">Remove</button>
+                    <button th:if="${status.index > 0}" data-remove-row="innovationArea" class="button-clear no-margin" th:value="${status.index}" type="button">Remove</button>
                 </div>
             </th:block>
             </fieldset>
@@ -129,7 +129,7 @@
             </th:block>
             <input type="hidden" name="autosaveInnovationAreaIds" />
             <div class="form-group" th:unless="${model.general.state.setupAndLive}">
-                <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
+                <button class="button-clear" type="button" data-add-row="innovationArea">+ add another innovation area</button>
             </div>
 
             <div class="form-group" th:classappend="${#fields.hasErrors('openingDate*')} ? 'form-group-error'">
@@ -255,7 +255,7 @@
 
             <input type="hidden" name="unrestricted" value="1" th:if="${#strings.isEmpty(restrictInitialDetailsEdit)}" />
 
-            <button class="button">
+            <button class="govuk-button">
                 Done
             </button>
         </th:block>
@@ -287,7 +287,7 @@
                 <dd th:text="${#bools.isTrue(competitionSetupForm.stateAid) ? 'Yes' : 'No'}"></dd>
             </dl>
 
-            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
         </th:block>
 
     </form>

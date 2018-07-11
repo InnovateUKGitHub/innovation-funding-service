@@ -46,7 +46,7 @@
                 th:with="publishDay=${#temporals.format(model.publishDate, 'd MMMM yyyy')},
                          publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, 'h:mma'))}">
                 <small th:text="${'Last published ' + publishDay + ' ' + publishTime}"></small></p>
-            <button th:unless="${model.hasBeenPublished()}" class="button" th:disabled="${model.disablePublishButton()}" name="publish">Publish content</button>
+            <button th:unless="${model.hasBeenPublished()}" class="govuk-button" th:disabled="${model.disablePublishButton()}" name="publish">Publish content</button>
         </form>
 
         <ul class="pagination" th:unless="${model.competition.nonIfs}">

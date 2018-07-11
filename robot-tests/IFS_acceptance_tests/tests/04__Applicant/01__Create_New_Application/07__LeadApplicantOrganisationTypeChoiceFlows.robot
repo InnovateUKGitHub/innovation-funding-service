@@ -68,4 +68,4 @@ the user starts a competition create account journey
     [Arguments]    ${competition_name}
     the user clicks the button/link in the paginated list    link=${competition_name}
     the user clicks the button/link    link=Start new application
-    the user clicks the button/link    jQuery=.button:contains("Create account")
+    the user clicks the button/link    jQuery=.govuk-button:contains("Create account")

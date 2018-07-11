@@ -51,7 +51,7 @@
 			</div>
 
 			<div class="form-block extra-margin">
-				<a class="button disabled" th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2':'/prototypes/865-assessor-dashboard-invites?accepted=yes')}" id="continue">Save and return to assessor dashboard</a>
+				<a class="govuk-button disabled" th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2':'/prototypes/865-assessor-dashboard-invites?accepted=yes')}" id="continue">Save and return to assessor dashboard</a>
 				<a th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites?user=assessor&#38;version=v2':'/prototypes/865-assessor-dashboard-invites')}">Cancel</a>
 			</div>
 		</fieldset>
@@ -60,7 +60,7 @@
 
   <th:block th:if="${param.status != null and param.status[0] == 'signed'}">
       <p class="govuk-body extra-margin">You signed the contract on 13 December 2016.</p>
-      <a class="button app-submit-btn" href="/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2">Return to assessor dashboard</a>
+      <a class="govuk-button app-submit-btn" href="/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2">Return to assessor dashboard</a>
   </th:block>
 
 	<hr />

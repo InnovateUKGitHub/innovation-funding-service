@@ -126,11 +126,11 @@ table {
       padding-left: 20px;
     }
 
-    .buttonlink {
+    .button-clear {
       margin: 0;
     }
 
-    .button {
+    .govuk-button {
       margin: 0 0 1px 0;
     }
   }
@@ -185,7 +185,7 @@ input,
 select {
   &.form-control {
     + button {
-      &.button {
+      &.govuk-button {
         @include govuk-media-query(mobile) {
           margin-top:15px;
         }
@@ -196,7 +196,7 @@ select {
 
     &.form-control-error {
       + button {
-        &.button {
+        &.govuk-button {
           line-height:1.35;
         }
       }
@@ -338,7 +338,7 @@ tr {
     font-size:16px;
     padding: 10px 0px;
 
-    .buttonlink {
+    .button-clear {
       vertical-align:top;
       padding: 0 10px 0 0;
     }
@@ -542,7 +542,7 @@ td {
     }
   }
 
-  .buttonlink {
+  .button-clear {
     margin-bottom: 0;
   }
 
@@ -568,7 +568,7 @@ td {
     }
   }
 
-  .buttonlink {
+  .button-clear {
     @include media-down(mobile) {
       margin: 0.5em;
     }

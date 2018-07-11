@@ -54,8 +54,8 @@ the applicant completes the application details
     the user fills in the Application details  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
-     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=.buttonlink[name="mark_as_incomplete"]
-     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=.buttonlink[name="mark_as_incomplete"]  # the Edit link
+     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=.button-clear[name="mark_as_incomplete"]
+     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=.button-clear[name="mark_as_incomplete"]  # the Edit link
 
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
@@ -294,11 +294,11 @@ Invite a non-existing collaborator
 
 the user is able to confirm the invite
     [Arguments]  ${email}  ${password}
-    the user clicks the button/link                 jQuery=.button:contains("Continue or sign in")
+    the user clicks the button/link                 jQuery=.govuk-button:contains("Continue or sign in")
     The guest user inserts user email and password  ${email}  ${password}
     The guest user clicks the log-in button
     the user should see the text in the page        Confirm your organisation
-    the user clicks the button/link                 jQuery=.button:contains("Confirm and accept invitation")
+    the user clicks the button/link                 jQuery=.govuk-button:contains("Confirm and accept invitation")
 
 Newly invited collaborator can create account and sign in
     [Arguments]    ${email}  ${competition_name}
@@ -322,7 +322,7 @@ the user completes the new account creation
     wait for autosave
     the user clicks the button/link             jQuery=button:contains("Continue")
     the user should not see an error in the page
-    the user clicks the button/link             jQuery=.button:contains("Save and continue")
+    the user clicks the button/link             jQuery=.govuk-button:contains("Save and continue")
     the user should be redirected to the correct page    ${SERVER}/registration/register
     the invited user fills the create account form       liam  smithson
     the user should see the text in the page     Please verify your email address
@@ -369,8 +369,8 @@ the user navigates to the eligibility of the competition
 the applicant submits the application
     the user clicks the button/link                    link=Review and submit
     the user should not see the element                jQuery=.task-status-incomplete
-    the user clicks the button/link                    jQuery=.button:contains("Submit application")
-    the user clicks the button/link                    jQuery=.button:contains("Yes, I want to submit my application")
+    the user clicks the button/link                    jQuery=.govuk-button:contains("Submit application")
+    the user clicks the button/link                    jQuery=.govuk-button:contains("Yes, I want to submit my application")
     the user should be redirected to the correct page  submit
 
 the user applies to competition and enters organisation type

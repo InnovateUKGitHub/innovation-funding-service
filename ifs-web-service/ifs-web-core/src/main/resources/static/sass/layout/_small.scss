@@ -121,78 +121,6 @@ th {
   }
 }
 
-.alignright-button {
-  @include govuk-clearfix;
-  text-align:right;
-
-  a {
-    line-height:45px;
-
-    &.button {
-      line-height:1;
-    }
-  }
-
-  a,
-  button,
-  [role="button"] {
-    display:inline-block;
-    margin:0 5px 0 0;
-
-    &:last-child {
-      margin-right:0;
-    }
-  }
-}
-
-@include media-down(mobile) {
-  .alignright-button {
-    a,
-    button,
-    [role="button"] {
-      margin:0 0 5px;
-      display: block;
-      text-align: center;
-    }
-  }
-}
-
-button,
-.button,
-[type="button"] {
-
-  &.button-clear {
-    background-color: transparent;
-    box-shadow: none;
-    color: govuk-colour("blue");
-    text-decoration: underline;
-
-    &:hover,
-    &:focus {
-      background-color: transparent;
-      color: #000;
-      text-decoration: none;
-    }
-
-    @include is-ie8() {
-      border-bottom: none;
-    }
-  }
-
-  &.button-small {
-    font-size: 16px;
-    padding: 5px 15px 3px;
-  }
-}
-
-table {
-  .button {
-    &:last-child {
-      margin-right: 3px;
-    }
-  }
-}
-
 .page-title {
   padding-top: 30px;
 
@@ -243,20 +171,6 @@ col {
   width: 16px;
   height: 18px;
   background-image: file-url("ifs-images/icons/icon-print.png");
-}
-
-.button-secondary{
-  @extend .govuk-button;
-  background-color: govuk-colour("grey-3");
-  color: $govuk-text-colour;
-}
-
-.button,
-.button-secondary{
-  @include govuk-media-query(mobile) {
-    width: 100%;
-    text-align: center;
-  }
 }
 
 .questions-dl {

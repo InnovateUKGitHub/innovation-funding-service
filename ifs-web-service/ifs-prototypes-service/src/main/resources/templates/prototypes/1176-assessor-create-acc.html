@@ -63,7 +63,7 @@
           <span class="form-hint">Please provide your postal address for our records.</span>
 				</label>
 				<input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
-				<button type="submit" id="postcode-lookup" class="button">Find UK address</button>
+				<button type="submit" id="postcode-lookup" class="govuk-button">Find UK address</button>
 				<div>
 					<a href="#" id="enter-address-manually">Enter address manually</a>
 				</div>
@@ -178,13 +178,13 @@
 				<input type="hidden" name="user" value="assessor" />
 			</th:block>
 
-			<button th:unless="${(param.version != null and param.version[0] == 'v3')}" class="button button-large extra-margin" name="create-account" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/643-signup-create-acc': '/prototypes/1177-assessor-skills')}" type="submit">Continue</button>
-  			<button th:if="${(param.version != null and param.version[0] == 'v3')}" class="button button-large extra-margin" name="create-account" formaction="/prototypes/5742-assessor-acc-created" type="submit">Create account</button>
+			<button th:unless="${(param.version != null and param.version[0] == 'v3')}" class="govuk-button button-large extra-margin" name="create-account" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/643-signup-create-acc': '/prototypes/1177-assessor-skills')}" type="submit">Continue</button>
+  			<button th:if="${(param.version != null and param.version[0] == 'v3')}" class="govuk-button button-large extra-margin" name="create-account" formaction="/prototypes/5742-assessor-acc-created" type="submit">Create account</button>
 
 		</div>
 
 		<div th:if="${param.edit != null}" class="extra-margin">
-			<button class="button" formaction="/prototypes/1178-assessor-profile-details" type="submit">Save and return to your details</button>
+			<button class="govuk-button" formaction="/prototypes/1178-assessor-profile-details" type="submit">Save and return to your details</button>
 			<a href="#">Cancel</a>
 		</div>
 		<hr />

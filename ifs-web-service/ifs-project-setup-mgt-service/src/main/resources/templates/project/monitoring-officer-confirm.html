@@ -34,10 +34,10 @@
 			<p class="govuk-body">This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will be visible to all members of the consortium.</p>
 			<div class="govuk-grid-row">
 				<div class="govuk-grid-column-one-half">
-					<button class="button" name="submit-app-details">Assign Monitoring Officer</button>
+					<button class="govuk-button" name="submit-app-details">Assign Monitoring Officer</button>
 				</div>
 				<div class="govuk-grid-column-one-half alignright">
-					<a th:href="@{/project/{projectId}/monitoring-officer(projectId=${model.projectId})}" class="buttonlink">Cancel</a>
+					<a th:href="@{/project/{projectId}/monitoring-officer(projectId=${model.projectId})}" class="button-clear">Cancel</a>
 				</div>
 			</div>
 		</form>

@@ -65,7 +65,7 @@
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].coFunder}"
                                th:value="${iteration.index != 0}" />
 
-                        <button th:unless="${isSetupAndAfterNotifications}" th:if="${iteration.index != 0}" class="button button-clear" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
+                        <button th:unless="${isSetupAndAfterNotifications}" th:if="${iteration.index != 0}" class="button-clear" data-remove-row="cofunder" name="remove-funder" th:value="${iteration.index}"
                                 th:id="'remove-funder-' + ${iteration.index}">Remove</button>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
 
                     <div class="alignright">
                         <input type="hidden" name="removeFunder" />
-                        <button class="buttonlink" name="add-cofunder" data-add-row="cofunder" type="button">+Add co-funder</button>
+                        <button class="button-clear" name="add-cofunder" data-add-row="cofunder" type="button">+Add co-funder</button>
                     </div>
                 </div>
             </div>
@@ -154,11 +154,11 @@
                            required="required"
                            th:attr="data-required-errormessage=#{validation.additionalinfoform.competitioncode.required}"
                            data-autosave-disabled="data-autosave-disabled"/>
-                    <button class="button button-secondary" th:disabled="${model.general.state.setupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${model.general.competition.id}">Generate code</button>
+                    <button class="button-secondary" th:disabled="${model.general.state.setupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${model.general.competition.id}">Generate code</button>
                 </div>
             </fieldset>
 
-            <button class="button">Done</button>
+            <button class="govuk-button">Done</button>
         </fieldset>
 
         <fieldset th:if="${!model.general.editable}" id="section-2-">
@@ -200,7 +200,7 @@
                 <dd th:text="${competitionSetupForm.competitionCode}">Competition Code</dd>
             </dl>
 
-            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
         </fieldset>
 
     </form>

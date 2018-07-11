@@ -172,7 +172,7 @@ Comp Admin user uploads new grant offer letter
     And the user should see the element         jQuery=button:contains("Remove")
     When the user uploads a file                annex  ${valid_pdf}
     And the user clicks the button/link         id=send-gol
-    And the user clicks the button/link         jQuery=.modal-accept-send-gol .button:contains("Publish to project team")
+    And the user clicks the button/link         jQuery=.modal-accept-send-gol .govuk-button:contains("Publish to project team")
     Then the user should not see the element    css=[name="removeGrantOfferLetterClicked"]
     When the user navigates to the page         ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should see the element        css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.waiting   # GOL
@@ -199,7 +199,7 @@ Partners should not be able to send the Grant Offer
     Given the user clicks the button/link       link=${PS_GOL_APPLICATION_HEADER}
     And the user clicks the button/link         link=Grant offer letter
     Then the user should not see the element    jQuery=label:contains(+ Upload)
-    And the user should not see the element     css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
+    And the user should not see the element     css=.govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -231,7 +231,7 @@ PM should be able upload a file and then access the Send button
     When the user uploads a file                     signedGrantOfferLetter   ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     When the user reloads the page
-    Then the user should see the element    css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
+    Then the user should see the element    css=.govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
     And the user clicks the button/link    link=Set up your project
     And the user should see the element    css=li.require-action:nth-child(7)
     When the user clicks the button/link    link=View the status of partners
@@ -335,13 +335,13 @@ PM can upload new signed grant offer letter
     [Tags]
     When the user uploads a file               signedGrantOfferLetter    ${valid_pdf}
     And the user reloads the page
-    Then the user should see the element    css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
-    And the user should not see the element    jQuery=[disabled='disabled'].button:contains(Send signed offer letter)
+    Then the user should see the element    css=.govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
+    And the user should not see the element    jQuery=[disabled='disabled'].govuk-button:contains(Send signed offer letter)
 
 PM Sends the Grant Offer letter
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
-    When the user clicks the button/link  css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
+    When the user clicks the button/link  css=.govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
     Then the user clicks the button/link  id=submit-gol-for-review
     And the user should not see an error in the page
     When the user navigates to the page   ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
@@ -390,7 +390,7 @@ Comp Admin can accept the signed grant offer letter
     When the user clicks the button/link  css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a
     Then the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     And the user should see the element   css=label[for="acceptGOL"]
-    And the user should see the element   css=#submit-button.disabled
+    And the user should see the element   css=#submit-button.govuk-button--disabled
     When the user selects the radio button  approvalType  rejectGOL
     Then the user should see the element  css=#submit-button
 
@@ -524,7 +524,7 @@ all the other sections of the project are completed (except spend profile approv
 the user removes existing and uploads new grant offer letter
     the user clicks the button/link  css=button[name="removeSignedGrantOfferLetterClicked"]
     the user uploads a file          signedGrantOfferLetter    ${valid_pdf}
-    the user clicks the button/link  css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
+    the user clicks the button/link  css=.govuk-button[data-js-modal="modal-confirm-grant-offer-letter"]
     the user clicks the button/link  id=submit-gol-for-review
     the user should see the element  jQuery=li:contains("Grant offer letter") .status-waiting
 

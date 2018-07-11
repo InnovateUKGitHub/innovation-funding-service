@@ -52,7 +52,7 @@
         <li class="width-full">
             <ul class="tabular-list__rowinternal">
                 <li class="width-half"><span th:unless="${site == 'rc'}">Contract and DOI: <strong th:text="${doi}">Yes</strong></span></li>
-                <li class="width-half alignright"><a href="#" class="button button-secondary add-to-invite">+ Add to invite list</a></li>
+                <li class="width-half alignright"><a href="#" class="govuk-button button-secondary add-to-invite">+ Add to invite list</a></li>
             </ul>
         </li>
     </ul> -->
@@ -62,7 +62,7 @@
 
         <li class="width-third" aria-describedby="assessor-area" th:text="${area}">Electronics, sensors &#38; photonics, Materials</li>
 
-        <li class="width-third alignright"><a href="#" class="button button-secondary add-to-invite">+ Add to invite list</a></li>
+        <li class="width-third alignright"><a href="#" class="govuk-button button-secondary add-to-invite">+ Add to invite list</a></li>
     </ul>
 
 </div>
@@ -98,7 +98,7 @@
         <li class="width-third alignright">
 
             <th:block th:if="${status == null}">
-                <a th:href="${'/prototypes/4607-manage-assessors-invite?status=invite-individual&#38;name='+name}" class="button invite-individual">Invite individual</a>
+                <a th:href="${'/prototypes/4607-manage-assessors-invite?status=invite-individual&#38;name='+name}" class="govuk-button invite-individual">Invite individual</a>
             </th:block>
 
             <th:block th:if="${status != null}">
@@ -142,15 +142,15 @@
                 <li class="width-half alignright">
 
                     <th:block th:if="${type != null and type == 'assign'}">
-                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;row='+ row + '&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors + '&#38;org=' + org + '&#38;name=' + name + '&#38;action=application-assigned'}" class="button button-secondary alignright">Assign</a>
+                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;row='+ row + '&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors + '&#38;org=' + org + '&#38;name=' + name + '&#38;action=application-assigned'}" class="govuk-button button-secondary alignright">Assign</a>
                     </th:block>
 
                     <th:block th:if="${type != null and type == 'remove'}">
-                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;row='+ row + '&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors + '&#38;org=' + org + '&#38;name=' + name + '&#38;action=remove-assigned'}" class="button button-secondary alignright">Remove</a>
+                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;row='+ row + '&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors + '&#38;org=' + org + '&#38;name=' + name + '&#38;action=remove-assigned'}" class="govuk-button button-secondary alignright">Remove</a>
                     </th:block>
 
                     <th:block th:if="${type == null}">
-                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors}" class="button button-secondary alignright" th:text="${button}">BUTTON TEXT</a>
+                        <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ number + '&#38;application=' + application + '&#38;assessors=' + assessors}" class="govuk-button button-secondary alignright" th:text="${button}">BUTTON TEXT</a>
                     </th:block>
 
                 </li>
@@ -186,19 +186,19 @@
         </li>
         <li class="width-full alignright">
             <th:block th:if="${type != null and type == 'assign'}">
-                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ param.number[0] + '&#38;application=' + param.application[0] + '&#38;name='+ name +'&#38;org='+ org +'&#38;position='+ position +'&#38;applications='+ applications +'&#38;row=' + row + '&#38;busType=' + busType + '&#38;action=application-assigned'}" class="button button-secondary">Assign to application</a>
+                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ param.number[0] + '&#38;application=' + param.application[0] + '&#38;name='+ name +'&#38;org='+ org +'&#38;position='+ position +'&#38;applications='+ applications +'&#38;row=' + row + '&#38;busType=' + busType + '&#38;action=application-assigned'}" class="govuk-button button-secondary">Assign to application</a>
             </th:block>
 
             <th:block th:if="${type != null and type == 'assign-assessor'}">
-                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;name='+ name}" class="button button-secondary">Assign</a>
+                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=assessor&#38;name='+ name}" class="govuk-button button-secondary">Assign</a>
             </th:block>
 
              <th:block th:if="${type != null and type == 'remove'}">
-                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ param.number[0] + '&#38;application=' + param.application[0] + '&#38;name='+ name +'&#38;org='+ org +'&#38;position='+ position +'&#38;applications='+ applications +'&#38;row=' + row + '&#38;action=remove-assigned'}" class="button button-secondary">Remove</a>
+                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;number='+ param.number[0] + '&#38;application=' + param.application[0] + '&#38;name='+ name +'&#38;org='+ org +'&#38;position='+ position +'&#38;applications='+ applications +'&#38;row=' + row + '&#38;action=remove-assigned'}" class="govuk-button button-secondary">Remove</a>
             </th:block>
 
             <th:block th:if="${type == null}">
-                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;name='+ name}" class="button button-secondary">Assign</a>
+                <a th:href="${'/prototypes/4607-manage-assessors-assign?view=application&#38;name='+ name}" class="govuk-button button-secondary">Assign</a>
             </th:block>
         </li>
     </ul>
@@ -257,7 +257,7 @@
                             </div>
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
-                            <button class="button">Filter</button>
+                            <button class="govuk-button">Filter</button>
                         </div>
                     </div>
 
@@ -277,7 +277,7 @@
             <ul class="tabular-list__row-header hide-mobile">
                 <li id="assessor-name" class="width-third">Name</li>
                 <li id="assessor-area" class="width-two-thirds" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">INNOVATION AREA</li>
-                <!-- <li id="assessor-org" class="width-third alignright"><a href="#" class="button button-secondary">Invite page</a></li> -->
+                <!-- <li id="assessor-org" class="width-third alignright"><a href="#" class="govuk-button button-secondary">Invite page</a></li> -->
             </ul>
 
             <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=1,name=${'John Barnes'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Horizon Ltd'}" />
@@ -327,7 +327,7 @@
                         </div>
                         <input type="hidden" name="status" value="invite-new" />
                         <input type="hidden" name="tab" value="invite" />
-                        <button class="button">Add new assessor to list</button>
+                        <button class="govuk-button">Add new assessor to list</button>
                     </form>
                 </div>
             </details>
@@ -352,7 +352,7 @@
                         Include all for group invite
                     </label>
                 </li>
-                <li class="width-third alignright"><a href="/prototypes/4607-manage-assessors-invite?status=invite-group" class="button button-secondary disabled" id="invite-group">Invite group</a></li>
+                <li class="width-third alignright"><a href="/prototypes/4607-manage-assessors-invite?status=invite-group" class="govuk-button button-secondary govuk-button--disabled" id="invite-group">Invite group</a></li>
             </ul>
 
             <th:block th:if="${param.status != null and param.status[0] == 'invite-new'}">
@@ -393,7 +393,7 @@
 
                         </select>
 
-                        <button class="button button-secondary hidden">Update view</button>
+                        <button class="govuk-button button-secondary hidden">Update view</button>
                     </label>
                 </div>
             </th:block>
@@ -402,10 +402,10 @@
 
                 <input type="hidden" name="tab" value="assign" />
 
-                <a href="#" class="button button-secondary disabled" th:unless="${param.action != null and param.action[0] == 'notify'}" th:text="${site == 'rc' ? 'Notify Panel member(s)' : 'Notify Assessor(s)'}">NOTIFY</a>
+                <a href="#" class="govuk-button button-secondary govuk-button--disabled" th:unless="${param.action != null and param.action[0] == 'notify'}" th:text="${site == 'rc' ? 'Notify Panel member(s)' : 'Notify Assessor(s)'}">NOTIFY</a>
 
                 <th:block th:if="${param.action != null and param.action[0] == 'notify'}">
-                    <a href="/prototypes/4607-manage-assessors-notify" class="button" th:text="${site == 'rc' ? 'Notify Panel member(s)' : 'Notify Assessor(s)'}">Notify assessor(s)</a>
+                    <a href="/prototypes/4607-manage-assessors-notify" class="govuk-button" th:text="${site == 'rc' ? 'Notify Panel member(s)' : 'Notify Assessor(s)'}">Notify assessor(s)</a>
                 </th:block>
 
             </div>
@@ -554,14 +554,14 @@
                 <a href="#">View application details</a>
             </div>
             <div class="govuk-grid-column-one-half alignright">
-                <a href="/prototypes/4607-manage-assessors?view=application&#38;tab=assign&#38;action=notify" class="button button-secondary">Return to assign tab</a>
+                <a href="/prototypes/4607-manage-assessors?view=application&#38;tab=assign&#38;action=notify" class="govuk-button button-secondary">Return to assign tab</a>
             </div>
         </div>
     </th:block>
 
     <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'assessor'}">
         <div class="alignright extra-margin-bottom">
-            <a href="/prototypes/4607-manage-assessors?view=assessor&#38;tab=assign&#38;action=notify" class="button button-secondary">Return to assign tab</a>
+            <a href="/prototypes/4607-manage-assessors?view=assessor&#38;tab=assign&#38;action=notify" class="govuk-button button-secondary">Return to assign tab</a>
         </div>
     </th:block>
 
@@ -637,7 +637,7 @@
                                 </div>
                             </div>
                             <div class="govuk-grid-column-one-half alignright">
-                                <button class="button">Filter</button>
+                                <button class="govuk-button">Filter</button>
                             </div>
                         </div>
 
@@ -707,7 +707,7 @@
                             </div>
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
-                            <button class="button">Filter</button>
+                            <button class="govuk-button">Filter</button>
                         </div>
                     </div>
 

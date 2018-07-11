@@ -80,20 +80,20 @@
         </th:block>
 
         <th:block th:if="${type == 'lead'}">
-            <a class="button" th:href="${'/prototypes/'} + ${user == 'existing' ? 'IFS-3598-application-team?type=' + type : 'IFS-3598-your-details?type=' + type}">Save and continue</a>
+            <a class="govuk-button" th:href="${'/prototypes/'} + ${user == 'existing' ? 'IFS-3598-application-team?type=' + type : 'IFS-3598-your-details?type=' + type}">Save and continue</a>
         </th:block>
 
         <th:block th:if="${type == 'collaborator' and status == 'orgNotAdded' and user == 'new'}">
-            <a class="button" th:href="${'/prototypes/IFS-3598-your-details?type=' + type}">Save and continue</a>
+            <a class="govuk-button" th:href="${'/prototypes/IFS-3598-your-details?type=' + type}">Save and continue</a>
         </th:block>
 
         <th:block th:if="${type == 'collaborator' and user == 'existing'}">
-            <a class="button" th:href="${'/prototypes/IFS-3599-collaborator-application?type=' + type}">Save and continue</a>
+            <a class="govuk-button" th:href="${'/prototypes/IFS-3599-collaborator-application?type=' + type}">Save and continue</a>
         </th:block>
 
         <th:block th:if="${type == 'collaborator' and status == 'orgAdded' and user == 'new'}">
 
-            <a class="button" th:href="${'/prototypes/IFS-3598-your-details?type=' + type}">Confirm and accept invitation</a>
+            <a class="govuk-button" th:href="${'/prototypes/IFS-3598-your-details?type=' + type}">Confirm and accept invitation</a>
         </th:block>
 
         <!-- END OF HARDCODED PROTOTYPE HTML -->

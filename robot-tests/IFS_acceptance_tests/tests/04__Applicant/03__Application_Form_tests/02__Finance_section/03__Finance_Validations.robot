@@ -16,7 +16,7 @@ Mark as complete Your funding with only one input should not be possible
     When the user clicks the button/link      link=Your funding
     And the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  70
     And the user moves focus to the element   css=[data-target="other-funding-table"] label
-    Then the user should see the element      jQuery=.disabled:contains("Mark as complete")
+    Then the user should see the element      jQuery=.govuk-button--disabled:contains("Mark as complete")
 
 Other funding client side
     [Documentation]    INFUND-2214
@@ -34,12 +34,12 @@ Other funding server side
     [Tags]
     [Setup]
     When the user enters invalid inputs in the other funding fields    ${EMPTY}    13-2020    -6565
-    And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    Funding source cannot be blank.
     And the user should see an error    Please use MM-YYYY format.
     And the user should see an error    This field should be 1 or higher.
     And the user should see the element    css=.error-summary
-    And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    Funding source cannot be blank.
     And the user should see an error    This field cannot be left blank.
     And the user should see an error    This field should be 1 or higher.
@@ -50,7 +50,7 @@ Select NO Other Funding and mark as complete should be possible
     Given the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  50
     When the user clicks the button/link        jQuery=label:contains("No")
     And the user selects the checkbox           agree-terms-page
-    Then the user clicks the button/link        jQuery=.button:contains("Mark as complete")
+    Then the user clicks the button/link        jQuery=.govuk-button:contains("Mark as complete")
     And the user should not see an error in the page
 
 Labour client side
@@ -83,7 +83,7 @@ Labour server side
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    ${EMPTY}
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    -1
-    And the user clicks the button/link         jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link         jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error       This field should be 1 or higher.
     And the user should see an error        This field cannot be left blank.
     Then the user should see the element    jQuery=.error-summary li:contains("This field should be 365 or lower")
@@ -110,14 +110,14 @@ Admin costs server side
     [Documentation]    INFUND-844
     [Tags]
     When the user enters text to a text field    css=[id$="customRate"]    ${EMPTY}
-    And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field should be 1 or higher.
     And the user enters text to a text field    css=[id$="customRate"]    101
-    And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field should be 100 or lower.
     And the user should see the element    css=.error-summary
     And the user enters text to a text field    css=[id$="customRate"]    -1
-    And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field should be 1 or higher.
     And the user should see the element    css=.error-summary
     [Teardown]    Run keywords    Given the user clicks the button/link    jQuery=label:contains("20% of labour costs")
@@ -139,7 +139,7 @@ Materials server side
     When the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    -1
     And the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    1212121212121212121212
-    And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field cannot be left blank.
     And the user should see an error    You must enter a value less than 20 digits.
     And the user should see an error    This field should be 1 or higher.
@@ -147,7 +147,7 @@ Materials server side
     When the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1
     And the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
-    And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field cannot be left blank.
     And the user should see an error    This field should be 1 or higher.
     And the user should see the element    css=.error-summary
@@ -180,7 +180,7 @@ Capital usage server side
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    -2
     And the user enters text to a text field    css=.form-finances-capital-usage-utilisation    -1
     And the user enters text to a text field    css=.form-finances-capital-usage-depreciation    ${EMPTY}
-    And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field cannot be left blank.
     And the user should see an error    This field cannot be left blank.
     And the user should see an error    This field should be 1 or higher.
@@ -201,7 +201,7 @@ Subcontracting costs server side
     [Tags]
     When the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    -100
     And the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    ${EMPTY}
-    And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field should be 1 or higher.
     And the user should see an error    This field cannot be left blank.
     And the user should see the element    css=.error-summary
@@ -229,7 +229,7 @@ Travel and subsistence server side
     When the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    -1
     And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    0123456789101112131415161718192021
-    And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field cannot be left blank.
     And the user should see an error    This field should be 1 or higher.
     And the user should see an error    You must enter a value less than 20 digits.
@@ -259,7 +259,7 @@ Other costs server side
     [Tags]
     When the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    -1
     And the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    ${EMPTY}
-    And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field should be 1 or higher.
     And the user should see an error    This field cannot be left blank.
     And the user should see the element    css=.error-summary
@@ -271,7 +271,7 @@ Funding level server side
     [Documentation]    INFUND-844
     [Tags]
     When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]  61
-    And the user clicks the button/link  jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field should be 60% or lower.
     Then the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]  59
     And the user moves focus to the element      css=[data-target="other-funding-table"] label
@@ -291,7 +291,7 @@ the field with the wrong input should be saved
     Should Be Equal As Strings    ${input_value}    -1
 
 the user reloads the page with validation errors
-    the user moves focus to the element  jQuery=.button:contains("Mark as complete")
+    the user moves focus to the element  jQuery=.govuk-button:contains("Mark as complete")
     wait for autosave
     the user reloads the page
     wait for autosave
@@ -302,7 +302,7 @@ the user enters invalid inputs in the other funding fields
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${SOURCE}
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${DATE}
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    ${FUNDING}
-    the user moves focus to the element     css=button.button[type="submit"]
+    the user moves focus to the element     css=button.govuk-button[type="submit"]
 
 Remove row
     [Arguments]    ${section}    ${close button}

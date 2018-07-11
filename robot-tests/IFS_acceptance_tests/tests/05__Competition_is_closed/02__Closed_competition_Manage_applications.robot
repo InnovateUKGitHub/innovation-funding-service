@@ -61,7 +61,7 @@ Filter assessors
     [Documentation]    IFS-399
     [Tags]
     Given the user selects the option from the drop-down menu  Materials and manufacturing  id=innovationSector
-    And the user clicks the button/link                        jQuery=.button:contains("Filter")
+    And the user clicks the button/link                        jQuery=.govuk-button:contains("Filter")
     Then the assessor list is correct before changes
     [Teardown]    the user clicks the button/link  link=Clear all filters
 
@@ -82,7 +82,7 @@ Filtering applications on the assessor progress page
     [Documentation]    IFS-400
     [Tags]
     When the user enters text to a text field  css=#filterSearch  ${application_ids["${availableApp}"]}
-    And the user clicks the button/link        jQuery=.button:contains("Filter")
+    And the user clicks the button/link        jQuery=.govuk-button:contains("Filter")
     Then the user should see the element       jQuery=.applications-available tr:contains("${availableApp}") td:contains("Enterprise Engineering") ~ td:contains("Assign")
 
 Assessor removal

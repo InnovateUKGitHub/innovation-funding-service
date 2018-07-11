@@ -145,7 +145,7 @@
 
 		<div class="govuk-grid-row constrain-width extra-margin ">
 			<div class="govuk-grid-column-one-third">
-				<a href="/prototypes/1348-open-applications" class="button-dashboard highlight">
+				<a href="/prototypes/1348-open-applications" class="govuk-button-dashboard highlight">
 					<p class="govuk-body"><span class="govuk-heading-l">22</span><br />Applications</p>
 				</a>
 			</div>
@@ -153,17 +153,17 @@
 
 		<div class="govuk-grid-row constrain-width extra-margin ">
 			<div class="govuk-grid-column-one-third">
-				<p class="button-dashboard">
+				<p class="govuk-button-dashboard">
 					<span class="govuk-heading-l">12</span><br />Applications started
 				</p>
 			</div>
 			<div class="govuk-grid-column-one-third">
-				<p class="button-dashboard">
+				<p class="govuk-button-dashboard">
 					<span class="govuk-heading-l">6</span><br />Applications in progress (beyond 50%)
 				</p>
 			</div>
 			<div class="govuk-grid-column-one-third">
-				<p class="button-dashboard">
+				<p class="govuk-button-dashboard">
 					<span class="govuk-heading-l">4</span><br />Applications submitted
 				</p>
 			</div>
@@ -178,12 +178,12 @@
 			<div th:unless="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
 
 				<div class="govuk-grid-column-one-third">
-					<a class="button-dashboard highlight" th:href="${'/prototypes/1348-submitted-applications?status=' + {param.status}}">
+					<a class="govuk-button-dashboard highlight" th:href="${'/prototypes/1348-submitted-applications?status=' + {param.status}}">
 						<span class="govuk-heading-l">4</span><br />Applications submitted
 					</a>
 				</div>
 				<div class="govuk-grid-column-one-third">
-					<a th:href="${'/prototypes/1348-not-submitted-applications?status=' + {param.status}}" class="button-dashboard">
+					<a th:href="${'/prototypes/1348-not-submitted-applications?status=' + {param.status}}" class="govuk-button-dashboard">
 						<p class="govuk-body"><span class="govuk-heading-l">18</span><br />Applications not submitted</p>
 					</a>
 				</div>
@@ -193,17 +193,17 @@
 
 			<div th:if="${param.status[0] == 'assessorFeedback'}" th:remove="tag">
 				<div class="govuk-grid-column-one-third">
-					<a class="button-dashboard highlight" th:href="${'/prototypes/1998-application-feedback?status=' + {param.status}}">
+					<a class="govuk-button-dashboard highlight" th:href="${'/prototypes/1998-application-feedback?status=' + {param.status}}">
 						<span class="govuk-heading-l">4</span><br />Applications requiring feedback
 					</a>
 				</div>
 				<div class="govuk-grid-column-one-third">
-					<a class="button-dashboard highlight" th:href="${'/prototypes/2000-project-setup?status=' + {param.status}}">
+					<a class="govuk-button-dashboard highlight" th:href="${'/prototypes/2000-project-setup?status=' + {param.status}}">
 						<span class="govuk-heading-l">3</span><br />Projects being setup
 					</a>
 				</div>
 				<div class="govuk-grid-column-one-third">
-					<a th:href="${'/prototypes/1348-not-submitted-applications?status=' + {param.status}}" class="button-dashboard">
+					<a th:href="${'/prototypes/1348-not-submitted-applications?status=' + {param.status}}" class="govuk-button-dashboard">
 						<p class="govuk-body"><span class="govuk-heading-l">18</span><br />Applications not submitted</p>
 					</a>
 				</div>

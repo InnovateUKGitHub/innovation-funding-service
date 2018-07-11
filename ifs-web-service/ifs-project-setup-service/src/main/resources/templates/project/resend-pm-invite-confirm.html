@@ -18,7 +18,7 @@
             <p class="govuk-body">They will be resent an email inviting them to join the project.</p>
             <hr />
             <input type="hidden" id="resend-pm-invite" name="resend-pm-invite" th:value="${model.inviteId}"/>
-            <button class="button" type="submit">Resend</button>
+            <button class="govuk-button" type="submit">Resend</button>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

@@ -55,10 +55,10 @@ Innovate UK
 	</div>
 
 	<div class="alignright">
-		<a th:href="${(param.status == null or param.status[0] == 'invite-individual' ? '/prototypes/4607-manage-assessors?tab=invite&#38;status=invite-individual' : '/prototypes/4607-manage-assessors?tab=invite&#38;status=invite-group')}" class="button no-margin-right" th:unless="${param.version != null and param.version[0] == 'v2'}" >Send invite</a>
+		<a th:href="${(param.status == null or param.status[0] == 'invite-individual' ? '/prototypes/4607-manage-assessors?tab=invite&#38;status=invite-individual' : '/prototypes/4607-manage-assessors?tab=invite&#38;status=invite-group')}" class="govuk-button no-margin-right" th:unless="${param.version != null and param.version[0] == 'v2'}" >Send invite</a>
 
 		<th:block th:if="${param.version != null and param.version[0] == 'v2'}">
-			<a th:href="${'/prototypes/5062-manage-assessors?tab=overview'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" class="button button-large no-margin-right">Send invite</a>
+			<a th:href="${'/prototypes/5062-manage-assessors?tab=overview'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" class="govuk-button button-large no-margin-right">Send invite</a>
 		</th:block>
 
 	</div>

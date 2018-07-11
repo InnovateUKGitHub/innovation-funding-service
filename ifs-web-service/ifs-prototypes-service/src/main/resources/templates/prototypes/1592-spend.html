@@ -406,11 +406,11 @@
 
 
 			<div class="extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
-				<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit')}" class="button button-secondary">Edit spend profile</a>
+				<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high#table-forecast' : '/prototypes/1592-spend?status=edit')}" class="govuk-button button-secondary">Edit spend profile</a>
 			</div>
 
 			<div class="extra-margin" th:unless="${param.user == null}">
-				<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" class="button button-secondary">Edit spend profile</a>
+				<a th:href="${(param.spend != null and param.spend[0] == 'high' ? '/prototypes/1592-spend?status=edit&#38;spend=high&#38;user=nonLead#table-forecast' : '/prototypes/1592-spend?status=edit&#38;user=nonLead#table-forecast')}" class="govuk-button button-secondary">Edit spend profile</a>
 			</div>
 
 			<div th:if="${param.user == null or param.user[0] != 'nonLead' and param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
@@ -426,11 +426,11 @@
 			<div th:if="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
 				<div class="extra-margin" th:unless="${param.spend != null and param.spend[0] == 'high'}">
-					<a href="#" class="button button-large" data-js-modal="modal-send-to-lead">Send to lead partner</a>
+					<a href="#" class="govuk-button button-large" data-js-modal="modal-send-to-lead">Send to lead partner</a>
 				</div>
 
 				<div class="extra-margin" th:unless="${param.spend == null or param.spend[0] != 'high'}">
-					<a href="#" class="button button-large" disabled="disabled">Send to lead partner</a>
+					<a href="#" class="govuk-button button-large" disabled="disabled">Send to lead partner</a>
 				</div>
 
 				<div class="modal-send-to-lead" role="dialog" aria-hidden="true" style="margin-top: -174px;">
@@ -445,9 +445,9 @@
 
 		            	<div class="alignright-button">
 
-							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+							<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-		            		<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead" class="button">Send</a>
+		            		<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead" class="govuk-button">Send</a>
 		            	</div>
 
 			        </div>
@@ -460,7 +460,7 @@
 		 		<input type="hidden" name="status" id="status" value="MarkedComplete" th:unless="${param.spend != null and param.spend[0] == 'high'}"/>
 
 				<div class="extra-margin">
-					<button formaction="/prototypes/2472-spend-lead-overview?status=MarkedComplete" class="button button-large" th:disabled="${param.spend != null and param.spend[0] == 'high'}"> Mark as complete</button>
+					<button formaction="/prototypes/2472-spend-lead-overview?status=MarkedComplete" class="govuk-button button-large" th:disabled="${param.spend != null and param.spend[0] == 'high'}"> Mark as complete</button>
 				</div>
 
 		 	</div>
@@ -472,7 +472,7 @@
 
 			<div class="extra-margin">
 
-				<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead':'/prototypes/1592-spend'}" class="button button-secondary" th:unless="${param.spend != null and param.spend[0] == 'high'}" >Save and return to spend profile overview</a>
+				<a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?user=nonLead':'/prototypes/1592-spend'}" class="govuk-button button-secondary" th:unless="${param.spend != null and param.spend[0] == 'high'}" >Save and return to spend profile overview</a>
 
 				<a href="#" class="button-secondary" data-js-modal="modal-save-error" th:unless="${param.spend == null or param.spend[0] != 'high'}">Save and return to spend profile overview</a>
 
@@ -490,9 +490,9 @@
 
 		            	<div class="alignright-button">
 
-							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+							<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-		            		<a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?spend=high&#38;user=nonLead' : '/prototypes/1592-spend?spend=high')}" class="button">Save</a>
+		            		<a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?spend=high&#38;user=nonLead' : '/prototypes/1592-spend?spend=high')}" class="govuk-button">Save</a>
 		            	</div>
 
 			        </div>
@@ -507,7 +507,7 @@
 			<!--<p class="govuk-body">If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>-->
 
 			<div class="extra-margin">
-				<a href="#" class="button button-secondary" data-js-modal="modal-allow-edits">Allow partner to edit</a>
+				<a href="#" class="govuk-button button-secondary" data-js-modal="modal-allow-edits">Allow partner to edit</a>
 			</div>
 
 			<p class="govuk-body"></p>
@@ -525,7 +525,7 @@
 					<hr />
 
 	            	<div class="alignright-button">
-	            		<a href="/prototypes/2472-spend-lead-overview" class="button">OK</a>
+	            		<a href="/prototypes/2472-spend-lead-overview" class="govuk-button">OK</a>
 	            	</div>
 
 		        </div>
@@ -537,7 +537,7 @@
 		<div th:if="${param.task != null and param.task[0] == 'reviewProject'}" th:remove="tag">
 
 			<div class="extra-margin" th:unless="${param.status != null and param.status[0] == 'Submitted'}">
-				<a href="#" class="button button-large" data-js-modal="modal-submit-spend">Submit project spend profile</a>
+				<a href="#" class="govuk-button button-large" data-js-modal="modal-submit-spend">Submit project spend profile</a>
 			</div>
 
 			<div class="modal-submit-spend" role="dialog" aria-hidden="true" style="margin-top: -174px;">
@@ -551,8 +551,8 @@
 					<hr />
 
 	            	<div class="alignright-button">
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-	            		<a href="/prototypes/1588-project-status?stage=level4" class="button">Submit</a>
+						<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
+	            		<a href="/prototypes/1588-project-status?stage=level4" class="govuk-button">Submit</a>
 	            	</div>
 
 		        </div>

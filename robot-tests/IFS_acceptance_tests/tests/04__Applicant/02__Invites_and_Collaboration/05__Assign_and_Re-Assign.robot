@@ -59,7 +59,7 @@ The question is enabled for the assignee
     And the user clicks the button/link   link=Assign test  #Application Title
     Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
     And the user should see the element   jQuery=li:contains("Public description") .task-status-incomplete
-    When the user clicks the button/link  jQuery=.button:contains("Review")
+    When the user clicks the button/link  jQuery=.govuk-button:contains("Review")
     And the user expands the section      Public description
     Then the user should see the element  jQuery=button:contains("Assign to lead for review")
     And the user clicks the button/link   jQuery=.form-group button:contains("Return and edit")
@@ -80,10 +80,10 @@ Collaborator should see the review button instead of the review and submit
     [Tags]  Email  HappyPath
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Assign test
-    Then the user should not see the element      jQuery=.button:contains("Review and submit")
-    And the user clicks the button/link           jQuery=.button:contains("Review")
+    Then the user should not see the element      jQuery=.govuk-button:contains("Review and submit")
+    And the user clicks the button/link           jQuery=.govuk-button:contains("Review")
     And the user should see the text in the page  All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
-    And the user should not see the element       jQuery=.button:contains("Submit application")
+    And the user should not see the element       jQuery=.govuk-button:contains("Submit application")
 
 Last update message is correctly updating
     [Documentation]  INFUND-280

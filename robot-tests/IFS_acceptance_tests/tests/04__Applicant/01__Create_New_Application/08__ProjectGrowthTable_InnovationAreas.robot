@@ -36,7 +36,7 @@ Comp Admin starts a new Competition
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page           ${CA_UpcomingComp}
-    When the user clicks the button/link           jQuery=.button:contains("Create competition")
+    When the user clicks the button/link           jQuery=.govuk-button:contains("Create competition")
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
@@ -107,7 +107,7 @@ Once the project growth table is selected
     [Tags]
     [Setup]    log in as a different user                &{Comp_admin1_credentials}
     Given the user navigates to the page                 ${CA_UpcomingComp}
-    When the user clicks the button/link                 jQuery=.button:contains("Create competition")
+    When the user clicks the button/link                 jQuery=.govuk-button:contains("Create competition")
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user selects the Terms and Conditions
@@ -396,7 +396,7 @@ the user should view the project growth table
     the user should see the element                css=td input[value="15000"]
 
 the user can edit the project growth table
-    the user clicks the button/link         jQuery=button.buttonlink:contains('Edit')
+    the user clicks the button/link         jQuery=button.button-clear:contains('Edit')
     the user selects the radio button       financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
     the user enters text to a text field    css=tr:nth-child(1) .form-control    4000
     the user enters text to a text field    css=td input[value="65000"]    5000

@@ -72,7 +72,7 @@
                             <ul>
                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                     <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
-                                    <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
+                                    <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                                 </li>
                             </ul>
                         </th:block>
@@ -89,8 +89,8 @@
                     <input type="hidden" id="action" value="postNote">
                     <div class="govuk-grid-row extra-margin">
                         <div class="govuk-grid-column-one-half">
-                            <button class="button button-large no-margin" data-content-on-submit="Please wait...">Save note</button>
-                            <a class="button button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
+                            <button class="govuk-button no-margin" data-content-on-submit="Please wait...">Save note</button>
+                            <a class="button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
                         </div>
                     </div>
                 </form>

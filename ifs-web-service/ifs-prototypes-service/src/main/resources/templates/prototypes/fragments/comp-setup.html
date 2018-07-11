@@ -38,7 +38,7 @@
         </ul>
 
         <div class="extra-margin">
-            <a href="#" class="button no-margin-right" id="compCTA">CTA</a>
+            <a href="#" class="govuk-button no-margin-right" id="compCTA">CTA</a>
         </div>
 
     </div>
@@ -52,8 +52,8 @@
     <input type="hidden" id="sectionId" name="sectionId" th:value="${sectionId}" />
     <input type="hidden" id="compStatus" name="compStatus" th:value="${(param.compStatus != null and param.compStatus[0] == 'ready' ? 'ready' : '')}" />
     <input type="hidden" id="status" name="status" th:value="${(param.status != null and param.status[0] == 'done' ? 'edit' : 'done')}" />
-    <button formaction="/prototypes/2469-comp-setup" class="button" th:text="${param.status != null and param.status[0] == 'edit' or sectionId == 6 ? 'Done' : 'Edit'}">Done</button>
-    <!--<button formaction="/prototypes/2469-comp-setup" class="button" th:unless="${param.status == null or param.status[0] == 'edit' or sectionId == 6}">Edit</button>-->
+    <button formaction="/prototypes/2469-comp-setup" class="govuk-button" th:text="${param.status != null and param.status[0] == 'edit' or sectionId == 6 ? 'Done' : 'Edit'}">Done</button>
+    <!--<button formaction="/prototypes/2469-comp-setup" class="govuk-button" th:unless="${param.status == null or param.status[0] == 'edit' or sectionId == 6}">Edit</button>-->
 </div>
 
 <!-- =================Section: Dashboard competitions =========================== -->
@@ -295,7 +295,7 @@
     </section>
 
     <div class="extra-margin">
-        <a href="/prototypes/2469-comp-setup" class="button button-large">Create competition</a>
+        <a href="/prototypes/2469-comp-setup" class="govuk-button button-large">Create competition</a>
     </div>
 </div>
 
@@ -806,7 +806,7 @@
                         <span class="form-label-bold">Competition code</span>
                     </label>
                     <input class="form-control width-large" id="compCode" name="compCode" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
-                    <a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" href="#" class="button button-secondary">Generate code</a>
+                    <a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" href="#" class="govuk-button button-secondary">Generate code</a>
                 </div>
 
             </fieldset>
@@ -1427,7 +1427,7 @@
                 <h2 class="govuk-heading-m" th:text="${questionNo+'. '+questionTitle}"></h2>
             </div>
             <div class="column-quarter alignright">
-                <a th:href="@{'?status=edit-'+${questionNo}+'&#38;section=application'}" class="button button-secondary" th:unless="${param.status != null and param.status[0] == 'edit-'+questionNo}">Edit</a>
+                <a th:href="@{'?status=edit-'+${questionNo}+'&#38;section=application'}" class="govuk-button button-secondary" th:unless="${param.status != null and param.status[0] == 'edit-'+questionNo}">Edit</a>
             </div>
         </div>
 
@@ -1572,7 +1572,7 @@
             </div>
 
             <div class="alignright">
-                <a th:href="@{'?status=save-'+${questionNo}+'&#38;section=application'}" class="button button-large">Save and close</a>
+                <a th:href="@{'?status=save-'+${questionNo}+'&#38;section=application'}" class="govuk-button button-large">Save and close</a>
             </div>
 
         </th:block>
@@ -1644,7 +1644,7 @@
     <p class="govuk-body"><small>Last published 08:55am 12 December 2016</small></p>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
-            <a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="button">Return to setup overview</a>
+            <a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="govuk-button">Return to setup overview</a>
         </div>
         <div class="govuk-grid-column-one-half alignright">
             <a id="prototype-publish-content" href="#" class="button-secondary disabled no-margin">Publish public content</a>

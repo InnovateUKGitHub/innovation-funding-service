@@ -84,7 +84,7 @@
 				<div id="upload-gol">
 			        <input type="file" name="file-gol" id="file-gol" class="inputfile" />
 			        <label for="file-gol" class="button-secondary extra-margin">+ Upload</label>
-			        <a th:href="${#httpServletRequest.requestURI}" class="button button-secondary extra-margin-top">Generate GOL</a>
+			        <a th:href="${#httpServletRequest.requestURI}" class="govuk-button button-secondary extra-margin-top">Generate GOL</a>
 				</div>
 			</th:block>
 
@@ -112,7 +112,7 @@
 
 	<div th:if="${param.status == null}" th:remove="tag">
 
-		<a href="#" data-js-modal="modal-send" class="button">Send to project team</a>
+		<a href="#" data-js-modal="modal-send" class="govuk-button">Send to project team</a>
 
 		<div class="modal-send" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
@@ -126,9 +126,9 @@
 
 	        	<div class="alignright-button">
 
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-	        		<a th:href="@{'?status=GOLSent'}" class="button">Send to project team</a>
+	        		<a th:href="@{'?status=GOLSent'}" class="govuk-button">Send to project team</a>
 	        	</div>
 
 	        </div>
@@ -149,7 +149,7 @@
 		    </label>
 	    </div>
 
-	    <button data-js-modal="modal-gol-by-post" id="gol-by-post-button" class="button" type="submit" disabled="disabled">Confirm GOL received by post</button>
+	    <button data-js-modal="modal-gol-by-post" id="gol-by-post-button" class="govuk-button" type="submit" disabled="disabled">Confirm GOL received by post</button>
 
 	    <div class="modal-gol-by-post" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
@@ -163,9 +163,9 @@
 
 	        	<div class="alignright-button">
 
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+					<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-	        		<a th:href="@{'?status=GOLDecision'}" class="button">Confirm</a>
+	        		<a th:href="@{'?status=GOLDecision'}" class="govuk-button">Confirm</a>
 	        	</div>
 
 	        </div>
@@ -214,8 +214,8 @@
 
                 </fieldset>
             </div>
-            <button class="button" type="submit">Submit</button>
-            <a href="#" class="button button-clear">Cancel</a>
+            <button class="govuk-button" type="submit">Submit</button>
+            <a href="#" class="govuk-button button-clear">Cancel</a>
         </form>
 
 

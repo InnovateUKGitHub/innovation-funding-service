@@ -126,8 +126,8 @@
 	    </table>
 
 	  <!--   <div class="extra-margin">
-	    	<a href="/prototypes/3807-finance-queries" class="button button-secondary">Queries</a>
-	    	<a href="/prototypes/3990-finance-notes" class="button button-secondary">Notes</a>
+	    	<a href="/prototypes/3807-finance-queries" class="govuk-button button-secondary">Queries</a>
+	    	<a href="/prototypes/3990-finance-notes" class="govuk-button button-secondary">Notes</a>
 	    </div> -->
 
 
@@ -154,7 +154,7 @@
                 </select>
             </div>
 
-	    	<button data-js-modal="approve-eligibility-modal" id="approve-eligibility" class="button" type="submit" disabled="disabled">Approve eligible costs</button>
+	    	<button data-js-modal="approve-eligibility-modal" id="approve-eligibility" class="govuk-button" type="submit" disabled="disabled">Approve eligible costs</button>
 
 		    <div class="approve-eligibility-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
@@ -170,12 +170,12 @@
 
 			        	<div class="alignright-button">
 
-							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+							<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
 							<input type="hidden" id="action" name="action" th:value="${(param.status != null and param.status[0] == 'grantChanged' ? 'grantChanged' : '')}" />
 							<input type="hidden" id="status" name="status" value="approved" />
 
-			        		<button class="button" th:formaction="@{${#httpServletRequest.requestURI}}">Approve eligible costs</button>
+			        		<button class="govuk-button" th:formaction="@{${#httpServletRequest.requestURI}}">Approve eligible costs</button>
 			        	</div>
 
 			        </form>
@@ -190,7 +190,7 @@
 	<hr />
 
 	<div class="extra-margin">
-		<a href="/prototypes/5163-project-finances" class="button button-secondary" th:text="${(param.status != null and param.status[0] == 'approved'? 'Return to finance checks' : 'Save and return to finance checks')}">RETURN BUTTON TEXT</a>
+		<a href="/prototypes/5163-project-finances" class="govuk-button button-secondary" th:text="${(param.status != null and param.status[0] == 'approved'? 'Return to finance checks' : 'Save and return to finance checks')}">RETURN BUTTON TEXT</a>
 	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

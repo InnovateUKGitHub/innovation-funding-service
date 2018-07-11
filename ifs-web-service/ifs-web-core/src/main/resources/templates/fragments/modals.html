@@ -20,8 +20,8 @@
         <p class="govuk-body" th:text="${message}"></p>
         <hr />
         <div>
-            <a class="button" th:href="${submitLink}" th:text="${submitText}"></a>
-            <button class="js-close buttonlink" type="button" th:text="${cancelText}"></button>
+            <a class="govuk-button" th:href="${submitLink}" th:text="${submitText}"></a>
+            <button class="js-close button-clear" type="button" th:text="${cancelText}"></button>
         </div>
     </div>
 </th:block>
@@ -35,8 +35,8 @@
             <p class="govuk-body" th:text="${message}"></p>
             <hr />
             <div>
-                <button type="submit" class="button" th:attr="data-submitted-text=${submittedText}" th:text="${submitText}" />
-                <button type="button" tabindex="1" class="js-close buttonlink"
+                <button type="submit" class="govuk-button" th:attr="data-submitted-text=${submittedText}" th:text="${submitText}" />
+                <button type="button" tabindex="1" class="js-close button-clear"
                         th:text="${cancelText}"></button>
             </div>
         </div>
@@ -51,9 +51,9 @@
         <p class="govuk-body" th:text="${message}"></p>
         <hr />
         <div>
-            <button role="button" tabindex="0" class="button" th:name="${submitName}" type="submit"
+            <button role="button" tabindex="0" class="govuk-button" th:name="${submitName}" type="submit"
                     th:text="${submitText}"></button>
-            <button class="js-close buttonlink" type="button" th:text="${cancelText}"></button>
+            <button class="js-close button-clear" type="button" th:text="${cancelText}"></button>
         </div>
     </div>
 </th:block>
@@ -68,8 +68,8 @@
         <p class="govuk-body">This step cannot be undone.</p>
         <hr />
         <div>
-            <button class="button" name="publish" value="publish" type="submit">Notify applicants</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button class="govuk-button" name="publish" value="publish" type="submit">Notify applicants</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -85,9 +85,9 @@
         <div>
             <input type="hidden" id="stage" name="stage" value="1"/>
             <button th:formaction="@{/project/{projectId}/monitoring-officer/assign(projectId=${model.projectId})}"
-                    class="button">Assign Monitoring Officer
+                    class="govuk-button">Assign Monitoring Officer
             </button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -101,8 +101,8 @@
         <hr />
         <div>
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
-                <button class="button" name="submit-app-details">Submit</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button class="govuk-button" name="submit-app-details">Submit</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </form>
         </div>
     </div>
@@ -116,8 +116,8 @@
         <p class="govuk-body">Your bank details will now be submitted to Innovate UK.</p>
         <hr />
         <div method="post">
-            <button class="button" id="submit-bank-details" name="submit-app-details">Submit</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button class="govuk-button" id="submit-bank-details" name="submit-app-details">Submit</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -132,8 +132,8 @@
         <p class="govuk-body">Partners will be notified that they can now create their spend profile.</p>
         <hr />
         <div method="post">
-            <button id="generate-spend-profile-modal-button" class="button" name="submit-app-details">Generate spend profile</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button id="generate-spend-profile-modal-button" class="govuk-button" name="submit-app-details">Generate spend profile</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -147,8 +147,8 @@
         <hr />
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
             <div>
-                <button class="button" id="submit-other-documents" name="submit-other-documents" type="submit">Submit</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button class="govuk-button" id="submit-other-documents" name="submit-other-documents" type="submit">Submit</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>
@@ -163,8 +163,8 @@
         <hr />
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
             <div>
-                <button class="button" name="submit-other-documents" type="submit">Submit</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button class="govuk-button" name="submit-other-documents" type="submit">Submit</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>
@@ -178,8 +178,8 @@
         <p class="govuk-body">Please confirm that any updates match the information supplied by the finance contact. After this update has been completed, previously supplied details will be overwritten.</p>
         <hr />
         <div>
-            <button class="button" id="submit-change-bank-details" name="submit-change-bank-details">Update bank account details</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button class="govuk-button" id="submit-change-bank-details" name="submit-change-bank-details">Update bank account details</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -191,8 +191,8 @@
         <p class="govuk-body">This step should only be done after the bank account for the organisation has been checked and meets the requirements of Innovate UK</p>
         <hr />
         <div>
-            <button class="button" id="submit-approve-bank-details" name="submit-approve-bank-details">Approve account</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button class="govuk-button" id="submit-approve-bank-details" name="submit-approve-bank-details">Approve account</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -205,8 +205,8 @@
         <p class="govuk-body">Once accepted the project team can complete any remaining stages of project setup.</p>
         <hr />
         <div>
-            <button class="button" id="accept-documents" name="approved" value="true">Accept documents</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button class="govuk-button" id="accept-documents" name="approved" value="true">Accept documents</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -219,8 +219,8 @@
         <p class="govuk-body">Once accepted the project team can complete any remaining stages of project setup.</p>
         <hr />
         <div>
-            <button class="button" id="accept-document" name="approved" value="true">Accept document</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button class="govuk-button" id="accept-document" name="approved" value="true">Accept document</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -236,8 +236,8 @@
         </div>
         <hr />
         <div>
-            <button class="button" id="reject-documents" name="approved" value="false">Reject documents</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button class="govuk-button" id="reject-documents" name="approved" value="false">Reject documents</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -253,8 +253,8 @@
         </div>
         <hr />
         <div>
-            <button class="button" id="reject-document" name="approved" value="false">Reject document</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button class="govuk-button" id="reject-document" name="approved" value="false">Reject document</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -267,8 +267,8 @@
         <p class="govuk-body">This partner will now be marked as eligible for this project.</p>
         <hr />
         <div>
-            <button class="button" name="approve">Approve eligible costs</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button class="govuk-button" name="approve">Approve eligible costs</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -280,8 +280,8 @@
         <p class="govuk-body">Once you send the signed grant offer letter we will review it and will contact you if we need further information.</p>
         <hr />
         <div>
-            <button class="button" id="submit-gol-for-review" name="confirmSubmit">Send to Innovate UK</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
+            <button class="govuk-button" id="submit-gol-for-review" name="confirmSubmit">Send to Innovate UK</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -294,8 +294,8 @@
         <p class="govuk-body">The project spend profile will be sent to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
         <hr />
         <div>
-            <input type="submit" id="submit-send-all-spend-profiles" tabindex="0" class="button" value="Send"/>
-            <button type="button" tabindex="1" class="js-close buttonlink">Cancel</button>
+            <input type="submit" id="submit-send-all-spend-profiles" tabindex="0" class="govuk-button" value="Send"/>
+            <button type="button" tabindex="1" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -309,8 +309,8 @@
         <hr />
         <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
             <div>
-                <button class="button" type="submit">Submit to lead partner</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button class="govuk-button" type="submit">Submit to lead partner</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>
@@ -326,8 +326,8 @@
         <hr />
         <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
             <div>
-                <button class="button" type="submit">Allow partner to edit</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button class="govuk-button" type="submit">Allow partner to edit</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>
@@ -343,8 +343,8 @@
         <hr />
         <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/APPROVED'}" method="post">
             <div>
-                <button class="button" type="submit">Approve</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button class="govuk-button" type="submit">Approve</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>
@@ -360,8 +360,8 @@
         <hr />
         <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/REJECTED'}" method="post">
             <div>
-                <button class="button" type="submit">Reject spend profile</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button class="govuk-button" type="submit">Reject spend profile</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>
@@ -376,8 +376,8 @@
         <hr />
         <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post">
             <div>
-                <button class="button" id="modal-send-gol" type="submit">Publish to project team</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button class="govuk-button" id="modal-send-gol" type="submit">Publish to project team</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>
@@ -393,8 +393,8 @@
         <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed'}" method="post">
             <input type="hidden" name="approvalType" value="APPROVED" />
             <div>
-                <button class="button" id="accept-signed-gol" type="submit">Accept signed grant offer letter</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button class="govuk-button" id="accept-signed-gol" type="submit">Accept signed grant offer letter</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>
@@ -414,8 +414,8 @@
             <input type="hidden" name="approvalType" value="REJECTED" />
             <input type="hidden" name="rejectionReason" data-mirror="#gol-reject-reason" value="" />
             <div>
-                <button class="button" id="reject-signed-gol" type="submit">Reject signed grant offer letter</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button class="govuk-button" id="reject-signed-gol" type="submit">Reject signed grant offer letter</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>
@@ -429,8 +429,8 @@
         <p class="govuk-body">This partner will now be marked as viable for this project.</p>
         <hr />
         <div>
-            <button class="button" name="confirm-viability">Confirm viability</button>
-            <button class="buttonlink js-close" type="button">Cancel</button>
+            <button class="govuk-button" name="confirm-viability">Confirm viability</button>
+            <button class="button-clear js-close" type="button">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -443,8 +443,8 @@
         <p class="govuk-body">This partner will now be marked as eligible for this project.</p>
         <hr />
         <div>
-            <button class="button" name="confirm-eligibility">Approve eligible costs</button>
-            <button class="buttonlink js-close" type="button">Cancel</button>
+            <button class="govuk-button" name="confirm-eligibility">Approve eligible costs</button>
+            <button class="button-clear js-close" type="button">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -458,8 +458,8 @@
         <p class="govuk-body">The organisation will not be notified of this action through this service. You should therefore discuss this with them beforehand.</p>
         <hr />
         <div>
-            <button class="button" name="deleteOrganisation" type="submit">Delete organisation</button>
-            <button class="buttonlink js-close" type="button">Cancel</button>
+            <button class="govuk-button" name="deleteOrganisation" type="submit">Delete organisation</button>
+            <button class="button-clear js-close" type="button">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -475,8 +475,8 @@
         </div>
         <hr />
         <div>
-            <button class="button" name="deactivateUser" type="submit">Yes, deactivate</button>
-            <button class="buttonlink js-close" type="button">Cancel</button>
+            <button class="govuk-button" name="deactivateUser" type="submit">Yes, deactivate</button>
+            <button class="button-clear js-close" type="button">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -491,8 +491,8 @@
         </div>
         <hr />
         <div>
-            <button class="button" name="reactivateUser" type="submit">Yes, reactivate</button>
-            <button class="buttonlink js-close" type="button">Cancel</button>
+            <button class="govuk-button" name="reactivateUser" type="submit">Yes, reactivate</button>
+            <button class="button-clear js-close" type="button">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -509,8 +509,8 @@
         <hr />
         <form th:action="'#'" method="post" novalidate="novalidate">
             <div>
-                <button class="button" name="markAsResolved" type="submit">Submit</button>
-                <button class="buttonlink js-close" type="button">Cancel</button>
+                <button class="govuk-button" name="markAsResolved" type="submit">Submit</button>
+                <button class="button-clear js-close" type="button">Cancel</button>
             </div>
         </form>
     </div>
@@ -529,8 +529,8 @@
             <div>
                 <input type="hidden" id="resend-fc-invite" name="resend-fc-invite" value=""/>
                 <input type="hidden" id="organisation" name="organisation" value=""/>
-                <button class="button" type="submit">Resend</button>
-                <button class="buttonlink js-close" type="button">Cancel</button>
+                <button class="govuk-button" type="submit">Resend</button>
+                <button class="button-clear js-close" type="button">Cancel</button>
             </div>
         </form>
     </div>
@@ -548,8 +548,8 @@
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" data-single-submit="">
             <div>
                 <input type="hidden" id="resend-pm-invite" name="resend-pm-invite" value=""/>
-                <button class="button" type="submit">Resend</button>
-                <button class="buttonlink js-close" type="button">Cancel</button>
+                <button class="govuk-button" type="submit">Resend</button>
+                <button class="button-clear js-close" type="button">Cancel</button>
             </div>
         </form>
     </div>
@@ -567,8 +567,8 @@
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" data-single-submit="">
             <div>
                 <input type="hidden" id="invite-id" name="inviteId" value="" />
-                <button class="button" type="submit">Resend</button>
-                <button class="buttonlink js-close" type="button">Cancel</button>
+                <button class="govuk-button" type="submit">Resend</button>
+                <button class="button-clear js-close" type="button">Cancel</button>
             </div>
         </form>
     </div>
@@ -585,8 +585,8 @@
         <hr />
         <form th:action="@{/competition/{competitionId}/project/{projectId}/withdraw(competitionId=${model.competitionId},projectId=${model.project.id})}" method="post">
             <div>
-                <button class="button" type="submit">Withdraw project</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
+                <button class="govuk-button" type="submit">Withdraw project</button>
+                <button type="button" class="js-close button-clear">Cancel</button>
             </div>
         </form>
     </div>

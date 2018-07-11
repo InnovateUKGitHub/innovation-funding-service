@@ -37,7 +37,7 @@ IFS.competitionManagement.repeatableRows = (function () {
         'data-required-errormessage="Please enter an email address." required="required" />' +
         '</td>' +
         '<td class="alignright width-20-percent">' +
-        '<button class="remove-another-row buttonlink" name="removeNewUser" type="button" value="0">Remove</button>' +
+        '<button class="remove-another-row button-clear" name="removeNewUser" type="button" value="0">Remove</button>' +
         '</td>' +
         '</tr>')
 

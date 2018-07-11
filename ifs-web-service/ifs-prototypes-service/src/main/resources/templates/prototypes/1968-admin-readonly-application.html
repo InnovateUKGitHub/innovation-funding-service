@@ -52,7 +52,7 @@
 
 			<div class="extra-margin">
 
-				<a href="/prototypes/5698-removed-applications" class="button button-secondary" data-js-modal="modal-reinstate">Reinstate application</a>
+				<a href="/prototypes/5698-removed-applications" class="govuk-button button-secondary" data-js-modal="modal-reinstate">Reinstate application</a>
 
 			</div>
 
@@ -71,9 +71,9 @@
 
 	            	<div class="alignright-button">
 
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+						<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>
 
-	            		<a href="/prototypes/5698-removed-applications" class="button">Reinstate application</a>
+	            		<a href="/prototypes/5698-removed-applications" class="govuk-button">Reinstate application</a>
 	            	</div>
 
 		        </div>
@@ -108,7 +108,7 @@
 		</div>
 
 		<div class="extra-margin-top" th:unless="${param.status != null and param.status[0] == 'removeApp' or param.status != null and param.status[0] == 'removed'}">
-			<a th:href="@{'?status=removeApp'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')} + ${'#removeApp'}" class="button button-secondary">Mark application as ineligible</a>
+			<a th:href="@{'?status=removeApp'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')} + ${'#removeApp'}" class="govuk-button button-secondary">Mark application as ineligible</a>
 		</div>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="extra-margin-bottom">
@@ -129,8 +129,8 @@
 
 				<div class="alignright">
 					<a th:href="${#httpServletRequest.requestURI}" class="extra-margin-right">Cancel</a>
-					<a href="/prototypes/5698-submitted-applications" class="button">Mark application as ineligible</a>
-					<!-- <button class="button no-margin-right">Continue and draft email</button> -->
+					<a href="/prototypes/5698-submitted-applications" class="govuk-button">Mark application as ineligible</a>
+					<!-- <button class="govuk-button no-margin-right">Continue and draft email</button> -->
 				</div>
 
           		<!--<div class="modal-inform-remove" role="dialog" aria-hidden="true" style="margin-top: -174px;">-->
@@ -144,8 +144,8 @@
     					<!--<hr />-->
 
 					  	<!--<div class="alignright-button">-->
-							<!--<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>-->
-						  	<!--<a th:href="${#httpServletRequest.requestURI}" class="button">Remove application from assessment</a>-->
+							<!--<a href="#" aria-label="Close Popup" class="govuk-button-link js-close">Cancel</a>-->
+						  	<!--<a th:href="${#httpServletRequest.requestURI}" class="govuk-button">Remove application from assessment</a>-->
               			<!--</div>-->
 
   	        		<!--</div>-->

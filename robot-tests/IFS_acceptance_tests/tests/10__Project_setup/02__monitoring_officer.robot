@@ -90,8 +90,8 @@ MO server-side validation
     [Documentation]    INFUND-2630
     [Tags]    HappyPath
     Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
-    When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
-    and the user clicks the button/link    jQuery=[role="dialog"] .button:contains("Assign Monitoring Officer")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Assign Monitoring Officer")
+    and the user clicks the button/link    jQuery=[role="dialog"] .govuk-button:contains("Assign Monitoring Officer")
     Then the user should see a field and summary error  Please enter a first name.
     And the user should see a field and summary error   Please enter a last name.
     And the user should see a field and summary error   Please enter an email address.
@@ -119,10 +119,10 @@ MO client-side validation
 MO details can be added
     [Documentation]    INFUND-2630, INFUND-6706, INFUND-2632
     [Tags]    HappyPath
-    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Assign Monitoring Officer")
     And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Cancel")
     Then the user should not see the text in the page    A Monitoring Officer has been assigned.
-    And the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Assign Monitoring Officer")
     And the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
     Then The user should see the element    css=.success-alert
     And the user should see the text in the page    A Monitoring Officer has been assigned.
@@ -221,7 +221,7 @@ standard verification for email address follows
 the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
-    Focus    jQuery=.button:contains("Assign Monitoring Officer")
+    Focus    jQuery=.govuk-button:contains("Assign Monitoring Officer")
     Wait for autosave
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
@@ -231,7 +231,7 @@ the user edits the MO details
     The user enters text to a text field    id=lastName    Harper
     The user enters text to a text field    id=emailAddress    ${test_mailbox_two}+monitoringofficer@gmail.com
     The user enters text to a text field    id=phoneNumber    08549731414
-    the user clicks the button/link    jQuery=.button[type="submit"]:contains("Assign Monitoring Officer")
+    the user clicks the button/link    jQuery=.govuk-button[type="submit"]:contains("Assign Monitoring Officer")
     the user clicks the button/link    jQuery=.modal-assign-mo button:contains("Assign Monitoring Officer")
 
 the user can see the changed MO details
@@ -265,7 +265,7 @@ the lead partner fills in project details
     the user clicks the button/link           css=button[type="submit"]
     the user clicks the button/link           link=Project address
     the user selects the radio button         addressType    REGISTERED
-    the user clicks the button/link           jQuery=.button:contains("Save project address")
+    the user clicks the button/link           jQuery=.govuk-button:contains("Save project address")
     the user clicks the button/link           link=Project Manager
     the user selects the radio button         projectManager  projectManager2
     the user clicks the button/link           id=save

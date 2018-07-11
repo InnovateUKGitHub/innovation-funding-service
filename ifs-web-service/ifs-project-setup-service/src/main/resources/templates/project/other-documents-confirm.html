@@ -19,10 +19,10 @@
         <form th:action="@{/project/{projectId}/partner/documents/submit(projectId=${model.projectId})}" th:if="${model.isShowSubmitDocumentsButton() and  model.submitAllowed and model.submitDate == null}" method="post">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                    <button class="button" name="submit-other-documents">Submit</button>
+                    <button class="govuk-button" name="submit-other-documents">Submit</button>
                 </div>
                 <div class="govuk-grid-column-one-half alignright">
-                    <a th:href="@{/project/{projectId}/partner/documents(projectId=${model.projectId})}" class="buttonlink">Cancel</a>
+                    <a th:href="@{/project/{projectId}/partner/documents(projectId=${model.projectId})}" class="button-clear">Cancel</a>
                 </div>
             </div>
         </form>

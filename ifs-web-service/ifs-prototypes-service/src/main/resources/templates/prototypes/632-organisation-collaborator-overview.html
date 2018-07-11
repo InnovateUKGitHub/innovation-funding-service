@@ -148,7 +148,7 @@
           <a href="/prototypes/635-application-overview" class="button-secondary" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">Return to application overview</a>
 
           <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
-            <a href="#" class="button">Begin application</a>
+            <a href="#" class="govuk-button">Begin application</a>
           </th:block>
 
         </p>
@@ -164,10 +164,10 @@
                 <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
                     <input type="hidden" value="6" name="applicationInviteId" />
                     <div class="govuk-grid-column-one-half">
-                        <button type="button" class="js-close buttonlink large">Cancel</button>
+                        <button type="button" class="js-close button-clear large">Cancel</button>
                     </div>
                     <div class="govuk-grid-column-one-half alignright-button">
-                        <button class="button" name="publish" value="publish" type="submit">Remove</button>
+                        <button class="govuk-button" name="publish" value="publish" type="submit">Remove</button>
                     </div>
                 </form>
             </div>
@@ -183,10 +183,10 @@
                 <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
                     <input type="hidden" value="6" name="applicationInviteId" />
                     <div class="govuk-grid-column-one-half">
-                        <button type="button" class="js-close buttonlink large">Cancel</button>
+                        <button type="button" class="js-close button-clear large">Cancel</button>
                     </div>
                     <div class="govuk-grid-column-one-half alignright-button">
-                        <button class="button" name="publish" value="publish" type="submit">Remove organisation and collaborator</button>
+                        <button class="govuk-button" name="publish" value="publish" type="submit">Remove organisation and collaborator</button>
                     </div>
                 </form>
             </div>

@@ -72,8 +72,8 @@
             </p>
 
             <div class="extra-margin">
-                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit(competitionId=${model.competitionId}, applicationId=${model.applicationId})}" class="button">Edit and resend invite</a>
-                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" class="button button-clear">Cancel</a>
+                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit(competitionId=${model.competitionId}, applicationId=${model.applicationId})}" class="govuk-button">Edit and resend invite</a>
+                <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" class="button-clear">Cancel</a>
             </div>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

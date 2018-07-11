@@ -206,13 +206,13 @@
 				<input type="hidden" name="user" value="assessor" />
 			</th:block>
 
-			<button class="button" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2':'/prototypes/1247-assessor-doi')}">Save and return to assessor dashboard</button>
+			<button class="govuk-button" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2':'/prototypes/1247-assessor-doi')}">Save and return to assessor dashboard</button>
 			<a href="#">Cancel</a>
 		</div>
 
 
 		<div th:if="${param.edit != null}" class="form-group extra-margin">
-			<button class="button" formaction="/prototypes/1178-assessor-profile-skills">Save and return to your skills</button>
+			<button class="govuk-button" formaction="/prototypes/1178-assessor-profile-skills">Save and return to your skills</button>
 			<a href="#">Cancel</a>
 		</div>
 

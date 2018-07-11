@@ -87,16 +87,16 @@
                                            th:attr="data-required-errormessage=#{validation.invite.email.required},
                                                     data-email-errormessage=#{validation.standard.email.format}" />
                                 </td>
-                                <td class="alignright"><button class="remove-another-row buttonlink" th:value="${applicantStat.index}" name="removeApplicant" type="submit">Remove</button></td>
+                                <td class="alignright"><button class="remove-another-row button-clear" th:value="${applicantStat.index}" name="removeApplicant" type="submit">Remove</button></td>
                             </tr>
                         </tbody>
                     </table>
 
-                    <p class="govuk-body"><button class="buttonlink" data-repeatable-rowcontainer="#applicant-table tbody" name="addApplicant" type="submit">Add new applicant</button></p>
+                    <p class="govuk-body"><button class="button-clear" data-repeatable-rowcontainer="#applicant-table tbody" name="addApplicant" type="submit">Add new applicant</button></p>
 
                     <p class="govuk-body extra-margin">
-                        <button class="button" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
-                        <a th:href="@{${model.backUrl}}" class="button button-clear">Cancel</a>
+                        <button class="govuk-button" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
+                        <a th:href="@{${model.backUrl}}" class="button-clear">Cancel</a>
                     </p>
                 </form>
 

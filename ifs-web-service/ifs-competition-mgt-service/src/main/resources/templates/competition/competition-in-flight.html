@@ -56,7 +56,7 @@
                                         th:unless="${model.readOnly}"
                                         th:formaction="@{/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}"
                                         th:disabled="${!(model.changesSinceLastNotify > 0)}"
-                                        class="button button-large">Notify assessors
+                                        class="govuk-button">Notify assessors
                                 </button>
                             </div>
                             <div class="govuk-grid-column-one-third">
@@ -159,19 +159,19 @@
                                         type="submit"
                                         th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED}"
                                         th:formaction="@{/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}"
-                                        class="button button-large">Notify assessors
+                                        class="govuk-button">Notify assessors
                                 </button>
                                 <button th:unless="${model.readOnly}"
                                         type="submit"
                                         th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).ASSESSOR_DEADLINE}"
                                         th:formaction="@{/competition/{competitionId}/close-assessment(competitionId=${model.competitionId})}"
                                         th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
-                                        class="button button-large">Close assessment
+                                        class="govuk-button">Close assessment
                                 </button>
                                 <th:block th:unless="${model.readOnly}"
                                           th:case="${T(org.innovateuk.ifs.competition.resource.MilestoneType).FUNDERS_PANEL}"
                                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK}">
-                                    <a class="button button-large" th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
+                                    <a class="govuk-button" th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
                                         th:if="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
                                     <a class="disabled button button-large" aria-disabled="true"
                                        th:unless="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
@@ -182,7 +182,7 @@
                                         th:disabled="${!model.keyStatistics.canReleaseFeedback}"
                                         th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK}"
                                         th:formaction="@{/competition/{competitionId}/release-feedback(competitionId=${model.competitionId})}"
-                                        class="button button-large">Release feedback
+                                        class="govuk-button">Release feedback
                                 </button>
                             </th:block>
                         </th:block>

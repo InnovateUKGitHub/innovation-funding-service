@@ -77,7 +77,7 @@
                         </div>
 
                         <div class="govuk-grid-column-one-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">
-                            <a th:href="@{/panel/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
+                            <a th:href="@{/panel/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="govuk-button">Review and send invites</a>
                         </div>
                     </div>
 
@@ -90,7 +90,7 @@
                                 <th scope="col">Innovation area</th>
                                 <th scope="col">Contract and DOI</th>
                                 <td scope="col" class="alignright">
-                                    <button name="removeAll" class="buttonlink alignright"
+                                    <button name="removeAll" class="button-clear alignright"
                                             th:if="${!#lists.isEmpty(model.assessors)}">
                                         Remove all
                                     </button>
@@ -113,7 +113,7 @@
                                     <span class="no" th:unless="${assessor.compliant}">No</span>
                                 </td>
                                 <td class="alignright">
-                                    <button class="buttonlink alignright" name="remove" th:value="${assessor.email}">
+                                    <button class="button-clear alignright" name="remove" th:value="${assessor.email}">
                                         <span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove
                                     </button>
                                 </td>

@@ -67,7 +67,7 @@
                         </div>
 
                         <div class="govuk-grid-column-one-half alignright" th:if="${!#lists.isEmpty(model.applications)}">
-                            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
+                            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" class="govuk-button">Review and send invites</a>
                         </div>
                     </div>
 
@@ -79,7 +79,7 @@
                                 <th scope="col">Project title</th>
                                 <th scope="col">Lead organisation</th>
                                 <td scope="col" class="alignright">
-                                    <button name="removeAll" class="buttonlink alignright"
+                                    <button name="removeAll" class="button-clear alignright"
                                             th:if="${!#lists.isEmpty(model.applications)}">
                                         Remove all
                                     </button>
@@ -96,7 +96,7 @@
                                 <td th:text="${app.applicationName}">Application name</td>
                                 <td th:text="${app.leadOrganisation}">Lead organisation</td>
                                 <td class="alignright">
-                                    <button class="buttonlink alignright" name="remove" th:value="${app.applicationId}">
+                                    <button class="button-clear alignright" name="remove" th:value="${app.applicationId}">
                                         <span class="hidden" th:text="${app.applicationName}">John Barnes </span>Remove
                                     </button>
                                 </td>

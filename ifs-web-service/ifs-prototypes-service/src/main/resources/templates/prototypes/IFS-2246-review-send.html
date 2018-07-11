@@ -133,7 +133,7 @@
                                         <p class="form-hint">(opens in a new window)</p>
                                     </div>
                                    <div class="govuk-grid-column-one-third">
-                                       <button name="remove_uploaded_file" value="" class="button button-clear" type="submit">Remove</button>
+                                       <button name="remove_uploaded_file" value="" class="govuk-button button-clear" type="submit">Remove</button>
                                    </div>
                                 </div>
                                 <!-- WE WILL NEED TO ADD CSS TO PRODUCTION CODE TO GET THIS LOOKING RIGHT. -->
@@ -169,7 +169,7 @@
                                         <p class="form-hint">(opens in a new window)</p>
                                     </div>
                                     <div class="govuk-grid-column-one-third">
-                                        <button name="remove_uploaded_file" value="" class="button button-clear" type="submit">Remove</button>
+                                        <button name="remove_uploaded_file" value="" class="govuk-button button-clear" type="submit">Remove</button>
                                     </div>
                                 </div>
                                 <!-- WE WILL NEED TO ADD CSS TO PRODUCTION CODE TO GET THIS LOOKING RIGHT. -->
@@ -218,8 +218,8 @@ Project title: [project title]
             </p>
 
             <div class="extra-margin">
-                <a href="/prototypes/IFS-2246-assign-applications?tab=view" class="button" th:text="${(param.status != null and param.status[0] == 'resendInvites' ? 'Resend invite' : 'Send invite')}">Send invite</a>
-                <a href="/prototypes//IFS-2246-assign-applications?tab=assign" class="button button-clear">Cancel</a>
+                <a href="/prototypes/IFS-2246-assign-applications?tab=view" class="govuk-button" th:text="${(param.status != null and param.status[0] == 'resendInvites' ? 'Resend invite' : 'Send invite')}">Send invite</a>
+                <a href="/prototypes//IFS-2246-assign-applications?tab=assign" class="govuk-button button-clear">Cancel</a>
             </div>
 
         </fieldset>

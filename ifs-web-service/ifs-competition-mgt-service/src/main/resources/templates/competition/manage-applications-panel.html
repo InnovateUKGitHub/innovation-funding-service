@@ -53,7 +53,7 @@
                             <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
                         </div>
                         <div class="govuk-grid-column-one-third">
-                            <button class="button" type="submit">Filter</button>
+                            <button class="govuk-button" type="submit">Filter</button>
                         </div>
                     </div>
                 </fieldset>
@@ -75,7 +75,7 @@
                         <option value="innovationArea" th:selected="${(model.sorting == 'innovationArea')}">Innovation area</option>
                         <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead organisation</option>
                     </select>
-                    <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
+                    <button type="submit" class="button-secondary no-margin js-hidden">Sort</button>
                 </div>
             </div>
         </form>

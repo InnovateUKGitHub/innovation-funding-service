@@ -37,11 +37,11 @@
                 </select>
             </div>
 
-            <button class="button">Done</button>
+            <button class="govuk-button">Done</button>
         </div>
 
         <th:block th:unless="${model.general.editable}">
-            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
         </th:block>
 
     </form>

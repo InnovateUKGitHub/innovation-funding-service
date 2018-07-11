@@ -57,7 +57,7 @@ Competition Dashboard
 Milestones for the In inform competition
     [Documentation]    INFUND-7561 INFUND-7950
     [Tags]
-    Then the user should see the element    jQuery=.button:contains("Manage funding notifications")
+    Then the user should see the element    jQuery=.govuk-button:contains("Manage funding notifications")
     And the user should see the element     jQuery=button:contains("Release feedback")
     And the user should see the element     css=li:nth-child(13).done    #Verify that 12. Notifications
     And the user should see the element     css=li:nth-child(14).not-done    #Verify that 13. Release feedback is not done
@@ -65,7 +65,7 @@ Milestones for the In inform competition
 Filtering on the Manage funding applications page
     [Documentation]    INFUND-8066
     [Tags]
-    Given The user clicks the button/link                      jQuery=.button:contains("Manage funding notifications")
+    Given The user clicks the button/link                      jQuery=.govuk-button:contains("Manage funding notifications")
     And the user enters text to a text field                   id=stringFilter    ${application_ids['Climate control solution']}
     And the user selects the option from the drop-down menu    Yes    id=sendFilter
     And the user selects the option from the drop-down menu    Successful    id=fundingFilter

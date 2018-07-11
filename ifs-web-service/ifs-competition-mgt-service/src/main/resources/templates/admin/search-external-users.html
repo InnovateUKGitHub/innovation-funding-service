@@ -52,7 +52,7 @@
                             <a href="?">Clear</a>
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
-                            <button type="submit" th:name="${tab == 'invites' ? 'pending' : 'active'}" class="button no-margin">Search</button>
+                            <button type="submit" th:name="${tab == 'invites' ? 'pending' : 'active'}" class="govuk-button no-margin">Search</button>
                         </div>
                     </div>
                 </fieldset>
@@ -60,10 +60,10 @@
 
             <ul class="inline-nav cf" th:if="${mode == 'search'}">
                 <li th:classappend="${tab == 'users' ? 'selected' : ''}">
-                    <button type="submit" name="active" class="buttonlink">Active accounts</button>
+                    <button type="submit" name="active" class="button-clear">Active accounts</button>
                 </li>
                 <li th:classappend="${tab == 'invites' ? 'selected' : ''}">
-                    <button type="submit" name="pending" class="buttonlink">Pending accounts</button>
+                    <button type="submit" name="pending" class="button-clear">Pending accounts</button>
                 </li>
             </ul>
         </form>

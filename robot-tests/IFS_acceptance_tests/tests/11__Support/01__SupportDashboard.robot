@@ -74,7 +74,7 @@ the user is searching for external users
 a collaborator has been invited but he has not yet approved the invitation
     log in as a different user       &{lead_applicant_credentials}
     the user navigates to the page   ${server}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/team/update/existing/${EMPIRE_LTD_ID}
-    the user clicks the button/link  jQuery=.buttonlink:contains("Add another contributor")
+    the user clicks the button/link  jQuery=.button-clear:contains("Add another contributor")
     the user enters text to a text field  name=stagedInvite.name  Stuart
     the user enters text to a text field  name=stagedInvite.email  ${invitedCollaborator}
     the user clicks the button/link       jQuery=button:contains("Invite")
@@ -86,7 +86,7 @@ the support user should be able to see him as
     logging in and error checking    &{support_user_credentials}
     the user navigates to the page   ${manageExternalUsers}
     the user is searching for external users  ${invitedCollaborator}  Email
-    the user clicks the button/link  jQuery=.buttonlink:contains("${tab}")
+    the user clicks the button/link  jQuery=.button-clear:contains("${tab}")
     #The tab appears after enabling the search functionality
     the user should see the element  jQuery=td:contains("${invitedCollaborator}") ~ td:contains("${status}")
     the user logs out if they are logged in

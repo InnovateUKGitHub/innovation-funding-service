@@ -102,7 +102,7 @@
                 </fieldset>
             </div>
 
-            <button type="submit" class="button">Done</button>
+            <button type="submit" class="govuk-button">Done</button>
         </form>
 
         <th:block th:unless="${model.editable}">
@@ -124,7 +124,7 @@
             </dl>
 
             <div class="extra-margin">
-                <a class="button"
+                <a class="govuk-button"
                    th:unless="${model.general.state.preventEdit}"
                    th:href="@{/competition/setup/{competitionId}/section/application/detail/edit(competitionId=${model.general.competition.id})}">Edit this question</a>
             </div>

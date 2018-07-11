@@ -23,7 +23,7 @@
         <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, showOrgType=true" />
 
         <form method="post" th:action="@{/organisation/create/save-organisation}">
-            <button name="save-organisation" class="button extra-margin">Save and continue</button>
+            <button name="save-organisation" class="govuk-button extra-margin">Save and continue</button>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

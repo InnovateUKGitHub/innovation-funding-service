@@ -217,8 +217,8 @@
 			</th:block>
 		</fieldset>
 		<div class="extra-margin">
-			<a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5085-application-process' : '/prototypes/5154-question-details?status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and close' : 'Edit this question')}"></a>
-			<a th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5154-question-details?status=edit&amp;compStatus=ready')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and close' : 'Edit this question')}"></a>
+			<a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="govuk-button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5085-application-process' : '/prototypes/5154-question-details?status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and close' : 'Edit this question')}"></a>
+			<a th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="govuk-button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5085-application-process?compStatus=ready' : '/prototypes/5154-question-details?status=edit&amp;compStatus=ready')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and close' : 'Edit this question')}"></a>
 
 		</div>
 		<div th:if="${param.status == null}" class="extra-margin">

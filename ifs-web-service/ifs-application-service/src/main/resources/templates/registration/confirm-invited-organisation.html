@@ -41,7 +41,7 @@
         <p class="govuk-body">If this is not the correct organisation, please <a th:href="${'mailto:'+ model.emailLeadApplicant}">email the lead applicant</a>.</p>
         <p class="govuk-body"><strong>Please note</strong>, if you are representing a different organisation then you will need to make a new account.</p>
 
-        <a th:href="${model.registerUrl}" class="button button-large extra-margin">Confirm and continue</a>
+        <a th:href="${model.registerUrl}" class="govuk-button extra-margin">Confirm and continue</a>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

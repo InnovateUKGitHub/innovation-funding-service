@@ -215,13 +215,13 @@
 
         <p class="extra-margin-top">
 
-          <a th:href="${'/prototypes/635-application-overview' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status='+ param.status[0] : '')}" data-js-modal="modal-update-organisation" class="button" th:unless="${param.company[0] == 'newOrg'}">Update organisation</a>
+          <a th:href="${'/prototypes/635-application-overview' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status='+ param.status[0] : '')}" data-js-modal="modal-update-organisation" class="govuk-button" th:unless="${param.company[0] == 'newOrg'}">Update organisation</a>
 
           <th:block th:if="${param.company[0] == 'newOrg'}">
-            <a href="/prototypes/635-application-overview" data-js-modal="modal-new-organisation" class="button">Add organisation and invite applicants</a>
+            <a href="/prototypes/635-application-overview" data-js-modal="modal-new-organisation" class="govuk-button">Add organisation and invite applicants</a>
           </th:block>
 
-          <a href="#" class="button-link-style">Cancel</a>
+          <a href="#" class="govuk-button-link-style">Cancel</a>
         </p>
 
 
@@ -242,7 +242,7 @@
                   <input type="hidden" name="status" value="firstLoad" />
                 </th:block>
 
-                <button class="button" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Update organisation</button>
+                <button class="govuk-button" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Update organisation</button>
                 <a href="#" class="js-close button-link-style">Cancel</a>
 
             </form>
@@ -262,7 +262,7 @@
               <input type="hidden" name="status" th:value="${param.status[0]}" />
             </th:block>
 
-            <button class="button" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Add organisation and invite applicants</button>
+            <button class="govuk-button" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Add organisation and invite applicants</button>
             <a href="#" class="js-close button-link-style">Cancel</a>
 
           </form>
@@ -277,8 +277,8 @@
 
             <form method="get">
 
-                <button class="button" name="publish" value="publish" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Delete organisation</button>
-                <button class="js-close buttonlink large" type="button">Cancel</button>
+                <button class="govuk-button" name="publish" value="publish" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Delete organisation</button>
+                <button class="js-close button-clear large" type="button">Cancel</button>
 
             </form>
 

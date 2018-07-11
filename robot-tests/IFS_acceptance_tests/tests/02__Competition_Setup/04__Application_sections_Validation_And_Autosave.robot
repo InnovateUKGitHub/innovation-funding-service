@@ -142,7 +142,7 @@ The user should see the correct inputs in assessment questions
 
 User creates a new competition for Application tests
     Given the user navigates to the page    ${CA_UpcomingComp}
-    When the user clicks the button/link    jQuery=.button:contains("Create competition")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Create competition")
     And the user clicks the button/link     link=Initial details
     And the user enters text to a text field    id=title    Test competition
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId

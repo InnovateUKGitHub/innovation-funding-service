@@ -42,9 +42,9 @@ Queries section is linked from eligibility and this selects eligibility on the q
     [Tags]  HappyPath
     Given Logging in and Error Checking   &{internal_finance_credentials}
     When the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/eligibility
-    And the user clicks the button/link   jQuery=.button:contains("Queries")
+    And the user clicks the button/link   jQuery=.govuk-button:contains("Queries")
     Then the user should see the element  jQuery=h2:contains("Queries")
-    When the user clicks the button/link  jQuery=.button:contains("Post a new query")
+    When the user clicks the button/link  jQuery=.govuk-button:contains("Post a new query")
     Then the user should see the dropdown option selected  Eligibility  section
 
 Queries section is linked from viability and this selects viability on the query dropdown
@@ -52,8 +52,8 @@ Queries section is linked from viability and this selects viability on the query
     [Tags]
     [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Given the user clicks the button/link    jQuery=table.table-progress th:contains("Lead") + td a
-    When the user clicks the button/link     jQuery=.button:contains("Queries")
-    And the user clicks the button/link      jQuery=.button:contains("Post a new query")
+    When the user clicks the button/link     jQuery=.govuk-button:contains("Queries")
+    And the user clicks the button/link      jQuery=.govuk-button:contains("Post a new query")
     Then the user should see the dropdown option selected    Viability    section
 
 Queries section is linked to from the main finance check summary page
@@ -73,7 +73,7 @@ Queries section contains finance contact name, email and telephone
 Viability and eligibility sections both available
     [Documentation]    INFUND-4840
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Post a new query")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Post a new query")
     Then the user should see the option in the drop-down menu    Viability    section
     And the user should see the option in the drop-down menu    Eligibility    section
 
@@ -81,7 +81,7 @@ Project finance user can upload a pdf file
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file        name=attachment  ${valid_pdf}
-    Then the user should see the element  jQuery=h3:contains("Supporting documentation") + ul:contains("testing.pdf") .buttonlink:contains("Remove")
+    Then the user should see the element  jQuery=h3:contains("Supporting documentation") + ul:contains("testing.pdf") .button-clear:contains("Remove")
 
 Project finance can remove the file
     [Documentation]    INFUND-4840
@@ -95,12 +95,12 @@ Project finance user can upload more than one file and remove it
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file      name=attachment    ${valid_pdf}
-    Then the user clicks the button/link  jQuery=h3:contains("Supporting documentation") ~ ul:contains("testing.pdf") .buttonlink:contains("Remove")
+    Then the user clicks the button/link  jQuery=h3:contains("Supporting documentation") ~ ul:contains("testing.pdf") .button-clear:contains("Remove")
 
 Post new query server side validations
     [Documentation]    INFUND-4840
     [Tags]
-    When the user clicks the button/link     jQuery=.button:contains("Post query")
+    When the user clicks the button/link     jQuery=.govuk-button:contains("Post query")
     Then the user should see the element     jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
     And the user should see the element      jQuery=label[for="query"] .error-message:contains(This field cannot be left blank.)
     And the user should see a summary error  This field cannot be left blank.
@@ -133,7 +133,7 @@ Query can be re-entered (Eligibility)
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
     When the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/query
-    And the user clicks the button/link    jQuery=.button:contains("Post a new query")
+    And the user clicks the button/link    jQuery=.govuk-button:contains("Post a new query")
     And the user enters text to a text field    id=queryTitle    an eligibility query's title
     And the user enters text to a text field    css=.editor    this is some query text
     And the user uploads the file    name=attachment    ${valid_pdf}
@@ -142,8 +142,8 @@ Query can be re-entered (Eligibility)
 New query can be posted
     [Documentation]    INFUND-4840 INFUND-9546
     [Tags]  HappyPath
-    When the user clicks the button/link      jQuery=.button:contains("Post query")
-    Then the user should not see the element  jQuery=.button:contains("Post query")
+    When the user clicks the button/link      jQuery=.govuk-button:contains("Post query")
+    Then the user should not see the element  jQuery=.govuk-button:contains("Post query")
     When the user expands the section         an eligibility query's title
     Then the user should see the element      jQuery=.govuk-heading-s:contains("Lee Bowman - Innovate UK (Finance team)")
     When the user should see the element      jQuery=.govuk-heading-s:contains("${today}")
@@ -177,7 +177,7 @@ Project finance user can add another query while he is awaiting for response
     And the user enters text to a text field  id=queryTitle  a viability query's title
     And the user selects the option from the drop-down menu  VIABILITY    id=section
     And the user enters text to a text field  css=.editor    another query body
-    And the user clicks the button/link       css=.column-half button[type="submit"]  # Post query
+    And the user clicks the button/link       css=.govuk-grid-column-one-half button[type="submit"]  # Post query
     Then the user should not see an error in the page
 
 Queries show in reverse chronological order
@@ -211,7 +211,7 @@ Applicant - Response to query server side validations
     And the user should see the element     jQuery=h2:contains("an eligibility") .section-incomplete
     Then the user expands the section       an eligibility query's title
     When the user clicks the button/link    jQuery=h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
-    And the user clicks the button/link     jQuery=.button:contains("Post response")
+    And the user clicks the button/link     jQuery=.govuk-button:contains("Post response")
     Then the user should see a field error  This field cannot be left blank.
 #    TODO commmented due to IFS-2622
 #    And the user should see a summary error            This field cannot be left blank.
@@ -220,7 +220,7 @@ Applicant - Response to query client side validations
     [Documentation]    INFUND-4843
     [Tags]
     When the user enters text to a text field          css=.editor  this is some response text
-    And the user moves focus to the element            jQuery=.button:contains("Post response")
+    And the user moves focus to the element            jQuery=.govuk-button:contains("Post response")
     Then the user should not see the text in the page  This field cannot be left blank.
     When the user uploads the file                     name=attachment  ${valid_pdf}
     Then the user should see the element               jQuery=a:contains("testing.pdf") + button:contains("Remove")
@@ -228,7 +228,7 @@ Applicant - Response to query client side validations
 Applicant - Word count validations for response
     [Documentation]    INFUND-4843
     When the user enters text to a text field  css=.editor  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
-    And the user moves focus to the element    jQuery=.button:contains("Post response")
+    And the user moves focus to the element    jQuery=.govuk-button:contains("Post response")
     Then the user should see a field error     Maximum word count exceeded. Please reduce your word count to 400.
     And the user should see a field error      This field cannot contain more than 4,000 characters.
     When the user enters text to a text field  css=.editor  This is some response text
@@ -237,8 +237,8 @@ Applicant - Word count validations for response
 Applicant - Query response can be posted
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link      jQuery=.button:contains("Post response")
-    Then the user should not see the element  jQuery=.button:contains("Post response")
+    When the user clicks the button/link      jQuery=.govuk-button:contains("Post response")
+    Then the user should not see the element  jQuery=.govuk-button:contains("Post response")
     And the user should see the element       jQuery=h2:contains("an eligibility") .section-awaiting
     And the user should see the element       jQuery=.govuk-heading-s:contains("Becky Mason") small:contains("${today}")
     And the user should see the element       jQuery=.govuk-heading-s:contains("Becky Mason") ~ .govuk-heading-s:contains("Supporting documentation")
@@ -248,7 +248,7 @@ Applicant - Respond to older query
     [Tags]
     Given the user clicks the button/link      jQuery=h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
     When the user enters text to a text field  css=.editor    one more response to the eligibility query
-    Then the user clicks the button/link       jQuery=.button:contains("Post response")
+    Then the user clicks the button/link       jQuery=.govuk-button:contains("Post response")
     And the user should see the element        jQuery=.panel + .panel:contains("Becky ")  #is the 2nd response
 
 Applicant - Repond to Viability query
@@ -257,7 +257,7 @@ Applicant - Repond to Viability query
     Given the user expands the section        a viability query's title
     When the user clicks the button/link      jQuery=h2:contains("viability") + [id^="finance-checks-query"] a:contains("Respond")
     And the user enters text to a text field  css=.editor  This is applicant's response to the Viability query.
-    And the user clicks the button/link       jQuery=.button:contains("Post response")
+    And the user clicks the button/link       jQuery=.govuk-button:contains("Post response")
     Then the user should see the element      jQuery=h2:contains("viability") .section-awaiting
 
 IFS Admin can see queries raised column updates to 'view'
@@ -296,7 +296,7 @@ Project finance user can continue the conversation
     [Tags]
     When the user clicks the button/link      jQuery=h2:contains("an eligibility query's title") + [id^="finance-checks-internal-query"] a:contains("Respond")
     And the user enters text to a text field  css=.editor  This is a response to a response
-    And the user clicks the button/link       jQuery=.button:contains("Post response")
+    And the user clicks the button/link       jQuery=.govuk-button:contains("Post response")
 
 Finance contact receives an email when a new response is posted
     [Documentation]    INFUND-7753 IFS-3559
@@ -336,16 +336,16 @@ Link to notes from viability section
     Given log in as a different user      &{internal_finance_credentials}
     When the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     And the user clicks the button/link   css=table.table-progress tr:nth-child(1) td:nth-child(2)
-    And the user clicks the button/link   jQuery=.button:contains("Notes")
+    And the user clicks the button/link   jQuery=.govuk-button:contains("Notes")
     Then the user should see the element  jQuery=h2:contains("Review notes")
-    And the user should see the element   jQuery=.button:contains("Create a new note")
+    And the user should see the element   jQuery=.govuk-button:contains("Create a new note")
 
 Link to notes from eligibility section
     [Documentation]    INFUND-4845
     [Tags]
     Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/eligibility
-    And the user clicks the button/link   jQuery=.button:contains("Notes")
-    Then the user should see the element  jQuery=.button:contains("Create a new note")
+    And the user clicks the button/link   jQuery=.govuk-button:contains("Notes")
+    Then the user should see the element  jQuery=.govuk-button:contains("Create a new note")
 
 Link to notes from main finance checks summary page
     [Documentation]    INFUND-4845
@@ -356,7 +356,7 @@ Link to notes from main finance checks summary page
 Project finance can upload a pdf file to notes
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user clicks the button/link  jQuery=.button:contains("Create a new note")
+    Given the user clicks the button/link  jQuery=.govuk-button:contains("Create a new note")
     When the user uploads the file         name=attachment  ${valid_pdf}
     Then the user should see the element   jQuery=h2:contains("Supporting documentation") + ul:contains("${valid_pdf} ${opens_in_new_window}")
 
@@ -395,7 +395,7 @@ Project finance can still view both files in notes
 Create new note server side validations
     [Documentation]    INFUND-4845
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Save note")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Save note")
     Then the user should see the element   jQuery=label[for="noteTitle"] .error-message:contains(This field cannot be left blank.)
     And the user should see the element    jQuery=label[for="note"] .error-message:contains(This field cannot be left blank.)
 
@@ -426,7 +426,7 @@ New note can be cancelled
 Note can be re-entered
     [Documentation]    INFUND-4845
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Create a new note")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Create a new note")
     And the user enters text to a text field    id=noteTitle    an eligibility query's title
     And the user enters text to a text field    css=.editor    this is some note text
     And the user uploads the file    name=attachment    ${valid_pdf}
@@ -435,8 +435,8 @@ Note can be re-entered
 New note can be posted
     [Documentation]    INFUND-4845
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Save note")
-    Then the user should not see the element  jQuery=.button:contains("Save note")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Save note")
+    Then the user should not see the element  jQuery=.govuk-button:contains("Save note")
     Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
 
 Note sections are no longer editable
@@ -508,20 +508,20 @@ Project finance can still view both files in note comments
 Note comments server side validations
     [Documentation]    INFUND-7756
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Save comment")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Save comment")
     Then the user should see the element    jQuery=label[for="comment"] .error-message:contains("This field cannot be left blank.")
 
 Note comments client side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user enters text to a text field    css=.editor  this is some comment text
-    And the user moves focus to the element    jQuery=.button:contains("Save comment")
+    And the user moves focus to the element    jQuery=.govuk-button:contains("Save comment")
     Then the user should not see the element    jQuery=label[for="comment"] .error-message:contains("This field cannot be left blank.")
 
 Word count validations for note comments
     [Documentation]    INFUND-7756
     When the user enters text to a text field  css=.editor  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
-    And the user moves focus to the element    jQuery=.button:contains("Save comment")
+    And the user moves focus to the element    jQuery=.govuk-button:contains("Save comment")
     Then the user should see a field error     Maximum word count exceeded. Please reduce your word count to 400.
     And the user should see a field error      This field cannot contain more than 4,000 characters.
     When the user enters text to a text field  css=.editor  this is some comment text
@@ -530,8 +530,8 @@ Word count validations for note comments
 Note comment can be posted
     [Documentation]    INFUND-7756
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Save comment")
-    Then the user should not see the element   jQuery=.button:contains("Save comment")
+    When the user clicks the button/link    jQuery=.govuk-button:contains("Save comment")
+    Then the user should not see the element   jQuery=.govuk-button:contains("Save comment")
 
 
 *** Keywords ***

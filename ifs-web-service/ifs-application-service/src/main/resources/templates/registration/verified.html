@@ -14,7 +14,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Account verified',size='govuk-heading-xl'" />
         <p class="govuk-body">Your account has been successfully verified. You can sign in with your registered email and password.</p>
-        <a th:href="${userDashboardLink}" class="button">Sign in</a>
+        <a th:href="${userDashboardLink}" class="govuk-button">Sign in</a>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 </div>

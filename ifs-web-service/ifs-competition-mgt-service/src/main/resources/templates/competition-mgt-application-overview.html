@@ -33,7 +33,7 @@
             <th:block th:if="${canReinstate}" th:unless="${ineligibility.readOnly}">
                 <div class="extra-margin">
                     <a th:href="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication/confirm(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})}"
-                       class="button button-secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
+                       class="button-secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
                 </div>
 
                 <div class="modal-reinstate" role="dialog" aria-hidden="true" style="margin-top: -174px;">
@@ -46,8 +46,8 @@
 
                             <hr />
 
-                            <button class="button" type="submit">Reinstate application</button>
-                            <button class="js-close buttonlink" type="button">Cancel</button>
+                            <button class="govuk-button" type="submit">Reinstate application</button>
+                            <button class="js-close button-clear" type="button">Cancel</button>
                         </div>
                     </form>
                 </div>
@@ -119,8 +119,8 @@
                     </div>
 
                     <div class="alignright">
-                        <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" class="button button-clear">Cancel</a>
-                        <button type="submit" name="markAsIneligible" class="button no-margin">Mark application as ineligible</button>
+                        <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" class="button-clear">Cancel</a>
+                        <button type="submit" name="markAsIneligible" class="govuk-button no-margin">Mark application as ineligible</button>
                     </div>
                 </form>
             </div>

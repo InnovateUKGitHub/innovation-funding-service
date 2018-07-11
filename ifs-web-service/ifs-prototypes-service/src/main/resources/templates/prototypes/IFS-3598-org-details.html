@@ -48,7 +48,7 @@
 
                 </label>
                 <input class="form-control" type="text" value="" id="organisationSearchName" name="organisationSearchName">
-                <button type="submit" id="org-search" name="search-organisation" class="button">Search</button>
+                <button type="submit" id="org-search" name="search-organisation" class="govuk-button">Search</button>
             </div>
 
             <h2 class="govuk-heading-m no-margin">Companies House search results</h2>
@@ -128,7 +128,7 @@
                                     <span class="form-label-bold">Postcode</span>
                                 </label>
                                 <input id="addressForm.postcodeInput" class="form-control" type="text" name="addressForm.postcodeInput" value="">
-                                <button type="submit" id="postcode-lookup" class="button" name="search-address">Find UK address</button>
+                                <button type="submit" id="postcode-lookup" class="govuk-button" name="search-address">Find UK address</button>
                             </div>
 
                             <input type="hidden" name="entry" value="manual" />
@@ -136,12 +136,12 @@
                             <input type="hidden" name="type" th:value="${type}" />
 
 
-                            <button type="submit" class="buttonlink" name="manual-address">Enter address manually</button>
+                            <button type="submit" class="button-clear" name="manual-address">Enter address manually</button>
                         </fieldset>
 
                     </div>
 
-                    <button type="submit" name="save-organisation-details" class="button extra-margin">Continue</button>
+                    <button type="submit" name="save-organisation-details" class="govuk-button extra-margin">Continue</button>
                 </div>
             </details>
 

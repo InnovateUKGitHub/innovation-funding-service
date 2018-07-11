@@ -64,8 +64,8 @@
 
 
 	<div class="extra-margin">
-		<a th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required?compStatus=ready&amp;status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Done' : 'Edit')}">Done</a>
-		<a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5090-assessors-required?' : '/prototypes/5090-assessors-required?status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Done' : 'Edit')}">Done</a>
+		<a th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="govuk-button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5090-assessors-required?compStatus=ready' : '/prototypes/5090-assessors-required?compStatus=ready&amp;status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Done' : 'Edit')}">Done</a>
+		<a th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" role="button" tabindex="0" class="govuk-button" th:href="${(param.status != null and param.status[0] == 'edit' ? '/prototypes/5090-assessors-required?' : '/prototypes/5090-assessors-required?status=edit')}" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Done' : 'Edit')}">Done</a>
 	</div>
 
 	<ul class="pagination">

@@ -221,10 +221,10 @@
 
          <th:block th:if="${model.isShowDisabledSubmitDocumentsButton()}">
              <th:block th:if="${model.collaborationAgreementRequired}">
-                <button disabled="disabled" class="button extra-margin">Submit documents</button>
+                <button disabled="disabled" class="govuk-button extra-margin">Submit documents</button>
              </th:block>
              <th:block th:unless="${model.collaborationAgreementRequired}">
-                 <button disabled="disabled" class="button extra-margin">Submit document</button>
+                 <button disabled="disabled" class="govuk-button extra-margin">Submit document</button>
              </th:block>
          </th:block>
         <th:block th:insert="fragments/layout :: main-content-end" />

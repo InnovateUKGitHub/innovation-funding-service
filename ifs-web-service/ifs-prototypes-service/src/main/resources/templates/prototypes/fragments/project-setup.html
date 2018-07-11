@@ -21,7 +21,7 @@
                     <input type="email" th:name="${'email-'+ addUserType +'1'}" th:id="${'email-'+ addUserType +'1'}" class="form-control width-full" aria-labelledby="user-email" value="" />
                 </td>
                 <td class="alignright">
-                    <button class="buttonlink no-margin-bottom" th:id="${'invite-' +addUserType}">Invite to project</button>
+                    <button class="button-clear no-margin-bottom" th:id="${'invite-' +addUserType}">Invite to project</button>
                 </td>
             </tr>
         </tbody>
@@ -70,7 +70,7 @@
             <span class="form-label-bold">Postcode</span>
         </label>
         <input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
-        <button type="submit" id="postcode-lookup" class="button">Find UK address</button>
+        <button type="submit" id="postcode-lookup" class="govuk-button">Find UK address</button>
         <div>
             <a href="#" id="enter-address-manually">Enter address manually</a>
         </div>
@@ -423,7 +423,7 @@
 
     <div class="govuk-grid-row extra-margin-top">
       <div class="govuk-grid-column-one-half">
-        <a th:href="${#httpServletRequest.requestURI + '?action=newQuery'}" id="post-new-query" th:unless="${param.action != null and param.action[0] == 'newQuery' or user == 'partner'}" class="button button-large" th:text="${(queryType == 'query' ? 'Post a new query' : 'Create a new note')}">QUERY TYPE</a>
+        <a th:href="${#httpServletRequest.requestURI + '?action=newQuery'}" id="post-new-query" th:unless="${param.action != null and param.action[0] == 'newQuery' or user == 'partner'}" class="govuk-button button-large" th:text="${(queryType == 'query' ? 'Post a new query' : 'Create a new note')}">QUERY TYPE</a>
       </div>
       <div class="govuk-grid-column-one-half">
         <fieldset th:unless="${queryType == 'note' or user == 'partner'}">
@@ -522,7 +522,7 @@
             <input type="hidden" id="action" name="action" th:value="${(queryType == 'query' ? 'postQuery' : 'saveNote')}" />
 
             <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-half"><button class="button button-large no-margin" th:text="${(queryType == 'query' ? 'Post Query' : 'Save note')}">Save note</button></div>
+                <div class="govuk-grid-column-one-half"><button class="govuk-button button-large no-margin" th:text="${(queryType == 'query' ? 'Post Query' : 'Save note')}">Save note</button></div>
                 <div class="govuk-grid-column-one-half alignright"><a th:href="${#httpServletRequest.requestURI + '?action=cancelQuery'}">Cancel</a></div>
 
             </div>
@@ -631,7 +631,7 @@
             <input type="hidden" id="queryTitle" name="queryTitle" th:value="${#httpServletRequest.getParameter('queryTitle')}" />
             <input type="hidden" id="action" name="action" value="newResponse" />
             <hr />
-            <button class="button button-secondary">Respond</button>
+            <button class="govuk-button button-secondary">Respond</button>
         </form>
 
     </th:block>
@@ -682,7 +682,7 @@
             <input type="hidden" id="action" name="action" value="postResponse" />
 
             <div class="govuk-grid-row extra-margin">
-                <div class="govuk-grid-column-one-half"><button class="button button-large no-margin" th:text="${(queryType == 'query' ? 'Post response' : 'Save comment')}">Post response</button></div>
+                <div class="govuk-grid-column-one-half"><button class="govuk-button button-large no-margin" th:text="${(queryType == 'query' ? 'Post response' : 'Save comment')}">Post response</button></div>
                 <div class="govuk-grid-column-one-half alignright"><a th:href="${#httpServletRequest.requestURI}">Cancel</a></div>
 
             </div>
@@ -697,7 +697,7 @@
             <input type="hidden" id="noteDetails" name="noteDetails" th:value="${#httpServletRequest.getParameter('noteDetails')}" />
             <input type="hidden" id="action" name="action" value="newResponse" />
             <hr />
-            <button class="button button-secondary">Comment</button>
+            <button class="govuk-button button-secondary">Comment</button>
         </form>
 
     </th:block>
