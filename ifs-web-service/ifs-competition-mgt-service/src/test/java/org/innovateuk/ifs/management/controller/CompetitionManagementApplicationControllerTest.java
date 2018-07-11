@@ -3,6 +3,10 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
@@ -10,6 +14,8 @@ import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionMod
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
@@ -19,14 +25,15 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.management.application.view.controller.CompetitionManagementApplicationController;
 import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleApplicationForm;
+import org.innovateuk.ifs.management.application.view.controller.CompetitionManagementApplicationController;
 import org.innovateuk.ifs.management.application.view.populator.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ApplicationTeamModelManagementPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligibleApplicationModelPopulator;
 import org.innovateuk.ifs.management.application.view.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverviewIneligibilityViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationTeamViewModel;
+import org.innovateuk.ifs.management.application.view.viewmodel.ManageApplicationViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligibleApplicationViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -48,10 +55,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
@@ -106,6 +117,25 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
     @InjectMocks
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private SummaryViewModelFragmentPopulator summaryViewModelFragmentPopulator;
+
+    @Mock
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
+
     @Mock
     private ApplicantRestService applicantRestService;
 
@@ -118,7 +148,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
 
     @Spy
     @InjectMocks
-    private ApplicationTeamModelManagementPopulator applicationTeamModelPopulator;
+    private ApplicationTeamModelManagementPopulator applicationTeamManagementModelPopulator;
 
     @Mock
     private CategoryRestService categoryRestServiceMock;
@@ -132,6 +162,9 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
+    @Mock
+    private AssessmentRestService assessmentRestService;
+
     @Test
     public void displayApplicationOverviewAsCompAdmin() throws Exception {
         this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
@@ -143,11 +176,13 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupResearchCategories();
         setupApplicantResource();
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("readOnly", false))
-                .andExpect(model().attribute("canReinstate", true));
+                .andReturn();
+
+        ManageApplicationViewModel resultModel = (ManageApplicationViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(resultModel.getSummaryViewModel().getCurrentApplication().getId(), applications.get(0).getId());
     }
 
     @Test
@@ -162,12 +197,15 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
 
         String expectedBackUrl = "/competition/" + competitionResource.getId() + "/applications/all?param1=abc&param2=def%26ghi";
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
                 .param("param1", "abc")
                 .param("param2", "def&ghi"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("backUrl", expectedBackUrl));
+                .andReturn();
+
+        ManageApplicationViewModel resultModel = (ManageApplicationViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(resultModel.getBackUrl(), expectedBackUrl);
     }
 
     @Test
@@ -182,14 +220,17 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
 
         String expectedBackUrl = "/competition/" + competitionResource.getId() + "/applications/all?p1=%26&p2=%3D&p3=%25&p4=%20";
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
                 .param("p1", "&")
                 .param("p2", "=")
                 .param("p3", "%")
                 .param("p4", " "))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("backUrl", expectedBackUrl));
+                .andReturn();
+
+        ManageApplicationViewModel resultModel = (ManageApplicationViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(resultModel.getBackUrl(), expectedBackUrl);
     }
 
     @Test
@@ -214,14 +255,14 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         ApplicationOverviewIneligibilityViewModel expectedIneligibility = new ApplicationOverviewIneligibilityViewModel(
                 false, "Removed by", now, "Reason for removal...");
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("applicationReadyForSubmit", false))
-                .andExpect(model().attribute("isCompManagementDownload", true))
-                .andExpect(model().attribute("responses", new HashMap<>()))
-                .andExpect(model().attribute("ineligibility", expectedIneligibility))
-                .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/all"));
+                .andReturn();
+
+        ManageApplicationViewModel resultModel = (ManageApplicationViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(resultModel.getIneligibility(), expectedIneligibility);
+        assertEquals(resultModel.getBackUrl(), "/competition/" + competitionResource.getId() + "/applications/all");
     }
 
     @Test
@@ -252,14 +293,14 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         ApplicationOverviewIneligibilityViewModel expectedIneligibility = new ApplicationOverviewIneligibilityViewModel(
                 true, "Removed by", now, "Reason for removal...");
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("applicationReadyForSubmit", false))
-                .andExpect(model().attribute("isCompManagementDownload", true))
-                .andExpect(model().attribute("responses", new HashMap<>()))
-                .andExpect(model().attribute("ineligibility", expectedIneligibility))
-                .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/all"));
+                .andReturn();
+
+        ManageApplicationViewModel resultModel = (ManageApplicationViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(resultModel.getIneligibility(), expectedIneligibility);
+        assertEquals(resultModel.getBackUrl(), "/competition/" + competitionResource.getId() + "/applications/all");
 
         // Competition still in assessment state
 
@@ -270,20 +311,22 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         expectedIneligibility = new ApplicationOverviewIneligibilityViewModel(
                 false, "Removed by", now, "Reason for removal...");
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+        result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("applicationReadyForSubmit", false))
-                .andExpect(model().attribute("isCompManagementDownload", true))
-                .andExpect(model().attribute("responses", new HashMap<>()))
-                .andExpect(model().attribute("ineligibility", expectedIneligibility))
-                .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/all"));
+                .andReturn();
+
+        resultModel = (ManageApplicationViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(resultModel.getIneligibility(), expectedIneligibility);
+        assertEquals(resultModel.getBackUrl(), "/competition/" + competitionResource.getId() + "/applications/all");
     }
 
     @Test
     public void displayApplicationOverview_submittedApplicationsOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        when(assessmentRestService.getByUserAndApplication(anyLong(), anyLong())).thenReturn(restSuccess(emptyList()));
+        when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(1D));
 
         assertApplicationOverviewWithBackUrl("SUBMITTED_APPLICATIONS",
                 "/competition/" + competitionResource.getId() + "/applications/submitted");
@@ -335,6 +378,8 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
     public void displayApplicationOverview_IneligibleApplicationsOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
+        when(assessmentRestService.getByUserAndApplication(anyLong(), anyLong())).thenReturn(restSuccess(emptyList()));
+        when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(1D));
 
         assertApplicationOverviewWithBackUrl("INELIGIBLE_APPLICATIONS",
                 "/competition/" + competitionResource.getId() + "/applications/ineligible");
@@ -348,13 +393,19 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupApplicationResponses();
         this.setupInvites();
         this.setupResearchCategories();
+        when(assessmentRestService.getByUserAndApplication(anyLong(), anyLong())).thenReturn(restSuccess(emptyList()));
+        when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(1D));
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
                 .param("origin", "ASSESSOR_PROGRESS")
                 .param("assessorId", "10"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("backUrl", "/assessment/competition/" + competitionResource.getId() + "/assessors/10"));
+                .andReturn();
+
+        ManageApplicationViewModel resultModel = (ManageApplicationViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(resultModel.getBackUrl(), "/assessment/competition/" + competitionResource.getId() + "/assessors/10");
     }
 
     @Test
@@ -651,13 +702,18 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
+        when(assessmentRestService.getByUserAndApplication(anyLong(), anyLong())).thenReturn(restSuccess(emptyList()));
+        when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(1D));
 
-        mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "?origin=SUBMITTED_APPLICATIONS&page=2&sort=name")
+        MvcResult result = mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "?origin=SUBMITTED_APPLICATIONS&page=2&sort=name")
                 .param("markAsIneligible", "")
                 .param("ineligibleReason", reason))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/submitted?page=2&sort=name"));
+                .andReturn();
+
+        ManageApplicationViewModel resultModel = (ManageApplicationViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(resultModel.getBackUrl(), "/competition/" + competitionResource.getId() + "/applications/submitted?page=2&sort=name");
 
         verify(applicationService).markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource));
     }
@@ -795,11 +851,15 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupResearchCategories();
         setupApplicantResource();
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("readOnly", true))
-                .andExpect(model().attribute("canReinstate", false));
+                .andReturn();
+
+        ManageApplicationViewModel resultModel = (ManageApplicationViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(resultModel.isCanReinstate(), false);
+        assertEquals(resultModel.isReadOnly(), true);
+
     }
 
     @Test
@@ -814,11 +874,14 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupFinances();
         setupApplicantResource();
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("readOnly", false))
-                .andExpect(model().attribute("canReinstate", false));
+                .andReturn();
+
+        ManageApplicationViewModel resultModel = (ManageApplicationViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(resultModel.isReadOnly(), false);
+        assertEquals(resultModel.isCanReinstate(), false);
     }
 
     private void assertApplicationOverviewWithBackUrl(final String origin, final String expectedBackUrl) throws Exception {
@@ -826,11 +889,14 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         this.setupInvites();
         this.setupResearchCategories();
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
                 .param("origin", origin))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("backUrl", expectedBackUrl));
+                .andReturn();
+
+        ManageApplicationViewModel resultModel = (ManageApplicationViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(resultModel.getBackUrl(), expectedBackUrl);
     }
 
     private void setupEmptyResponses() {
@@ -846,6 +912,8 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
     private void setupApplicantResource() {
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().build());
         when(formInputViewModelGenerator.fromQuestion(any(), any())).thenReturn(Collections.emptyList());
+        when(assessmentRestService.getByUserAndApplication(anyLong(), anyLong())).thenReturn(restSuccess(emptyList()));
+        when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(1D));
     }
 
     @Override

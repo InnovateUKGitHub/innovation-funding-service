@@ -92,7 +92,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
 
         SummaryViewModel viewModel = summaryPopulator.populate(application.getId(), user, form);
 
-
         model.addAttribute("model", new ManageApplicationViewModel(viewModel, backUrl, queryParam,
                 readOnly, canReinstate, ineligibility,  getAppendices(application.getId(), responses, model)));
         model.addAttribute("form", form);
