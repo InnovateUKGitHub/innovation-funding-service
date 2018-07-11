@@ -142,7 +142,6 @@
                                th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}' th:style="'font-weight: normal;'">
                                 View finances
                             </a>
-                            ${support}
                             <th:block th:if="${currentApplication.isOpen()}">
                                 <th:block th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}">
                                     <img class="table-tick" width="20" height="17"

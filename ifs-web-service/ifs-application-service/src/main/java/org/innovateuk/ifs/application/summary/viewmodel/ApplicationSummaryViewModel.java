@@ -12,22 +12,19 @@ public class ApplicationSummaryViewModel {
     private final SummaryViewModel summaryViewModel;
     private final boolean userIsLeadApplicant;
     private final boolean projectWithdrawn;
-    private final boolean isSupport;
 
     public ApplicationSummaryViewModel(ApplicationResource currentApplication,
                                        CompetitionResource currentCompetition,
                                        boolean applicationReadyForSubmit,
                                        SummaryViewModel summaryViewModel,
                                        boolean userIsLeadApplicant,
-                                       boolean projectWithdrawn,
-                                       boolean isSupport) {
+                                       boolean projectWithdrawn) {
         this.currentApplication = currentApplication;
         this.currentCompetition = currentCompetition;
         this.applicationReadyForSubmit = applicationReadyForSubmit;
         this.summaryViewModel = summaryViewModel;
         this.userIsLeadApplicant = userIsLeadApplicant;
         this.projectWithdrawn = projectWithdrawn;
-        this.isSupport = isSupport;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -52,9 +49,5 @@ public class ApplicationSummaryViewModel {
 
     public boolean isProjectWithdrawn() {
         return projectWithdrawn;
-    }
-
-    public boolean isSupport() {
-        return isSupport;
     }
 }

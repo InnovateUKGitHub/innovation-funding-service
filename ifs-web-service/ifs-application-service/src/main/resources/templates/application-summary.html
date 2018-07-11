@@ -36,7 +36,7 @@
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview" novalidate="novalidate">
                 <div class="collapsible-finances-summary">
-                    <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (competitionIsOpen = ${model.currentCompetition.isOpen()}, isApplicant = true, hideDetails = false, support=${model.support})" />
+                    <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (competitionIsOpen = ${model.currentCompetition.isOpen()}, isApplicant = true, hideDetails = false)" />
                 </div>
             </form>
 
