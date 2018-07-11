@@ -121,7 +121,7 @@ public class Competition implements ProcessActivity {
     @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
     private GrantTermsAndConditions termsAndConditions;
 
-    @OneToMany(mappedBy="competition")
+    @OneToMany(mappedBy="competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<GrantClaimMaximum> grantClaimMaximums;
 
     private boolean locationPerPartner = true;
