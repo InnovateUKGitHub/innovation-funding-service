@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.survey;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.exception.ServiceUnavailableException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
@@ -10,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SurveyRestServiceImpl extends BaseRestService implements SurveyRestService {
+
+    private static final Log LOG = LogFactory.getLog(SurveyRestServiceImpl.class);
+
 
     @Value("${ifs.survey.data.service.baseURL}")
     public void setServiceUrl(String serviceUrl) {
@@ -23,6 +28,7 @@ public class SurveyRestServiceImpl extends BaseRestService implements SurveyRest
     }
 
     public RestResult<Void> saveFallback(SurveyResource surveyResource, Throwable e) {
+        LOG.info("Calling Survey Fallback:",e);
         throw new ServiceUnavailableException();
     }
 }

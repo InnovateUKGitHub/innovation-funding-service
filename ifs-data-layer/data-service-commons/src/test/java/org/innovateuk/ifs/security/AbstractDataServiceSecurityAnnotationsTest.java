@@ -22,7 +22,7 @@ public abstract class AbstractDataServiceSecurityAnnotationsTest extends Abstrac
 
     @Override
     protected final List<Class<?>> excludedClasses() {
-        return union(asList(UidAuthenticationService.class, StatelessAuthenticationFilter.class), additionalExcludedClasses());
+        return union(asList(UidAuthenticationService.class), additionalExcludedClasses());
     }
 
     @Override
