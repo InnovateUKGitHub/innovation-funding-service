@@ -23,6 +23,7 @@ public class ProcessHistoryEntityListener {
         catch (IllegalStateException e) {
             // this is to workaround issues when running unit tests in bamboo in cases where
             // the application context has been invalidated
+            // see https://devops.innovateuk.org/issue-tracking/browse/IFS-3924
             LOG.warn("Exception saving ProcessHistory", e);
         }
     }
