@@ -88,6 +88,9 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
         Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
 
+        boolean yourFinancesCompleteForAllOrganisations = getYourFinancesCompleteForAllOrganisations(
+                completedSectionsByOrganisation, financeSectionId);
+
         return new ApplicationFinanceSummaryViewModel(
                 application,
                 hasFinanceSection,
@@ -104,7 +107,8 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 organisationFinanceOverview.getTotalContribution(),
                 organisationFinanceOverview.getTotal(),
                 completedSectionsByOrganisation,
-                eachCollaboratorFinanceSectionId
+                eachCollaboratorFinanceSectionId,
+                yourFinancesCompleteForAllOrganisations
         );
     }
 
@@ -112,11 +116,22 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
     }
 
-    private Set<Long> getCompletedSectionsForUserOrganisation(Map<Long, Set<Long>> completedSectionsByOrganisation, OrganisationResource userOrganisation) {
+    private Set<Long> getCompletedSectionsForUserOrganisation(Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                                              OrganisationResource userOrganisation) {
         return completedSectionsByOrganisation.getOrDefault(
                 userOrganisation.getId(),
                 new HashSet<>()
         );
+    }
+
+    private boolean getYourFinancesCompleteForAllOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                                               Long financeSectionId) {
+        if (financeSectionId == null) {
+            return false;
+        }
+        return completedSectionsByOrganisation.keySet()
+                .stream()
+                .noneMatch(id -> !completedSectionsByOrganisation.get(id).contains(financeSectionId));
     }
 
     private Long getEachCollaboratorFinanceSectionId(List<SectionResource> eachOrganisationFinanceSections) {
