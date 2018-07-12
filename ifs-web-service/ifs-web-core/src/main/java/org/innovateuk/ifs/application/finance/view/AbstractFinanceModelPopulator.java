@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.finance.view;
 
-import org.innovateuk.ifs.application.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -19,7 +18,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
-public abstract class AbstractFinanceModelPopulator extends AbstractApplicationModelPopulator{
+public abstract class AbstractFinanceModelPopulator {
 
     private SectionService sectionService;
     private FormInputRestService formInputRestService;

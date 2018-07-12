@@ -24,9 +24,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 @Component
 public class ApplicationOverviewSectionModelPopulator {
 
-    private SectionService sectionService;
-    private ApplicantRestService applicantRestService;
-    private AssignButtonsPopulator assignButtonsPopulator;
+    private final SectionService sectionService;
+    private final ApplicantRestService applicantRestService;
+    private final AssignButtonsPopulator assignButtonsPopulator;
 
     public ApplicationOverviewSectionModelPopulator(SectionService sectionService, ApplicantRestService applicantRestService, AssignButtonsPopulator assignButtonsPopulator) {
         this.sectionService = sectionService;
@@ -55,11 +55,15 @@ public class ApplicationOverviewSectionModelPopulator {
 
         final List<SectionResource> financeSections = getFinanceSectionIds(parentSections);
 
-        boolean hasFinanceSection = false;
-        Long financeSectionId = null;
+        final boolean hasFinanceSection;
+        final Long financeSectionId;
         if (!financeSections.isEmpty()) {
             hasFinanceSection = true;
             financeSectionId = financeSections.get(0).getId();
+        }
+        else {
+            financeSectionId = null;
+            hasFinanceSection = false;
         }
 
         Map<Long, AssignButtonsViewModel> assignButtonViewModels = new HashMap<>();
@@ -76,7 +80,6 @@ public class ApplicationOverviewSectionModelPopulator {
         allSections.sort(Comparator.comparing(SectionResource::getPriority, Comparator.nullsLast(Comparator.naturalOrder())));
         return simpleFilter(allSections, section -> childSections.contains(section.getId()));
     }
-
 
     private List<SectionResource> getFinanceSectionIds(List<SectionResource> sections){
         return sections.stream()

@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -42,7 +43,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
     private FinanceOverviewPopulator financeOverviewPopulator;
 
     @Autowired
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+    private InviteService inviteService;
 
     @Override
     public BaseSectionViewModel populateModel(ApplicationForm form, Model model, BindingResult bindingResult, ApplicantSectionResource applicantSection) {
@@ -114,7 +115,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         List<String> activeApplicationOrganisationNames = applicantSection.allOrganisations().map(OrganisationResource::getName).collect(Collectors.toList());
 
-        List<String> pendingOrganisationNames = applicationSectionAndQuestionModelPopulator.pendingInvitations(applicantSection.getApplication().getId()).stream()
+        List<String> pendingOrganisationNames = inviteService.getPendingInvitationsByApplicationId(applicantSection.getApplication().getId()).stream()
             .map(ApplicationInviteResource::getInviteOrganisationName)
             .distinct()
             .filter(orgName -> StringUtils.hasText(orgName)

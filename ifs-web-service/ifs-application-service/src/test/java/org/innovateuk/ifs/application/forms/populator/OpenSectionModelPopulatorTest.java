@@ -5,6 +5,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
@@ -21,6 +22,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -84,10 +86,16 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     private UserService userService;
 
     @Mock
+    private InviteService inviteService;
+
+    @Mock
     private Model model;
 
     @Mock
     private ApplicationNavigationPopulator applicationNavigationPopulator;
+
+    @Mock
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Before
     public void setUp() {
@@ -95,7 +103,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testPopulateModelWithValidObjects() throws Exception {
+    public void populateModelWithValidObjects() throws Exception {
         Long competitionId = 1L, applicationId = 23L;
 
         Long organisationId = 245L;

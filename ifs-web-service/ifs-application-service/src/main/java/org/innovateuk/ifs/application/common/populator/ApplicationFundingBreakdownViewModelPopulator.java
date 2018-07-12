@@ -14,7 +14,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinanceModelPopulator{
+public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinanceModelPopulator {
 
     private OrganisationRestService organisationRestService;
     private FinanceService financeService;
@@ -37,7 +37,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     private SectionService sectionService;
     private UserService userService;
     private OrganisationService organisationService;
-    private InviteRestService inviteRestService;
+    private InviteService inviteService;
 
     public ApplicationFundingBreakdownViewModelPopulator(FinanceService financeService,
                                                          FileEntryRestService fileEntryRestService,
@@ -49,7 +49,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                                                          FormInputRestService formInputRestService,
                                                          UserService userService,
                                                          OrganisationService organisationService,
-                                                         InviteRestService inviteRestService) {
+                                                         InviteService inviteService) {
         super(sectionService, formInputRestService, questionService);
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
@@ -59,7 +59,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         this.sectionService = sectionService;
         this.userService = userService;
         this.organisationService = organisationService;
-        this.inviteRestService = inviteRestService;
+        this.inviteService = inviteService;
     }
 
     public ApplicationFundingBreakdownViewModel populate(long applicationId) {
@@ -130,7 +130,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                 .map(OrganisationResource::getName)
                 .collect(Collectors.toList());
 
-        return pendingInvitations(applicationId).stream()
+        return inviteService.getPendingInvitationsByApplicationId(applicationId).stream()
                 .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
                 .distinct()
                 .filter(orgName -> StringUtils.hasText(orgName)

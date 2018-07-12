@@ -21,6 +21,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -41,7 +42,7 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class ApplicationSectionAndQuestionModelPopulator extends AbstractApplicationModelPopulator{
+public class ApplicationSectionAndQuestionModelPopulator {
     public static final String MODEL_ATTRIBUTE_FORM = "form";
 
     @Autowired
@@ -79,6 +80,9 @@ public class ApplicationSectionAndQuestionModelPopulator extends AbstractApplica
 
     @Autowired
     private FormInputViewModelGenerator formInputViewModelGenerator;
+
+    @Autowired
+    private InviteService inviteService;
 
     public void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                          Optional<SectionResource> currentSection,
@@ -199,7 +203,7 @@ public class ApplicationSectionAndQuestionModelPopulator extends AbstractApplica
         }
         List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), user.getId());
         questionService.removeNotifications(notifications);
-        List<ApplicationInviteResource> pendingAssignableUsers = pendingInvitations(application.getId());
+        List<ApplicationInviteResource> pendingAssignableUsers = inviteService.getPendingInvitationsByApplicationId(application.getId());
 
         model.addAttribute("assignableUsers", processRoleService.findAssignableProcessRoles(application.getId()));
         model.addAttribute("pendingAssignableUsers", pendingAssignableUsers);

@@ -10,18 +10,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationOverviewUserModelPopulator {
 
-    private UserService userService;
+    private final UserService userService;
 
     public ApplicationOverviewUserModelPopulator(UserService userService) {
         this.userService = userService;
     }
 
-    public ApplicationOverviewUserViewModel populate(ApplicationResource application, Long userId) {
+    public ApplicationOverviewUserViewModel populate(ApplicationResource application, long userId) {
 
-        Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
-        Boolean ableToSubmitApplication = isAbleToSubmitApplication(application, userIsLeadApplicant);
+        boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
+        boolean ableToSubmitApplication = isAbleToSubmitApplication(application, userIsLeadApplicant);
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application.getId());
-        UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
+
+        final UserResource leadApplicant;
+        if (leadApplicantProcessRole != null) {
+            leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
+        } else {
+            leadApplicant = null;
+        }
 
         return new ApplicationOverviewUserViewModel(userIsLeadApplicant,
                                                     leadApplicant,

@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.application.overview.populator;
 
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewAssignableViewModel;
-import org.innovateuk.ifs.application.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -17,27 +17,32 @@ import java.util.Optional;
 import java.util.concurrent.Future;
 
 @Component
-public class ApplicationOverviewAssignableModelPopulator extends AbstractApplicationModelPopulator {
+public class ApplicationOverviewAssignableModelPopulator {
 
-    private QuestionService questionService;
-    private ProcessRoleService processRoleService;
+    private final QuestionService questionService;
+    private final ProcessRoleService processRoleService;
+    private final InviteService inviteService;
 
-    public ApplicationOverviewAssignableModelPopulator(QuestionService questionService, ProcessRoleService processRoleService) {
+    public ApplicationOverviewAssignableModelPopulator(QuestionService questionService,
+                                                       ProcessRoleService processRoleService,
+                                                       InviteService inviteService) {
         this.questionService = questionService;
         this.processRoleService = processRoleService;
+        this.inviteService = inviteService;
     }
 
-    public ApplicationOverviewAssignableViewModel populate(ApplicationResource application, Optional<OrganisationResource> userOrganisation, Long userId) {
+    public ApplicationOverviewAssignableViewModel populate(ApplicationResource application, Optional<OrganisationResource> userOrganisation, long userId) {
 
         if (isApplicationInViewMode(application, userOrganisation)) {
             return new ApplicationOverviewAssignableViewModel();
         }
 
-        Map<Long, QuestionStatusResource> questionAssignees = questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.get().getId());
+        Map<Long, QuestionStatusResource> questionAssignees =
+                questionService.getQuestionStatusesForApplicationAndOrganisation(application.getId(), userOrganisation.get().getId());
 
         List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
         questionService.removeNotifications(notifications);
-        List<ApplicationInviteResource> pendingAssignableUsers = pendingInvitations(application.getId());
+        List<ApplicationInviteResource> pendingAssignableUsers = inviteService.getPendingInvitationsByApplicationId(application.getId());
 
         Future<List<ProcessRoleResource>> assignableUsers = processRoleService.findAssignableProcessRoles(application.getId());
 

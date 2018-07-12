@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.populator.ApplicationCompletedModelPopulat
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -38,6 +39,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
     private OrganisationService organisationService;
     private ProjectService projectService;
     private SectionService sectionService;
+    private QuestionService questionService;
     private ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator;
     private ApplicationCompletedModelPopulator applicationCompletedModelPopulator;
     private ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator;
@@ -47,15 +49,17 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
                                              ProcessRoleService processRoleService,
                                              OrganisationService organisationService,
                                              SectionService sectionService,
+                                             QuestionService questionService,
                                              ProjectService projectService,
                                              ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator,
                                              ApplicationCompletedModelPopulator applicationCompletedModelPopulator,
                                              ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator,
                                              ApplicationOverviewUserModelPopulator applicationOverviewUserModelPopulator) {
+        super(sectionService, questionService);
         this.competitionService = competitionService;
         this.processRoleService = processRoleService;
-        this.organisationService = organisationService;
         this.sectionService = sectionService;
+        this.organisationService = organisationService;
         this.projectService = projectService;
         this.applicationOverviewSectionModelPopulator = applicationOverviewSectionModelPopulator;
         this.applicationCompletedModelPopulator = applicationCompletedModelPopulator;

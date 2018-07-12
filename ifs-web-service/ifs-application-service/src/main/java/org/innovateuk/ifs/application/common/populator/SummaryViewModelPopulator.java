@@ -75,7 +75,7 @@ public class SummaryViewModelPopulator extends AbstractApplicationModelPopulator
                                      ApplicantRestService applicantRestService,
                                      FormInputViewModelGenerator formInputViewModelGenerator,
                                      ApplicationTeamModelPopulator applicationTeamModelPopulator) {
-        super(sectionService, questionService, null);
+        super(sectionService, questionService);
         this.applicationService = applicationService;
         this.competitionService = competitionService;
         this.sectionService = sectionService;

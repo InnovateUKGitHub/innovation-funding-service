@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.populator;
 
-import org.innovateuk.ifs.application.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -24,10 +24,13 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  * View model for Organisation Details
  */
 @Component
-public class OrganisationDetailsModelPopulator extends AbstractApplicationModelPopulator{
+public class OrganisationDetailsModelPopulator {
 
     @Autowired
     protected InviteRestService inviteRestService;
+
+    @Autowired
+    protected InviteService inviteService;
 
     @Autowired
     protected OrganisationRestService organisationRestService;
@@ -43,7 +46,7 @@ public class OrganisationDetailsModelPopulator extends AbstractApplicationModelP
 
         final List<String> activeApplicationOrganisationNames = simpleMap(organisations, OrganisationResource::getName);
 
-        final List<String> pendingOrganisationNames = pendingInvitations(applicationId).stream()
+        final List<String> pendingOrganisationNames = inviteService.getPendingInvitationsByApplicationId(applicationId).stream()
                 .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
                 .distinct()
                 .filter(orgName -> StringUtils.hasText(orgName)

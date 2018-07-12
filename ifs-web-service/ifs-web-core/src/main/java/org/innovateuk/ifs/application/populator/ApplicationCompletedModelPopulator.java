@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.stereotype.Component;
 
@@ -14,15 +13,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 
 @Component
-public class ApplicationCompletedModelPopulator {
+public class ApplicationCompletedModelPopulator extends AbstractApplicationModelPopulator{
 
     private SectionService sectionService;
     private QuestionService questionService;
 
     public ApplicationCompletedModelPopulator(SectionService sectionService, QuestionService questionService) {
+        super(sectionService, questionService);
         this.sectionService = sectionService;
         this.questionService = questionService;
     }
@@ -55,14 +54,5 @@ public class ApplicationCompletedModelPopulator {
         completedSectionsByOrganisation.forEach((key, values) -> combinedMarkedAsComplete.retainAll(values));
 
         return combinedMarkedAsComplete;
-    }
-
-    private boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
-
-        return sectionService.getAllByCompetitionId(application.getCompetition())
-                .stream()
-                .filter(section -> section.getType().equals(FINANCE))
-                .map(SectionResource::getId)
-                .anyMatch(id -> completedSectionsByOrganisation.get(userOrganisation.getId()).contains(id));
     }
 }

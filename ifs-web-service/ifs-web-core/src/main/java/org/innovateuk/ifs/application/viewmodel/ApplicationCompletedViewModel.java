@@ -14,11 +14,11 @@ public class ApplicationCompletedViewModel {
     private Set<Long> sectionsMarkedAsComplete;
     private Future<Set<Long>> markedAsComplete;
     private Set<Long> completedSections;
-    private Boolean userFinanceSectionCompleted;
+    private boolean userFinanceSectionCompleted;
 
     public ApplicationCompletedViewModel(Set<Long> sectionsMarkedAsComplete,
                                          Future<Set<Long>> markedAsComplete,
-                                         Boolean userFinanceSectionCompleted) {
+                                         boolean userFinanceSectionCompleted) {
         this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
         this.markedAsComplete = markedAsComplete;
         this.userFinanceSectionCompleted = userFinanceSectionCompleted;
@@ -40,7 +40,7 @@ public class ApplicationCompletedViewModel {
         return completedSections;
     }
 
-    public Boolean getUserFinanceSectionCompleted() {
+    public boolean getUserFinanceSectionCompleted() {
         return userFinanceSectionCompleted;
     }
 

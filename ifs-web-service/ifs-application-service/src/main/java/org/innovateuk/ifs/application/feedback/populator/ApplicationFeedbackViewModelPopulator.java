@@ -70,7 +70,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
                                                  InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator,
                                                  InterviewAssignmentRestService interviewAssignmentRestService,
                                                  ProjectService projectService) {
-        super(sectionService, questionService, null);
+        super(sectionService, questionService);
         this.organisationRestService = organisationRestService;
         this.applicationService = applicationService;
         this.competitionService = competitionService;

@@ -4,13 +4,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 
@@ -26,17 +21,11 @@ public abstract class AbstractApplicationModelPopulator {
 
     private SectionService sectionService;
     private QuestionService questionService;
-    private InviteRestService inviteRestService;
-
-    public AbstractApplicationModelPopulator() {
-    }
 
     public AbstractApplicationModelPopulator(SectionService sectionService,
-                                             QuestionService questionService,
-                                             InviteRestService inviteRestService) {
+                                             QuestionService questionService) {
         this.sectionService = sectionService;
         this.questionService = questionService;
-        this.inviteRestService = inviteRestService;
     }
 
     protected Map<Long, List<QuestionResource>> getSectionQuestions(Long competitionId) {
@@ -89,7 +78,7 @@ public abstract class AbstractApplicationModelPopulator {
         return combinedMarkedAsComplete;
     }
 
-    private boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
+    protected boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
 
         return sectionService.getAllByCompetitionId(application.getCompetition())
                 .stream()
@@ -100,15 +89,5 @@ public abstract class AbstractApplicationModelPopulator {
 
     private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
         return simpleFilter(questions, q -> questionIds.contains(q.getId()));
-    }
-
-    protected List<ApplicationInviteResource> pendingInvitations(Long applicationId) {
-        RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(applicationId);
-
-        return pendingAssignableUsersResult.handleSuccessOrFailure(
-                failure -> new ArrayList<>(0),
-                success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                        .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
-                        .collect(Collectors.toList()));
     }
 }

@@ -5,13 +5,18 @@ import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionStatusResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
+import org.innovateuk.ifs.invite.service.InviteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Populator for the {@link AssignButtonsViewModel}
  */
 @Component
-public class AssignButtonsPopulator extends AbstractApplicationModelPopulator{
+public class AssignButtonsPopulator {
+
+    @Autowired
+    private InviteService inviteService;
 
     public AssignButtonsViewModel populate(AbstractApplicantResource resource, ApplicantQuestionResource question, boolean hideAssignButtons) {
         AssignButtonsViewModel viewModel = new AssignButtonsViewModel();
@@ -22,7 +27,7 @@ public class AssignButtonsPopulator extends AbstractApplicationModelPopulator{
         viewModel.setLeadApplicant(resource.getApplicants().stream().filter(ApplicantResource::isLead).findAny().orElse(null));
         viewModel.setCurrentApplicant(resource.getCurrentApplicant());
         viewModel.setAssignableApplicants(resource.getApplicants());
-        viewModel.setPendingAssignableUsers(pendingInvitations(resource.getApplication().getId()));
+        viewModel.setPendingAssignableUsers(inviteService.getPendingInvitationsByApplicationId(resource.getApplication().getId()));
         viewModel.setHideAssignButtons(hideAssignButtons);
         viewModel.setQuestion(question.getQuestion());
         return viewModel;
