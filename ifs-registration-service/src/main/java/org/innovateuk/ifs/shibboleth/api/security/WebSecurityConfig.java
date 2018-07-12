@@ -44,24 +44,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.
             csrf().disable().
-
-            anonymous().disable().
-
             exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint).and().
-
             servletApi().and().
-
             sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().
-
             authorizeRequests().
                 antMatchers(monitoringEndpoint+"/**").permitAll().and()
             .authorizeRequests().
                 anyRequest().fullyAuthenticated().and().
-
             authenticationProvider(preAuthProvider()).
-
             addFilterBefore(preAuthHeaderFilter(), RequestHeaderAuthenticationFilter.class).
-
             headers().cacheControl();
     }
 
