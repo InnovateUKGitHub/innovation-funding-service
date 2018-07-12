@@ -26,7 +26,7 @@
         <p th:text="|${model.ineligibility.removedBy}, ${#temporals.format(model.ineligibility.removedOn, 'd MMMM yyyy')}|">Peter Kault, 20 December 2016</p>
 
         <h2 class="heading-small">Reason for removal</h2>
-        <p th:text="${modelineligibility.reasonForRemoval}"></p>
+        <p th:text="${model.ineligibility.reasonForRemoval}"></p>
         <th:block th:if="${model.canReinstate}" th:unless="${model.ineligibility.readOnly}">
             <div class="extra-margin">
                 <a th:href="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication/confirm(competitionId=${model.summaryViewModel.currentApplication.competition},applicationId=${model.summaryViewModel.currentApplication.id})}"
