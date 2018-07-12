@@ -1,6 +1,10 @@
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
 
 description = """"""
 tasks.withType(JavaCompile) {
@@ -58,6 +62,7 @@ osStageLocal.tag = registrationServiceVersion
 createContainer.hostName="registration-svc"
 createContainer.containerName="registration-svc"
 createContainer.containerId="registration-svc"
+createContainer.portBindings = ['9007:8000']
 
 
 def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false

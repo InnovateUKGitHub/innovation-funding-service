@@ -4,6 +4,11 @@ apply from: rootProject.file("gradle-support/mapstruct.gradle")
 bootJar.enabled=false
 jar.enabled=true
 
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
+
 configurations {
     testArtifacts
 }

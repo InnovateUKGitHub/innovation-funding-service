@@ -9,6 +9,14 @@ apply from: rootProject.file("gradle-support/mapstruct.gradle")
 bootJar.enabled=false
 jar.enabled=true
 
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
+
+ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
+
+
 configurations {
     testArtifacts
 }
@@ -19,7 +27,6 @@ task testJar(type: Jar) {
 artifacts {
     testArtifacts testJar
 }
-
 
 dependencies {
     compile project(":ifs-resources")

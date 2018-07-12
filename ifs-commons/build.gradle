@@ -1,3 +1,8 @@
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
+
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 
 dependencies {
