@@ -1,12 +1,4 @@
-if(hasProperty('profile')) {
-    def targetBuild = profile
-    if (targetBuild != 'automated' && targetBuild != 'docker') {
-        //temp workaround before we remove the automated profile completely
-        apply from: targetBuild + "-build.gradle";
-    }
-}
-
-
+apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
@@ -17,6 +9,8 @@ apply plugin: 'idea'
 
 group 'innovateuk'
 version project.version
+
+processResources.dependsOn applyProfiles
 
 
 dependencies {
