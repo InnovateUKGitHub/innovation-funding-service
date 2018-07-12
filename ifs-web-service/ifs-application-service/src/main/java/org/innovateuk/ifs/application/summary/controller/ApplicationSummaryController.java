@@ -34,8 +34,8 @@ import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 @RequestMapping("/application")
 public class ApplicationSummaryController {
 
-    private UserService userService;
     private ApplicationService applicationService;
+    private UserService userService;
     private CompetitionService competitionService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
@@ -45,10 +45,12 @@ public class ApplicationSummaryController {
 
     @Autowired
     public ApplicationSummaryController(ApplicationService applicationService,
+                                        UserService userService,
                                         CompetitionService competitionService,
                                         InterviewAssignmentRestService interviewAssignmentRestService,
                                         ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
         this.applicationService = applicationService;
+        this.userService = userService;
         this.competitionService = competitionService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;
