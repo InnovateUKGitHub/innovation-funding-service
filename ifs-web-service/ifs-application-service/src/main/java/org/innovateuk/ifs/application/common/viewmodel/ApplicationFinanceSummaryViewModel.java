@@ -31,6 +31,8 @@ public class ApplicationFinanceSummaryViewModel {
     private final BigDecimal totalContribution;
     private final BigDecimal financeTotal;
     private final Map<Long, Set<Long>> completedSectionsByOrganisation;
+    private final Long eachCollaboratorFinanceSectionId;
+    private final boolean yourFinancesCompleteForAllOrganisations;
 
     public ApplicationFinanceSummaryViewModel(ApplicationResource currentApplication,
                                               Boolean hasFinanceSection,
@@ -46,7 +48,9 @@ public class ApplicationFinanceSummaryViewModel {
                                               BigDecimal totalOtherFunding,
                                               BigDecimal totalContribution,
                                               BigDecimal financeTotal,
-                                              Map<Long, Set<Long>> completedSectionsByOrganisation) {
+                                              Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                              Long eachCollaboratorFinanceSectionId,
+                                              boolean yourFinancesCompleteForAllOrganisations) {
         this.currentApplication = currentApplication;
         this.hasFinanceSection = hasFinanceSection;
         this.financeTotalPerType = financeTotalPerType;
@@ -62,6 +66,8 @@ public class ApplicationFinanceSummaryViewModel {
         this.totalContribution = totalContribution;
         this.financeTotal = financeTotal;
         this.completedSectionsByOrganisation = completedSectionsByOrganisation;
+        this.eachCollaboratorFinanceSectionId = eachCollaboratorFinanceSectionId;
+        this.yourFinancesCompleteForAllOrganisations = yourFinancesCompleteForAllOrganisations;
     }
 
     public ApplicationResource getCurrentApplication() {
@@ -126,5 +132,13 @@ public class ApplicationFinanceSummaryViewModel {
 
     public Map<Long, Set<Long>> getCompletedSectionsByOrganisation() {
         return completedSectionsByOrganisation;
+    }
+
+    public Long getEachCollaboratorFinanceSectionId() {
+        return eachCollaboratorFinanceSectionId;
+    }
+
+    public boolean getYourFinancesCompleteForAllOrganisations() {
+        return yourFinancesCompleteForAllOrganisations;
     }
 }

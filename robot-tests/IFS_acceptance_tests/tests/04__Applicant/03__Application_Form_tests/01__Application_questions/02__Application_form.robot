@@ -38,27 +38,6 @@ Application details: Previous submission
     When the user clicks the button/link                css=label[for="application.resubmission-no"]
     Then The user should not see the element            css=[id="application.previousApplicationNumber"]
 
-Application details: Research category
-    [Documentation]    INFUND-6823
-    Given The user clicks the button/link    jQuery=button:contains("Choose your research category")
-    and the user should not see the text in the page    Changing the research category will reset the funding level for all business participants.
-    Then the user should see the element    jQuery=label:contains("Industrial research")
-    And the user should see the element    jQuery=label:contains("Feasibility studies")
-    And the user should see the element    jQuery=label:contains("Experimental development")
-    and the user clicks the button/link    jQuery=button:contains(Save)
-    Then the user should see an error    This field cannot be left blank
-    and the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
-    and the user clicks the button/link    jQuery=button:contains(Save)
-    and the user should see the element    jQuery=div:contains("Chosen research category: Feasibility studies")
-
-Research Category : Autosave not applicable
-    [Documentation]    INFUND-6823, INFUND-8251
-    When the user clicks the button/link   jQuery=button:contains("Change your research category")
-    Then the user clicks the button twice  jQuery=label[for^="researchCategoryChoice"]:contains("Industrial research")
-    And the user clicks the button/link    jQuery=a:contains("Application details")
-    And the user should see the element    jQuery=div:contains("Chosen research category: Feasibility studies")
-    And the finance summary page should show a warning
-
 Application details: Innovation area section is visible
     [Documentation]  INFUND-8115 INFUND-9154
     [Tags]
@@ -137,8 +116,32 @@ Incomplete sections contain mark as complete link
     Then the user should see the element   jQuery=.collapsible:contains("Application details") button:contains("Mark as complete")
     And the user should see the element    jQuery=.collapsible:contains("Application details") button:contains("Return and edit")
     When the user clicks the button/link   jQuery=.collapsible:contains("Application details") button:contains("Mark as complete")
-    And the user fills in the Application details  ${aeroApplication}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
-    Then the user should no longer see the Mark-as-complete-link
+    And the user fills in the Application details  ${aeroApplication}  ${tomorrowday}  ${month}  ${nextyear}
+    Then the user should no longer see the Mark-as-complete-link  Application details
+
+Research section incomplete
+    [Documentation]  IFS-2123
+    Given The user clicks the button/link  link=Application overview
+    Then the user should see the element   jQuery=li:contains("Research category") .task-status-incomplete
+
+Research category validation
+    [Documentation]  IFS-2123
+    Given The user clicks the button/link  link=Research category
+    When The user clicks the button/link   id=application-question-save
+    Then The user should see a field and summary error  This field cannot be left blank.
+    [Teardown]  the user clicks the button/link  link=Application overview
+
+Mark research section as complete
+    [Documentation]  IFS-2123
+    Given the user selects Research category  Industrial research
+    When The user clicks the button/link      link=Research category
+    Then the user should see the element     jQuery=.success-alert ~ p:contains("Industrial research")
+
+Mark research section as incomplete
+    [Documentation]  IFS-2123
+    Given the user clicks the button/link    css=button[name="mark_as_incomplete"]
+    When the user clicks the button/link     id=application-question-save
+    Then The user should see the element     jQuery=li:contains("Research category") .task-status-incomplete
 
 Collaborator: read only view of Application details
     [Documentation]    INFUND-8251 , INFUND-8260
@@ -148,12 +151,21 @@ Collaborator: read only view of Application details
     And the user clicks the button/link    link=${Competition_E2E}
     When the user clicks the button/link    link=Application details
     then the user should not see the element    css=input
-    and the user should see the element    jQuery=a:contains("Return to application overview")
+    [Teardown]   the user clicks the button/link    jQuery=a:contains("Return to application overview")
+
+Collaborator: read only view of research
+    [Documentation]  IFS-2321
+    Given the user clicks the button/link  link=Research category
+    Then the user should not see the element  css=button[name="mark_as_incomplete"]
+    And the user should not see the element   id=application-question-save
+    And the user should see the element       jQuery=a:contains("Return to application overview")
 
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
     Log in and create a new application for the Aerospace competition
+    ${appId} =  get application id by name  ${aeroApplication}
+    Set suite variable  ${appId}
 
 the application details need to be autosaved
     the user enters text to a text field    application.durationInMonths    22
@@ -171,7 +183,7 @@ the text box should turn to green
 
 the question should be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
-    The user should see the element    jQuery=li:nth-child(3) span:contains("Complete")
+    The user should see the element    jQuery=li:nth-child(4) span:contains("Complete")
 
 the text box should be editable
     Wait Until Element Is Enabled Without Screenshots    css= textarea
@@ -180,11 +192,6 @@ the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
     the user should see the element    css=li:nth-child(2) .task-status-incomplete
     the user should not see the element    jQuery=li:nth-child(2) span:contains("Complete")
-
-the finance summary page should show a warning
-    The user clicks the button/link    link=Application overview
-    The user clicks the button/link    link=Your finances
-    the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")
 
 Log in and create a new application for the Aerospace competition
     The user logs-in in new browser  &{lead_applicant_credentials}
@@ -202,7 +209,6 @@ Log in and create a new application for the Aerospace competition
     The user clicks the button/link       id=application-question-save
 
 the user should no longer see the Mark-as-complete-link
-    ${appId} =  get application id by name  ${aeroApplication}
+    [Arguments]  ${Section}
     the user navigates to the page       ${server}/application/${appId}/summary
-    the user should see the element      jQuery=.collapsible:contains("Application details") button:contains("Return and edit")
-    the user should not see the element  jQuery=.collapsible:contains("Application details") button:contains("Mark as complete")
+    the user should see the element      jQuery=.collapsible:contains("${Section}") button:contains("Return and edit")

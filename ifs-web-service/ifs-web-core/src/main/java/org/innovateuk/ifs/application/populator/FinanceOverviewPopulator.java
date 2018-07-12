@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -49,7 +48,7 @@ public class FinanceOverviewPopulator {
             Long organisationType = applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType();
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSections.get(0).getId(), QuestionType.COST);
 
-            applicationFinanceOverviewModelManager.addFinanceDetails(model, applicantSection.getCompetition().getId(), applicantSection.getApplication().getId(), Optional.of(applicantSection.getCurrentApplicant().getOrganisation().getId()));
+            applicationFinanceOverviewModelManager.addFinanceDetails(model, applicantSection.getCompetition().getId(), applicantSection.getApplication().getId());
             if(!form.isAdminMode() && applicantSection.getCompetition().isOpen()) {
                 openSectionViewModel.setFinanceViewModel(financeViewHandlerProvider.getFinanceModelManager(organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions, applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
             }

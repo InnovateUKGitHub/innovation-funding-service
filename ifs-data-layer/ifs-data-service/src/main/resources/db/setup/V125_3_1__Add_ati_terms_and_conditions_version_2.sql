@@ -1,5 +1,9 @@
 -- IFS-3205: As an applicant I am able to see the current ATI grant terms and conditions
 
+SET @system_maintenance_user_id = (SELECT id
+                                   FROM user
+                                   WHERE email = 'ifs_system_maintenance_user@innovateuk.org');
+
 -- Add entry into terms and conditions table for the version 2 of ATI terms and conditions
 INSERT INTO terms_and_conditions (name, template, version, type, created_by, created_on, modified_on, modified_by)
 VALUES

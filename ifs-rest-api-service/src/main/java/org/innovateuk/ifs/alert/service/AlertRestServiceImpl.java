@@ -40,14 +40,20 @@ public class AlertRestServiceImpl extends BaseRestService implements AlertRestSe
         return getWithRestResultAnonymous(alertRestURL + "/findAllVisible", ParameterizedTypeReferences.alertResourceListType());
     }
 
-    public RestResult<List<AlertResource>> findAllVisibleFallback( Throwable e) {
+    public RestResult<List<AlertResource>> findAllVisibleFallback(Throwable e) {
         LOG.info("Calling Alerts Fallback:",e);
         return RestResult.restSuccess(Collections.emptyList());
     }
 
     @Override
+    @HystrixCommand(fallbackMethod = "findAllVisibleByTypeFallback")
     public RestResult<List<AlertResource>> findAllVisibleByType(AlertType type) {
         return getWithRestResultAnonymous(alertRestURL + "/findAllVisible/" + type.name(), ParameterizedTypeReferences.alertResourceListType());
+    }
+
+    public RestResult<List<AlertResource>> findAllVisibleByTypeFallback(AlertType type, Throwable e) {
+        LOG.info("Calling Alerts Fallback:",e);
+        return RestResult.restSuccess(Collections.emptyList());
     }
 
     @Override
