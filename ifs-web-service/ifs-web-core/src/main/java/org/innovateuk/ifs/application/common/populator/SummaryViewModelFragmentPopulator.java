@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -56,7 +55,6 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
     private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
     private ApplicantRestService applicantRestService;
     private FormInputViewModelGenerator formInputViewModelGenerator;
-    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
     private UserService userService;
 
     public SummaryViewModelFragmentPopulator(ApplicationService applicationService,
@@ -75,7 +73,6 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
                                              ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator,
                                              ApplicantRestService applicantRestService,
                                              FormInputViewModelGenerator formInputViewModelGenerator,
-                                             ApplicationTeamModelPopulator applicationTeamModelPopulator,
                                              UserService userService) {
         super(sectionService, questionService);
         this.applicationService = applicationService;
@@ -94,7 +91,6 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
         this.applicationResearchParticipationViewModelPopulator = applicationResearchParticipationViewModelPopulator;
         this.applicantRestService = applicantRestService;
         this.formInputViewModelGenerator = formInputViewModelGenerator;
-        this.applicationTeamModelPopulator = applicationTeamModelPopulator;
         this.userService = userService;
     }
 
@@ -160,7 +156,6 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
                 applicationResearchParticipationViewModelPopulator.populate(applicationId),
                 getCompletedDetails(application, userOrganisation),
                 getFormInputViewModel(sectionQuestions, applicantId, application, competition),
-                applicationTeamModelPopulator.populateSummaryModel(applicationId, user.getId(), competition.getId()),
                 showApplicationTeamLink
         );
     }

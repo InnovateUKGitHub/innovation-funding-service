@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewComp
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -33,7 +32,6 @@ public class SummaryViewModel {
     private final ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel;
     private final ApplicationOverviewCompletedViewModel completedViewModel;
     private final Map<Long, AbstractFormInputViewModel> formInputViewModels;
-    private final ApplicationTeamViewModel applicationTeamModel;
     private final boolean showApplicationTeamLink;
 
     public SummaryViewModel(ApplicationResource currentApplication,
@@ -50,7 +48,6 @@ public class SummaryViewModel {
                             ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
                             ApplicationOverviewCompletedViewModel completedViewModel,
                             Map<Long, AbstractFormInputViewModel> formInputViewModels,
-                            ApplicationTeamViewModel applicationTeamModel,
                             boolean showApplicationTeamLink) {
         this.currentApplication = currentApplication;
         this.sections = sections;
@@ -66,7 +63,6 @@ public class SummaryViewModel {
         this.applicationResearchParticipationViewModel = applicationResearchParticipationViewModel;
         this.completedViewModel = completedViewModel;
         this.formInputViewModels = formInputViewModels;
-        this.applicationTeamModel = applicationTeamModel;
         this.showApplicationTeamLink = showApplicationTeamLink;
     }
 
@@ -124,10 +120,6 @@ public class SummaryViewModel {
 
     public Map<Long, AbstractFormInputViewModel> getFormInputViewModels() {
         return formInputViewModels;
-    }
-
-    public ApplicationTeamViewModel getApplicationTeamModel() {
-        return applicationTeamModel;
     }
 
     public boolean isShowApplicationTeamLink() {
