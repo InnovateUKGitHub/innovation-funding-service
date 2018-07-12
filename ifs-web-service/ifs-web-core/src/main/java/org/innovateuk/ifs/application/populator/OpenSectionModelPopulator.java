@@ -154,6 +154,18 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         openSectionViewModel.setHasFinanceSection(optionalFinanceSection.isPresent());
         openSectionViewModel.setFinanceSectionId(optionalFinanceSectionId.orElse(null));
         openSectionViewModel.setEachCollaboratorFinanceSectionId(optionalFinanceSectionId.orElse(null));
+        if (optionalFinanceSection.isPresent()) {
+            boolean yourFinancesCompleteForAllOrganisations = getYourFinancesCompleteForAllOrganisations(
+                    completedSectionsByOrganisation, optionalFinanceSectionId.get());
+            openSectionViewModel.setYourFinancesCompleteForAllOrganisations(yourFinancesCompleteForAllOrganisations);
+        }
+    }
+
+    private boolean getYourFinancesCompleteForAllOrganisations(Map<Long, Set<Long>> completedSectionsByOrganisation,
+                                                               Long financeSectionId) {
+        return completedSectionsByOrganisation.keySet()
+                .stream()
+                .noneMatch(id -> !completedSectionsByOrganisation.get(id).contains(financeSectionId));
     }
 
     private Set<Long> convertToCombinedMarkedAsCompleteSections(Map<Long, Set<Long>> completedSectionsByOrganisation) {

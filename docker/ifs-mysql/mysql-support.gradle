@@ -1,0 +1,61 @@
+import org.innovateuk.ifs.tasks.StartDbContainerIfNotStartedTask
+
+def sqlVersion = "5.6.39"
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+buildDocker.tag = "innovateuk/ifs-mysql:" + sqlVersion
+buildDocker.inputDir = project.file("$project.parent.projectDir/docker/")
+
+tagDocker.onlyIf { !isNamedEnv() }
+tagDocker.repository = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
+tagDocker.imageId = "innovateuk/ifs-mysql:" + sqlVersion
+tagDocker.tag = sqlVersion
+
+tagDockerLocal.imageId = "innovateuk/ifs-mysql:" + sqlVersion
+tagDockerLocal.tag = sqlVersion
+tagDockerLocal {
+    doFirst {
+        repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
+        tag = sqlVersion
+    }
+}
+
+createContainer.imageId = "innovateuk/ifs-mysql:" + sqlVersion
+
+osStageRemote.onlyIf { !isNamedEnv() }
+osStageRemote.imageName = getRemoteOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
+osStageRemote.tag = sqlVersion
+
+osStageLocal.tag = sqlVersion
+osStageLocal {
+    doFirst {
+        registryCredentials = getLocalOCCredentials()
+        imageName = registryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
+    }
+}
+
+def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+if (enabled) {
+    buildDocker.outputs.upToDateWhen { false }
+}
+
+task createTestSchema(type: Exec) {
+    doFirst {
+        commandLine 'docker', 'exec', '-d', sqlContainer, 'mysql', '-uroot', '-ppassword', '-e', 'create database if not exists ' + testSchema
+    }
+}
+
+task startDbIfNotStarted(type: StartDbContainerIfNotStartedTask) {
+
+}
+
+
+task initDB {
+    createTestSchema.mustRunAfter wait
+    wait.mustRunAfter startDbIfNotStarted
+    dependsOn startDbIfNotStarted
+    dependsOn wait
+    dependsOn createTestSchema
+}
