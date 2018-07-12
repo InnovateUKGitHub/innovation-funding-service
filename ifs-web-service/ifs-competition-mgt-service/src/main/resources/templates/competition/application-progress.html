@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="extra-margin">
-                    <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})} + ${applicationOriginQuery}">Review application</a>
+                    <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})} + ${applicationOriginQuery}" class="govuk-link">Review application</a>
                 </div>
 
                 <h2 class="govuk-heading-m" th:text="(${model.inAssessment} ? 'Assigned' : 'Assign Assessors') + | (${#lists.size(model.assigned)})|">Assigned (4)</h2>
@@ -61,7 +61,8 @@
                         <tbody>
                             <tr th:each="assessor : ${model.assigned}">
                                 <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
-                                       th:text="${assessor.name}">Oliver Romero</a></td>
+                                       th:text="${assessor.name}"
+                                       class="govuk-link">Oliver Romero</a></td>
                                 <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Academic</td>
                                 <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                                 <td class="numeric" th:text="${assessor.totalApplicationsCount}">6</td>
@@ -89,7 +90,8 @@
                                        th:with="
                                        removeAction=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})},
                                        removeActionNonJs=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}"
-                                       th:unless="${assessor.submitted}">Remove</a>
+                                       th:unless="${assessor.submitted}"
+                                       class="govuk-link">Remove</a>
                                     <form th:unless="${assessor.notified}" method="post"
                                           th:action="@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}">
                                         <button type="submit" class="button-secondary no-margin">Remove</button>
@@ -120,7 +122,8 @@
                         <tbody>
                         <tr th:each="assessor : ${model.rejected}">
                             <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
-                                   th:text="${assessor.name}">Irving Wolfe</a></td>
+                                   th:text="${assessor.name}"
+                                   class="govuk-link">Irving Wolfe</a></td>
                             <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Academic</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td><th:block th:text="${assessor.rejectReason.displayLabel}">Too many assignments</th:block><br />
@@ -155,7 +158,8 @@
                         <tbody>
                             <tr th:each="assessor : ${model.previouslyAssigned}">
                                 <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
-                                       th:text="${assessor.name}">Dave Smith</a></td>
+                                       th:text="${assessor.name}"
+                                       class="govuk-link">Dave Smith</a></td>
                                 <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
                                 <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Electronics, sensors &amp; photonics, Materials</td>
                                 <td class="numeric" th:text="${assessor.totalApplicationsCount}">6</td>
@@ -197,7 +201,7 @@
                                             </optgroup>
                                         </select>
                                     </div>
-                                    <a href="?">Clear all filters</a>
+                                    <a href="?" class="govuk-link">Clear all filters</a>
                                 </div>
                                 <div class="govuk-grid-column-one-third">
                                     <button class="govuk-button">Filter</button>
@@ -228,7 +232,8 @@
                         <tbody>
                             <tr th:each="assessor : ${model.available}">
                                 <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
-                                       th:text="${assessor.name}">John Barnes</a></td>
+                                       th:text="${assessor.name}"
+                                       class="govuk-link">John Barnes</a></td>
                                 <td th:text="${assessor.skillAreas}">skills</td>
                                 <td class="numeric" th:text="${assessor.totalApplicationsCount}">4</td>
                                 <td class="numeric" th:text="${assessor.assignedCount}">2</td>

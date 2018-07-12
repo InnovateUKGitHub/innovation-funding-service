@@ -31,7 +31,7 @@
                             </div>
                         </fieldset>
                         <div class="extra-margin">
-                            <a href="?">Clear all filters</a>
+                            <a href="?" class="govuk-link">Clear all filters</a>
                         </div>
                     </div>
                 </form>
@@ -50,7 +50,7 @@
                         </thead>
                         <tbody>
                             <tr th:each="app : ${model.applications}">
-                                <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
+                                <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}" class="govuk-link" /></td>
                                 <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                                 <td th:text="${app.leadOrganisation}">Wessex University</td>
                                 <td class="numeric" th:text="${app.assessors}">4</td>

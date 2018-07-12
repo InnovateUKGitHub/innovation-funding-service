@@ -29,7 +29,7 @@
                 <th:block th:text="${model.monitoringOfficerName}" /><br/>
               </th:block>
               <th:block th:unless="${#strings.isEmpty(model.monitoringOfficerEmailAddress)}">
-                <a th:href="'mailto:'+${model.monitoringOfficerEmailAddress}" th:text="${model.monitoringOfficerEmailAddress}" /><br/>
+                <a th:href="'mailto:'+${model.monitoringOfficerEmailAddress}" th:text="${model.monitoringOfficerEmailAddress}" class="govuk-link" /><br/>
               </th:block>
               <th:block th:unless="${#strings.isEmpty(model.monitoringOfficerPhoneNumber)}">
                 <th:block th:text="${model.monitoringOfficerPhoneNumber}" /><br/>

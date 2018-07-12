@@ -51,10 +51,10 @@
                     </p>
                     <p class="extra-margin" th:if="${model.showSignInText}">
                         <th:block th:unless="${model.userIsLoggedIn}">
-                            Or <a th:href="@{/}" >sign in</a> to continue an existing application.
+                            Or <a th:href="@{/}" class="govuk-link">sign in</a> to continue an existing application.
                         </th:block>
                         <th:block th:if="${model.userIsLoggedIn}">
-                            Or go to <a th:href="@{/}">your dashboard</a> to continue an existing application.
+                            Or go to <a th:href="@{/}" class="govuk-link">your dashboard</a> to continue an existing application.
                         </th:block>
                     </p>
                 </th:block>
@@ -64,7 +64,7 @@
                 <ul>
                     <th:block th:each="sectionType : ${model.allSections}">
                         <li>
-                            <a th:href="${'#' + sectionType.path}" th:text="${sectionType.text}"></a>
+                            <a th:href="${'#' + sectionType.path}" th:text="${sectionType.text}" class="govuk-link"></a>
                         </li>
                     </th:block>
                 </ul>

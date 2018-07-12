@@ -17,12 +17,12 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage users',size='govuk-heading-l'" />
 
         <p class="govuk-body">You can view the status of all internal users and add new users.</p>
-        <p class="govuk-body"><a th:href="@{/admin/invite-user}">Invite a new internal user</a></p>
+        <p class="govuk-body"><a th:href="@{/admin/invite-user}" class="govuk-link">Invite a new internal user</a></p>
 
         <!--/*
          TODO: Uncomment this when search feature is implemented.  Probably after IFS-34.
         <p class="govuk-body">You can view, edit and search for internal users here.</p>
-        <p class="govuk-body"><a href="/">Invite a new internal user</a></p>
+        <p class="govuk-body"><a href="/" class="govuk-link">Invite a new internal user</a></p>
 
         <div class="search-filters extra-margin">
           <h2 class="govuk-heading-m">Search users</h2>
@@ -30,7 +30,7 @@
             <div class="govuk-grid-column-two-thirds">
               <label class="form-label" for="search">Search for a name, job role, permission or email address</label>
               <input type="text" class="form-control extra-margin-bottom" id="search" name="search" />
-              <a href="/">Clear search</a>
+              <a href="/" class="govuk-link">Clear search</a>
             </div>
             <div class="govuk-grid-column-one-third">
               <button class="govuk-button">Search</button>
@@ -41,13 +41,13 @@
 
         <ul class="inline-nav cf">
           <li th:classappend="${model.tab == 'active'} ? 'selected'">
-            <a th:href="active" th:text="|Active (${model.activeCount})|">Active (38)</a>
+            <a th:href="active" th:text="|Active (${model.activeCount})|" class="govuk-link">Active (38)</a>
           </li>
           <li th:classappend="${model.tab == 'inactive'} ? 'selected'">
-            <a th:href="inactive" th:text="|Inactive (${model.inactiveCount})|">Inactive (10)</a>
+            <a th:href="inactive" th:text="|Inactive (${model.inactiveCount})|" class="govuk-link">Inactive (10)</a>
           </li>
           <li th:classappend="${model.tab == 'pending'} ? 'selected'">
-            <a th:href="pending" th:text="|Pending (${model.pendingCount})|">Pending (10)</a>
+            <a th:href="pending" th:text="|Pending (${model.pendingCount})|" class="govuk-link">Pending (10)</a>
           </li>
         </ul>
 

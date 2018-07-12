@@ -47,7 +47,7 @@
                     </div>
                 </fieldset>
                 <div class="clear-search-filters">
-                    <a href="?filterChanged=1">Clear all filters</a>
+                    <a href="?filterChanged=1" class="govuk-link">Clear all filters</a>
                 </div>
             </div>
             <input type="hidden" name="filterChanged" value="1"/>
@@ -126,7 +126,7 @@
                                 <span class="empty-table-cell-select">-</span>
                             </th:block>
                         </td>
-                        <td><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}"/></td>
+                        <td><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}" class="govuk-link" /></td>
                         <td th:text="${result.name}"></td>
                         <td th:text="${result.lead}"></td>
                         <td th:text="${result.numberOfPartners}"></td>
@@ -149,7 +149,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="result : ${results.content}">
-                        <td><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}"/></td>
+                        <td><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}" class="govuk-link" /></td>
                         <td th:text="${result.name}"></td>
                         <td th:text="${result.lead}"></td>
                         <td th:text="${result.completedPercentage}"></td>

@@ -56,7 +56,8 @@
             <li><a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors to attend</a></li>
 
             <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
-                   th:href="@{/assessment/panel/competition/{competitionId}/manage-applications(competitionId=${model.competitionId})}">
+                   th:href="@{/assessment/panel/competition/{competitionId}/manage-applications(competitionId=${model.competitionId})}"
+                   class="govuk-link">
                 Assign applications to panel
                 </a>
                 <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"

@@ -71,7 +71,7 @@
                             <h2 class="govuk-heading-s no-margin">Supporting documentation</h2>
                             <ul>
                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
+                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link" target="_blank">filename</a>
                                     <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                                 </li>
                             </ul>

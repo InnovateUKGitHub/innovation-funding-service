@@ -36,7 +36,7 @@
             <tbody>
                 <tr>
                     <td>
-                        <a th:if="${model.userLeadPartner and !model.spendProfileGenerated}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Target start date</a>
+                        <a th:if="${model.userLeadPartner and !model.spendProfileGenerated}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}" class="govuk-link">Target start date</a>
                         <th:block th:unless="${model.userLeadPartner and !model.spendProfileGenerated}">Target start date</th:block>
                     </td>
                     <td id="start-date">
@@ -50,7 +50,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}">Project address</a>
+                        <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}" class="govuk-link">Project address</a>
                         <th:block th:unless="${model.userLeadPartner and !model.grantOfferLetterGenerated}">Project address</th:block>
                     </td>
                     <td id="project-address">
@@ -64,7 +64,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}">Project Manager</a>
+                        <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}" class="govuk-link">Project Manager</a>
                         <th:block th:unless="${model.userLeadPartner and !model.grantOfferLetterGenerated}">Project Manager</th:block>
                     </td>
                     <td id="project-manager" th:if="${model.projectManager != null}" th:text="${model.projectManager?.userName}">John Smith</td>
@@ -101,7 +101,8 @@
                             <th:block th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
                                 <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
                                     <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}"
-                                    th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}">finance contact name</a>
+                                       th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}"
+                                       class="govuk-link">finance contact name</a>
                                 </th:block>
 
                                 <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
@@ -113,7 +114,8 @@
                             <th:block th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
 
                                 <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
-                                    <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}">Select finance contact</a>
+                                    <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}"
+                                       class="govuk-link">Select finance contact</a>
                                 </th:block>
 
                                 <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
@@ -126,7 +128,8 @@
                             <th:block th:unless="${model.getPostcodeForPartnerOrganisation(organisation.id) == null}">
                                 <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
                                     <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}"
-                                       th:text="${model.getPostcodeForPartnerOrganisation(organisation.id)}">post code</a>
+                                       th:text="${model.getPostcodeForPartnerOrganisation(organisation.id)}"
+                                       class="govuk-link">post code</a>
                                 </th:block>
 
                                 <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
@@ -138,7 +141,8 @@
                             <th:block th:if="${model.getPostcodeForPartnerOrganisation(organisation.id) == null}">
 
                                 <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
-                                    <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}">Select project location</a>
+                                    <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}"
+                                       class="govuk-link">Select project location</a>
                                 </th:block>
 
                                 <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
@@ -168,7 +172,9 @@
                 <tr th:each="organisation: ${model.organisations}">
                     <td>
                         <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
-                            <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
+                            <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}"
+                               th:text="${organisation.name}"
+                               class="govuk-link">organisation name</a>
                             <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
                         </th:block>
                         <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">

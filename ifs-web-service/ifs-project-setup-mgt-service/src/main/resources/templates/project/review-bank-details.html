@@ -44,7 +44,7 @@
                         <th:block th:text="${model.financeContactName}" /><br/>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(model.financeContactEmail)}">
-                        <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}" /><br/>
+                        <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}" class="govuk-link" /><br/>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(model.financeContactPhoneNumber)}">
                         <th:block th:text="${model.financeContactPhoneNumber}" /><br/>
@@ -89,7 +89,7 @@
             </table>
             <div class="govuk-grid-row extra-margin" th:unless="${model.approved}">
                 <div class="govuk-grid-column-one-half">
-                    <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}">Change bank account details</a>
+                    <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}" class="govuk-link">Change bank account details</a>
                 </div>
                 <div class="govuk-grid-column-one-half alignright">
                     <button data-js-modal="modal-partner-approve-bank-details" class="no-margin-right govuk-button">Approve bank account details</button>

@@ -28,7 +28,7 @@
             <div class="message-alert" th:if="${model.hasBeenPublished()}">
                 <p class="govuk-body" th:unless="${model.inviteOnly}">This information will be publicly viewable by prospective applicants.</p>
                 <p class="govuk-body" th:if="${model.inviteOnly}">Competition URL:
-                    <a th:href="${model.competitionURL}" th:text="${model.competitionURL}"></a>
+                    <a th:href="${model.competitionURL}" th:text="${model.competitionURL}" class="govuk-link"></a>
                 </p>
             </div>
 
@@ -36,7 +36,9 @@
                 <li th:each="section : ${model.sections}">
                     <div class="task">
                         <h2 class="govuk-heading-s">
-                            <a th:text="${section.type.text}" th:href="@{/competition/setup/public-content/{sectionPath}/{competitionId}{edit}(competitionId=${model.competition.id},sectionPath=${section.type.path},edit=${model.isSectionComplete(section) ? '' : '/edit'})}"></a>
+                            <a th:text="${section.type.text}"
+                               th:href="@{/competition/setup/public-content/{sectionPath}/{competitionId}{edit}(competitionId=${model.competition.id},sectionPath=${section.type.path},edit=${model.isSectionComplete(section) ? '' : '/edit'})}"
+                               class="govuk-link"></a>
                         </h2>
                     </div>
                     <div th:if="${model.isSectionComplete(section)}" class="task-status-complete"><span>Complete</span></div>

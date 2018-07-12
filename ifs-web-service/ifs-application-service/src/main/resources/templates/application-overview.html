@@ -43,9 +43,9 @@
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
                     <th:block th:unless="${model.currentCompetition.useNewApplicantMenu}">
-                        <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.currentApplication.id})}">view and manage contributors and collaborators</a></li>
+                        <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.currentApplication.id})}" class="govuk-link">view and manage contributors and collaborators</a></li>
                     </th:block>
-                    <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}">view the grant terms and conditions</a></li>
+                    <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link">view the grant terms and conditions</a></li>
                 </ul>
             </div>
         </div>
@@ -70,7 +70,8 @@
                                 <div class="task">
                                     <h3 class="govuk-heading-s">
                                         <a th:href="'/application/'+${model.currentApplication.id}+'/form/section/'+${childSection.id}"
-                                           th:text="${childSection.getName()}" />
+                                           th:text="${childSection.getName()}"
+                                           class="govuk-link" />
                                     </h3>
                                 </div>
                                 <th:block th:if="${childSection.id.equals(model.financeSectionId)}">

@@ -27,9 +27,11 @@
             </div>
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
-                    <li><a th:href="${'/application/' + model.applicationId + '/feedback'} + ${model.originQuery}">
+                    <li><a th:href="${'/application/' + model.applicationId + '/feedback'} + ${model.originQuery}"
+                           class="govuk-link">
                         view application feedback</a></li>
-                    <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}">
+                    <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
+                           class="govuk-link">
                         view the grant terms and conditions</a></li>
                 </ul>
             </div>
@@ -37,7 +39,7 @@
 
         <th:block th:if="${model.projectComplete}">
             <div class="success-alert extra-margin-bottom">
-                The project is live, you can review progress at <a href="https://grants.innovateuk.org">_connect</a>
+                The project is live, you can review progress at <a href="https://grants.innovateuk.org" class="govuk-link">_connect</a>
             </div>
 
             <p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
@@ -47,7 +49,7 @@
             <div class="message-alert">
                 <p class="govuk-body">You must complete your project and bank details within 30 days of our notification to you.</p>
                 <p class="govuk-body">All project partners have individual steps to complete in this section.</p>
-                <p class="govuk-body"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}">View the status of partners</a></p>
+                <p class="govuk-body"><a th:href="@{/project/{id}/team-status(id=${model.projectId})}" class="govuk-link">View the status of partners</a></p>
             </div>
         </th:block>
 
@@ -58,8 +60,10 @@
                     <div class="task">
                         <h2 class="govuk-heading-s">
                             <a th:if="${model.projectDetailsSection.accessible and not model.projectComplete}"
-                               th:href="@{/project/{id}/details(id=${model.projectId})}">Project details</a>
-                            <a th:if="${model.projectComplete}" th:href="@{/project/{id}/readonly(id=${model.projectId})}">Project
+                               th:href="@{/project/{id}/details(id=${model.projectId})}"
+                               class="govuk-link">Project details</a>
+                            <a th:if="${model.projectComplete}" th:href="@{/project/{id}/readonly(id=${model.projectId})}"
+                               class="govuk-link">Project
                                 details</a>
                             <th:block th:unless="${model.projectDetailsSection.accessible or model.projectComplete}">Project
                                 details
@@ -76,9 +80,11 @@
                     <div class="task">
                         <h2 class="govuk-heading-s">
                             <a th:if="${model.monitoringOfficerSection.accessible and not model.projectComplete}"
-                               th:href="@{/project/{id}/monitoring-officer(id=${model.projectId})}">Monitoring Officer</a>
+                               th:href="@{/project/{id}/monitoring-officer(id=${model.projectId})}"
+                               class="govuk-link">Monitoring Officer</a>
                             <a th:if="${model.projectComplete}"
-                               th:href="@{/project/{id}/monitoring-officer/readonly(id=${model.projectId})}">Monitoring
+                               th:href="@{/project/{id}/monitoring-officer/readonly(id=${model.projectId})}"
+                               class="govuk-link">Monitoring
                                 Officer</a>
                             <th:block th:unless="${model.monitoringOfficerSection.accessible}">Monitoring Officer</th:block>
                         </h2>
@@ -105,9 +111,11 @@
                     <div class="task">
                         <h2 class="govuk-heading-s">
                             <a th:if="${model.bankDetailsSection.accessible and not model.projectComplete}"
-                               th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
+                               th:href="@{/project/{id}/bank-details(id=${model.projectId})}"
+                               class="govuk-link">Bank details</a>
                             <a th:if="${model.projectComplete}"
-                               th:href="@{/project/{id}/bank-details/readonly(id=${model.projectId})}">Bank details</a>
+                               th:href="@{/project/{id}/bank-details/readonly(id=${model.projectId})}"
+                               class="govuk-link">Bank details</a>
                             <th:block th:if="${model.bankDetailsSection.notRequired}">Bank details (not required)</th:block>
                         </h2>
                         <p class="govuk-body no-margin">We need bank details for those partners eligible for funding.</p>
@@ -119,7 +127,8 @@
                     <div class="task">
                         <h2 class="govuk-heading-s">
                             <a th:if="${model.financeChecksSection.accessible}"
-                               th:href="@{/project/{id}/finance-checks(id=${model.projectId})}">Finance
+                               th:href="@{/project/{id}/finance-checks(id=${model.projectId})}"
+                               class="govuk-link">Finance
                                 checks</a>
                             <th:block th:unless="${model.financeChecksSection.accessible}">Finance checks
                                 <th:block th:if="${model.financeChecksSection.notRequired}">(not required)</th:block>
@@ -139,7 +148,8 @@
                     <div class="task">
                         <h2 class="govuk-heading-s">
                             <a th:if="${model.spendProfileSection.accessible}"
-                               th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile(id=${model.projectId}, organisationId=${model.getOrganisationId()})}">Spend
+                               th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile(id=${model.projectId}, organisationId=${model.getOrganisationId()})}"
+                               class="govuk-link">Spend
                                 profile</a>
                             <th:block th:if="${model.spendProfileSection.notAccessible}">Spend profile</th:block>
                         </h2>
@@ -153,9 +163,11 @@
                     <div class="task">
                         <h2 class="govuk-heading-s">
                             <a th:if="${model.otherDocumentsSection.accessible and not model.projectComplete}"
-                               th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a>
+                               th:href="@{/project/{id}/partner/documents(id=${model.projectId})}"
+                               class="govuk-link">Other documents</a>
                             <a th:if="${model.projectComplete}"
-                               th:href="@{/project/{id}/partner/documents/readonly(id=${model.projectId})}">Other
+                               th:href="@{/project/{id}/partner/documents/readonly(id=${model.projectId})}"
+                               class="govuk-link">Other
                                 documents</a>
                             <th:block th:if="${model.otherDocumentsSection.notAccessible}">Other documents</th:block>
                         </h2>
@@ -184,7 +196,8 @@
                     <div class="task">
                         <h2 class="govuk-heading-s">
                             <a th:if="${model.grantOfferLetterSection.accessible}"
-                               th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a>
+                               th:href="@{/project/{id}/offer(id=${model.projectId})}"
+                               class="govuk-link">Grant offer letter</a>
                             <th:block th:if="${model.grantOfferLetterSection.notAccessible}">Grant offer letter</th:block>
                         </h2>
                         <p class="govuk-body no-margin">Once all tasks are complete the Project Manager can review, sign and submit the grant offer letter to Innovate UK.</p>

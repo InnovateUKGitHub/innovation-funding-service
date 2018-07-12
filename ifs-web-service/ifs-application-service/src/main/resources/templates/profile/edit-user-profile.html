@@ -82,7 +82,7 @@
                     <div class="govuk-heading-s">Email</div>
                     <p class="form-hint">Your email address cannot be changed in the system <br /><strong th:text="*{email}" /></p>
                 </div>
-                <p class="govuk-body">To change your email address please contact Innovate UK by emailing <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
+                <p class="govuk-body">To change your email address please contact Innovate UK by emailing <a href="mailto:support@innovateuk.gov.uk" class="govuk-link">support@innovateuk.gov.uk</a></p>
                 <div class="form-group" th:classappend="${#fields.hasErrors('allowMarketingEmails')} ? 'form-group-error'">
                     <div class="multiple-choice">
                         <input id="allowMarketingEmails" th:field="*{allowMarketingEmails}" type="checkbox" value="yes"/>

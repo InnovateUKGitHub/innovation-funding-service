@@ -38,7 +38,7 @@
                 <th:block th:text="${model.financeContactName}" /><br/>
             </th:block>
             <th:block th:unless="${#strings.isEmpty(model.financeContactEmail)}">
-                <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}" /><br/>
+                <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}" class="govuk-link" /><br/>
             </th:block>
             <th:block th:unless="${#strings.isEmpty(model.financeContactPhoneNumber)}">
                 <th:block th:text="${model.financeContactPhoneNumber}" /><br/>
@@ -201,7 +201,7 @@
 
             <div class="govuk-grid-row extra-margin">
                 <div class="govuk-grid-column-one-half">
-                    <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details(id=${model.projectId}, orgId=${model.organisationId})}">Cancel bank account changes</a>
+                    <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details(id=${model.projectId}, orgId=${model.organisationId})}" class="govuk-link">Cancel bank account changes</a>
                 </div>
                 <th:block th:insert="fragments/modals :: modal-partner-change-bank-details" />
                 <div class="govuk-grid-column-one-half alignright">

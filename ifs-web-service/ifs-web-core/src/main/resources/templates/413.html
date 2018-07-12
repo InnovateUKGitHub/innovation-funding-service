@@ -20,7 +20,7 @@
         </p>
 
         We are unable to complete your request because the size of file or request being submitted is too large.
-        Please limit the size of your file to the sizes specified. You can now return to <a th:href="${userDashboardLink}">your dashboard</a> or use your back button.
+        Please limit the size of your file to the sizes specified. You can now return to <a th:href="${userDashboardLink}" class="govuk-link">your dashboard</a> or use your back button.
 
         <th:block th:if="${message} and ${message.length() != 0}" ifs:utext="${'&lt;!--' + message + ' --&gt;'}">
             Error message will be displayed here for developers on dev/UAT environments.

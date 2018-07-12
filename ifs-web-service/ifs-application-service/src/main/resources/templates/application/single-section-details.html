@@ -14,7 +14,9 @@
             <div class="task">
                 <h3 class="govuk-heading-s">
                     <a th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${currentApplication.id},questionId=${question.id})}"
-                       th:text="|${questionNumber}${question.shortName}|" th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''" />
+                       th:text="|${questionNumber}${question.shortName}|"
+                       th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''"
+                       class="govuk-link" />
                 </h3>
             </div>
             <th:block th:unless="${model.completed.completedOrMarkedAsComplete(question, section)}">

@@ -30,7 +30,7 @@
                         <tr th:each="query : ${model.openQueries}">
                             <td th:text="${query.applicationId}" />
                             <td th:text="${query.projectName}"/>
-                            <td><a th:text="${query.organisationName}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${query.projectId},organisationId=${query.organisationId})}" /></td>
+                            <td><a th:text="${query.organisationName}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${query.projectId},organisationId=${query.organisationId})}" class="govuk-link" /></td>
                         </tr>
                     </tbody>
                 </table>

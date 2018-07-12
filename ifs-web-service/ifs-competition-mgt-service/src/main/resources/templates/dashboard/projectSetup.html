@@ -29,7 +29,7 @@
                 <h2 class="govuk-heading-m" th:text="'Project setup ('+${model.counts.projectSetupCount}+')'"></h2>
 
                 <th:block th:if="${model.projectFinanceUser}">
-                    <a href="/project-setup-management/competitions/status/pending-bank-details-approvals"><span th:text="'Review bank details (' + ${model.countBankDetails} + ')'">2</span></a>
+                    <a href="/project-setup-management/competitions/status/pending-bank-details-approvals" class="govuk-link"><span th:text="'Review bank details (' + ${model.countBankDetails} + ')'">2</span></a>
                 </th:block>
 
                 <ul class="govuk-list list-overview extra-margin">

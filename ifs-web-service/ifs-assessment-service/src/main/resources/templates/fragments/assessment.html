@@ -7,13 +7,13 @@
     <nav class="pagination" th:unless="${#strings.isEmpty(navigation.previousUrl) and #strings.isEmpty(navigation.nextUrl)}">
         <ul>
             <li class="prev" th:unless="${#strings.isEmpty(navigation.previousUrl)}">
-                <a th:href="@{${navigation.previousUrl}}" rel="prev" title="Navigate to previous part">
+                <a th:href="@{${navigation.previousUrl}}" class="govuk-link" rel="prev" title="Navigate to previous part">
                     <span class="pagination-label">Previous</span>
                     <span class="pagination-part-title" th:text="${navigation.previousText}" />
                 </a>
             </li>
             <li class="next" th:unless="${#strings.isEmpty(navigation.nextUrl)}">
-                <a th:href="@{${navigation.nextUrl}}" rel="next" title="Navigate to next part">
+                <a th:href="@{${navigation.nextUrl}}" class="govuk-link" rel="next" title="Navigate to next part">
                     <span class="pagination-label">Next</span>
                     <span class="pagination-part-title" th:text="${navigation.nextText}" />
                 </a>
@@ -88,7 +88,7 @@
     <div class="question">
         <div class="form-group">
             <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${question.feedback}" />
-            <p class="govuk-body"><a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}">Return to this question in the application</a></p>
+            <p class="govuk-body"><a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}" class="govuk-link">Return to this question in the application</a></p>
             <p th:unless="${question.applicationInScope == null}" class="govuk-body assessor-score alignright">
               <span class="score">In scope: <strong th:text="${question.applicationInScope} ? 'Yes' : 'No'" /></span>
             </p>

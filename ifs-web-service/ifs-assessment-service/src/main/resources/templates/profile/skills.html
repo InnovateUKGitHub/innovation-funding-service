@@ -17,7 +17,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your skills',size='govuk-heading-xl'" />
                 <p class="govuk-body">These innovation areas have been chosen as your current areas of expertise. They will influence the types
                     of competition you will be invited to assess. If you would like to amend them or add new ones please
-                    contact Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.
+                    contact Innovate UK <a href="mailto:support@innovateuk.gov.uk" class="govuk-link">support@innovateuk.gov.uk</a>.
                 </p>
 
                 <h2 class="govuk-heading-m no-margin-bottom">Innovation areas</h2>
@@ -41,7 +41,7 @@
 
                 <div class="form-footer">
                     <div class="form-footer__actions">
-                        <a th:href="@{/profile/skills/edit}">Edit</a>
+                        <a th:href="@{/profile/skills/edit}" class="govuk-link">Edit</a>
                     </div>
                 </div>
 

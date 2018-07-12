@@ -41,7 +41,8 @@
 
         <div class="extra-margin">
             <a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${model.assessorId})} + ${originQuery}"
-               th:text="'Review assessor'"/>
+               th:text="'Review assessor'"
+               class="govuk-link" />
         </div>
 
         <h2 class="govuk-heading-m" th:text="| Assigned (${#lists.size(model.assigned)}) |"/>
@@ -85,7 +86,8 @@
                         <td>
                             <a href="#"
                                th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
-                               th:text="${app.applicationId}">
+                               th:text="${app.applicationId}"
+                               class="govuk-link">
                             1
                             </a>
                         </td>
@@ -151,7 +153,8 @@
                         <td>
                             <a href="#"
                                th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
-                               th:text="${app.applicationId}">1</a>
+                               th:text="${app.applicationId}"
+                               class="govuk-link">1</a>
                         </td>
                         <td th:text="${app.applicationName}">Application name</td>
                         <td th:text="${app.leadOrganisation}">Lead organisation</td>
@@ -183,7 +186,8 @@
                         <td>
                             <a href="#"
                                th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
-                               th:text="${app.applicationId}">1</a>
+                               th:text="${app.applicationId}"
+                               class="govuk-link">1</a>
                         </td>
                         <td th:text="${app.applicationName}">Application name</td>
                         <td th:text="${app.leadOrganisation}">Lead organisation</td>
@@ -224,7 +228,7 @@
                     </div>
                 </fieldset>
                 <div class="extra-margin">
-                    <a href="?" th:href="'?filterSearch='">Clear all filters</a>
+                    <a href="?" th:href="'?filterSearch='" class="govuk-link">Clear all filters</a>
                 </div>
             </div>
         </form>
@@ -268,7 +272,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="app : ${model.applicationsView.applications}">
-                    <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}" th:text="${app.applicationId}"/></td>
+                    <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}" th:text="${app.applicationId}" class="govuk-link" /></td>
                     <td th:text="${app.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                     <td th:text="${app.leadOrganisation}">Wessex University</td>
                     <td class="numeric" th:text="${app.assessors}">4</td>

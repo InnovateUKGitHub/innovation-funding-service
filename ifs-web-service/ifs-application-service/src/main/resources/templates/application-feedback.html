@@ -82,7 +82,8 @@
                                 <div th:if="${model.interviewFeedbackViewModel.hasResponse()}">
                                     <p class="uploaded-file"><a th:href="@{/application/{applicationId}/feedback/download-response(applicationId=${model.application.id})}"
                                                                 th:text="${model.interviewFeedbackViewModel.responseFilename}"
-                                                                target="_blank">File</a> (opens in a new window)</p>
+                                                                target="_blank"
+                                                                class="govuk-link">File</a> (opens in a new window)</p>
                                     <button th:unless="${model.interviewFeedbackViewModel.feedbackReleased}" name="removeResponse" class="button-secondary">Remove</button>
                                 </div>
                             </div>
@@ -98,7 +99,8 @@
                                 <h3 class="govuk-heading-s no-margin">Lead applicant response</h3>
                                 <p class="uploaded-file"><a th:href="@{/application/{applicationId}/feedback/download-response(applicationId=${model.application.id})}"
                                                             th:text="${model.interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
-                                                            target="_blank">File</a></p>
+                                                            target="_blank"
+                                                            class="govuk-link">File</a></p>
                             </div>
                         </th:block>
                     </th:block>
@@ -116,7 +118,8 @@
                                         <div class="govuk-grid-column-two-thirds">
                                             <h3 class="govuk-heading-s">
                                                 <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})}"
-                                                th:text="${question.shortName}" >Project summary</a>
+                                                   th:text="${question.shortName}"
+                                                   class="govuk-link">Project summary</a>
                                             </h3>
                                         </div>
                                         <div class="govuk-grid-column-one-third">
@@ -145,7 +148,8 @@
                                 <div class="govuk-grid-column-two-thirds">
                                     <h3 class="govuk-heading-s">
                                         <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})}"
-                                            th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}">1. Business opportunity</a>
+                                           th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}"
+                                           class="govuk-link">1. Business opportunity</a>
                                     </h3>
                                 </div>
                                 <div>

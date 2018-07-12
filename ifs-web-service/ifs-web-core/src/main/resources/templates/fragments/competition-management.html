@@ -42,22 +42,22 @@
 
 <th:block th:fragment="competition-mgt-menu-assessor-feedback(id)">
   <ul class="inline-nav extra-margin">
-    <li th:class="${activeTab == 'overview' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=overview'}">Overview</a></li>
-    <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=submitted'}">Applications submitted</a></li>
-    <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=notSubmitted'}">Applications not submitted</a></li>
+    <li th:class="${activeTab == 'overview' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=overview'}" class="govuk-link">Overview</a></li>
+    <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=submitted'}" class="govuk-link">Applications submitted</a></li>
+    <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=notSubmitted'}" class="govuk-link">Applications not submitted</a></li>
   </ul>
 </th:block>
 
 <th:block th:fragment="competition-mgt-menu-assessment(id)">
   <ul class="inline-nav extra-margin">
-    <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=submitted'}">Applications submitted</a></li>
-    <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=notSubmitted'}">Applications not submitted</a></li>
+    <li th:class="${activeTab == 'submitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=submitted'}" class="govuk-link">Applications submitted</a></li>
+    <li th:class="${activeTab == 'notSubmitted' ? 'selected':''}"><a th:href="${'/management/competition/' + id + '/applications?tab=notSubmitted'}" class="govuk-link">Applications not submitted</a></li>
   </ul>
 </th:block>
 
 <th:block th:fragment="competition-mgt-menu-open(id)">
   <ul class="inline-nav extra-margin">
-    <li th:class="${activeTab == 'allApplications' ? 'selected':''}"><a th:href="@{/competition/{competitionId}/applications(competitionId=${id})}">All applications</a></li>
+    <li th:class="${activeTab == 'allApplications' ? 'selected':''}"><a th:href="@{/competition/{competitionId}/applications(competitionId=${id})}" class="govuk-link">All applications</a></li>
   </ul>
 </th:block>
 

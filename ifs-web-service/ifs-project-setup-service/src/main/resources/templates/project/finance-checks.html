@@ -28,19 +28,19 @@
             <div class="success-alert extra-margin-bottom">
                 The checks have been completed and your finances approved.
             </div>
-            <p class="govuk-body"> Review your <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">finances</a>
-                or your <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}">project finance overview</a>.
+            <p class="govuk-body"> Review your <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}" class="govuk-link">finances</a>
+                or your <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}" class="govuk-link">project finance overview</a>.
             </p>
         </th:block>
         <th:block th:unless="${model.isApproved()}">
             <p class="govuk-body">Innovate UK is reviewing
                 <th:block th:unless="${model.isAcademic()}">
-                <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">your finances</a>.
+                <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}" class="govuk-link">your finances</a>.
                 </th:block>
                 <th:block th:if="${model.isAcademic()}">
                 your finances.
                 </th:block>
-            You can also view the <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}">project finance overview</a>.
+            You can also view the <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}" class="govuk-link">project finance overview</a>.
         </p>
         </th:block>
 
@@ -85,7 +85,7 @@
                                     <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul>
                                         <li th:each="attachment : ${post.attachments}">
-                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a>
+                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" class="govuk-link" target="_blank">file</a>
                                         </li>
                                     </ul>
                                 </th:block>
@@ -129,7 +129,7 @@
                                             <h3 class="govuk-heading-s no-margin">Supporting documentation</h3>
                                             <ul>
                                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
+                                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link" target="_blank">filename</a>
                                                     <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                                                 </li>
                                             </ul>
@@ -150,7 +150,7 @@
                                         <button class="govuk-button no-margin" data-content-on-submit="Please wait...">Post response</button>
                                     </div>
                                     <div class="govuk-grid-column-one-half alignright">
-                                        <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}">Cancel</a>
+                                        <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}" class="govuk-link">Cancel</a>
                                     </div>
                                 </div>
                             </form>
@@ -180,7 +180,7 @@
                                     <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul>
                                         <li th:each="attachment : ${post.attachments}">
-                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a>
+                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" class="govuk-link" target="_blank">file</a>
                                         </li>
                                     </ul>
                                 </th:blocK>
@@ -224,7 +224,7 @@
                                         <h3 class="govuk-heading-s no-margin">Supporting documentation</h3>
                                         <ul>
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
+                                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link" target="_blank">filename</a>
                                                 <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                                             </li>
                                         </ul>
@@ -245,7 +245,7 @@
                                         <button class="govuk-button no-margin" data-content-on-submit="Please wait...">Post response</button>
                                     </div>
                                     <div class="govuk-grid-column-one-half alignright">
-                                        <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}">Cancel</a>
+                                        <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}" class="govuk-link">Cancel</a>
                                     </div>
                                 </div>
                             </form>
@@ -273,7 +273,7 @@
                                     <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul>
                                         <li th:each="attachment : ${post.attachments}">
-                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a>
+                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" class="govuk-link" target="_blank">file</a>
                                         </li>
                                     </ul>
                                 </th:blocK>
@@ -317,7 +317,7 @@
                                         <h3 class="govuk-heading-s no-margin">Supporting documentation</h3>
                                         <ul>
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
+                                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link" target="_blank">filename</a>
                                                 <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                                             </li>
                                         </ul>
@@ -338,7 +338,7 @@
                                         <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
                                     </div>
                                     <div class="govuk-grid-column-one-half alignright">
-                                        <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}">Cancel</a>
+                                        <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}" class="govuk-link">Cancel</a>
                                     </div>
                                 </div>
                             </form>

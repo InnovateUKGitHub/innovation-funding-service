@@ -115,7 +115,7 @@
                                th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
                     </div>
 
-                    <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}">
+                    <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}" class="govuk-link">
                         Change Monitoring Officer
                     </a>
 

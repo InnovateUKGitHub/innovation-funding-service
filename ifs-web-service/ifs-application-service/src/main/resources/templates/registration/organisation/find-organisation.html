@@ -61,7 +61,8 @@
                     <h3>
                         <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}"
                            title="View organisation"
-                           th:text="${organisation.name}">
+                           th:text="${organisation.name}"
+                           class="govuk-link">
                         </a>
                     </h3>
                     <th:block th:unless="${organisationForm.research}">

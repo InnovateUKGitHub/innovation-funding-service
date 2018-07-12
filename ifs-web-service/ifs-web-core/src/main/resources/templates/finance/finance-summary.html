@@ -15,7 +15,7 @@
 
         <h2 class="govuk-heading-m">Finances summary</h2>
         <th:block th:insert="finance/finance-summary :: application_finances_summary" />
-        <!--/* <div class="icon icon-information"></div><span>Please provide your financial breakdown in the <a th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Your finances</a> section.</span> */-->
+        <!--/* <div class="icon icon-information"></div><span>Please provide your financial breakdown in the <a th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" class="govuk-link">Your finances</a> section.</span> */-->
         <h2 class="govuk-heading-m">Project cost breakdown</h2>
         <th:block th:insert="finance/finance-summary :: financial_summary_table" />
         <p class="govuk-body">This is the level of cost detail that the assessors will see during the assessment process.</p>
@@ -53,7 +53,8 @@
                                 <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Lead organisation</small></div>
                                 <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Partner</small></div>
                                 <a th:if="${showAssessorDetailedFinanceLink}"
-                                   th:href="@{/{assessmentId}/detailed-finances/organisation/{organisationId}(assessmentId=${assessmentId}, organisationId=${applicationOrganisation.id})}" th:style="'font-weight: normal;'">
+                                   th:href="@{/{assessmentId}/detailed-finances/organisation/{organisationId}(assessmentId=${assessmentId}, organisationId=${applicationOrganisation.id})}"
+                                   class="govuk-link">
                                     View finances
                                 </a>
                             </th>
@@ -135,11 +136,13 @@
                                 <small>Partner</small>
                             </div>
                             <a th:if="${(form == null || !form.isAdminMode()) and !currentCompetition.isOpen() and applicationOrganisation.equals(userOrganisation)}"
-                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}' th:style="'font-weight: normal;'">
+                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'
+                               class="govuk-link">
                                 View finances
                             </a>
                             <a th:if="${showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id)}"
-                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}' th:style="'font-weight: normal;'">
+                               th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}'
+                               class="govuk-link">
                                 View finances
                             </a>
                             <th:block th:if="${currentApplication.isOpen()}">
@@ -224,7 +227,8 @@
             <th:block th:each="applicationOrganisation : ${applicationOrganisations}">
                 <a th:if="${applicationOrganisation.id == userOrganisation.id}"
                    th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"
-                   th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.getId()},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}" >Return to the finances section to complete your finances</a>
+                   th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.getId()},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
+                   class="govuk-link">Return to the finances section to complete your finances</a>
             </th:block>
 
             <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete by all partners.</p>

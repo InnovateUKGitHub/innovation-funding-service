@@ -64,7 +64,7 @@
             <th:block th:if="${summaryModel.isExternalView()}">
                 <h2 class="govuk-heading-m">Detailed finances</h2>
                 <p class="govuk-body">These are your project finances. Changes that result from discussions with Innovate UK will be reflected here. Substantial changes to your project costs should be discussed with your Project Manager.</p>
-                <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId})}">View changes to finances</a></p>
+                <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId})}" class="govuk-link">View changes to finances</a></p>
             </th:block>
 
             <th:block th:unless="${summaryModel.isExternalView()}">
@@ -72,13 +72,13 @@
                     <h2 class="govuk-heading-m">Project finance overview</h2>
                     <p class="govuk-body">These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
                     <p class="govuk-body">All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
-                    <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">Review all changes to project finances</a></p>
+                    <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">Review all changes to project finances</a></p>
                 </th:block>
 
                 <th:block th:if="${summaryModel.isApproved()}">
                     <h2 class="govuk-heading-m">Detailed finances</h2>
                     <p class="govuk-body">These finances were submitted by the applicant during the application stage. They include all changes made during the eligibility checks.</p>
-                    <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a></p>
+                    <p class="govuk-body"><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="govuk-link">View changes to finances</a></p>
                 </th:block>
             </th:block>
 
@@ -144,7 +144,7 @@
             <div class="upload-section">
                 <h3 class="govuk-heading-s no-margin">Download Je-S form:</h3>
                 <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${summaryModel.projectId}, organisationId=${summaryModel.organisationId})}"
-                   class="uploaded-file" th:text="${summaryModel.jesFileDetails?.filename} + ' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
+                   class="govuk-link uploaded-file" th:text="${summaryModel.jesFileDetails?.filename} + ' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
             </div>
         </th:block>
 

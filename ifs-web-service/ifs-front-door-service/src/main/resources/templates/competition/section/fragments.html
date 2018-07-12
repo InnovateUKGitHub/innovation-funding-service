@@ -12,7 +12,8 @@
             <th:block th:if="${section.hasAttachment(contentGroup.id)}">
                 <div>
                     <a th:href="@{/competition/{competitionId}/download/{contentGroupId}(competitionId=${competitionId}, contentGroupId=${contentGroup.id})}"
-                        th:text="${section.fileName(contentGroup.id)}"></a>
+                       th:text="${section.fileName(contentGroup.id)}"
+                       class="govuk-link"></a>
                 </div>
             </th:block>
         </div>

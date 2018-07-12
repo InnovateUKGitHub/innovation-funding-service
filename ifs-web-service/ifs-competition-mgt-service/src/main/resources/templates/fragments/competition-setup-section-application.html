@@ -20,7 +20,7 @@
                 <th:block th:if="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).APPLICATION_DETAILS)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${model.general.competition.id})}">Application details</a>
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${model.general.competition.id})}" class="govuk-link">Application details</a>
                         </h4>
                     </div>
                     <div class="task-status-complete"><span>Complete</span></div>
@@ -28,7 +28,7 @@
                 <th:block th:unless="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).APPLICATION_DETAILS)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/detail/edit(competitionId=${model.general.competition.id})}">Application details</a>
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/detail/edit(competitionId=${model.general.competition.id})}" class="govuk-link">Application details</a>
                         </h4>
                     </div>
                 </th:block>
@@ -38,7 +38,8 @@
                     <div class="task">
                         <h4 class="govuk-heading-s">
                             <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}"
-                               th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
+                               th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"
+                               class="govuk-link">Question Title</a>
                         </h4>
                     </div>
                     <div class="task-status-complete"><span>Complete</span></div>
@@ -47,7 +48,8 @@
                     <div class="task">
                         <h4 class="govuk-heading-s">
                             <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id}, questionId=${question.id})}"
-                               th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
+                               th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"
+                               class="govuk-link">Question Title</a>
                         </h4>
                     </div>
                     <div class="task-status">
@@ -65,7 +67,7 @@
                 <th:block th:if="${model.questionStatuses.get(question.id)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}" class="govuk-link">
                                 <th:block th:text="${question.questionNumber} + '. '"></th:block>
                                 <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
                             </a>

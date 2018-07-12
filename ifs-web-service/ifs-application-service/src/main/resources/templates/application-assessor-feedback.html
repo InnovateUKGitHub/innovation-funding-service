@@ -30,7 +30,8 @@
             <th:block th:if="${item.fileEntry}">
                 <h3 class="govuk-heading-s no-margin">View appendix:</h3>
                 <a th:href="@{/application/{appId}/form/question/{questionId}/forminput/{inputId}/download(appId=${model.application.id},questionId=${item.question},inputId=${item.formInput})}"
-                   th:text="|${item.filename} (${item.humanReadableFileSize})|">Project-plan.pdf (161.96 KB)</a>
+                   th:text="|${item.filename} (${item.humanReadableFileSize})|"
+                   class="govuk-link">Project-plan.pdf (161.96 KB)</a>
             </th:block>
         </th:block>
 

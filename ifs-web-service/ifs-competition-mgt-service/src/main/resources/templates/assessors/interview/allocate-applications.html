@@ -43,7 +43,8 @@
                     <tr th:each="applicationInterview : ${model.applications}">
                         <td>
                             <a th:text="${applicationInterview.id}"
-                               th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${applicationInterview.id})} + ${originQuery}">114</a>
+                               th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${applicationInterview.id})} + ${originQuery}"
+                               class="govuk-link">114</a>
                         </td>
                         <td th:text="${applicationInterview.name}">Electronics, sensors &#38; photonics, Materials</td>
                         <td th:text="${applicationInterview.leadOrganisation}">Ooba</td>

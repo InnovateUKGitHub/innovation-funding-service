@@ -16,7 +16,8 @@
                     <h2 class="govuk-heading-s">
                         <a th:if="${model.initialCompleteOrSectionIsInitial(section)}"
                            th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
-                           th:text="${section.name}">Section Name</a>
+                           th:text="${section.name}"
+                           class="govuk-link">Section Name</a>
                         <th:block th:unless="${model.initialCompleteOrSectionIsInitial(section)}"
                                   th:text="${section.name}">Section Name</th:block>
                     </h2>
@@ -32,7 +33,7 @@
                 <div class="task">
                     <h2 class="govuk-heading-s">
                         <th:block th:if="${model.general.initialComplete}">
-                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${competition.id})}">Stakeholders</a>
+                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${competition.id})}" class="govuk-link">Stakeholders</a>
                         </th:block>
                         <th:block th:unless="${model.general.initialComplete}">Stakeholders</th:block>
                     </h2>

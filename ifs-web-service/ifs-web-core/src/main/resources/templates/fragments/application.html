@@ -106,7 +106,7 @@
           <div class="question">
 
               <p class="govuk-body">This is the overview of the finances provided by all partners in this project.</p>
-              <p class="govuk-body" th:if="${(currentApplication.isOpen() and isApplicant)}">To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'>your                  finances</a> section.</p>
+              <p class="govuk-body" th:if="${(currentApplication.isOpen() and isApplicant)}">To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}' class="govuk-link">your                  finances</a> section.</p>
 
               <div th:if="${fromApplicationService}">
                 <th:block ifs:global="${applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></th:block>

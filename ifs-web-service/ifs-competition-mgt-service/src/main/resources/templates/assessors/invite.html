@@ -55,16 +55,16 @@
 
                 <ul class="inline-nav">
                     <li class="not-selected">
-                        <a th:href="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
+                        <a th:href="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}" class="govuk-link">Find</a>
                     </li>
                     <li class="selected">
-                        <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
+                        <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" class="govuk-link">Invite</a>
                     </li>
                     <li class="not-selected">
-                        <a th:href="@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}">Pending and declined</a>
+                        <a th:href="@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}" class="govuk-link">Pending and declined</a>
                     </li>
                     <li class="not-selected">
-                        <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
+                        <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}" class="govuk-link">Accepted</a>
                     </li>
                 </ul>
 
@@ -225,7 +225,8 @@
                                 <td>
                                     <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}"
                                        th:if="${assessor.id}"
-                                       th:text="${assessor.name}">John Barnes
+                                       th:text="${assessor.name}"
+                                       class="govuk-link">John Barnes
                                     </a>
                                     <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
                                 </td>

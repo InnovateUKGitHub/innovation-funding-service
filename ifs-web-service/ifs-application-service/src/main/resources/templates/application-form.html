@@ -32,7 +32,7 @@
                             <th:block th:if="${err.global || err.fieldName == 'formInput[cost]'}" th:text="${err.message}">Non-field specific message</th:block>
                             <th:block th:unless="${err.global || err.fieldName == 'formInput[cost]'}">
                               <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
-                              <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+                              <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}" class="govuk-link">The error message</a>
                             </th:block>
                         </li>
                     </ul>

@@ -31,7 +31,8 @@
                             message
                         </th:block>
                         <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|"
-                           th:text="${err.message}">The error message</a>
+                           th:text="${err.message}"
+                           class="govuk-link">The error message</a>
                     </th:block>
                 </li>
             </ul>

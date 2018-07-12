@@ -29,7 +29,7 @@
                     </div>
                 </fieldset>
                 <div class="extra-margin">
-                    <a href="?">Clear all filters</a>
+                    <a href="?" class="govuk-link">Clear all filters</a>
                 </div>
             </div>
         </form>
@@ -61,7 +61,7 @@
                     <th scope="row">
                       <div class="govuk-heading-s no-margin" th:text="${project.projectTitle}" />
                         <!--/*  origin must one of org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin */-->
-                      <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" />
+                      <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" class="govuk-link" />
                       <small>
                         <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
                         <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
@@ -106,7 +106,7 @@
                 <tr th:if="${model.canExportBankDetails}">
                   <td colspan="3"></td>
                   <td class="aligncentre">
-                    <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionProjectsStatusResource.competitionNumber})}">Export all bank details</a>
+                    <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionProjectsStatusResource.competitionNumber})}" class="govuk-link">Export all bank details</a>
                   </td>
                   <td colspan="4"></td>
                 </tr>

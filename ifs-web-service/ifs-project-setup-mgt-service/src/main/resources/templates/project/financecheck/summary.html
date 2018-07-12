@@ -46,7 +46,7 @@
                     <dt>Total percentage grant:</dt>
                     <dd th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalPercentageGrant,1,'NONE')+'%'}"></dd>
                 </dl>
-                <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}">View
+                <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-link">View
                     finances</a>
             </div>
             <div class="govuk-grid-column-one-half">
@@ -61,7 +61,7 @@
                 </dl>
 
                 <th:block th:unless="${model.financeCheckSummaryResource.spendProfilesGenerated}">
-                    <a th:href="@{/competition/{competitionId}/project/{projectId}/duration(competitionId=${model.financeCheckSummaryResource.competitionId},projectId=${model.financeCheckSummaryResource.projectId})}">Edit</a>
+                    <a th:href="@{/competition/{competitionId}/project/{projectId}/duration(competitionId=${model.financeCheckSummaryResource.competitionId},projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-link">Edit</a>
                 </th:block>
             </div>
         </div>
@@ -94,7 +94,8 @@
                         <a th:if="${!orgDetails.viability.notApplicable}"
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/viability(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
-                           th:classappend="${'viability-' + status.index}"/>
+                           th:classappend="${'viability-' + status.index}"
+                           class="govuk-link"/>
 
                         <span th:if="${orgDetails.viability.notApplicable}"
                               th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
@@ -111,7 +112,8 @@
                     <td class="aligncentre">
                         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
-                           th:classappend="${'eligibility-' + status.index}"/>
+                           th:classappend="${'eligibility-' + status.index}"
+                           class="govuk-link"/>
                     </td>
                     <td class="aligncentre cell-border-right">
                     <span th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.eligibilityRagStatus)}"
@@ -119,10 +121,12 @@
                     </td>
                     <td class="aligncentre">
                         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
-                           th:text="View"/>
+                           th:text="View"
+                           class="govuk-link"/>
                     </td>
                     <td class="aligncentre">
-                        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}">View</a>
+                        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                           class="govuk-link">View</a>
                     </td>
                 </tr>
                 </tbody>

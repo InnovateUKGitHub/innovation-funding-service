@@ -12,7 +12,7 @@
     <th:block th:switch="${status.name()}">
         <td th:case="'COMPLETE'" class="status ok">
           <th:block th:if="${url}">
-              <a th:href="${url}">
+              <a th:href="${url}" class="govuk-link">
                   <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
               </a>
           </th:block>
@@ -22,7 +22,7 @@
         </td>
         <td th:case="'ACTION_REQUIRED'" class="status action">
             <th:block th:if="${url}">
-                <a th:href="${url}">
+                <a th:href="${url}" class="govuk-link">
                   <th:block th:if="${columnType == 'project-details'}">Incomplete</th:block>
                   <th:block th:if="${columnType == 'MO'}">Assign</th:block>
                   <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
@@ -42,7 +42,7 @@
         </td>
         <td th:case="'PENDING'" class="status waiting">
           <th:block th:if="${url}">
-              <a th:href="${url}">
+              <a th:href="${url}" class="govuk-link">
                 <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
               </a>
           </th:block>
@@ -52,7 +52,7 @@
         </td>
         <td th:case="'REJECTED'" class="status rejected">
             <th:block th:if="${url}">
-                <a th:href="${url}">Rejected</a>
+                <a th:href="${url}" class="govuk-link">Rejected</a>
             </th:block>
             <th:block th:unless="${url}">Rejected</th:block>
         </td>
@@ -63,18 +63,18 @@
 <div th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, pendingSpendProfilesCount, showAllTabs)">
     <ul class="inline-nav cf">
         <li id="section-1" th:class="${selectedTab == 'all' ? 'selected' : ''}">
-            <a th:href="@{/competition/{competitionId}/status/all(competitionId=${competitionId})}">All projects</a>
+            <a th:href="@{/competition/{competitionId}/status/all(competitionId=${competitionId})}" class="govuk-link">All projects</a>
         </li>
 
         <th:block th:if="${showAllTabs}">
             <li id="section-2" th:class="${selectedTab == 'queries' ? 'selected' : ''}">
-                <a th:href="@{/competition/{competitionId}/status/queries(competitionId=${competitionId})}" th:text="'Query responses (' + ${openQueryCount} + ')'"></a>
+                <a th:href="@{/competition/{competitionId}/status/queries(competitionId=${competitionId})}" th:text="'Query responses (' + ${openQueryCount} + ')'" class="govuk-link"></a>
             </li>
         </th:block>
 
         <th:block th:if="${showAllTabs}">
             <li id="section-3" th:class="${selectedTab == 'spend-profile' ? 'selected' : ''}">
-                <a th:href="@{/competition/{competitionId}/status/pending-spend-profiles(competitionId=${competitionId})}" th:text="'Generate spend profile (' + ${pendingSpendProfilesCount} + ')'"></a>
+                <a th:href="@{/competition/{competitionId}/status/pending-spend-profiles(competitionId=${competitionId})}" th:text="'Generate spend profile (' + ${pendingSpendProfilesCount} + ')'" class="govuk-link"></a>
             </li>
         </th:block>
     </ul>

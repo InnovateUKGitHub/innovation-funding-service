@@ -63,13 +63,15 @@
 
             <li>
                 <a th:href="@{/assessment/competition/{competitionId}/assessors(competitionId=${model.competitionId})} + ${originQuery}"
-                   th:text="${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors'">
+                   th:text="${model.inAssessment} ? 'Manage assessors' : 'Allocate assessors'"
+                   class="govuk-link">
                     Allocate/Manage assessors
                 </a>
             </li>
             <li>
                 <a th:href="@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})} + ${originQuery}"
-                   th:text="${model.inAssessment} ? 'Manage applications' : 'Allocate applications'">
+                   th:text="${model.inAssessment} ? 'Manage applications' : 'Allocate applications'"
+                   class="govuk-link">
                     Allocate/Manage applications
                 </a>
             </li>

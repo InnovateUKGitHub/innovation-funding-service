@@ -41,7 +41,8 @@
                             <div th:if="${model.hasAttachment()}" class="upload-section">
                                 <a th:text="${model.feedbackFilename}"
                                    th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
-                                   target="_blank">Uploaded-file.pdf</a>
+                                   target="_blank"
+                                   class="govuk-link">Uploaded-file.pdf</a>
                                 <p class="form-hint">(opens in a new window)</p>
                             </div>
                             <th:block th:unless="${model.hasAttachment()}">No feedback uploaded</th:block>

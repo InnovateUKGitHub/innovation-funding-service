@@ -136,11 +136,13 @@
                         <h3 class="govuk-heading-s">
                             <th:block th:unless="${model.allReadOnly}">
                                 <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id},sectionId=${childSection.section.id})}"
-                                   th:text="${childSection.section.name}"></a>
+                                   th:text="${childSection.section.name}"
+                                   class="govuk-link"></a>
                             </th:block>
                             <th:block th:if="${model.allReadOnly}">
                                 <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id},sectionId=${childSection.section.id},applicantOrganisationId=${model.applicantOrganisationId})}"
-                                   th:text="${childSection.section.name}"></a>
+                                   th:text="${childSection.section.name}"
+                                   class="govuk-link"></a>
                             </th:block>
                         </h3>
                     </div>
@@ -152,7 +154,7 @@
                             <th:block th:if="${model.userIsLeadApplicant}">
                                 You must select a research category in
                                 <th:block th:unless="${model.allReadOnly}">
-                                    <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a>
+                                    <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.applicationDetailsQuestionId})}" class="govuk-link">application details</a>
                                 </th:block>
                                 <th:block th:if="${model.allReadOnly}">
                                     application details
@@ -163,10 +165,10 @@
                             <br />
                             You must also state your organisation size in the
                             <th:block th:unless="${model.allReadOnly}">
-                                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.
+                                <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}" class="govuk-link">your organisation</a> section.
                             </th:block>
                             <th:block th:if="${model.allReadOnly}">
-                                <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId},applicantOrganisationId=${model.applicantOrganisationId})}">your organisation</a> section.
+                                <a th:href="@{/application/{id}/form/section/{sectionId}/{applicantOrganisationId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId},applicantOrganisationId=${model.applicantOrganisationId})}" class="govuk-link">your organisation</a> section.
                             </th:block>
                         </p>
                     </div>

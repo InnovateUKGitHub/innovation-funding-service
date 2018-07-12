@@ -21,13 +21,13 @@
                 </p>
                 <ul class="govuk-list govuk-list--bullet extra-margin-top">
                     <li th:unless="${model.profileStatus.skillsComplete}">
-                        <a th:href="@{/profile/skills/edit}">your skills</a>
+                        <a th:href="@{/profile/skills/edit}" class="govuk-link">your skills</a>
                     </li>
                     <li th:unless="${model.profileStatus.affiliationsComplete}">
-                        <a th:href="@{/profile/declaration/edit}">your declaration of interest</a>
+                        <a th:href="@{/profile/declaration/edit}" class="govuk-link">your declaration of interest</a>
                     </li>
                     <li th:unless="${model.profileStatus.agreementComplete}">
-                        <a th:href="@{/profile/agreement}">your assessor agreement</a>
+                        <a th:href="@{/profile/agreement}" class="govuk-link">your assessor agreement</a>
                     </li>
                 </ul>
             </div>
@@ -127,7 +127,8 @@
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="@{/competition/{competitionId}/upcoming(competitionId=${upcomingCompetition.competitionId})}"
-                                       th:text="${upcomingCompetition.displayLabel}"/>
+                                       th:text="${upcomingCompetition.displayLabel}"
+                                       class="govuk-link" />
                                 </h3>
                                 <p class="govuk-body no-margin">Upcoming competition</p>
                             </div>
@@ -154,7 +155,8 @@
                                 <div class="task">
                                     <h3 class="govuk-heading-s">
                                         <a th:href="@{/assessor/dashboard/competition/{competitionId}/panel(competitionId=${assessmentPanelAccept.competitionId})}"
-                                           th:text="${assessmentPanelAccept.competitionName}"/>
+                                           th:text="${assessmentPanelAccept.competitionName}"
+                                           class="govuk-link" />
                                     </h3>
 
                                     <div th:if="${assessmentPanelAccept.awaitingApplications == 0}">
@@ -191,7 +193,8 @@
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="@{/invite/panel/{inviteHash}(inviteHash=${assessmentReviewPanelInvite.inviteHash})}"
-                                       th:text="${assessmentReviewPanelInvite.competitionName}"/>
+                                       th:text="${assessmentReviewPanelInvite.competitionName}"
+                                       class="govuk-link" />
                                 </h3>
                                 <p class="govuk-body">You have been asked to attend this assessment panel. Please respond.</p>
                             </div>
@@ -208,7 +211,8 @@
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="@{/invite/interview/{inviteHash}(inviteHash=${interviewPanelInvite.inviteHash})}"
-                                       th:text="${interviewPanelInvite.competitionName}"/>
+                                       th:text="${interviewPanelInvite.competitionName}"
+                                       class="govuk-link" />
                                 </h3>
                                 <p class="govuk-body">You have been asked to attend an interview panel for this competition. Please respond.</p>
                             </div>
@@ -249,23 +253,23 @@
             <h2 class="govuk-heading-m">Your assessor details</h2>
             <ul class="govuk-list govuk-list--bullet">
                 <li>
-                    <a th:href="@{/profile/skills}">your skills</a>
+                    <a th:href="@{/profile/skills}" class="govuk-link">your skills</a>
                 </li>
                 <li>
-                    <a th:href="@{/profile/declaration}">your declaration of interest</a>
+                    <a th:href="@{/profile/declaration}" class="govuk-link">your declaration of interest</a>
                 </li>
                 <li>
-                    <a th:href="@{/profile/agreement}">your assessor agreement</a>
+                    <a th:href="@{/profile/agreement}" class="govuk-link">your assessor agreement</a>
                 </li>
                 <li>
-                    <a th:href="@{/profile/travel}">travel and subsistence rates</a>
+                    <a th:href="@{/profile/travel}" class="govuk-link">travel and subsistence rates</a>
                 </li>
             </ul>
 
             <h2 class="govuk-heading-m">Profile</h2>
             <ul class="govuk-list govuk-list--bullet">
                 <li>
-                    <a th:href="@{/profile/details}">your details</a>
+                    <a th:href="@{/profile/details}" class="govuk-link">your details</a>
                 </li>
                 <!--/* TODO INFUND-7057
                 <li>

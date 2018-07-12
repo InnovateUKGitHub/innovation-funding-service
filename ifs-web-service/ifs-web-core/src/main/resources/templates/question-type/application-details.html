@@ -37,12 +37,12 @@
             <th:block th:if="${showApplicationTeamLink}">
                 <ul class="govuk-list govuk-list--bullet">
                     <li>
-                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${queryParams}">
+                        <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${queryParams}" class="govuk-link">
                             view contributors and collaborators
                         </a>
                     </li>
                     <li>
-                        <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${competition.id})}">
+                        <a th:href="@{~/competition/{competitionId}/info/terms-and-conditions(competitionId=${competition.id})}" class="govuk-link">
                             view the grant terms and conditions
                         </a>
                     </li>

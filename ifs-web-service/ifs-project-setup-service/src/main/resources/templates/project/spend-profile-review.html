@@ -46,7 +46,8 @@
                     <h3 class="govuk-heading-s">
                         <a th:if="${partner.value.showEditLinkToUser}"
                            th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.key})}"
-                           th:text="${partner.value.organisationName}" />
+                           th:text="${partner.value.organisationName}"
+                           class="govuk-link"/>
                         <th:block th:unless="${partner.value.showEditLinkToUser}"
                                   th:text="${partner.value.organisationName}" />
                         <th:block th:if="${partner.value.organisationName.equals(model.leadOrganisation.name)}"> (Lead)</th:block>

@@ -17,7 +17,7 @@
                     <h2 class="govuk-heading-m error-summary-heading"  id="error-summary-heading">We are unable to save your target start date.</h2>
                     <ul class="error-summary-list">
                         <li th:each="err : ${#fields.errors('${form.*}')}">
-                            <a href="#projectStartDate_month" th:text="${err}">The error message</a>
+                            <a href="#projectStartDate_month" th:text="${err}" class="govuk-link">The error message</a>
                         </li>
                     </ul>
                 </div>

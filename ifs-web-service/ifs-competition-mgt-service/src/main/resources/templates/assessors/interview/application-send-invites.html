@@ -88,7 +88,8 @@
                                             <input type="file" name="feedback" class="govuk-visually-hidden">
                                             <a th:text="${app.filename}"
                                                th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
-                                               target="_blank">Uploaded-file.pdf</a>
+                                               target="_blank"
+                                               class="govuk-link">Uploaded-file.pdf</a>
                                             <p class="form-hint">(opens in a new window)</p>
                                         </div>
                                         <div class="govuk-grid-column-one-third">

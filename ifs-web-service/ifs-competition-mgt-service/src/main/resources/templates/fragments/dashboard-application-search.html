@@ -18,10 +18,10 @@
             </thead>
             <tbody>
             <tr th:each="app : ${applications}">
-                <td><a th:href="${'/management/competition/' + app.competition + '/application/' + app.id}" th:text="${app.id}"></a></td>
+                <td><a th:href="${'/management/competition/' + app.competition + '/application/' + app.id}" th:text="${app.id}" class="govuk-link"></a></td>
                 <td th:text="${app.name}"></td>
                 <th:block th:if="${app.isApproved()}">
-                    <td><a th:href="${'/project-setup-management/competition/' + app.competition + '/status/all'}" th:text="${app.competitionName}"></a></td>
+                    <td><a th:href="${'/project-setup-management/competition/' + app.competition + '/status/all'}" th:text="${app.competitionName}" class="govuk-link"></a></td>
                 </th:block>
                 <th:block th:unless="${app.isApproved()}">
                     <td th:text="${app.competitionName}"></td>

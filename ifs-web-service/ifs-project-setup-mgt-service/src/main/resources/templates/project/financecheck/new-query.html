@@ -23,7 +23,7 @@
         <h2 class="govuk-heading-m">Finance Contact</h2>
         <p class="govuk-body">
             <th:block th:text="${model.financeContactName}">Finance Contact</th:block> <br />
-            <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}">example@example.com</a> <br />
+            <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}" class="govuk-link">example@example.com</a> <br />
             <th:block th:text="${model.financeContactPhoneNumber}">0</th:block>
         </p>
 
@@ -113,7 +113,7 @@
                         <h3 class="govuk-heading-s">Supporting documentation</h3>
                         <ul>
                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" target="_blank">filename</a>
+                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link" target="_blank">filename</a>
                                 <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button>
                             </li>
                         </ul>
@@ -135,7 +135,7 @@
                         <button type="submit" id="post-query" data-content-on-submit="Please wait..." class="govuk-button no-margin">Post query</button>
                     </div>
                     <div class="govuk-grid-column-one-half alignright">
-                        <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>
+                        <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-link">Cancel</a>
                     </div>
                 </div>
         </form>

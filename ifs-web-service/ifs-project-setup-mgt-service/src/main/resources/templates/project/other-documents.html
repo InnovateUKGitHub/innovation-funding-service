@@ -52,7 +52,7 @@
                   <th:block th:text="${model.projectManagerName}"/><br/>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(model.projectManagerEmail)}">
-                  <a th:href="${'mailto:'+model.projectManagerEmail}" th:text="${model.projectManagerEmail}" /><br/>
+                  <a th:href="${'mailto:'+model.projectManagerEmail}" th:text="${model.projectManagerEmail}" class="govuk-link" /><br/>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(model.projectManagerTelephone)}">
                   <th:block th:text="${model.projectManagerTelephone}"/>
@@ -64,12 +64,12 @@
                 <th:block th:if="${model.collaborationAgreementRequired}">
                     <h2 class="govuk-heading-m">Collaboration agreement</h2>
                     <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
-                    class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
+                    class="uploaded-file govuk-link" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
                 </th:block>
 
                 <h2 class="govuk-heading-m">Exploitation plan</h2>
                 <a th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
-                 class="uploaded-file"
+                 class="uploaded-file govuk-link"
                  th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
 
                 <th:block th:if="${model.isShowApproveRejectButtons()}">

@@ -11,7 +11,7 @@
 
 <th:block th:fragment="global-cookie-message">
     <div id="global-cookie-message">
-        <p class="govuk-body">GOV.UK uses cookies to make the site simpler. <a href="/info/cookies">Find out more about cookies</a>.</p>
+        <p class="govuk-body">GOV.UK uses cookies to make the site simpler. <a href="/info/cookies" class="govuk-link">Find out more about cookies</a>.</p>
     </div>
 </th:block>
 
@@ -151,7 +151,7 @@
                 <input id="agree-terms-page" th:field="${form.termsAgreed}" type="checkbox" value="yes"
                        data-switches-button-status="#mark-all-as-complete" data-autosave-disabled />
                 <label for="agree-terms-page">
-                    As a member of this consortium I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${competitionId})}">grant terms and conditions</a> set out by Innovate UK.
+                    As a member of this consortium I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${competitionId})}" class="govuk-link">grant terms and conditions</a> set out by Innovate UK.
                 </label>
             </div>
         </fieldset>
@@ -170,7 +170,7 @@
                    data-switches-button-status="#mark-all-as-complete" data-autosave-disabled />
             <label for="stateAidAgreed">
                 By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
-                <a target="_blank" href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">project costs guidance (opens in a new window)</a>
+                <a target="_blank" href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance" class="govuk-link">project costs guidance (opens in a new window)</a>
             </label>
         </div>
     </div>
@@ -195,7 +195,7 @@
                 <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" />
             </p>
             <p class="govuk-body" th:if="${currentProject}">
-                <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
+                <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}" class="govuk-link">Start to plan your project</a>
             </p>
         </div>
         <div class="warning-alert" th:if="${app.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).REJECTED}">
@@ -214,13 +214,13 @@
 <th:block th:fragment="general-pagination(pagination)">
     <ul class="pagination" th:if="${pagination.totalPages > 1}">
         <li class="prev" th:if="${pagination.hasPrevious}">
-            <a href="#" th:href="${pagination.pageNames[pagination.currentPage - 1].path}" rel="prev" title="Navigate to previous page">
+            <a href="#" th:href="${pagination.pageNames[pagination.currentPage - 1].path}" class="govuk-link" rel="prev" title="Navigate to previous page">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title" th:text="${pagination.pageNames[pagination.currentPage - 1].title}">1 to 20</span>
             </a>
         </li>
         <li class="next" th:if="${pagination.hasNext}">
-            <a href="#" th:href="${pagination.pageNames[pagination.currentPage + 1].path}" rel="next" title="Navigate to next page">
+            <a href="#" th:href="${pagination.pageNames[pagination.currentPage + 1].path}" class="govuk-link" rel="next" title="Navigate to next page">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title" th:text="${pagination.pageNames[pagination.currentPage + 1].title}">21 to 40</span>
             </a>
@@ -228,7 +228,7 @@
     </ul>
     <ul class="pagination-index" th:if="${pagination.totalPages > 1}">
         <li th:each="page : ${pagination.pageNames}">
-            <a href="#" th:href="${page.path}" th:text="${page.title}">1 to 20</a>
+            <a href="#" th:href="${page.path}" th:text="${page.title}" class="govuk-link">1 to 20</a>
         </li>
     </ul>
 </th:block>
@@ -239,7 +239,7 @@
             <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
             <th:block th:unless="${err.global}">
                 <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
-                <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+                <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}" class="govuk-link">The error message</a>
             </th:block>
         </li>
     </ul>

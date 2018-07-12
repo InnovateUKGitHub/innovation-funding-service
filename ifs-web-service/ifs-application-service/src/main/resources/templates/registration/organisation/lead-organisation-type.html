@@ -18,7 +18,7 @@
           <ul class="error-summary-list">
               <li th:each="err : ${#fields.detailedErrors('${organisationForm.organisationTypeId}')}">
                   <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
-                  <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+                  <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}" class="govuk-link">The error message</a>
               </li>
           </ul>
         </div>
@@ -69,7 +69,7 @@
 
 
             <p class="govuk-body">
-                If your organisation type is not listed contact the <a th:href="@{/info/contact}">customer support service</a>.
+                If your organisation type is not listed contact the <a th:href="@{/info/contact}" class="govuk-link">customer support service</a>.
             </p>
             <button id="lead-organisation-type-cta" class="govuk-button extra-margin" name="select-company-type" type="submit">Save and continue</button>
         </form>

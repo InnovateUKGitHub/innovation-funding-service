@@ -39,7 +39,7 @@
 
                             <p class="govuk-body">The lead applicant cannot submit the application until everyone has accepted their invites. Only the lead can remove team members.</p>
 
-                            <p class="govuk-body">Read the guidance on <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" target="_blank">how collaboration in the Innovation Funding Service works</a> (this link will open in a new window).</p>
+                            <p class="govuk-body">Read the guidance on <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#applying-for-a-competition-on-the-innovation-funding-service" class="govuk-link" target="_blank">how collaboration in the Innovation Funding Service works</a> (this link will open in a new window).</p>
 
                             <div th:if="${model.applicationCanBegin}" class="message-alert">
                                 <h2 class="govuk-heading-s">As the lead applicant you can:</h2>
@@ -93,16 +93,18 @@
                         <p class="govuk-body" th:if="${organisation.editable and !model.complete}">
                             <!--/* Prefer linking by the InviteOrganisation id over the Organisation id except where there is no InviteOrganisation. */-->
                             <a th:unless="${organisation.organisationExists}" th:href="@{/application/{applicationId}/team/update/invited/{organisationId}(applicationId=${model.applicationId}, organisationId=${organisation.inviteOrganisationId})}"
-                               th:text="|Update and add contributors from ${organisation.name}|">Update and add contributors from Empire Ltd</a>
+                               th:text="|Update and add contributors from ${organisation.name}|"
+                               class="govuk-link">Update and add contributors from Empire Ltd</a>
                             <a th:if="${organisation.organisationExists}" th:href="@{/application/{applicationId}/team/update/existing/{organisationId}(applicationId=${model.applicationId},organisationId=${organisation.organisationId})}"
-                               th:text="|Update and add contributors from ${organisation.name}|">Update and add contributors from Empire Ltd</a>
+                               th:text="|Update and add contributors from ${organisation.name}|"
+                               class="govuk-link">Update and add contributors from Empire Ltd</a>
                         </p>
                     </div>
 
                     <!--/* End - show the link to add another organisation (lead only) */-->
                     <th:block th:if="${model.userLeadApplicant and !model.complete}">
                         <p class="govuk-body extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
-                        <p class="govuk-body"><a th:href="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}">Add a collaborator organisation</a></p>
+                        <p class="govuk-body"><a th:href="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" class="govuk-link">Add a collaborator organisation</a></p>
                     </th:block>
                 </th:block>
 

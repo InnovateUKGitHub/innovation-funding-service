@@ -33,7 +33,7 @@
                             <span th:text="${partner.organisationName}"/>
                         </th:block>
                         <th:block th:unless="${isCompAdminUser or partner.bankDetailsStatus.name() == 'NOT_STARTED' or partner.bankDetailsStatus.name() == 'NOT_REQUIRED'}">
-                            <a th:href="@{organisation/{organisationId}/review-bank-details(organisationId=${partner.organisationId})}" th:text="${partner.organisationName}" />
+                            <a th:href="@{organisation/{organisationId}/review-bank-details(organisationId=${partner.organisationId})}" th:text="${partner.organisationName}" class="govuk-link" />
                         </th:block>
                         <th:block th:if="${partner.organisationName.equals(model.leadOrganisation)}"> (Lead)</th:block>
                     </h3>

@@ -35,7 +35,7 @@
         <div>
           We are unable to complete your request.
           This could be because something went wrong at our end, or you are trying to perform an action that does not exist.
-          You can either go back to the page you were previously on or to the <a th:href="${userDashboardLink}">Innovation Funding Service sign in page</a>.
+          You can either go back to the page you were previously on or to the <a th:href="${userDashboardLink}" class="govuk-link">Innovation Funding Service sign in page</a>.
         </div>
 
         <p class="govuk-body" th:unless="${#strings.isEmpty(stacktrace)}" th:text="${'Stack trace for debugging: ' + stacktrace}" style="margin-top: 2em;">

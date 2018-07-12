@@ -23,7 +23,7 @@
 
         <p class="govuk-body">Innovate UK is to invest up to £9 million in Technology inspired.</p>
 
-        <p class="govuk-body">Please review the <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">details of this competition (opens in a new window)</a> before the interview panel.</p>
+        <p class="govuk-body">Please review the <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" class="govuk-link" target="_blank" rel="external noopener noreferrer">details of this competition (opens in a new window)</a> before the interview panel.</p>
         <br>
 
         <form th:action="@{/invite/interview/{inviteHash}/decision(inviteHash=${model.panelInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">

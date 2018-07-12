@@ -50,7 +50,7 @@
                                     <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul>
                                         <li th:each="attachment : ${post.attachments}">
-                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" target="_blank">file</a>
+                                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name + ' (opens in a new window)'}" class="govuk-link" target="_blank">file</a>
                                         </li>
                                     </ul>
                                 </th:block>
@@ -94,7 +94,7 @@
                                         <h3 class="govuk-heading-s">Supporting documentation</h3>
                                         <ul>
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                                <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}">filename</a>
+                                                <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link">filename</a>
                                                 <button name="removeAttachment" class="button-clear" th:value="${attachmentId}">Remove</button><br />
                                             </li>
                                         </ul>
