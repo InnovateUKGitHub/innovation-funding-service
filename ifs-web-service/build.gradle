@@ -1,18 +1,13 @@
-if(hasProperty('profile')) {
-    def targetBuild = profile
-    if (targetBuild != 'automated' && targetBuild != 'docker') {
-        //temp workaround before we remove the automated profile completely
-        apply from: targetBuild + "-build.gradle";
-    }
-}
-
+apply from: rootProject.file("gradle-support/profile-handler.gradle")
 apply from: "fractal.gradle";
 apply from: "front-end.gradle"
+apply plugin: 'idea'
+
 
 group 'innovateuk'
 version project.version
 
-apply plugin: 'idea'
+processResources.dependsOn applyProfiles
 
 buildscript {
 
