@@ -40,7 +40,7 @@ IFS.application.repeatableOrgApplicantRows = (function () {
           'name="stagedInvite.email" value="" ' +
           'data-required-errormessage="Please enter an email address." required="required" />' +
           '</td>' +
-          '<td><button id="invite-collaborator-' + rowId + '" class="govuk-button no-margin" name="executeStagedInvite" value="true" type="submit">Invite</button></td>' +
+          '<td><button id="invite-collaborator-' + rowId + '" class="govuk-button govuk-!-margin-0" name="executeStagedInvite" value="true" type="submit">Invite</button></td>' +
           '<td class="alignright">' +
           '<button id="remove-collaborator-' + rowId + '" class="remove-another-row button-clear" name="removeInvite" type="button" value="0">Remove</button>' +
           '</td>' +

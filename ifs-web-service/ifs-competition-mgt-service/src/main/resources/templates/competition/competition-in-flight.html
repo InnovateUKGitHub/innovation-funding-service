@@ -18,7 +18,7 @@
             <form th:action="@{/competition}" method="post">
                 <div class="govuk-grid-column-two-thirds">
                     <div class="boxed">
-                        <h2 class="govuk-heading-m no-margin-top">Competition information</h2>
+                        <h2 class="govuk-heading-m govuk-!-margin-top-0">Competition information</h2>
 
                         <dl class="standard-definition-list">
                             <dt>Competition type</dt>
@@ -50,7 +50,7 @@
                     </div>
 
                     <th:block th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
-                        <div class="govuk-grid-row extra-margin">
+                        <div class="govuk-grid-row govuk-!-margin-top-6">
                             <div class="govuk-grid-column-one-third dashboard-actions">
                                 <button type="submit"
                                         th:unless="${model.readOnly}"
@@ -148,7 +148,7 @@
                     </ul>
                 </div>
                 <div class="govuk-grid-column-one-third">
-                    <h2 class="govuk-heading-m no-margin-top">Competition milestones</h2>
+                    <h2 class="govuk-heading-m govuk-!-margin-top-0">Competition milestones</h2>
                     <ul class="timeline-status">
                         <th:block th:each="milestone : ${model.milestones}">
                             <li th:if="${milestone.milestoneType.presetDate}"

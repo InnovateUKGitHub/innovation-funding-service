@@ -93,7 +93,7 @@
         <div class="grid-container">
             <h2 class="govuk-heading-m">Project costs for financial year</h2>
             <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
-            <table class="extra-margin-bottom" style="width: 50%;">
+            <table class="govuk-!-margin-bottom-6" style="width: 50%;">
                 <thead>
                 <tr>
                     <th scope="col" style="width: 50%">Financial year (April to March)</th>
@@ -121,7 +121,7 @@
                 </tbody>
             </table>
             <a th:href="@{/project/{id}/spend-profile/total/confirmation(id=${project.getId()})}"
-               class="govuk-button extra-margin" data-js-modal="modal-confirm-spend-profile-totals">Send project spend profile</a>
+               class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-spend-profile-totals">Send project spend profile</a>
         </div>
     </main>
 </div>

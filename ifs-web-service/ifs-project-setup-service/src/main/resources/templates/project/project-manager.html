@@ -41,7 +41,7 @@
                                     data-js-modal="modal-resend-project-manager"
                                     th:attr="data-modal-form-action=@{/project/{projectId}/details/project-manager(projectId=${model.projectId})},data-modal-input-resend-pm-invite=${user.id}"
                                     th:href="@{/project/{projectId}/details/project-manager/confirm?resend-pm-invite={userId}(projectId=${model.projectId},userId=${user.id})}"
-                                    class="button-clear no-margin">
+                                    class="button-clear govuk-!-margin-0">
                                     Resend invite
                                 </a>
                             </div>
@@ -78,7 +78,7 @@
                                             <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail')} ? 'form-control-error'" name="inviteEmail" id="email-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.email.required}"/>
                                         </td>
                                         <td class="alignright">
-                                            <button class="button-clear no-margin-bottom" id="invite-project-manager" name="invite-pm">Invite to project</button>
+                                            <button class="button-clear govuk-!-margin-bottom-0" id="invite-project-manager" name="invite-pm">Invite to project</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -88,7 +88,7 @@
 
                     <p class="govuk-body">You can change your Project Manager up until your grant offer letter is generated.</p>
 
-                    <button class="govuk-button extra-margin" type="submit" id="save" name="save-pm">Save</button>
+                    <button class="govuk-button govuk-!-margin-top-6" type="submit" id="save" name="save-pm">Save</button>
                 </form>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />

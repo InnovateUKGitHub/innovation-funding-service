@@ -4,13 +4,13 @@
     <!-- ===========================Your finances section view =========================== -->
     <th:block th:fragment="finance(model)">
         <div class="your-finances">
-            <h2 class="govuk-heading-m no-margin-bottom">Finances</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Finances</h2>
             <div class="message-alert">
                 <p class="govuk-body">Only members from your organisation will be able to see a breakdown of your finances.</p>
             </div>
-            <p class="govuk-body extra-margin">Please complete your project finances.</p>
+            <p class="govuk-body govuk-!-margin-top-6">Please complete your project finances.</p>
 
-            <details th:unless="${model.canNotRequestFunding || model.allReadOnly}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
+            <details th:unless="${model.canNotRequestFunding || model.allReadOnly}" class="govuk-!-margin-bottom-6" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
                 <summary><span class="summary">Not requesting funding</span></summary>
                 <div class="panel-indent">
                     <p class="govuk-body">If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
@@ -47,11 +47,11 @@
         </th:block>
 
         <fieldset th:unless="${model.financeOverviewRows.isEmpty()}">
-            <legend class="govuk-heading-m no-margin-bottom">Financial overview</legend>
+            <legend class="govuk-heading-m govuk-!-margin-bottom-0">Financial overview</legend>
             <span class="form-hint">Details relating to your organisation over the last financial year.</span><br>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <table class="extra-margin-bottom">
+                    <table class="govuk-!-margin-bottom-6">
                         <thead>
                         <tr>
                             <th scope="col">Section</th>
@@ -109,11 +109,11 @@
             <div>
                 <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
                    th:if="${model.complete}"
-                   class="extra-margin button-secondary">Return to finances
+                   class="govuk-!-margin-top-6 button-secondary">Return to finances
                 </a>
                 <button type="submit"
                    th:unless="${model.complete}"
-                   class="extra-margin govuk-button">
+                   class="govuk-!-margin-top-6 govuk-button">
                     Save and return to finances
                 </button>
             </div>
@@ -250,7 +250,7 @@
 
 
     <th:block th:fragment="project_location(model)">
-        <div class="extra-margin">
+        <div class="govuk-!-margin-top-6">
             <th:block th:unless="${model.readonly}">
                 <p class="govuk-body">Where will most of the project work take place?</p>
                 <!--/* edit */-->

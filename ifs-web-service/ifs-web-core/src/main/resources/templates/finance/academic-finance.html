@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="your_finance (model, internalView)" th:with="question=${model.applicantQuestion.question}, userOrganisation=${model.currentApplicant.organisation}, readonly=${model.allReadOnly or model.complete}">
-    <h2 class="govuk-heading-m no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}"/>
+    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}"/>
     <p ifs:utext="${question.description}"/>
     <fieldset>
         <h2 class="govuk-heading-m">Innovate UK funding</h2>
@@ -40,7 +40,7 @@
 
     <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})"
          th:with="fieldName='form.academicTermsAgreed'"
-         class="agree-to-terms-container extra-margin"
+         class="agree-to-terms-container govuk-!-margin-top-6"
          th:unless="${model.allReadOnly}"></div>
 
 </th:block>
@@ -52,7 +52,7 @@
 
 <th:block th:fragment="finance_fields (model, isApplicant)">
     <fieldset class="academic">
-        <h2 class="govuk-heading-m" th:classappend="${isApplicant == 'true' ? ' no-margin' : ''}">Financial resources</h2>
+        <h2 class="govuk-heading-m" th:classappend="${isApplicant == 'true' ? ' govuk-!-margin-0' : ''}">Financial resources</h2>
         <legend class="govuk-visually-hidden">Financial resources</legend>
         <p class="govuk-body" th:text="'The following costs are entered by the organisation from the summary of resources section on ' + (${isApplicant == 'true'} ? 'your ' : 'the ') + 'Je-S form'">The following costs are entered by the organisation from the summary of resources section on the Je-S form</p>
 
@@ -333,8 +333,8 @@
          removeName='remove_finance_document',
          saveName='upload_finance_document'">
     <div class="upload-section">
-        <h3 th:if="${viewmode=='edit'}" class="govuk-heading-s no-margin" th:text="${formInput.getDescription()}">Upload a pdf copy of the Je-S output form once you have a status of 'With Council'.</h3>
-        <h3 th:if="${viewmode=='readonly'}" class="govuk-heading-s no-margin" th:text="'Download Je-S form'">Download Je-S form</h3>
+        <h3 th:if="${viewmode=='edit'}" class="govuk-heading-s govuk-!-margin-0" th:text="${formInput.getDescription()}">Upload a pdf copy of the Je-S output form once you have a status of 'With Council'.</h3>
+        <h3 th:if="${viewmode=='readonly'}" class="govuk-heading-s govuk-!-margin-0" th:text="'Download Je-S form'">Download Je-S form</h3>
         <p class="govuk-body" th:if="${viewmode=='edit'}" ifs:utext="${question.description}"></p>
         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" th:with="autoSaveOff=true" />
     </div>

@@ -21,7 +21,7 @@
                 <p class="govuk-body">You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
                 <section class="boxed">
-                    <h2 class="govuk-heading-m no-margin" th:text="|${#temporals.format(model.acceptsDate, 'd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'd MMMM yyyy')}: Assessment period|">
+                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|${#temporals.format(model.acceptsDate, 'd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'd MMMM yyyy')}: Assessment period|">
                         21 March 2017 to 28 March 2017: Assessment period
                     </h2>
                     <p class="govuk-body">This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependent on how many applications have been submitted. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.</p>

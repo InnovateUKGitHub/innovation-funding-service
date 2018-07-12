@@ -19,18 +19,18 @@
 
                 <p class="form-hint">You can access this assessor agreement at any time from your profile. <a target="_blank" href="/assessment/documents/New simple assessor agreement.pdf">Download assessor agreement (opens in a new window)</a>.</p>
 
-                <form class="extra-margin" th:action="@{/profile/agreement}" method="post" th:unless="${model.currentAgreement}">
+                <form class="govuk-!-margin-top-6" th:action="@{/profile/agreement}" method="post" th:unless="${model.currentAgreement}">
                     <p class="govuk-body">By creating an account with us you agree to the terms and conditions contained in this assessor agreement.</p>
-                    <button class="govuk-button extra-margin-right" type="submit">Save and return to assessor dashboard</button>
+                    <button class="govuk-button" type="submit">Save and return to assessor dashboard</button>
                     <a th:href="@{/assessor/dashboard}" class="govuk-link">Cancel</a>
                 </form>
 
-                <p class="extra-margin" th:text="|You signed the assessor agreement on ${#temporals.format(model.agreementSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">
+                <p class="govuk-!-margin-top-6" th:text="|You signed the assessor agreement on ${#temporals.format(model.agreementSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">
                     <span class="icon icon-important"></span>
                     You signed the assessor agreement on 1 January 1970.
                 </p>
 
-                <div class="extra-margin-top" th:if="${model.currentAgreement}">
+                <div th:if="${model.currentAgreement}">
                     <a th:href="@{/assessor/dashboard}" class="govuk-button">Return to assessor dashboard</a>
                 </div>
 

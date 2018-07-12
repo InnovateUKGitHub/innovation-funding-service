@@ -25,12 +25,12 @@
 	<h2 class="govuk-heading-m">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 
 	<div class="success-alert" th:unless="${param.status == null or param.status[0] != 'accepted'}">
-		<h2 class="govuk-heading-s no-margin-top">The bank details provided have been approved.</h2>
+		<h2 class="govuk-heading-s govuk-!-margin-top-0">The bank details provided have been approved.</h2>
 	</div>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'noCompHouse' or param.type != null and param.type[0] == 'noCompHouse'}">
 		<div class="panel">
-			<h2 class="govuk-heading-m no-margin-top">Business not registered on Companies House</h2>
+			<h2 class="govuk-heading-m govuk-!-margin-top-0">Business not registered on Companies House</h2>
 
 			<dl class="standard-definition-list">
 				<dt>Stated business type:</dt>
@@ -146,7 +146,7 @@
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
 
-				<h2 class="govuk-heading-m no-margin">Approve bank account</h2>
+				<h2 class="govuk-heading-m govuk-!-margin-0">Approve bank account</h2>
 
 				<p class="govuk-body">Approving the bank account will enable the finance checks to begin on the account.</p>
 

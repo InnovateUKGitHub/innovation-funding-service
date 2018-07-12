@@ -23,7 +23,7 @@
             <div class="govuk-grid-column-two-thirds">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
             </div>
-            <div class="govuk-grid-column-one-third alignright extra-margin">
+            <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
                 <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Bank account</h2>
             </div>
         </div>
@@ -47,8 +47,8 @@
 
         <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
 
-            <h2 class="govuk-heading-m no-margin-bottom">Company details</h2>
-            <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('organisationName')} ? 'form-group-error'">
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Company details</h2>
+            <div class="form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('organisationName')} ? 'form-group-error'">
                 <label class="form-label" for="organisationName">
                     <span class="form-label-bold">Company name</span>
                     <th:block th:if="${#fields.hasErrors('organisationName')}">
@@ -85,9 +85,9 @@
                        data-switches-button-status="#modal-change-bank-details"/>
             </div>
 
-            <h2 class="govuk-heading-m no-margin-bottom">Account details</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Account details</h2>
             <p class="form-hint">This is the bank account that the applicant will use for the duration of the project</p>
-            <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('accountNumber')} ? 'form-group-error'">
+            <div class="form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('accountNumber')} ? 'form-group-error'">
                 <label class="form-label" for="accountNumber">
                     <span class="form-label-bold">Account number</span>
                     <th:block th:if="${#fields.hasErrors('accountNumber')}">
@@ -129,11 +129,11 @@
                        th:field="*{sortCode}"
                        data-switches-button-status="#modal-change-bank-details"/>
             </div>
-            <h2 class="govuk-heading-m no-margin-bottom">Billing address</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Billing address</h2>
             <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
 
 
-            <fieldset id="address-details" class="extra-margin">
+            <fieldset id="address-details" class="govuk-!-margin-top-6">
                 <legend class="govuk-visually-hidden">Address details</legend>
                 <div class="form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine1')} ? 'form-group-error'">
                     <label class="form-label" for="addressForm.selectedPostcode.addressLine1">
@@ -199,13 +199,13 @@
                 </div>
             </fieldset>
 
-            <div class="govuk-grid-row extra-margin">
+            <div class="govuk-grid-row govuk-!-margin-top-6">
                 <div class="govuk-grid-column-one-half">
                     <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details(id=${model.projectId}, orgId=${model.organisationId})}" class="govuk-link">Cancel bank account changes</a>
                 </div>
                 <th:block th:insert="fragments/modals :: modal-partner-change-bank-details" />
                 <div class="govuk-grid-column-one-half alignright">
-                    <button class="no-margin-right govuk-button" id="modal-change-bank-details" data-js-modal="modal-partner-change-bank-details">Update bank account details</button>
+                    <button class="govuk-!-margin-right-0 govuk-button" id="modal-change-bank-details" data-js-modal="modal-partner-change-bank-details">Update bank account details</button>
                 </div>
             </div>
         </form>

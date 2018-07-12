@@ -54,7 +54,7 @@
             </div>
         </div>
         <div th:if="${url == ''}" th:remove="tag">
-            <h2 class="govuk-heading-s no-margin" style="margin-top: 5px" th:text="${link}">Title text</h2>
+            <h2 class="govuk-heading-s govuk-!-margin-0" style="margin-top: 5px" th:text="${link}">Title text</h2>
         </div>
         <div th:if="${url != ''}" th:remove="tag">
              <a th:href="${url}" class="link-back" th:text="${link}">Link text</a>
@@ -64,9 +64,9 @@
 
 <!-- ===================Assessor Page title============================== -->
 <div th:fragment="prototype-assessor-page-title(subtitle, heading)">
-    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <p class="subtitle no-margin" th:text="${subtitle}">Subtitle here</p>
-        <h1 class="govuk-heading-xl no-margin" th:text="${heading}">Title here</h1>
+    <div class="hgroup govuk-!-margin-top-0" style="padding-top: 20px; margin-bottom: 30px">
+        <p class="subtitle govuk-!-margin-0" th:text="${subtitle}">Subtitle here</p>
+        <h1 class="govuk-heading-xl govuk-!-margin-0" th:text="${heading}">Title here</h1>
     </div>
 </div>
 
@@ -690,7 +690,7 @@
                     <p class="govuk-body">You have been asked to assess this competition. Please respond.</p>
                 </div>
                 <div class="assessment-period">
-                    <h4 class="govuk-heading-s no-margin">Assessment period</h4>
+                    <h4 class="govuk-heading-s govuk-!-margin-0">Assessment period</h4>
                     <dl class="standard-definition-list reduced-width">
                         <dt>Begins</dt>
                         <dd>15 November 2017</dd>
@@ -713,7 +713,7 @@
                     <!--<div class="column-two-thirds">-->
                         <!--<h3 class="govuk-heading-m"><a href="/prototypes/4083-upcoming-comp">An example competition</a></h3>-->
                         <!--<p class="form-hint">Upcoming competition</p>-->
-                        <!--<p class="govuk-body no-margin">Applications allocated 15 April</p>-->
+                        <!--<p class="govuk-body govuk-!-margin-0">Applications allocated 15 April</p>-->
                     <!--</div>-->
                     <!--<div class="govuk-grid-column-one-third">-->
                         <!--<h3 class="govuk-heading-m">Assessment period</h3>-->
@@ -736,7 +736,7 @@
             <li>
                 <div class="task">
                     <h4 class="govuk-heading-s"><a href="/prototypes/4083-upcoming-comp">An example competition</a></h4>
-                    <p class="govuk-body no-margin">Applications allocated 15 April</p>
+                    <p class="govuk-body govuk-!-margin-0">Applications allocated 15 April</p>
                 </div>
                 <div class="assessment-period">
                     <h4 class="govuk-heading-s">Assessment period</h4>
@@ -790,7 +790,7 @@
     <!--</ul>-->
 
     <div class="progress-list">
-        <h3 class="govuk-heading-m no-margin-top">Competitions for assessment (<span>2</span>)</h3>
+        <h3 class="govuk-heading-m govuk-!-margin-top-0">Competitions for assessment (<span>2</span>)</h3>
         <ul>
             <li>
                 <div class="task">
@@ -847,7 +847,7 @@
         <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
 
             <button class="js-close close" aria-label="Close Popup">X</button>
-            <h3 class="govuk-heading-m no-margin">Are you sure you want to submit these assessments?</h3>
+            <h3 class="govuk-heading-m govuk-!-margin-0">Are you sure you want to submit these assessments?</h3>
             <p class="govuk-body">Once you have submitted them you will no longer be able to edit or view the assessments.</p>
             <div>
                 <input type="hidden" name="status" value="accept" />
@@ -981,7 +981,7 @@
                     <p class="govuk-body extra-margin">Once you have completed your assessment of these applications, use the checkboxes to submit assessments individually or as a series. You cannot edit any submitted assessments.</p>
 
                     <input type="hidden" name="competitionId" value="1" />
-                    <button class="govuk-button button-pull-right no-margin" data-js-modal="modal-confirm-submit" name="submit_assessments" id="formSubmitAssessmentButton" type="submit" href="/assessor/confirm-submit" disabled="disabled">Submit assessments</button>
+                    <button class="govuk-button button-pull-right govuk-!-margin-0" data-js-modal="modal-confirm-submit" name="submit_assessments" id="formSubmitAssessmentButton" type="submit" href="/assessor/confirm-submit" disabled="disabled">Submit assessments</button>
 
                 </form>
             </ul>
@@ -1079,7 +1079,7 @@
 
 <!-- ===================Assessor terms and conditions============================== -->
 <div th:fragment="prototype-assessor-terms">
-    <h2 class="govuk-heading-m no-margin">1. Interpretation </h2>
+    <h2 class="govuk-heading-m govuk-!-margin-0">1. Interpretation </h2>
 
     <h3 class="govuk-heading-s"> 1.1 In this contract the following words shall mean: </h3>
 
@@ -1284,7 +1284,7 @@
 
     <p class="govuk-body">(These rates eliminate any individual tax/NIC liability)</p>
 
-    <dl class="standard-definition-list extra-margin-bottom">
+    <dl class="standard-definition-list govuk-!-margin-bottom-6">
       <dt>Up to 10,000 miles</dt>
       <dd>45p (flat rate not dependent on car engine size)</dd>
     </dl>

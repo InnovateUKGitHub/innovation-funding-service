@@ -22,8 +22,8 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLRejected'}">
 
-		<div class="warning-alert extra-margin-bottom">
-			<h3 class="govuk-heading-s no-margin-top">We are unable to approve the grant offer letter. We will return this to you. A member of Innovate UK will be in contact to discuss our requirements with you.</h3>
+		<div class="warning-alert govuk-!-margin-bottom-6">
+			<h3 class="govuk-heading-s govuk-!-margin-top-0">We are unable to approve the grant offer letter. We will return this to you. A member of Innovate UK will be in contact to discuss our requirements with you.</h3>
 		</div>
 
 	</th:block>
@@ -54,7 +54,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLAccepted'}">
 
-		<div class="success-alert extra-margin-bottom">
+		<div class="success-alert govuk-!-margin-bottom-6">
 			<p class="govuk-body">Your signed grant offer letter has been received and accepted by Innovate UK</p>
 		</div>
 
@@ -83,7 +83,7 @@
 		<!--<p class="govuk-body">Appendix 2 will contain any additional contracts agreed upon during your applicnation process, in signing the grant offer letter you also agree to any conditions set out in Appendix 2.</p>-->
 
 		<div class="upload-section unstyled-view">
-			<h2 class="govuk-heading-s no-margin">Upload signed grant offer letter</h2>
+			<h2 class="govuk-heading-s govuk-!-margin-0">Upload signed grant offer letter</h2>
 			The Project Manager is required to provide a signed copy of the grant offer letter.
 
 			<details>
@@ -122,7 +122,7 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="govuk-heading-m no-margin">Confirm submission</h2>
+					<h2 class="govuk-heading-m govuk-!-margin-0">Confirm submission</h2>
 
 					<p class="govuk-body">Once you submit the signed grant offer letter, we'll review it and will contact you if we need further information.</p>
 

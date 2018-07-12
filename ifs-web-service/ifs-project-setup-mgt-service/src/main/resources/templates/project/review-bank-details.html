@@ -23,7 +23,7 @@
                 <div class="govuk-grid-column-two-thirds">
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank Details',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
                 </div>
-                <div class="govuk-grid-column-one-third alignright extra-margin">
+                <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
                     <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Bank account</h2>
                 </div>
             </div>
@@ -31,7 +31,7 @@
 
             <th:block th:if="${model.approved}">
                 <div class="success-alert">
-                    <h2 class="govuk-heading-s no-margin-top">The bank details provided have been approved.</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-top-0">The bank details provided have been approved.</h2>
                 </div>
             </th:block>
             <th:block th:unless="${model.approved}">
@@ -87,12 +87,12 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="govuk-grid-row extra-margin" th:unless="${model.approved}">
+            <div class="govuk-grid-row govuk-!-margin-top-6" th:unless="${model.approved}">
                 <div class="govuk-grid-column-one-half">
                     <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}" class="govuk-link">Change bank account details</a>
                 </div>
                 <div class="govuk-grid-column-one-half alignright">
-                    <button data-js-modal="modal-partner-approve-bank-details" class="no-margin-right govuk-button">Approve bank account details</button>
+                    <button data-js-modal="modal-partner-approve-bank-details" class="govuk-!-margin-right-0 govuk-button">Approve bank account details</button>
                 </div>
                 <th:block th:insert="fragments/modals :: modal-overlay" />
                 <th:block th:insert="fragments/modals :: modal-partner-approve-bank-details" />

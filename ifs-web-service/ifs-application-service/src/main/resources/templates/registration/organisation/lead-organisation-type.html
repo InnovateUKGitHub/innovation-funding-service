@@ -28,7 +28,7 @@
             Choose your organisation type
         </h1>
 
-        <div class="message-alert extra-margin-bottom">
+        <div class="message-alert govuk-!-margin-bottom-6">
             <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
         </div>
 
@@ -37,7 +37,7 @@
               th:action="@{/organisation/create/lead-organisation-type}" method="POST" novalidate="novalidate">
             <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-group-error'">
                 <fieldset>
-                    <legend class="extra-margin-bottom" id="organisationTypeId">
+                    <legend class="govuk-!-margin-bottom-6" id="organisationTypeId">
                         <span class="govuk-visually-hidden">Please select your organisation type</span>
                         <th:block th:if="${#fields.hasErrors('*{organisationTypeId}')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>
@@ -71,7 +71,7 @@
             <p class="govuk-body">
                 If your organisation type is not listed contact the <a th:href="@{/info/contact}" class="govuk-link">customer support service</a>.
             </p>
-            <button id="lead-organisation-type-cta" class="govuk-button extra-margin" name="select-company-type" type="submit">Save and continue</button>
+            <button id="lead-organisation-type-cta" class="govuk-button govuk-!-margin-top-6" name="select-company-type" type="submit">Save and continue</button>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

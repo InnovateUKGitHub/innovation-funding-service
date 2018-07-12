@@ -5,7 +5,7 @@
 
 <th:block th:fragment="comp-setup-navigation(sections, currentSection, competition, readyToOpen)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:unless="${(param.section != null)}">
-        <div th:if="${setupComplete}" class="extra-margin-bottom">
+        <div th:if="${setupComplete}" class="govuk-!-margin-bottom-6">
             <div class="message-alert">
                 <p class="govuk-body">Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
             </div>
@@ -40,13 +40,13 @@
                 </div>
             </li>
         </ul>
-        <div th:if="${!isReadyToOpen}" class="extra-margin">
+        <div th:if="${!isReadyToOpen}" class="govuk-!-margin-top-6">
             <p class="govuk-body">Once you complete, this competition will be ready to open.</p>
             <a data-js-modal="complete-modal"
                th:disabled="${!setupReady}"
-               class="govuk-button no-margin-right" id="compCTA">Complete</a>
+               class="govuk-button govuk-!-margin-right-0" id="compCTA">Complete</a>
         </div>
-        <div class="extra-margin"
+        <div class="govuk-!-margin-top-6"
              th:unless="${model.general.competition.competitionStatus.isLaterThan(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN)}">
             <a data-js-modal="delete-modal" class="button-clear">Delete competition</a>
         </div>
@@ -55,7 +55,7 @@
 
 <!-- ===================Comp admin Page back button============================== -->
 <div th:fragment="setup-home">
-    <div class="extra-margin">
+    <div class="govuk-!-margin-top-6">
         <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}">Return to setup overview</a>
     </div>
 </div>
@@ -86,7 +86,7 @@
 
 <!-- ======== Comp admin - remove assigned assessor confirmation content for modal and non-js page ======= -->
 <div th:fragment="comp-setup-remove-assigned-assessor-content">
-    <h2 class="govuk-heading-m no-margin">Are you sure you want to remove this assessor from the application?</h2>
+    <h2 class="govuk-heading-m govuk-!-margin-0">Are you sure you want to remove this assessor from the application?</h2>
 
     <p class="govuk-body">Any work they have started will be permanently deleted. This action cannot be undone.</p>
 </div>
@@ -95,7 +95,7 @@
 <div th:fragment="comp-setup-send-to-all-applicants-modal">
     <div class="send-to-all-applicants-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="govuk-heading-m no-margin">Send email to all applicants</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-0">Send email to all applicants</h2>
         <p class="govuk-body">This will inform all applicants of the funding decision. If applicants are successful you cannot retract this decision.</p>
         <hr />
         <div>
@@ -109,7 +109,7 @@
 <div th:fragment="comp-setup-complete-modal">
     <div class="complete-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="govuk-heading-m no-margin">Complete competition setup</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-0">Complete competition setup</h2>
         <p class="govuk-body">Setup of competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
         <hr />
         <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
@@ -127,7 +127,7 @@
     <div class="delete-modal warning-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
-            <h2 class="govuk-heading-m no-margin">Deleting this competition will remove all data</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-0">Deleting this competition will remove all data</h2>
             <p class="govuk-body">All information entered and stored for this competition will be removed from the service and will not be
                 accessible again.</p>
         </div>
@@ -146,7 +146,7 @@
 <div th:fragment="comp-setup-mark-as-successful-modal">
     <div class="mark-as-successful-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="govuk-heading-m no-margin">Mark application as successful</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-0">Mark application as successful</h2>
         <p class="govuk-body">Are you sure?</p>
         <p class="govuk-body">Remember that:</p>
         <ul class="govuk-list govuk-list--bullet">

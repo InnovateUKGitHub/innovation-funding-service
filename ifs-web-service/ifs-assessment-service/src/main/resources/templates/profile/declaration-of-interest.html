@@ -15,14 +15,14 @@
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Declaration of interest',size='govuk-heading-xl'" />
 
-                <h2 class="govuk-heading-m no-margin-bottom">Principal employer and role</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Principal employer and role</h2>
                 <p class="govuk-body" th:if="${model.principalEmployer}">
                     <th:block th:text="${model.principalEmployer}">ASDF solutions</th:block><br />
                     <th:block th:text="${model.role}">CEO</th:block>
                 </p>
                 <p class="govuk-body" th:unless="${model.principalEmployer}">Not answered</p>
 
-                <h2 class="govuk-heading-m no-margin-bottom">Professional affiliations</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Professional affiliations</h2>
                 <p class="govuk-body" th:text="${model.professionalAffiliations}"
                    th:unless="${#strings.isEmpty(model.professionalAffiliations)}">
                     Professional affiliation
@@ -32,8 +32,8 @@
                     None declared
                 </p>
 
-                <h2 class="govuk-heading-m no-margin-bottom">Appointments, directorships and consultancies</h2>
-                <table class="extra-margin" th:unless="${#lists.isEmpty(model.appointments)}">
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Appointments, directorships and consultancies</h2>
+                <table class="govuk-!-margin-top-6" th:unless="${#lists.isEmpty(model.appointments)}">
                     <thead>
                         <tr>
                             <th scope="col">Organisation</th>
@@ -52,7 +52,7 @@
                     None declared
                 </p>
 
-                <h2 class="govuk-heading-m no-margin-bottom">Other financial interests</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Other financial interests</h2>
 
                 <p class="govuk-body" th:if="${model.financialInterests}" th:text="${model.financialInterests}">Financial interests</p>
                 <p class="govuk-body" th:unless="${model.financialInterests}"
@@ -60,8 +60,8 @@
                     None declared
                 </p>
 
-                <h2 class="govuk-heading-m no-margin-bottom">Close family member appointments, directorships and consultancies</h2>
-                <table class="extra-margin" th:unless="${#lists.isEmpty(model.familyAffiliations)}">
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Close family member appointments, directorships and consultancies</h2>
+                <table class="govuk-!-margin-top-6" th:unless="${#lists.isEmpty(model.familyAffiliations)}">
                     <thead>
                         <tr>
                             <th scope="col">Relation</th>
@@ -82,7 +82,7 @@
                     None declared
                 </p>
 
-                <h2 class="govuk-heading-m no-margin-bottom">Close family members' other financial interests</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Close family members' other financial interests</h2>
                 <p class="govuk-body" th:if="${model.familyFinancialInterests}" th:text="${model.familyFinancialInterests}">Family members' financial interests</p>
                 <p class="govuk-body" th:unless="${model.familyFinancialInterests}"
                    th:text="${model.completed} ? 'None declared' : 'Not answered'">
@@ -95,7 +95,7 @@
                     </div>
                 </div>
 
-                <div class="extra-margin">
+                <div class="govuk-!-margin-top-6">
                     <a th:href="@{/assessor/dashboard}" class="button-secondary">Return to assessor dashboard</a>
                 </div>
 

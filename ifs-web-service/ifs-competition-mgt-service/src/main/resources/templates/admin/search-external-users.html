@@ -15,7 +15,7 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find external users',size='govuk-heading-l'" />
 
         <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
-            <div class="search-filters extra-margin">
+            <div class="search-filters govuk-!-margin-top-6">
                 <fieldset>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-half">
@@ -52,7 +52,7 @@
                             <a href="?" class="govuk-link">Clear</a>
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
-                            <button type="submit" th:name="${tab == 'invites' ? 'pending' : 'active'}" class="govuk-button no-margin">Search</button>
+                            <button type="submit" th:name="${tab == 'invites' ? 'pending' : 'active'}" class="govuk-button govuk-!-margin-0">Search</button>
                         </div>
                     </div>
                 </fieldset>

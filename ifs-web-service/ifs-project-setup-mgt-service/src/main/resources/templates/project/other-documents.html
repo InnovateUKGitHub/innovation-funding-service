@@ -24,19 +24,19 @@
 
             <div class="success-alert" th:if="${model.isApproved()}">
                 <th:block th:if="${model.collaborationAgreementRequired}">
-                    <p class="govuk-heading-s no-margin-top">The documents provided have been approved.</p>
+                    <p class="govuk-heading-s govuk-!-margin-top-0">The documents provided have been approved.</p>
                 </th:block>
                 <th:block th:unless="${model.collaborationAgreementRequired}">
-                    <p class="govuk-heading-s no-margin-top">The document provided has been approved.</p>
+                    <p class="govuk-heading-s govuk-!-margin-top-0">The document provided has been approved.</p>
                 </th:block>
             </div>
 
             <div class="warning-alert" th:if="${model.isRejected()}">
                 <th:block th:if="${model.collaborationAgreementRequired}">
-                    <p class="govuk-heading-s no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+                    <p class="govuk-heading-s govuk-!-margin-top-0">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
                 </th:block>
                 <th:block th:unless="${model.collaborationAgreementRequired}">
-                    <p class="govuk-heading-s no-margin-top">This document has been reviewed and rejected. We have returned it to the Project Manager.</p>
+                    <p class="govuk-heading-s govuk-!-margin-top-0">This document has been reviewed and rejected. We have returned it to the Project Manager.</p>
                 </th:block>
             </div>
 

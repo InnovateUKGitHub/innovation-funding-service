@@ -20,13 +20,13 @@
 
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'5436854: Technology inspired'}, ${(param.type != null and param.type[0] == 'multiple' ? 'Inform lead applicants' : 'Inform lead applicant')}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" />
 
-	<h2 class="govuk-heading-m no-margin">Application:</h2>
-	<p class="no-margin-top" th:text="${(param.type != null and param.type[0] == 'multiple' ? 'Multiple' : '94565678: The potential for glucose based contact lens monitoring in the management of type two diabetes')}"></p>
+	<h2 class="govuk-heading-m govuk-!-margin-0">Application:</h2>
+	<p class="govuk-!-margin-top-0" th:text="${(param.type != null and param.type[0] == 'multiple' ? 'Multiple' : '94565678: The potential for glucose based contact lens monitoring in the management of type two diabetes')}"></p>
 
 	<p class="govuk-body">The following email will be sent to the lead <span th:text="${(param.type != null and param.type[0] == 'multiple' ? 'applicants' : 'applicant')}">applicant</span>, after which this application will be no longer available for assessment.</p>
 
-	<h2 class="govuk-heading-m no-margin">Recipient:</h2>
-	<p class="no-margin-top" th:text="${(param.type != null and param.type[0] == 'multiple' ? 'Multiple' : 'Dave Smith (Lead applicant)')}"></p>
+	<h2 class="govuk-heading-m govuk-!-margin-0">Recipient:</h2>
+	<p class="govuk-!-margin-top-0" th:text="${(param.type != null and param.type[0] == 'multiple' ? 'Multiple' : 'Dave Smith (Lead applicant)')}"></p>
 
 	<form action="/prototypes/" id="removeApp">
 
@@ -35,7 +35,7 @@
 			<input class="form-control" id="remove-application-subject" name="remove-application-subject" type="text" required="required" />
 		</div>
 
-		<div class="form-group no-margin-bottom">
+		<div class="form-group govuk-!-margin-bottom-0">
 			<label for="remove-application-message">Message</label>
 			<textarea name="remove-application-message" id="remove-application-message" class="width-full" cols="30" rows="10"></textarea>
 			<div class="textarea-footer">
@@ -47,14 +47,14 @@
 
 		<div class="alignright">
 			<a href="/prototypes/5698-admin-readonly-application" class="extra-margin-right">Cancel</a>
-			<a href="/prototypes/5698-ineligible-applications" class="govuk-button no-margin-right">Send</a>
+			<a href="/prototypes/5698-ineligible-applications" class="govuk-button govuk-!-margin-right-0">Send</a>
 		</div>
 
 		<!--<div class="modal-inform-remove" role="dialog" aria-hidden="true" style="margin-top: -174px;">-->
 			<!--<button class="js-close close" aria-label="Close Popup">X</button>-->
 			<!--<div>-->
 
-				<!--<h2 class="govuk-heading-m no-margin">Remove application</h2>-->
+				<!--<h2 class="govuk-heading-m govuk-!-margin-0">Remove application</h2>-->
 
 				<!--<p class="govuk-body">The application 'Application title' will not be removed from the assessment group, the lead applicant will be informed using the email dafted of the decision</p>-->
 

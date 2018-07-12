@@ -102,7 +102,7 @@
                         <option th:each="(innovationArea : ${model.innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${competitionSetupForm.innovationAreaCategoryIds[__${status.index}__] == innovationArea.id}">Innovation Area</option>
                     </select>
                     <input type="hidden" th:if="${model.general.state.setupAndLive}" th:field="${competitionSetupForm.innovationAreaCategoryIds}" />
-                    <button th:if="${status.index > 0}" data-remove-row="innovationArea" class="button-clear no-margin" th:value="${status.index}" type="button">Remove</button>
+                    <button th:if="${status.index > 0}" data-remove-row="innovationArea" class="button-clear govuk-!-margin-0" th:value="${status.index}" type="button">Remove</button>
                 </div>
             </th:block>
             </fieldset>

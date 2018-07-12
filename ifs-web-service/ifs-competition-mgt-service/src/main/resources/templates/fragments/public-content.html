@@ -133,25 +133,25 @@
 <!-- =================== Public content section - Summary  ========================================================= -->
 <th:block th:fragment="section-summary(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
-        <div class="govuk-grid-row extra-margin-bottom">
+        <div class="govuk-grid-row govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-one-third">
-                <h2 class="govuk-heading-m no-margin">Description</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-0">Description</h2>
             </div>
             <div class="govuk-grid-column-two-thirds">
-                <div class="wysiwyg-styles extra-margin-bottom" ifs:utext="${form.description}"></div>
+                <div class="wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${form.description}"></div>
             </div>
         </div>
-        <div class="govuk-grid-row extra-margin-bottom">
+        <div class="govuk-grid-row govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-one-third">
-                <h2 class="govuk-heading-m no-margin">Funding type</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-0">Funding type</h2>
             </div>
             <div class="govuk-grid-column-two-thirds">
                 <p class="govuk-body" th:text="${form.fundingType}"></p>
             </div>
         </div>
-        <div class="govuk-grid-row extra-margin-bottom">
+        <div class="govuk-grid-row govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-one-third">
-                <h2 class="govuk-heading-m no-margin">Project size</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-0">Project size</h2>
             </div>
             <div class="govuk-grid-column-two-thirds">
                 <p class="govuk-body" th:text="${form.projectSize}"></p>
@@ -242,26 +242,26 @@
 <th:block th:fragment="section-dates(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
         <th:block th:each="event : ${model.sortedEvents}">
-            <div class="govuk-grid-row extra-margin-bottom">
+            <div class="govuk-grid-row govuk-!-margin-bottom-6">
                 <div class="govuk-grid-column-one-third">
-                    <h2 class="govuk-heading-m no-margin" th:text="${event.dateTimeFormatted}"></h2>
+                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${event.dateTimeFormatted}"></h2>
                 </div>
                 <div class="govuk-grid-column-two-thirds">
-                    <div class="wysiwyg-styles extra-margin-bottom" ifs:utext="${event.content}"></div>
+                    <div class="wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${event.content}"></div>
                 </div>
             </div>
         </th:block>
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <p class="govuk-body">Text entered into this section will appear within the dates tab.</p>
-        <h2 class="govuk-heading-s extra-margin-bottom">Generated automatically from the competition milestones.</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-6">Generated automatically from the competition milestones.</h2>
         <th:block th:each="event : ${model.sortedEvents}">
-            <div class="govuk-grid-row extra-margin-bottom">
+            <div class="govuk-grid-row govuk-!-margin-bottom-6">
                 <div class="govuk-grid-column-one-third">
-                    <h2 class="govuk-heading-m no-margin" th:text="${event.dateTimeFormatted}"></h2>
+                    <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${event.dateTimeFormatted}"></h2>
                 </div>
                 <div class="govuk-grid-column-two-thirds">
-                    <div class="wysiwyg-styles extra-margin-bottom" ifs:utext="${event.content}"></div>
+                    <div class="wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${event.content}"></div>
                 </div>
             </div>
         </th:block>
@@ -451,9 +451,9 @@
 <!-- =================== Public content group - Read only  ==================================================== -->
 <th:block th:fragment="content-groups-read-only(form, model)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:each="contentGroup: ${form.contentGroups}">
-        <div class="govuk-grid-column-one-quarter extra-margin-bottom">
+        <div class="govuk-grid-column-one-quarter govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-one-third">
-                <h2 class="govuk-heading-m no-margin" th:text="${contentGroup.heading}"></h2>
+                <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${contentGroup.heading}"></h2>
             </div>
             <div class="govuk-grid-column-two-thirds">
                 <div class="wysiwyg-styles" ifs:utext="${contentGroup.content}"></div>

@@ -30,7 +30,7 @@
                     <div th:unless="${model.closed or model.summary}" class="textarea-header">
 
                         <th:block th:if="${model.complete}">
-                            <div class="success-alert assignee extra-margin-bottom">
+                            <div class="success-alert assignee govuk-!-margin-bottom-6">
                                 <p class="govuk-body">Application team is marked as complete</p>
                             </div>
                         </th:block>
@@ -103,12 +103,12 @@
 
                     <!--/* End - show the link to add another organisation (lead only) */-->
                     <th:block th:if="${model.userLeadApplicant and !model.complete}">
-                        <p class="govuk-body extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
+                        <p class="govuk-body govuk-!-margin-top-6">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
                         <p class="govuk-body"><a th:href="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" class="govuk-link">Add a collaborator organisation</a></p>
                     </th:block>
                 </th:block>
 
-                <p class="govuk-body extra-margin">
+                <p class="govuk-body govuk-!-margin-top-6">
                     <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}" class="button-secondary">
                         <th:block th:if="${model.applicationCanBegin}">
                             Begin application

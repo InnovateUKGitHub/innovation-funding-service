@@ -23,14 +23,14 @@
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Other documents'})" />
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
-		<div class="success-alert extra-margin-bottom">
-			<h3 class="govuk-heading-s no-margin-top">These documents have been approved by Innovate UK</h3>
+		<div class="success-alert govuk-!-margin-bottom-6">
+			<h3 class="govuk-heading-s govuk-!-margin-top-0">These documents have been approved by Innovate UK</h3>
 		</div>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'submittedApproved'}">
-		<div class="success-alert extra-margin-bottom">
-			<h3 class="govuk-heading-s no-margin-top">The other documents have been reviewed and approved by Innovate UK</h3>
+		<div class="success-alert govuk-!-margin-bottom-6">
+			<h3 class="govuk-heading-s govuk-!-margin-top-0">The other documents have been reviewed and approved by Innovate UK</h3>
 		</div>
 	</th:block>
 
@@ -41,8 +41,8 @@
 	<div th:unless="${param.user != null and param.user[0] == 'nonLead'}" th:remove="tag">
 
 		<div th:if="${param.status != null and param.status[0] == 'reject'}" th:remove="tag">
-			<div class="warning-alert extra-margin-bottom">
-				<h3 class="govuk-heading-s no-margin-top">We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.</h3>
+			<div class="warning-alert govuk-!-margin-bottom-6">
+				<h3 class="govuk-heading-s govuk-!-margin-top-0">We are unable to approve your documents and have returned them to you. A member of Innovate UK will be in touch to discuss our requirements.</h3>
 			</div>
 		</div>
 
@@ -67,7 +67,7 @@
 
 			<div class="upload-section">
 
-				<h2 class="govuk-heading-m no-margin">Collaboration agreement</h2>
+				<h2 class="govuk-heading-m govuk-!-margin-0">Collaboration agreement</h2>
 
 				<p class="form-hint">The collaboration agreement covers how the consortium will work together on the project. It must be signed by all partners.</p>
 
@@ -107,7 +107,7 @@
 					<a href="#" class="uploaded-file">Collab-agreement-file.pdf</a>
 
 					<div class="alignright" th:unless="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'approved' or param.user != null and param.user[0] == 'nonLead'}">
-                		<button class="button-secondary no-margin-right" type="submit" name="remove_agreement_plan">Remove</button>
+                		<button class="button-secondary govuk-!-margin-right-0" type="submit" name="remove_agreement_plan">Remove</button>
             		</div>
 
 				</div>
@@ -122,7 +122,7 @@
 
 			<div class="upload-section">
 
-				<h2 class="govuk-heading-m no-margin">Exploitation plan</h2>
+				<h2 class="govuk-heading-m govuk-!-margin-0">Exploitation plan</h2>
 				<p class="form-hint">The plan aims to confirm the benefits realisation that the project hopes to achieve. You should describe the partner activities that will exploit the results of the project.</p>
 
 				<details>
@@ -178,7 +178,7 @@
 					<a href="#" class="uploaded-file">Expolitation-file.pdf</a>
 
 					<div class="alignright" th:unless="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'approved'}">
-                		<button class="button-secondary no-margin-right" type="submit" name="remove_exploitation_plan">Remove</button>
+                		<button class="button-secondary govuk-!-margin-right-0" type="submit" name="remove_exploitation_plan">Remove</button>
             		</div>
 
 				</div>
@@ -205,7 +205,7 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="govuk-heading-m no-margin">Submit documents</h2>
+					<h2 class="govuk-heading-m govuk-!-margin-0">Submit documents</h2>
 
 					<p class="govuk-body">Are you sure that you want to send these documents to Innovate UK for review? If we need further information we will contact the Project Manager.</p>
 

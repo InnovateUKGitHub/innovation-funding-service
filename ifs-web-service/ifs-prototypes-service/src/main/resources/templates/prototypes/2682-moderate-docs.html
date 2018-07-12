@@ -27,13 +27,13 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'accepted'}">
 		<div class="success-alert">
-			<h2 class="govuk-heading-s no-margin-top">The documents provided have been approved.</h2>
+			<h2 class="govuk-heading-s govuk-!-margin-top-0">The documents provided have been approved.</h2>
 		</div>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'reject'}">
 		<div class="warning-alert">
-			<h3 class="govuk-heading-s no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</h3>
+			<h3 class="govuk-heading-s govuk-!-margin-top-0">These documents have been reviewed and rejected. We have returned them to the Project Manager.</h3>
 		</div>
 	</th:block>
 
@@ -74,7 +74,7 @@
         <button class="js-close close" aria-label="Close Popup">X</button>
         <div>
 
-			<h2 class="govuk-heading-m no-margin">Accept documents</h2>
+			<h2 class="govuk-heading-m govuk-!-margin-0">Accept documents</h2>
 
 			<p class="govuk-body">Once the documents are accepted, the project team can complete any remaining stages of the project setup process.</p>
 
@@ -95,7 +95,7 @@
         <button class="js-close close" aria-label="Close Popup">X</button>
         <div>
 
-			<h2 class="govuk-heading-m no-margin">Reject documents</h2>
+			<h2 class="govuk-heading-m govuk-!-margin-0">Reject documents</h2>
 
 			<p class="govuk-body">If these documents are rejected, the Project Manager will be informed. Please contact the Project Manager detailing the reason for not approving the documents before rejecting.</p>
 

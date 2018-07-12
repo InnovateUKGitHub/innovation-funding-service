@@ -50,7 +50,7 @@
         <div class="my-applications">
             <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                 <div class="progress-list">
-                    <h2 class="govuk-heading-m no-margin">Applications for panel (<span
+                    <h2 class="govuk-heading-m govuk-!-margin-0">Applications for panel (<span
                         th:text="${#lists.size(model.applications)}"/>)</h2>
 
                     <ul>
@@ -62,7 +62,7 @@
                                 <div class="task">
                                     <a th:if="${app.accepted}" class="govuk-heading-s govuk-link" th:href="@{/review/{reviewId}/application/{appId}(reviewId=${app.reviewId}, appId=${app.applicationId})}" th:text="${app.displayLabel}">Application name</a>
                                     <h3 th:unless="${app.accepted}" class="govuk-heading-s" th:text="${app.displayLabel}">Application name</h3>
-                                    <p th:text="${app.leadOrganisation}" class="govuk-body no-margin"/>
+                                    <p th:text="${app.leadOrganisation}" class="govuk-body govuk-!-margin-0"/>
                                 </div>
 
                                 <div class="status">
@@ -94,7 +94,7 @@
             </form>
         </div>
 
-        <p class="extra-margin form-hint">
+        <p class="govuk-!-margin-top-6 form-hint">
             Please complete your review of the applications before the panel date. You cannot edit or add feedback to applications at this stage.
         </p>
 

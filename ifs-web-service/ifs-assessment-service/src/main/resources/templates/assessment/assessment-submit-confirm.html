@@ -14,7 +14,7 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit assessments',size='govuk-heading-xl'" />
 
-            <h2 class="govuk-heading-m no-margin">You are about to submit your assessments.</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-0">You are about to submit your assessments.</h2>
             <p class="govuk-body">You will not be able to edit after you submit. Are you sure you want to continue?</p>
             <form method="post" th:action="@{/assessor/dashboard/competition/{id}(id=${competitionId})}" novalidate="novalidate" th:object="${form}">
 

@@ -1,9 +1,5 @@
 
 .button-secondary{
-  &.no-margin {
-    margin: 0;
-  }
-
   @include govuk-media-query(mobile) {
     width: 100%;
     text-align: center;
@@ -35,10 +31,6 @@
   &.highlight{
     background: $govuk-button-colour;
     color: white;
-  }
-
-  &.no-margin {
-    margin: 0;
   }
 }
 

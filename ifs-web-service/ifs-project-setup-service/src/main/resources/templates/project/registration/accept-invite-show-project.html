@@ -29,10 +29,10 @@
         </dl>
         <p class="govuk-body">You have been invited to join this project on behalf of the following organisation: <strong th:text="${model.organisationName}"></strong></p>
 
-        <a th:href="@{/registration/accept-invite-user-exist-confirm}" class="govuk-button extra-margin"
+        <a th:href="@{/registration/accept-invite-user-exist-confirm}" class="govuk-button govuk-!-margin-top-6"
            name="select-org-size" th:unless="${!userExists}">Continue to project</a>
 
-        <a th:href="@{/registration/register}" class="govuk-button extra-margin" name="select-org-size"
+        <a th:href="@{/registration/register}" class="govuk-button govuk-!-margin-top-6" name="select-org-size"
            th:unless="${userExists}">Create account</a>
 
     </main>

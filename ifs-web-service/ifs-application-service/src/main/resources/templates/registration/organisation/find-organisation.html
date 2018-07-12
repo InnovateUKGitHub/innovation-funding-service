@@ -51,7 +51,7 @@
                     <p class="form-hint">Choose your organisation:</p>
                 </th:block>
                 <th:block th:unless="${organisationForm.research}">
-                    <h2 class="govuk-heading-m no-margin">Companies House search results</h2>
+                    <h2 class="govuk-heading-m govuk-!-margin-0">Companies House search results</h2>
                     <p class="form-hint">Select your organisation from the options below</p>
                 </th:block>
             </th:block>
@@ -85,7 +85,7 @@
                             <h2 class="govuk-heading-m">Enter your organisation details</h2>
                             <th:block th:insert="fragments/addresses :: organisation-name"  th:with="form=${organisationForm},addressType=${'organisation address'}"/>
                             <th:block th:insert="fragments/addresses :: company-address-details"  th:with="form=${organisationForm}, addressType=${'organisation address'}"/>
-                            <button type="submit" name="save-organisation-details" class="govuk-button extra-margin">Continue</button>
+                            <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Continue</button>
                         </div>
                     </details>
                 </th:block>

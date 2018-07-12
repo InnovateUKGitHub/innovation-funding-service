@@ -18,13 +18,13 @@
 
         <dl class="govuk-list">
             <dt>Full name</dt>
-            <dd class="extra-margin-bottom" th:text="${model.user.name}">Mark Smith</dd>
+            <dd class="govuk-!-margin-bottom-6" th:text="${model.user.name}">Mark Smith</dd>
 
             <dt>Email address</dt>
-            <dd class="extra-margin-bottom" th:text="${model.user.email}">mark.smith@innovate.gov.uk</dd>
+            <dd class="govuk-!-margin-bottom-6" th:text="${model.user.email}">mark.smith@innovate.gov.uk</dd>
 
             <dt>Role</dt>
-            <dd class="extra-margin-bottom" th:text="${model.user.getRolesString()}">Super admin</dd>
+            <dd class="govuk-!-margin-bottom-6" th:text="${model.user.getRolesString()}">Super admin</dd>
         </dl>
 
         <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">

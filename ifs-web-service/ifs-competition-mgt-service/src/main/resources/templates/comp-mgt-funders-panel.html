@@ -17,9 +17,9 @@
 
 
         <form method="GET" th:object="${fundingDecisionFilterForm}">
-            <div class="search-filters extra-margin">
+            <div class="search-filters govuk-!-margin-top-6">
                 <fieldset>
-                    <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
+                    <legend class="govuk-heading-m govuk-!-margin-top-0">Filter applications</legend>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-half">
                             <div class="form-group">
@@ -42,7 +42,7 @@
                     </div>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-full alignright">
-                            <button class="govuk-button no-margin">Filter</button>
+                            <button class="govuk-button govuk-!-margin-0">Filter</button>
                         </div>
                     </div>
                 </fieldset>
@@ -57,14 +57,14 @@
             <p class="govuk-body"><span>A funding decision is required for all applications to the competition.</span></p>
         </div>
 
-        <div class="warning-alert extra-margin-bottom" th:if="${selectionLimitWarning}">
+        <div class="warning-alert govuk-!-margin-bottom-6" th:if="${selectionLimitWarning}">
             <p class="govuk-body" th:text="#{competition.management.limit.warning}"></p>
         </div>
         <div data-selection-limit-exceeded-block=""></div>
 
         <div class="govuk-grid-row sorting">
             <div class="govuk-grid-column-one-half">
-                <h3><span class="govuk-heading-xl no-margin" th:text="${results.totalElements}" /> applications</h3>
+                <h3><span class="govuk-heading-xl govuk-!-margin-0" th:text="${results.totalElements}" /> applications</h3>
             </div>
         </div>
         <form method="POST"

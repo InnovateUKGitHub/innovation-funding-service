@@ -1,6 +1,6 @@
 <th:block th:fragment="user-list(users)">
     <p class="govuk-body">
-        <span class="govuk-heading-xl no-margin" th:text="${users.size()}">38</span>
+        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${users.size()}">38</span>
         <span class="govuk-heading-s">users with IFS account</span>
     </p>
     <th:block th:insert="fragments/external-users :: users-table(users=${users})" />

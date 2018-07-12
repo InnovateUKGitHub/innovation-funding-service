@@ -75,7 +75,7 @@
 	<th:block th:insert="prototypes/fragments/finance-review-questions :: finance-question-other-funding" th:with="status=partnerView" />
 
   <th:block th:unless="${param.org != null and param.org[0] == 'growth'}">
-    <dl class="readonly-data extra-margin-top extra-margin-bottom">
+    <dl class="readonly-data extra-margin-top govuk-!-margin-bottom-6">
       <dt>Organisation size</dt>
       <dd>Medium</dd>
 
@@ -88,7 +88,7 @@
   </th:block>
 
   <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
-    <dl class="readonly-data extra-margin-top extra-margin-bottom">
+    <dl class="readonly-data extra-margin-top govuk-!-margin-bottom-6">
       <dt>Organisation size</dt>
       <dd>Medium</dd>
     </dl>
@@ -100,8 +100,8 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
-        <div class="table-overflow extra-margin-bottom">
-          <table class="extra-margin-bottom">
+        <div class="table-overflow govuk-!-margin-bottom-6">
+          <table class="govuk-!-margin-bottom-6">
             <thead>
               <tr>
                 <th scope="col">Section</th>
@@ -132,7 +132,7 @@
       </div>
     </div>
 
-    <dl class="readonly-data extra-margin-bottom">
+    <dl class="readonly-data govuk-!-margin-bottom-6">
       <dt>Full time employees</dt>
       <dd>42</dd>
     </dl>

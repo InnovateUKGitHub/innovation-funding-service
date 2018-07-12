@@ -17,7 +17,7 @@
                 <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                     <div class="form-group" th:classappend="${#fields.hasErrors('*{__innovationAreaChoice__}')} ? 'form-group-error'">
                         <fieldset>
-                            <legend class="extra-margin-bottom">
+                            <legend class="govuk-!-margin-bottom-6">
                                 <span class="govuk-visually-hidden">
                                     Choose the primary innovation area for your project. This will help us to select suitable assessors for your application.
                                 </span>

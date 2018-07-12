@@ -88,7 +88,7 @@
                     <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.Role).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
                 </select>
             </div>
-            <div class="form-group extra-margin">
+            <div class="form-group govuk-!-margin-top-6">
                 <button class="govuk-button">Send invite</button>
                 <a th:href="@{/admin/users/active}" class="govuk-link">Cancel</a>
             </div>

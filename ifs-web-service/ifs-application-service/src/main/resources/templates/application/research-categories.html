@@ -16,15 +16,15 @@
 
         <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
             <div class="form-group" th:classappend="${#fields.hasErrors('*{__researchCategoryChoice__}')} ? 'form-group-error'">
-                <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
-                    <h2 class="govuk-heading-s no-margin">What type of research are you undertaking in this project?</h2>
+                <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.hasApplicationFinances}">
+                    <h2 class="govuk-heading-s govuk-!-margin-0">What type of research are you undertaking in this project?</h2>
                     <p class="govuk-body">The type of research affects the level of funding a business can receive under UK state aid rules.
                         Changing the research category will reset the funding level for all business participants.
                     </p>
                 </div>
 
                 <fieldset>
-                    <legend class="extra-margin-bottom">
+                    <legend class="govuk-!-margin-bottom-6">
                         <h2 class="govuk-heading-m">Research category</h2>
                         <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a
                             href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"

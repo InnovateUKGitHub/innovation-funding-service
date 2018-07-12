@@ -213,7 +213,7 @@
 
     <!-- ===========================Research Participation =========================== -->
     <th:block th:fragment="research_participation(researchParticipationPercentage,maxResearchPercentage)">
-        <div class="extra-margin-top extra-margin-bottom" th:class="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'eligibility warning' : 'eligibility'" >
+        <div class="govuk-!-margin-bottom-6" th:class="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'eligibility warning' : 'eligibility'" >
             <dl class="list-eligibility">
                 <dt>Maximum research participation</dt>
                 <dd th:text="${maxResearchPercentage}+' %'"></dd>
@@ -231,10 +231,10 @@
     <!-- ===========================Research Participation alert messages =========================== -->
     <th:block th:fragment="research_participation_alert">
         <div th:unless="${researchParticipationPercentage &gt; maxResearchPercentage}" class="success-alert">
-            <h2 class="govuk-heading-s no-margin">The research participation levels of this project are within the required range.</h2>
+            <h2 class="govuk-heading-s govuk-!-margin-0">The research participation levels of this project are within the required range.</h2>
         </div>
         <div th:if="${researchParticipationPercentage &gt; maxResearchPercentage}" class="warning-alert">
-            <h2 class="govuk-heading-s no-margin">Maximum research participation exceeded</h2>
+            <h2 class="govuk-heading-s govuk-!-margin-0">Maximum research participation exceeded</h2>
             <p class="govuk-body">Please seek confirmation that the project is still eligible for funding.</p>
         </div>
     </th:block>
@@ -242,7 +242,7 @@
     <!-- ===========================Finances Overview =========================== -->
     <th:block th:fragment="project-finance-overview(overview)">
         <h3 class="govuk-heading-m">Overview</h3>
-        <div class="table-overflow extra-margin-bottom">
+        <div class="table-overflow govuk-!-margin-bottom-6">
             <table>
                 <thead>
                     <tr>
@@ -270,7 +270,7 @@
 
     <!-- ===========================Project Finance Summaries =========================== -->
     <th:block th:fragment="project-finance-summaries(summaries)">
-        <div class="table-overflow extra-margin-bottom">
+        <div class="table-overflow govuk-!-margin-bottom-6">
             <table>
                 <thead>
                     <tr>
@@ -321,7 +321,7 @@
 
     <!-- ===========================Project Finance Cost Breakdown =========================== -->
     <th:block th:fragment="project-finance-cost-breakdown(breakdowns)">
-        <div class="table-overflow extra-margin-bottom">
+        <div class="table-overflow govuk-!-margin-bottom-6">
             <table>
                 <thead>
                     <tr>

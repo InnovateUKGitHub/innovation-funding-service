@@ -20,7 +20,7 @@
                     contact Innovate UK <a href="mailto:support@innovateuk.gov.uk" class="govuk-link">support@innovateuk.gov.uk</a>.
                 </p>
 
-                <h2 class="govuk-heading-m no-margin-bottom">Innovation areas</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Innovation areas</h2>
 
                 <ul class="govuk-list govuk-list--bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
                   <th:block th:each="innovationSectorEntry : ${model.innovationAreas}"
@@ -45,7 +45,7 @@
                     </div>
                 </div>
 
-                <div class="extra-margin">
+                <div class="govuk-!-margin-top-6">
                     <a th:href="@{/assessor/dashboard}" class="button-secondary">Return to assessor dashboard</a>
                 </div>
 

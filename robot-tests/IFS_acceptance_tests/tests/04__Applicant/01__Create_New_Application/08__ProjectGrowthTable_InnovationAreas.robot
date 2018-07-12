@@ -384,8 +384,8 @@ the user populates the project growth table
     the user enters value to field    Research and development spend    15000
 
 the user should view the project growth table
-    the user should see the text in the element    css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(1)    Section
-    the user should see the text in the element    css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(2)    Last financial year (£)
+    the user should see the text in the element    css=table.govuk-!-margin-bottom-6 tr:nth-of-type(1) th:nth-of-type(1)    Section
+    the user should see the text in the element    css=table.govuk-!-margin-bottom-6 tr:nth-of-type(1) th:nth-of-type(2)    Last financial year (£)
     the user should see the text in the element    css=tr:nth-child(1) td:nth-child(1) span    Annual turnover
     the user should see the element                css=td input[value="65000"]
     the user should see the text in the element    css=tr:nth-child(2) td:nth-child(1) span    Annual profits

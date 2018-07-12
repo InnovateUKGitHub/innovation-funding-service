@@ -3,9 +3,9 @@
 
 <!-- ===================Comp admin Page title============================== -->
 <div th:fragment="prototype-comp-admin-page-title(subtitle, heading)">
-    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-        <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>
-        <h1 class="govuk-heading-xl no-margin" th:text="${heading}">Title here</h1>
+    <div class="hgroup govuk-!-margin-top-0" style="padding-top: 20px; margin-bottom: 30px">
+        <p class="subtitle govuk-!-margin-0" th:text="${subtitle}">Sub title</p>
+        <h1 class="govuk-heading-xl govuk-!-margin-0" th:text="${heading}">Title here</h1>
     </div>
 </div>
 
@@ -48,11 +48,11 @@
 
 
 
-  <!--  <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+  <!--  <div class="hgroup govuk-!-margin-top-0" style="padding-top: 20px; margin-bottom: 30px">
         <div class="govuk-grid-row">
             <div class="column-two-thirds">
-                <p class="subtitle no-margin" th:text="${subtitle}">Sub title</p>
-                <h1 class="govuk-heading-xl no-margin"><span th:text="${heading}">Title here</span>
+                <p class="subtitle govuk-!-margin-0" th:text="${subtitle}">Sub title</p>
+                <h1 class="govuk-heading-xl govuk-!-margin-0"><span th:text="${heading}">Title here</span>
                     <th:block th:if="${partner == 'lead'}">
                         <small>(Lead partner)</small>
                     </th:block>
@@ -181,7 +181,7 @@
     <section class="boxed">
         <p class="govuk-body">Innovate UK is to invest up to £9 million in collaborative research and development to stimulate innovation in integrated transport solutions for local authorities. The aim of this competition is to meet user needs by connecting people and/or goods to transport products and services. New or improved systems will be tested in environment laboratories.</p>
 
-        <h2 class="govuk-heading-m no-margin">Applications</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-0">Applications</h2>
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-third">
@@ -393,15 +393,15 @@
             <div th:if="${param.filterInnovationArea == null}" th:remove="tag">
 
                 <div th:if="${type == null}" th:remove="tag">
-                    <h2><span class="govuk-heading-xl no-margin available">76</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
+                    <h2><span class="govuk-heading-xl govuk-!-margin-0 available">76</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
                 </div>
 
                 <div th:if="${type != null}" th:unless="${type == 'notSubmittedApplications'}" th:remove="tag">
-                    <h2><span class="govuk-heading-xl no-margin available" th:text="${(type == 'openApplications' ? '22' : '4')}">76</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
+                    <h2><span class="govuk-heading-xl govuk-!-margin-0 available" th:text="${(type == 'openApplications' ? '22' : '4')}">76</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
                 </div>
 
                 <div th:if="${type != null}" th:unless="${type != 'notSubmittedApplications'}" th:remove="tag">
-                    <h2><span class="govuk-heading-xl no-margin available">18</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
+                    <h2><span class="govuk-heading-xl govuk-!-margin-0 available">18</span> <strong th:text="${filterTitle}">TITLE</strong></h2>
                 </div>
 
             </div>
@@ -421,7 +421,7 @@
                 </div>
 
                 <div th:if="${param.filterInnovationArea[0] == '---' and param.filterSearch[0] == ''}" th:remove="tag">
-                    <h4><span class="govuk-heading-xl no-margin available">76</span> <strong th:text="${filterTitle}">TITLE</strong></h4>
+                    <h4><span class="govuk-heading-xl govuk-!-margin-0 available">76</span> <strong th:text="${filterTitle}">TITLE</strong></h4>
                 </div>
 
             </div>
@@ -527,7 +527,7 @@
             <div th:if="${status == 'open'}" th:remove="tag">
                 <div class="comp-status open">
                     <h2 class="govuk-heading-s">Competition open</h2>
-                    <p class="govuk-heading-l no-margin">Open until <br />20<sup>th</sup> March 2016</p>
+                    <p class="govuk-heading-l govuk-!-margin-0">Open until <br />20<sup>th</sup> March 2016</p>
                 </div>
             </div>
 
@@ -536,28 +536,28 @@
                 <div th:if="${status == 'funders'}" th:remove="tag">
                     <div class="comp-status funders-panel">
                         <h2 class="govuk-heading-s">Funders panel</h2>
-                        <p class="govuk-heading-l no-margin">15<sup>th</sup> September 2016</p>
+                        <p class="govuk-heading-l govuk-!-margin-0">15<sup>th</sup> September 2016</p>
                     </div>
                 </div>
 
                 <div th:if="${status == 'closed'}" th:remove="tag">
                     <div class="comp-status closed">
                         <h2 class="govuk-heading-s">Competition closed</h2>
-                        <p class="govuk-heading-l no-margin">Date closed <br />15<sup>th</sup> September 2016</p>
+                        <p class="govuk-heading-l govuk-!-margin-0">Date closed <br />15<sup>th</sup> September 2016</p>
                     </div>
                 </div>
 
                 <div th:if="${status == 'assess'}" th:remove="tag">
                     <div class="comp-status in-assessment">
                         <h2 class="govuk-heading-s">Competition in assessment</h2>
-                        <p class="govuk-heading-l no-margin">Assessment deadline <br />15<sup>th</sup> September 2016</p>
+                        <p class="govuk-heading-l govuk-!-margin-0">Assessment deadline <br />15<sup>th</sup> September 2016</p>
                     </div>
                 </div>
 
                 <div th:if="${status == 'prep'}" th:remove="tag">
                     <div class="comp-status prep">
                         <h2 class="govuk-heading-s">Competition in prep</h2>
-                        <p class="govuk-heading-l no-margin">Open date <br />15<sup>th</sup> September 2016</p>
+                        <p class="govuk-heading-l govuk-!-margin-0">Open date <br />15<sup>th</sup> September 2016</p>
                     </div>
                 </div>
 
@@ -573,7 +573,7 @@
     <div th:if="${status == 'closed'}" th:remove="tag">
         <div class="govuk-grid-row highlight-panel extra-margin">
             <div class="govuk-grid-column-one-half">
-                <h3 class="govuk-heading-m no-margin">The competition is now closed</h3>
+                <h3 class="govuk-heading-m govuk-!-margin-0">The competition is now closed</h3>
             </div>
             <div class="govuk-grid-column-one-half alignright-button">
 
@@ -596,7 +596,7 @@
         <div class="govuk-grid-row highlight-panel">
             <div class="govuk-grid-column-one-half">
                 <h3>Overall applications</h3>
-                <p class="govuk-heading-xl no-margin">92</p>
+                <p class="govuk-heading-xl govuk-!-margin-0">92</p>
             </div>
             <div class="govuk-grid-column-one-half alignright-button">
 
@@ -619,7 +619,7 @@
         <div class="govuk-grid-row highlight-panel">
             <div class="govuk-grid-column-one-half">
                 <h3>Total rejected applications</h3>
-                <p class="govuk-heading-xl no-margin">8</p>
+                <p class="govuk-heading-xl govuk-!-margin-0">8</p>
             </div>
             <div class="govuk-grid-column-one-half alignright-button">
                 <a class="govuk-button" href="#">Allocate assessors</a>
@@ -789,7 +789,7 @@
     </div>
 
     <div class="upload-section">
-        <h3 class="govuk-heading-s no-margin">Competition documents</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-0">Competition documents</h3>
         <div class="uploaded-file"><a href="#">Competition-brief.pdf</a> (161.96kb)</div>
         <div class="uploaded-file"><a href="#">Guidance-for-applicants.pdf</a> (161.96kb)</div>
 

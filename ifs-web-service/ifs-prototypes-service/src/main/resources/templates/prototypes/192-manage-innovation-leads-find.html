@@ -66,7 +66,7 @@
                 <div class="govuk-grid-row">
                     <div class="column-two-thirds">
                         <label for="filter">Innovation Area</label>
-                        <select id="filter" class="form-control extra-margin-bottom">
+                        <select id="filter" class="form-control govuk-!-margin-bottom-6">
                             <option value="any">Any</option>
                             <option value="Materials, process and manufacturing design technologies">Materials, process and manufacturing design technologies</option>
                             <option value="Digital manufacturing">Digital manufacturing</option>
@@ -105,7 +105,7 @@
                         <tr>
                             <td>Alexis Kinney</td>
                             <td>Digital manufacturing</td>
-                            <td><button class="govuk-button button-secondary no-margin">Add</button></td>
+                            <td><button class="govuk-button button-secondary govuk-!-margin-0">Add</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -254,7 +254,7 @@ jQuery(document).ready(function(){
         if(this.selected === false){
             var name = this.name;
             var area = this.area;
-            var html = '<tr><td>' + name + '</td><td>' + area + '</td><td><button type="button" class="govuk-button button-secondary no-margin">Add</button></td></tr>';
+            var html = '<tr><td>' + name + '</td><td>' + area + '</td><td><button type="button" class="govuk-button button-secondary govuk-!-margin-0">Add</button></td></tr>';
             tableRowContainer.append(html);
         }
     });

@@ -19,11 +19,11 @@
             <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
         </div>
 
-        <h2 class="govuk-heading-m no-margin-bottom">Confirm your organisation details are correct</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Confirm your organisation details are correct</h2>
         <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, showOrgType=true" />
 
         <form method="post" th:action="@{/organisation/create/save-organisation}">
-            <button name="save-organisation" class="govuk-button extra-margin">Save and continue</button>
+            <button name="save-organisation" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

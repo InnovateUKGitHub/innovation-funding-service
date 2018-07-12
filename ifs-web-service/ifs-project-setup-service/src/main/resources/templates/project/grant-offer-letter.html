@@ -26,12 +26,12 @@
                 <p class="govuk-body">The unsigned grant offer letter is available for your records.</p>
             </th:block>
 
-            <div th:if="${model.showGrantOfferLetterApprovedByInnovateMessage}" class="success-alert extra-margin-bottom">
+            <div th:if="${model.showGrantOfferLetterApprovedByInnovateMessage}" class="success-alert govuk-!-margin-bottom-6">
                 <p class="govuk-body">Your signed grant offer letter has been received and accepted by Innovate UK.</p>
             </div>
 
             <th:block th:if="${model.showGrantOfferLetterRejectedMessage}">
-                <div class="fail-alert extra-margin-bottom">
+                <div class="fail-alert govuk-!-margin-bottom-6">
                     <h2 class="govuk-heading-s">Your grant offer letter has been rejected by Innovate UK</h2>
                     <p class="govuk-body">Someone will be in touch with you soon.</p>
                 </div>
@@ -72,7 +72,7 @@
 
                 <div th:if="${model.grantOfferLetterSent and !model.submitted and model.grantOfferLetterFile != null}" class="upload-section">
                     <h2 class="govuk-heading-m">Sending your signed grant offer letter to Innovate UK</h2>
-                    <h2 class="govuk-heading-s no-margin">Upload signed grant offer letter</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-0">Upload signed grant offer letter</h2>
                     The Project Manager is required to provide a signed copy of the grant offer letter.
                     <details>
                         <summary><span class="summary">What are the requirements for upload?</span></summary>

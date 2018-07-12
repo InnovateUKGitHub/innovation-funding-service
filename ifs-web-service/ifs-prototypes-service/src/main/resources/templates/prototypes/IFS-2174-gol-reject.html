@@ -25,15 +25,15 @@
 	<!-- <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" /> -->
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLAccepted'}">
-		<div class="success-alert extra-margin-bottom">
-			<h2 class="govuk-heading-s no-margin-top">The grant offer letter has been received and accepted</h2>
+		<div class="success-alert govuk-!-margin-bottom-6">
+			<h2 class="govuk-heading-s govuk-!-margin-top-0">The grant offer letter has been received and accepted</h2>
 		</div>
 
 		<p class="govuk-body">The grant offer letter provided by Innovate UK has been received. Your consortium has completed project setup and will soon be able to complete the process.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLRejected'}">
-		<div class="warning-alert extra-margin-bottom">
+		<div class="warning-alert govuk-!-margin-bottom-6">
 			<h3 class="govuk-heading-s">REJECT TEXT REQUIRED</h3>
 			<ul class="govuk-list govuk-list--bullet">
 				<li>TEXT REQUIRED</li>
@@ -46,7 +46,7 @@
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
-        <h2 class="govuk-heading-s no-margin">Upload signed grant offer letter</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-0">Upload signed grant offer letter</h2>
         The Project Manager is required to provide a signed copy of the grant offer letter.
         <details>
             <summary><span class="summary">What are the requirements for upload?</span></summary>
@@ -69,7 +69,7 @@
 
 
 	<div class="extra-margin-top">
-		<h2 class="govuk-heading-m no-margin">Grant offer letter</h2>
+		<h2 class="govuk-heading-m govuk-!-margin-0">Grant offer letter</h2>
 
 		<th:block th:if="${param.status == null}">
 
@@ -104,7 +104,7 @@
 
 	 <th:block th:if="${param.status != null and param.status[0] == 'GOLDecision' or param.status != null and param.status[0] == 'GOLAccepted' or param.status != null and param.status[0] == 'GOLRejected'}">
 		<div class="extra-margin-top">
-			<h2 class="govuk-heading-m no-margin">Signed grant offer letter</h2>
+			<h2 class="govuk-heading-m govuk-!-margin-0">Signed grant offer letter</h2>
 			<p class="govuk-body"><a href="#">signed-offer-letter.PDF</a></p>
 		</div>
 	</th:block>
@@ -118,7 +118,7 @@
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
 
-				<h2 class="govuk-heading-m no-margin">Send grant offer letter</h2>
+				<h2 class="govuk-heading-m govuk-!-margin-0">Send grant offer letter</h2>
 
 				<p class="govuk-body">The grant offer letter will now be sent to the applicants. The Project Manager will be informed of the availablity of the GOL by email.</p>
 
@@ -139,7 +139,7 @@
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
 
-		<h2 class="govuk-heading-m no-margin-bottom">Received GOL by post?</h2>
+		<h2 class="govuk-heading-m govuk-!-margin-bottom-0">Received GOL by post?</h2>
 		<p class="govuk-body">If the grant offer letter has been received by post, please tick the box below.</p>
 
 		<div class="form-group">
@@ -155,7 +155,7 @@
 	        <button class="js-close close" aria-label="Close Popup">X</button>
 	        <div>
 
-				<h2 class="govuk-heading-m no-margin">Confirm receipt of posted grant offer letter</h2>
+				<h2 class="govuk-heading-m govuk-!-margin-0">Confirm receipt of posted grant offer letter</h2>
 
 				<p class="govuk-body">The signed grant offer letter has been uploaded, and a decision can be made on whether the document meets the requirements of Innovate UK.</p>
 

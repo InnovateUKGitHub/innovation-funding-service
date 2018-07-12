@@ -24,7 +24,7 @@
 
     <th:block th:if="${param.deactivateAssessor != null}">
         <div class="message-alert">
-            <h2 class="govuk-heading-s no-margin">This assessor has been deactivated with the reason:</h2>
+            <h2 class="govuk-heading-s govuk-!-margin-0">This assessor has been deactivated with the reason:</h2>
             <p class="govuk-body" th:text="${param.deactivateAssessor[0]}">REASON</p>
             <th:block th:if="${param.rejectText != null}">
                 <p class="govuk-body" th:text="${param.rejectText[0]}"></p>
@@ -59,7 +59,7 @@
 
         <th:block th:if="${param.version != null and param.version[0] == 'v1'}">
             <h3 class="govuk-heading-s">Emerging and enabling</h3>
-            <ul class="task-list no-margin">
+            <ul class="task-list govuk-!-margin-0">
                 <li>Creative industries</li>
                 <li>Digital industries</li>
             </ul>
@@ -69,7 +69,7 @@
             </ul>
 
             <div class="upload-section" style="border: none;">
-                <h3 class="govuk-heading-s no-margin">Work history</h3>
+                <h3 class="govuk-heading-s govuk-!-margin-0">Work history</h3>
                 <p class="govuk-body"><a href="#">Assessor work history.pdf (opens in a new window)</a></p>
             </div>
         </th:block>
@@ -92,7 +92,7 @@
         </div>
 
         <div class="upload-section extra-margin-top" style="border: none">
-            <h3 class="govuk-heading-s no-margin">CV</h3>
+            <h3 class="govuk-heading-s govuk-!-margin-0">CV</h3>
             <div>
                 <p class="uploaded-file">
                     <a href="#">CV-for-assessor.pdf (opens in a new window)</a>
@@ -110,7 +110,7 @@
                         <form th:action="${#httpServletRequest.requestURI}">
                             <fieldset>
                                 <legend>
-                                    <h2 class="govuk-heading-m no-margin">Deactivate assessor</h2>
+                                    <h2 class="govuk-heading-m govuk-!-margin-0">Deactivate assessor</h2>
                                 </legend>
 
                                 <p class="govuk-body">Please select the reason for deactivating this assessor.</p>
@@ -157,7 +157,7 @@
                     <div class="panel">
                         <form th:action="${#httpServletRequest.requestURI}">
 
-                            <h2 class="govuk-heading-m no-margin">Reactivate assessor</h2>
+                            <h2 class="govuk-heading-m govuk-!-margin-0">Reactivate assessor</h2>
                             <p class="govuk-body">Are you sure you want to reactivate this assessor?</p>
 
                             <div class="extra-margin-top">
@@ -189,7 +189,7 @@
                 <form th:action="${#httpServletRequest.requestURI}">
                     <fieldset class="inline">
                         <legend>
-                            <h2 class="govuk-heading-m no-margin">Deactivate assessor</h2>
+                            <h2 class="govuk-heading-m govuk-!-margin-0">Deactivate assessor</h2>
                         </legend>
 
                         <p class="govuk-body">Please select the reason for deactivating this assessor</p>
@@ -216,7 +216,7 @@
                 <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
                 <form th:action="${#httpServletRequest.requestURI}">
 
-                    <h2 class="govuk-heading-m no-margin">Reactivate assessor</h2>
+                    <h2 class="govuk-heading-m govuk-!-margin-0">Reactivate assessor</h2>
                     <p class="govuk-body">Are you sure you want to reactivate this assessor?</p>
 
                     <div class="extra-margin-top">
@@ -236,10 +236,10 @@
     <th:block th:if="${param.tab != null and param.tab[0] == 'doi'}">
         <h2 class="govuk-heading-m">Declaration of interest</h2>
 
-        <h3 class="govuk-heading-s no-margin-bottom">Principal employer and role</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Principal employer and role</h3>
         <p class="govuk-body">University of Sheffield <br /> Professor</p>
 
-        <h3 class="govuk-heading-s no-margin-bottom">Professional affiliations</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Professional affiliations</h3>
         <p class="govuk-body">None declared</p>
 
         <h3 class="govuk-heading-s extra-margin-top">Appointments, directorships and consultancies</h3>

@@ -16,12 +16,12 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle=${'Notify assessor'},subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'"/>
 
-        <h2 class="govuk-heading-m no-margin" th:text="${model.user.getName()}">Felix Wilson</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${model.user.getName()}">Felix Wilson</h2>
 
         <p class="govuk-body">Review the allocated applications, edit the email and click notify. Feedback will then be released to the assessor.</p>
 
-        <div class="grid-row sorting extra-margin">
-            <span class="govuk-heading-xl no-margin" th:text="${#lists.size(model.applications)}">4</span>
+        <div class="grid-row sorting govuk-!-margin-top-6">
+            <span class="govuk-heading-xl govuk-!-margin-0" th:text="${#lists.size(model.applications)}">4</span>
             <span class="govuk-heading-s">applications</span>
         </div>
 
@@ -56,9 +56,9 @@
                     </tbody>
                 </table>
             </div>
-            <fieldset class="extra-margin">
+            <fieldset class="govuk-!-margin-top-6">
                 <legend class="govuk-visually-hidden">Email assessor</legend>
-                <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+                <div class="form-group govuk-!-margin-bottom-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
                     <label class="form-label-bold" th:for="${#ids.next('subject')}">
                         <span>Email subject</span>
                         <th:block th:if="${#fields.hasErrors('subject')}">
@@ -77,7 +77,7 @@
 
                 <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
 
-                <div class="form-group extra-margin">
+                <div class="form-group govuk-!-margin-top-6">
                     <label class="form-label-bold" for="message">Additional text</label>
                     <div class="textarea-wrapped">
                         <textarea id="message" rows="8" data-editor="html" class="width-full" th:field="*{content}">
@@ -85,11 +85,11 @@
                     </div>
                 </div>
 
-                <p class="form-hint extra-margin">
+                <p class="form-hint govuk-!-margin-top-6">
                     Yours sincerely,
                 </p>
 
-                <p class="form-hint extra-margin">
+                <p class="form-hint govuk-!-margin-top-6">
                     Innovate UK, part of UK Research and Innovation <br />
                     Tel: 0300 321 4357 <br />
                     Email: competitions@innovateuk.ukri.org

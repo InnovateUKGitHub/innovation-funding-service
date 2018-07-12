@@ -33,10 +33,10 @@
 
         <div class="my-applications">
 
-            <p class="govuk-body extra-margin">Please click on the links below to review the applications and all feedback before the interview.</p>
+            <p class="govuk-body govuk-!-margin-top-6">Please click on the links below to review the applications and all feedback before the interview.</p>
 
                 <div class="progress-list">
-                    <h2 class="govuk-heading-m no-margin">Applications for interview panel (<span
+                    <h2 class="govuk-heading-m govuk-!-margin-0">Applications for interview panel (<span
                         th:text="${#lists.size(model.applications)}"/>)</h2>
 
                     <ul>
@@ -47,7 +47,7 @@
                                     <a class="govuk-heading-s"
                                        th:href="@{~/application/{applicationId}/feedback(applicationId=${app.applicationId})}"
                                        th:text="${app.displayLabel}">Application name</a>
-                                    <p th:text="${app.leadOrganisation}" class="govuk-body no-margin"/>
+                                    <p th:text="${app.leadOrganisation}" class="govuk-body govuk-!-margin-0"/>
                                 </div>
                             </th:block>
 

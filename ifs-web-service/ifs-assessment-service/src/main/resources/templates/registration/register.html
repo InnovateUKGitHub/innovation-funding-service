@@ -68,7 +68,7 @@
 
                     <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
 
-                    <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
+                    <div class="form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
                         <label class="form-label" for="phoneNumber">
                             <span class="form-label-bold">Phone number</span>
                             <span class="form-hint">We may use this to contact you about the application.</span>
@@ -94,7 +94,7 @@
 
                     <th:block th:insert="fragments/password :: registration"/>
 
-                    <button class="govuk-button extra-margin" name="create-account" type="submit">Continue</button>
+                    <button class="govuk-button govuk-!-margin-top-6" name="create-account" type="submit">Continue</button>
                 </form>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />

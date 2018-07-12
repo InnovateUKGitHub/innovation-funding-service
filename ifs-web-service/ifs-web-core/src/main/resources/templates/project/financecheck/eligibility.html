@@ -142,7 +142,7 @@
             <p class="govuk-body">These finances were initially submitted at the application stage, from the details in the Je-S form.</p>
             <p class="govuk-body">If you need to make corrections, discuss this with the applicant. You can do this by raising queries through IFS. Saved changes will be visible to the applicant.</p>
             <div class="upload-section">
-                <h3 class="govuk-heading-s no-margin">Download Je-S form:</h3>
+                <h3 class="govuk-heading-s govuk-!-margin-0">Download Je-S form:</h3>
                 <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${summaryModel.projectId}, organisationId=${summaryModel.organisationId})}"
                    class="govuk-link uploaded-file" th:text="${summaryModel.jesFileDetails?.filename} + ' (opens in a new window)'" target="_blank">The-uploaded-file-example.pdf</a>
             </div>
@@ -180,9 +180,9 @@
             </th:block>
 
             <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Return to finance checks</button>
-            <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}" th:classappend="${summaryModel.isApproved() ? 'extra-large-margin' : ''}">Return to finance checks</a>
+            <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}" th:classappend="${summaryModel.isApproved() ? 'govuk-!-margin-top-9' : ''}">Return to finance checks</a>
         </form>
-        <div class="extra-margin" th:unless="${summaryModel.isExternalView()}">
+        <div class="govuk-!-margin-top-6" th:unless="${summaryModel.isExternalView()}">
             <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}" class="button-secondary">Queries</a>
             <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="button-secondary">Notes</a>
         </div>

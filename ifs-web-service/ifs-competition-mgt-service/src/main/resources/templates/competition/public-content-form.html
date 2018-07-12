@@ -28,13 +28,13 @@
             <th:block th:insert="fragments/public-content :: ${'section-' + model.section.type.path} (model=${model},form=${form})" />
 
             <!-- buttons -->
-            <div class="govuk-grid-row extra-margin">
+            <div class="govuk-grid-row govuk-!-margin-top-6">
                 <th:block th:if="${model.readOnly}">
                     <div class="govuk-grid-column-one-half">
                         <a class="govuk-button" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
                     </div>
                     <div class="govuk-grid-column-one-half alignright">
-                        <a class="button-secondary no-margin" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
+                        <a class="button-secondary govuk-!-margin-0" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
                     </div>
                 </th:block>
                 <th:block th:unless="${model.readOnly}">

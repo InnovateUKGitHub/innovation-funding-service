@@ -45,25 +45,25 @@
 
             <th:block
                 th:if="${model.markedAsComplete and !model.submitted and !model.leadPartner and form==null}">
-                <div class="success-alert extra-margin-bottom">
+                <div class="success-alert govuk-!-margin-bottom-6">
                     <p class="govuk-body">Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.
                     </p>
                 </div>
             </th:block>
             <th:block
                 th:if="${model.markedAsComplete and !model.submitted and model.leadPartner and form == null and model.userPartOfThisOrganisation}">
-                <div class="success-alert extra-margin-bottom">
+                <div class="success-alert govuk-!-margin-bottom-6">
                     <p class="govuk-body">Your spend profile is marked as complete. You can still edit this page. When all partners have completed their spend profiles you can send them to us.</p>
                 </div>
             </th:block>
             <th:block
                 th:if="${model.markedAsComplete and model.submitted and !model.approved and model.userPartOfThisOrganisation}">
-                <div class="success-alert extra-margin-bottom">
+                <div class="success-alert govuk-!-margin-bottom-6">
                     <p class="govuk-body">Your spend profile has been completed.</p>
                 </div>
             </th:block>
             <th:block th:if="${model.approved and model.userPartOfThisOrganisation}">
-                <div class="success-alert extra-margin-bottom">
+                <div class="success-alert govuk-!-margin-bottom-6">
                     <p class="govuk-body">Your spend profile has now been accepted by Innovate UK.</p>
                 </div>
             </th:block>
@@ -279,7 +279,7 @@
                 <div class="grid-container">
                     <h2 class="govuk-heading-m">Project costs for financial year</h2>
                     <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
-                    <table class="extra-margin-bottom" style="width: 50%;">
+                    <table class="govuk-!-margin-bottom-6" style="width: 50%;">
                         <thead>
                         <tr>
                             <th scope="col" style="width: 50%">Financial year (April to March)</th>
@@ -307,7 +307,7 @@
                         </tr>
                         </tbody>
                     </table>
-                    <button th:unless="${readonly}" class="button-secondary extra-margin">Save and return to spend profile overview</button>
+                    <button th:unless="${readonly}" class="button-secondary govuk-!-margin-top-6">Save and return to spend profile overview</button>
                 </div>
             </form>
 
@@ -315,25 +315,25 @@
             <div class="grid-container" th:if="${readonly and !model.submitted}">
 
                 <th:block th:if="${!model.markedAsComplete and !model.leadPartner and model.userPartOfThisOrganisation}">
-                    <a class="button-secondary extra-margin"
+                    <a class="button-secondary govuk-!-margin-top-6"
                        th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
-                    <p class="govuk-body extra-margin">Once you are satisfied with your spend profile please submit to the lead partner.</p>
+                    <p class="govuk-body govuk-!-margin-top-6">Once you are satisfied with your spend profile please submit to the lead partner.</p>
                     <th:block th:unless="${#lists.size(model.table.validationMessages.errors) > 0}">
                     <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/confirm(projectId=${model.projectId},organisationId=${model.organisationId})}"
-                       class="govuk-button extra-margin" data-js-modal="modal-confirm-spend-profile-submit">Submit to lead partner</a>
+                       class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-spend-profile-submit">Submit to lead partner</a>
                     </th:block>
                     <th:block th:if="${#lists.size(model.table.validationMessages.errors) > 0}">
-                        <button disabled="disabled" class="govuk-button extra-margin">Submit to lead partner</button>
+                        <button disabled="disabled" class="govuk-button govuk-!-margin-top-6">Submit to lead partner</button>
                     </th:block>
                 </th:block>
 
                 <th:block th:if="${model.leadPartner and model.userPartOfThisOrganisation}">
-                    <a class="button-secondary extra-margin"
+                    <a class="button-secondary govuk-!-margin-top-6"
                        th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
                     <th:block th:if="${!model.markedAsComplete}">
-                        <p class="govuk-body extra-margin">You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.</p>
+                        <p class="govuk-body govuk-!-margin-top-6">You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.</p>
                         <form method="post"
                               th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}">
                             <button class="govuk-button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
@@ -342,9 +342,9 @@
                 </th:block>
 
                 <th:block th:if="${model.leadPartner and model.markedAsComplete and !model.userPartOfThisOrganisation}">
-                    <p class="govuk-body extra-margin">You can still allow partners to edit their spend profile at this stage. Once this section has been marked as complete you can submit it to Innovate UK.</p>
+                    <p class="govuk-body govuk-!-margin-top-6">You can still allow partners to edit their spend profile at this stage. Once this section has been marked as complete you can submit it to Innovate UK.</p>
                     <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}"
-                        class="govuk-button extra-margin" data-js-modal="modal-confirm-allow-spend-profile-edits">Allow edits
+                        class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-allow-spend-profile-edits">Allow edits
                     </a>
                 </th:block>
 

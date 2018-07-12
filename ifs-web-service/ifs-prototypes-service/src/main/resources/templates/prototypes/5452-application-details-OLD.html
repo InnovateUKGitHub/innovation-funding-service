@@ -31,8 +31,8 @@
                     <input class="form-control width-full" type="text" id="application_details-title" required="required" data-required-errormessage="Please enter the full title of the project" name="application.name" value="A novel solution to an old problem" />
                 </div>
                 <fieldset>
-                    <div class="message-alert extra-margin-bottom">
-                        <h2 class="govuk-heading-s no-margin">Research area determines funding</h2>
+                    <div class="message-alert govuk-!-margin-bottom-6">
+                        <h2 class="govuk-heading-s govuk-!-margin-0">Research area determines funding</h2>
                         <p class="govuk-body">The research area is used to calculate the funding for all collaborators in the application.</p>
                         <p class="govuk-body">Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
                     </div>
@@ -73,7 +73,7 @@
                 </fieldset>
                 <div id="resubmission-details">
                     <div class="form-group">
-                        <h2 class="govuk-heading-m no-margin">Please provide the details of this previous application</h2>
+                        <h2 class="govuk-heading-m govuk-!-margin-0">Please provide the details of this previous application</h2>
                     </div>
                     <div class="form-group">
                         <label class="form-label form-label-bold" for="application_details-previousapplicationnumber">
@@ -129,11 +129,11 @@
                 </fieldset>
 
                 <div class="form-group">
-                    <h2 class="govuk-heading-s no-margin">Lead organisation</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-0">Lead organisation</h2>
                     <div>Empire Ltd</div>
                 </div>
                 <div class="form-group">
-                    <h2 class="govuk-heading-s no-margin">Partners</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-0">Partners</h2>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>
                             <span>Ludlow</span>
@@ -174,7 +174,7 @@
                 <dd>Worth Internet Systems<small>(pending)</small></dd>
             </dl>
         </th:block>
-        <div class="extra-margin extra-margin-bottom">
+        <div class="extra-margin govuk-!-margin-bottom-6">
             <!--<button type="submit" name="mark_as_complete" class="button-clear" value="9">Mark as complete</button>-->
             <a th:href="${param.status != null and param.status[0] == 'readOnly' ? '/prototypes/5452-application-details' : '/prototypes/5452-application-details?status=readOnly'}" th:text="${param.status != null and param.status[0] == 'readOnly' ? 'Edit application details' : 'Mark application details as complete'}"></a>
         </div>

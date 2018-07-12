@@ -120,7 +120,7 @@
         </div>
         <div id="resubmission-details">
             <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'form-group-error'">
-                <h2 class="govuk-heading-m no-margin-top">Please provide the details of this previous application</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-top-0">Please provide the details of this previous application</h2>
                 <label for="application.previousApplicationNumber">
                     <span class="form-label form-label-bold">Previous application number</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')"  />

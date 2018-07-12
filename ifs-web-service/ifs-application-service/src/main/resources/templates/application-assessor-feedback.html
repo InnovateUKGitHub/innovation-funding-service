@@ -19,7 +19,7 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.question.shortName},subTitle=${applicationName},size='govuk-heading-xl'" />
         </th:block>
 
-        <h2 class="govuk-heading-m no-margin" th:unless="${model.question.name == 'Project summary'} or ${model.question.name == 'Public description'}"
+        <h2 class="govuk-heading-m govuk-!-margin-0" th:unless="${model.question.name == 'Project summary'} or ${model.question.name == 'Public description'}"
             th:text="(${model.question.questionNumber} ? ${model.question.questionNumber} + '. ' : ' ') + ${model.question.name} ">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h2>
 
         <h3 class="govuk-heading-m">Your answer:</h3>
@@ -28,7 +28,7 @@
                 <div th:text="${item.value}" data-md-to-html="" class="wysiwyg-styles"></div>
             </th:block>
             <th:block th:if="${item.fileEntry}">
-                <h3 class="govuk-heading-s no-margin">View appendix:</h3>
+                <h3 class="govuk-heading-s govuk-!-margin-0">View appendix:</h3>
                 <a th:href="@{/application/{appId}/form/question/{questionId}/forminput/{inputId}/download(appId=${model.application.id},questionId=${item.question},inputId=${item.formInput})}"
                    th:text="|${item.filename} (${item.humanReadableFileSize})|"
                    class="govuk-link">Project-plan.pdf (161.96 KB)</a>
@@ -36,7 +36,7 @@
         </th:block>
 
         <h2 class="govuk-heading-l" th:text="${model.question.assessorMaximumScore} ? 'Average score: '+${model.aggregateResource.avgScore}+ '/ ' + ${model.question.assessorMaximumScore}">Average score: 7/10</h2>
-        <h3 class="govuk-heading-m no-margin" th:if="${#lists.size(model.aggregateResource.feedback) > 0}">Your assessors' feedback</h3>
+        <h3 class="govuk-heading-m govuk-!-margin-0" th:if="${#lists.size(model.aggregateResource.feedback) > 0}">Your assessors' feedback</h3>
         <ul class="govuk-list boxed-list">
             <li th:each="item, iterStat : ${model.aggregateResource.feedback}">
                 <h4 class="govuk-heading-s" th:text="|Assessor ${iterStat.count}|">Assessor 1</h4>

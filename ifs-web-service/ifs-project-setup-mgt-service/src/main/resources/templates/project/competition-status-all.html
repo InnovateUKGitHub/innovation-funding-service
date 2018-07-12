@@ -15,9 +15,9 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='govuk-heading-xl'" />
 
         <form method="GET">
-            <div class="search-filters extra-margin">
+            <div class="search-filters govuk-!-margin-top-6">
                 <fieldset>
-                    <legend class="govuk-heading-m no-margin-top">Filter projects</legend>
+                    <legend class="govuk-heading-m govuk-!-margin-top-0">Filter projects</legend>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
                             <label class="form-label" for="applicationSearchString">Search by application number.</label>
@@ -28,7 +28,7 @@
                         </div>
                     </div>
                 </fieldset>
-                <div class="extra-margin">
+                <div class="govuk-!-margin-top-6">
                     <a href="?" class="govuk-link">Clear all filters</a>
                 </div>
             </div>
@@ -59,7 +59,7 @@
               <tbody class="cell-border-right">
                 <tr th:each="project : ${model.competitionProjectsStatusResource.projectStatusResources}">
                     <th scope="row">
-                      <div class="govuk-heading-s no-margin" th:text="${project.projectTitle}" />
+                      <div class="govuk-heading-s govuk-!-margin-0" th:text="${project.projectTitle}" />
                         <!--/*  origin must one of org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin */-->
                       <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" class="govuk-link" />
                       <small>

@@ -19,7 +19,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Bank account'})" />
 
-	<div class="success-alert extra-margin-bottom" th:unless="${param.status != null and param.status[0] == 'review'}">
+	<div class="success-alert govuk-!-margin-bottom-6" th:unless="${param.status != null and param.status[0] == 'review'}">
 		<p class="govuk-body"><strong>Your bank details have been approved.</strong></p>
 	</div>
 

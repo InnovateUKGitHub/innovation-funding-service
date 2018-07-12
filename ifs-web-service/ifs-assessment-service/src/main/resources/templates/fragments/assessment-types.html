@@ -4,7 +4,7 @@
 
 <!-- ======== Assessment - research category ======= -->
 <div th:fragment="assessor_research_category (field)">
-    <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'form-group-error'">
+    <div class="form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'form-group-error'">
         <label class="form-label" th:for="formInput[__${field.id}__]">
             <span class="form-label-bold">Please select the research category for this project</span>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
@@ -88,7 +88,7 @@
 <!-- =================== Assessment feedback scope ============================== -->
 <div th:fragment="assessor_application_in_scope (field)">
     <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'form-group-error'">
-    <h2 class="govuk-heading-s no-margin">Is this application in scope?</h2>
+    <h2 class="govuk-heading-s govuk-!-margin-0">Is this application in scope?</h2>
     <fieldset class="inline">
         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
         <legend class="govuk-visually-hidden" th:id="formInput[__${field.id}__]" >Is this application in scope?</legend>

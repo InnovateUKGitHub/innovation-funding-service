@@ -6,7 +6,7 @@
     <div class="govuk-grid-row">
         <div class="column-three-quarters">
 
-            <h1 class="govuk-heading-xl no-margin-bottom" th:text="${(site == 'rc' ? 'Manage panel' : 'Manage assessor')}">MANAGE TITLE</h1>
+            <h1 class="govuk-heading-xl govuk-!-margin-bottom-0" th:text="${(site == 'rc' ? 'Manage panel' : 'Manage assessor')}">MANAGE TITLE</h1>
 
             <h2 class="govuk-heading-m extra-margin-top">Technology inspired <br/> Ref: 0102468</h2>
 
@@ -21,15 +21,15 @@
             </h2>
             <ul class="assessor-status extra-margin">
                 <li>
-                    <h3 class="govuk-heading-l no-margin">1</h3>
+                    <h3 class="govuk-heading-l govuk-!-margin-0">1</h3>
                     <p class="govuk-body">invited</p>
                 </li>
                 <li>
-                    <h3 class="govuk-heading-l no-margin">1</h3>
+                    <h3 class="govuk-heading-l govuk-!-margin-0">1</h3>
                     <p class="govuk-body">accepted</p>
                 </li>
                 <li>
-                    <h3 class="govuk-heading-l no-margin">1</h3>
+                    <h3 class="govuk-heading-l govuk-!-margin-0">1</h3>
                     <p class="govuk-body">declined</p>
                 </li>
             </ul>
@@ -73,9 +73,9 @@
 
     <ul class="tabular-list__row">
         <li class="width-third">
-            <h3 class="govuk-heading-s no-margin"><a href="#" th:text="${name}">NAME</a></h3>
-            <p class="no-margin" th:text="${position}">POSITION</p>
-            <p class="no-margin-top" th:text="${org}">ORG</p>
+            <h3 class="govuk-heading-s govuk-!-margin-0"><a href="#" th:text="${name}">NAME</a></h3>
+            <p class="govuk-!-margin-0" th:text="${position}">POSITION</p>
+            <p class="govuk-!-margin-top-0" th:text="${org}">ORG</p>
         </li>
 
         <li class="width-third">
@@ -118,7 +118,7 @@
 <div th:fragment="prototype-assesor-row-assign-application">
     <ul class="tabular-list__row">
         <li class="width-half">
-            <p class="govuk-body no-margin">No: <a href="#" class="extra-margin-right" th:text="${number}">NUMBER</a></p>
+            <p class="govuk-body govuk-!-margin-0">No: <a href="#" class="extra-margin-right" th:text="${number}">NUMBER</a></p>
         </li>
         <li class="width-quarter" aria-describedby="assign-lead-org" th:text="${org}">
             ORG
@@ -128,7 +128,7 @@
         </li>
         <li class="width-full">
             <ul class="tabular-list__row--internal">
-                <li class="width-half"><h3 class="govuk-heading-s no-margin"><a href="#" th:text="${application}">APPLICATION</a></h3>
+                <li class="width-half"><h3 class="govuk-heading-s govuk-!-margin-0"><a href="#" th:text="${application}">APPLICATION</a></h3>
 
                 <th:block th:if="${status != null}">
                     <p class="govuk-body">Status: <strong th:text="${status}">STATUS</strong></p>
@@ -164,10 +164,10 @@
 <div th:fragment="prototype-assesor-row-assign-assessor">
     <ul class="tabular-list__row">
         <li class="width-third">
-            <h3 class="govuk-heading-s no-margin"><a href="#" th:text="${name}">NAME</a></h3>
-            <p class="no-margin" th:text="${position}">POSITION</p>
-            <p class="no-margin" th:text="${org}">ORG</p>
-            <p class="no-margin" th:text="${busType}">TYPE</p>
+            <h3 class="govuk-heading-s govuk-!-margin-0"><a href="#" th:text="${name}">NAME</a></h3>
+            <p class="govuk-!-margin-0" th:text="${position}">POSITION</p>
+            <p class="govuk-!-margin-0" th:text="${org}">ORG</p>
+            <p class="govuk-!-margin-0" th:text="${busType}">TYPE</p>
         </li>
         <li class="width-third">
             <ul>
@@ -310,7 +310,7 @@
                 </div>
             </div>
 
-            <details class="extra-margin-bottom" th:unless="${site == 'rc'}">
+            <details class="govuk-!-margin-bottom-6" th:unless="${site == 'rc'}">
                 <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
                 <div class="panel">
                     <form th:action="${#httpServletRequest.requestURI}">
@@ -492,13 +492,13 @@
         <div class="govuk-grid-row">
         <div class="column-two-thirds">
 
-            <h1 class="govuk-heading-xl no-margin-bottom">Assign assessor</h1>
+            <h1 class="govuk-heading-xl govuk-!-margin-bottom-0">Assign assessor</h1>
 
             <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
 
                 <h2 class="govuk-heading-m">No: <a href="#" th:text="${(param.number != null ? param.number[0] : '00000000000')}"></a></h2>
 
-                <h2 class="govuk-heading-m no-margin-top" th:text="${(param.application != null ? param.application[0] : 'Application name here')}">APPLICATION</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-top-0" th:text="${(param.application != null ? param.application[0] : 'Application name here')}">APPLICATION</h2>
 
                 <th:block th:if="${site == 'rc'}">
 
@@ -508,7 +508,7 @@
 
                 <th:block th:unless="${site == 'rc'}">
 
-                    <div class="govuk-grid-row extra-margin-bottom">
+                    <div class="govuk-grid-row govuk-!-margin-bottom-6">
                         <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Innovation area</h3>
                             <ul class="govuk-list govuk-list--bullet">
@@ -541,7 +541,7 @@
         <div class="govuk-grid-column-one-third aligncentre">
             <ul>
                 <li>
-                    <h3 class="govuk-heading-xl no-margin-bottom" id="assessors-remaining">3</h3>
+                    <h3 class="govuk-heading-xl govuk-!-margin-bottom-0" id="assessors-remaining">3</h3>
                     <p class="govuk-body">Applications left to assign</p>
                 </li>
             </ul>
@@ -549,7 +549,7 @@
     </div>
 
     <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
-        <div class="govuk-grid-row extra-margin-bottom">
+        <div class="govuk-grid-row govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-one-half">
                 <a href="#">View application details</a>
             </div>
@@ -560,7 +560,7 @@
     </th:block>
 
     <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'assessor'}">
-        <div class="alignright extra-margin-bottom">
+        <div class="alignright govuk-!-margin-bottom-6">
             <a href="/prototypes/4607-manage-assessors?view=assessor&#38;tab=assign&#38;action=notify" class="govuk-button button-secondary">Return to assign tab</a>
         </div>
     </th:block>

@@ -101,7 +101,7 @@
                                                     data-email-duplication-errormessage=#{email.already.in.invite}" />
                                 </td>
                                 <td>
-                                   <button class="govuk-button no-margin" name="executeStagedInvite" value="true" type="submit">Invite</button>
+                                   <button class="govuk-button govuk-!-margin-0" name="executeStagedInvite" value="true" type="submit">Invite</button>
                                 </td>
                                 <td class="alignright">
                                     <button class="remove-another-row button-clear"
@@ -127,7 +127,7 @@
                     </div>
 
                     <div th:if="${model.userLeadApplicant and !model.leadOrganisation}">
-                        <div class="extra-margin">
+                        <div class="govuk-!-margin-top-6">
                             <a th:href="${model.organisationExists} ?
                             @{/application/{applicationId}/team/update/existing/{organisationId}(applicationId=${model.applicationId}, organisationId=${model.organisationId}, deleteOrganisation='')} :
                             @{/application/{applicationId}/team/update/invited/{organisationId}(applicationId=${model.applicationId}, organisationId=${model.inviteOrganisationId}, deleteOrganisation='')} "
@@ -140,10 +140,10 @@
                         <th:block th:insert="fragments/modals :: modal-delete-organisation" />
                     </div>
 
-                    <p class="govuk-body extra-margin">Once you update the organisation, your changes will take effect. Invites will be sent to all new applicants.</p>
+                    <p class="govuk-body govuk-!-margin-top-6">Once you update the organisation, your changes will take effect. Invites will be sent to all new applicants.</p>
                     <p class="govuk-body" th:if="${model.userLeadApplicant}">You should not remove members of your team without discussing this action with them first. Members who are removed may not receive a notification from Innovate UK.</p>
 
-                    <p class="govuk-body extra-margin">
+                    <p class="govuk-body govuk-!-margin-top-6">
                         <a
                             th:href="@{${model.backUrl}}" class="button-secondary">Return to application team page</a>
                     </p>

@@ -33,7 +33,7 @@
             You must confirm any finance changes with the contact before you approve.
         </p>
 
-        <form class="extra-margin" id="post-new-query-form" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
+        <form class="govuk-!-margin-top-6" id="post-new-query-form" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
               th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
                 <h2 class="govuk-heading-m">Post a new query</h2>
                 <div class="form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'form-group-error'">
@@ -118,13 +118,13 @@
                             </li>
                         </ul>
                     </th:block>
-                    <h3 class="govuk-heading-s no-margin-bottom">Upload supporting documentation in PDF format.</h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Upload supporting documentation in PDF format.</h3>
                     <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error': ''">
                         <th:block th:if="${#fields.hasErrors('attachment')}">
                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}"></span>
                         </th:block>
                         <input type="file" id="attachment" class="inputfile" name="attachment">
-                        <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
+                        <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                         <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
                     </div>
                 </div>
@@ -132,7 +132,7 @@
                 <input type="hidden" id="action" value="postQuery">
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-half">
-                        <button type="submit" id="post-query" data-content-on-submit="Please wait..." class="govuk-button no-margin">Post query</button>
+                        <button type="submit" id="post-query" data-content-on-submit="Please wait..." class="govuk-button govuk-!-margin-0">Post query</button>
                     </div>
                     <div class="govuk-grid-column-one-half alignright">
                         <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-link">Cancel</a>

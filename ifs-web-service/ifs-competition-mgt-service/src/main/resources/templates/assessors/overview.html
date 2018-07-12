@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                <dl class="standard-definition-list extra-margin">
+                <dl class="standard-definition-list govuk-!-margin-top-6">
                     <dt>Innovation sector</dt>
                     <dd th:text="${model.innovationSector}">Health and life sciences</dd>
 
@@ -66,14 +66,14 @@
 
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-three-quarters">
-                        <h2 class="govuk-heading-s no-margin-top">View assessors who have not yet responded or have declined the invite.</h2>
+                        <h2 class="govuk-heading-s govuk-!-margin-top-0">View assessors who have not yet responded or have declined the invite.</h2>
                     </div>
                 </div>
 
                 <form method="GET" th:object="${filterForm}">
-                    <div class="search-filters extra-margin">
+                    <div class="search-filters govuk-!-margin-top-6">
                         <fieldset>
-                            <legend class="govuk-heading-m no-margin-top">Filter assessors</legend>
+                            <legend class="govuk-heading-m govuk-!-margin-top-0">Filter assessors</legend>
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-one-third">
                                     <div class="form-group">
@@ -110,7 +110,7 @@
                             <div class="govuk-grid-row">
                                 <input type="hidden" name="filterChanged" value="1"/>
                                 <div class="govuk-grid-column-full alignright">
-                                    <button class="govuk-button no-margin" type="submit">Filter</button>
+                                    <button class="govuk-button govuk-!-margin-0" type="submit">Filter</button>
                                 </div>
                             </div>
                        </fieldset>
@@ -120,14 +120,14 @@
                     </div>
                 </form>
 
-                <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">
+                <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.selectAllDisabled}">
                     <p class="govuk-body" th:text="#{competition.management.limit.warning}"></p>
                 </div>
                 <div data-selection-limit-exceeded-block=""></div>
 
                 <div class="govuk-grid-row sorting">
                     <div class="govuk-grid-column-one-half">
-                        <span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">20</span>
+                        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${model.pagination.totalCount}">20</span>
                         <span class="govuk-heading-s">assessors</span>
                     </div>
                 </div>

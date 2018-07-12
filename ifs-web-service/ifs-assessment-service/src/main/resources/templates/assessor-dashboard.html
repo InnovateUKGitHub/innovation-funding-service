@@ -12,14 +12,14 @@
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessor dashboard',size='govuk-heading-xl'" />
-            <div class="message-alert extra-margin-bottom" th:unless="${model.profileStatus.complete}">
-                <h2 class="govuk-heading-s no-margin">Complete your assessor account</h2>
+            <div class="message-alert govuk-!-margin-bottom-6" th:unless="${model.profileStatus.complete}">
+                <h2 class="govuk-heading-s govuk-!-margin-0">Complete your assessor account</h2>
 
                 <p class="govuk-body">
                     Please complete the following sections of your account. We cannot assign applications to you for
                     assessment until these sections are complete.
                 </p>
-                <ul class="govuk-list govuk-list--bullet extra-margin-top">
+                <ul class="govuk-list govuk-list--bullet">
                     <li th:unless="${model.profileStatus.skillsComplete}">
                         <a th:href="@{/profile/skills/edit}" class="govuk-link">your skills</a>
                     </li>
@@ -42,10 +42,10 @@
                                 <h3 class="govuk-heading-s"><a
                                     th:href="@{/invite/competition/{hash}(hash=${pendingInvite.hash})}"
                                     th:text="${pendingInvite.displayLabel}">Technology inspired</a></h3>
-                                    <p class="govuk-body no-margin">You have been asked to assess this competition. Please respond.</p>
+                                    <p class="govuk-body govuk-!-margin-0">You have been asked to assess this competition. Please respond.</p>
                             </div>
                             <div class="assessment-period">
-                                <h3 class="govuk-heading-s no-margin">Assessment period</h3>
+                                <h3 class="govuk-heading-s govuk-!-margin-0">Assessment period</h3>
                                 <dl class="standard-definition-list reduced-width">
                                     <dt>Begins</dt>
                                     <dd th:text="${#temporals.format(pendingInvite.assessmentPeriodDateFrom, 'd MMMM yyyy')}">
@@ -66,7 +66,7 @@
                 <th:block th:unless="${#lists.isEmpty(model.activeCompetitions)}">
 
                     <div class="progress-list">
-                        <h2 class="govuk-heading-m no-margin-top">Competitions for assessment (<span
+                        <h2 class="govuk-heading-m govuk-!-margin-top-0">Competitions for assessment (<span
                             th:text="${#lists.size(model.activeCompetitions)}"/>)</h2>
                         <ul>
                             <li th:each="activeCompetition : ${model.activeCompetitions}">
@@ -130,10 +130,10 @@
                                        th:text="${upcomingCompetition.displayLabel}"
                                        class="govuk-link" />
                                 </h3>
-                                <p class="govuk-body no-margin">Upcoming competition</p>
+                                <p class="govuk-body govuk-!-margin-0">Upcoming competition</p>
                             </div>
                             <div class="assessment-period">
-                                <h3 class="govuk-heading-s no-margin">Assessment period</h3>
+                                <h3 class="govuk-heading-s govuk-!-margin-0">Assessment period</h3>
                                 <dl class="standard-definition-list reduced-width">
                                     <dt>Begins</dt>
                                     <dd th:text="|${#temporals.day(upcomingCompetition.assessmentPeriodDateFrom)} ${#temporals.monthName(upcomingCompetition.assessmentPeriodDateFrom)}|">15 November 2017</dd>
@@ -148,7 +148,7 @@
 
             <div class="assessment-panel-invites">
                 <th:block th:unless="${#lists.isEmpty(model.assessmentPanelAccepted)}">
-                    <div class="progress-list"><h2 class="govuk-heading-m no-margin-top">Attend panel (<span
+                    <div class="progress-list"><h2 class="govuk-heading-m govuk-!-margin-top-0">Attend panel (<span
                         th:text="${#lists.size(model.assessmentPanelAccepted)}"/>)</h2>
                         <ul>
                             <li th:each="assessmentPanelAccept : ${model.assessmentPanelAccepted}">
@@ -224,7 +224,7 @@
             <div class="interview-panel-invites">
                 <th:block th:unless="${#lists.isEmpty(model.interviewPanelAccepted)}">
                     <div class="progress-list">
-                        <h2 class="govuk-heading-m no-margin-top">Interviews you have agreed to attend (<span
+                        <h2 class="govuk-heading-m govuk-!-margin-top-0">Interviews you have agreed to attend (<span
                         th:text="${#lists.size(model.interviewPanelAccepted)}"/>)</h2>
                         <ul>
                             <li th:each="interviewPanelAccept : ${model.interviewPanelAccepted}">

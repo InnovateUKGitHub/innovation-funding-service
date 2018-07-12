@@ -32,7 +32,7 @@
                 </p>
             </div>
 
-            <ul class="task-list extra-margin">
+            <ul class="task-list govuk-!-margin-top-6">
                 <li th:each="section : ${model.sections}">
                     <div class="task">
                         <h2 class="govuk-heading-s">
@@ -60,7 +60,7 @@
             </li>
         </ul>
 
-        <div class="extra-margin">
+        <div class="govuk-!-margin-top-6">
             <a th:unless="${model.competition.nonIfs}" th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button-secondary">Return to setup overview</a>
             <a th:if="${model.competition.nonIfs}" th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button-secondary">Return to non-IFS competition details</a>
         </div>

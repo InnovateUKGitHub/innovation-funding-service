@@ -19,17 +19,17 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
             </th:block>
           </div>
-          <div class="govuk-grid-column-one-third alignright extra-margin">
+          <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
               <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Finance Checks</h2>
           </div>
       </div>
       <hr/>
 
         <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.projectId})}">
-          <h2 class="govuk-heading-m no-margin">Generate spend profile</h2>
+          <h2 class="govuk-heading-m govuk-!-margin-0">Generate spend profile</h2>
             <p class="govuk-body">This will generate a flat spend profile for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
             <p class="govuk-body">Partners will be notified that they can now create their spend profile.</p>
-                <button class="button extra-margin">Generate spend profile</button>
+                <button class="button govuk-!-margin-top-6">Generate spend profile</button>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

@@ -18,14 +18,14 @@
         <div class="govuk-grid-row">
 
             <section class="govuk-grid-column-one-half" th:with="redirectAfterLogin= '/application/create-authenticated/'+${competitionId}">
-                <h2 class="govuk-heading-l no-margin">Used this service before?</h2>
+                <h2 class="govuk-heading-l govuk-!-margin-0">Used this service before?</h2>
                 <p class="govuk-body">Please sign into your Innovation Funding Service account.</p>
 
                 <a th:href="${redirectAfterLogin}" class="govuk-button" value="create-account" type="submit">Sign in</a>
             </section>
 
             <section class="govuk-grid-column-one-half" th:with="createUrl= '/organisation/create/initialize'">
-                <h2 class="govuk-heading-l no-margin">New to this service?</h2>
+                <h2 class="govuk-heading-l govuk-!-margin-0">New to this service?</h2>
                 <p class="govuk-body">If you haven't used the new Innovation Funding Service before you will need to create an account.</p>
 
                 <a th:href="${createUrl}" class="govuk-button" value="create-account" type="submit">Create account</a>

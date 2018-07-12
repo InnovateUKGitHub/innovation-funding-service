@@ -21,10 +21,10 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${#strings.isEmpty(competitionSetupForm.question.shortTitle)} ? #{ifs.application.question.no_heading} : ${competitionSetupForm.question.shortTitle},subTitle=${competitionName},size='govuk-heading-xl'" />
 
-        <p class="extra-margin" th:unless="${model.general.state.preventEdit}">
+        <p class="govuk-!-margin-top-6" th:unless="${model.general.state.preventEdit}">
             You can edit this question for the applicant as well as the guidance for assessors. </p>
 
-        <p class="extra-margin" th:if="${model.general.state.preventEdit}">
+        <p class="govuk-!-margin-top-6" th:if="${model.general.state.preventEdit}">
             You are no longer able to make changes to this page.</p>
 
         <form th:if="${model.editable}"
@@ -38,7 +38,7 @@
               novalidate="novalidate">
 
             <th:block th:insert="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.question}, ${model.editable})" />
-            <div class="extra-margin">
+            <div class="govuk-!-margin-top-6">
                 <button type="submit" class="govuk-button">
                     Done
                 </button>
@@ -46,15 +46,15 @@
         </form>
         <th:block th:unless="${model.editable}">
             <th:block th:insert="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.question}, ${model.editable})" />
-            <div class="extra-margin">
+            <div class="govuk-!-margin-top-6">
               <a class="govuk-button" th:unless="${model.general.state.preventEdit}" th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id},questionId=${competitionSetupForm.question.questionId})}">Edit this question</a>
             </div>
-            <div class="extra-margin">
+            <div class="govuk-!-margin-top-6">
               <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/section/application(competitionId=${model.general.competition.id})}">Return to application questions</a>
             </div>
-            <div class="extra-margin" th:if="${competitionSetupForm.isRemovable()}">
+            <div class="govuk-!-margin-top-6" th:if="${competitionSetupForm.isRemovable()}">
                 <form method="post" th:action="@{'/competition/setup/{competitionId}/section/application/landing-page'(competitionId=${model.general.competition.id})}" th:unless="${model.general.state.preventEdit}">
-                    <button type="submit" th:value="${competitionSetupForm.question.questionId}" name="deleteQuestion" class="button-clear no-margin">Remove question</button>
+                    <button type="submit" th:value="${competitionSetupForm.question.questionId}" name="deleteQuestion" class="button-clear govuk-!-margin-0">Remove question</button>
                 </form>
             </div>
         </th:block>

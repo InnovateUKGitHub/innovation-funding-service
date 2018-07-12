@@ -38,7 +38,7 @@ The key statistics counts should be correct
     Should Be Equal As Integers    ${AWAITING}    7  # Assignments awaiting response
     ${ACCEPTED}=    Get text    css=ul:nth-child(4) > li:nth-child(3) > div > span
     Should Be Equal As Integers    ${ACCEPTED}    6  # Assignments accepted
-    ${STARTED}=    Get text    css=.extra-margin > li:nth-child(1) > div > span
+    ${STARTED}=    Get text    css=.govuk-!-margin-top-6 > li:nth-child(1) > div > span
     Should Be Equal As Integers    ${STARTED}    3  # Assessments started
-    ${SUBMITTED}=    Get text    css=.extra-margin > li:nth-child(2) > div > span
+    ${SUBMITTED}=    Get text    css=.govuk-!-margin-top-6 > li:nth-child(2) > div > span
     Should Be Equal As Integers    ${SUBMITTED}    0  # Assessments submitted

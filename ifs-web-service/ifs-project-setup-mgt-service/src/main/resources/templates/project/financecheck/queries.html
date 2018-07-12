@@ -42,7 +42,7 @@
         <p class="govuk-body">
             Raise finance queries to the organisation in this section. You should confirm any changes to finances with the finance contact before you approve them. If the query button is disabled, the organisation has not yet appointed a finance contact.
         </p>
-        <div class="govuk-grid-row extra-margin-bottom">
+        <div class="govuk-grid-row govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-one-half">
                 <th:block th:if="${model.financeContact.isPresent()}">
                     <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-button">Post a new query</a>
@@ -73,13 +73,13 @@
                     <th:block th:if="${query.isClosed()}"><span class="status yes">Resolved</span></th:block>
                 </h2>
                 <div class="collapsible-content" th:classappend="${'query ' + querySection+'-section'}">
-                    <h3 class="no-margin">
+                    <h3 class="govuk-!-margin-0">
                         <span class="govuk-heading-s">Section: </span>
                         <span th:text="${#strings.capitalize(querySection)}">Section title</span>
                     </h3>
                     <th:block th:each="(post, iteration : ${query.viewModelPosts})">
                         <div th:class="${iteration.index == 0} ? '' : 'panel'">
-                            <div class="govuk-heading-s no-margin">
+                            <div class="govuk-heading-s govuk-!-margin-0">
                                 <th:block th:text="${post.username}">Created by user</th:block>
                                 <small>
                                     <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
@@ -96,8 +96,8 @@
                         </div>
                     </th:block>
                     <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                        <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="extra-margin govuk-button">Respond</a>
-                        <a class="button-clear width-full no-padding-left"
+                        <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="govuk-!-margin-top-6 govuk-button">Respond</a>
+                        <a class="button-clear width-full govuk-!-padding-left-0"
                            data-js-modal="modal-confirm-mark-resolved"
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}"
                            th:attr="data-modal-form-action=@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}">
@@ -105,7 +105,7 @@
                         </a>
                     </th:block>
                     <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
-                        <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:id="${'form-query-' + query.id}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
+                        <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:id="${'form-query-' + query.id}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                             <h3 class="govuk-heading-m">Respond to query</h3>
                             <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
                                 <label for="response">
@@ -143,20 +143,20 @@
                                         </li>
                                     </ul>
                                 </th:block>
-                                <h3 class="govuk-heading-s no-margin-bottom">Upload supporting documentation in pdf format</h3>
+                                <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Upload supporting documentation in pdf format</h3>
                                 <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error': ''">
                                     <th:block th:if="${#fields.hasErrors('attachment')}">
                                         <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}"></span>
                                     </th:block>
                                     <input type="file" id="attachment" class="inputfile" name="attachment">
-                                    <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
+                                    <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                                     <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
                                 </div>
                             </div>
                             <input type="hidden" id="action" value="postResponse">
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-one-half">
-                                    <button class="button no-margin" data-content-on-submit="Please wait...">Post response</button>
+                                    <button class="govuk-button govuk-!-margin-0" data-content-on-submit="Please wait...">Post response</button>
                                 </div>
                                 <div class="govuk-grid-column-one-half alignright">
                                     <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-link">Cancel</a>

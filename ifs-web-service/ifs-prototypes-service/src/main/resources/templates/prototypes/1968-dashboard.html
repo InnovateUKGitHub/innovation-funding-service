@@ -66,7 +66,7 @@
 
 					<div th:if="${param.closed == null}" th:remove="tag">
 
-						<h2 class="govuk-heading-m no-margin">In assessment</h2>
+						<h2 class="govuk-heading-m govuk-!-margin-0">In assessment</h2>
 
 						<div class="govuk-grid-row">
 
@@ -95,7 +95,7 @@
 
 				    <div th:if="${param.closed != null}" th:remove="tag">
 
-							<h2 class="govuk-heading-m no-margin">
+							<h2 class="govuk-heading-m govuk-!-margin-0">
 								<div th:if="${param.status[0] == 'assessment'}" th:remove="tag">
 									Funders panel
 								</div>

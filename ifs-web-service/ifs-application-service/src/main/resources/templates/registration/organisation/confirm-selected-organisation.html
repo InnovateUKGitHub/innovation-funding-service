@@ -21,10 +21,10 @@
 
         <th:block th:insert="fragments/addresses :: organisation-details" th:with="showOrgType=${model.showOrgType}"/>
 
-        <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" novalidate="novalidate" class="extra-margin">
+        <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" novalidate="novalidate" class="govuk-!-margin-top-6">
             <input type="hidden" th:field="*{searchOrganisationId}" />
 
-            <h2 class="govuk-heading-m no-margin">Operating address</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-0">Operating address</h2>
             <p class="form-hint">This is the address your organisation works from</p>
 
             <fieldset>
@@ -45,7 +45,7 @@
             </fieldset>
 
             <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm},addressType=${'operating address'}" />
-            <button type="submit" name="save-organisation-details" class="govuk-button extra-margin">Continue</button>
+            <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Continue</button>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

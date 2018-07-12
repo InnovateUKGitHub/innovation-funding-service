@@ -10,7 +10,7 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application process',size='govuk-heading-xl'" />
 
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
-        <h2 class="govuk-heading-m extra-margin" th:text="${model.general.competition.competitionTypeName+' competition questions'}" />
+        <h2 class="govuk-heading-m govuk-!-margin-top-6" th:text="${model.general.competition.competitionTypeName+' competition questions'}" />
 
         <p class="govuk-body">You can review and amend the application and assessment questions and guidance for this competition. You can also edit the finances section to update funding rules. Any changes you make will be applied to this competition, but will not affect the default template for this competition type.</p>
 
@@ -54,7 +54,7 @@
                     </div>
                     <div class="task-status">
                         <th>
-                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="button-clear no-margin">Remove</button>
+                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="button-clear govuk-!-margin-0">Remove</button>
                         </th>
                     </div>
                 </th:block>
@@ -62,7 +62,7 @@
         </ul>
 
         <h3 class="govuk-heading-s">Assessed questions</h3>
-        <ul class="task-list" th:classappend="${model.general.state.preventEdit} ? '' : 'no-margin-bottom'">
+        <ul class="task-list" th:classappend="${model.general.state.preventEdit} ? '' : 'govuk-!-margin-bottom-0'">
             <li th:each="question : ${model.questions}">
                 <th:block th:if="${model.questionStatuses.get(question.id)}">
                     <div class="task">
@@ -86,7 +86,7 @@
                     </div>
                     <div th:if="${model.multipleAssessedQuestionsLeft()}" class="task-status">
                         <th>
-                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="button-clear no-margin">Remove</button>
+                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="button-clear govuk-!-margin-0">Remove</button>
                         </th>
                     </div>
                 </th:block>
@@ -120,7 +120,7 @@
         </ul>
 
         <div class="govuk-grid-column-one-quarter">
-            <div class="govuk-grid-column-full extra-margin">
+            <div class="govuk-grid-column-full govuk-!-margin-top-6">
                 <button th:if="${model.general.editable}" th:disabled="${!model.allComplete}" class="govuk-button">Done</button>
             </div>
         </div>

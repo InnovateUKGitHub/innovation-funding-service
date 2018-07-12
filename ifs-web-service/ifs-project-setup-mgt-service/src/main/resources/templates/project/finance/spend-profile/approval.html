@@ -21,26 +21,26 @@
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
                 </th:block>
             </div>
-            <div class="govuk-grid-column-one-third alignright extra-margin">
+            <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
                 <h2 class="govuk-heading-s govuk-!-margin-0 blue-block">Spend profile</h2>
             </div>
         </div>
         <hr/>
 
         <th:block th:if="${model.approved}">
-            <div class="success-alert extra-margin-bottom">
-                <h2 class="govuk-heading-s no-margin-top">The spend profile has been approved.</h2>
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <h2 class="govuk-heading-s govuk-!-margin-top-0">The spend profile has been approved.</h2>
             </div>
         </th:block>
 
         <th:block th:if="${model.empty}">
-            <div class="warning-alert extra-margin-bottom">
-                <h2 class="govuk-heading-s no-margin-top">The spend profile is not generated.</h2>
+            <div class="warning-alert govuk-!-margin-bottom-6">
+                <h2 class="govuk-heading-s govuk-!-margin-top-0">The spend profile is not generated.</h2>
             </div>
         </th:block>
 
         <th:block th:if="${model.rejected}">
-            <div class="warning-alert extra-margin-bottom">
+            <div class="warning-alert govuk-!-margin-bottom-6">
                 <h3 class="govuk-heading-s">The spend profile has been rejected.</h3>
             </div>
         </th:block>

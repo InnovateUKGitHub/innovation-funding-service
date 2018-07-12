@@ -22,7 +22,7 @@
             <input th:if="${entry.getValue().name() == 'UNFUNDED'}" type="hidden" th:name="${entry.key}" value="N" />
         </th:block>
           <a th:href="@{/competition/{competitionId}/applications(competitionId=${competitionId})}" class="govuk-link">Cancel</a>
-          <button id="no-js-notify-applicants" type="submit" class="govuk-button no-margin">Notify Applicants</button>
+          <button id="no-js-notify-applicants" type="submit" class="govuk-button govuk-!-margin-0">Notify Applicants</button>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

@@ -31,7 +31,7 @@
             <h2 class="govuk-heading-s">Reason for removal</h2>
             <p class="govuk-body" th:text="${ineligibility.reasonForRemoval}"></p>
             <th:block th:if="${canReinstate}" th:unless="${ineligibility.readOnly}">
-                <div class="extra-margin">
+                <div class="govuk-!-margin-top-6">
                     <a th:href="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication/confirm(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})}"
                        class="button-secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
                 </div>
@@ -40,7 +40,7 @@
                     <form th:action="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" method="post">
                         <th:block th:insert="fragments/modals :: close-button" />
                         <div>
-                            <h2 class="govuk-heading-m no-margin">Reinstate application</h2>
+                            <h2 class="govuk-heading-m govuk-!-margin-0">Reinstate application</h2>
                             <p class="govuk-body">Are you sure that you wish to reinstate this application?</p>
                             <p class="govuk-body">It will be added to applications requiring assessment, and will require assessors to be assigned to it.</p>
 
@@ -61,7 +61,7 @@
             <th:block th:insert="fragments/application :: application-summary (isApplicant = false, hideDetails = false)" />
         </form>
 
-        <div class="extra-margin">
+        <div class="govuk-!-margin-top-6">
             <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${currentCompetition.id},appId=${currentApplication.id})}"
                class="govuk-link"
                rel="nofollow"
@@ -76,7 +76,7 @@
 
             <th:block th:each="appendix : ${appendices}">
                 <div class="form-group download">
-                    <h3 class="govuk-heading-s no-margin" th:text="${appendix.title}">
+                    <h3 class="govuk-heading-s govuk-!-margin-0" th:text="${appendix.title}">
                         View project management appendix:
                     </h3>
                     <a target="_blank" th:href="${appendix.getDownloadURL()}"
@@ -88,7 +88,7 @@
         </th:block>
 
         <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED && !readOnly}"
-             class="extra-margin collapsible collapsible-eligibility collapsible-stateless"
+             class="govuk-!-margin-top-6 collapsible collapsible-eligibility collapsible-stateless"
              th:classappend="${#fields.hasErrors('${form.*}')} ? 'collapsible-expanded'"
              th:unless="${ineligibility.readOnly}">
             <h2>Mark application as ineligible</h2>
@@ -121,7 +121,7 @@
 
                     <div class="alignright">
                         <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${currentCompetition.id},applicationId=${currentApplication.id})}" class="button-clear">Cancel</a>
-                        <button type="submit" name="markAsIneligible" class="govuk-button no-margin">Mark application as ineligible</button>
+                        <button type="submit" name="markAsIneligible" class="govuk-button govuk-!-margin-0">Mark application as ineligible</button>
                     </div>
                 </form>
             </div>

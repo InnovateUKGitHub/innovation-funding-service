@@ -16,7 +16,7 @@
          <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application status',subTitle=|${currentApplication.id} : ${currentApplication.name}|,size='govuk-heading-xl'" />
 
         <div class="submitted-panel">
-            <h2 class="govuk-heading-xl no-margin">Application submitted</h2>
+            <h2 class="govuk-heading-xl govuk-!-margin-0">Application submitted</h2>
             <ul>
                 <li>Application number: <span th:text="${currentApplication.id}" /></li>
                 <li>
@@ -77,7 +77,7 @@
             <br />We will email you when this becomes available.
         </p>
 
-        <div class="extra-margin">
+        <div class="govuk-!-margin-top-6">
             <a href="/applicant/dashboard" class="govuk-button" role="button" th:href="${userDashboardLink}">Finished</a>
         </div>
         <th:block th:insert="fragments/layout :: main-content-end" />

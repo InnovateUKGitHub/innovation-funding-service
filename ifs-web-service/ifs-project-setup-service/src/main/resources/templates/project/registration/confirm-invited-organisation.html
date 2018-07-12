@@ -14,7 +14,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',size='govuk-heading-l'" />
 
-        <h2 class="govuk-heading-m no-margin-bottom">Business organisation</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Business organisation</h2>
         <fieldset>
             <legend class="govuk-visually-hidden">Business organisation</legend>
             <div class="form-block">
@@ -34,7 +34,7 @@
 
         <p class="govuk-body">If this is not the correct organisation <a th:href="${'mailto:'+ invite.leadApplicantEmail}" class="govuk-link">email the lead applicant</a>.</p>
 
-        <a th:href="${registerUrl}" class="govuk-button extra-margin">Continue</a>
+        <a th:href="${registerUrl}" class="govuk-button govuk-!-margin-top-6">Continue</a>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

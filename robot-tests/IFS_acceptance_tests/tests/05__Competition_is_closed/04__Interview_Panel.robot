@@ -395,7 +395,7 @@ the user marks applications as successful and send funding decision email
     the user clicks the button/link       link = Competition
     the user clicks the button/link       link = Manage funding notifications
     the user selects the checkbox         select-all-1
-    the user clicks the button/link       css = button.govuk-button.govuk-button-notification.extra-margin-top   #Assessor clicks 'Write and send emails'
+    the user clicks the button/link       css = button.govuk-button.govuk-button-notification   #Assessor clicks 'Write and send emails'
     the user clicks the button/link       css = .govuk-button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link       css = button[name="send-emails"]
     the user clicks the button/link       link = Competition

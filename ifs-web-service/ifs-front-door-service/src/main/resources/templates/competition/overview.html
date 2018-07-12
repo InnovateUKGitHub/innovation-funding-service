@@ -38,7 +38,7 @@
                     Registration has now closed.
                 </div>
                 <th:block>
-                    <p class="extra-margin-top">
+                    <p class="govuk-body">
                         <a class="govuk-button govuk-button--disabled" aria-disabled="true"
                            th:if="${model.disableApplyButton}"
                            th:text="${model.applyButtonText}">
@@ -49,7 +49,7 @@
                            th:text="${model.applyButtonText}">
                         </a>
                     </p>
-                    <p class="extra-margin" th:if="${model.showSignInText}">
+                    <p class="govuk-!-margin-top-6" th:if="${model.showSignInText}">
                         <th:block th:unless="${model.userIsLoggedIn}">
                             Or <a th:href="@{/}" class="govuk-link">sign in</a> to continue an existing application.
                         </th:block>

@@ -1,7 +1,7 @@
 <th:block th:fragment="active(users, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
     <h2 class="govuk-heading-m">Active</h2>
     <p class="govuk-body">
-        <span class="govuk-heading-xl no-margin" th:text="${count}">38</span>
+        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">38</span>
         <span class="govuk-heading-s">active internal users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: users-table(users=${users})" />
@@ -11,7 +11,7 @@
 <th:block th:fragment="inactive(users, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
     <h2 class="govuk-heading-m">Inactive</h2>
     <p class="govuk-body">
-        <span class="govuk-heading-xl no-margin" th:text="${count}">10</span>
+        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">10</span>
         <span class="govuk-heading-s">inactive internal users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: users-table(users=${users})" />
@@ -21,7 +21,7 @@
 <th:block th:fragment="pending(invites, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
     <h2 class="govuk-heading-m">Pending</h2>
     <p class="govuk-body">
-        <span class="govuk-heading-xl no-margin" th:text="${count}">10</span>
+        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">10</span>
         <span class="govuk-heading-s">pending internal users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: invites-table(invites=${invites})" />

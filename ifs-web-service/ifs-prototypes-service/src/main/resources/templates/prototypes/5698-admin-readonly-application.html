@@ -27,7 +27,7 @@
 
 	<div>
 
-		<h2 class="govuk-heading-m no-margin-top">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
+		<h2 class="govuk-heading-m govuk-!-margin-top-0">94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes</h2>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'removed'}">
 
@@ -56,7 +56,7 @@
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
 
-					<h2 class="govuk-heading-m no-margin">Reinstate application</h2>
+					<h2 class="govuk-heading-m govuk-!-margin-0">Reinstate application</h2>
 
 					<p class="govuk-body">Are you sure that you wish to reinstate this application?</p>
 
@@ -88,17 +88,17 @@
 		<h2 class="govuk-heading-m">Appendices</h2>
 
 			<div class="form-group download">
-		        <h3 class="govuk-heading-s no-margin">View project management appendix:</h3>
+		        <h3 class="govuk-heading-s govuk-!-margin-0">View project management appendix:</h3>
 		        <a href="#">Project-plan.pdf (161.96 KB)</a>
 		    </div>
 
 		    <div class="form-group download">
-		        <h3 class="govuk-heading-s no-margin">View innovation appendix:</h3>
+		        <h3 class="govuk-heading-s govuk-!-margin-0">View innovation appendix:</h3>
 		        <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
 		    </div>
 
 		    <div class="form-group download">
-		        <h3 class="govuk-heading-s no-margin">View project team appendix:</h3>
+		        <h3 class="govuk-heading-s govuk-!-margin-0">View project team appendix:</h3>
 		        <a href="#">CVs-of-team.pdf (161.96 KB)</a>
 		    </div>
 
@@ -106,12 +106,12 @@
 		    	<a th:href="@{'?status=removeApp#removeApp'}" class="govuk-button button-secondary">Remove application from assessment</a>
 		    </div>
 
-			<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="extra-margin-bottom">
+			<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="govuk-!-margin-bottom-6">
 				<form action="/prototypes/5698-draft-email" id="removeApp">
 					<fieldset>
 						<legend class="govuk-heading-m">Remove application from assessment</legend>
 					</fieldset>
-					<div class="form-group no-margin-bottom">
+					<div class="form-group govuk-!-margin-bottom-0">
 						<label for="remove-application-reason">Please enter the reason for removing this application from assessment</label>
 						<textarea name="remove-application-reason" id="remove-application-reason" class="width-full" cols="30" rows="10"></textarea>
 						<div class="textarea-footer">
@@ -126,7 +126,7 @@
 							<a th:href="${#httpServletRequest.requestURI}">Cancel</a>
 						</div>
 						<div class="govuk-grid-column-one-half alignright">
-							<button class="govuk-button no-margin-right">Continue and draft email</button>
+							<button class="govuk-button govuk-!-margin-right-0">Continue and draft email</button>
 						</div>
 					</div>
 				</form>

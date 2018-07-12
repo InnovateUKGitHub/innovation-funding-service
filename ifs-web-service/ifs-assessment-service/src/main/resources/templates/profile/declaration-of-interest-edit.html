@@ -30,7 +30,7 @@
                       </li>
                   </ul>
                 </div>
-                  <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your declaration of interest',size='govuk-heading-xl extra-margin-bottom'" />
+                  <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your declaration of interest',size='govuk-heading-xl govuk-!-margin-bottom-6'" />
                 <p class="govuk-body">We need to record if you, or an immediate family member, is connected to a body which has any financial interests.</p>
 
                 <p class="govuk-body">Please complete the sections below declaring to the best of your knowledge, all active interests currently held.
@@ -41,9 +41,9 @@
                 <h2 class="govuk-heading-l">Your affiliations (financial interests)</h2>
 
                 <form th:action="@{/profile/declaration/edit}" method="post" th:object="${form}" novalidate="novalidate">
-                    <h3 class="govuk-heading-m no-margin">Principal employer and role</h3>
+                    <h3 class="govuk-heading-m govuk-!-margin-0">Principal employer and role</h3>
 
-                    <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('principalEmployer')} ? 'form-group-error'">
+                    <div class="form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('principalEmployer')} ? 'form-group-error'">
                         <label class="form-label-bold" th:for="${#ids.next('principalEmployer')}">
                             Prinicipal employer
                             <th:block th:if="${#fields.hasErrors('principalEmployer')}">
@@ -173,7 +173,7 @@
                                 </tbody>
                             </table>
 
-                            <p class="alignright extra-margin">
+                            <p class="alignright govuk-!-margin-top-6">
                                 <button class="button-clear" data-repeatable-rowcontainer="#position-table tbody" name="addAppointment" type="submit">Add another position</button>
                             </p>
                         </div>
@@ -343,7 +343,7 @@
                                 </tbody>
                             </table>
 
-                            <p class="alignright extra-margin"><button class="button-clear" data-repeatable-rowcontainer="#family-table tbody" name="addFamilyMemberAffiliation" type="submit">Add another family member</button></p>
+                            <p class="alignright govuk-!-margin-top-6"><button class="button-clear" data-repeatable-rowcontainer="#family-table tbody" name="addFamilyMemberAffiliation" type="submit">Add another family member</button></p>
                         </div>
                     </div>
 

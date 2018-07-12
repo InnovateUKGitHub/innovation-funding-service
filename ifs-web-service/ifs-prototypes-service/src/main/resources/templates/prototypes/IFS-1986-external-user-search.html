@@ -21,7 +21,7 @@
                 <div class="govuk-grid-column-one-half">
                   <div class="form-group">
                     <label class="form-label" for="filterSearch">Look for</label>
-                    <input class="form-control extra-margin-bottom" id="filterSearch" name="searchTerm" minlength="3" required="required" value="" type="text">
+                    <input class="form-control govuk-!-margin-bottom-6" id="filterSearch" name="searchTerm" minlength="3" required="required" value="" type="text">
                     <a href="?">Clear</a>
                   </div>
                 </div>
@@ -38,7 +38,7 @@
             </div>
             <div class="govuk-grid-row">
               <div class="govuk-grid-column-full">
-                <button class="govuk-button no-margin">Search</button>
+                <button class="govuk-button govuk-!-margin-0">Search</button>
               </div>
             </div>
         </fieldset>
@@ -50,7 +50,7 @@
           <li><a th:href="@{/prototypes/IFS-1986-external-user-search-unregistered.html?searchTerm={searchTerm}&filterCategory={filterCategory}(searchTerm=${param.searchTerm},filterCategory=${param.filterCategory})}">Unregistered</a></li>
       </ul>
       <p id="result-count">
-          <span class="govuk-heading-xl no-margin">38</span>
+          <span class="govuk-heading-xl govuk-!-margin-0">38</span>
           <span class="govuk-heading-s">registered users</span>
       </p>
       <div class="table-overflow">
@@ -718,7 +718,7 @@ jQuery(document).ready(function(){
     jQuery("tbody").empty();
     if(filtered.length){
       hasResults(true);
-      jQuery('.govuk-heading-xl.no-margin').text(filtered.length)
+      jQuery('.govuk-heading-xl.govuk-!-margin-0').text(filtered.length)
       jQuery.each(filtered, function(index,value){
          var html = `
          <tr>

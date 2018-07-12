@@ -22,7 +22,7 @@
         <section class="boxed">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                    <h2 class="govuk-heading-s no-margin">Title:</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-0">Title:</h2>
                     <p class="govuk-body" th:text="${model.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</p>
 
                     <th:block th:if="${model.projectSummary}">
@@ -31,7 +31,7 @@
                     </th:block>
                 </div>
                 <div class="govuk-grid-column-one-half">
-                    <h2 class="govuk-heading-s no-margin">Partners:</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-0">Partners:</h2>
                     <span th:each="partner : ${model.partners}">
                             <th:block th:text="${partner.name}">Wessex University</th:block>
                             <strong th:if="${partner.id.equals(model.leadPartner.id)}">(Lead)</strong>
@@ -41,7 +41,7 @@
             </div>
         </section>
 
-        <p class="govuk-body extra-margin">Read the project summary above to make sure you do not have a conflict of interest with this application.</p>
+        <p class="govuk-body govuk-!-margin-top-6">Read the project summary above to make sure you do not have a conflict of interest with this application.</p>
 
         <form th:action="@{/review/{reviewId}/respond(reviewId=${model.reviewId})}" method="post" novalidate="novalidate" th:object="${form}">
             <div class="form-group" th:classappend="${#fields.hasErrors('reviewAccept')} ? 'form-group-error'">

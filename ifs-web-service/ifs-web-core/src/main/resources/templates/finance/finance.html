@@ -38,8 +38,8 @@
 
     <!-- ===========================Form: organisation_size =========================== -->
     <th:block th:fragment="organisation_size(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
-        <div class="message-alert extra-margin-bottom" th:if="${model.organisationSizeAlert}">
-            <h2 class="govuk-heading-s no-margin">Organisation size determines funding</h2>
+        <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.organisationSizeAlert}">
+            <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
             <p class="govuk-body">The organisation size is used to calculate your funding level in the application.</p>
             <p class="govuk-body">Changing this selection will reset your funding level.</p>
         </div>
@@ -227,7 +227,7 @@
 
     <!-- ===========================Form: your_finance =========================== -->
     <th:block th:fragment="your_finance (model, internalView)">
-        <h2 class="govuk-heading-m no-margin" th:text="${#strings.replace(model.question.name,'{organisationName}',
+        <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${#strings.replace(model.question.name,'{organisationName}',
         model.currentApplicant.organisation.name)}" />
         <p ifs:utext="${model.question.description}" />
 
@@ -557,7 +557,7 @@
                             </tr>
                             <tr>
                                 <td class="form-group download">
-                                    <h3 class="govuk-heading-s no-margin">Download the overhead calculation spreadsheet</h3>
+                                    <h3 class="govuk-heading-s govuk-!-margin-0">Download the overhead calculation spreadsheet</h3>
                                     <ul>
                                         <li>Download as an Excel document <a href="/files/overheads.xlsx" class="govuk-link">overhead calculation spreadsheet.xlsx (16KB)</a></li>
                                         <li>Download as an Open Office document <a href="/files/overheads.ods" class="govuk-link">overhead calculation spreadsheet.ods (10KB)</a></li>
@@ -705,14 +705,14 @@
                         This will assess the appropriateness of your claim if your grant application is successful.
                     </p>
                     <div class="form-group download">
-                        <h3 class="govuk-heading-s no-margin">Download the overhead calculation spreadsheet</h3>
+                        <h3 class="govuk-heading-s govuk-!-margin-0">Download the overhead calculation spreadsheet</h3>
                         <ul>
                             <li>Download as an Excel document <a href="/files/overheads.xlsx" class="govuk-link">overhead calculation spreadsheet.xlsx (16KB)</a></li>
                             <li>Download as an Open Office document <a href="/files/overheads.ods" class="govuk-link">overhead calculation spreadsheet.ods (10KB)</a></li>
                         </ul>
                     </div>
-                    <div class="upload-section extra-margin">
-                        <h3 class="govuk-heading-s no-margin">Upload your completed spreadsheet</h3>
+                    <div class="upload-section govuk-!-margin-top-6">
+                        <h3 class="govuk-heading-s govuk-!-margin-0">Upload your completed spreadsheet</h3>
                         <div class="form-group">
                             <input type="hidden"
                                    name="fileoverheadid"
@@ -757,7 +757,7 @@
                     </th:block>
                     <th:block th:if="${overheadCosts?.calculationFile?.present}">
                         <p class="govuk-body">The applicant has uploaded a completed overhead costs spreadsheet.</p>
-                        <div class="upload-section extra-margin form-group download">
+                        <div class="upload-section govuk-!-margin-top-6 form-group download">
                             <th:block th:with="uploadViewmode='readonly',
                                            downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts.id}},
                                            filename=${overheadCosts.calculationFile.get()?.name},

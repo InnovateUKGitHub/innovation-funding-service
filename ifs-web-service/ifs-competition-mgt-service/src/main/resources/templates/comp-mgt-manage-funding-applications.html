@@ -22,9 +22,9 @@
 
         <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
         <form method="GET" th:object="${fundingNotificationFilterForm}">
-            <div class="search-filters extra-margin">
+            <div class="search-filters govuk-!-margin-top-6">
                 <fieldset>
-                    <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
+                    <legend class="govuk-heading-m govuk-!-margin-top-0">Filter applications</legend>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-third">
                             <div class="form-group">
@@ -56,7 +56,7 @@
                     </div>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-full alignright">
-                            <button class="govuk-button no-margin">Filter</button>
+                            <button class="govuk-button govuk-!-margin-0">Filter</button>
                         </div>
                     </div>
                 </fieldset>
@@ -67,7 +67,7 @@
             <input type="hidden" name="filterChanged" value="1"/>
         </form>
 
-        <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">
+        <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.selectAllDisabled}">
             <p class="govuk-body" th:text="#{competition.management.limit.warning}"></p>
         </div>
         <div data-selection-limit-exceeded-block=""></div>
@@ -93,7 +93,7 @@
                 </div>
                 <div class="govuk-grid-column-one-half">
                     <fieldset class="mark-applications">
-                        <button class="govuk-button button-notification extra-margin-top" data-submit-el="" type="submit" name="write-and-send-email"
+                        <button class="govuk-button button-notification" data-submit-el="" type="submit" name="write-and-send-email"
                                 th:attr="disabled=${#lists.isEmpty(selectionForm.ids)}">Write and send email</button>
                     </fieldset>
                 </div>

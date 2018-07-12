@@ -27,7 +27,7 @@
                 <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${model.projectId})}" th:object="${form}" novalidate="novalidate">
                     <input type="hidden" th:field="*{organisation}" />
 
-                    <div class="form-group extra-margin" id="finance-contact-section" th:classappend="${#fields.hasErrors('*') ? 'form-group-error' : ''}">
+                    <div class="form-group govuk-!-margin-top-6" id="finance-contact-section" th:classappend="${#fields.hasErrors('*') ? 'form-group-error' : ''}">
                         <fieldset>
                             <legend>
                                 <span class="govuk-heading-m">Finance contact</span>
@@ -52,7 +52,7 @@
                                     data-js-modal="modal-resend-finance-contact"
                                     th:attr="data-modal-form-action=@{/project/{projectId}/details/finance-contact?resend-fc-invite={userId}(projectId=${model.projectId},userId=${user.id})},data-modal-input-resend-fc-invite=${user.id},data-modal-input-organisation=${model.organisationId}"
                                     th:href="@{/project/{projectId}/details/finance-contact/confirm?resend-fc-invite={userId}&organisation={orgId}(projectId=${model.projectId},userId=${user.id}, orgId=${model.organisationId})}"
-                                    class="button-clear no-margin">
+                                    class="button-clear govuk-!-margin-0">
                                     Resend invite
                                 </a>
                             </div>
@@ -84,7 +84,7 @@
                                                 <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail')} ? 'form-control-error'" name="inviteEmail" id="email-finance-contact" th:attr="data-required-errormessage=#{validation.project.invite.email.required}" required="required"/>
                                             </td>
                                             <td class="alignright">
-                                                <button class="button-clear no-margin-bottom" name="invite-fc" id="invite-finance-contact">Invite to project</button>
+                                                <button class="button-clear govuk-!-margin-bottom-0" name="invite-fc" id="invite-finance-contact">Invite to project</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -97,7 +97,7 @@
 
                     <p class="govuk-body">You can change your finance contact up until your grant offer letter is generated.</p>
 
-                    <button class="govuk-button extra-margin" type="submit"  name="save-fc" id="save">Save finance contact</button>
+                    <button class="govuk-button govuk-!-margin-top-6" type="submit"  name="save-fc" id="save">Save finance contact</button>
                 </form>
 
 

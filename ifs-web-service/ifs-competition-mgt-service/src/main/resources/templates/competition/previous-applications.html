@@ -17,9 +17,9 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Previous applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
             <form method="GET">
-                <div class="search-filters extra-margin">
+                <div class="search-filters govuk-!-margin-top-6">
                     <fieldset>
-                        <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
+                        <legend class="govuk-heading-m govuk-!-margin-top-0">Filter applications</legend>
                         <div class="grid-row">
                             <div class="govuk-grid-column-two-thirds">
                                 <label class="form-label" for="filter">Status</label>
@@ -35,7 +35,7 @@
                             </div>
                         </div>
                     </fieldset>
-                    <div class="extra-margin">
+                    <div class="govuk-!-margin-top-6">
                         <a href="?" class="govuk-link">Clear all filters</a>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
 
             <div class="grid-row sorting">
                 <div class="govuk-grid-column-full">
-                    <span class="govuk-heading-xl no-margin" th:text="${model.unsuccessfulApplicationsSize}">6</span>
+                    <span class="govuk-heading-xl govuk-!-margin-0" th:text="${model.unsuccessfulApplicationsSize}">6</span>
                     <span class="govuk-heading-s">applications</span>
                 </div>
             </div>

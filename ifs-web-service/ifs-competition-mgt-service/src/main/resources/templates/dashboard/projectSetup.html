@@ -32,7 +32,7 @@
                     <a href="/project-setup-management/competitions/status/pending-bank-details-approvals" class="govuk-link"><span th:text="'Review bank details (' + ${model.countBankDetails} + ')'">2</span></a>
                 </th:block>
 
-                <ul class="govuk-list list-overview extra-margin">
+                <ul class="govuk-list list-overview govuk-!-margin-top-6">
                     <!-- Deliberate separation from PS list.  Check with BAs if this should be categorised like in live tab for clarity of status -->
                     <li class="govuk-grid-row" th:each="competition : ${panelComps}">
                         <th:block

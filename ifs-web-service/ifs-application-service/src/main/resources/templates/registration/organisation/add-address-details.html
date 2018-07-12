@@ -32,11 +32,11 @@
             <th:block th:with="formURL=${#strings.isEmpty(postcode) && #strings.isEmpty(selectedPostcode)} ? |/organisation/create/selected-organisation/${organisationId}| : |/organisation/create/selected-organisation/${organisationId}/${postcode}/${selectedPostcode}|">
                 <form th:action="@{${formURL}}" novalidate="novalidate" method="POST">
                     <input type="hidden" th:field="*{searchOrganisationId}" />
-                    <h2 class="govuk-heading-m no-margin-bottom">Operating address</h2>
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Operating address</h2>
                     <p class="govuk-body">This is the address that your organisation works from</p>
                     <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
 
-                    <button type="submit" name="save-organisation-details" class="govuk-button extra-margin">Save organisation and continue</button>
+                    <button type="submit" name="save-organisation-details" class="govuk-button govuk-!-margin-top-6">Save organisation and continue</button>
                 </form>
             </th:block>
         </th:block>

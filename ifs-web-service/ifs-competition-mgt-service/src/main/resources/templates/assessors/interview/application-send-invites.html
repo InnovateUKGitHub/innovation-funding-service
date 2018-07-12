@@ -36,9 +36,9 @@
             </div>
         </details>
 
-        <div class="govuk-grid-row sorting extra-margin">
+        <div class="govuk-grid-row sorting govuk-!-margin-top-6">
             <div class="govuk-grid-column-one-half">
-                <span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">20</span>
+                <span class="govuk-heading-xl govuk-!-margin-0" th:text="${model.pagination.totalCount}">20</span>
                 <span class="govuk-heading-s">applications</span>
             </div>
         </div>
@@ -77,7 +77,7 @@
                                 <th:block th:unless="${app.hasAttachment()}">
                                     <div class="upload-section">
                                         <input type="file" th:id="${fieldName}" class="inputfile" name="feedback">
-                                        <label th:for="${fieldName}" class="button-secondary extra-margin">+ Upload</label>
+                                        <label th:for="${fieldName}" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                                         <button name="attachFeedbackApplicationId" class="button-secondary" type="submit" th:attr="data-for-file-upload=${fieldName}" th:value="${app.applicationId}">Save</button>
                                     </div>
                                 </th:block>
@@ -108,7 +108,7 @@
             </div>
             <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
 
-            <div class="form-group extra-margin-bottom extra-margin" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+            <div class="form-group govuk-!-margin-bottom-6 govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
                 <label class="form-label-bold" th:for="${#ids.next('subject')}">
                     <span>Email subject</span>
                     <th:block th:if="${#fields.hasErrors('subject')}">
@@ -126,7 +126,7 @@
             <h3 class="govuk-heading-s">Message</h3>
             <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
 
-            <div class="form-group extra-margin">
+            <div class="form-group govuk-!-margin-top-6">
                 <label class="form-label-bold" for="message">Additional text</label>
                 <div class="textarea-wrapped">
                     <textarea id="message" rows="8" data-editor="html" class="width-full" th:field="*{content}">
@@ -134,17 +134,17 @@
                 </div>
             </div>
 
-            <p class="form-hint extra-margin">
+            <p class="form-hint govuk-!-margin-top-6">
                 Yours sincerely,
             </p>
 
-            <p class="form-hint extra-margin">
+            <p class="form-hint govuk-!-margin-top-6">
                 Innovate UK, part of UK Research and Innovation <br />
                 Tel: 0300 321 4357 <br />
                 Email: competitions@innovateuk.ukri.org
             </p>
 
-            <div class="extra-margin">
+            <div class="govuk-!-margin-top-6">
                 <button type="submit" class="govuk-button">Send invite</button>
                 <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}"
                    class="button-clear">Cancel</a>

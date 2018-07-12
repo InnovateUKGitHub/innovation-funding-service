@@ -123,11 +123,11 @@ IFS.competitionManagement.repeater = (function () {
                       '</div>' +
                     '<div class="form-group upload-section">' +
                         '<input type="file" id="contentGroups-' + idCount + '.attachment" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
-                        '<label for="contentGroups-' + idCount + '.attachment" class="button-secondary extra-margin">+ Upload</label>' +
+                        '<label for="contentGroups-' + idCount + '.attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>' +
                         '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="contentGroups-' + idCount + '.attachment" value="' + count + '">Save</button>' +
                         '<p class="uploaded-file">No file currently uploaded</p>' +
                     '</div>' +
-                    '<button type="button" class="button-clear no-margin" data-remove-row="contentGroup">Remove section</button>' +
+                    '<button type="button" class="button-clear govuk-!-margin-0" data-remove-row="contentGroup">Remove section</button>' +
                   '</div>'
       if (rows.length) {
         rows.last().after(html)

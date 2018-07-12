@@ -25,7 +25,7 @@
                         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='govuk-heading-xl'" />
                     </th:block>
                 </div>
-                <div class="govuk-grid-column-one-third alignright extra-margin">
+                <div class="govuk-grid-column-one-third alignright govuk-!-margin-top-6">
                     <th:block th:insert="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" />
                 </div>
             </div>
@@ -34,7 +34,7 @@
 
             <th:block th:if="${model.displayMonitoringOfficerAssignedMessage}">
                 <div class="success-alert">
-                    <h2 class="govuk-heading-s no-margin-top">A Monitoring Officer has been assigned.</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-top-0">A Monitoring Officer has been assigned.</h2>
                 </div>
             </th:block>
 
@@ -130,17 +130,17 @@
                 <h2 class="govuk-heading-l">Supporting information</h2>
 
                 <th:block th:if="${model.projectTitle}">
-                    <h3 class="govuk-heading-m no-margin">Project title</h3>
+                    <h3 class="govuk-heading-m govuk-!-margin-0">Project title</h3>
                     <p class="govuk-body" th:text="${model.projectTitle}">Technology inspired</p>
                 </th:block>
 
                 <th:block th:if="${model.area}">
-                <h3 class="govuk-heading-m no-margin">Area</h3>
+                <h3 class="govuk-heading-m govuk-!-margin-0">Area</h3>
                 <p class="govuk-body" th:text="${model.area}">Technology</p>
                 </th:block>
 
                 <th:block th:if="${model.primaryAddressLines}">
-                    <h3 class="govuk-heading-m no-margin">Primary address</h3>
+                    <h3 class="govuk-heading-m govuk-!-margin-0">Primary address</h3>
                     <p class="form-hint">This has been designated by the lead organisation as the main work location for the project.</p>
                     <p class="govuk-body">
                         <th:block th:each="addressLine : ${model.primaryAddressLines}">
@@ -150,7 +150,7 @@
                 </th:block>
 
                 <th:block th:if="${model.targetProjectStartDate}">
-                    <h3 class="govuk-heading-m no-margin">Target project start date</h3>
+                    <h3 class="govuk-heading-m govuk-!-margin-0">Target project start date</h3>
                     <p class="form-hint">Planned start date for the project.</p>
                     <p class="govuk-body" th:if="${model.targetProjectStartDate}">
                       <th:block th:insert="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
@@ -159,13 +159,13 @@
                 </th:block>
 
                 <th:block th:if="${model.projectManagerName}">
-                    <h3 class="govuk-heading-m no-margin">Project Manager</h3>
+                    <h3 class="govuk-heading-m govuk-!-margin-0">Project Manager</h3>
                     <p class="form-hint">Project Manager for the project, designated by the lead organisation.</p>
                     <p class="govuk-body" th:text="${model.projectManagerName}">David Smith</p>
                 </th:block>
 
                 <th:block th:if="${model.partnerOrganisationNames}">
-                    <h3 class="govuk-heading-m no-margin">Project partners</h3>
+                    <h3 class="govuk-heading-m govuk-!-margin-0">Project partners</h3>
                     <ul class="govuk-list govuk-list--bullet">
                         <li th:each="organisationName : ${model.partnerOrganisationNames}">
                             <th:block th:text="${organisationName}">organisation name</th:block>

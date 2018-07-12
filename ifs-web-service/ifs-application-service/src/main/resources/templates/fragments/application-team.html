@@ -10,7 +10,7 @@
 
     <!--/* Summary view */-->
     <th:block th:if="${model.summary}">
-        <div class="extra-margin"
+        <div class="govuk-!-margin-top-6"
              th:each="organisation : ${model.organisations}">
 
             <div class="govuk-heading-s" role="heading" aria-level="4">
@@ -40,7 +40,7 @@
     </th:block>
 
     <!--/* Applicant buttons */-->
-    <div class="extra-margin">
+    <div class="govuk-!-margin-top-6">
         <!--/* 'Mark as complete' / 'Edit' links */-->
         <th:block
                   th:insert="question-type/form-elements :: form-mark-as-complete-buttons (model=${model},question=${question})" />

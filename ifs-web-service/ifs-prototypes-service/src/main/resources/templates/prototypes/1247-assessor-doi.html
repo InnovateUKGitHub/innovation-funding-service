@@ -22,8 +22,8 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-		<h1 class="govuk-heading-l no-margin" th:text="${(param.edit == null ? 'Declaration of interest':'Edit your declaration of interest')}">Declaration of interest</h1>
+	<div class="hgroup govuk-!-margin-top-0" style="padding-top: 20px; margin-bottom: 30px">
+		<h1 class="govuk-heading-l govuk-!-margin-0" th:text="${(param.edit == null ? 'Declaration of interest':'Edit your declaration of interest')}">Declaration of interest</h1>
 	</div>
 
 	<p class="govuk-body">We will need to report if you, or a close family member, is connected to a body which conducts material financial transactions.</p>
@@ -36,9 +36,9 @@
 
 	<form>
 		<fieldset>
-			<h3 class="govuk-heading-m no-margin">Principal employer and role</h3>
+			<h3 class="govuk-heading-m govuk-!-margin-0">Principal employer and role</h3>
 			<legend class="govuk-visually-hidden">Principal employer and role</legend>
-			<p class="form-hint extra-margin-bottom">Tell us about your current employer and position</p>
+			<p class="form-hint govuk-!-margin-bottom-6">Tell us about your current employer and position</p>
 
 			<div class="form-group">
 				<label for="doi-principal-employer" class="form-label-bold">Prinicipal employer</label>
@@ -58,7 +58,7 @@
 
 
 		<fieldset class="extra-margin">
-			<h2 class="govuk-heading-s no-margin">Do you have any appointments, directorships or consultancies?</h2>
+			<h2 class="govuk-heading-s govuk-!-margin-0">Do you have any appointments, directorships or consultancies?</h2>
 			<legend class="govuk-visually-hidden">Do you have any appointments, directorships or consultancies?</legend>
 
 			<div class="form-group">
@@ -75,7 +75,7 @@
 			</div>
 
 
-			<div class="govuk-visually-hidden extra-margin-bottom" id="add-appointments">
+			<div class="govuk-visually-hidden govuk-!-margin-bottom-6" id="add-appointments">
 
 				<!-- <div class="table-overflow">
 					<table>
@@ -166,7 +166,7 @@
 					</fieldset>
 				</div>
 
-				<div id="add-pecuniary" class="govuk-visually-hidden extra-margin-bottom">
+				<div id="add-pecuniary" class="govuk-visually-hidden govuk-!-margin-bottom-6">
 					<label for="doi-pecuniary" class="form-label-bold">Please describe these interests?</label>
 					<textarea name="doi-pecuniary" id="doi-pecuniary" cols="30" rows="3" class="form-control width-full" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus rerum velit, alias fugit aliquam rem eveniet, deleniti praesentium non, quos vel dicta animi. Est dolores, quibusdam cum saepe suscipit! Itaque.' : '')}">
 					</textarea>
@@ -176,10 +176,10 @@
 
 		</fieldset>
 
-		<h2 class="govuk-heading-m no-margin-top">Close family member affiliations</h2>
+		<h2 class="govuk-heading-m govuk-!-margin-top-0">Close family member affiliations</h2>
 
 		<fieldset>
-			<h3 class="govuk-heading-s no-margin">Do any of your close family members have any appointments, directorships or consultancies?</h3>
+			<h3 class="govuk-heading-s govuk-!-margin-0">Do any of your close family members have any appointments, directorships or consultancies?</h3>
 			<legend class="govuk-visually-hidden">Do any of your close family members have any appointments, directorships or consultancies?</legend>
 
 			<div class="form-group">
@@ -195,7 +195,7 @@
 				</fieldset>
 			</div>
 
-			<!-- <div id="add-family" class="extra-margin-bottom govuk-visually-hidden">
+			<!-- <div id="add-family" class="govuk-!-margin-bottom-6 govuk-visually-hidden">
 
 				<table>
 					<thead>
@@ -224,7 +224,7 @@
 				</table>
 
 			</div> -->
-      <div id="add-family" class="extra-margin-bottom govuk-visually-hidden">
+      <div id="add-family" class="govuk-!-margin-bottom-6 govuk-visually-hidden">
         <div class="govuk-grid-row">
           <div class="column-one-quarter">
             <div class="form-group">
@@ -261,7 +261,7 @@
 		</fieldset>
 
 		<fieldset>
-			<h3 class="govuk-heading-s no-margin">Do any of your close family members have any other financial interests?</h3>
+			<h3 class="govuk-heading-s govuk-!-margin-0">Do any of your close family members have any other financial interests?</h3>
 			<legend class="govuk-visually-hidden">Do any of your close family members have any other financial interests?</legend>
 
 			<p class="form-hint">Do any of your close family members have a position or investment in a company from which you can benefit financially?</p>
@@ -279,14 +279,14 @@
 				</fieldset>
 			</div>
 
-			<div class="form-group govuk-visually-hidden extra-margin-bottom" id="add-family-pecuniary">
+			<div class="form-group govuk-visually-hidden govuk-!-margin-bottom-6" id="add-family-pecuniary">
 				<label for="doi-close-pecuniary" class="form-label-bold">Please describe these interests</label>
 				<textarea name="doi-close-pecuniary" id="doi-close-pecuniary" cols="30" rows="3" class="form-control width-full"><div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">N/A</div></textarea>
 			</div>
 
 		</fieldset>
 
-		<div class="form-block extra-margin-bottom">
+		<div class="form-block govuk-!-margin-bottom-6">
 			<label class="block-label selection-button-checkbox" for="confirm-doi">
 				<input id="confirm-doi" type="checkbox" value="" />
 				I confirm that for the financial year ending 31 March 2017 the above represents an accurate account of my interests outside Innovate UK

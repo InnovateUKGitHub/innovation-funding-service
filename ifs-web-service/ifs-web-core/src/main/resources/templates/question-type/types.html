@@ -47,7 +47,7 @@
         <div th:unless="${model.closed or model.summary}" class="textarea-header">
 
             <th:block th:if="${model.complete}">
-                <div class="success-alert assignee extra-margin-bottom">
+                <div class="success-alert assignee govuk-!-margin-bottom-6">
                     <p class="govuk-body">This question is marked as complete</p>
                 </div>
             </th:block>
@@ -99,7 +99,7 @@
          removeName='remove_uploaded_file',
          saveName='upload_file'">
 
-        <h3 class="govuk-heading-s no-margin" th:text="${formInput.description}">Project management appendix</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-0" th:text="${formInput.description}">Project management appendix</h3>
         <th:block th:if="${viewmode=='edit'}" th:insert="question-type/form-elements :: form-guidance-appendix (${formInput})" />
         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename}, ${inputField}, ${validationField}, ${mayRemove}, ${removeName}, ${saveName})" />
     </div>
@@ -141,7 +141,7 @@
                     <th:block th:unless="${autoSaveOff}">
                         <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" />
                     </th:block>
-                    <label th:for="${inputField}" class="button-secondary extra-margin">+ Upload</label>
+                    <label th:for="${inputField}" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                     <button th:name="${saveName}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${inputField}">Save</button>
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(filename)}">

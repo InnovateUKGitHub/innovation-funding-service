@@ -43,7 +43,7 @@
     <div class="my-applications">
 
         <div class="progress-list">
-            <h2 class="govuk-heading-m no-margin-top" th:text="${param.status != null and param.status[0] == 'noApplications' ? 'Applications for interview panel (0)' : 'Applications for interview panel (3)'}">Applications for interview panel (3)</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-top-0" th:text="${param.status != null and param.status[0] == 'noApplications' ? 'Applications for interview panel (0)' : 'Applications for interview panel (3)'}">Applications for interview panel (3)</h2>
             <ul>
                 <th:block th:unless="${param.status != null and param.status[0] == 'noApplications'}">
                     <li>

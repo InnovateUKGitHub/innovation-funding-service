@@ -46,7 +46,7 @@
                         </p>
                         <p class="govuk-body">Duration: <br /><th:block th:text="${model.application.durationInMonths}" /> months</p>
 
-                        <h3 class="govuk-heading-s extra-margin">Total project cost</h3>
+                        <h3 class="govuk-heading-s govuk-!-margin-top-6">Total project cost</h3>
                         <p class="govuk-body">&pound;<th:block th:text="${model.totalFundingSought} ? ${#numbers.formatInteger(model.totalFundingSought, 0, 'DEFAULT')} : '0'">203,567</th:block></p>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                                     </th:block>
                                     <p class="uploaded-file">No file currently uploaded</p>
                                     <input type="file" id="response" name="response" class="inputfile">
-                                    <label for="response" class="button-secondary extra-margin">+ Upload</label>
+                                    <label for="response" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                                     <button name="uploadResponse" class="button-secondary" data-for-file-upload="response"></button>
                                 </div>
                                 <div th:if="${model.interviewFeedbackViewModel.hasResponse()}">
@@ -96,7 +96,7 @@
                         </th:block>
                         <th:block th:if="${model.interviewFeedbackViewModel.hasResponse()}">
                             <div class="form-group download">
-                                <h3 class="govuk-heading-s no-margin">Lead applicant response</h3>
+                                <h3 class="govuk-heading-s govuk-!-margin-0">Lead applicant response</h3>
                                 <p class="uploaded-file"><a th:href="@{/application/{applicationId}/feedback/download-response(applicationId=${model.application.id})}"
                                                             th:text="${model.interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
                                                             target="_blank"
@@ -106,12 +106,12 @@
                     </th:block>
                 </th:block>
 
-                <h2 class="govuk-heading-m no-margin-bottom">Application details</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application details</h2>
                 <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
 
                 <section th:each="section : ${model.sections.values()}" th:unless="${section.name.equals('Finances')}">
                     <th:block th:if="${section.name.equals('Project details')}">
-                        <ul class="govuk-list list-overview extra-margin">
+                        <ul class="govuk-list list-overview govuk-!-margin-top-6">
                             <th:block th:each="question : ${model.sectionQuestions.get(section.id)}" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS}">
                                 <li class="section-status">
                                     <div class="govuk-grid-row">
@@ -124,13 +124,13 @@
                                         </div>
                                         <div class="govuk-grid-column-one-third">
                                             <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
-                                                <p th:unless="${model.scores.scopeAssessed}" class="govuk-body form-hint no-margin">No feedback provided</p>
+                                                <p th:unless="${model.scores.scopeAssessed}" class="govuk-body form-hint govuk-!-margin-0">No feedback provided</p>
                                                 <p class="govuk-body" th:if="${model.scores.scopeAssessed}">
                                                     In scope? <span th:text="${model.scores.inScope}">4</span>/<span th:text="${model.scores.totalScope}">5</span>
                                                 </p>
                                             </th:block>
                                             <th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
-                                                <p class="form-hint no-margin">No feedback provided</p>
+                                                <p class="form-hint govuk-!-margin-0">No feedback provided</p>
                                             </th:block>
                                         </div>
                                     </div>
@@ -139,7 +139,7 @@
                         </ul>
                     </th:block>
                     <th:block th:if="${!section.name.equals('Project details')}">
-                        <h2 class="govuk-heading-m no-margin-bottom">Application questions</h2>
+                        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application questions</h2>
                         <p class="form-hint">Each question has been assessed by several independent assessors. They have given a score and feedback for each.</p>
 
                         <ul class="govuk-list list-overview">
@@ -158,7 +158,7 @@
                             </div>
                             </li>
                         </ul>
-                        <div class="govuk-grid-row extra-margin">
+                        <div class="govuk-grid-row govuk-!-margin-top-6">
                             <div class="govuk-grid-column-two-thirds">
                                 &nbsp;
                             </div>
@@ -172,7 +172,7 @@
                 <th:block th:if="${model.interviewFeedbackViewModel != null && model.interviewFeedbackViewModel.hasFeedback()}">
                     <h2 class="govuk-heading-m">Additional feedback</h2>
                     <div class="form-group download">
-                        <h3 class="govuk-heading-s no-margin">Additional Innovate UK feedback</h3>
+                        <h3 class="govuk-heading-s govuk-!-margin-0">Additional Innovate UK feedback</h3>
                         <a target="_blank" href=""
                            th:href="@{/application/{applicationId}/feedback/download-feedback(applicationId=${model.application.id})}"
                            th:text="${model.interviewFeedbackViewModel.feedbackFilename}">panel-assessment-feedback.pdf, 6 KB </a> (opens in a new window)

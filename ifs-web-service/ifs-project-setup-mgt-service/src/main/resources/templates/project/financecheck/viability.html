@@ -80,7 +80,7 @@
                     </label>
                 </div>
           </div>
-          <div class="extra-margin">
+          <div class="govuk-!-margin-top-6">
               <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="button-secondary">Queries</a>
               <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="button-secondary">Notes</a>
           </div>

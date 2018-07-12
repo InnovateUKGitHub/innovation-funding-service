@@ -66,13 +66,13 @@
 
             <p class="govuk-body">Yours sincerely,</p>
 
-            <p class="govuk-body extra-margin">
+            <p class="govuk-body govuk-!-margin-top-6">
                 Innovate UK, part of UK Research and Innovation <br />
                 Tel: 0300 321 4357 <br />
                 Email: competitions@innovateuk.ukri.org
             </p>
 
-            <div class="extra-margin">
+            <div class="govuk-!-margin-top-6">
                 <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit(competitionId=${model.competitionId}, applicationId=${model.applicationId})}" class="govuk-button">Edit and resend invite</a>
                 <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" class="button-clear">Cancel</a>
             </div>

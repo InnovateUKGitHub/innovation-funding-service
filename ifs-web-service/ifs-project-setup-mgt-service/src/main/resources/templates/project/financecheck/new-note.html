@@ -19,7 +19,7 @@
                 <p class="govuk-body">
                     Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
                 </p>
-                <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post"
+                <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post"
                       enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                     <h2 class="govuk-heading-m">New note</h2>
                     <div class="form-group" th:classappend="${#fields.hasErrors('noteTitle')} ? 'form-group-error'">
@@ -68,7 +68,7 @@
                     </div>
                     <div class="upload-section">
                         <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                            <h2 class="govuk-heading-s no-margin">Supporting documentation</h2>
+                            <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h2>
                             <ul>
                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                     <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link" target="_blank">filename</a>
@@ -82,14 +82,14 @@
                                 <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                             </th:block>
                             <input type="file" id="attachment" class="inputfile" name="attachment">
-                            <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
+                            <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                             <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
                         </div>
                     </div>
                     <input type="hidden" id="action" value="postNote">
-                    <div class="govuk-grid-row extra-margin">
+                    <div class="govuk-grid-row govuk-!-margin-top-6">
                         <div class="govuk-grid-column-one-half">
-                            <button class="govuk-button no-margin" data-content-on-submit="Please wait...">Save note</button>
+                            <button class="govuk-button govuk-!-margin-0" data-content-on-submit="Please wait...">Save note</button>
                             <a class="button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
                         </div>
                     </div>

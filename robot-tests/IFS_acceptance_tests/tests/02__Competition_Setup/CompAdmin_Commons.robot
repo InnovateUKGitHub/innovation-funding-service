@@ -122,7 +122,7 @@ the user fills in the CS Application section with custom questions
     [Arguments]  ${growthTable}  ${competitionType}
     the user clicks the button/link   link=Application
     # Removing questions from the Assessed questions
-    Remove previous rows              jQuery=.no-margin-bottom li:last-of-type button[type="submit"]:contains("Remove")
+    Remove previous rows              jQuery=.govuk-!-margin-bottom-0 li:last-of-type button[type="submit"]:contains("Remove")
     the user clicks the button/link   jQuery=li:contains("1.") a  # Click the last question left - which now will be first
     the user is able to configure the new question  How innovative is your project?
     the user clicks the button/link   css=button[name="createQuestion"]

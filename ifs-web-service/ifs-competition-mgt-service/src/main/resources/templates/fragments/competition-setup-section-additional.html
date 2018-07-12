@@ -77,7 +77,7 @@
                     &nbsp;
                 </div>
                 <div class="govuk-grid-column-one-half">
-                    <p class="govuk-heading-s no-margin">Total: <span data-calculation-operations="+" data-calculation-fields="input[id*=funderBudget]" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatInteger(competitionSetupForm.totalFunding, 0, 'DEFAULT')}">£0</span></p>
+                    <p class="govuk-heading-s govuk-!-margin-0">Total: <span data-calculation-operations="+" data-calculation-fields="input[id*=funderBudget]" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatInteger(competitionSetupForm.totalFunding, 0, 'DEFAULT')}">£0</span></p>
 
                     <div class="alignright">
                         <input type="hidden" name="removeFunder" />
@@ -189,7 +189,7 @@
                 </tbody>
             </table>
 
-            <dl class="standard-definition-list extra-margin">
+            <dl class="standard-definition-list govuk-!-margin-top-6">
                 <dt>PAF number</dt>
                 <dd th:text="${competitionSetupForm.pafNumber}">PAF Number</dd>
                 <dt>Budget code</dt>

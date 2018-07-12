@@ -38,7 +38,7 @@
         </ul>
 
         <div class="extra-margin">
-            <a href="#" class="govuk-button no-margin-right" id="compCTA">CTA</a>
+            <a href="#" class="govuk-button govuk-!-margin-right-0" id="compCTA">CTA</a>
         </div>
 
     </div>
@@ -471,9 +471,9 @@
 
 <div th:fragment="prototype-section-essential">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="govuk-heading-xl no-margin">Initial details</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Initial details</h1>
     </div>
 
     <div th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready')}" class="panel">
@@ -632,7 +632,7 @@
             </p>
 
             <fieldset class="form-group">
-                <h3 class="govuk-heading-s no-margin">Opening date</h3>
+                <h3 class="govuk-heading-s govuk-!-margin-0">Opening date</h3>
                 <legend class="govuk-visually-hidden">Opening date</legend>
                 <p class="form-hint">You are able to edit this date if needed in the milestones section.</p>
                 <div class="date-group">
@@ -706,9 +706,9 @@
 
 <div th:fragment="prototype-section-funding">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="govuk-heading-xl no-margin">Funding information</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Funding information</h1>
     </div>
 
     <form>
@@ -766,7 +766,7 @@
                     &nbsp;
                 </div>
                 <div class="govuk-grid-column-one-half">
-                    <p class="govuk-heading-s no-margin">Total: &pound; <span th:text="${(param.action != null and param.action[0] == 'addCofunder' ? '1,300,000' : '0')}">TOTAL</span></p>
+                    <p class="govuk-heading-s govuk-!-margin-0">Total: &pound; <span th:text="${(param.action != null and param.action[0] == 'addCofunder' ? '1,300,000' : '0')}">TOTAL</span></p>
 
                     <div class="alignright">
                         <a th:href="@{''(section=funding, action=addCofunder)}" id="add-cofunder">+Add co-funder</a>
@@ -876,9 +876,9 @@
 
 <div th:fragment="prototype-section-eligibility">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="govuk-heading-xl no-margin">Eligibility</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Eligibility</h1>
     </div>
 
     <form>
@@ -1107,9 +1107,9 @@
 
 <div th:fragment="prototype-section-milestones">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="govuk-heading-xl no-margin">Milestones</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Milestones</h1>
     </div>
 
     <div class="panel">
@@ -1247,9 +1247,9 @@
 
 <div th:fragment="prototype-section-assessors">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="govuk-heading-xl no-margin">Assessors</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Assessors</h1>
     </div>
 
     <form>
@@ -1282,9 +1282,9 @@
 
 <div th:fragment="prototype-section-application">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="govuk-heading-xl no-margin">Application questions</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Application questions</h1>
     </div>
 
     <div class="panel">
@@ -1353,9 +1353,9 @@
 
 <div th:fragment="prototype-section-finance">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="govuk-heading-xl no-margin">Application finances</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Application finances</h1>
     </div>
 
     <div class="panel">
@@ -1391,9 +1391,9 @@
 
 <div th:fragment="prototype-section-description">
 
-    <div class="hgroup extra-margin-bottom">
+    <div class="hgroup govuk-!-margin-bottom-6">
         <p class="subtitle" id="compMainTitle">Connected digital additive manufacturing</p>
-        <h1 class="govuk-heading-xl no-margin">Description &#38; brief</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0">Description &#38; brief</h1>
     </div>
 
     <form>
@@ -1433,7 +1433,7 @@
 
         <th:block th:unless="${param.status != null and param.status[0] == 'edit-'+questionNo}">
 
-            <div class="extra-margin-bottom">
+            <div class="govuk-!-margin-bottom-6">
 
                 <div class="govuk-grid-row">
                     <div class="column-quarter">
@@ -1647,7 +1647,7 @@
             <a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')}" class="govuk-button">Return to setup overview</a>
         </div>
         <div class="govuk-grid-column-one-half alignright">
-            <a id="prototype-publish-content" href="#" class="button-secondary disabled no-margin">Publish public content</a>
+            <a id="prototype-publish-content" href="#" class="button-secondary disabled govuk-!-margin-0">Publish public content</a>
         </div>
     </div>
     <hr />
@@ -1714,7 +1714,7 @@
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="0">[Text]</a>
         </div>
         <div class="govuk-grid-column-one-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-competition-information&amp;state=edit" class="button-secondary no-margin">Edit</a>
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-competition-information&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
     <hr />
@@ -1743,7 +1743,7 @@
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
             <fieldset>
-                <legend class="govuk-heading-m extra-margin-bottom">Mandatory content</legend>
+                <legend class="govuk-heading-m govuk-!-margin-bottom-6">Mandatory content</legend>
                 <div class="form-group">
                     <label class="form-label-bold" for="competition-description">
                         Competition description
@@ -1789,7 +1789,7 @@
                 </div>
             </fieldset>
             <fieldset>
-                <legend class="govuk-heading-m extra-margin-bottom">
+                <legend class="govuk-heading-m govuk-!-margin-bottom-6">
                     Additional content
                 </legend>
                 <p class="govuk-body">There is no additional content associated with this competition.</p>
@@ -1804,7 +1804,7 @@
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="1">[Text]</a>
         </div>
         <div class="govuk-grid-column-one-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-summary&amp;state=edit" class="button-secondary no-margin">Edit</a>
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-summary&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
     <hr />
@@ -1818,7 +1818,7 @@
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Eligibility'}, ${null})" />
     <p class="govuk-body">Text entered into this section will appear within the eligibility tab</p>
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
-        <h2 class="govuk-heading-s no-margin-bottom">Lead applicant eligibility</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-0">Lead applicant eligibility</h2>
         <p class="govuk-body">To lead a project, you must:</p>
         <ul>
             <li>be a UK-based business (of any size)</li>
@@ -1827,13 +1827,13 @@
             <li>work alone or in collaboration with others (businesses, research base and third sector)</li>
         </ul>
 
-        <h2 class="govuk-heading-s no-margin-bottom" >Consortium eligibility</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-0" >Consortium eligibility</h2>
         <p class="govuk-body">All projects must involve at least one SME and a business must lead the project.</p>
         <p class="govuk-body">If you are an SME and expect your eligible project costs to be up to £100,000, you may deliver the project on your own. You may also work with other businesses or research organisations.</p>
         <p class="govuk-body">If you expect your eligible project costs to be more than £100,000 you must collaborate with at least one other organisation. At least one company in the collaboration must be an SME.</p>
         <p class="govuk-body">Find out if your business fits the EU definition of an SME.</p>
 
-        <h2 class="govuk-heading-s no-margin-bottom" >Project types</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-0" >Project types</h2>
         <p class="govuk-body">Your project may focus on technical feasibility, industrial research or experimental development. This will depend on the challenge.</p>
         <p class="govuk-body">For technical feasibility studies and industrial research, you could get:</p>
         <ul>
@@ -1849,7 +1849,7 @@
         </ul>
         <p class="govuk-body">We expect projects to last 6 months to 3 years. We expect them to range in size from total costs of £35,000 to £2 million, depending on the type of project.</p>
 
-        <h2 class="govuk-heading-s no-margin-bottom" >Projects we won't fund</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-0" >Projects we won't fund</h2>
         <p class="govuk-body">In this competition we will not fund applications in the following areas:</p>
         <ul>
             <li>topics defined in the Innovate UK Quantum technologies competition 2016</li>
@@ -1861,7 +1861,7 @@
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
             <fieldset>
-                <legend class="govuk-heading-m no-margin">Content</legend>
+                <legend class="govuk-heading-m govuk-!-margin-0">Content</legend>
                 <fieldset>
                     <hr />
                     <div class="form-group">
@@ -1893,7 +1893,7 @@
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         <!--</div>-->
                         <!--<div class="form-group">-->
-                            <!--<h3 class="govuk-heading-s no-margin">Attachment file</h3>-->
+                            <!--<h3 class="govuk-heading-s govuk-!-margin-0">Attachment file</h3>-->
                             <!--<a href="#" class="uploaded-file">additional_documentation.pdf</a>-->
                             <!--<div class="alignright"><a href="#">Remove file</a></div>-->
                         <!--</div>-->
@@ -2073,7 +2073,7 @@
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="2">[Text]</a>
         </div>
         <div class="govuk-grid-column-one-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-eligibility&amp;state=edit" class="button-secondary no-margin">Edit</a>
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-eligibility&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
     <hr />
@@ -2086,7 +2086,7 @@
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Scope'}, ${null})" />
 
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
-        <h2 class="govuk-heading-s no-margin-bottom">Project scope</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-0">Project scope</h2>
         <p class="govuk-body">Our Emerging and Enabling Technologies programme (E&amp;E) identifies and invests in new technologies and the underpinning capabilities that improve existing industries. Our aim is to inspire the new products, processes and services of tomorrow; those with the potential to unlock billions of pounds of value to industry and disrupt existing markets.</p>
         <p class="govuk-body">An emerging technology is one that is progressing in, or has recently emerged from, the research base. It allows us to do something that was not possible before. Because of this, it disrupts existing markets and enhances value to customers. It can improve our lives and lead to new sources of wealth generation.</p>
         <p class="govuk-body">Enabling technologies underpin the development of high-value products and services in many industrial sectors and markets. They improve performance and productivity.</p>
@@ -2114,7 +2114,7 @@
         </ul>
         <p class="govuk-body">The type of innovation project will depend on the challenges and opportunities your business faces.</p>
         <p class="govuk-body">Proposals must show how project success will improve business growth and productivity and/or encourage export opportunities, including for at least one UK small and medium-sized enterprise (SME) involved in the project.</p>
-        <h2 class="govuk-heading-s no-margin-bottom">Specific competition themes</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-0">Specific competition themes</h2>
         <p class="govuk-body">We welcome applications in one or more of the following areas:</p>
         <p class="govuk-body">Innovation in emerging technologies that show significant industry and commercial improvement in novel applications of:</p>
         <ul>
@@ -2144,7 +2144,7 @@
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
             <fieldset>
-                <legend class="govuk-heading-m no-margin">Content</legend>
+                <legend class="govuk-heading-m govuk-!-margin-0">Content</legend>
                 <fieldset>
                     <hr />
                     <div class="form-group">
@@ -2293,7 +2293,7 @@
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="3">[Text]</a>
         </div>
         <div class="govuk-grid-column-one-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-scope&amp;state=edit" class="button-secondary no-margin">Edit</a>
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-scope&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
     <hr />
@@ -2408,7 +2408,7 @@
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="4">[Text]</a>
         </div>
         <div class="govuk-grid-column-one-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-dates&amp;state=edit" class="button-secondary no-margin">Edit</a>
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-dates&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
     <hr />
@@ -2446,7 +2446,7 @@
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
             <fieldset>
-                <legend class="govuk-heading-m no-margin">Content</legend>
+                <legend class="govuk-heading-m govuk-!-margin-0">Content</legend>
                 <fieldset>
                     <hr />
                     <div class="form-group">
@@ -2660,7 +2660,7 @@
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="5">[Text]</a>
         </div>
         <div class="govuk-grid-column-one-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-how-to-apply&amp;state=edit" class="button-secondary no-margin">Edit</a>
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-how-to-apply&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
     <hr />
@@ -2687,7 +2687,7 @@
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
             <fieldset>
-                <legend class="govuk-heading-m no-margin">Content</legend>
+                <legend class="govuk-heading-m govuk-!-margin-0">Content</legend>
                 <fieldset>
                     <hr />
                     <div class="form-group">
@@ -2752,7 +2752,7 @@
             <a href="?" th:class="${(param.state != null and param.state[0] == 'readOnly' ? 'button' : 'button prototype-save')}" th:text="${(param.state != null and param.state[0] == 'readOnly' ? 'Return to public content' : 'Save and return')}" data-index="6">[Text]</a>
         </div>
         <div class="govuk-grid-column-one-half alignright">
-            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-supporting-information&amp;state=edit" class="button-secondary no-margin">Edit</a>
+            <a th:if="${(param.state != null and param.state[0] == 'readOnly')}" href="?section=public-supporting-information&amp;state=edit" class="button-secondary govuk-!-margin-0">Edit</a>
         </div>
     </div>
     <hr />

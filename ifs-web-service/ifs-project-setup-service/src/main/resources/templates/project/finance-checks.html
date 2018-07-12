@@ -25,7 +25,7 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance checks',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <th:block th:if="${model.isApproved()}">
-            <div class="success-alert extra-margin-bottom">
+            <div class="success-alert govuk-!-margin-bottom-6">
                 The checks have been completed and your finances approved.
             </div>
             <p class="govuk-body"> Review your <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}" class="govuk-link">finances</a>
@@ -73,7 +73,7 @@
                     <div class="collapsible-content">
                         <th:block th:each="(post, iteration : ${query.viewModelPosts})">
                             <div th:class="${iteration.index == 0} ? '' : 'panel'">
-                                <div class="govuk-heading-s no-margin">
+                                <div class="govuk-heading-s govuk-!-margin-0">
                                     <th:block th:text="${post.username}">Created by user</th:block>
                                     <small>
                                         <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
@@ -92,10 +92,10 @@
                             </div>
                         </th:block>
                         <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                            <a id="post-new-response-1" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.Id})}" class="extra-margin govuk-button">Respond</a>
+                            <a id="post-new-response-1" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.Id})}" class="govuk-!-margin-top-6 govuk-button">Respond</a>
                         </th:block>
                         <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
-                            <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
+                            <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
                                 enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                     <h2 class="govuk-heading-m">Respond to query</h2>
                                     <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
@@ -126,7 +126,7 @@
                                     </div>
                                     <div class="upload-section">
                                         <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                                            <h3 class="govuk-heading-s no-margin">Supporting documentation</h3>
+                                            <h3 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h3>
                                             <ul>
                                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                                     <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link" target="_blank">filename</a>
@@ -140,14 +140,14 @@
                                                 <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                             </th:block>
                                             <input type="file" id="attachment-1" class="inputfile" name="attachment">
-                                            <label for="attachment-1" class="button-secondary extra-margin">+ Upload</label>
+                                            <label for="attachment-1" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                                             <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment-1">Save</button>
                                         </div>
                                     </div>
                                 <input type="hidden" id="action-1" value="postResponse">
                                 <div class="govuk-grid-row">
                                     <div class="govuk-grid-column-one-half">
-                                        <button class="govuk-button no-margin" data-content-on-submit="Please wait...">Post response</button>
+                                        <button class="govuk-button govuk-!-margin-0" data-content-on-submit="Please wait...">Post response</button>
                                     </div>
                                     <div class="govuk-grid-column-one-half alignright">
                                         <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}" class="govuk-link">Cancel</a>
@@ -168,7 +168,7 @@
                     <div class="collapsible-content">
                         <th:block th:each="(post, iteration : ${query.viewModelPosts})">
                             <div th:class="${iteration.index == 0} ? '' : 'panel'">
-                                <div class="govuk-heading-s no-margin">
+                                <div class="govuk-heading-s govuk-!-margin-0">
                                     <th:block th:text="${post.username}">Created by user</th:block>
                                     <small>
                                         <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
@@ -187,10 +187,10 @@
                             </div>
                         </th:block>
                         <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                            <a id="post-new-response-2" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top govuk-button">Respond</a>
+                            <a id="post-new-response-2" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="govuk-!-margin-top-6-top govuk-button">Respond</a>
                         </th:block>
                         <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
-                            <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
+                            <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
                                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                 <h2 class="govuk-heading-m">Respond to query</h2>
                                 <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
@@ -221,7 +221,7 @@
                                 </div>
                                 <div class="upload-section">
                                     <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                                        <h3 class="govuk-heading-s no-margin">Supporting documentation</h3>
+                                        <h3 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h3>
                                         <ul>
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                                 <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link" target="_blank">filename</a>
@@ -235,14 +235,14 @@
                                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                         </th:block>
                                         <input type="file" id="attachment-2" class="inputfile" name="attachment">
-                                        <label for="attachment-2" class="button-secondary extra-margin">+ Upload</label>
+                                        <label for="attachment-2" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                                         <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment-2">Save</button>
                                     </div>
                                 </div>
                                 <input type="hidden" id="action-2" value="postResponse">
                                 <div class="govuk-grid-row">
                                     <div class="govuk-grid-column-one-half">
-                                        <button class="govuk-button no-margin" data-content-on-submit="Please wait...">Post response</button>
+                                        <button class="govuk-button govuk-!-margin-0" data-content-on-submit="Please wait...">Post response</button>
                                     </div>
                                     <div class="govuk-grid-column-one-half alignright">
                                         <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}" class="govuk-link">Cancel</a>
@@ -261,7 +261,7 @@
                     <div class="collapsible-content">
                         <th:block th:each="(post, iteration : ${query.viewModelPosts})">
                             <div th:class="${iteration.index == 0} ? '' : 'panel'">
-                                <div class="govuk-heading-s no-margin">
+                                <div class="govuk-heading-s govuk-!-margin-0">
                                     <th:block th:text="${post.username}">Created by user</th:block>
                                     <small>
                                         <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
@@ -280,10 +280,10 @@
                             </div>
                         </th:block>
                         <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                            <a id="post-new-response-3" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top govuk-button">Respond</a>
+                            <a id="post-new-response-3" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.Id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="govuk-!-margin-top-6-top govuk-button">Respond</a>
                         </th:block>
                         <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
-                            <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
+                            <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
                                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                 <h2 class="govuk-heading-m">Respond to query</h2>
                                 <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
@@ -314,7 +314,7 @@
                                 </div>
                                 <div class="upload-section">
                                     <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
-                                        <h3 class="govuk-heading-s no-margin">Supporting documentation</h3>
+                                        <h3 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h3>
                                         <ul>
                                             <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                                                 <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId) + ' (opens in a new window)'}" class="govuk-link" target="_blank">filename</a>
@@ -328,14 +328,14 @@
                                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                         </th:block>
                                         <input type="file" id="attachment-3" class="inputfile" name="attachment">
-                                        <label for="attachment-3" class="button-secondary extra-margin">+ Upload</label>
+                                        <label for="attachment-3" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                                         <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment-3">Save</button>
                                     </div>
                                 </div>
                                 <input type="hidden" id="action-3" value="postResponse">
                                 <div class="govuk-grid-row">
                                     <div class="govuk-grid-column-one-half">
-                                        <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
+                                        <button class="govuk-button govuk-!-margin-0" data-content-on-submit="Please wait...">Post response</button>
                                     </div>
                                     <div class="govuk-grid-column-one-half alignright">
                                         <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}" class="govuk-link">Cancel</a>

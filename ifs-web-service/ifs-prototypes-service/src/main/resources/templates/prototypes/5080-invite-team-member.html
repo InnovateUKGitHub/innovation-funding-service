@@ -19,16 +19,16 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
-		<h1 class="govuk-heading-l no-margin">Add new team member</h1>
+	<div class="hgroup govuk-!-margin-top-0" style="padding-top: 20px; margin-bottom: 30px">
+		<h1 class="govuk-heading-l govuk-!-margin-0">Add new team member</h1>
 	</div>
 
 	<p class="govuk-body">Invite new members of the Innovate UK operations team here. The team you select this individual as a member of will determine which areas of the service they can later access.</p>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'invalidEmailAddress'}">
 
-		<div class="warning-alert extra-margin-bottom">
-			<h2 class="govuk-heading-s no-margin-top">Invalid email address</h2>
+		<div class="warning-alert govuk-!-margin-bottom-6">
+			<h2 class="govuk-heading-s govuk-!-margin-top-0">Invalid email address</h2>
 			<p class="govuk-body">For an individual to be invited to use the IFS system, they must use an email address with the @innovateuk.gov.uk email domain.</p>
 		</div>
 

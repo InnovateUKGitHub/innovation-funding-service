@@ -28,13 +28,13 @@
 	<h2 class="govuk-heading-m">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'accepted'}">
-		<div class="success-alert extra-margin-bottom">
-			<h2 class="govuk-heading-s no-margin-top">The spend profile has been approved.</h2>
+		<div class="success-alert govuk-!-margin-bottom-6">
+			<h2 class="govuk-heading-s govuk-!-margin-top-0">The spend profile has been approved.</h2>
 		</div>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'reject'}">
-		<div class="warning-alert extra-margin-bottom">
+		<div class="warning-alert govuk-!-margin-bottom-6">
 			<h3 class="govuk-heading-s">REJECT TEXT REQUIRED</h3>
 			<ul class="govuk-list govuk-list--bullet">
 				<li>TEXT REQUIRED</li>
@@ -80,7 +80,7 @@
         <button class="js-close close" aria-label="Close Popup">X</button>
         <div>
 
-			<h2 class="govuk-heading-m no-margin">Approved by Innovation Lead</h2>
+			<h2 class="govuk-heading-m govuk-!-margin-0">Approved by Innovation Lead</h2>
 
 			<p class="govuk-body">The project spend profile has been appoved and accepted by the Innovation Lead, by confirming the Project Manager will be notified of this decision via email.</p>
 
@@ -101,7 +101,7 @@
         <button class="js-close close" aria-label="Close Popup">X</button>
         <div>
 
-			<h2 class="govuk-heading-m no-margin">Reject spend profile</h2>
+			<h2 class="govuk-heading-m govuk-!-margin-0">Reject spend profile</h2>
 
 			<p class="govuk-body">Rejecting will return access to this section to all project partners.</p>
 

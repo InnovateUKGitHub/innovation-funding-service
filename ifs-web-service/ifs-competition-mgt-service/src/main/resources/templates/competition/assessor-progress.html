@@ -22,9 +22,9 @@
                     subTitle=|${model.competitionId} : ${model.competitionName}|,
                     size='govuk-heading-xl'" />
 
-        <h2 class="govuk-heading-l no-margin" th:text="${model.assessorName}"></h2>
+        <h2 class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorName}"></h2>
 
-        <h3 class="govuk-heading-m no-margin">Innovation area and skills</h3>
+        <h3 class="govuk-heading-m govuk-!-margin-0">Innovation area and skills</h3>
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <div class="extra-margin">
+        <div class="govuk-!-margin-top-6">
             <a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${model.assessorId})} + ${originQuery}"
                th:text="'Review assessor'"
                class="govuk-link" />
@@ -115,7 +115,7 @@
                             Yes
                         </td>
                         <td class="alignright">
-                            <a th:if="${app.notified}" class="button-secondary no-margin" data-js-modal="remove-assigned-assessor-modal"
+                            <a th:if="${app.notified}" class="button-secondary govuk-!-margin-0" data-js-modal="remove-assigned-assessor-modal"
                                th:href="${removeActionNonJs}"
                                th:attr="data-modal-form-action=${removeAction}"
                                th:with="removeAction=@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId})},
@@ -123,7 +123,7 @@
                                th:unless="${app.submitted}">Remove</a>
                             <form th:unless="${app.notified}" method="post"
                                 th:action="@{/assessment/competition/{cId}/assessors/{assessorId}/withdraw/{asId}(cId=${model.competitionId}, asId=${app.assessmentId}, assessorId=${model.assessorId})}">
-                                <button type="submit" class="button-secondary no-margin">Remove</button>
+                                <button type="submit" class="button-secondary govuk-!-margin-0">Remove</button>
                             </form>
                         </td>
                     </tr>
@@ -194,7 +194,7 @@
                         <td th:text="${app.totalAssessors}" class="numeric">3</td>
                         <td class="alignright"><form method="post"
                                   th:action="@{/assessment/competition/{competitionId}/assessors/{assessorId}/application/{applicationId}/assign(competitionId=${model.competitionId}, assessorId=${model.assessorId}, applicationId=${app.applicationId})}" >
-                            <button type="submit" class="button-secondary no-margin">Reassign</button>
+                            <button type="submit" class="button-secondary govuk-!-margin-0">Reassign</button>
                         </form>
                         </td>
                     </tr>
@@ -210,9 +210,9 @@
         <p class="govuk-body">These are the rest of the applications for this competition. You can assign more to this assessor.</p>
 
         <form method="GET">
-            <div class="search-filters extra-margin">
+            <div class="search-filters govuk-!-margin-top-6">
                 <fieldset>
-                    <legend class="govuk-heading-m no-margin-top">Filter applications</legend>
+                    <legend class="govuk-heading-m govuk-!-margin-top-0">Filter applications</legend>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
                             <label class="form-label" for="filterSearch">Search by application number.</label>
@@ -227,7 +227,7 @@
                         </div>
                     </div>
                 </fieldset>
-                <div class="extra-margin">
+                <div class="govuk-!-margin-top-6">
                     <a href="?" th:href="'?filterSearch='" class="govuk-link">Clear all filters</a>
                 </div>
             </div>
@@ -244,7 +244,7 @@
                             <option th:if="${model.applicationsView.inAssessment}" value="completedApps" th:selected="${(model.applicationsView.sortField == 'completedApps')}">Completed applications</option>
                         </select>
                     </div>
-                    <button type="submit" class="button-secondary no-margin js-hidden">Sort</button>
+                    <button type="submit" class="button-secondary govuk-!-margin-0 js-hidden">Sort</button>
                      </div>
                 */-->
         <div class="govuk-grid-row sorting">
@@ -280,7 +280,7 @@
                     <td class="numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
                     <td><form method="post"
                            th:action="@{/assessment/competition/{competitionid}/assessors/{assessorid}/application/{applicationid}/assign(competitionid=${model.competitionId}, assessorid=${model.assessorId}, applicationid=${app.applicationId})}" >
-                        <button type="submit" class="button-secondary no-margin">Assign</button>
+                        <button type="submit" class="button-secondary govuk-!-margin-0">Assign</button>
                     </form>
                     </td>
                 </tr>

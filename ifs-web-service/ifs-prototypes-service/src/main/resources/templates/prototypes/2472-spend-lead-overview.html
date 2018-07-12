@@ -20,7 +20,7 @@
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Spend profile'})" />
 
 	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
-		<div class="success-alert extra-margin-bottom">
+		<div class="success-alert govuk-!-margin-bottom-6">
 			<p class="govuk-body"><strong>All project spend profiles have been submitted to Innovate UK</strong></p>
 		</div>
 	</div>

@@ -67,9 +67,9 @@
                     </div>
 
 
-                    <fieldset class="extra-margin">
+                    <fieldset class="govuk-!-margin-top-6">
                         <legend class="govuk-visually-hidden">Address details</legend>
-                        <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'form-group-error'">
+                        <div class="form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'form-group-error'">
                             <label class="form-label" for="addressForm.addressLine1">
                                 <span class="form-label-bold">Street</span>
                                 <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine1}')}">
@@ -125,7 +125,7 @@
                         </div>
                     </fieldset>
 
-                    <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
+                    <div class="form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
                         <label class="form-label" th:for="phoneNumber">
                             <span class="form-label-bold">Phone number</span>
                             <span class="form-hint">We may use this to contact you about the application.</span>

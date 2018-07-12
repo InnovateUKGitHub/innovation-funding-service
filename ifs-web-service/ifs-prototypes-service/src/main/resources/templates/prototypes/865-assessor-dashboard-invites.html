@@ -20,8 +20,8 @@
     </div>
 
     <th:block th:if="${param.user != null and param.user[0] == 'assessor'}">
-        <div class="message-alert extra-margin-bottom">
-            <h2 class="govuk-heading-s no-margin">Complete your assessor account</h2>
+        <div class="message-alert govuk-!-margin-bottom-6">
+            <h2 class="govuk-heading-s govuk-!-margin-0">Complete your assessor account</h2>
             <p class="govuk-body">You must complete your profile before we can assign you applications.</p>
             <ul class="govuk-list govuk-list--bullet extra-margin-top">
                 <li>
@@ -39,8 +39,8 @@
     </th:block>
 
     <th:block th:unless="${param.user != null and param.user[0] == 'assessor'}">
-        <div class="success-alert extra-margin-bottom">
-            <h2 class="govuk-heading-s no-margin">Assessor account complete</h2>
+        <div class="success-alert govuk-!-margin-bottom-6">
+            <h2 class="govuk-heading-s govuk-!-margin-0">Assessor account complete</h2>
         </div>
     </th:block>
 

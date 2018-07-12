@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        <ul class="inline-nav extra-margin">
+        <ul class="inline-nav govuk-!-margin-top-6">
             <li class="not-selected">
                 <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
                    th:text="${'Applications (' + model.unallocatedApplications + ')' }"></a>
@@ -60,14 +60,14 @@
             </li>
         </ul>
 
-        <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">
+        <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.selectAllDisabled}">
             <p class="govuk-body" th:text="#{competition.management.limit.warning}"></p>
         </div>
         <div data-selection-limit-exceeded-block=""></div>
 
         <div class="govuk-grid-row sorting">
             <div class="column-one">
-                <span class="govuk-heading-xl no-margin" th:text="${model.pagination.totalCount}">20</span>
+                <span class="govuk-heading-xl govuk-!-margin-0" th:text="${model.pagination.totalCount}">20</span>
                 <span class="govuk-heading-s">applications allocated to this assessor</span>
             </div>
         </div>

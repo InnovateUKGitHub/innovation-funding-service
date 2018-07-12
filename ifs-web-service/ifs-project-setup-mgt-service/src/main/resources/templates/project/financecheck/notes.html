@@ -28,7 +28,7 @@
                 <p class="govuk-body">
                     Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
                 </p>
-                <div class="govuk-grid-row extra-margin">
+                <div class="govuk-grid-row govuk-!-margin-top-6">
                     <div class="govuk-grid-column-one-half">
                         <a id="post-new-note" th:href="@{{baseUrl}/new-note(baseUrl=${baseUrl})}" class="govuk-button">Create a new note</a>
                     </div>
@@ -41,7 +41,7 @@
                         <h2 class="govuk-heading-m" th:text="${note.title}">Note Title</h2>
                         <th:block th:each="(post, iteration : ${note.viewModelPosts})">
                             <div th:class="${iteration.index == 0} ? '' : 'panel'">
-                                <p class="govuk-heading-s no-margin">
+                                <p class="govuk-heading-s govuk-!-margin-0">
                                     <th:block th:text="${post.username}">Created by user</th:block>
                                     <small th:text="${#temporals.format(post.createdOn, 'hh:mma d MMMM yyyy')}">13:21 27 February 2017</small>
                                 </p>
@@ -57,11 +57,11 @@
                             </div>
                         </th:block>
                         <th:block th:if="${model.noteId == null}">
-                            <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="extra-margin button-secondary">Comment</a>
+                            <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="govuk-!-margin-top-6 button-secondary">Comment</a>
                         </th:block>
                         <th:block th:if="${(model.noteId != null) and (note.id == model.noteId)}" th:with="baseUrl=@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl}, noteId=${model.noteId})}">
                             <h2 class="govuk-heading-m">Add your comment</h2>
-                            <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}"
+                            <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}"
                                   method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                 <div class="form-group" th:classappend="${#fields.hasErrors('comment')} ? 'form-group-error'">
                                     <label for="comment">
@@ -99,20 +99,20 @@
                                             </li>
                                         </ul>
                                     </th:block>
-                                    <h3 class="govuk-heading-s no-margin">Upload supporting documentation in pdf format</h3>
+                                    <h3 class="govuk-heading-s govuk-!-margin-0">Upload supporting documentation in pdf format</h3>
                                     <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
                                         <th:block th:if="${#fields.hasErrors('attachment')}">
                                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                         </th:block>
                                         <input type="file" id="attachment" class="inputfile" name="attachment">
-                                        <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
+                                        <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                                         <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
                                     </div>
                                 </div>
                                 <input type="hidden" id="action" value="postComment">
-                                <div class="govuk-grid-row extra-margin">
+                                <div class="govuk-grid-row govuk-!-margin-top-6">
                                     <div class="govuk-grid-column-one-half">
-                                        <button class="govuk-button no-margin" data-content-on-submit="Please wait...">Save comment</button>
+                                        <button class="govuk-button govuk-!-margin-0" data-content-on-submit="Please wait...">Save comment</button>
                                         <a class="button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
                                     </div>
                                 </div>

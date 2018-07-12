@@ -23,13 +23,13 @@
         <hr/>
 
         <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
-            <div class="success-alert extra-margin-bottom">
-                <h2 class="govuk-heading-s no-margin-top">These documents have been approved.</h2>
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <h2 class="govuk-heading-s govuk-!-margin-top-0">These documents have been approved.</h2>
             </div>
         </th:block>
 
         <div class="warning-alert" th:if="${model.getSignedGrantOfferLetterRejected()}">
-            <p class="govuk-heading-s no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+            <p class="govuk-heading-s govuk-!-margin-top-0">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
             <p class="govuk-body">If you have not already done so, please contact the Project Manager to explain your decision.</p>
             <p class="govuk-body">Reason for rejection:</p>
             <p class="govuk-body" th:text="${model.getGrantOfferLetterRejectionReason()}"></p>
@@ -105,7 +105,7 @@
         </th:block>
 
         <th:block th:if="${model.isSentToProjectTeam()}">
-            <h2 class="govuk-heading-m no-margin">Signed grant offer letter</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-0">Signed grant offer letter</h2>
             <div class="upload-section">
                 <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
                     <p class="govuk-body"><a class="uploaded-file" target="_blank" th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename} + ' (opens in a new window)'" class="govuk-link">signed-offer-letter.PDF</a></p>
@@ -120,7 +120,7 @@
             <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" id="gol-decision-form" method="post" novalidate="novalidate">
                 <div class="form-group">
                     <fieldset>
-                        <legend id="decisionGOL" class="extra-margin-bottom">
+                        <legend id="decisionGOL" class="govuk-!-margin-bottom-6">
                             Please confirm that these documents meet the requirements for the grant offer letter.
                         </legend>
                         <div class="multiple-choice">

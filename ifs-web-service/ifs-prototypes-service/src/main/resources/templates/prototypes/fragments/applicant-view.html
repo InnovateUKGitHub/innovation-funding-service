@@ -98,7 +98,7 @@
 <div th:fragment="prototype-subheader(link, url)">
     <div class="sub-header">
         <div th:if="${url == ''} and ${link != ''}" th:remove="tag">
-            <h2 class="govuk-heading-s no-margin" style="margin-top: 5px" th:text="${link}">Title text</h2>
+            <h2 class="govuk-heading-s govuk-!-margin-0" style="margin-top: 5px" th:text="${link}">Title text</h2>
         </div>
         <div th:if="${url != ''}" th:remove="tag">
              <a th:href="${url}" class="link-back" th:text="${link}">Link text</a>
@@ -116,29 +116,29 @@
 
 <!-- ===================Assessor Page title============================== -->
 <div th:fragment="prototype-project-page-title(subtitle, heading)">
-    <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
+    <div class="hgroup govuk-!-margin-top-0" style="padding-top: 20px; margin-bottom: 30px">
         <div th:if="${subtitle == 'projectSetup'}" th:remove="tag">
-            <p class="subtitle no-margin">Machine learning in robots</p>
+            <p class="subtitle govuk-!-margin-0">Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'successful'}" th:remove="tag">
-            <p class="subtitle no-margin">Machine learning in robots</p>
+            <p class="subtitle govuk-!-margin-0">Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'successfulFeedback'}" th:remove="tag">
-            <p class="subtitle no-margin">Machine learning in robots</p>
+            <p class="subtitle govuk-!-margin-0">Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'unsuccessful'}" th:remove="tag">
-            <p class="subtitle no-margin">Machine learning in robots</p>
+            <p class="subtitle govuk-!-margin-0">Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'unsuccessfulFeedback'}" th:remove="tag">
-            <p class="subtitle no-margin">Mobile Phone Data for Logistics Analytics</p>
+            <p class="subtitle govuk-!-margin-0">Mobile Phone Data for Logistics Analytics</p>
         </div>
         <div th:if="${subtitle == 'notSubmitted'}" th:remove="tag">
-            <p class="subtitle no-margin">Additive manufacturing</p>
+            <p class="subtitle govuk-!-margin-0">Additive manufacturing</p>
         </div>
         <div th:if="${subtitle == 'noStatus'}" th:remove="tag">
-            <p class="subtitle no-margin">Machine learning in robots</p>
+            <p class="subtitle govuk-!-margin-0">Machine learning in robots</p>
         </div>
-        <h1 class="govuk-heading-xl no-margin" th:text="${heading}">Title here</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-0" th:text="${heading}">Title here</h1>
     </div>
 </div>
 
@@ -213,7 +213,7 @@
 <div th:fragment="prototype-application-details-panel">
     <section class="boxed">
 
-        <!-- <h2 class="govuk-heading-m no-margin">Application details</h2> -->
+        <!-- <h2 class="govuk-heading-m govuk-!-margin-0">Application details</h2> -->
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
@@ -514,7 +514,7 @@
 <!-- ===================Finances elibility success============================== -->
 <div th:fragment="prototype-eligibility-success">
     <div class="success-alert">
-        <h2 class="govuk-heading-s no-margin">The participation levels of this project are within the required range.</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-0">The participation levels of this project are within the required range.</h2>
         <p class="govuk-body">This application can be submitted with these project costs.</p>
     </div>
 </div>
@@ -523,7 +523,7 @@
 <!-- ===================Finances elibility warning============================== -->
 <div th:fragment="prototype-eligibility-warning">
     <div class="warning-alert">
-        <h2 class="govuk-heading-s no-margin">The participation levels of this project are not within the required range</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-0">The participation levels of this project are not within the required range</h2>
         <p class="govuk-body">You will not be able to submit this application until the research participation is 30% or less.</p>
     </div>
 </div>
@@ -531,7 +531,7 @@
 <!-- ===================Finances elibility warning============================== -->
 <div th:fragment="prototype-warning-incomplete">
     <div class="warning-alert">
-        <h2 class="govuk-heading-s no-margin">You have not completed your finances</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-0">You have not completed your finances</h2>
         <ul class="govuk-list govuk-list--bullet">
             <li>This application cannot be submitted unless finances have been marked as complete by all partners</li>
             <li><a href="/prototypes/631-finances-overview">Return to the finances section to complete your finances</a></li>
@@ -541,7 +541,7 @@
 
 <!-- =============================Appendix content question 5============================== -->
 <div th:fragment="appendix-question5" th:remove="tag" >
-    <h3 class="govuk-heading-s no-margin">Project management appendix</h3>
+    <h3 class="govuk-heading-s govuk-!-margin-0">Project management appendix</h3>
     <p class="govuk-body">If you need to provide more information to support your answer, you can include an appendix, e.g. a project plan</p>
     <details>
         <summary><span class="summary">What should I include in the project management appendix?</span></summary>
@@ -566,7 +566,7 @@
 
 <!-- =============================Appendix content question 6============================== -->
 <div th:fragment="appendix-question6" th:remove="tag" >
-    <h3 class="govuk-heading-s no-margin">Innovate appendix</h3>
+    <h3 class="govuk-heading-s govuk-!-margin-0">Innovate appendix</h3>
     <p class="govuk-body">If you need to provide more information to support your answer, you can include an appendix, e.g. a diagram of your innovation</p>
     <details>
         <summary><span class="summary">What should I include in the innovation appendix?</span></summary>
@@ -589,7 +589,7 @@
 
 <!-- =============================Appendix content question 8============================== -->
 <div th:fragment="appendix-question8" th:remove="tag" >
-    <h3 class="govuk-heading-s no-margin">Project team appendix</h3>
+    <h3 class="govuk-heading-s govuk-!-margin-0">Project team appendix</h3>
     <p class="govuk-body">If you need to provide more information to support your answer, you can include an appendix, e.g. details of subcontractors</p>
     <details>
         <summary><span class="summary">What should I include in the innovation appendix?</span></summary>
@@ -612,7 +612,7 @@
 
 <!-- =============================Appendix content question 8 jes============================== -->
 <th:block th:fragment="appendix-question8-jes">
-    <h3 class="govuk-heading-s no-margin">Upload a pdf copy of the Je-S form once you have a status of 'With Council'</h3>
+    <h3 class="govuk-heading-s govuk-!-margin-0">Upload a pdf copy of the Je-S form once you have a status of 'With Council'</h3>
     <details>
         <summary><span class="summary">How do I create my Je-S output?</span></summary>
         <div class="panel">
@@ -626,7 +626,7 @@
 
 <!-- =============================Appendix content question 8 jes============================== -->
 <div th:fragment="appendix-academic-download" th:remove="tag" >
-    <h3 class="govuk-heading-s no-margin">Upload a pdf copy of the Je-S output confirming a status of 'With Council'</h3>
+    <h3 class="govuk-heading-s govuk-!-margin-0">Upload a pdf copy of the Je-S output confirming a status of 'With Council'</h3>
     <details>
         <summary><span class="summary">How do I create my Je-S output?</span></summary>
         <div class="panel">
@@ -712,7 +712,7 @@
     <div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'} or ${param.status != null} and ${param.status[0] == 'assessorFeedback'}" th:remove="tag">
 
         <div class="upload-section">
-            <h3 class="govuk-heading-s no-margin">Assessor feedback</h3>
+            <h3 class="govuk-heading-s govuk-!-margin-0">Assessor feedback</h3>
             <p class="govuk-body">Upload the assessor feedback page</p>
             <label for="file" class="button-secondary extra-margin">+ Upload</label>
         </div>
@@ -722,7 +722,7 @@
     <div th:if="${param.status != null} and (${param.status[0] == 'successfulFeedback'} or ${param.status[0] == 'unsuccessfulFeedback'} or ${param.status[0] == 'setup'})" th:remove="tag">
 
         <div class="form-group download extra-margin">
-            <h3 class="govuk-heading-s no-margin">View your application feedback:</h3>
+            <h3 class="govuk-heading-s govuk-!-margin-0">View your application feedback:</h3>
             <a href="#">10294856feedback.pdf (161.96 KB)</a>
         </div>
 
@@ -952,7 +952,7 @@
                 <p class="govuk-body">We will take this data and engineer a solution to isolate the problem we will then collude with our fabrication partner to design and prototype a tool to correct the obstacle.</p>
 
                 <div class="form-group download">
-                    <h3 class="govuk-heading-s no-margin">View project management appendix:</h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-0">View project management appendix:</h3>
                     <a href="#">Project-plan.pdf (161.96 KB)</a>
                 </div>
 
@@ -989,7 +989,7 @@
                 <p class="govuk-body">The project is based on Manchester?s novel IP that, for the first time, allows SLM to be conducted without any need for anchors/supports. A search of the literature has established that the advances proposed in this project on which RAMP are based are not available via any commercially available process. In addition, the development and supply of tailored materials by Empire and a dedicated high temperature rig by Ludlow will involve further, critical degrees of innovation that will help to build a portfolio of IP to enhance commercial exploitation. NB. RAMP does not simply reduce stresses by working at higher temperatures; it involves a novel step based on manufacturing engineering and material science that completely eliminates stresses.</p>
 
                 <div class="form-group download">
-                    <h3 class="govuk-heading-s no-margin">View innovation appendix:</h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-0">View innovation appendix:</h3>
                     <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
                 </div>
 
@@ -1071,7 +1071,7 @@
                 <p class="govuk-body">The Fabricators ? Are a leading team within complex engineering fabrication. They have work on multiple high budget engineering solutions and consist of a team of people with many years? experience in a range of industries</p>
 
                 <div class="form-group download">
-                    <h3 class="govuk-heading-s no-margin">View project team appendix:</h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-0">View project team appendix:</h3>
                     <a href="#">CVs-of-team.pdf (161.96 KB)</a>
                 </div>
 
@@ -1346,7 +1346,7 @@
     <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.
 </p>
 
-    <table class="extra-margin-bottom" style="width: 50%;">
+    <table class="govuk-!-margin-bottom-6" style="width: 50%;">
         <thead>
             <tr>
                 <th scope="col" style="width: 50%">Financial year <br /> (April to March)</th>

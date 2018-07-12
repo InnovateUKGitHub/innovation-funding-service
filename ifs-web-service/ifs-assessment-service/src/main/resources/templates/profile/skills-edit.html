@@ -20,7 +20,7 @@
                 </div>
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your skills',size='govuk-heading-xl'" />
-                <h2 class="govuk-heading-m no-margin-bottom">Innovation areas</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Innovation areas</h2>
 
                 <p class="form-hint">These innovation areas have been chosen as your current areas of expertise. They will influence the types
                     of competition you will be invited to assess. If you would like to amend them or add new ones please
@@ -36,7 +36,7 @@
                     </th:block>
                 </ul>
 
-                <form th:action="@{/profile/skills/edit}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
+                <form th:action="@{/profile/skills/edit}" method="post" th:object="${form}" class="govuk-!-margin-top-6" novalidate="novalidate">
                     <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'form-group-error'">
                         <label class="form-label" th:for="skillAreas">
                             <span class="govuk-heading-m">Skill areas</span>

@@ -41,7 +41,7 @@
         <dd>Agriculture and food</dd>
     </dl> -->
 
-    <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and review assessor invites for this competition.</p>
+    <p class="extra-margin govuk-!-margin-bottom-6">Choose a tab to find, invite and review assessor invites for this competition.</p>
 
 </div>
 
@@ -149,7 +149,7 @@
 <div th:fragment="prototype-assesor-row-assign-application">
     <ul class="tabular-list__row">
         <li class="width-half">
-            <p class="govuk-body no-margin">No: <a href="#" class="extra-margin-right" th:text="${number}">NUMBER</a></p>
+            <p class="govuk-body govuk-!-margin-0">No: <a href="#" class="extra-margin-right" th:text="${number}">NUMBER</a></p>
         </li>
         <li class="width-quarter" aria-describedby="assign-lead-org" th:text="${org}">
             ORG
@@ -160,7 +160,7 @@
         <li class="width-full">
             <ul class="tabular-list__row--internal">
                 <li class="width-half">
-                    <h3 class="govuk-heading-s no-margin"><a href="#" th:text="${application}">APPLICATION</a></h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-0"><a href="#" th:text="${application}">APPLICATION</a></h3>
 
                     <th:block th:if="${status != null}">
                         <p class="govuk-body">Status: <strong th:text="${status}">STATUS</strong></p>
@@ -201,7 +201,7 @@
             <a th:href="${'/prototypes/5229-assessor-profile?name='+name} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}" th:text="${name}" class="govuk-heading-s">NAME</a>
         </li>
         <li class="width-10-percent">
-            <strong class="show-mobile">Type:</strong> <span class="no-margin" th:text="${busType}">TYPE</span>
+            <strong class="show-mobile">Type:</strong> <span class="govuk-!-margin-0" th:text="${busType}">TYPE</span>
         </li>
         <li class="width-20-percent">
             <strong class="show-mobile">Innovation area:</strong> <span th:text="${area}">INNOVATION AREA</span>
@@ -236,7 +236,7 @@
 <th:block th:fragment="prototype-assessor-list-table">
     <div class="govuk-govuk-grid-row sorting extra-margin">
         <div class="govuk-grid-column-one-half">
-            <span class="govuk-heading-xl no-margin">20</span>
+            <span class="govuk-heading-xl govuk-!-margin-0">20</span>
             <span class="govuk-heading-s">assessors</span>
         </div>
     </div>
@@ -651,7 +651,7 @@
 
             <div class="govuk-govuk-grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="govuk-heading-s no-margin-top">Find registered assessors. Add them to the invite list using the tickboxes.</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-top-0">Find registered assessors. Add them to the invite list using the tickboxes.</h2>
                 </div>
             </div>
 
@@ -661,7 +661,7 @@
                       <div class="govuk-govuk-grid-row">
                         <div class="column-two-thirds">
                           <label class="form-label" for="filterInnovationArea">Innovation area</label>
-                          <select name="innovationArea" id="filterInnovationArea" class="form-control extra-margin-bottom">
+                          <select name="innovationArea" id="filterInnovationArea" class="form-control govuk-!-margin-bottom-6">
                             <option value="" selected="selected">Any</option>
                             <optgroup label="Open">
 
@@ -739,7 +739,7 @@
 
             <div class="govuk-govuk-grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="govuk-heading-s no-margin-top extra-margin-bottom">
+                    <h2 class="govuk-heading-s govuk-!-margin-top-0 govuk-!-margin-bottom-6">
                         <th:block th:if="${invite == null}">Invite one or more people to become an assessor for this panel assessment</th:block>
                         <th:block th:if="${invite == 'assessor-comp'}">Invite assessors to this competiton</th:block>
                     </h2>
@@ -788,7 +788,7 @@
                             <div>
                                 <input type="hidden" name="status" value="invite-new" />
                                 <input type="hidden" name="tab" value="invite" />
-                                <a class="govuk-button no-margin " id="prototype-add-assessors">Add assessors to list</a>
+                                <a class="govuk-button govuk-!-margin-0 " id="prototype-add-assessors">Add assessors to list</a>
                             </div>
 
                         </form>
@@ -883,7 +883,7 @@
 
                 <div class="column-three-quarters">
 
-                  <h2 class="govuk-heading-s no-margin-top extra-margin-bottom">Review invited assessors and resend invites.</h2>
+                  <h2 class="govuk-heading-s govuk-!-margin-top-0 govuk-!-margin-bottom-6">Review invited assessors and resend invites.</h2>
 
                 </div>
 
@@ -895,7 +895,7 @@
 
     <div class="govuk-govuk-grid-row sorting">
         <div class="govuk-grid-column-one-half">
-            <span class="govuk-heading-xl no-margin">5</span>
+            <span class="govuk-heading-xl govuk-!-margin-0">5</span>
             <span class="govuk-heading-s">assessors</span>
         </div>
     </div>
@@ -1024,11 +1024,11 @@
 
 <th:block th:if="${param.tab != null and param.tab[0] == 'accepted'}">
 
-    <h3 class="govuk-heading-s extra-margin-bottom">View assessors who have accepted to participate in the assessment panel.</h3>
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-6">View assessors who have accepted to participate in the assessment panel.</h3>
 
     <div class="govuk-govuk-grid-row sorting">
         <div class="govuk-grid-column-one-half">
-            <span class="govuk-heading-xl no-margin">5</span>
+            <span class="govuk-heading-xl govuk-!-margin-0">5</span>
             <span class="govuk-heading-s">assessors</span>
         </div>
     </div>
@@ -1090,13 +1090,13 @@
     <div class="govuk-govuk-grid-row">
         <div class="column-two-thirds">
 
-            <h1 class="govuk-heading-xl no-margin-bottom">Assign assessor</h1>
+            <h1 class="govuk-heading-xl govuk-!-margin-bottom-0">Assign assessor</h1>
 
             <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
 
                 <h2 class="govuk-heading-m">No: <a href="#" th:text="${(param.number != null ? param.number[0] : '00000000000')}"></a></h2>
 
-                <h2 class="govuk-heading-m no-margin-top" th:text="${(param.application != null ? param.application[0] : 'Application name here')}">APPLICATION</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-top-0" th:text="${(param.application != null ? param.application[0] : 'Application name here')}">APPLICATION</h2>
 
                 <th:block th:if="${site == 'rc'}">
 
@@ -1106,7 +1106,7 @@
 
                 <th:block th:unless="${site == 'rc'}">
 
-                    <div class="govuk-govuk-grid-row extra-margin-bottom">
+                    <div class="govuk-govuk-grid-row govuk-!-margin-bottom-6">
                         <div class="govuk-grid-column-one-half">
                             <h3 class="govuk-heading-s">Innovation area</h3>
                             <ul class="govuk-list govuk-list--bullet">
@@ -1139,7 +1139,7 @@
         <div class="govuk-grid-column-one-third aligncentre">
             <ul>
                 <li>
-                    <h3 class="govuk-heading-xl no-margin-bottom" id="assessors-remaining">3</h3>
+                    <h3 class="govuk-heading-xl govuk-!-margin-bottom-0" id="assessors-remaining">3</h3>
                     <p class="govuk-body">Applications left to assign</p>
                 </li>
             </ul>
@@ -1147,7 +1147,7 @@
     </div>
 
     <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'application'}">
-        <div class="govuk-govuk-grid-row extra-margin-bottom">
+        <div class="govuk-govuk-grid-row govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-one-half">
                 <a href="#">View application details</a>
             </div>
@@ -1158,7 +1158,7 @@
     </th:block>
 
     <th:block th:if="${param.view == null or param.view != null and param.view[0] == 'assessor'}">
-        <div class="alignright extra-margin-bottom">
+        <div class="alignright govuk-!-margin-bottom-6">
             <a href="/prototypes/4607-manage-assessors?view=assessor&#38;tab=assign&#38;action=notify" class="button-secondary">Return to assign tab</a>
         </div>
     </th:block>
@@ -1411,7 +1411,7 @@
                 <td>Wessex University</td>
                 <td class="numeric">1</td>
                 <td>
-                    <a href="#" class="button-secondary no-margin" id="remove-application">Remove</a>
+                    <a href="#" class="button-secondary govuk-!-margin-0" id="remove-application">Remove</a>
                 </td>
             </tr>
             </tbody>
@@ -1438,7 +1438,7 @@
                     <th:block th:unless="${type == 'reviewPermissions'}">
                         <td class="numeric">1</td>
                         <td>
-                            <a href="#" class="button-secondary no-margin" id="assign-application">Assign</a>
+                            <a href="#" class="button-secondary govuk-!-margin-0" id="assign-application">Assign</a>
                         </td>
                     </th:block>
                 </tr>
@@ -1464,7 +1464,7 @@
                     <th:block th:unless="${type == 'reviewPermissions'}">
                         <td class="numeric">1</td>
                         <td>
-                            <a href="#" class="button-secondary no-margin">Assign</a>
+                            <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                         </td>
                     </th:block>
 
@@ -1490,7 +1490,7 @@
                     <th:block th:unless="${type == 'reviewPermissions'}">
                         <td class="numeric">0</td>
                         <td>
-                            <a href="#" class="button-secondary no-margin">Assign</a>
+                            <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                         </td>
                     </th:block>
                 </tr>
@@ -1515,7 +1515,7 @@
                     <th:block th:unless="${type == 'reviewPermissions'}">
                         <td class="numeric">5</td>
                         <td>
-                            <a href="#" class="button-secondary no-margin">Assign</a>
+                            <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                         </td>
                     </th:block>
 
@@ -1541,7 +1541,7 @@
                     <th:block th:unless="${type == 'reviewPermissions'}">
                         <td class="numeric">1</td>
                         <td>
-                            <a href="/prototypes/5386-assign-application" class="button-secondary no-margin">Assign</a>
+                            <a href="/prototypes/5386-assign-application" class="button-secondary govuk-!-margin-0">Assign</a>
                         </td>
                     </th:block>
 

@@ -33,7 +33,7 @@
 
                 <th:block th:insert="fragments/elements :: competition-status-message (app=${model.currentApplication}, competition=${model.currentCompetition}, projectWithdrawn=${model.projectWithdrawn})" />
 
-                <p class="hint govuk-body-l extra-margin" th:if="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}">
+                <p class="hint govuk-body-l govuk-!-margin-top-6" th:if="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}">
                     Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
                 </p>
 
@@ -48,14 +48,14 @@
                         Registration is now closed, you are no longer able to submit your application.
                     </div>
                 </div>
-                <div th:if="${model.currentCompetition.isOpen() and model.currentApplication.isOpen()}" class="extra-large-margin">
+                <div th:if="${model.currentCompetition.isOpen() and model.currentApplication.isOpen()}" class="govuk-!-margin-top-9">
                     <th:block th:if="${model.userIsLeadApplicant}">
                         <div class="message-alert">
                             <p class="govuk-body">You will not be able to make changes to your application or resubmit after this point.</p>
                         </div>
-                        <a th:if="${model.applicationReadyForSubmit}" id="submit-application-button" class="govuk-button extra-margin" data-js-modal="modal-confirm-submit-application"
+                        <a th:if="${model.applicationReadyForSubmit}" id="submit-application-button" class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-submit-application"
                            th:href="@{/application/{id}/confirm-submit(id=${model.currentApplication.getId()})}">Submit application</a>
-                        <button disabled="disabled" class="govuk-button extra-margin" th:unless="${model.applicationReadyForSubmit}">Submit application</button>
+                        <button disabled="disabled" class="govuk-button govuk-!-margin-top-6" th:unless="${model.applicationReadyForSubmit}">Submit application</button>
                     </th:block>
 
                     <th:block th:unless="${model.userIsLeadApplicant}">

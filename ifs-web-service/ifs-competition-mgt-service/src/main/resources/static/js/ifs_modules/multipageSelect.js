@@ -9,7 +9,7 @@ IFS.competitionManagement.multipageSelect = (function () {
       submitEl: '[data-multipage-select] [data-submit-el]',
       totalListSizeEl: '[data-multipage-select][data-total-checkboxes]',
       selectionLimitExceededElement: '[data-selection-limit-exceeded-block]',
-      limitExceededMessage: '<div class="warning-alert extra-margin-bottom"><p class="govuk-body">Cannot select additional items, selection limit of 500 exceeded.</p></div>',
+      limitExceededMessage: '<div class="warning-alert govuk-!-margin-bottom-6"><p class="govuk-body">Cannot select additional items, selection limit of 500 exceeded.</p></div>',
       totalListSize: 0
     },
     init: function () {

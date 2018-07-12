@@ -179,16 +179,16 @@
 <!-- =========================== Element: Competition status warning ================ -->
 <th:block th:fragment="competition-status-message (app, competition, projectWithdrawn)">
     <div class="warning-alert" th:if="${(app.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).CREATED or app.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).OPEN) and competition.competitionStatus.name() != 'OPEN'}">
-        <h2 class="govuk-heading-s no-margin">Application not submitted</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-0">Application not submitted</h2>
         <p class="govuk-body">This application has not been entered into the competition <th:block th:text="${competition.name}" /> as it was not submitted before the competition deadline.</p>
     </div>
     <div class="warning-alert" th:if="${projectWithdrawn}">
-        <h2 class="govuk-heading-s no-margin">This project has been withdrawn.</h2>
+        <h2 class="govuk-heading-s govuk-!-margin-0">This project has been withdrawn.</h2>
         <p class="govuk-body">The application was successful but withdrawn at project setup stage. The scores and written feedback from each assessor can be found below.</p>
     </div>
     <th:block th:unless="${projectWithdrawn}">
 		<div class="success-alert" th:if="${app.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).APPROVED}">
-	        <h2 class="govuk-heading-s no-margin">Congratulations, your application has been successful</h2>
+	        <h2 class="govuk-heading-s govuk-!-margin-0">Congratulations, your application has been successful</h2>
 	        <p class="govuk-body">
                 <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful in this round of funding.</th:block>
                 <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
@@ -199,7 +199,7 @@
             </p>
         </div>
         <div class="warning-alert" th:if="${app.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).REJECTED}">
-            <h2 class="govuk-heading-s no-margin">Your application has not been successful in this competition.</h2>
+            <h2 class="govuk-heading-s govuk-!-margin-0">Your application has not been successful in this competition.</h2>
             <p class="govuk-body">
                 <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
                 <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')+'.'}" />

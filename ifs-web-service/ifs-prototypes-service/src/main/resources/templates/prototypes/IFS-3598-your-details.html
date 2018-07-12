@@ -58,7 +58,7 @@
         </th:block>
 
         <th:block th:unless="${type == 'lead'}">
-            <div class="extra-margin-bottom">
+            <div class="govuk-!-margin-bottom-6">
                 <h2 class="govuk-heading-s">Email</h2>
                 <p class="form-hint">You will need this to sign in to your account, the provided email is:<br />
                     <strong>srankin.nomensa@gmail.com</strong>
@@ -78,7 +78,7 @@
                     <li data-containsuppercase-validationstatus="">contain at least 1 capital letter</li>
                     <li data-containsnumber-validationstatus="">contain at least 1 number</li>
                 </ul>
-                <p class="govuk-body no-margin-bottom">Your password can include spaces to make a phrase.</p>
+                <p class="govuk-body govuk-!-margin-bottom-0">Your password can include spaces to make a phrase.</p>
             </div>
             <div class="password-toggle">
                 <input data-containsnumber-showmessage="govuk-visually-hidden" data-containsuppercase-showmessage="govuk-visually-hidden" data-minlength-showmessage="govuk-visually-hidden" data-required-showmessage="govuk-visually-hidden" data-duplicate-required-minlength="true" aria-describedby="password-hint" class="form-control" type="password" required="required" minlength="8" data-required-errormessage="Please enter your password." data-minlength-errormessage="Password must be at least 8 characters." id="password" name="password" value="">

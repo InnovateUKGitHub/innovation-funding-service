@@ -24,11 +24,11 @@
                 <div class="boxed">
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-half">
-                            <p class="govuk-heading-s no-margin">Title:</p>
+                            <p class="govuk-heading-s govuk-!-margin-0">Title:</p>
                             <p class="govuk-body" th:text="${model.applicationName}"></p>
                         </div>
                         <div class="govuk-grid-column-one-half">
-                            <p class="govuk-heading-s no-margin">Partners:</p>
+                            <p class="govuk-heading-s govuk-!-margin-0">Partners:</p>
                             <ul class="govuk-list govuk-list--bullet">
                                 <li th:each="partner : ${model.partners}">
                                     <th:block th:text="${partner.name}"></th:block>
@@ -40,7 +40,7 @@
 
 
                     <th:block th:if="${model.projectSummary}">
-                        <h3 class="govuk-heading-s no-margin">Project summary:</h3>
+                        <h3 class="govuk-heading-s govuk-!-margin-0">Project summary:</h3>
                         <p th:text="${model.projectSummary}" data-md-to-html="" class="govuk-body wysiwyg-styles">This is the applicant response for project summary.</p>
                     </th:block>
                 </div>

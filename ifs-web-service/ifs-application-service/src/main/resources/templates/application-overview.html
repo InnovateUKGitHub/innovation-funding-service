@@ -36,9 +36,9 @@
                         <th:block th:text="${#temporals.format(model.currentCompetition.endDate, 'EEEE d MMMM yyyy')}"/>
                     </dd>
                 </dl>
-                <h2 class="govuk-heading-m no-margin-bottom">Application progress</h2>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application progress</h2>
                 <div th:include="fragments/elements :: progress-indicator"
-                     th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="extra-margin"/>
+                     th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="govuk-!-margin-top-6"/>
             </div>
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
@@ -49,7 +49,7 @@
                 </ul>
             </div>
         </div>
-        <div class="extra-margin-bottom"
+        <div class="govuk-!-margin-bottom-6"
              th:if="${model.completedQuestionsPercentage == 100 and !model.currentApplication.submitted and model.user.userIsLeadApplicant}">
             <div class="message-alert">
                 <p class="govuk-body">Now your application is complete, you need to review and then submit.</p>

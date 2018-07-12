@@ -31,7 +31,7 @@
             </div>
             <button type="submit" class="button-clear" name="manual-address">Enter address manually</button>
         </fieldset>
-        <fieldset id="address-details" class="extra-margin" th:if="${form.addressForm.selectedPostcodeIndex != null or form.addressForm.manualAddress}">
+        <fieldset id="address-details" class="govuk-!-margin-top-6" th:if="${form.addressForm.selectedPostcodeIndex != null or form.addressForm.manualAddress}">
             <input type="hidden" th:field="*{addressForm.manualAddress}" />
             <legend class="govuk-heading-m" th:if="${addressType}" th:text="|Your ${addressType}|">ADDRESS TYPE</legend>
             <legend class="govuk-visually-hidden" th:unless="${addressType}">Address details</legend>

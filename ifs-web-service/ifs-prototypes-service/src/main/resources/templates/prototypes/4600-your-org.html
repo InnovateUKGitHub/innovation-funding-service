@@ -21,8 +21,8 @@
         <!-- HARDCODED PROTOTYPE HTML -->
         <th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your organisation'})" />
 
-        <div class="message-alert extra-margin-bottom" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-          <h2 class="govuk-heading-s no-margin">Organisation size determines funding</h2>
+        <div class="message-alert govuk-!-margin-bottom-6" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+          <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
           <p class="govuk-body">Your organisation size will determine the level of funding you may receive.</p>
           <p class="govuk-body">Changing the organisation size will reset the funding level.</p>
         </div>
@@ -30,8 +30,8 @@
         <form action="#">
 
           <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-            <fieldset class="extra-margin-bottom">
-              <legend class="govuk-heading-m no-margin-bottom">Business size</legend>
+            <fieldset class="govuk-!-margin-bottom-6">
+              <legend class="govuk-heading-m govuk-!-margin-bottom-0">Business size</legend>
               <p class="form-hint">To determine your funding level please provide your business size. If you are unsure please use the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
               <div class="form-block">
                 <label class="block-label selection-button-radio" for="radio-1">
@@ -98,8 +98,8 @@
           </fieldset>
 
           <th:block th:if="${param.org != null and param.org[0] == 'growth'}">
-            <fieldset th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="extra-margin-bottom">
-                <legend class="govuk-heading-m no-margin-bottom">End of last financial year</legend>
+            <fieldset th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="govuk-!-margin-bottom-6">
+                <legend class="govuk-heading-m govuk-!-margin-bottom-0">End of last financial year</legend>
                 <span class="form-hint">Enter the month and year that your last financial year finished.<br />For example: 12 2016</span>
                 <div class="date-group extra-margin">
                     <div class="month">
@@ -118,12 +118,12 @@
                 </div>
             </fieldset>
             <fieldset>
-              <legend th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="govuk-heading-m no-margin-bottom">Financial overview</legend>
+              <legend th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="govuk-heading-m govuk-!-margin-bottom-0">Financial overview</legend>
               <span th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="form-hint">Details relating to your organisation over the last financial year.</span><br th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
               <h2 th:if="${param.status != null and param.status[0] == 'readOnly'}" class="govuk-heading-s">Financial overview</h2>
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                  <table class="extra-margin-bottom">
+                  <table class="govuk-!-margin-bottom-6">
                     <thead>
                       <tr>
                         <th scope="col">Section</th>
@@ -179,7 +179,7 @@
             </fieldset>
 
             <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
-              <dl class="readonly-data extra-margin-bottom">
+              <dl class="readonly-data govuk-!-margin-bottom-6">
                 <dt>Full time employees</dt>
                 <dd>42</dd>
               </dl>
@@ -187,7 +187,7 @@
 
             <!--<fieldset>-->
 
-              <!--<legend class="govuk-heading-l no-margin-bottom">Projected growth</legend>-->
+              <!--<legend class="govuk-heading-l govuk-!-margin-bottom-0">Projected growth</legend>-->
 
               <!--<p class="govuk-body">Details relating to your projected growth for the next 5 years.</p>-->
 
@@ -202,8 +202,8 @@
 
 
 
-                <!--<div class="table-overflow extra-margin-bottom">-->
-                  <!--<table class="extra-margin-bottom">-->
+                <!--<div class="table-overflow govuk-!-margin-bottom-6">-->
+                  <!--<table class="govuk-!-margin-bottom-6">-->
                     <!--<thead>-->
                       <!--<tr>-->
                         <!--<th></th>-->

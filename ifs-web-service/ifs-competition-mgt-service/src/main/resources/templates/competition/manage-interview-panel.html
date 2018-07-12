@@ -35,7 +35,7 @@
             </li>
         </ul>
 
-        <ul class="link-list extra-margin">
+        <ul class="link-list govuk-!-margin-top-6">
 
             <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
                    th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}"
@@ -50,7 +50,7 @@
 
             <li><a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}" class="govuk-link">Invite assessors</a></li>
 
-            <li><p class="govuk-body extra-margin">You can allocate applications to assessors once they have responded.</p></li>
+            <li><p class="govuk-body govuk-!-margin-top-6">You can allocate applications to assessors once they have responded.</p></li>
 
             <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
                    th:href="@{/assessment/interview/competition/{competitionId}/assessors/allocate-assessors(competitionId=${model.competitionId})}"
