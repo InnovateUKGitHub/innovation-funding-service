@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.grantofferletter.model;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +10,7 @@ import java.util.Map;
 /**
  * Holder of values for the grant offer letter academic finance table, used by the pdf renderer
  */
+
 @Component
 public class GrantOfferLetterAcademicFinanceTable extends GrantOfferLetterFinanceTable {
 

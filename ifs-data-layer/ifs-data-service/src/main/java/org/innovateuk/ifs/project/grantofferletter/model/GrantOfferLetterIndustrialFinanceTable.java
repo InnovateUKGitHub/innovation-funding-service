@@ -1,18 +1,15 @@
 package org.innovateuk.ifs.project.grantofferletter.model;
 
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Holder of values for the grant offer letter industrial finance table, used by the pdf renderer
  */
+
 @Component
 public class GrantOfferLetterIndustrialFinanceTable extends GrantOfferLetterFinanceTable {
 

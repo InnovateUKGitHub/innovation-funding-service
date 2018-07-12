@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.grantofferletter.model;
 
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -14,13 +14,14 @@ import java.util.stream.Collectors;
 /**
  * Populator for the grant offer letter industrial finance table
  */
+
 @Component
 public class GrantOfferLetterIndustrialFinanceTablePopulator extends BaseGrantOfferLetterTablePopulator implements GrantOfferLetterFinanceTablePopulatorInterface {
 
     @Override
-    public GrantOfferLetterIndustrialFinanceTable createTable(Map<Organisation, List<ProjectFinanceRow>> finances) {
+    public GrantOfferLetterIndustrialFinanceTable createTable(Map<Organisation, List<Cost>> finances) {
 
-        Map<String, List<ProjectFinanceRow>> industrialFinances =
+        Map<String, List<Cost>> industrialFinances =
                 finances
                         .entrySet()
                         .stream()
@@ -28,24 +29,30 @@ public class GrantOfferLetterIndustrialFinanceTablePopulator extends BaseGrantOf
                         .collect(Collectors.toMap(e -> e.getKey().getName(), Map.Entry::getValue));
 
         if (industrialFinances.isEmpty()) {
-            // to make it easier to reference if theree are no industrial orgs in the pdf renderer
+            // to make it easier to reference if there are no industrial orgs in the pdf renderer
             return null;
         } else {
 
             Map<String, BigDecimal> labour = sumByFinancialType(industrialFinances,
-                                                                FinanceRowType.LABOUR.getType());
+                                                                FinanceRowType.LABOUR.getName());
+
             Map<String, BigDecimal> materials = sumByFinancialType(industrialFinances,
-                                                                   FinanceRowType.MATERIALS.getType());
+                                                                   FinanceRowType.MATERIALS.getName());
+
             Map<String, BigDecimal> overheads = sumByFinancialType(industrialFinances,
-                                                                   FinanceRowType.OVERHEADS.getType());
+                                                                   FinanceRowType.OVERHEADS.getName());
+
             Map<String, BigDecimal> capitalUsage = sumByFinancialType(industrialFinances,
-                                                                      FinanceRowType.CAPITAL_USAGE.getType());
+                                                                      FinanceRowType.CAPITAL_USAGE.getName());
+
             Map<String, BigDecimal> subcontract = sumByFinancialType(industrialFinances,
-                                                                     FinanceRowType.SUBCONTRACTING_COSTS.getType());
+                                                                     FinanceRowType.SUBCONTRACTING_COSTS.getName());
+
             Map<String, BigDecimal> travel = sumByFinancialType(industrialFinances,
-                                                                FinanceRowType.TRAVEL.getType());
+                                                                FinanceRowType.TRAVEL.getName());
+
             Map<String, BigDecimal> otherCosts = sumByFinancialType(industrialFinances,
-                                                                    FinanceRowType.OTHER_COSTS.getType());
+                                                                    FinanceRowType.OTHER_COSTS.getName());
 
             List<String> organisations = new ArrayList<>(industrialFinances.keySet());
 

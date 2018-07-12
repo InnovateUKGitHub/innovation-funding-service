@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.grantofferletter.model;
 
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -13,15 +13,20 @@ import java.util.Objects;
 /**
  * Base class for grant offer letter finance table populators
  **/
-public class BaseGrantOfferLetterTablePopulator {
 
-    protected Map<String, BigDecimal> sumByFinancialType(Map<String, List<ProjectFinanceRow>> financials, String type) {
+public abstract class BaseGrantOfferLetterTablePopulator {
+
+    protected Map<String, BigDecimal> sumByFinancialType(Map<String, List<Cost>> financials, String type) {
         Map<String, BigDecimal> financeMap = new HashMap<>();
         financials.forEach( (orgName, finances) -> {
+            finances.forEach( cost -> {
+                String costCat = cost.getCostCategory().getName();
+            });
             BigDecimal financeSum = finances
                     .stream()
-                    .filter(pfr -> type.equals(pfr.getName()))
-                    .map(ProjectFinanceRow::getCost)
+                    .filter(cost -> cost.getCostCategory().getName().equals(type))
+                    .map(Cost::getValue)
+                    .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
             financeMap.put(orgName, financeSum);
         });
@@ -36,8 +41,6 @@ public class BaseGrantOfferLetterTablePopulator {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-
-//    protected Map<String, List<ProjectFinanceRow>> mapAndFilter()
     protected Boolean isAcademic(OrganisationType type) {
         return OrganisationTypeEnum.RESEARCH.getId().equals(type.getId());
     }
