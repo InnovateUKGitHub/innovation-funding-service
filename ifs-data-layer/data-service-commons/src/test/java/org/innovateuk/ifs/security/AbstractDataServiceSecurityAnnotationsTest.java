@@ -19,7 +19,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.union;
 
 public abstract class AbstractDataServiceSecurityAnnotationsTest extends AbstractServiceSecurityAnnotationsTest {
 
-
     @Override
     protected final List<Class<?>> excludedClasses() {
         return union(asList(UidAuthenticationService.class), additionalExcludedClasses());

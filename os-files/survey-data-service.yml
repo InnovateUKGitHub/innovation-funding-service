@@ -46,7 +46,7 @@ items:
           imagePullPolicy: Always
           env:
           - name: JAVA_OPTS
-            value: -Xms450m -Xmx450m -javaagent:/newrelic.jar
+            value: -Xms800m -Xmx800m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
             value: "ifs-survey-data-service (${openshiftEnv})"
           - name: NEW_RELIC_LICENSE_KEY
@@ -59,10 +59,10 @@ items:
           - containerPort: 8080
           resources:
             limits:
-              cpu: 500m
+              cpu: 1000m
             requests:
-              cpu: 200m
-              memory: 450M
+              cpu: 300m
+              memory: 800M
     test: false
     triggers:
     - type: ConfigChange
