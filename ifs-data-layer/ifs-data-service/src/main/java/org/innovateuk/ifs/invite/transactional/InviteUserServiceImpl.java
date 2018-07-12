@@ -304,7 +304,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 appInvite.getName(),
                 appInvite.getInviteOrganisation().getOrganisation() != null ? appInvite.getInviteOrganisation().getOrganisation().getName() : appInvite.getInviteOrganisation().getOrganisationName(), // organisation may not exist yet (new collaborator)
                 appInvite.getInviteOrganisation().getOrganisation() != null ? appInvite.getInviteOrganisation().getOrganisation().getOrganisationType().getName() : "New", // organisation may not exist yet (new collaborator)
-                appInvite.getInviteOrganisation().getOrganisation() != null ? appInvite.getInviteOrganisation().getOrganisation().getId().toString() : "New",
                 appInvite.getEmail(),
                 appInvite.getTarget().getId(),
                 appInvite.getStatus())).collect(Collectors.toList());
@@ -316,7 +315,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 new ExternalInviteResource(
                         projectInvite.getName(),
                         projectInvite.getOrganisation().getName(),
-                        projectInvite.getOrganisation().getOrganisationType().getName(),
                         projectInvite.getOrganisation().getId().toString(),
                         projectInvite.getEmail(),
                         projectInvite.getTarget().getApplication().getId(),

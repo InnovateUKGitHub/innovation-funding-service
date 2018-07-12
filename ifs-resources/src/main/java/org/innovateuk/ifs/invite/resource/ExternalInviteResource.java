@@ -7,16 +7,14 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 public class ExternalInviteResource {
     private String name;
     private String organisationName;
-    private String organisationType;
     private String organisationId;
     private String email;
     private Long applicationId;
     private InviteStatus status;
 
-    public ExternalInviteResource(String name, String organisationName, String organisationType, String organisationId, String email, Long applicationId, InviteStatus status) {
+    public ExternalInviteResource(String name, String organisationName, String organisationId, String email, Long applicationId, InviteStatus status) {
         this.name = name;
         this.organisationName = organisationName;
-        this.organisationType = organisationType;
         this.organisationId = organisationId;
         this.email = email;
         this.applicationId = applicationId;
@@ -39,10 +37,6 @@ public class ExternalInviteResource {
 
     public String getOrganisationName() {
         return organisationName;
-    }
-
-    public String getOrganisationType() {
-        return organisationType;
     }
 
     public String getOrganisationId() {
@@ -72,7 +66,6 @@ public class ExternalInviteResource {
         return new EqualsBuilder()
                 .append(name, that.name)
                 .append(organisationName, that.organisationName)
-                .append(organisationType, that.organisationType)
                 .append(organisationId, that.organisationId)
                 .append(email, that.email)
                 .append(applicationId, that.applicationId)
@@ -85,7 +78,6 @@ public class ExternalInviteResource {
         return new HashCodeBuilder(17, 37)
                 .append(name)
                 .append(organisationName)
-                .append(organisationType)
                 .append(organisationId)
                 .append(email)
                 .append(applicationId)
