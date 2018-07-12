@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -34,6 +35,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     private OrganisationResource organisationResource;
     private UserResource leadApplicant;
     private UserResource collaborator;
+    private UserResource support;
     private UserResource otherApplicant;
 
     @Mock
@@ -51,6 +53,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
         leadApplicant = newUserResource().build();
         collaborator = newUserResource().build();
+        support = newUserResource().withRolesGlobal(Collections.singletonList(Role.SUPPORT)).build();
         otherApplicant = newUserResource().build();
 
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationResource.getId(), Role.LEADAPPLICANT))
@@ -78,6 +81,7 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
         assertTrue(rules.consortiumCanViewAnyInviteOrganisation(inviteOrganisationResource, leadApplicant));
         assertTrue(rules.consortiumCanViewAnyInviteOrganisation(inviteOrganisationResource, collaborator));
+        assertTrue(rules.consortiumCanViewAnyInviteOrganisation(inviteOrganisationResource, support));
         assertFalse(rules.consortiumCanViewAnyInviteOrganisation(inviteOrganisationResource, otherApplicant));
     }
 

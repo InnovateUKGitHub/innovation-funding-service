@@ -213,6 +213,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("Applications", model.getBackTitle());
         assertEquals("/competition/" + COMPETITION_ID + "/applications", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
+        assertEquals(false, model.isSupport());
     }
 
     @Test

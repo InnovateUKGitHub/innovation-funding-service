@@ -125,7 +125,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testApplicationSummaryWithProjectWithdrawn() throws Exception {
+    public void applicationSummaryWithProjectWithdrawn() throws Exception {
         CompetitionResource competition = competitionResources.get(0);
         competition.setCompetitionStatus(PROJECT_SETUP);
 
@@ -143,7 +143,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
 
     @Test
-    public void testApplicationSummary() throws Exception {
+    public void applicationSummary() throws Exception {
         ApplicationResource app = applications.get(0);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
@@ -175,5 +175,12 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         assertEquals(model.getSummaryViewModel().getResponses(), formInputsToFormInputResponses);
         assertEquals(model.getSummaryViewModel().getApplicationTeamModel(), applicationTeamViewModel);
         assertEquals(model.isUserIsLeadApplicant(), true);
+    }
+
+    @Test
+    public void applicationSummaryWhenLoggedInAsSupport() throws Exception {
+        setLoggedInUser(support);
+        applicationSummary();
+
     }
 }
