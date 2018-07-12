@@ -14,6 +14,7 @@
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Organisation name</th>
+                <th scope="col">Organisation type</th>
                 <th scope="col">Organisation ID</th>
                 <th scope="col">Email</th>
                 <th scope="col">Status</th>
@@ -23,6 +24,7 @@
             <tr th:each="user : ${users}">
                 <td th:text="${user.name}">Steve Smith</td>
                 <td th:text="${user.organisationName}">Empire Limited</td>
+                <td th:text="${user.organisationType}">Research</td>
                 <td th:text="${user.organisationId}">10</td>
                 <td th:text="${user.email}">steve.smith@empire.com</td>
                 <td th:text="${user.status.displayName}">Verified</td>
