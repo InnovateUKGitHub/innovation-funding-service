@@ -28,7 +28,6 @@ import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.project.ProjectService;
@@ -135,9 +134,6 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
     @Mock
     private InviteService inviteService;
 
-    @Mock
-    private InviteRestService inviteRestService;
-
     @Override
     protected ApplicationController supplyControllerUnderTest() {
         return new ApplicationController();
@@ -232,7 +228,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
         InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv4);
 
         List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
-        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
+        RestResult<List<InviteOrganisationResource>> invitesResult = restSuccess(inviteOrgResources, HttpStatus.OK);
 
         when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
 

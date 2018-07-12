@@ -19,9 +19,9 @@ import java.util.concurrent.Future;
 @Component
 public class ApplicationOverviewAssignableModelPopulator {
 
-    private final QuestionService questionService;
-    private final ProcessRoleService processRoleService;
-    private final InviteService inviteService;
+    private QuestionService questionService;
+    private ProcessRoleService processRoleService;
+    private InviteService inviteService;
 
     public ApplicationOverviewAssignableModelPopulator(QuestionService questionService,
                                                        ProcessRoleService processRoleService,
