@@ -36,6 +36,7 @@ if (enabled) {
 createContainer.networkAliases=["ifs-survey-data-service"]
 
 ext.dockerDir = "$project.parent.projectDir/docker/"
+ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 ext {
     snippetsDir = file('build/generated-snippets')
