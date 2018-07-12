@@ -44,7 +44,6 @@ public class PasswordPolicyValidator {
 
     private List<ExclusionRule> exclusionRules;
     private List<ExclusionRulePatternGenerator> exclusionRulePatternGenerators;
-    private Long organisationId;
 
     /**
      * A class representing a facet of a User that we wish to exclude from their password e.g. first name, last name,
@@ -53,11 +52,11 @@ public class PasswordPolicyValidator {
     class ExclusionRule {
 
         private String errorKey;
-        private Function<UserResource, List<String>> exclusionSupplier;
+        private Function<ExclusionRuleTarget, List<String>> exclusionSupplier;
         private int lengthThresholdForRuleToApply;
         private boolean mustContainAllExcludedWords;
 
-        public ExclusionRule(String errorKey, int lengthThresholdForRuleToApply, boolean mustContainAllExcludedWords, Function<UserResource, List<String>> exclusionSupplier) {
+        public ExclusionRule(String errorKey, int lengthThresholdForRuleToApply, boolean mustContainAllExcludedWords, Function<ExclusionRuleTarget, List<String>> exclusionSupplier) {
             this.errorKey = errorKey;
             this.exclusionSupplier = exclusionSupplier;
             this.lengthThresholdForRuleToApply = lengthThresholdForRuleToApply;
@@ -121,19 +120,41 @@ public class PasswordPolicyValidator {
 
     }
 
+    private class ExclusionRuleTarget {
+        private UserResource user;
+        private Long organisationId;
+
+        public ExclusionRuleTarget(UserResource user) {
+            this.user = user;
+        }
+
+        public ExclusionRuleTarget(UserResource user, Long organisationId) {
+            this.user = user;
+            this.organisationId = organisationId;
+        }
+
+        public UserResource getUser() {
+            return user;
+        }
+
+        public Long getOrganisationId() {
+            return organisationId;
+        }
+    }
+
     @PostConstruct
     void postConstruct() {
 
-        ExclusionRule containsFirstName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 4, true, user -> singletonList(user.getFirstName()));
-        ExclusionRule containsLastName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 4, true, user -> singletonList(user.getLastName()));
-        ExclusionRule containsFullName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 5, true, user -> asList(user.getFirstName(), user.getLastName()));
-        ExclusionRule containsOrganisationName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME, 4, false, user -> getOrganisationNamesForUser(user));
+        ExclusionRule containsFirstName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 4, true, target -> singletonList(target.getUser().getFirstName()));
+        ExclusionRule containsLastName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 4, true, target -> singletonList(target.getUser().getLastName()));
+        ExclusionRule containsFullName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 5, true, target -> asList(target.getUser().getFirstName(), target.getUser().getLastName()));
+        ExclusionRule containsOrganisationName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME, 4, false, target -> getOrganisationNamesForUser(target.getUser(), target.getOrganisationId()));
 
         exclusionRules = asList(containsFirstName, containsLastName, containsFullName, containsOrganisationName);
         exclusionRulePatternGenerators = asList(lettersForNumbersGenerator);
     }
 
-    private List<String> getOrganisationNamesForUser(UserResource user) {
+    private List<String> getOrganisationNamesForUser(UserResource user, Long organisationId) {
         if (user.getId() == null && organisationId != null) {
             Organisation organisation = organisationRepository.findOne(organisationId);
             return asList(organisation.getName());
@@ -152,7 +173,19 @@ public class PasswordPolicyValidator {
      * @return
      */
     public ServiceResult<Void> validatePassword(String password, UserResource userResource) {
-        List<ServiceResult<Void>> exclusionResults = getExclusionResults(password, userResource);
+        List<ServiceResult<Void>> exclusionResults = flattenLists(simpleMap(exclusionRules, rule ->
+                simpleMap(exclusionRulePatternGenerators, patternGenerator -> {
+
+                    List<String> excludedWords = rule.exclusionSupplier.apply(new ExclusionRuleTarget(userResource));
+
+                    if (rule.mustContainAllExcludedWords) {
+                        return checkForExclusionWordsWithinPassword(password, rule, patternGenerator, excludedWords);
+                    } else {
+                        List<ServiceResult<Void>> results = simpleMap(excludedWords, excludedWord -> checkForExclusionWordsWithinPassword(password, rule, patternGenerator, singletonList(excludedWord)));
+                        return returnSuccessOrCollateFailures(results);
+                    }
+                })
+        ));
         return returnSuccessOrCollateFailures(exclusionResults);
     }
 
@@ -164,16 +197,10 @@ public class PasswordPolicyValidator {
      * @return
      */
     public ServiceResult<Void> validatePassword(String password, UserResource userResource, Long organisationId) {
-        this.organisationId = organisationId;
-        List<ServiceResult<Void>> exclusionResults = getExclusionResults(password, userResource);
-        return returnSuccessOrCollateFailures(exclusionResults);
-    }
-
-    private List<ServiceResult<Void>> getExclusionResults(String password, UserResource userResource) {
-        return flattenLists(simpleMap(exclusionRules, rule ->
+        List<ServiceResult<Void>> exclusionResults = flattenLists(simpleMap(exclusionRules, rule ->
                 simpleMap(exclusionRulePatternGenerators, patternGenerator -> {
 
-                    List<String> excludedWords = rule.exclusionSupplier.apply(userResource);
+                    List<String> excludedWords = rule.exclusionSupplier.apply(new ExclusionRuleTarget(userResource, organisationId));
 
                     if (rule.mustContainAllExcludedWords) {
                         return checkForExclusionWordsWithinPassword(password, rule, patternGenerator, excludedWords);
@@ -183,6 +210,7 @@ public class PasswordPolicyValidator {
                     }
                 })
         ));
+        return returnSuccessOrCollateFailures(exclusionResults);
     }
 
     private ServiceResult<Void> returnSuccessOrCollateFailures(List<ServiceResult<Void>> exclusionResults) {
