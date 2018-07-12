@@ -101,7 +101,7 @@ test {
 
 }
 
-
+flywayClean.dependsOn applyProfiles
 flywayMigrate.dependsOn processResources
 
 ext.serverPort=8080

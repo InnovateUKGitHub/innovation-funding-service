@@ -118,6 +118,7 @@ task asciidoctorOnly(type: Test) {
     finalizedBy asciidoctor
 }
 
+flywayClean.dependsOn applyProfiles
 flywayMigrate.dependsOn processResources
 
 ext.serverPort=8080
