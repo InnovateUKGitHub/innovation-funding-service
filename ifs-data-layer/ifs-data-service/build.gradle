@@ -150,6 +150,7 @@ task syncShib(type:Exec) {
     commandLine 'docker', 'exec',  '-d', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
+flywayClean.dependsOn applyProfiles
 flywayMigrate.dependsOn processResources
 
 ext.ifsDataServiceRestBaseURL="http://data-service:8080"
