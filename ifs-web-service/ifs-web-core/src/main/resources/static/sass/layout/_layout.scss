@@ -52,8 +52,8 @@
 }
 
 .sub-header {
+  @include govuk-font(16);
   clear: both;
-  font-size: 16px;
   line-height:40px;
   overflow: hidden;
   padding: 5px 0px;
@@ -77,7 +77,7 @@
 
   .deadline {
     @include media-down(mobile) {
-      font-size:14px;
+      @include govuk-font(14);
     }
 
     float:right;

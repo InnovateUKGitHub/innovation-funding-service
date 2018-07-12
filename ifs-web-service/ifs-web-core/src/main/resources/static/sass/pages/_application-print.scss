@@ -61,11 +61,11 @@
   table {
     th,
     small{
-      font-size: 14px;
+      @include govuk-font(14);
     }
 
     td {
-      font-size:16px;
+      @include govuk-font(16);
     }
   }
 

@@ -18,10 +18,10 @@
 
   a,
   button {
+    @include govuk-font(16);
     border: 0;
     color: govuk-colour("blue");
     display: block;
-    font-size: 16px;
     outline: none;
     padding: 15px 0;
     text-decoration: none;
@@ -50,9 +50,9 @@
   }
 
   button {
+    @include govuk-font(27);
     background-color: transparent;
     cursor: pointer;
-    font-size: 27px;
     position: absolute;
     top: 0;
 
@@ -139,7 +139,7 @@
   }
 
   .status {
-    font-size: 18px;
+    @include govuk-font(19);
     text-align: center;
     padding: 2.1em 0;
   }

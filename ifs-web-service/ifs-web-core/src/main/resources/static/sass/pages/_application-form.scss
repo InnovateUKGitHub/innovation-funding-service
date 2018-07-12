@@ -75,7 +75,7 @@
     }
 
     .form-label-bold {
-      font-size: 24px;
+      @include govuk-font(24);
     }
 
     .last-update {
@@ -176,7 +176,7 @@ table {
   }
 
   .form-label-bold {
-    font-size: 19px;
+    @include govuk-font(19);
   }
 
   .totals {

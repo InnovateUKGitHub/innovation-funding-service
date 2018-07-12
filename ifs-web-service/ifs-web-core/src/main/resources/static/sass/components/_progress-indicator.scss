@@ -91,13 +91,13 @@
 
     &:before {
       @include rotate(45deg);
+      @include govuk-font(36);
       position: absolute;
       display: block;
       width:100%;
       text-align: center;
       top:-10px;
       color:#000;
-      font-size: 40px;
       content: "\25A0";
       z-index: -1;
     }

@@ -1,9 +1,9 @@
 @mixin with-hourglass {
+  @include govuk-font(14);
   background: url(../images/ifs-images/icons/icon-awaiting-assessment.png) no-repeat;
   width: 105px;
   text-align: center;
   line-height: 1.2em;
-  font-size: 14px;
   float: right;
   color: $govuk-secondary-text-colour;
   margin: 0;
@@ -161,7 +161,7 @@
       float: right;
 
       .score {
-        font-size: 48px;
+        @include govuk-font(48);
       }
     }
   }

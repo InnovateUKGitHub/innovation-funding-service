@@ -28,7 +28,7 @@
   }
 
   .assign-container {
-    font-size: 14px;
+    @include govuk-font(14);
     padding: 10px 0;
 
     .assign-team {

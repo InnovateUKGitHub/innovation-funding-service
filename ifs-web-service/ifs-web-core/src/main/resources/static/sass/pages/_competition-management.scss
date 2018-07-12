@@ -109,7 +109,7 @@
   &.competition-setup {
     .inline-nav {
       a {
-        font-size:15px;
+        @include govuk-font(16);
       }
     }
   }
@@ -173,7 +173,7 @@
   }
 
   .dt-title {
-    font-size: 24px;
+    @include govuk-font(24);
   }
 }
 

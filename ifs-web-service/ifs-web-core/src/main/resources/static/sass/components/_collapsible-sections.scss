@@ -1,9 +1,5 @@
 %toggle-button {
-  @include media-down(mobile){
-    font-size:15px;
-  }
-
-  font-size: 19px;
+  @include govuk-font(19);
   font-weight: 700;
   text-align:left;
   padding: 10px 40px 10px 10px; //padding right for the icons
@@ -92,10 +88,10 @@
   }
 
   .status {
+    @include govuk-font(16);
     float: right;
     padding-top: 2px;
     font-weight: normal;
-    font-size: 0.9em;
 
     &.yes{
       color: govuk-colour("green");
@@ -127,12 +123,12 @@
       float: none;
     }
 
+    @include govuk-font(16);
     float: right;
     font-weight: normal;
     margin-right: 190px;
     width: 144px;
     text-align: left;
-    font-size: 16px;
   }
 }
 

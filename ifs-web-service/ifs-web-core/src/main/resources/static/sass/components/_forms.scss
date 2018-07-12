@@ -295,7 +295,7 @@ tr {
   position: relative;
 
   .textarea-header {
-    font-size: 14px;
+    @include govuk-font(14);
     border: 2px solid $govuk-border-colour;
     border-bottom: none;
     background: govuk-colour("grey-4") 0 0 no-repeat;
@@ -335,7 +335,7 @@ tr {
   }
 
   .textarea-footer {
-    font-size:16px;
+    @include govuk-font(16);
     padding: 10px 0px;
 
     .button-clear {
@@ -370,8 +370,8 @@ tr {
 
 td {
   &.autosave-info {
+    @include govuk-font(14);
     color: $govuk-secondary-text-colour;
-    font-size:14px;
     min-width:70px;
   }
 }
@@ -447,8 +447,8 @@ td {
 .no-js {
   .upload-section {
     .inputfile {
+      @include govuk-font(16);
       margin:16px 0;
-      font-size:17px;
 
       + label {
         visibility: hidden;

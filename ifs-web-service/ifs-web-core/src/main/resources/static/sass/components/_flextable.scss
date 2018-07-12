@@ -35,7 +35,7 @@
   }
 
   th {
-    font-size:15px;
+    @include govuk-font(16);
 
     &[scope="col"] {
       text-align:right;
@@ -47,7 +47,7 @@
   }
 
   td {
-    font-size:16px;
+    @include govuk-font(16);
     text-align:right;
   }
 

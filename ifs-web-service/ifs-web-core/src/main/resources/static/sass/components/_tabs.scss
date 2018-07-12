@@ -102,6 +102,7 @@
         }
 
         button {
+          @include govuk-font(16);
           border:0;
           cursor: pointer;
           position: relative;
@@ -109,7 +110,6 @@
           text-align:left;
           padding: 10px 40px 10px 0px; //padding right for the icons
           background:#fff;
-          font-size:15px;
 
           &::-moz-focus-inner {
             padding: 0;

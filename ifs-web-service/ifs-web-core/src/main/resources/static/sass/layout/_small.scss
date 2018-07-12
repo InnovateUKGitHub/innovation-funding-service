@@ -22,8 +22,8 @@ caption {
 
 small {
   @extend .form-hint;
+  @include govuk-font(16);
   display: inline;
-  font-size: 16px;
 }
 
 .list-indent {
@@ -227,13 +227,13 @@ span {
   z-index:99;
 
   code {
+    @include govuk-font(27);
     background:black;
     color:#fff;
     line-height:1.5;
     box-sizing:content-box;
     white-space: nowrap;
     padding:5px;
-    font-size:1.5em;
     width:100%;
     display: block;
     min-height:1.5em;

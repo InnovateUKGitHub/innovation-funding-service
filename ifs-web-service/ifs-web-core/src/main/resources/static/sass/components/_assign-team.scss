@@ -59,7 +59,7 @@
       &[aria-expanded] {
         > ::after {
           content: '\0020\0020\25bc';
-          font-size: 12px;
+          @include govuk-font(14);
         }
       }
 

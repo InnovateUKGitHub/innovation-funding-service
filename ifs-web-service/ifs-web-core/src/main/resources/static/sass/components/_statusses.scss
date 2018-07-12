@@ -48,8 +48,8 @@
 
   div {
     &.section-status {
+      @include govuk-font(16);
       float: right;
-      font-size: 16px;
       padding: 3px 5px 0 20px;
       text-align: left;
       font-weight: bold;
