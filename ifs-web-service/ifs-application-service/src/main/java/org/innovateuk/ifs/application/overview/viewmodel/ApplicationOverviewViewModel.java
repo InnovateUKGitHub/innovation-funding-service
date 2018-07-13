@@ -15,7 +15,7 @@ public class ApplicationOverviewViewModel {
     private Long applicationId;
     private String applicationName;
     private ApplicationState applicationState;
-    private boolean isApplicationSubmitted;
+    private boolean applicationSubmitted;
     private boolean projectWithdrawn;
     private CompetitionResource currentCompetition;
     private OrganisationResource userOrganisation;
@@ -26,19 +26,17 @@ public class ApplicationOverviewViewModel {
     private ApplicationCompletedViewModel completed;
     private ApplicationOverviewSectionViewModel section;
 
-
-
     public ApplicationOverviewViewModel(Long applicationId,
                                         String applicationName,
                                         ApplicationState applicationState,
-                                        boolean isApplicationSubmitted, boolean projectWithdrawn, CompetitionResource currentCompetition,
+                                        boolean applicationSubmitted, boolean projectWithdrawn, CompetitionResource currentCompetition,
                                         OrganisationResource userOrganisation, Integer completedQuestionsPercentage, Long financeSectionId,
                                         ApplicationOverviewUserViewModel user, ApplicationOverviewAssignableViewModel assignable,
                                         ApplicationCompletedViewModel completed, ApplicationOverviewSectionViewModel section) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.applicationState = applicationState;
-        this.isApplicationSubmitted = isApplicationSubmitted;
+        this.applicationSubmitted = applicationSubmitted;
         this.projectWithdrawn = projectWithdrawn;
         this.currentCompetition = currentCompetition;
         this.userOrganisation = userOrganisation;
@@ -63,7 +61,7 @@ public class ApplicationOverviewViewModel {
     }
 
     public boolean isApplicationSubmitted() {
-        return isApplicationSubmitted;
+        return applicationSubmitted;
     }
 
     public boolean isProjectWithdrawn() {
