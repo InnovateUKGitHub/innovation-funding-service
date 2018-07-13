@@ -157,11 +157,19 @@ table {
   }
 
   img {
-    &.table-tick {
+    &.table-tick,
+    &.table-total-tick{
       position: absolute;
       right: 0;
       top: 50%;
+    }
+
+    &.table-tick {
       margin-top: -8px;
+    }
+
+    &.table-total-tick {
+      margin-top: -22px;
     }
   }
 }
