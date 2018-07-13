@@ -20,7 +20,7 @@
         <form th:object="${form}" id="other-documents-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
 
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Other documents',subTitle=${model.projectName},size='govuk-heading-xl'" />
-            <hr/>
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
             <div class="success-alert" th:if="${model.isApproved()}">
                 <th:block th:if="${model.collaborationAgreementRequired}">

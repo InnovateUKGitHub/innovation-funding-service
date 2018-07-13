@@ -37,7 +37,7 @@
         <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
 
         <th:block th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources) && param.applicationSearchString == null}">
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             <div class="warning-alert"><p class="govuk-body">There are currently no active projects in this competition.</p></div>
         </th:block>
 

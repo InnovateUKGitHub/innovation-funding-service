@@ -15,7 +15,7 @@
         <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit to lead partner',size='govuk-heading-m'" />
             <p class="govuk-body">Are you sure you want to submit your spend profile to the lead partner?</p>
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             <input type="submit" class="govuk-button" value="Submit"/>
         </form>
 

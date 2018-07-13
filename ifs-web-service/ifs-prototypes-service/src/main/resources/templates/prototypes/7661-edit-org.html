@@ -206,7 +206,7 @@
 
           <div class="alignright extra-margin-top" th:unless="${param.company[0] == 'empire' or param.company[0] == 'newOrg'}">
             <a href="/prototypes/635-application-overview" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
           </div>
 
           <p class="extra-margin-top" th:unless="${param.company[0] == 'newOrg'}">Updating the organisation will notify applicants of changes to their position on the project.</p>
@@ -230,7 +230,7 @@
             <h2 class="govuk-heading-m govuk-!-margin-0">Update organisation</h2>
             <p class="govuk-body">Invites will be sent to all new applicants.</p>
             <p class="govuk-body">You should not remove applicants without discussing this action with them first. They will not receive any notification about their removal.</p>
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
             <form method="get" id="submit-remove-collaborator-form">
 
@@ -254,7 +254,7 @@
           <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
           <h2 class="govuk-heading-m govuk-!-margin-0">Add organisation and invite applicants</h2>
           <p class="govuk-body">All applicants that have been added to this organisation will be added at this point.</p>
-          <hr />
+          <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
           <form method="get" id="submit-remove-collaborator-form">
 
@@ -273,7 +273,7 @@
             <h2 class="govuk-heading-m govuk-!-margin-0">Delete organisation</h2>
             <p class="govuk-body">Are you sure you wish to remove this organisation from the application. The innovate funding system will not inform collaborators of their removal, this action should be discussed with all applicants beforehand.</p>
             <p class="govuk-body">This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
             <form method="get">
 

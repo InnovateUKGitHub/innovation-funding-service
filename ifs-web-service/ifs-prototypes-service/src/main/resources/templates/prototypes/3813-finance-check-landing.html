@@ -41,7 +41,7 @@
 
 	<p class="govuk-body">Any queries we raise will appear here, with the most recent queries first. You may upload files to support your answers if necessary. It is your responsibility to make sure your answers are as accurate as possible</p>
 
-	<hr />
+	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 	<h2 class="govuk-heading-m govuk-!-margin-top-0">Subcontractor charges</h2>
     <p class="govuk-body"><strong>Innovate UK - Finance team </strong> <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy HH:mm')}">26/06/2016 18:23</small></p>
@@ -51,7 +51,7 @@
     <form method="get" th:action="${#httpServletRequest.requestURI}" th:unless="${param.action != mull and param.action[0] == 'newResponse' or param.action != mull and param.action[0] == 'postResponse'}">
         <input type="hidden" id="action" name="action" value="newResponse" />
         <input type="hidden" id="query" name="query" value="Test query" />
-        <hr />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <button class="govuk-button button-secondary" th:unless="${param.status != null and param.status[0] == 'approved'}">Respond</button>
     </form>
 

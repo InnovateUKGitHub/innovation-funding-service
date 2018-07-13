@@ -14,7 +14,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Changes to finances',subTitle=${model.projectName},size='govuk-heading-xl'" />
-        <hr/>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <th:block th:fragment="summary" th:with="summaryModel=${model.financeCheckEligibility}">
             <h2 class="govuk-heading-m">Project finances</h2>
@@ -103,7 +103,7 @@
             </div>
         </th:block>
 
-        <hr/>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <a th:if="${model.internal}" class="button-secondary" th:href="@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
         <a th:unless="${model.internal}" class="button-secondary" th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">Return to eligibility</a>

@@ -517,7 +517,7 @@
 
             <a href="#">Attach another file</a>
 
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
             <input type="hidden" id="action" name="action" th:value="${(queryType == 'query' ? 'postQuery' : 'saveNote')}" />
 
@@ -535,7 +535,7 @@
     <th:block th:if="${param.action != null and param.action[0] == 'postQuery' or param.action != null and param.action[0] == 'showResponse' or param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}" th:unless="${user == 'partner'}" >
         <th:block th:if="${queryType == 'query'}">
 
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
             <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:utext="${#strings.replace( #strings.escapeXml( #httpServletRequest.getParameter('queryTitle') ),T(java.lang.System).getProperty('line.separator'),'&lt;br /&gt;')}">QUERY TITLE</h2>
 
@@ -551,7 +551,7 @@
                 <input type="hidden" id="section" name="section" th:value="${#httpServletRequest.getParameter('section')}" />
                 <input type="hidden" id="query" name="query" th:value="${#httpServletRequest.getParameter('query')}" />
                 <input type="hidden" id="action" name="action" value="showResponse" />
-                <hr />
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
                 <button>Show example response from the applicant</button>
             </form>
         </th:block>
@@ -630,7 +630,7 @@
             <input type="hidden" id="query" name="query" th:value="${#httpServletRequest.getParameter('query')}" />
             <input type="hidden" id="queryTitle" name="queryTitle" th:value="${#httpServletRequest.getParameter('queryTitle')}" />
             <input type="hidden" id="action" name="action" value="newResponse" />
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             <button class="govuk-button button-secondary">Respond</button>
         </form>
 
@@ -696,7 +696,7 @@
             <input type="hidden" id="noteTitle" name="noteTitle" th:value="${#httpServletRequest.getParameter('noteTitle')}" />
             <input type="hidden" id="noteDetails" name="noteDetails" th:value="${#httpServletRequest.getParameter('noteDetails')}" />
             <input type="hidden" id="action" name="action" value="newResponse" />
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             <button class="govuk-button button-secondary">Comment</button>
         </form>
 

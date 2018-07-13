@@ -52,7 +52,7 @@
             <h2 class="govuk-heading-m govuk-!-margin-0">Removing collaborator</h2>
             <p class="govuk-body">Are you sure you wish to remove this collaborator from this application.</p>
             <p class="govuk-body">This step cannot be undone.</p>
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             <div class="govuk-grid-row extra-margin">
                 <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
                     <input type="hidden" value="6" name="applicationInviteId" />
@@ -71,7 +71,7 @@
             <h2 class="govuk-heading-m govuk-!-margin-0">Remove organisation and collaborator</h2>
             <p class="govuk-body">Are you sure you wish to remove this organisation from this application?</p>
             <p class="govuk-body">This will remove all collaborators and delete the organisations financial details.</p>
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             <div class="govuk-grid-row extra-margin">
                 <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
                     <input type="hidden" value="6" name="applicationInviteId" />

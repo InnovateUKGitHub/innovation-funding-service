@@ -23,7 +23,7 @@
 
 	<!-- <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" /> -->
 
-	<hr />
+	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 		<div class="success-alert">
@@ -217,7 +217,7 @@
 						</dl>
 					</div>
 
-					<hr />
+					<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 		        	<div class="alignright-button">
 
@@ -316,7 +316,7 @@
 
 					<form>
 
-						<hr />
+						<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 			        	<div class="alignright-button">
 
@@ -342,7 +342,7 @@
 
 	</th:block>
 
-	<hr />
+	<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 	<div class="extra-margin">
 		<a href="/prototypes/1199-project-finances" class="govuk-button button-secondary" th:text="${(param.status != null and param.status[0] == 'approved'? 'Return to finance checks' : 'Save and return to finance checks')}">RETURN BUTTON TEXT</a>

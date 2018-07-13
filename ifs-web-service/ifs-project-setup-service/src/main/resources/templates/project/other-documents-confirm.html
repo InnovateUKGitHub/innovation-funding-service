@@ -14,7 +14,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit other documents',subTitle=${model.projectName},size='govuk-heading-xl'" />
         <p class="govuk-body">Are you sure that you wish to submit your documents to Innovate UK?</p>
-        <hr/>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <form th:action="@{/project/{projectId}/partner/documents/submit(projectId=${model.projectId})}" th:if="${model.isShowSubmitDocumentsButton() and  model.submitAllowed and model.submitDate == null}" method="post">
             <div class="govuk-grid-row">

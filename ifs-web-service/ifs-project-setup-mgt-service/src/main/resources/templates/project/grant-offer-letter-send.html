@@ -20,7 +20,7 @@
         <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=${competitionTitle},size='govuk-heading-xl'" />
         </th:block>
-        <hr/>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
             <div class="success-alert govuk-!-margin-bottom-6">

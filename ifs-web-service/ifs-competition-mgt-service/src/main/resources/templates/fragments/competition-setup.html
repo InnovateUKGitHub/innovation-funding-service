@@ -73,7 +73,7 @@
 
         <form th:action="'#'" method="post" novalidate="novalidate">
             <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-content" />
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             <div>
                 <button class="govuk-button" type="submit">Remove assessor</button>
                 <button type="button" class="js-close button-clear">Cancel</button>
@@ -97,7 +97,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m govuk-!-margin-0">Send email to all applicants</h2>
         <p class="govuk-body">This will inform all applicants of the funding decision. If applicants are successful you cannot retract this decision.</p>
-        <hr />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
             <button name="send-emails" class="govuk-button">Send email to all applicants</button>
             <button type="button" class="js-close button-clear">Cancel</button>
@@ -111,7 +111,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m govuk-!-margin-0">Complete competition setup</h2>
         <p class="govuk-body">Setup of competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
-        <hr />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
               th:action="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${model.general.competition.id})}">
             <div>
@@ -131,7 +131,7 @@
             <p class="govuk-body">All information entered and stored for this competition will be removed from the service and will not be
                 accessible again.</p>
         </div>
-        <hr />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
               th:action="@{/competition/setup/{competitionId}/delete(competitionId=${model.general.competition.id})}">
             <div>
@@ -153,7 +153,7 @@
             <li>you cannot undo this</li>
             <li>IFS will not inform the applicants, so you must contact them</li>
         </ul>
-        <hr />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <form class="js-modal-url-target" method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div>
                 <button name="mark-as-successful" class="govuk-button">I'm sure</button>

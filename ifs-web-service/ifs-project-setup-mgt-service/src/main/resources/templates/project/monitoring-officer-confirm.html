@@ -22,7 +22,7 @@
 				<th:block th:insert="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" />
 			</div>
 		</div>
-		<hr/>
+		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
 		<form th:action="@{/project/{projectId}/monitoring-officer/assign(projectId=${model.projectId})}" method="post" th:object="${form}">
 					<input type="hidden" th:field="*{firstName}" />

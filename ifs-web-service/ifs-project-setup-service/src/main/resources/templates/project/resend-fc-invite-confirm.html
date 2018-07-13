@@ -16,7 +16,7 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Resend invite to team member',size='govuk-heading-xl'" />
             <h2 class="govuk-heading-m govuk-!-margin-0">Resend invite to team member</h2>
             <p class="govuk-body">They will be resent an email inviting them to join the project.</p>
-            <hr />
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             <input type="hidden" id="resend-fc-invite" name="resend-fc-invite" th:value="${model.inviteId}"/>
             <input type="hidden" id="organisation" name="organisation" th:value="${model.organisationId}"/>
             <button class="govuk-button" type="submit">Resend</button>

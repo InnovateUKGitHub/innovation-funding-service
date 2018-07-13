@@ -170,7 +170,7 @@
                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
             </div>
         </div>
-        <hr />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
             <button class="govuk-button" name="submit-app-details">Reject</button>
             <button class="js-close button-clear" type="button">Cancel</button>
@@ -186,7 +186,7 @@
 
         <h2 class="govuk-heading-m govuk-!-margin-0">You are about to submit your assessments.</h2>
         <p class="govuk-body">You will not be able to edit after you submit. Are you sure you want to continue?</p>
-        <hr />
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
             <button class="govuk-button" type="submit">Yes I want to submit the assessments</button>
             <button class="js-close button-clear" type="button">Cancel</button>

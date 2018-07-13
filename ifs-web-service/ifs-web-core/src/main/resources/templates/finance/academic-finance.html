@@ -60,7 +60,7 @@
             <div class="govuk-grid-column-one-third"><strong>Directly incurred</strong></div>
             <div class="govuk-grid-column-two-thirds"><strong>TSB Contribution (please refer to the TSB contribution column)</strong></div>
         </div>
-        <hr class="underline"/>
+        <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-4" />
 
         <div class="govuk-grid-row">
             <div class="form-group"
@@ -145,7 +145,7 @@
 
         <legend class="govuk-visually-hidden">Directly allocated</legend>
         <strong>Directly allocated</strong>
-        <hr class="underline"/>
+        <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-4" />
 
         <div class="govuk-grid-row">
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')} ? 'form-group-error'">
@@ -221,12 +221,12 @@
             </div>
         </div>
     </fieldset>
-    <hr class="underline"/>
+    <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-4" />
 
     <fieldset>
         <legend class="govuk-visually-hidden">Indirect costs</legend>
         <div class="govuk-grid-row">
-            <div class="form-group border-top"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')} ? 'form-group-error'">
+            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')} ? 'form-group-error'">
                 <label class="form-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.indirectCosts?.id} + -cost]">
                     <span class="form-label-bold">Indirect costs </span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.indirectCosts?.id+'-cost'})" />
@@ -251,7 +251,7 @@
         <legend class="govuk-visually-hidden">Exceptions</legend>
 
         <strong>Exceptions</strong>
-        <hr class="underline"/>
+        <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-4" />
 
         <div class="govuk-grid-row">
             <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')} ? 'form-group-error'">
