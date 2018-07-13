@@ -23,7 +23,7 @@
 </div>
 
 <div th:fragment="comp-dashboard-navigation(selectedTab, counts, tabs)">
-    <ul class="inline-nav cf">
+    <ul class="govuk-list inline-nav cf">
         <li id="section-1" th:class="${selectedTab == 'live' ? 'selected' : ''}" th:if="${tabs.live()}">
             <a th:href="@{'/dashboard/live'}" th:text="'Live ('+${counts.liveCount}+')'" class="govuk-link"></a>
         </li>

@@ -1,11 +1,13 @@
 
 <!-- =================== Comp setup section - Application questions (5) ============================== -->
 <th:block th:fragment="section-content">
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
-        <h2 class="govuk-heading-m error-summary-heading">Unable to mark as complete.</h2>
-        <ul class="error-summary-list">
-            <li>view the application section(s) to resolve the error.</li>
-        </ul>
+    <div class="govuk-error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to mark as complete.</h2>
+        <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+                <li>view the application section(s) to resolve the error.</li>
+            </ul>
+        </div>
     </div>
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application process',size='govuk-heading-xl'" />
 

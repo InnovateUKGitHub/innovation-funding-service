@@ -398,7 +398,7 @@ Application: Application details validations
     Then the user should see the element       jQuery=[for="minProjectDuration"] .error-message:contains("This field cannot be left blank.")
     And the user should see the element        jQuery=[for="maxProjectDuration"] .error-message:contains("This field cannot be left blank.")
     When the user clicks the button/link       css=button[type="submit"]
-    Then the user should see the element       css=.error-summary-list
+    Then the user should see the element       css=.govuk-error-summary__list
 
     When the user enters text to a text field  id=minProjectDuration  -2
     And the user enters text to a text field   id=maxProjectDuration  -3

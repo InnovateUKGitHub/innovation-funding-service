@@ -13,14 +13,21 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-          <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
-          <ul class="error-summary-list">
-              <li th:each="err : ${#fields.detailedErrors('${organisationForm.organisationTypeId}')}">
-                  <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
-                  <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}" class="govuk-link">The error message</a>
-              </li>
-          </ul>
+        <div th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}"
+             class="govuk-error-summary"
+             role="alert"
+             aria-labelledby="error-summary-title"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                  <li th:each="err : ${#fields.detailedErrors('${organisationForm.organisationTypeId}')}">
+                      <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
+                      <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+                  </li>
+                </ul>
+            </div>
         </div>
 
         <h1 class="govuk-heading-xl">

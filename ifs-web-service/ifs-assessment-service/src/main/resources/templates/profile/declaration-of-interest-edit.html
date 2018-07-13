@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
-                <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" data-ignore-errors="true" aria-labelledby="error-summary-heading" tabindex="-1">
+                <div th:if="${#fields.hasErrors('${form.*}')}" aria-labelledby="error-summary-title" role="alert" data-ignore-errors="true" aria-labelledby="error-summary-title" tabindex="-1">
                   <h2 class="govuk-heading-m error-summary-heading">We were unable to save your changes.</h2>
                   <ul class="error-summary-list">
                       <li th:each="err : ${#fields.detailedErrors('${form.*}')}">

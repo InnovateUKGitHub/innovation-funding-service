@@ -15,8 +15,8 @@
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='govuk-heading-xl'" />
 
-                <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+                <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
@@ -53,7 +53,7 @@
 
                 <div><br></div>
 
-                <ul class="inline-nav">
+                <ul class="govuk-list inline-nav">
                     <li class="not-selected">
                         <a th:href="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}" class="govuk-link">Find</a>
                     </li>

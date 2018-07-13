@@ -149,7 +149,6 @@ ol {
     @include media-down(mobile) {
       padding-bottom: 20px;
     }
-
     padding: 0 10px;
     margin-bottom: 30px;
     overflow: hidden;
@@ -161,6 +160,7 @@ ol {
       }
 
       float: left;
+      margin-bottom: 0;
 
       &.selected {
         a,

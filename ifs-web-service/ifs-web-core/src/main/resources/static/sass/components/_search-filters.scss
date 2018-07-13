@@ -12,10 +12,6 @@
 
   button {
     margin: 25px 0 0 0;
-
-    &.govuk-!-margin-0 {
-      margin: 0;
-    }
   }
 
   @include media-down(mobile) {

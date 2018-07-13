@@ -61,7 +61,7 @@
 </th:block>
 
 <div th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, pendingSpendProfilesCount, showAllTabs)">
-    <ul class="inline-nav cf">
+    <ul class="govuk-list inline-nav cf">
         <li id="section-1" th:class="${selectedTab == 'all' ? 'selected' : ''}">
             <a th:href="@{/competition/{competitionId}/status/all(competitionId=${competitionId})}" class="govuk-link">All projects</a>
         </li>

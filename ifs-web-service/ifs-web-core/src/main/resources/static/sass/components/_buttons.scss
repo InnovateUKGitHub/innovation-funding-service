@@ -46,8 +46,8 @@ table {
 
 .button-clear {
   @extend .govuk-button;
-  background-color: transparent;
   @include box-shadow(none);
+  background-color: transparent;
   color: govuk-colour("blue");
   text-decoration: underline;
   padding: 0;

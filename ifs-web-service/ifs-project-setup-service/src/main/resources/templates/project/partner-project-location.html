@@ -15,13 +15,15 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project location',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="govuk-heading-m error-summary-heading"  id="error-summary-heading">We are unable to save your project location.</h2>
-            <ul class="error-summary-list">
-                <li th:each="err : ${#fields.errors('${form.*}')}">
-                    <a href="#postcode" th:text="${err}" class="govuk-link">The error message</a>
-                </li>
-            </ul>
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title"  id="error-summary-title">We are unable to save your project location.</h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li th:each="err : ${#fields.errors('${form.*}')}">
+                        <a href="#postcode" th:text="${err}" class="govuk-link">The error message</a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <p class="govuk-body">We will assign a Monitoring Officer who will visit your project location.</p>

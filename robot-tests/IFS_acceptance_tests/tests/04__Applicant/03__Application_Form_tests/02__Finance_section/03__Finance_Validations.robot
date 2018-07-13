@@ -38,7 +38,7 @@ Other funding server side
     Then the user should see an error    Funding source cannot be blank.
     And the user should see an error    Please use MM-YYYY format.
     And the user should see an error    This field should be 1 or higher.
-    And the user should see the element    css=.error-summary
+    And the user should see the element    css=.govuk-error-summary
     And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    Funding source cannot be blank.
     And the user should see an error    This field cannot be left blank.
@@ -86,10 +86,10 @@ Labour server side
     And the user clicks the button/link         jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error       This field should be 1 or higher.
     And the user should see an error        This field cannot be left blank.
-    Then the user should see the element    jQuery=.error-summary li:contains("This field should be 365 or lower")
-    And the user should see the element     jQuery=.error-summary li:contains("This field should be 1 or higher")
-    And the user should see the element     jQuery=.error-summary li:contains("This field cannot be left blank")
-    And the user should see the element    css=.error-summary
+    Then the user should see the element    jQuery=.govuk-error-summary li:contains("This field should be 365 or lower")
+    And the user should see the element     jQuery=.govuk-error-summary li:contains("This field should be 1 or higher")
+    And the user should see the element     jQuery=.govuk-error-summary li:contains("This field cannot be left blank")
+    And the user should see the element    css=.govuk-error-summary
     [Teardown]    Run keywords    the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    21
     ...    AND    Remove row    jQuery=button:contains("Labour")    jQuery=.labour-costs-table button:contains("Remove")
 
@@ -115,11 +115,11 @@ Admin costs server side
     And the user enters text to a text field    css=[id$="customRate"]    101
     And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field should be 100 or lower.
-    And the user should see the element    css=.error-summary
+    And the user should see the element    css=.govuk-error-summary
     And the user enters text to a text field    css=[id$="customRate"]    -1
     And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field should be 1 or higher.
-    And the user should see the element    css=.error-summary
+    And the user should see the element    css=.govuk-error-summary
     [Teardown]    Run keywords    Given the user clicks the button/link    jQuery=label:contains("20% of labour costs")
     ...    AND    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
@@ -143,14 +143,14 @@ Materials server side
     Then the user should see an error    This field cannot be left blank.
     And the user should see an error    You must enter a value less than 20 digits.
     And the user should see an error    This field should be 1 or higher.
-    And the user should see the element    css=.error-summary
+    And the user should see the element    css=.govuk-error-summary
     When the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1
     And the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
     And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field cannot be left blank.
     And the user should see an error    This field should be 1 or higher.
-    And the user should see the element    css=.error-summary
+    And the user should see the element    css=.govuk-error-summary
     [Teardown]    Remove row    jQuery=button:contains("Material")    jQuery=#material-costs-table button:contains("Remove")
 
 Capital usage client side
@@ -185,7 +185,7 @@ Capital usage server side
     And the user should see an error    This field cannot be left blank.
     And the user should see an error    This field should be 1 or higher.
     And the user should see an error    This field should be 0 or higher.
-    And the user should see the element    css=.error-summary
+    And the user should see the element    css=.govuk-error-summary
     [Teardown]    Remove row    jQuery=button:contains("Capital usage")    jQuery=#capital_usage button:contains("Remove")
 
 Subcontracting costs client side
@@ -204,7 +204,7 @@ Subcontracting costs server side
     And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field should be 1 or higher.
     And the user should see an error    This field cannot be left blank.
-    And the user should see the element    css=.error-summary
+    And the user should see the element    css=.govuk-error-summary
     [Teardown]    Remove row    jQuery=button:contains("Subcontracting")    jQuery=#subcontracting button:contains("Remove")
 
 Travel and subsistence client side
@@ -233,7 +233,7 @@ Travel and subsistence server side
     Then the user should see an error    This field cannot be left blank.
     And the user should see an error    This field should be 1 or higher.
     And the user should see an error    You must enter a value less than 20 digits.
-    And the user should see the element    css=.error-summary
+    And the user should see the element    css=.govuk-error-summary
     [Teardown]    Remove row    jQuery=button:contains("Travel")    jQuery=#travel-costs-table button:contains("Remove")
 
 Other costs client side
@@ -262,7 +262,7 @@ Other costs server side
     And the user clicks the button/link  jQuery=.govuk-button:contains("Mark as complete")
     Then the user should see an error    This field should be 1 or higher.
     And the user should see an error    This field cannot be left blank.
-    And the user should see the element    css=.error-summary
+    And the user should see the element    css=.govuk-error-summary
     [Teardown]    Remove row    jQuery=button:contains("Other costs")    jQuery=#other-costs-table button:contains("Remove")
 
 #Funding level client side is covered in 02__Org_size_validation.robot

@@ -15,16 +15,23 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There was a problem submitting some of your assessments.</h2>
-            <ul class="error-summary-list">
-                <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
-                    <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
-                    <!--/* Add a one to the field name of assesmentId's as th:field will increament the id of the list and we just want to select the first one.
-                           It was harder to make the template change underneath as it was inside of a loop with if/else */-->
-                    <a th:if="${err.fieldName}" th:href="|#${err.fieldName == 'assessmentIds' ? 'assessmentIds1' : err.fieldName}|" th:text="${err.message}" class="govuk-link">The error message</a>
-                </li>
-            </ul>
+        <div th:if="${#fields.hasErrors('${form.*}')}"
+             class="govuk-error-summary"
+             role="alert"
+             aria-labelledby="error-summary-title"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There was a problem submitting some of your assessments.</h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
+                        <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
+                        <!--/* Add a one to the field name of assesmentId's as th:field will increament the id of the list and we just want to select the first one.
+                               It was harder to make the template change underneath as it was inside of a loop with if/else */-->
+                        <a th:if="${err.fieldName}" th:href="|#${err.fieldName == 'assessmentIds' ? 'assessmentIds1' : err.fieldName}|" th:text="${err.message}">The error message</a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
 

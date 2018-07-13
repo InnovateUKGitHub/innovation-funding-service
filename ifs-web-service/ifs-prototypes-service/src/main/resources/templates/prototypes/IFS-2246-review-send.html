@@ -22,15 +22,17 @@
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${(param.status != null and param.status[0] == 'resendInvites' ? 'Resend invites to interview panel' : 'Send invites to interview panel' )}, ${null})" />
 
     <th:block th:if="${param.status != null and param.status[0] == 'error'}">
-        <div class="error-summary" role="alert" aria-labelledby="error-upload-heading" tabindex="-1">
-            <h2 class="govuk-heading-m error-summary-heading" id="error-upload-heading">
+        <div class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
                 There is a problem on this page.
             </h2>
-            <ul class="error-summary-list">
-                <li>
-                    <a href="#">Your upload must be a PDF.</a>
-                </li>
-            </ul>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li>
+                        <a href="#">Your upload must be a PDF.</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </th:block>
 

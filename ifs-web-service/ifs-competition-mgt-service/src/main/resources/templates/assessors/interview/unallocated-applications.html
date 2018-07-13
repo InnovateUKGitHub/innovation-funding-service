@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        <ul class="inline-nav govuk-!-margin-top-6">
+        <ul class="govuk-list inline-nav govuk-!-margin-top-6">
             <li class="selected">
                 <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId}, userId=${model.user.id})}"
                    th:text="${'Applications (' + model.unallocatedApplications + ')' }"></a>

@@ -13,8 +13,8 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${registrationForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to create your account.</h2>
+        <div th:if="${#fields.hasErrors('${registrationForm.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to create your account.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(registrationForm)" />
         </div>
 

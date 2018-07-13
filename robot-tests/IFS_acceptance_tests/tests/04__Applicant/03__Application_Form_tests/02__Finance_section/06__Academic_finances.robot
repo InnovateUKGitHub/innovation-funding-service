@@ -37,7 +37,7 @@ Academic finance validations
     And the applicant enters invalid inputs
     And the element should be disabled       id=mark-all-as-complete
     And Mark academic finances as complete
-    And the user should see the element  css=.error-summary-list
+    And the user should see the element  css=.govuk-error-summary__list
 
 Academic finance calculations
     [Documentation]    INFUND-917, INFUND-2399

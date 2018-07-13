@@ -198,9 +198,9 @@ Organisation server side validation when yes
     [Setup]  the user navigates to the growth table finances
     Given the user clicks the button/link  link=Your organisation
     When the user clicks the button/link   jQuery=button:contains("Mark as complete")
-    And the user should see the element    jQuery=.error-summary-list li:contains("This field cannot be left blank.")
+    And the user should see the element    jQuery=.govuk-error-summary__list li:contains("This field cannot be left blank.")
     And the user should see the element    jQuery=.error-message:contains("This field cannot be left blank.")
-    And the user should see the element    jQuery=.error-summary-list li:contains("Please enter a valid date.")
+    And the user should see the element    jQuery=.govuk-error-summary__list li:contains("Please enter a valid date.")
     And the user should see the element    jQuery=.error-message:contains("Please enter a valid date.")
     And The user should see a field error  This field cannot be left blank.
     And The user should see a field error  Please enter a valid date.

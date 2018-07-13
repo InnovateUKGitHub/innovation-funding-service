@@ -39,7 +39,7 @@
     <h3 class="govuk-heading-s">Email address</h3>
     <p class="govuk-body"><a href="#">mailto:veronica.lederman@innovateuk.test</a></p>
 
-    <ul class="inline-nav extra-margin-top">
+    <ul class="govuk-list inline-nav extra-margin-top">
         <li th:class="${(param.tab == null or param.tab[0] == 'skills' ? 'selected' : 'not-selected' )}"><a href="?tab=skills">Skills</a></li>
         <li th:class="${(param.tab != null and param.tab[0] == 'doi' ? 'selected' : 'not-selected' )}"><a href="?tab=doi">DOI</a></li>
         <li th:class="${(param.tab != null and param.tab[0] == 'history' ? 'selected' : 'not-selected' )}"><a href="?tab=history">Assessment history</a></li>

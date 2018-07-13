@@ -58,8 +58,8 @@
 
       &[aria-expanded] {
         > ::after {
-          content: '\0020\0020\25bc';
           @include govuk-font(14);
+          content: '\0020\0020\25bc';
         }
       }
 

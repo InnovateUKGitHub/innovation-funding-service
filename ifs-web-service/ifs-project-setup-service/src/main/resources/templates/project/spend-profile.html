@@ -24,20 +24,20 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div class="grid-container">
             <th:block th:if="${form != null}">
-                <div th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">Unable to submit spend profile.</h2>
-                    Please review
+                <div th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to submit spend profile.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
             </th:block>
 
             <th:block th:if="${form == null}">
-              <div class="error-summary" th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}">
-                  <h2 class="govuk-heading-m error-summary-heading">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
-                  Please review
-                  <ul class="govuk-list govuk-list--bullet">
-                      <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.arguments[0]}"></li>
-                  </ul>
+              <div class="govuk-error-summary" th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+                  <h2 class="govuk-error-summary__title" id="error-summary-title">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
+                  <div class="govuk-error-summary__body">
+                      <ul class="govuk-list govuk-error-summary__list">
+                          <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.arguments[0]}"></li>
+                      </ul>
+                  </div>
               </div>
             </th:block>
 

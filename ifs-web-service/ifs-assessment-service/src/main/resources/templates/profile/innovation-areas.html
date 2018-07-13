@@ -14,7 +14,7 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
 
-                <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+                <div aria-labelledby="error-summary-title" th:if="${#fields.hasErrors('${form.*}')}">
                     <h2 class="govuk-heading-m error-summary-heading">We were unable to save your changes.</h2>
                     <ul class="error-summary-list">
                         <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>

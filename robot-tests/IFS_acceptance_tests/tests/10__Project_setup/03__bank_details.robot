@@ -151,9 +151,9 @@ Bank details experian validations
     [Tags]    Experian
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     Given the user submits the bank account details    12345673    000003
-    Then the user should see the element              jQuery=.error-summary-list:contains("Please check your bank account number and/or sort code.")
+    Then the user should see the element              jQuery=.govuk-error-summary__list:contains("Please check your bank account number and/or sort code.")
     When the user submits the bank account details    00000123    000004 
-    Then the user should see the element              jQuery=.error-summary-list:contains("Please check your bank account number and/or sort code.")
+    Then the user should see the element              jQuery=.govuk-error-summary__list:contains("Please check your bank account number and/or sort code.")
 
 Bank details submission
     [Documentation]    INFUND-3010, INFUND-2621, INFUND-7109, INFUND-8688
@@ -191,7 +191,7 @@ Submission of bank details for academic user
     And the user clicks the button/link            link=Set up your project
     And the user clicks the button/link            link=Bank details
     When partner fills in his bank details         ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
-    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.error-summary-list:contains("Please check your bank account number and/or sort code.")
+    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.govuk-error-summary__list:contains("Please check your bank account number and/or sort code.")
     # Added this wait so to give extra execution time
     When the user enters text to a text field      name=accountNumber   ${account_one}
     And the user enters text to a text field       name=sortCode  ${sortCode_one}
@@ -235,7 +235,7 @@ User sees error response for invalid bank details for non-lead partner
     Then the user clicks the button/link           link=Bank details
     When partner fills in his bank details         ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${PS_BD_APPLICATION_PROJECT}  00000123  000004
     # Stub is configured to return error response for these values
-    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.error-summary-list:contains("Please check your bank account number and/or sort code.")
+    Then wait until keyword succeeds without screenshots  30 s  500 ms  the user should see the element  jQuery=.govuk-error-summary__list:contains("Please check your bank account number and/or sort code.")
     # Added this wait so to give extra execution time
 
 Non lead partner submits bank details

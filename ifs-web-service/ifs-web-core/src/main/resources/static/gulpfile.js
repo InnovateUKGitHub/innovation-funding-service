@@ -15,7 +15,7 @@ var nodeModulesRelativePath = '../../../../../node_modules/'
 var govukFrontendPath = nodeModulesPath + 'govuk-frontend/'
 var sassFiles = [
   './sass/**/*.scss',
-	govukFrontendPath + 'settings/**/*.scss',
+  govukFrontendPath + 'settings/**/*.scss',
   govukFrontendPath + 'tools/**/*.scss',
   govukFrontendPath + 'helpers/**/*.scss',
   govukFrontendPath + 'core/**/*.scss',

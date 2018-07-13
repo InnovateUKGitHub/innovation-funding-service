@@ -234,13 +234,15 @@
 </th:block>
 
 <th:block th:fragment="error-summary-list(formName)">
-    <ul class="error-summary-list">
-        <li th:each="err : ${#fields.detailedErrors('${__${formName}__.*}')}">
-            <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
-            <th:block th:unless="${err.global}">
-                <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
-                <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}" class="govuk-link">The error message</a>
-            </th:block>
-        </li>
-    </ul>
+    <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+            <li th:each="err : ${#fields.detailedErrors('${__${formName}__.*}')}">
+                <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
+                <th:block th:unless="${err.global}">
+                    <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
+                    <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+                </th:block>
+            </li>
+        </ul>
+    </div>
 </th:block>

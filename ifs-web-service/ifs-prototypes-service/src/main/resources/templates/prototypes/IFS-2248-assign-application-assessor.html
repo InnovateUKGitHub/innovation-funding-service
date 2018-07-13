@@ -56,7 +56,7 @@
     </div>
 
 
-    <ul class="inline-nav extra-margin-top">
+    <ul class="govuk-list inline-nav extra-margin-top">
         <li th:class="${(param.tab == null or param.tab[0] == 'applications' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab == null or param.tab[0] == 'applications' ? 'Item selected' : 'Item not selected' )}">
             <a th:href="@{'?tab=applications&#38;name='} + ${name}">Applications (5)</a>
         </li>

@@ -42,7 +42,7 @@
         <dd>Agriculture and food</dd>
     </dl>
 
-	<ul class="inline-nav extra-margin-top">
+	<ul class="govuk-list inline-nav extra-margin-top">
 		<li th:class="${(param.tab == null or param.tab[0] == 'assign' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab == null or param.tab[0] == 'assign' ? 'Item selected' : 'Item not selected' )}">
 			<a th:href="@{'?tab=assign'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Assign applications (60)</a>
 		</li>

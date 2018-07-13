@@ -22,7 +22,7 @@
 
     <p class="govuk-body"><a href="/prototypes/IFS-6-assessor-profile-update?action=new">Add a new assessor</a></p>
 
-    <ul class="inline-nav">
+    <ul class="govuk-list inline-nav">
         <li th:class="${(param.tab == null or param.tab[0] == 'active' ? 'selected' : 'not-selected' )}">
             <a th:href="@{'?tab=active'}">Active (12)</a>
         </li>

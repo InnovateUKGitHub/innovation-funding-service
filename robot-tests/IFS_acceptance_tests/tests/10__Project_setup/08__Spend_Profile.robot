@@ -217,27 +217,27 @@ Lead partner can edit his spend profile with invalid values and see the error me
     Then the user should see the element       jQuery=th:contains("Labour") + td input
     When the user enters text to a text field  jQuery=th:contains("Labour") + td input   520
     And the user moves focus to the element    jQuery=th:contains("Overheads") + td input
-    Then the user should see the element       jQuery=.error-summary:contains("Unable to submit spend profile.")
+    Then the user should see the element       jQuery=.govuk-error-summary:contains("Unable to submit spend profile.")
     And the user should see the element        jQuery=.form-group-error th:contains("Labour")
     And the user should see the element        jQuery=th:contains("Labour") ~ .fix-right.cell-error input[data-calculation-rawvalue="3495"]
     # Project costs for financial year are instantly reflecting the financial values INFUND-3971, INFUND-6148
     And the user should see the element        jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£56,289")
     When the user clicks the button/link       jQuery=.govuk-button:contains("Save and return to spend profile overview")
-    Then the user should see the element       jQuery=.error-summary:contains("Your total costs are higher than the eligible project costs.")
+    Then the user should see the element       jQuery=.govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
     When the user clicks the button/link       jQuery=.govuk-button:contains("Edit spend profile")
     Then the user enters text to a text field  jQuery=th:contains("Labour") + td input  10
     And the user should not see the element   jQuery=.form-group-error th:contains("Labour")
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  -55
     And the user moves focus to the element    jQuery=th:contains("Overheads") ~ td:nth-child(5)
-    Then the user should see the element       jQuery=.error-summary-list li:contains("This field should be 0 or higher")
+    Then the user should see the element       jQuery=.govuk-error-summary__list li:contains("This field should be 0 or higher")
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  35.25
     And the user moves focus to the element    jQuery=th:contains("Overheads") ~ td:nth-child(5)
-    Then the user should see the element       jQuery=.error-summary-list li:contains("This field can only accept whole numbers")
+    Then the user should see the element       jQuery=.govuk-error-summary__list li:contains("This field can only accept whole numbers")
     When the user clicks the button/link       jQuery=.govuk-button:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  0
     And the user moves focus to the element    css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
-    And the user should not see the element    css=.error-summary-list
+    And the user should not see the element    css=.govuk-error-summary__list
 
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
@@ -252,9 +252,9 @@ Lead partner can edit his spend profile with valid values
     When the user enters text to a text field  jQuery=th:contains("Subcontracting") ~ td:nth-child(5) input  0
     And the user moves focus to the element    jQuery=th:contains("Subcontracting") ~ td:nth-child(7) input
     Then the user should see the element       jQuery=th:contains("Subcontracting") ~ td.fix-right input[data-calculation-rawvalue="90000"]
-    And the user should not see the element    jQuery=.error-summary:contains("Unable to save spend profile")
+    And the user should not see the element    jQuery=.govuk-error-summary:contains("Unable to save spend profile")
     When the user clicks the button/link       jQuery=.govuk-button:contains("Save and return to spend profile overview")
-    Then the user should not see the element   jQuery=.error-summary:contains("Your total costs are higher than the eligible project costs.")
+    Then the user should not see the element   jQuery=.govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
 
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached

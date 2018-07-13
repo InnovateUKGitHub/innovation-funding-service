@@ -16,8 +16,8 @@
                 <th:block th:insert="fragments/layout :: page-title"
                           th:with="pageTitle='Assign applications to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'"/>
 
-                <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+                <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
 
@@ -46,7 +46,7 @@
                     <dd th:text="${model.innovationArea}">Agriculture and food</dd>
                 </dl>
 
-                <ul class="inline-nav govuk-!-margin-top-6">
+                <ul class="govuk-list inline-nav govuk-!-margin-top-6">
                     <li class="not-selected">
                         <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
                     </li>

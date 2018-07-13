@@ -113,7 +113,7 @@
 <!-- =================Tabbed navigation competion setup=========================== -->
 
 <div th:fragment="prototype-comp-setup-navigation">
-    <ul class="inline-nav cf">
+    <ul class="govuk-list inline-nav cf">
         <li><a th:href="@{'?section=essential'}">Essential information</a></li>
         <li><a th:href="@{'?section=additional'}">Additional information</a></li>
         <li><a th:href="@{'?section=eligibility'}">Eligibility</a></li>
@@ -129,7 +129,7 @@
 <div th:fragment="prototype-comp-navigation">
 
     <div th:if="${status == 'open'}" th:remove="tag">
-         <ul class="inline-nav cf">
+         <ul class="govuk-list inline-nav cf">
             <li th:class="${(page == 'dashboard' ? 'selected' : '')}"><a href="/prototypes/1570-dashboard">Overview</a></li>
             <li th:class="${(page == 'applications' ? 'selected' : '')}"><a href="/prototypes/1348-open-applications">All applications</a></li>
         </ul>
@@ -139,7 +139,7 @@
 
         <div th:if="${param.status[0] != 'assessorFeedback' and param.status[0] != 'setup'}" th:remove="tag">
 
-            <ul class="inline-nav cf">
+            <ul class="govuk-list inline-nav cf">
                 <li th:class="${(page == 'dashboard' ? 'selected' : '')}">
                     <a th:href="${(param.status != null ? '/prototypes/1570-dashboard?closed&#38;status=' + {param.status} : '/prototypes/1570-dashboard?closed')}">Overview</a>
                 </li>
@@ -155,7 +155,7 @@
 
         <div th:if="${param.status[0] == 'assessorFeedback' or param.status[0] == 'setup'}" th:remove="tag">
 
-            <ul class="inline-nav cf">
+            <ul class="govuk-list inline-nav cf">
                 <li th:class="${(page == 'dashboard' ? 'selected' : '')}">
                     <a href="/prototypes/1968-dashboard?closed&#38;status=assessorFeedback">Overview</a>
                 </li>

@@ -78,7 +78,7 @@ Competition information and search: Valid values
     And the user enters text to a text field        css=[aria-labelledby="eligibilitySummary"]  Summary of eligiblity
     When the user enters text to a text field       id=keywords  hellohellohellohellohellohellohellohellohellohellou
     And the user clicks the button/link             jQuery=button:contains("Save and review")
-    Then the user should see the element            jQuery=.error-summary-list:contains("Each keyword must be less than 50 characters long.")
+    Then the user should see the element            jQuery=.govuk-error-summary__list:contains("Each keyword must be less than 50 characters long.")
     And the user enters text to a text field        id=keywords  Search, Testing, Robot
     Then the user clicks the button/link            jQuery=.govuk-button:contains("Save and review")
     And the user clicks the button/link             jQuery=.govuk-button:contains("Return to public content")
@@ -492,7 +492,7 @@ the user can add and remove multiple content groups
     And the user enters text to a text field   id=contentGroups[2].heading    Heading 3
     And the user enters text to a text field   jQuery=.editor:eq(2)     Content 3
     When the user uploads the file             name=contentGroups[2].attachment  ${text_file}
-    Then the user should see the element       jQuery=.error-summary-list:contains("${wrong_filetype_validation_error}")
+    Then the user should see the element       jQuery=.govuk-error-summary__list:contains("${wrong_filetype_validation_error}")
     And the user uploads the file              name=contentGroups[2].attachment  ${too_large_pdf}
     Then the user should see the element       jQuery=h1:contains("Attempt to upload a large file")
     And the user goes back to the previous page

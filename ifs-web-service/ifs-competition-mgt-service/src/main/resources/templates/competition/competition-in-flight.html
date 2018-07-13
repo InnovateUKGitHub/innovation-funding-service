@@ -73,13 +73,14 @@
                     <h2 class="govuk-heading-m">Competition navigation</h2>
                     <ul class="govuk-list link-list">
                         <li th:with="linkTitle=${model.readOnly ? 'Applications: Submitted, ineligible' : 'Applications: All, submitted, ineligible'}">
-                            <a class="disabled" aria-disabled="true"
+                            <a class="disabled govuk-link" aria-disabled="true"
                                th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}"
                                 th:text="${linkTitle}">
                             </a>
                             <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN}"
                                th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
-                               th:text="${linkTitle}">
+                               th:text="${linkTitle}"
+                               class="govuk-link">
                             </a>
                         </li>
                         <li th:unless="${model.readOnly}">
@@ -98,10 +99,9 @@
                             </a>
                         </li>
                         <li th:unless="${model.readOnly}">
-                            <a class="disabled" aria-disabled="true"
+                            <a class="disabled govuk-link" aria-disabled="true"
                                th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
-                               class="govuk-link">
+                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">
                                 Manage assessments
                             </a>
                             <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
@@ -112,7 +112,7 @@
                             </a>
                         </li>
                         <li th:unless="${model.readOnly}">
-                            <a class="disabled" aria-disabled="true" th:unless="${model.assessmentPanelEnabled}" class="govuk-link">
+                            <a class="disabled govuk-link" aria-disabled="true" th:unless="${model.assessmentPanelEnabled}">
                                 Manage assessment panel
                             </a>
                             <a th:if="${model.assessmentPanelEnabled}" th:href="@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}" class="govuk-link">
@@ -120,7 +120,7 @@
                             </a>
                         </li>
                         <li th:unless="${model.readOnly}">
-                            <a class="disabled" aria-disabled="true" th:unless="${model.interviewPanelEnabled}" class="govuk-link">
+                            <a class="disabled govuk-link" aria-disabled="true" th:unless="${model.interviewPanelEnabled}">
                                 Manage interview panel
                             </a>
                             <a th:if="${model.interviewPanelEnabled}" th:href="@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}" class="govuk-link">
@@ -128,12 +128,11 @@
                             </a>
                         </li>
                         <li th:unless="${model.readOnly}">
-                            <a class="disabled" aria-disabled="true"
+                            <a class="disabled govuk-link" aria-disabled="true"
                                th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                                 or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN
                                 or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED
-                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
-                               class="govuk-link">
+                                or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
                                 Input and review funding decision
                             </a>
                             <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN

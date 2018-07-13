@@ -16,26 +16,31 @@
               th:with="currentApplication=${model.application},linkTitle=${backTitle},linkClass='link-back',linkUrl=${backURL}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert"
-             aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There is a problem on this
-                page.</h2>
-
-            <ul class="error-summary-list">
-                <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
-                    <th:block th:if="${err.global || err.fieldName == 'formInput[cost]'}" th:text="${err.message}">Non-field
-                        specific message
-                    </th:block>
-                    <th:block th:unless="${err.global || err.fieldName == 'formInput[cost]'}">
-                        <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error
-                            message
+        <div th:if="${#fields.hasErrors('${form.*}')}"
+             class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem on this page.
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
+                        <th:block th:if="${err.global || err.fieldName == 'formInput[cost]'}" th:text="${err.message}">
+                            Non-field specific message
                         </th:block>
-                        <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|"
-                           th:text="${err.message}"
-                           class="govuk-link">The error message</a>
-                    </th:block>
-                </li>
-            </ul>
+                        <th:block th:unless="${err.global || err.fieldName == 'formInput[cost]'}">
+                            <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">
+                                The error message
+                            </th:block>
+                            <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|"
+                               th:text="${err.message}">The error message</a>
+                        </th:block>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.competition})"/>

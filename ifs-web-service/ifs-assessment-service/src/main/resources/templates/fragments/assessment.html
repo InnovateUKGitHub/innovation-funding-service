@@ -124,7 +124,7 @@
 <div th:fragment="assessment-reject-application-form (assessmentId)">
     <form action="#" th:action="@{/{assessmentId}/reject(assessmentId=${assessmentId})}" method="post" th:object="${form}" novalidate="novalidate">
         <h2 class="govuk-heading-m govuk-!-margin-0">Reject assessment</h2>
-        <div class="error-summary" th:if="${#fields.hasErrors('global')}">
+        <div aria-labelledby="error-summary-title" th:if="${#fields.hasErrors('global')}">
             <h2 class="govuk-heading-m error-summary-heading">We were unable to reject the assessment.</h2>
             <ul class="error-summary-list">
                 <li th:each="err : ${#fields.errors('global')}" th:text="${err}"></li>

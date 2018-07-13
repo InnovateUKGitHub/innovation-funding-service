@@ -13,9 +13,8 @@
     <main class="govuk-main-wrapper" id="main-content" role="main" th:with="project=${model.project}">
         <div class="grid-container">
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">Unable to send spend profiles.</h2>
-                Please review
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to send spend profiles.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 

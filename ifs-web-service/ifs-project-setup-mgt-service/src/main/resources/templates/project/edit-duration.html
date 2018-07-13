@@ -14,12 +14,14 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.project.id})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-            <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">We are unable to save your project details.</h2>
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">We are unable to save your project details.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-            <ul class="govuk-list govuk-list--bullet" th:if="${#fields.hasErrors('${form}')}">
-                <li>please check your project duration</li>
-            </ul>
+            <div class="govuk-error-summary__body" th:if="${#fields.hasErrors('${form}')}">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li>please check your project duration</li>
+                </ul>
+            </div>
         </div>
 
       <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionName)} ? |${model.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionId} : ${model.competitionName}|">

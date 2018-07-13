@@ -13,14 +13,15 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="govuk-heading-m error-summary-heading" id="error-summary-heading">There was a problem saving your comment.</h2>
-                    <p class="govuk-body">Please review:</p>
-                    <ul class="error-summary-list">
-                        <th:block th:each="err : ${nonFormErrors}">
-                            <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
-                        </th:block>
-                    </ul>
+                <div class="govuk-error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">There was a problem saving your comment.</h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            <th:block th:each="err : ${nonFormErrors}">
+                                <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
+                            </th:block>
+                        </ul>
+                    </div>
                 </div>
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />

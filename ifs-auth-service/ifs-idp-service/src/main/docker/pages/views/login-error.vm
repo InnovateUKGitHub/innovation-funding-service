@@ -18,10 +18,12 @@
 #end
 
 #if ($message)
-    <section class="error-summary" role="group" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h1 class="govuk-heading-m error-summary-heading" id="error-summary-heading">Your sign in was unsuccessful because of the following issues</h1>
-        <ul class="error-summary-list">
-            <li>$encoder.encodeForHTML($message).</li>
-        </ul>
-    </section>
+    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">Your sign in was unsuccessful because of the following issues</h2>
+        <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+                <li>$encoder.encodeForHTML($message).</li>
+            </ul>
+        </div>
+    </div>
 #end
