@@ -85,4 +85,3 @@ ext.ifsSmtpPassword="smtp"
 ext.ifsSmtpTlsEnabled=false
 ext.ifsMailTimeoutMillis=10000
 
-ext.activeProfile="local"

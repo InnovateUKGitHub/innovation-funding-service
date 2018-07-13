@@ -33,7 +33,6 @@ endpointDocumentation.dependsOn "ifs-front-door-service:test"
 
 ext.ifsDataServiceRestBaseURL = "http://data-service:8080"
 ext.serverPort = 8080
-ext.activeProfile="local"
 ext.ifsIdpLogoutUrl="https://ifs.local-dev/Logout"
 ext.ifsWebGoogleanalyticsTrackingid=""
 ext.ifsSystemUserUUID="c0d02979-e66e-11e7-ac43-0242ac120002"
