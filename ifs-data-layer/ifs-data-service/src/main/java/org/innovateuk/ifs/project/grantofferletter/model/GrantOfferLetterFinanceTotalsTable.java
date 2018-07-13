@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.project.grantofferletter.model;
 
 
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 /**
- * Creates the grant offer letter totals finance table, used by the html renderer for the grant offer letter
+ * Holder of values for the grant offer letter finance totals table, used by the pdf renderer
  */
 
 @Component

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.financechecks.repository;
 import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import java.util.Optional;
 
 /**
  * This interface is used to generate Spring Data Repositories.

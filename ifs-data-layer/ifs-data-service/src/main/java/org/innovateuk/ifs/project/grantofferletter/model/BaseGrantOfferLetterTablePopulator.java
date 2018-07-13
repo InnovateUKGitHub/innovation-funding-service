@@ -19,9 +19,6 @@ public abstract class BaseGrantOfferLetterTablePopulator {
     protected Map<String, BigDecimal> sumByFinancialType(Map<String, List<Cost>> financials, String type) {
         Map<String, BigDecimal> financeMap = new HashMap<>();
         financials.forEach( (orgName, finances) -> {
-            finances.forEach( cost -> {
-                String costCat = cost.getCostCategory().getName();
-            });
             BigDecimal financeSum = finances
                     .stream()
                     .filter(cost -> cost.getCostCategory().getName().equals(type))
