@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 
 import java.util.List;
@@ -49,19 +50,11 @@ public class GrantClaimMaximumBuilder extends BaseBuilder<GrantClaimMaximum, Gra
         return withArraySetFieldByReflection("organisationType", organisationType);
     }
 
-    public GrantClaimMaximumBuilder withDef(Integer... def) {
-        return withArraySetFieldByReflection("def", def);
+    public GrantClaimMaximumBuilder withSize(OrganisationSize... size) {
+        return withArraySetFieldByReflection("size", size);
     }
 
-    public GrantClaimMaximumBuilder withSmall(Integer... small) {
-        return withArraySetFieldByReflection("small", small);
-    }
-
-    public GrantClaimMaximumBuilder withMedium(Integer... medium) {
-        return withArraySetFieldByReflection("medium", medium);
-    }
-
-    public GrantClaimMaximumBuilder withLarge(Integer... large) {
-        return withArraySetFieldByReflection("large", large);
+    public GrantClaimMaximumBuilder withMaximum(Integer... maximum) {
+        return withArraySetFieldByReflection("maximum", maximum);
     }
 }

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 
 import javax.persistence.Entity;
@@ -17,15 +18,15 @@ import javax.persistence.ManyToOne;
 public class ApplicationFinance extends Finance {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="applicationId", referencedColumnName="id")
+    @JoinColumn(name = "applicationId", referencedColumnName = "id")
     private Application application;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="financeFileEntryId", referencedColumnName="id")
+    @JoinColumn(name = "financeFileEntryId", referencedColumnName = "id")
     private FileEntry financeFileEntry;
 
     public ApplicationFinance() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public ApplicationFinance(Application application, Organisation organisation) {
@@ -60,32 +61,26 @@ public class ApplicationFinance extends Finance {
                 .stream()
                 .filter(this::isMatchingGrantClaimMaximum)
                 .findAny()
-                .map(this::getMaximum).orElse(0);
-    }
-
-    private Integer getMaximum(GrantClaimMaximum grantClaimMaximum) {
-        if (getOrganisationSize() == null) {
-            return grantClaimMaximum.getDef();
-        }
-        switch (getOrganisationSize()) {
-            case SMALL:
-                return grantClaimMaximum.getSmall();
-            case MEDIUM:
-                return grantClaimMaximum.getMedium();
-            case LARGE:
-                return grantClaimMaximum.getLarge();
-            default:
-                throw new IllegalStateException("Unexpected organisation size: " + getOrganisationSize());
-        }
+                .map(GrantClaimMaximum::getMaximum)
+                .orElse(0);
     }
 
     private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum) {
-         return isMatchingOrganisationType(grantClaimMaximum)
+        return isMatchingOrganisationType(grantClaimMaximum)
+                && isMatchingOrganisationSize(grantClaimMaximum)
                 && isMatchingResearchCategory(grantClaimMaximum);
     }
 
     private boolean isMatchingOrganisationType(GrantClaimMaximum grantClaimMaximum) {
         return getOrganisation().getOrganisationType().getId().equals(grantClaimMaximum.getOrganisationType().getId());
+    }
+
+    private boolean isMatchingOrganisationSize(GrantClaimMaximum grantClaimMaximum) {
+        OrganisationSize organisationSize = getOrganisationSize();
+        if (organisationSize == null) {
+            return grantClaimMaximum.getOrganisationSize() == null;
+        }
+        return organisationSize == grantClaimMaximum.getOrganisationSize();
     }
 
     private boolean isMatchingResearchCategory(GrantClaimMaximum grantClaimMaximum) {

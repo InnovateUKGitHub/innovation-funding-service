@@ -126,10 +126,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum()
                 .withCompetition(competitionTemplate)
-                .withDef(50, 100)
-                .withSmall(15, 30)
-                .withMedium(30, 60)
-                .withLarge(45, 90)
+                .withMaximum(50, 100)
                 .build(2);
         competitionTemplate.setGrantClaimMaximums(grantClaimMaximums);
 
@@ -180,10 +177,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum()
                 .withCompetition(competitionTemplate)
-                .withDef(50, 100)
-                .withSmall(15, 30)
-                .withMedium(30, 60)
-                .withLarge(45, 90)
+                .withMaximum(50, 100)
                 .build(2);
         competitionTemplate.setGrantClaimMaximums(grantClaimMaximums);
 
