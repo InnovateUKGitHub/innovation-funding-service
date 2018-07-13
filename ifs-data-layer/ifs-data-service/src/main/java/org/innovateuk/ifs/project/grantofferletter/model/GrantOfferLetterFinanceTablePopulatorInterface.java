@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.grantofferletter.model;
 
-import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 

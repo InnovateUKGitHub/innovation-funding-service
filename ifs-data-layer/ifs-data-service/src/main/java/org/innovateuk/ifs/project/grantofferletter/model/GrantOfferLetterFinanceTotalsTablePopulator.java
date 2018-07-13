@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.grantofferletter.model;
 
-import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -85,11 +84,20 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
 
         BigDecimal allTotalGrant = industryTotalGrant.add(academicTotalGrant);
 
-        BigDecimal industryTotalGrantClaim = industryTotalEligibleCosts.multiply(industryTotalGrant);
+        BigDecimal industryTotalGrantClaim =
+                industryTotalGrant
+                        .divide(industryTotalEligibleCosts,2, BigDecimal.ROUND_HALF_UP)
+                        .multiply(BigDecimal.valueOf(100));
 
-        BigDecimal academicTotalGrantClaim = academicTotalEligibleCosts.multiply(academicTotalGrant);
+        BigDecimal academicTotalGrantClaim =
+                academicTotalGrant
+                        .divide(academicTotalEligibleCosts,2, BigDecimal.ROUND_HALF_UP)
+                        .multiply(BigDecimal.valueOf(100));
 
-        BigDecimal allTotalGrantClaim = allTotalEligibleCosts.multiply(allTotalGrant);
+        BigDecimal allTotalGrantClaim =
+                allTotalGrant
+                        .divide(allTotalEligibleCosts,2, BigDecimal.ROUND_HALF_UP)
+                        .multiply(BigDecimal.valueOf(100));
 
         return new GrantOfferLetterFinanceTotalsTable(grantClaims,
                                                       totalEligibleCosts,
@@ -124,8 +132,6 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
                 .map(row -> BigDecimal.valueOf(row.getQuantity()))
                 .orElse(BigDecimal.ZERO);
     }
-
-    private BigDecimal averageGrantCosts()
 
     private BigDecimal getTotalOfOrgs(Map<String, BigDecimal> finances, List<String> orgs) {
         return finances

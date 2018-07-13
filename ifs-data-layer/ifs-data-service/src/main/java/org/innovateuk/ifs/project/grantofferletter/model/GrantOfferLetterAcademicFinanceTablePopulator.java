@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.*;
-import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.INDIRECT_COSTS_EQUIPMENT;
-import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.INDIRECT_COSTS_OTHER_COSTS;
 
 /**
  * Populator for the grant offer letter academic finance table
