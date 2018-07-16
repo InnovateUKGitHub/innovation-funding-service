@@ -29,7 +29,7 @@ public class OrganisationSizeViewModel extends AbstractFormInputViewModel {
         return organisationFinanceSize;
     }
 
-    public void setOrganisationFinanceSize(final OrganisationSize organisationFinanceSize) {
+    public void setOrganisationFinanceSize(OrganisationSize organisationFinanceSize) {
         this.organisationFinanceSize = organisationFinanceSize;
     }
 }

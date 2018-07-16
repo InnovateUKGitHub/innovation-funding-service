@@ -24,8 +24,8 @@ public class GrantClaimMaximumBuilder extends BaseBuilder<GrantClaimMaximum, Gra
     }
 
     @Override
-    protected GrantClaimMaximumBuilder createNewBuilderWithActions(final List<BiConsumer<Integer,
-            GrantClaimMaximum>> actions) {
+    protected GrantClaimMaximumBuilder createNewBuilderWithActions(List<BiConsumer<Integer, GrantClaimMaximum>>
+                                                                               actions) {
         return new GrantClaimMaximumBuilder(actions);
     }
 

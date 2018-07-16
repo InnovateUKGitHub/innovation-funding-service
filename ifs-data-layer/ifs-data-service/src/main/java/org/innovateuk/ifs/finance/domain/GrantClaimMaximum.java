@@ -42,7 +42,7 @@ public class GrantClaimMaximum {
         return id;
     }
 
-    public void setId(final Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -50,7 +50,7 @@ public class GrantClaimMaximum {
         return competitions;
     }
 
-    public void setCompetitions(final List<Competition> competitions) {
+    public void setCompetitions(List<Competition> competitions) {
         this.competitions = competitions;
     }
 
@@ -58,7 +58,7 @@ public class GrantClaimMaximum {
         return researchCategory;
     }
 
-    public void setResearchCategory(final ResearchCategory researchCategory) {
+    public void setResearchCategory(ResearchCategory researchCategory) {
         this.researchCategory = researchCategory;
     }
 
@@ -66,7 +66,7 @@ public class GrantClaimMaximum {
         return organisationType;
     }
 
-    public void setOrganisationType(final OrganisationType organisationType) {
+    public void setOrganisationType(OrganisationType organisationType) {
         this.organisationType = organisationType;
     }
 
@@ -74,7 +74,7 @@ public class GrantClaimMaximum {
         return organisationSize;
     }
 
-    public void setOrganisationSize(final OrganisationSize organisationSize) {
+    public void setOrganisationSize(OrganisationSize organisationSize) {
         this.organisationSize = organisationSize;
     }
 
@@ -82,7 +82,7 @@ public class GrantClaimMaximum {
         return maximum;
     }
 
-    public void setMaximum(final Integer maximum) {
+    public void setMaximum(Integer maximum) {
         this.maximum = maximum;
     }
 }

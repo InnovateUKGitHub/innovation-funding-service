@@ -694,7 +694,7 @@ public class Competition implements ProcessActivity {
         return grantClaimMaximums;
     }
 
-    public void setGrantClaimMaximums(final List<GrantClaimMaximum> grantClaimMaximums) {
+    public void setGrantClaimMaximums(List<GrantClaimMaximum> grantClaimMaximums) {
         this.grantClaimMaximums = grantClaimMaximums;
     }
 
@@ -734,7 +734,7 @@ public class Competition implements ProcessActivity {
         return stateAid;
     }
 
-    public void setStateAid(final Boolean stateAid) {
+    public void setStateAid(Boolean stateAid) {
         this.stateAid = stateAid;
     }
 

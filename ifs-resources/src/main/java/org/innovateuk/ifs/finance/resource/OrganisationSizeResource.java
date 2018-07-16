@@ -11,7 +11,7 @@ public class OrganisationSizeResource {
 
     public OrganisationSizeResource() {}
 
-    public OrganisationSizeResource(final Long id, final String description) {
+    public OrganisationSizeResource(Long id, String description) {
         this.id = id;
         this.description = description;
     }

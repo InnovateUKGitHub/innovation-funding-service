@@ -44,7 +44,7 @@ public class FinanceViewModel extends BaseFinanceViewModel {
         return organisationFinanceSize;
     }
 
-    public void setOrganisationFinanceSize(final OrganisationSize organisationFinanceSize) {
+    public void setOrganisationFinanceSize(OrganisationSize organisationFinanceSize) {
         this.organisationFinanceSize = organisationFinanceSize;
     }
 
