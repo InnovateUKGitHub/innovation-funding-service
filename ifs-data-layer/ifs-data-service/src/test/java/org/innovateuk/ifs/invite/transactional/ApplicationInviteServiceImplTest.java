@@ -17,7 +17,6 @@ import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -210,10 +209,9 @@ public class ApplicationInviteServiceImplTest {
                 new InviteOrganisation("SomeOrg", null, singletonList(invite));
         invite.setInviteOrganisation(inviteOrganisation);
 
-        List<ServiceResult<Void>> results =
+        ServiceResult<Void> results =
                 inviteService.inviteCollaborators("http:localhost:189809", singletonList(invite));
-        assertThat(results).hasSize(1);
-        assertThat(results.get(0).isSuccess()).isTrue();
+        assertThat(results.isSuccess()).isTrue();
     }
 
     @Test
@@ -234,10 +232,9 @@ public class ApplicationInviteServiceImplTest {
         invite.setName("Nico");
         invite.setEmail("nicotest.nl");
 
-        List<ServiceResult<Void>> results =
+        ServiceResult<Void> results =
                 inviteService.inviteCollaborators("http:localhost:189809", singletonList(invite));
-        assertThat(results).hasSize(1);
-        assertThat(results.get(0).isFailure()).isTrue();
+        assertThat(results.isFailure()).isTrue();
     }
 
     @Test
@@ -279,7 +276,7 @@ public class ApplicationInviteServiceImplTest {
         when(applicationInviteRepositoryMock.save(saveInvitesExpectations)).thenReturn(savedInvites);
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
-        ServiceResult<InviteResultsResource> result =
+        ServiceResult<Void> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
 
         assertThat(result.isSuccess()).isTrue();
@@ -341,7 +338,7 @@ public class ApplicationInviteServiceImplTest {
         when(applicationRepositoryMock.findOne(isA(Long.class)))
                 .thenReturn(newApplication().withId(1L).build());
 
-        ServiceResult<InviteResultsResource> result =
+        ServiceResult<Void> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
 
         assertThat(result.isFailure()).isTrue();
@@ -370,7 +367,7 @@ public class ApplicationInviteServiceImplTest {
                 .thenReturn(newInviteOrganisation().build(inviteResources.size()));
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
-        ServiceResult<InviteResultsResource> result =
+        ServiceResult<Void> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
 
         assertThat(result.isSuccess()).isTrue();
@@ -407,7 +404,7 @@ public class ApplicationInviteServiceImplTest {
         when(organisationRepositoryMock.findOne(inviteOrganisationResource.getOrganisation())).thenReturn(organisation);
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
-        ServiceResult<InviteResultsResource> result =
+        ServiceResult<Void> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
 
         assertThat(result.isSuccess()).isTrue();
@@ -455,7 +452,7 @@ public class ApplicationInviteServiceImplTest {
 
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
 
-        ServiceResult<InviteResultsResource> result =
+        ServiceResult<Void> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
 
         assertThat(result.isSuccess()).isTrue();
@@ -702,7 +699,7 @@ public class ApplicationInviteServiceImplTest {
         when(applicationRepositoryMock.findOne(null)).thenReturn(newApplication().withId(1L).build());
         when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(1));
 
-        ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
+        ServiceResult<Void> result = inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
         assertThat(result.isFailure()).isTrue();
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));

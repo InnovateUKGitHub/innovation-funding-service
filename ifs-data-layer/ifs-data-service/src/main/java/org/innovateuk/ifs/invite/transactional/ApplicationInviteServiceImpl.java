@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressServiceImpl;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -21,7 +20,6 @@ import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -131,8 +129,17 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Override
     @Transactional
-    public List<ServiceResult<Void>> inviteCollaborators(String baseUrl, List<ApplicationInvite> invites) {
-        return invites.stream().map(invite -> processCollaboratorInvite(baseUrl, invite)).collect(toList());
+    public ServiceResult<Void> inviteCollaborators(String baseUrl, List<ApplicationInvite> invites) {
+
+        for (ApplicationInvite invite : invites) {
+            ServiceResult<Void> inviteResult = processCollaboratorInvite(baseUrl, invite);
+
+            if (inviteResult.isFailure()) {
+                return inviteResult;
+            }
+        }
+
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> processCollaboratorInvite(String baseUrl, ApplicationInvite invite) {
@@ -213,14 +220,14 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Override
     @Transactional
-    public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
+    public ServiceResult<Void> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
+
         return validateInviteOrganisationResource(inviteOrganisationResource).andOnSuccess(() ->
                 validateUniqueEmails(inviteOrganisationResource.getInviteResources())).andOnSuccess(() ->
-                findOrAssembleInviteOrganisationFromResource(inviteOrganisationResource, applicationId).andOnSuccessReturn(inviteOrganisation -> {
-                            List<ApplicationInvite> invites = saveInviteOrganisationWithInvites(inviteOrganisation, inviteOrganisationResource.getInviteResources());
-                            return sendInvites(invites);
-                        }
-                ));
+                findOrAssembleInviteOrganisationFromResource(inviteOrganisationResource, applicationId).andOnSuccess(inviteOrganisation -> {
+                    List<ApplicationInvite> invites = saveInviteOrganisationWithInvites(inviteOrganisation, inviteOrganisationResource.getInviteResources());
+                    return inviteCollaborators(webBaseUrl, invites);
+                }));
     }
 
     @Override
@@ -240,11 +247,11 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Override
     @Transactional
-    public ServiceResult<InviteResultsResource> saveInvites(List<ApplicationInviteResource> inviteResources) {
+    public ServiceResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources) {
         return validateUniqueEmails(inviteResources).andOnSuccess(() -> {
             List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
             applicationInviteRepository.save(invites);
-            return serviceSuccess(sendInvites(invites));
+            return inviteCollaborators(webBaseUrl, invites);
         });
     }
 
@@ -332,19 +339,6 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
             }
         }
         applicationProgressService.updateApplicationProgress(application.getId());
-    }
-
-    private InviteResultsResource sendInvites(List<ApplicationInvite> invites) {
-        List<ServiceResult<Void>> results = inviteCollaborators(webBaseUrl, invites);
-
-        long failures = results.stream().filter(BaseEitherBackedResult::isFailure).count();
-        long successes = results.stream().filter(BaseEitherBackedResult::isSuccess).count();
-        LOG.debug(format("Invite sending requests %s Success: %s Failures: %s", invites.size(), successes, failures));
-
-        InviteResultsResource resource = new InviteResultsResource();
-        resource.setInvitesSendFailure((int) failures);
-        resource.setInvitesSendSuccess((int) successes);
-        return resource;
     }
 
     private ServiceResult<InviteOrganisation> findOrAssembleInviteOrganisationFromResource(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
