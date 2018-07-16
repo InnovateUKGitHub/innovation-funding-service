@@ -38,8 +38,8 @@ public class GrantClaimMaximumBuilder extends BaseBuilder<GrantClaimMaximum, Gra
         return withArraySetFieldByReflection("id", ids);
     }
 
-    public GrantClaimMaximumBuilder withCompetition(Competition... competition) {
-        return withArraySetFieldByReflection("competition", competition);
+    public GrantClaimMaximumBuilder withCompetitions(List<Competition>... competitions) {
+        return withArraySetFieldByReflection("competitions", competitions);
     }
 
     public GrantClaimMaximumBuilder withResearchCategory(ResearchCategory... researchCategory) {

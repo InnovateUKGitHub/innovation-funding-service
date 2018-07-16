@@ -20,7 +20,9 @@ public class GrantClaimMaximum {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "grantClaimMaximums")
+    @ManyToMany(fetch = FetchType.LAZY,
+            mappedBy = "grantClaimMaximums",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Competition> competitions;
 
     @ManyToOne(fetch = FetchType.LAZY)
