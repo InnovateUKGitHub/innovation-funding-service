@@ -1,0 +1,39 @@
+apply from: rootProject.file("gradle-support/java.gradle")
+
+apply plugin: 'org.springframework.boot'
+
+findMainClass.enabled = false
+
+dependencies {
+    if (project.hasProperty("cloud") && project.cloud == "development") {
+        compile 'de.codecentric:spring-boot-admin-starter-client:1.3.5'
+        compile "org.springframework.boot:spring-boot-actuator-docs"
+        compile "org.springframework.boot:spring-boot-devtools"
+    }
+
+    if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
+        compile "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.4.1"
+    }
+
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.cloud:spring-cloud-starter-hystrix"
+    compile "org.springframework.cloud:spring-cloud-starter-sleuth"
+    compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+
+}
+
+// Workaround for https://github.com/spring-projects/spring-boot/issues/8308
+// Can reinstate excludeDevtools in the bootRepackage task in next release
+springBoot {
+    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+}
+
+bootRepackage {
+    classifier = 'executable'
+    mainClass = 'org.innovateuk.ifs.Application'
+    //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+
+}

@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/java.gradle")
 
 group 'innovateuk'
 version project.version
@@ -8,5 +8,3 @@ apply plugin: 'idea'
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
 }
-
-bootRepackage.enabled=false

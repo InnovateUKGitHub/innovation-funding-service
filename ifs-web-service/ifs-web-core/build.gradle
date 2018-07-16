@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/java.gradle")
 apply from: rootProject.file("gradle-support/zipkin-support.gradle")
 
 apply plugin: 'idea'
@@ -18,11 +18,6 @@ buildscript {
 
 group 'innovateuk'
 version project.version
-
-
-bootRepackage {
-    enabled = false
-}
 
 configurations {
     testArtifacts

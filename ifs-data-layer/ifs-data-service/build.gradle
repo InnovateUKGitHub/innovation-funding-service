@@ -1,7 +1,7 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 apply from: targetBuild + "-build.gradle"
 
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
 
 apply from: "../flyway.gradle"

@@ -3,15 +3,15 @@ version project.version
 
 apply plugin: 'idea'
 
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/java.gradle")
 
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.jsoup:jsoup:1.10.2'
     compile "com.google.guava:guava:21.0"
-    compile "com.fasterxml.jackson.core:jackson-databind"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.8.11.1"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.11"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.11"
 }
 
 configurations {
@@ -24,5 +24,3 @@ task testJar(type: Jar) {
 artifacts {
     testArtifacts testJar
 }
-
-bootRepackage.enabled = false

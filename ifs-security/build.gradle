@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/java.gradle")
 
 group 'innovateuk'
 version project.version
@@ -29,5 +29,3 @@ task testJar (type: Jar) {
 artifacts {
     testArtifacts testJar
 }
-
-bootRepackage.enabled=false
