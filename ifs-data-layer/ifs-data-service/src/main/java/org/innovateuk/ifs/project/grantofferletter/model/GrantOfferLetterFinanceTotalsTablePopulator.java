@@ -84,17 +84,20 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
 
         BigDecimal allTotalGrant = industryTotalGrant.add(academicTotalGrant);
 
-        BigDecimal industryTotalGrantClaim =
+        BigDecimal industryTotalGrantClaim = industryTotalEligibleCosts.equals(BigDecimal.ZERO) ?
+                BigDecimal.ZERO :
                 industryTotalGrant
                         .divide(industryTotalEligibleCosts,2, BigDecimal.ROUND_HALF_UP)
                         .multiply(BigDecimal.valueOf(100));
 
-        BigDecimal academicTotalGrantClaim =
+        BigDecimal academicTotalGrantClaim = academicTotalEligibleCosts.equals(BigDecimal.ZERO) ?
+                BigDecimal.ZERO :
                 academicTotalGrant
                         .divide(academicTotalEligibleCosts,2, BigDecimal.ROUND_HALF_UP)
                         .multiply(BigDecimal.valueOf(100));
 
-        BigDecimal allTotalGrantClaim =
+        BigDecimal allTotalGrantClaim = allTotalEligibleCosts.equals(BigDecimal.ZERO) ?
+                BigDecimal.ZERO : 
                 allTotalGrant
                         .divide(allTotalEligibleCosts,2, BigDecimal.ROUND_HALF_UP)
                         .multiply(BigDecimal.valueOf(100));
