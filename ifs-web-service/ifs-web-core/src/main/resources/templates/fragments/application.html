@@ -106,7 +106,7 @@
       <h2 class="heading-medium">Finance</h2>
       <div class="collapsible">
           <h3>Finances summary
-              <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
+              <th:block th:if="${(currentApplication.isOpen() and userIsLeadApplicant)}">
                   <div class="section-status section-complete" th:if="${completedViewModel.sectionsMarkedAsComplete.contains(financeSectionId)}">Complete</div>
                   <div class="section-status section-incomplete" th:unless="${completedViewModel.sectionsMarkedAsComplete.contains(financeSectionId)}">Incomplete</div>
               </th:block>

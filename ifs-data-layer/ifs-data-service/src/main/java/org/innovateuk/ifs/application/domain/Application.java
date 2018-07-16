@@ -90,12 +90,11 @@ public class Application implements ProcessActivity {
         this.applicationProcess = new ApplicationProcess(this, null, ApplicationState.CREATED);
     }
 
-    public Application(Competition competition, String name, List<ProcessRole> processRoles, ApplicationState activityState) {
-        requireNonNull(activityState, "activityState cannot be null " + activityState);
+    public Application(Competition competition, String name, List<ProcessRole> processRoles) {
         this.competition = competition;
         this.name = name;
         this.processRoles = processRoles;
-        this.applicationProcess = new ApplicationProcess(this, null, activityState);
+        this.applicationProcess = new ApplicationProcess(this, null, ApplicationState.CREATED);
     }
 
     protected boolean canEqual(Object other) {
