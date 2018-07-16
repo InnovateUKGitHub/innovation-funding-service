@@ -35,13 +35,13 @@ public class CompetitionTemplatePersistorImpl implements BaseTemplatePersistor<C
 
     @Override
     @Transactional
-    public Competition persistByEntity(Competition template) {
-        entityManager.detach(template);
+    public Competition persistByEntity(Competition competition) {
+        entityManager.detach(competition);
 
-        Competition competition = competitionRepository.save(template);
-        template.setId(competition.getId());
-        sectionTemplateService.persistByParentEntity(template);
+        Competition saved = competitionRepository.save(competition);
+        competition.setId(saved.getId());
+        sectionTemplateService.persistByParentEntity(competition);
 
-        return competition;
+        return saved;
     }
 }
