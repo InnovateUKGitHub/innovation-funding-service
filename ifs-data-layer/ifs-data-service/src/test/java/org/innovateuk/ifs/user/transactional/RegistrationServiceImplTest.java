@@ -23,7 +23,6 @@ import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
-import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.Ethnicity;
@@ -120,10 +119,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
     @Mock
     private RegistrationNotificationService registrationEmailServiceMock;
-
-    @Mock
-    @SuppressWarnings("unused")
-    private TransactionalHelper transactionalHelperMock;
 
     @Test
     public void createUser() {
