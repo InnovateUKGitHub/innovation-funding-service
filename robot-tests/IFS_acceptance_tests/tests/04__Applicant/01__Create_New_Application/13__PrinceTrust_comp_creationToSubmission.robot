@@ -26,7 +26,7 @@ Applicant applies to newly created The Prince's Trust competition
     [Tags]    MySQL
     When the competition is open                                 ${comp_name}
         And Log in as a different user            &{RTO_lead_applicant_credentials}
-        Then logged in user applies to competition                  ${comp_name}  1
+        Then logged in user applies to competition                  ${comp_name}  3
 
 Applicant submits his application
     [Documentation]  IFS-2688
