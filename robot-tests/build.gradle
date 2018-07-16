@@ -5,6 +5,7 @@ import com.bmuschko.gradle.docker.tasks.network.*
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
 
+
 buildscript {
 
     repositories {

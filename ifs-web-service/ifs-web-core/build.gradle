@@ -1,3 +1,25 @@
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/zipkin-support.gradle")
+
+apply plugin: 'idea'
+
+buildscript {
+
+    ext['thymeleaf.version'] = '3.0.3.RELEASE'
+
+    ext {
+        thymeleafVersion = ext['thymeleaf.version']
+    }
+
+    repositories {
+        jcenter()
+    }
+}
+
+group 'innovateuk'
+version project.version
+
+
 bootRepackage {
     enabled = false
 }
@@ -12,7 +34,6 @@ task testJar (type: Jar) {
 artifacts {
     testArtifacts testJar
 }
-
 
 dependencies {
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
