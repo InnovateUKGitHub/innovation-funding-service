@@ -19,6 +19,7 @@ dependencies {
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile "net.sf.opencsv:opencsv:2.3"
     testCompile "org.springframework.boot:spring-boot-test:1.5.11.RELEASE"
+    testCompile "org.springframework:spring-test:4.3.15.RELEASE"
 
 }
 
