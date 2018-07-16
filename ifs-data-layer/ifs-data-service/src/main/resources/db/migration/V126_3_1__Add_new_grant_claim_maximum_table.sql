@@ -49,14 +49,3 @@ FROM
   competition c
   INNER JOIN grant_claim_maximum gcm ON c.competition_type_id = gcm.competition_type_id
 ORDER BY c.id, gcm.id;
-
--- TODO IFS-3818 ZDD (future ticket) Drop the competition_type_id column from grant_claim_maximum
--- ALTER TABLE grant_claim_maximum DROP FOREIGN KEY grant_claim_maximum_category_fk;
--- ALTER TABLE grant_claim_maximum DROP FOREIGN KEY grant_claim_maximum_organisation_type_fk;
--- ALTER TABLE grant_claim_maximum DROP FOREIGN KEY grant_claim_maximum_competition_type_fk;
--- ALTER TABLE grant_claim_maximum DROP KEY unique_grant_claim_maximum;
--- ALTER TABLE grant_claim_maximum ADD CONSTRAINT grant_claim_maximum_category_fk FOREIGN KEY
--- (category_id) REFERENCES category (id);
--- ALTER TABLE grant_claim_maximum ADD CONSTRAINT grant_claim_maximum_organisation_type_fk FOREIGN KEY
--- (organisation_type_id) REFERENCES organisation_type (id);
--- ALTER TABLE grant_claim_maximum DROP COLUMN competition_type_id;
