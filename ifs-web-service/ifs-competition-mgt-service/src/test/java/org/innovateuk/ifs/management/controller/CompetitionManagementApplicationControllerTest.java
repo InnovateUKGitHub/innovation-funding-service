@@ -19,6 +19,7 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.management.application.controller.CompetitionManagementApplicationController;
 import org.innovateuk.ifs.management.application.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.populator.ApplicationOverviewIneligibilityModelPopulator;
@@ -128,6 +129,9 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
 
     @Mock
     private UserRestService userRestServiceMock;
+
+    @Mock
+    private InviteService inviteService;
 
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;

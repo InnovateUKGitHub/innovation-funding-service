@@ -28,7 +28,7 @@ task buildDocker(type: DockerBuildImage) {
             image = image.substring(0, image.indexOf(":"))
         }
 
-        "docker images".execute().text.contains(image)
+        "docker images".execute().text.contains("$image ")
     }
 }
 
