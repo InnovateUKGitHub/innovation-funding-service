@@ -18,6 +18,7 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -101,6 +102,9 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
 
     @Mock
     private AssessmentRestService assessmentRestService;
+
+    @Mock
+    private InviteService inviteService;
 
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
