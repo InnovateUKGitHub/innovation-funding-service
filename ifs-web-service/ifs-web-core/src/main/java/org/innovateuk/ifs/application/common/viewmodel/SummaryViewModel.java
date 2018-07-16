@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.common.viewmodel;
 
-import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
+import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -30,7 +30,7 @@ public class SummaryViewModel {
     private final ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel;
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
     private final ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel;
-    private final ApplicationOverviewCompletedViewModel completedViewModel;
+    private final ApplicationCompletedViewModel completedViewModel;
     private final Map<Long, AbstractFormInputViewModel> formInputViewModels;
     private final boolean showApplicationTeamLink;
 
@@ -46,7 +46,7 @@ public class SummaryViewModel {
                             ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
                             ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
                             ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
-                            ApplicationOverviewCompletedViewModel completedViewModel,
+                            ApplicationCompletedViewModel completedViewModel,
                             Map<Long, AbstractFormInputViewModel> formInputViewModels,
                             boolean showApplicationTeamLink) {
         this.currentApplication = currentApplication;
@@ -114,7 +114,7 @@ public class SummaryViewModel {
         return applicationResearchParticipationViewModel;
     }
 
-    public ApplicationOverviewCompletedViewModel getCompletedViewModel() {
+    public ApplicationCompletedViewModel getCompletedViewModel() {
         return completedViewModel;
     }
 

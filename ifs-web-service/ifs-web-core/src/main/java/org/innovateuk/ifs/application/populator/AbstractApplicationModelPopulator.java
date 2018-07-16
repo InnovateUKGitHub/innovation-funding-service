@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.application.common.populator;
+package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewCompletedViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -22,7 +22,8 @@ public abstract class AbstractApplicationModelPopulator {
     private SectionService sectionService;
     private QuestionService questionService;
 
-    public AbstractApplicationModelPopulator(SectionService sectionService, QuestionService questionService) {
+    public AbstractApplicationModelPopulator(SectionService sectionService,
+                                             QuestionService questionService) {
         this.sectionService = sectionService;
         this.questionService = questionService;
     }
@@ -48,12 +49,13 @@ public abstract class AbstractApplicationModelPopulator {
                         Function.identity()));
     }
 
-    protected ApplicationOverviewCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+    protected ApplicationCompletedViewModel getCompletedDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
-        boolean userFinanceSectionCompleted = userOrganisation.map(org -> isUserFinanceSectionCompleted(application, org, completedSectionsByOrganisation)).orElse(false);
-        ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, markedAsComplete, userFinanceSectionCompleted);
+        boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation.get(), completedSectionsByOrganisation);
+
+        ApplicationCompletedViewModel viewModel = new ApplicationCompletedViewModel(sectionsMarkedAsComplete, markedAsComplete, userFinanceSectionCompleted);
         userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));
         return viewModel;
     }
@@ -76,7 +78,7 @@ public abstract class AbstractApplicationModelPopulator {
         return combinedMarkedAsComplete;
     }
 
-    private boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
+    protected boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
 
         return sectionService.getAllByCompetitionId(application.getCompetition())
                 .stream()

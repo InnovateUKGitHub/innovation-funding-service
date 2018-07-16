@@ -14,7 +14,6 @@ import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionMod
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
@@ -35,6 +34,7 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverv
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManageApplicationViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligibleApplicationViewModel;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
@@ -121,8 +121,9 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
     @InjectMocks
     private SummaryViewModelFragmentPopulator summaryViewModelFragmentPopulator;
 
-    @Mock
-    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
+    @Spy
+    @InjectMocks
+    private ApplicationTeamModelManagementPopulator applicationTeamModelPopulator;
 
     @Spy
     @InjectMocks
@@ -158,6 +159,9 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
 
     @Mock
     private UserRestService userRestServiceMock;
+
+    @Mock
+    private InviteService inviteService;
 
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
