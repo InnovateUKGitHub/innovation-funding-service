@@ -6,7 +6,6 @@ import org.innovateuk.ifs.applicant.resource.ApplicantQuestionStatusResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.invite.service.InviteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,8 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class AssignButtonsPopulator {
 
-    @Autowired
     private InviteService inviteService;
+
+    public AssignButtonsPopulator(InviteService inviteService) {
+        this.inviteService = inviteService;
+    }
 
     public AssignButtonsViewModel populate(AbstractApplicantResource resource, ApplicantQuestionResource question, boolean hideAssignButtons) {
         AssignButtonsViewModel viewModel = new AssignButtonsViewModel();

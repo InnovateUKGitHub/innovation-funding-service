@@ -13,10 +13,8 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteService;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -33,17 +31,17 @@ import java.util.stream.Collectors;
 @Component
 public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
-    @Autowired
     private SectionService sectionService;
-
-    @Autowired
-    private InviteRestService inviteRestService;
-
-    @Autowired
     private FinanceOverviewPopulator financeOverviewPopulator;
-
-    @Autowired
     private InviteService inviteService;
+
+    public OpenSectionModelPopulator(SectionService sectionService,
+                                     FinanceOverviewPopulator financeOverviewPopulator,
+                                     InviteService inviteService) {
+        this.sectionService = sectionService;
+        this.financeOverviewPopulator = financeOverviewPopulator;
+        this.inviteService = inviteService;
+    }
 
     @Override
     public BaseSectionViewModel populateModel(ApplicationForm form, Model model, BindingResult bindingResult, ApplicantSectionResource applicantSection) {

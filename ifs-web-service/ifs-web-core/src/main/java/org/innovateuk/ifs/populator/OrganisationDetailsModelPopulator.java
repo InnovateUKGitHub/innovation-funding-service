@@ -2,13 +2,11 @@ package org.innovateuk.ifs.populator;
 
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteService;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -26,14 +24,14 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Component
 public class OrganisationDetailsModelPopulator {
 
-    @Autowired
-    protected InviteRestService inviteRestService;
-
-    @Autowired
     protected InviteService inviteService;
-
-    @Autowired
     protected OrganisationRestService organisationRestService;
+
+    public OrganisationDetailsModelPopulator(InviteService inviteService,
+                                             OrganisationRestService organisationRestService) {
+        this.inviteService = inviteService;
+        this.organisationRestService = organisationRestService;
+    }
 
     public void populateModel(final Model model, final Long applicationId, final List<ProcessRoleResource> userApplicationRoles) {
         final List<OrganisationResource> organisations = getApplicationOrganisations(applicationId);

@@ -5,11 +5,9 @@ import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.application.forms.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteService;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -23,11 +21,11 @@ import java.util.stream.Collectors;
 @Component
 public class OrganisationDetailsViewModelPopulator {
 
-    @Autowired
-    protected InviteRestService inviteRestService;
-
-    @Autowired
     protected InviteService inviteService;
+
+    public OrganisationDetailsViewModelPopulator(InviteService inviteService) {
+        this.inviteService = inviteService;
+    }
 
     public <R extends AbstractApplicantResource> QuestionOrganisationDetailsViewModel populateModel(final R applicantResource) {
         final SortedSet<OrganisationResource> organisations = getApplicationOrganisations(applicantResource);

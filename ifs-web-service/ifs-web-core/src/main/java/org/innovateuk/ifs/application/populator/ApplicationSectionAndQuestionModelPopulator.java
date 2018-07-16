@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGene
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
@@ -22,14 +21,12 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteService;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CollectionFunctions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -45,44 +42,41 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 public class ApplicationSectionAndQuestionModelPopulator {
     public static final String MODEL_ATTRIBUTE_FORM = "form";
 
-    @Autowired
     protected FormInputRestService formInputRestService;
-
-    @Autowired
     protected FormInputResponseService formInputResponseService;
-
-    @Autowired
     protected FormInputResponseRestService formInputResponseRestService;
-
-    @Autowired
     protected QuestionService questionService;
-
-    @Autowired
     protected ProcessRoleService processRoleService;
-
-    @Autowired
-    protected InviteRestService inviteRestService;
-
-    @Autowired
     protected SectionService sectionService;
-
-    @Autowired
-    protected OrganisationService organisationService;
-
-    @Autowired
     private CategoryRestService categoryRestService;
-
-    @Autowired
     private ApplicantRestService applicantRestService;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private FormInputViewModelGenerator formInputViewModelGenerator;
-
-    @Autowired
     private InviteService inviteService;
+
+    public ApplicationSectionAndQuestionModelPopulator(FormInputRestService formInputRestService,
+                                                       FormInputResponseService formInputResponseService,
+                                                       FormInputResponseRestService formInputResponseRestService,
+                                                       QuestionService questionService,
+                                                       ProcessRoleService processRoleService,
+                                                       SectionService sectionService,
+                                                       CategoryRestService categoryRestService,
+                                                       ApplicantRestService applicantRestService,
+                                                       UserService userService,
+                                                       FormInputViewModelGenerator formInputViewModelGenerator,
+                                                       InviteService inviteService) {
+        this.formInputRestService = formInputRestService;
+        this.formInputResponseService = formInputResponseService;
+        this.formInputResponseRestService = formInputResponseRestService;
+        this.questionService = questionService;
+        this.processRoleService = processRoleService;
+        this.sectionService = sectionService;
+        this.categoryRestService = categoryRestService;
+        this.applicantRestService = applicantRestService;
+        this.userService = userService;
+        this.formInputViewModelGenerator = formInputViewModelGenerator;
+        this.inviteService = inviteService;
+    }
 
     public void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                          Optional<SectionResource> currentSection,
