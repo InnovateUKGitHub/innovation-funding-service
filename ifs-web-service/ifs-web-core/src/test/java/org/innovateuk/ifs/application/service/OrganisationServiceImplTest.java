@@ -135,4 +135,39 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
 
         assertEquals(organisation, result.get());
     }
+
+    @Test
+    public void getPrimaryForUser() {
+        long userId = 1L;
+        OrganisationResource organisationResource = newOrganisationResource().build();
+        when(organisationRestService.getPrimaryForUser(userId)).thenReturn(restSuccess(organisationResource));
+
+        OrganisationResource result = service.getPrimaryForUser(userId);
+
+        assertEquals(organisationResource, result);
+    }
+
+    @Test
+    public void getByUserAndApplicationId() {
+        long userId = 1L;
+        long applicationId = 2L;
+        OrganisationResource organisationResource = newOrganisationResource().build();
+        when(organisationRestService.getByUserAndApplicationId(userId, applicationId)).thenReturn(restSuccess(organisationResource));
+
+        OrganisationResource result = service.getByUserAndApplicationId(userId, applicationId);
+
+        assertEquals(organisationResource, result);
+    }
+
+    @Test
+    public void getByUserAndProjectId() {
+        long userId = 1L;
+        long projectId = 2L;
+        OrganisationResource organisationResource = newOrganisationResource().build();
+        when(organisationRestService.getByUserAndProjectId(userId, projectId)).thenReturn(restSuccess(organisationResource));
+
+        OrganisationResource result = service.getByUserAndProjectId(userId, projectId);
+
+        assertEquals(organisationResource, result);
+    }
 }
