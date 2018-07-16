@@ -34,41 +34,65 @@ public class GrantOfferLetterAcademicFinanceTablePopulator extends BaseGrantOffe
             return null;
         } else {
 
-            Map<String, BigDecimal> incurredStaff = sumByFinancialType(academicFinances,
-                                                                       DIRECTLY_INCURRED_STAFF.getName());
+            Map<String, BigDecimal> incurredStaff =
+                    sumByFinancialTypeAndLabel(academicFinances,
+                                               DIRECTLY_INCURRED_STAFF.getName(),
+                                               DIRECTLY_INCURRED_STAFF.getLabel());
 
-            Map<String, BigDecimal> incurredTravelSubsistence = sumByFinancialType(academicFinances,
-                                                                                   DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getName());
+            Map<String, BigDecimal> incurredTravelSubsistence =
+                    sumByFinancialTypeAndLabel(academicFinances,
+                                               DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getName(),
+                                               DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE.getLabel());
 
-            Map<String, BigDecimal> incurredEquipment = sumByFinancialType(academicFinances,
-                                                                           DIRECTLY_INCURRED_EQUIPMENT.getName());
+            Map<String, BigDecimal> incurredEquipment =
+                    sumByFinancialTypeAndLabel(academicFinances,
+                                               DIRECTLY_INCURRED_EQUIPMENT.getName(),
+                                               DIRECTLY_INCURRED_EQUIPMENT.getLabel());
 
-            Map<String, BigDecimal> incurredOtherCosts = sumByFinancialType(academicFinances,
-                                                                            DIRECTLY_INCURRED_OTHER_COSTS.getName());
+            Map<String, BigDecimal> incurredOtherCosts =
+                    sumByFinancialTypeAndLabel(academicFinances,
+                                               DIRECTLY_INCURRED_OTHER_COSTS.getName(),
+                                               DIRECTLY_INCURRED_OTHER_COSTS.getLabel());
 
-            Map<String, BigDecimal> allocatedInvestigators = sumByFinancialType(academicFinances,
-                                                                                DIRECTLY_ALLOCATED_INVESTIGATORS.getName());
+            Map<String, BigDecimal> allocatedInvestigators =
+                    sumByFinancialTypeAndLabel(academicFinances,
+                                               DIRECTLY_ALLOCATED_INVESTIGATORS.getName(),
+                                               DIRECTLY_ALLOCATED_INVESTIGATORS.getLabel());
 
-            Map<String, BigDecimal> allocatedEstateCosts = sumByFinancialType(academicFinances,
-                                                                              DIRECTLY_ALLOCATED_ESTATES_COSTS.getName());
+            Map<String, BigDecimal> allocatedEstateCosts =
+                    sumByFinancialTypeAndLabel(academicFinances,
+                                               DIRECTLY_ALLOCATED_ESTATES_COSTS.getName(),
+                                               DIRECTLY_ALLOCATED_ESTATES_COSTS.getLabel());
 
-            Map<String, BigDecimal> allocatedOtherCosts = sumByFinancialType(academicFinances,
-                                                                             DIRECTLY_INCURRED_OTHER_COSTS.getName());
+            Map<String, BigDecimal> allocatedOtherCosts =
+                    sumByFinancialTypeAndLabel(academicFinances,
+                                               DIRECTLY_INCURRED_OTHER_COSTS.getName(),
+                                               DIRECTLY_INCURRED_OTHER_COSTS.getLabel());
 
-            Map<String, BigDecimal> indirectCosts = sumByFinancialType(academicFinances,
-                                                                       INDIRECT_COSTS_OTHER_COSTS.getName());
+            Map<String, BigDecimal> indirectCosts =
+                    sumByFinancialTypeAndLabel(academicFinances,
+                                               INDIRECT_COSTS_OTHER_COSTS.getName(),
+                                               INDIRECT_COSTS_OTHER_COSTS.getLabel());
 
-            Map<String, BigDecimal> exceptionsStaff = sumByFinancialType(academicFinances,
-                                                                         INDIRECT_COSTS_STAFF.getName());
+            Map<String, BigDecimal> exceptionsStaff =
+                    sumByFinancialTypeAndLabel(academicFinances,
+                                               INDIRECT_COSTS_STAFF.getName(),
+                                               INDIRECT_COSTS_STAFF.getLabel());
 
-            Map<String, BigDecimal> exceptionsTravelSubsistence = sumByFinancialType(academicFinances,
-                                                                                     INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getName());
+            Map<String, BigDecimal> exceptionsTravelSubsistence =
+                    sumByFinancialTypeAndLabel(academicFinances,
+                                               INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getName(),
+                                               INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE.getLabel());
 
-            Map<String, BigDecimal> exceptionsEquipment = sumByFinancialType(academicFinances,
-                                                                             INDIRECT_COSTS_EQUIPMENT.getName());
+            Map<String, BigDecimal> exceptionsEquipment =
+                    sumByFinancialTypeAndLabel(academicFinances,
+                                               INDIRECT_COSTS_EQUIPMENT.getName(),
+                                               INDIRECT_COSTS_EQUIPMENT.getLabel());
 
-            Map<String, BigDecimal> exceptionsOtherCosts = sumByFinancialType(academicFinances,
-                                                                              INDIRECT_COSTS_OTHER_COSTS.getName());
+            Map<String, BigDecimal> exceptionsOtherCosts =
+                    sumByFinancialTypeAndLabel(academicFinances,
+                                               INDIRECT_COSTS_OTHER_COSTS.getName(),
+                                               INDIRECT_COSTS_OTHER_COSTS.getLabel());
 
             List<String> organisations = new ArrayList<>(academicFinances.keySet());
 
