@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.application.overview.viewmodel;
+package org.innovateuk.ifs.application.viewmodel;
 
+import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.junit.Before;
@@ -22,9 +23,9 @@ import static org.mockito.Mockito.when;
  * Testing {@link ApplicationOverviewSectionViewModel}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationOverviewCompletedViewModelTest {
+public class ApplicationCompletedViewModelTest {
 
-    private ApplicationOverviewCompletedViewModel viewModel;
+    private ApplicationCompletedViewModel viewModel;
 
     @Before
     public void setup() throws Exception {
@@ -35,7 +36,7 @@ public class ApplicationOverviewCompletedViewModelTest {
         Set<Long> completedSections = asSet(1L, 2L);
         Boolean userFinanceSectionCompleted = Boolean.FALSE;
 
-        viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, markedAsComplete, userFinanceSectionCompleted);
+        viewModel = new ApplicationCompletedViewModel(sectionsMarkedAsComplete, markedAsComplete, userFinanceSectionCompleted);
         viewModel.setCompletedSections(completedSections);
     }
 

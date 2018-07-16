@@ -23,6 +23,7 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -108,6 +109,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     @Mock
     private ProjectService projectService;
 
+    @Mock
+    private InviteService inviteService;
+
     @Override
     protected ApplicationSummaryController supplyControllerUnderTest() {
         return new ApplicationSummaryController();
@@ -130,7 +134,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testApplicationSummaryWithProjectWithdrawn() throws Exception {
+    public void applicationSummaryWithProjectWithdrawn() throws Exception {
         CompetitionResource competition = competitionResources.get(0);
         competition.setCompetitionStatus(PROJECT_SETUP);
 
@@ -146,7 +150,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testApplicationSummary() throws Exception {
+    public void applicationSummary() throws Exception {
         ApplicationResource app = applications.get(0);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
