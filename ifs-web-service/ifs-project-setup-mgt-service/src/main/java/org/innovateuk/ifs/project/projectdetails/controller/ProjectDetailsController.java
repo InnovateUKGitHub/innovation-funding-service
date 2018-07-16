@@ -44,7 +44,7 @@ import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.RedirectUtils.redirectToCompetitionManagementService;
+import static org.innovateuk.ifs.util.RedirectUtils.buildRedirect;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -129,8 +129,8 @@ public class ProjectDetailsController {
                                 )
                         );
 
-        return redirectToCompetitionManagementService(request,
-                "competition/" + competitionId + "/applications/previous");
+        return "redirect:" + buildRedirect(request,
+                "management/competition/" + competitionId + "/applications/previous");
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
