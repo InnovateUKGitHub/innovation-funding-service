@@ -73,9 +73,9 @@
 <!-- ===================Assessor feedback============================== -->
 <div th:fragment="prototype-assessor-feedback">
     <div th:if="${question == null}">
-        <fieldset>
+        <fieldset class="govuk-fieldset">
             <legend class="govuk-visually-hidden">Question score</legend>
-            <div class="form-group">
+            <div class="govuk-form-group">
             <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
             <select class="form-control width-medium" name="assessor-question-score" id="assessor-question-score">
                 <option value="" th:text="${(score != null ? score  : 'Set score')}"></option>
@@ -97,9 +97,9 @@
 
     <div th:if="${question == 'yesno'}">
         <h2 class="govuk-heading-s">Is the application in scope?</h2>
-        <fieldset class="inline">
+        <fieldset class="govuk-fieldset">
             <legend class="govuk-visually-hidden">Is the application in scope?</legend>
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="block-label selection-button-radio" for="assessor-question-confirmation-yes">
                 <input id="assessor-question-confirmation-yes" type="radio" name="radio-inline-group" value="Yes" />
                     Yes
@@ -114,13 +114,13 @@
 
     <div th:replace="prototypes/fragments/assessor-view :: ${'prototype-assessor-guidance-' + questionTitle}"  th:remove="tag" />
 
-     <fieldset class="extra-margin-top">
+     <fieldset class="govuk-fieldset extra-margin-top">
         <legend class="govuk-visually-hidden">Question feedback</legend>
-        <div class="form-group">
-            <div class="form-group">
+        <div class="govuk-form-group">
+            <div class="govuk-form-group">
 
                  <label class="form-label form-label-bold" for="assessor-question-feedback-text">Feedback
-                    <span class="form-hint">Please justify your <span th:text="${(questionTitle == 'scope' ? 'answer' : 'score')}">SCORE</span> by writing two or three sentences which will be returned to the applicant as feedback</span>
+                    <span class="govuk-hint">Please justify your <span th:text="${(questionTitle == 'scope' ? 'answer' : 'score')}">SCORE</span> by writing two or three sentences which will be returned to the applicant as feedback</span>
                  </label>
 
 
@@ -712,7 +712,7 @@
                 <!--<div class="govuk-grid-row">-->
                     <!--<div class="column-two-thirds">-->
                         <!--<h3 class="govuk-heading-m"><a href="/prototypes/4083-upcoming-comp">An example competition</a></h3>-->
-                        <!--<p class="form-hint">Upcoming competition</p>-->
+                        <!--<p class="govuk-hint">Upcoming competition</p>-->
                         <!--<p class="govuk-body govuk-!-margin-0">Applications allocated 15 April</p>-->
                     <!--</div>-->
                     <!--<div class="govuk-grid-column-one-third">-->
@@ -762,7 +762,7 @@
                     <!--<h2 class="govuk-heading-m">-->
                     <!--<a href="/prototypes/871-assessor-comp-dashboard">Technology inspired</a>-->
                     <!--</h2>-->
-                    <!--<p class="form-hint">Assessment progress:</p>-->
+                    <!--<p class="govuk-hint">Assessment progress:</p>-->
                     <!--<p class="greentext"><strong><span>1</span>/<span>4</span> assessed</strong></p>-->
                 <!--</div>-->
                 <!--<div class="govuk-grid-column-one-third">-->
@@ -831,7 +831,7 @@
     <h2 class="govuk-heading-m">Competitions for assessment (0)</h2>
     <ul class="govuk-list boxed-list">
         <li>
-            <p class="form-hint">When you have upcoming competitions they will appear here.</p>
+            <p class="govuk-hint">When you have upcoming competitions they will appear here.</p>
         </li>
     </ul>
 </div>
@@ -1022,7 +1022,7 @@
         <div>
             <form method="get" th:action="${backTo}" >
 
-                <div class="form-group">
+                <div class="govuk-form-group">
 
                     <label for="reject-reason" class="form-label">Please select a reason for rejecting the application</label>
                     <select name="decisionReason" id="reject-reason" required="required" class="form-control">
@@ -1032,7 +1032,7 @@
                         <option value="too-many-assessments">Too many assessments</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label for="rejection-observations" class="form-label">Use this space to provide more information</label>
                     <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
                 </div>
@@ -1053,7 +1053,7 @@
         <div>
             <form method="get" th:action="${backTo}">
 
-                <div class="form-group">
+                <div class="govuk-form-group">
 
                     <label for="reject-reason" class="form-label">Please select the reason why you are unable to assess this competition</label>
                     <select name="decisionReason" id="reject-reason" required="required" class="form-control">
@@ -1065,7 +1065,7 @@
 
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label for="rejection-observations" class="form-label">Use this space to provide more information</label>
                     <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
                 </div>

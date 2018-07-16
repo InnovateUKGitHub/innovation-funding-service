@@ -19,7 +19,7 @@
           Please note that verification links are only valid for 24 hours.
         </p>
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${resendEmailVerificationForm}" method="POST">
-                <div class="form-group" th:classappend="${#fields.hasErrors('email')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="email">
                         <span class="form-label-bold">Enter Email Address</span>
                         <th:block th:if="${#fields.hasErrors('email')}">

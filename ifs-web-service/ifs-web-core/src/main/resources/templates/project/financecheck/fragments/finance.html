@@ -59,50 +59,54 @@
     <!-- ===========================Form: Other funding=========================== -->
     <th:block th:fragment="other_funding" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
 
-        <div class="form-group"
-             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'form-group-error'">
+        <div class="govuk-form-group"
+             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'govuk-form-group--error'">
+            <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h2 class="govuk-fieldset__heading" th:text="${question.getName()}"></h2>
+                </legend>
+                <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" />
+                <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+                <div class="govuk-radios govuk-radios--inline">
+                    <div class="govuk-radios__item" data-target="other-funding-table">
+                        <input type="radio"
+                               class="govuk-radios__input"
+                               th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                               th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
+                               value="Yes"
+                               required="required"
+                               th:checked="${costCategory.otherPublicFunding?.equals('Yes')}"
+                               th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                        />
+                        <label th:class="${(costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
+                               th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                               class="govuk-label govuk-radios__label">
+                            Yes
+                        </label>
+                    </div>
 
+                    <div class="govuk-radios__item">
+                        <input type="radio"
+                               class="govuk-radios__input"
+                               th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
+                               th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
+                               value="No"
+                               required="required"
+                               th:checked="${costCategory.otherPublicFunding?.equals('No')}"
+                               th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
+                        <label th:class="${(costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
+                               th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
+                               class="govuk-label govuk-radios__label">
+                            No
+                        </label>
+                    </div>
 
-            <h2 th:text="${question.getName()}" class="govuk-heading-m" />
-            <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" />
-            <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-
-            <fieldset class="inline" id="otherFundingShowHideToggle">
-                <legend class="govuk-visually-hidden" th:text="${question.getName()}" />
-
-                <div class="multiple-choice" data-target="other-funding-table">
-                    <input type="radio"
-                           th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
-                           th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
-                           value="Yes"
-                           required="required"
-                           th:checked="${costCategory.otherPublicFunding?.equals('Yes')}"
-                           th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                            />
-                    <label th:class="${(costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
-                           th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}">
-                        Yes
-                    </label>
-                </div>
-
-                <div class="multiple-choice">
-                    <input type="radio"
-                           th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
-                           th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
-                           value="No"
-                           required="required"
-                           th:checked="${costCategory.otherPublicFunding?.equals('No')}"
-                           th:disabled="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}" />
-                    <label th:class="${(costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
-                           th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
-                        No
-                    </label>
                 </div>
 
                 <div id="other-funding-table">
-                    <div class="form-group" th:attr="data-repeatable-container=${question.id}">
+                    <div class="govuk-form-group" th:attr="data-repeatable-container=${question.id}">
                         <table>
                             <thead>
                             <tr>
@@ -122,7 +126,7 @@
                             <th:block th:insert="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" />
                         </p>
                     </div>
-                    <div class="form-group alignright inline">
+                    <div class="govuk-form-group alignright inline">
                         <label for="other-funding-total">Total other funding</label>
                         <input class="form-control form-control-1-4 alignright"
                                data-calculation-fields="[id*=fundingAmount]"
@@ -143,7 +147,7 @@
     <th:block th:fragment="other_funding_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
-                <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-fundingSource')}">
+                <td class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-form-group--error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-fundingSource')}">
                     <label th:for="${'cost-other_funding-'+costIdentifier+'-source'}">
                         <span class="govuk-visually-hidden">Source of funding</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
@@ -159,7 +163,7 @@
                            maxlength="255"
                            th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}" />
                 </td>
-                <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-securedDate')}">
+                <td class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-form-group--error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-securedDate')}">
                     <label th:for="${'cost-other_funding-'+costIdentifier+'-date'}">
                         <span class="govuk-visually-hidden">Date secured</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
@@ -178,7 +182,7 @@
                            required="required" />
                 </td>
 
-                <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'form-group-error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-fundingAmount')}">
+                <td class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-form-group--error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-fundingAmount')}">
                   <label th:for="${'cost-other_funding-'+costIdentifier+'-fundingAmount'}">
                     <span class="govuk-visually-hidden">Funding amount (&pound;)</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />

@@ -31,7 +31,7 @@
 
                 <section th:each="section,iterStat : ${model.sections}">
                     <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'bold-medium': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
-                    <p class="form-hint" th:text="${section.guidance}" />
+                    <p class="govuk-hint" th:text="${section.guidance}" />
                     <ul class="task-list">
                         <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'" th:unless="${section.finance}">
                             <div class="task">
@@ -61,7 +61,7 @@
                 <th:block th:unless="${#lists.isEmpty(model.appendices)}">
                     <h2 class="govuk-heading-m">Appendices</h2>
                     <ul th:each="appendix : ${model.appendices}">
-                        <li class="form-group download">
+                        <li class="govuk-form-group download">
                             <div class="govuk-heading-s govuk-!-margin-0" th:text="|${appendix.title}:|">View project management appendix:</div>
                             <a target="_blank" th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId})}" th:text="|${appendix.name}, ${appendix.size} (opens in a new window)|">Project-plan.pdf, 161.96 KB (opens in a new window)</a>
                         </li>
@@ -77,7 +77,7 @@
                         <summary><span class="summary">Unable to assess this application?</span></summary>
                         <p class="govuk-body">If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK</p>
                         <form th:action="@{/{assessmentId}/reject(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
-                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'form-group-error'">
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'govuk-form-group--error'">
                                 <label class="form-label" th:for="${#ids.next('rejectReason')}">
                                     Please select a reason for rejecting the competition
                                     <th:block th:if="${#fields.hasErrors('rejectReason')}">
@@ -93,7 +93,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? 'form-group-error'">
+                            <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? 'govuk-form-group--error'">
                                 <label class="form-label" th:for="${#ids.next('rejectComment')}">
                                     Use this space to provide more information
                                     <th:block th:if="${#fields.hasErrors('rejectComment')}">

@@ -21,7 +21,7 @@ IFS.core.disableSubmitUntilChecked = (function () {
         var inputError = jQuery(panelId + s.checkRequiredInputs)
         var formGroupError = jQuery(inputError).parent()
         inputError.removeClass('form-control-error')
-        formGroupError.removeClass('form-group-error')
+        formGroupError.removeClass('govuk-form-group--error')
         // Set CTA state accordingly
         IFS.core.disableSubmitUntilChecked.checkButtonStates(panelId + s.checkRequiredInputs)
       })

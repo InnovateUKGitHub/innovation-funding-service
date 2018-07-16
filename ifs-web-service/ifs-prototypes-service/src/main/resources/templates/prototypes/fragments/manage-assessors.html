@@ -314,14 +314,14 @@
                 <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
                 <div class="panel">
                     <form th:action="${#httpServletRequest.requestURI}">
-                        <fieldset>
+                        <fieldset class="govuk-fieldset">
                             <legend>Enter the new assessor's details below to add them to your invite list</legend>
                         </fieldset>
-                        <div class="form-group extra-margin">
+                        <div class="govuk-form-group extra-margin">
                             <label class="form-label" for="name">Name</label>
                             <input class="form-control" id="name" name="name" type="text" required="required" />
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label" for="email">Email</label>
                             <input class="form-control" id="email" name="email" type="text" required="required" />
                         </div>

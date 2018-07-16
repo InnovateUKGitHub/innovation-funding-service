@@ -258,7 +258,7 @@
 
             <!--<div class="govuk-grid-column-one-half">-->
 
-            <!--<div class="form-group">-->
+            <!--<div class="govuk-form-group">-->
             <!--<label for="filterInnovationType">Type</label>-->
 
             <!--<select name="filterInnovationType" id="filterInnovationType" class="form-control">-->
@@ -279,7 +279,7 @@
             <!--</div>-->
 
             <!--<div class="govuk-grid-column-one-half">-->
-            <!--<div class="form-group">-->
+            <!--<div class="govuk-form-group">-->
             <!--<label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>-->
 
             <!--<select name="filterInnovationArea" id="filterInnovationArea" class="form-control">-->
@@ -302,7 +302,7 @@
             <!--<div class="govuk-grid-row">-->
 
             <!--<div class="govuk-grid-column-one-half">-->
-            <!--<div class="form-group">-->
+            <!--<div class="govuk-form-group">-->
             <!--<label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>-->
             <!--<input type="text" class="form-control" id="filterSearch" name="filterSearch" />-->
             <!--</div>-->
@@ -478,10 +478,10 @@
                         <form th:action="${#httpServletRequest.requestURI}">
                             <p class="govuk-body">Enter new assessor's details below and then add them to your invite list.</p>
 
-                            <div class="form-group">
+                            <div class="govuk-form-group">
                                 <label for="grouped-innovation-area" class="form-label-bold">Innovation area</label>
 
-                                <p class="form-hint">The innovation area will remain the same until you click 'Add assessors to list' button.</p>
+                                <p class="govuk-hint">The innovation area will remain the same until you click 'Add assessors to list' button.</p>
 
                                 <select class="form-control" required="required" aria-labelledby="innovation-area" id="grouped-innovation-area" data-required-errormessage="Please select an innovation area." name="selectedInnovationArea">
                               <option value="">Please select an innovation area</option>
@@ -560,7 +560,7 @@
             </div>
 
             <!--<div class="alignright">-->
-            <!--<div class="form-group">-->
+            <!--<div class="govuk-form-group">-->
             <!--<label for="sort-by">Sort by</label>-->
             <!--<select name="sort-by" id="sort-by" class="form-control">-->
             <!--<option value="Assessor name">Assessor name</option>-->
@@ -615,7 +615,7 @@
                 </div>
 
                 <div class="govuk-grid-column-one-third alignright">
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label for="sort-by">Sort by</label>
                         <select name="sort-by" id="sort-by" class="form-control">
                         <option value="Title">Assessor name</option>
@@ -717,7 +717,7 @@
                 <div class="govuk-grid-row">
 
                   <div class="govuk-grid-column-one-third">
-                      <div class="form-group">
+                      <div class="govuk-form-group">
                         <label for="filterInnovationType">Type</label>
                         <select name="filterInnovationType" id="filterInnovationType" class="form-control">
 
@@ -736,7 +736,7 @@
                   </div>
 
                   <div class="govuk-grid-column-one-third">
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                       <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
 
                       <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
@@ -755,7 +755,7 @@
                   </div>
 
                   <div class="govuk-grid-column-one-third">
-                      <div class="form-group">
+                      <div class="govuk-form-group">
                         <label class="form-label" for="filterStatus">Status</label>
                         <select name="filterStatus" id="filterStatus" class="form-control width-full">
                              <option value="All">All</option>
@@ -771,7 +771,7 @@
             <div class="govuk-grid-row">
 
                 <div class="govuk-grid-column-one-third">
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
                         <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
                     </div>
@@ -820,7 +820,7 @@
         </div>
 
         <div class="govuk-grid-column-one-third alignright">
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label for="inviteFilter">Sort by
                         <select class="form-control" id="inviteFilter" name="inviteFilter">
                             <option value="">All</option>
@@ -1195,11 +1195,11 @@
 
 <!-- =========================== Manage assessors innovation areas collapsible list =========================== -->
 <th:block th:fragment="prototype-assessor-innovation-areas">
-    <fieldset>
+    <fieldset class="govuk-fieldset">
         <legend>
             <h2 class="govuk-heading-m">Innovation areas</h2>
                 <th:block th:if="${assessor == 'non-registered'}">
-                    <p class="form-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
+                    <p class="govuk-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
                 </th:block>
         </legend>
         <div class="collapsible">
@@ -1251,11 +1251,11 @@
 
 <!-- =========================== Manage assessors innovation areas full list =========================== -->
 <th:block th:fragment="prototype-assessor-innovation-areas-full-list">
-    <fieldset>
+    <fieldset class="govuk-fieldset">
         <legend>
             <h2 class="govuk-heading-m">Innovation areas</h2>
             <th:block th:if="${assessor == 'non-registered'}">
-                <p class="form-hint">You can select more than one innovation area.</p>
+                <p class="govuk-hint">You can select more than one innovation area.</p>
             </th:block>
         </legend>
         <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-area-1" />

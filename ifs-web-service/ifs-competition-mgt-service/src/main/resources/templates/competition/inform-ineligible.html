@@ -33,7 +33,7 @@
         <p class="govuk-heading-m" th:text="|Recipient: ${model.leadApplicant}|">Dave smith</p>
 
         <form th:action="@{/competition/application/{applicationId}/ineligible/send(applicationId=${model.applicationId})}" novalidate="novalidate" method="post" enctype="multipart/form-data" th:object="${form}">
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
                 <label class="form-label" th:for="${#ids.next('subject')}">
                     <span>Subject</span>
                     <th:block th:if="${#fields.hasErrors('subject')}">
@@ -48,9 +48,9 @@
                        th:attr="data-required-errormessage=#{validation.informleadapplicant.subject.required}"   />
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <span class="form-label-bold">Message</span>
-                <p class="form-hint">
+                <p class="govuk-hint">
                     Dear [recipient name] <br/>
                     Innovate UK <br/>
                     [competition name] <br/>
@@ -58,7 +58,7 @@
                 </p>
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{message}')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{message}')} ? 'govuk-form-group--error'">
                 <label class="form-label" th:for="${#ids.next('message')}">
                     <span>Body text</span>
                     <th:block th:if="${#fields.hasErrors('message')}">

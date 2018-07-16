@@ -40,7 +40,7 @@
 				<dd>Aptran</dd>
 			</dl>
 
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<label for="company-reviewed" class="block-label selection-button-checkbox">
 					The updated company details have been reviewed
 					<input type="checkbox" id="company-reviewed" name="company-reviewed" />
@@ -160,7 +160,7 @@
 		<form>
 			<fieldset class="extra-margin">
 				<legend class="govuk-heading-m" id="change-org-title">Change organisation size</legend>
-				<p class="form-hint">If the credit report shows that the business has not self declared properly, please update their business size. This should only be done after communicating with the lead partner. Increasing their buiness size will reduce their grant amount.</p>
+				<p class="govuk-hint">If the credit report shows that the business has not self declared properly, please update their business size. This should only be done after communicating with the lead partner. Increasing their buiness size will reduce their grant amount.</p>
 				<div class="form-block">
 					<label class="block-label selection-button-radio" for="orgSizeSmall">
 						<input id="orgSizeSmall" type="radio" name="orgSizeGroup" value="Micro"/>
@@ -267,7 +267,7 @@
 
 
 	<h2 class="govuk-heading-m">Credit report</h2>
-	 <div class="form-group">
+	 <div class="govuk-form-group">
     	<label class="block-label selection-button-checkbox" for="costs-reviewed">
 	      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" th:disabled="${param.status != null and param.status[0] == 'approved'}" th:checked="${param.status != null and param.status[0] == 'approved'}" />
 	     	A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
@@ -285,14 +285,14 @@
 		    <p class="govuk-body">Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
 		    <p class="govuk-body">Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
 
-		    <div class="form-group">
+		    <div class="govuk-form-group">
 		    	<label class="block-label selection-button-checkbox" for="project-viable">
 			      <input id="project-viable" value="project-viable" type="checkbox" />
 			     	Aptrans Ltd is viable for this project
 			    </label>
 		    </div>
 
-		    <div class="form-group hidden" id="add-rag-rating">
+		    <div class="govuk-form-group hidden" id="add-rag-rating">
                 <label for="rag-rating" class="form-label">Please enter the RAG rating for this viability review</label>
                 <select id="rag-rating" name="rag-rating" class="form-control" >
                 	<option value="">--</option>

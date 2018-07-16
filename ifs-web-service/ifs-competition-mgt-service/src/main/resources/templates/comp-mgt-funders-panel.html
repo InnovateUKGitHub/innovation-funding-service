@@ -18,17 +18,19 @@
 
         <form method="GET" th:object="${fundingDecisionFilterForm}">
             <div class="search-filters govuk-!-margin-top-6">
-                <fieldset>
-                    <legend class="govuk-heading-m govuk-!-margin-top-0">Filter applications</legend>
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                        <h2 class="govuk-fieldset__heading">Filter applications</h2>
+                    </legend>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-half">
-                            <div class="form-group">
+                            <div class="govuk-form-group">
                                 <label class="form-label" for="stringFilter">Search by application number</label>
                                 <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:value="*{stringFilterValue}"/>
                             </div>
                         </div>
                         <div class="govuk-grid-column-one-half">
-                            <div class="form-group">
+                            <div class="govuk-form-group">
                                 <label class="form-label" for="fundingFilter">Funding decision</label>
                                 <select name="fundingFilter" id="fundingFilter" class="form-control" th:field="*{fundingFilter}">
                                     <option value="">Show all</option>
@@ -75,7 +77,7 @@
             <div class="govuk-grid-row sorting">
                 <div class="govuk-grid-column-one-half">
                     <div class="select-all">
-                        <fieldset>
+                        <fieldset class="govuk-fieldset">
                             <legend class="govuk-visually-hidden">Select applications</legend>
                             <div class="multiple-choice">
                                 <input th:disabled="${selectAllDisabled || selectionLimitWarning}" th:checked="${selectionForm.isAllSelected()}" class="select-all" id="select-all-1" value="select-all" type="checkbox" data-select-all="" />
@@ -83,12 +85,12 @@
                                     Select all applications
                                 </label>
                             </div>
-                            <span class="form-hint"><span th:text="${selectionForm.applicationIds.size()}" data-count-selected="">0</span> applications selected</span>
+                            <span class="govuk-hint"><span th:text="${selectionForm.applicationIds.size()}" data-count-selected="">0</span> applications selected</span>
                         </fieldset>
                     </div>
                 </div>
                 <div class="govuk-grid-column-one-half">
-                    <fieldset class="mark-applications">
+                    <fieldset class="govuk-fieldset mark-applications">
                         <legend class="govuk-visually-hidden">Mark selected applications</legend>
                         <h3>Mark application as:</h3>
                         <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Successful</button>

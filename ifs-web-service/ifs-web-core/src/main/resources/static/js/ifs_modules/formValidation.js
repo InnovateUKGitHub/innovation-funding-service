@@ -157,11 +157,11 @@ IFS.core.formValidation = (function () {
       var hasNumber = IFS.core.formValidation.checkFieldContainsNumber(field)
       var isMinlength = IFS.core.formValidation.checkMinLength(field)
       var isFilledOut = IFS.core.formValidation.checkRequired(field)
-      var formGroup = field.closest('.form-group')
+      var formGroup = field.closest('.govuk-form-group')
       var confirmsToPasswordPolicy = hasUppercase && hasLowercase && hasNumber && isMinlength && isFilledOut
       if (errorStyles) {
         if (confirmsToPasswordPolicy) {
-          formGroup.removeClass('form-group-error')
+          formGroup.removeClass('govuk-form-group--error')
           field.removeClass('form-control-error')
           //  clear tooWeakPassword message as this is validated in the back end.
           IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'passwordPolicy-tooWeak', 'visuallyhidden'))
@@ -170,7 +170,7 @@ IFS.core.formValidation = (function () {
             field[0].setCustomValidity('')
           }
         } else {
-          formGroup.addClass('form-group-error')
+          formGroup.addClass('govuk-form-group--error')
           field.addClass('form-control-error')
         }
       }
@@ -398,7 +398,7 @@ IFS.core.formValidation = (function () {
           return true
         } else if (field.is('select')) {
           // check if we are a group of select elements
-          var selectGroup = field.closest('.form-group').find('select')
+          var selectGroup = field.closest('.govuk-form-group').find('select')
           var valid = true
           if (selectGroup.length > 1) {
             // a group of select elements
@@ -765,7 +765,7 @@ IFS.core.formValidation = (function () {
         return
       }
 
-      var formGroup = field.closest('.form-group')
+      var formGroup = field.closest('.govuk-form-group')
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
       var name = IFS.core.formValidation.getName(field)
@@ -817,14 +817,14 @@ IFS.core.formValidation = (function () {
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
-      var formGroup = field.closest('.form-group')
+      var formGroup = field.closest('.govuk-form-group')
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
       var errorSummary = jQuery('.error-summary-list')
       var name = IFS.core.formValidation.getName(field)
       var id = IFS.core.formValidation.getIdentifier(field)
 
-      // if it is a .form-group we assume the basic form structure with just one field per group
+      // if it is a .govuk-form-group we assume the basic form structure with just one field per group
       // i.e.
       // <div class="form-group">
       //      <label for="field1">
@@ -837,7 +837,7 @@ IFS.core.formValidation = (function () {
         formGroup.find('.error-message:contains("' + message + '")').remove()
         // if this was the last error we remove the error styling
         if (formGroup.find('.error-message').length === 0) {
-          formGroup.removeClass('form-group-error')
+          formGroup.removeClass('govuk-form-group--error')
           field.removeClass('form-control-error')
           // set corresponding radios/checkboxes valid
           if (s.html5validationMode) {
@@ -846,13 +846,13 @@ IFS.core.formValidation = (function () {
         }
       }
       if (formGroupRowValidated.length && formGroupRowValidated.find('.form-control-error').length === 0) {
-        formGroupRowValidated.removeClass('form-group-error')
+        formGroupRowValidated.removeClass('govuk-form-group--error')
       }
 
       // if it is a .form-group-multiple there can be multiple fields within the group, all having there own validation but reporting to one label
       // the template has to output server side error messages linked to the field
       // i.e. a table
-      // <tr class="form-group-row form-group-error">
+      // <tr class="form-group-row govuk-form-group--error">
       //     <th scope="row" id="rowlabel">
       //          <span>The label of this row</span>
       //          <span class="error-message" data-errorfield="field1">This field cannot be empty</span>
@@ -870,7 +870,7 @@ IFS.core.formValidation = (function () {
           jQuery('[name="' + name + '"]').each(function () { this.setCustomValidity('') })
         }
         if (formGroupRow.find('[data-errorfield]').length === 0) {
-          formGroupRow.removeClass('form-group-error')
+          formGroupRow.removeClass('govuk-form-group--error')
         }
       }
 
@@ -910,7 +910,7 @@ IFS.core.formValidation = (function () {
       })
     },
     setStatus: function (field, type, status) {
-      var formGroup = field.closest('.form-group,tr.form-group-row')
+      var formGroup = field.closest('.govuk-form-group,tr.form-group-row')
       var statusAttribute = 'data-' + type + '-validationStatus'
       var statusElements = formGroup.find('[' + statusAttribute + ']')
       status = status.toString()
@@ -984,7 +984,7 @@ IFS.core.formValidation = (function () {
         errorSummary.focus()
       } else {
         // Otherwise, set focus to the field with the error
-        jQuery('.form-group-error input:not([type="hidden"])').first().focus()
+        jQuery('.govuk-form-group--error input:not([type="hidden"])').first().focus()
       }
     },
     errorSummaryLinksClick: function (el) {

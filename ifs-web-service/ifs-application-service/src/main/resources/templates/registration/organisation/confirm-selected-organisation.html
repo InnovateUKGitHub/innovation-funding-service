@@ -24,24 +24,22 @@
         <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" novalidate="novalidate" class="govuk-!-margin-top-6">
             <input type="hidden" th:field="*{searchOrganisationId}" />
 
-            <h2 class="govuk-heading-m govuk-!-margin-0">Operating address</h2>
-            <p class="form-hint">This is the address your organisation works from</p>
-
-            <fieldset>
-              <legend id="useSearchResultAddress">
-                  <span class="govuk-visually-hidden">Operating address</span>
-                  <th:block th:if="${#fields.hasErrors('*{useSearchResultAddress}')}">
-                      <span class="error-message" th:each="err : ${#fields.errors('*{useSearchResultAddress}')}" th:text="${err}"></span>
-                  </th:block>
-              </legend>
-              <div class="form-group" th:classappend="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'form-group-error'">
-                  <div class="multiple-choice" data-target="manual-company-input" data-target-inverted="true">
-                      <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes" />
-                      <label for="address-same">
-                          The operating address is the same as the registered organisation address
-                      </label>
-                  </div>
-              </div>
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="useSearchResultAddress">
+                    <h2 class="govuk-fieldset__heading">Operating address</h2>
+                </legend>
+                <span class="govuk-hint">This is the address your organisation works from</span>
+                <th:block th:if="${#fields.hasErrors('*{useSearchResultAddress}')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('*{useSearchResultAddress}')}" th:text="${err}"></span>
+                </th:block>
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'govuk-form-group--error'">
+                    <div class="multiple-choice" data-target="manual-company-input" data-target-inverted="true">
+                        <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes" />
+                        <label for="address-same">
+                            The operating address is the same as the registered organisation address
+                        </label>
+                    </div>
+                </div>
             </fieldset>
 
             <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm},addressType=${'operating address'}" />

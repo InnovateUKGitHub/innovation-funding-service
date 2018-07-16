@@ -43,7 +43,7 @@
                 <form th:action="@{/profile/declaration/edit}" method="post" th:object="${form}" novalidate="novalidate">
                     <h3 class="govuk-heading-m govuk-!-margin-0">Principal employer and role</h3>
 
-                    <div class="form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('principalEmployer')} ? 'form-group-error'">
+                    <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('principalEmployer')} ? 'govuk-form-group--error'">
                         <label class="form-label-bold" th:for="${#ids.next('principalEmployer')}">
                             Prinicipal employer
                             <th:block th:if="${#fields.hasErrors('principalEmployer')}">
@@ -55,7 +55,7 @@
                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.principalEmployer.required}" />
                     </div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('role')} ? 'form-group-error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('role')} ? 'govuk-form-group--error'">
                         <label class="form-label-bold" th:for="${#ids.next('role')}">
                             Role
                             <th:block th:if="${#fields.hasErrors('role')}">
@@ -67,7 +67,7 @@
                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.role.required}" />
                     </div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')} ? 'form-group-error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')} ? 'govuk-form-group--error'">
                         <label class="form-label-bold"  th:for="${#ids.next('professionalAffiliations')}">
                             List any bodies you are currently a member of as part of your profession.
                             <th:block th:if="${#fields.hasErrors('professionalAffiliations')}">
@@ -92,29 +92,36 @@
                         </div>
                     </div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('hasAppointments')} ? 'form-group-error'">
-                        <fieldset class="inline">
-                            <legend class="govuk-heading-s">
-                                Do you hold any appointments or directorships?
-                                <th:block th:if="${#fields.hasErrors('hasAppointments')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}"></span>
-                                </th:block>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('hasAppointments')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h3 class="govuk-fieldset__heading">Do you hold any appointments or directorships?</h3>
                             </legend>
-                            <div class="multiple-choice" data-target="toggle-appointments">
-                                <input value="yes" type="radio" th:field="*{hasAppointments}"
-                                       data-repeatable-rowcontainer="#position-table tbody"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
-                                       data-conditionally-add-required="input.appointment-field" />
-                                <label th:for="${#ids.prev('hasAppointments')}">Yes</label>
+                            <th:block th:if="${#fields.hasErrors('hasAppointments')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}"></span>
+                            </th:block>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item" data-target="toggle-appointments">
+                                    <input value="yes" type="radio" th:field="*{hasAppointments}"
+                                           class="govuk-radios__input"
+                                           data-repeatable-rowcontainer="#position-table tbody"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
+                                           data-conditionally-add-required="input.appointment-field" />
+                                    <label th:for="${#ids.prev('hasAppointments')}"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input value="no" type="radio" th:field="*{hasAppointments}"
+                                           class="govuk-radios__input"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
+                                           data-conditionally-remove-required="input.appointment-field" />
+                                    <label th:for="${#ids.prev('hasAppointments')}"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
                             </div>
-                            <div class="multiple-choice">
-                                <input value="no" type="radio" th:field="*{hasAppointments}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
-                                       data-conditionally-remove-required="input.appointment-field" />
-                                <label th:for="${#ids.prev('hasAppointments')}">No</label>
-                            </div>
+
                         </fieldset>
 
                         <div class="panel js-hidden" id="toggle-appointments">
@@ -132,8 +139,8 @@
                                 <tbody>
                                 <tr th:each="appointment,appointmentStat: *{appointments}"
                                     class="form-group-row-validated"
-                                    th:classappend="((${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}) or (${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')})) ? 'form-group-error'">
-                                    <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')} ? 'form-group-error'">
+                                    th:classappend="((${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}) or (${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')})) ? 'govuk-form-group--error'">
+                                    <td class="govuk-form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')} ? 'govuk-form-group--error'">
                                         <label>
                                             <th:block th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}">
                                                 <span class="error-message"
@@ -150,7 +157,7 @@
                                                th:attr="data-required-errormessage=#{validation.assessorprofileappointmentform.organisation.required}" />
 
                                     </td>
-                                    <td class="form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')} ? 'form-group-error'">
+                                    <td class="govuk-form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')} ? 'govuk-form-group--error'">
                                         <label>
                                                 <th:block th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}">
                                                     <span class="error-message"
@@ -179,38 +186,43 @@
                         </div>
                     </div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('hasFinancialInterests')} ? 'form-group-error'">
-                        <fieldset class="inline">
-                            <legend class="govuk-heading-s">
-                                Do you have any other financial interests?
-                                <th:block th:if="${#fields.hasErrors('hasFinancialInterests')}">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('hasFinancialInterests')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h3 class="govuk-fieldset__heading">Do you have any other financial interests?</h3>
+                            </legend>
+                            <span class="govuk-hint">Do you have a position or investment in a company from which you can benefit financially?</span>
+                            <th:block th:if="${#fields.hasErrors('hasFinancialInterests')}">
                                     <span class="error-message"
                                           th:each="err : ${#fields.errors('hasFinancialInterests')}"
                                           th:text="${err}"></span>
-                                </th:block>
-                            </legend>
-
-                            <p class="form-hint">Do you have a position or investment in a company from which you can benefit financially?</p>
-
-                            <div class="multiple-choice" data-target="toggle-interest">
-                                <input value="Yes" type="radio" th:field="*{hasFinancialInterests}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFinancialInterests.required}"
-                                       data-conditionally-add-required="#financialInterests" />
-                                <label th:for="${#ids.prev('hasFinancialInterests')}">Yes</label>
+                            </th:block>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item" data-target="toggle-interest">
+                                    <input value="Yes" type="radio" th:field="*{hasFinancialInterests}"
+                                           class="govuk-radios__input"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFinancialInterests.required}"
+                                           data-conditionally-add-required="#financialInterests" />
+                                    <label th:for="${#ids.prev('hasFinancialInterests')}"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input value="No" type="radio" th:field="*{hasFinancialInterests}"
+                                           class="govuk-radios__input"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFinancialInterests.required}"
+                                           data-conditionally-remove-required="#financialInterests" />
+                                    <label th:for="${#ids.prev('hasFinancialInterests')}"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
                             </div>
-                            <div class="multiple-choice">
-                                <input value="No" type="radio" th:field="*{hasFinancialInterests}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFinancialInterests.required}"
-                                       data-conditionally-remove-required="#financialInterests" />
-                                <label th:for="${#ids.prev('hasFinancialInterests')}">No</label>
-                            </div>
+
                         </fieldset>
                     </div>
 
-                    <div class="form-group js-hidden" id="toggle-interest" th:classappend="${#fields.hasErrors('financialInterests')} ? 'form-group-error'">
-                        <fieldset class="inline">
+                    <div class="govuk-form-group js-hidden" id="toggle-interest" th:classappend="${#fields.hasErrors('financialInterests')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
                             <label class="form-label-bold">
                                 Please describe these interests
                                 <th:block th:if="${#fields.hasErrors('financialInterests')}">
@@ -239,32 +251,38 @@
 
                     <h3 class="govuk-heading-m">Family member affiliations</h3>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyAffiliations')} ? 'form-group-error'">
-                        <fieldset class="inline">
-                            <legend class="govuk-heading-s">
-                                Do any of your immediate family members have any appointments or directorships?
-                                <th:block th:if="${#fields.hasErrors('hasFamilyAffiliations')}">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('hasFamilyAffiliations')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h4 class="govuk-fieldset__heading">Do any of your immediate family members have any appointments or directorships?</h4>
+                            </legend>
+                            <th:block th:if="${#fields.hasErrors('hasFamilyAffiliations')}">
                                     <span class="error-message"
                                           th:each="err : ${#fields.errors('hasFamilyAffiliations')}"
                                           th:text="${err}"></span>
-                                </th:block>
-                            </legend>
+                            </th:block>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item" data-target="toggle-familyAffiliations">
+                                    <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}"
+                                           class="govuk-radios__input"
+                                           data-repeatable-rowcontainer="#family-table tbody"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}"
+                                           data-conditionally-add-required="input.family-affiliation-field" />
+                                    <label th:for="${#ids.prev('hasFamilyAffiliations')}"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input value="No" type="radio" th:field="*{hasFamilyAffiliations}"
+                                           class="govuk-radios__input"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}"
+                                           data-conditionally-remove-required="input.family-affiliation-field" />
+                                    <label th:for="${#ids.prev('hasFamilyAffiliations')}"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
+                            </div>
 
-                            <div class="multiple-choice" data-target="toggle-familyAffiliations">
-                                <input value="Yes" type="radio" th:field="*{hasFamilyAffiliations}"
-                                       data-repeatable-rowcontainer="#family-table tbody"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}"
-                                       data-conditionally-add-required="input.family-affiliation-field" />
-                                <label th:for="${#ids.prev('hasFamilyAffiliations')}">Yes</label>
-                            </div>
-                            <div class="multiple-choice">
-                                <input value="No" type="radio" th:field="*{hasFamilyAffiliations}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyAffiliations.required}"
-                                       data-conditionally-remove-required="input.family-affiliation-field" />
-                                <label th:for="${#ids.prev('hasFamilyAffiliations')}">No</label>
-                            </div>
                         </fieldset>
 
                         <div class="panel js-hidden" id="toggle-familyAffiliations">
@@ -283,8 +301,8 @@
                                 <tbody>
                                 <tr th:each="familyAffiliation,familyAffiliationStat: *{familyAffiliations}"
                                     class="form-group-row-validated"
-                                    th:classappend="((${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')})) ? 'form-group-error'">
-                                    <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')} ? 'form-group-error'">
+                                    th:classappend="((${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')})) ? 'govuk-form-group--error'">
+                                    <td class="govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')} ? 'govuk-form-group--error'">
                                         <label>
                                             <span class="form-label">Relation</span>
                                             <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}">
@@ -301,7 +319,7 @@
                                                required="required"
                                                th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.relation.required}" />
                                     </td>
-                                    <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')} ? 'form-group-error'">
+                                    <td class="govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')} ? 'govuk-form-group--error'">
                                         <label>
                                             <span class="form-label">Organisation</span>
                                             <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}">
@@ -318,7 +336,7 @@
                                                required="required"
                                                th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.organisation.required}" />
                                     </td>
-                                    <td class="form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')} ? 'form-group-error'">
+                                    <td class="govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')} ? 'govuk-form-group--error'">
                                         <label>
                                             <span class="form-label">Position</span>
                                             <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}">
@@ -347,35 +365,42 @@
                         </div>
                     </div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyFinancialInterests')} ? 'form-group-error'">
-                        <fieldset class="inline">
-                            <legend class="govuk-heading-s">
-                                Do any of your immediate family members have any other financial interests?
-                                <th:block th:if="${#fields.hasErrors('hasFamilyFinancialInterests')}">
-                                    <span class="error-message"
-                                          th:each="err : ${#fields.errors('hasFamilyFinancialInterests')}"
-                                          th:text="${err}"></span>
-                                </th:block>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('hasFamilyFinancialInterests')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h4 class="govuk-fieldset__heading">Do any of your immediate family members have any other financial interests?</h4>
                             </legend>
-                            <div class="multiple-choice" data-target="toggle-family-interest">
-                                <input value="Yes" type="radio" th:field="*{hasFamilyFinancialInterests}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}"
-                                       data-conditionally-add-required="#familyFinancialInterests" />
-                                <label th:for="${#ids.prev('hasFamilyFinancialInterests')}">Yes</label>
+                            <th:block th:if="${#fields.hasErrors('hasFamilyFinancialInterests')}">
+                                <span class="error-message"
+                                      th:each="err : ${#fields.errors('hasFamilyFinancialInterests')}"
+                                      th:text="${err}"></span>
+                            </th:block>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item" data-target="toggle-family-interest">
+                                    <input value="Yes" type="radio" th:field="*{hasFamilyFinancialInterests}"
+                                           class="govuk-radios__input"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}"
+                                           data-conditionally-add-required="#familyFinancialInterests" />
+                                    <label th:for="${#ids.prev('hasFamilyFinancialInterests')}"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input value="No" type="radio" th:field="*{hasFamilyFinancialInterests}"
+                                           class="govuk-radios__input"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}"
+                                           data-conditionally-remove-required="#familyFinancialInterests" />
+                                    <label th:for="${#ids.prev('hasFamilyFinancialInterests')}"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
                             </div>
-                            <div class="multiple-choice">
-                                <input value="No" type="radio" th:field="*{hasFamilyFinancialInterests}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasFamilyFinancialInterests.required}"
-                                       data-conditionally-remove-required="#familyFinancialInterests" />
-                                <label th:for="${#ids.prev('hasFamilyFinancialInterests')}">No</label>
-                            </div>
+
                         </fieldset>
                     </div>
 
-                    <div class="form-group js-hidden" id="toggle-family-interest" th:classappend="${#fields.hasErrors('familyFinancialInterests')} ? 'form-group-error'">
-                        <fieldset class="inline">
+                    <div class="govuk-form-group js-hidden" id="toggle-family-interest" th:classappend="${#fields.hasErrors('familyFinancialInterests')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
                             <label class="form-label-bold">Please describe these interests
                                 <th:block th:if="${#fields.hasErrors('familyFinancialInterests')}">
                                     <span class="error-message"  th:each="err : ${#fields.errors('familyFinancialInterests')}" th:text="${err}"></span>
@@ -400,15 +425,14 @@
                         </fieldset>
                     </div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('accurateAccount')} ? 'form-group-error'">
-                        <fieldset>
-                            <legend>
-                                <span class="govuk-visually-hidden">Confirm declaration of interest</span>
-                                <th:block th:if="${#fields.hasErrors('accurateAccount')}">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('accurateAccount')}" th:text="${err}"></span>
-                                </th:block>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('accurateAccount')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-visually-hidden">
+                                <span class="govuk-fieldset__heading">Confirm declaration of interest</span>
                             </legend>
-
+                            <th:block th:if="${#fields.hasErrors('accurateAccount')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('accurateAccount')}" th:text="${err}"></span>
+                            </th:block>
                             <div class="multiple-choice">
                                 <input type="checkbox"
                                        th:field="*{accurateAccount}"

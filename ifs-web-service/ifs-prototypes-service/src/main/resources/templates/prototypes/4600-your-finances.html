@@ -66,8 +66,8 @@
 
         <!-- <th:block th:insert="prototypes/fragments/finance-questions :: finance-other-funding" /> -->
         <form class="govuk-!-margin-bottom-6">
-          <div class="form-group" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-            <fieldset>
+          <div class="govuk-form-group" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+            <fieldset class="govuk-fieldset">
               <label for="org-eligible" class="block-label">
                 <input id="org-eligible" value="org-eligible" type="checkbox" />
                 I confirm that the project costs entered for my organisation are eligible.

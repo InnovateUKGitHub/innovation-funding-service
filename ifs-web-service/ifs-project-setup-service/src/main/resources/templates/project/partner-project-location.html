@@ -31,10 +31,10 @@
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
             <h2 class="govuk-heading-m">Project location</h2>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'form-group-error'" >
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'govuk-form-group--error'" >
                 <label class="form-label-bold" for="postcode">
                     Postcode
-                    <span class="form-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>
+                    <span class="govuk-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>
                 </label>
                 <th:block th:if="${#fields.hasErrors('postcode')}">
                     <span class="error-message" th:each="err : ${#fields.errors('postcode')}" th:text="${err}" />

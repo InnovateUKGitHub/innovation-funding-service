@@ -161,9 +161,9 @@
         </th:block> -->
 
         <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
-          <fieldset>
+          <fieldset class="govuk-fieldset">
             <legend class="govuk-heading-m">Organisation</legend>
-            <div class="form-group">
+            <div class="govuk-form-group">
               <label class="form-label-bold" for="new-org-name">Organisation name</label>
               <input class="form-control width-full" id="new-org-name" type="text" />
             </div>

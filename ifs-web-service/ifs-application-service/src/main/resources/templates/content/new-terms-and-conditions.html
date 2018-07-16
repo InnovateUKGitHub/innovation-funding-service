@@ -28,14 +28,14 @@
         <p class="govuk-body">We have updated our terms and conditions. Please read them and confirm you agree.</p>
 
         <form th:action="@{'/info/new-terms-and-conditions'}" method="post" th:object="${form}" novalidate="novalidate">
-            <div class="form-group" th:classappend="${#fields.hasErrors('agree')} ? 'form-group-error'">
-                <fieldset>
-                    <legend>
-                        <span class="govuk-visually-hidden">Website terms and conditions</span>
-                        <span th:if="${#fields.hasErrors('agree')}"
-                              th:errors="*{agree}"
-                              class="error-message">In order to continue you must agree to the terms and conditions.</span>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('agree')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-visually-hidden">
+                        <span class="govuk-fieldset__heading">Website terms and conditions</span>
                     </legend>
+                    <span th:if="${#fields.hasErrors('agree')}"
+                          th:errors="*{agree}"
+                          class="error-message">In order to continue you must agree to the terms and conditions.</span>
                     <div class="multiple-choice">
                         <input id="agree"
                                type="checkbox"

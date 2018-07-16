@@ -28,7 +28,7 @@
 	<p class="govuk-body extra-margin">Make changes to the question'Business opportunity'. You can amend how this is presented, and also the wording and guidance assessors are given for scoring the question.</p>
 
 	<form>
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 			<legend class="govuk-visually-hidden">Application question</legend>
 			<h2 class="govuk-heading-m extra-margin">Application question</h2>
 
@@ -57,31 +57,31 @@
 				</dl>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="question-heading">
 						<span class="form-label-bold">Question heading</span>
 					</label>
 					<input class="form-control" id="question-heading" name="question-heading" value="Business opportunity" type="text" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="question-title">
 						<span class="form-label-bold">Question title</span>
 					</label>
 					<input class="form-control" id="question-title" name="question-title" value="What is the business opportunity this project addresses?" type="text" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="question-subtitle">
 						<span class="form-label-bold">Question subtitle</span>
 					</label>
 					<input class="form-control" id="question-subtitle" name="question-subtitle" type="text" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="guidance-title">
 						<span class="form-label-bold">Guidance title</span>
 					</label>
 					<input class="form-control" id="guidance-title" name="guidance-title" value="What should I include in the business opportunity section?" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="guidance">
 						<span class="form-label-bold">Guidance</span>
 					</label>
@@ -91,14 +91,14 @@
 - the challenges you expect to face and how you will overcome them
 					</textarea>
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="word-count">
 						<span class="form-label-bold">Max word count</span>
 					</label>
 					<input class="form-control width-medium" id="word-count" name="word-count" value="400" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
-				<div class="form-group">
-					<fieldset class="inline">
+				<div class="govuk-form-group">
+					<fieldset class=govuk-fieldset "inline">
 						<h3 class="govuk-heading-s">Appendix</h3>
 						<legend class="govuk-visually-hidden">Appendix</legend>
 						<label class="block-label selection-button-radio" for="appendix-yes">
@@ -113,7 +113,7 @@
 				</div>
 			</th:block>
 		</fieldset>
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 			<legend class="govuk-visually-hidden">Assessment of this question</legend>
 			<h2 class="govuk-heading-m extra-margin">Assessment of this question</h2>
 			<th:block th:if="${param.status == null}">
@@ -145,8 +145,8 @@
 				</dl>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
-				<div class="form-group">
-					<fieldset class="inline">
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset inline">
 						<h3 class="govuk-heading-s">Scored</h3>
 						<legend class="govuk-visually-hidden">Scored</legend>
 						<label class="block-label selection-button-radio" for="scored-yes">
@@ -159,14 +159,14 @@
 						</label>
 					</fieldset>
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="out-of">
 						<span class="form-label-bold">Max word count</span>
 					</label>
 					<input class="form-control width-medium" id="out-of" name="out-of" value="10" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
-				<div class="form-group">
-					<fieldset class="inline">
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset inline">
 						<h3 class="govuk-heading-s">Written feedback</h3>
 						<legend class="govuk-visually-hidden">Written feedback</legend>
 						<label class="block-label selection-button-radio" for="feedback-yes">
@@ -179,13 +179,13 @@
 						</label>
 					</fieldset>
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="assessment-guidance">
 						<span class="form-label-bold">Guidance</span>
 					</label>
 					<input class="form-control" id="assessment-guidance" name="assessment-guidance" value="Your score should be based on the following:" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<h3 class="govuk-heading-s">Guidance table</h3>
 					<table>
 						<thead>
@@ -208,7 +208,7 @@
 						<a href="#" class="add-new-group">+ add new score group</a>
 					</p>
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="max-word-count">
 						<span class="form-label-bold">Max word count</span>
 					</label>

@@ -70,8 +70,8 @@
 
                             <tr th:if="*{stagedInvite}"
                                 class="repeatable-row form-group-row-validated"
-                                th:classappend="((${#fields.hasErrors('stagedInvite.name')}) or (${#fields.hasErrors('stagedInvite.email')})) ? 'form-group-error'">
-                                <td class="form-group" th:classappend="${#fields.hasErrors('stagedInvite.name')} ? 'form-group-error'">
+                                th:classappend="((${#fields.hasErrors('stagedInvite.name')}) or (${#fields.hasErrors('stagedInvite.email')})) ? 'govuk-form-group--error'">
+                                <td class="govuk-form-group" th:classappend="${#fields.hasErrors('stagedInvite.name')} ? 'govuk-form-group--error'">
                                     <label for="stagedInvite.name">
                                         <span class="govuk-visually-hidden">Applicant name</span>
                                         <th:block th:if="${#fields.hasErrors('stagedInvite.name')}">
@@ -87,7 +87,7 @@
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                                 </td>
-                                <td class="form-group" th:classappend="${#fields.hasErrors('stagedInvite.email')} ? 'form-group-error'">
+                                <td class="govuk-form-group" th:classappend="${#fields.hasErrors('stagedInvite.email')} ? 'govuk-form-group--error'">
                                     <label for="stagedInvite.email">
                                         <span class="govuk-visually-hidden">Applicant email</span>
                                         <th:block th:if="${#fields.hasErrors('stagedInvite.email')}">

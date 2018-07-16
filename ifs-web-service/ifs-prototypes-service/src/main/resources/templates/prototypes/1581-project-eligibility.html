@@ -183,10 +183,10 @@
 				<fieldset class="panel" id="change-grant">
 					<legend class="govuk-visually-hidden">Change % grant</legend>
 					<div class="cf">
-						<div class="form-group">
+						<div class="govuk-form-group">
 							<label for="change-grant-percent" class="form-label-bold">
 								Change % grant
-								<span class="form-hint">When changing the % grant, the revised funding level must be below the level originally applied for</span>
+								<span class="govuk-hint">When changing the % grant, the revised funding level must be below the level originally applied for</span>
 							</label>
 							<input class="form-control width-small" id="change-grant-percent" name="change-grant-percent" type="number" th:value="${(param.action != null and param.action[0] == 'grantUpdated' ? '40' : '55')}" /> <strong><a th:href="@{'?status=changeGrant&#38;action=grantUpdated'}">Update</a></strong>
 						</div>
@@ -271,14 +271,14 @@
 		    <p class="govuk-body">After making any necessary changes, eligible costs should be approved.</p>
 		    <p class="govuk-body">If changes are made, make sure the applicant has reviewed and understand all changes before you approve.</p>
 
-		    <div class="form-group">
+		    <div class="govuk-form-group">
 		    	<label class="block-label selection-button-checkbox" for="costs-reviewed">
 			      <input id="costs-reviewed" value="costs-reviewed" type="checkbox" />
 			     	These funding costs have been reviewed and are acceptable
 			    </label>
 		    </div>
 
-		    <div class="form-group hidden" id="add-rag-rating">
+		    <div class="govuk-form-group hidden" id="add-rag-rating">
                 <label for="rag-rating" class="form-label">Please enter the RAG rating for this eligibility review</label>
                 <select id="rag-rating" name="rag-rating" class="form-control" >
                 	<option value="">--</option>

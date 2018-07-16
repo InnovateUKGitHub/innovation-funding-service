@@ -56,9 +56,9 @@
                     </tbody>
                 </table>
             </div>
-            <fieldset class="govuk-!-margin-top-6">
+            <fieldset class="govuk-fieldset govuk-!-margin-top-6">
                 <legend class="govuk-visually-hidden">Email assessor</legend>
-                <div class="form-group govuk-!-margin-bottom-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+                <div class="form-group govuk-!-margin-bottom-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
                     <label class="form-label-bold" th:for="${#ids.next('subject')}">
                         <span>Email subject</span>
                         <th:block th:if="${#fields.hasErrors('subject')}">
@@ -75,7 +75,7 @@
 
                 <h3 class="govuk-heading-s">Message</h3>
 
-                <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
+                <p th:utext="${model.content}" class="govuk-hint" style="white-space: pre-wrap">Read-only email content</p>
 
                 <div class="form-group govuk-!-margin-top-6">
                     <label class="form-label-bold" for="message">Additional text</label>
@@ -85,11 +85,11 @@
                     </div>
                 </div>
 
-                <p class="form-hint govuk-!-margin-top-6">
+                <p class="govuk-hint govuk-!-margin-top-6">
                     Yours sincerely,
                 </p>
 
-                <p class="form-hint govuk-!-margin-top-6">
+                <p class="govuk-hint govuk-!-margin-top-6">
                     Innovate UK, part of UK Research and Innovation <br />
                     Tel: 0300 321 4357 <br />
                     Email: competitions@innovateuk.ukri.org

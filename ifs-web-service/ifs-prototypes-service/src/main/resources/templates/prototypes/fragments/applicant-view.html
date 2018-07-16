@@ -5,14 +5,14 @@
 <div th:fragment="prototype-signin(url)">
     <h1 class="govuk-heading-l">Sign in</h1>
     <form action="#" method="GET">
-        <fieldset>
+        <fieldset class="govuk-fieldset">
             <legend class="govuk-visually-hidden">Sign in</legend>
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="id_email">Email address</label>
                 <input class="form-control width-full" type="text" id="id_email" name="email" value="" />
             </div><!-- .form-group -->
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="id_password" style="position: relative">
                   Password
                   <input class="form-control width-full" type="password" id="id_password" name="password1" value="" />
@@ -39,13 +39,13 @@
     <div class="govuk-grid-row">
         <section class="govuk-grid-column-one-half">
             <form action="#" method="GET">
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">Sign in</legend>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label" for="id_email">Email address</label>
                         <input class="form-control width-full" type="text" id="id_email" name="email" value="" />
                     </div><!-- .form-group -->
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label" for="id_password" style="position: relative">
                             Password
                             <input class="form-control width-full" type="password" id="id_password" name="password1" value="" />
@@ -148,9 +148,9 @@
 <div th:fragment="prototype-applicant-create-acc(url)">
     <h2 class="govuk-heading-m">Your details</h2>
     <form>
-        <fieldset>
+        <fieldset class="govuk-fieldset">
             <legend class="govuk-visually-hidden">Your details</legend>
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="title">
                     <span class="form-label-bold">Title</span>
                 </label>
@@ -162,36 +162,36 @@
                     <option value="">Dr</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="first-name">
                     <span class="form-label-bold">First name</span>
                 </label>
                 <input class="form-control" id="first-name" name="first-name" type="text" />
             </div>
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="last-name">
                     <span class="form-label-bold">Last name</span>
                 </label>
                 <input class="form-control" id="last-name" name="last-name" type="text" />
             </div>
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="phone-number">
                     <span class="form-label-bold">Phone number</span>
-                    <span class="form-hint">We may use this to contact you about the application</span>
+                    <span class="govuk-hint">We may use this to contact you about the application</span>
                 </label>
                 <input class="form-control" id="phone-number" name="phone-number" type="text" />
             </div>
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <h3 class="govuk-heading-s">Email</h3>
-                <p class="form-hint">You will need this to sign into your account, the provided email is:<br /><strong>andy.jones@nomensa.com</strong></p>
+                <p class="govuk-hint">You will need this to sign into your account, the provided email is:<br /><strong>andy.jones@nomensa.com</strong></p>
             </div>
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="password">
                     <span class="form-label-bold">Password</span>
                 </label>
                 <input class="form-control" id="password" name="password" type="password" />
             </div>
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="retype-password">
                     <span class="form-label-bold">Re-type password</span>
                 </label>
@@ -269,7 +269,7 @@
         <p class="govuk-body">This is the level of cost detail that the assessors will see during the assessment process</p>
     </div>
 
-    <div class="form-group">
+    <div class="govuk-form-group">
         <div style="overflow: auto;">
             <table>
                 <thead>
@@ -377,7 +377,7 @@
 <div th:fragment="prototype-project-cost-breakdown">
     <h2 class="govuk-heading-m extra-margin">Project cost breakdown</h2>
 
-    <div class="form-group">
+    <div class="govuk-form-group">
         <div style="overflow: auto;">
             <table>
                 <thead>
@@ -721,7 +721,7 @@
 
     <div th:if="${param.status != null} and (${param.status[0] == 'successfulFeedback'} or ${param.status[0] == 'unsuccessfulFeedback'} or ${param.status[0] == 'setup'})" th:remove="tag">
 
-        <div class="form-group download extra-margin">
+        <div class="govuk-form-group download extra-margin">
             <h3 class="govuk-heading-s govuk-!-margin-0">View your application feedback:</h3>
             <a href="#">10294856feedback.pdf (161.96 KB)</a>
         </div>
@@ -736,7 +736,7 @@
 
         <div id="collapsible-1" aria-hidden="false">
             <div class="question">
-                <div class="form-group">
+                <div class="govuk-form-group">
 
                     <h3 class="govuk-heading-s">Project title</h3>
                     <p class="govuk-body">A novel solution to an old problem</p>
@@ -764,7 +764,7 @@
         <h2>Project summary</h2>
 
         <div class="question">
-            <div class="form-group extra-margin">
+            <div class="govuk-form-group extra-margin">
                 <p class="govuk-body">The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
             </div>
         </div>
@@ -772,7 +772,7 @@
         <h2>Public description</h2>
 
             <div class="question">
-                <div class="form-group extra-margin">
+                <div class="govuk-form-group extra-margin">
                     <p class="govuk-body">Wastage in our industry can be attributed in no small part to one issue. To date businesses have been reluctant to tackle that problem and instead worked around it. That has stifled progress.</p>
                     <p class="govuk-body">The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage caused by it.</p>
                 </div>
@@ -782,7 +782,7 @@
         <h2>Scope</h2>
 
             <div class="question">
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <h3 class="govuk-heading-s">How does your project align with the scope of this competition?</h3>
                     <p class="govuk-body">The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years. Identification will involve the university testing conditions to determine the exact circumstance of the Issue. Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in which it occurs within a laboratory environment. After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
                 </div>
@@ -798,7 +798,7 @@
         <h2>1. Business opportunity</h2>
 
         <div class="question">
-            <div class="form-group">
+            <div class="govuk-form-group">
 
                 <h3 class="govuk-heading-s">What is the business opportunity that your project addresses?</h3>
 
@@ -832,7 +832,7 @@
         <h2>2. Potential market</h2>
 
         <div class="question">
-            <div class="form-group">
+            <div class="govuk-form-group">
 
                 <h2 class="govuk-heading-s">What is the size of the potential market for your project?</h2>
 
@@ -871,7 +871,7 @@
         <h2>3. Project exploitation</h2>
 
         <div class="question">
-            <div class="form-group">
+            <div class="govuk-form-group">
 
                 <h2 class="govuk-heading-s">How will you exploit and market your project?</h2>
 
@@ -908,7 +908,7 @@
         <h2>4. Economic benefit</h2>
 
             <div class="question">
-                <div class="form-group">
+                <div class="govuk-form-group">
 
                     <h3 class="govuk-heading-s">What economic, social and environmental benefits do you expect your project to deliver and when?</h3>
 
@@ -945,13 +945,13 @@
         <h2>5. Technical approach</h2>
 
         <div class="question">
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <h3 class="govuk-heading-s">What technical approach will you use and how will you manage your project?</h3>
                 <p class="govuk-body">Our Academic partner has developed a technique to identify the precise cause of the issue and have been able to demonstrate it at a small scale. Taking this information they will scale up the experiment to a percentage of industrial scale to confirm.</p>
 
                 <p class="govuk-body">We will take this data and engineer a solution to isolate the problem we will then collude with our fabrication partner to design and prototype a tool to correct the obstacle.</p>
 
-                <div class="form-group download">
+                <div class="govuk-form-group download">
                     <h3 class="govuk-heading-s govuk-!-margin-0">View project management appendix:</h3>
                     <a href="#">Project-plan.pdf (161.96 KB)</a>
                 </div>
@@ -983,12 +983,12 @@
         <h2>6. Innovation</h2>
 
         <div class="question">
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <h3 class="govuk-heading-s">What is innovative about your project?
 </h3>
                 <p class="govuk-body">The project is based on Manchester?s novel IP that, for the first time, allows SLM to be conducted without any need for anchors/supports. A search of the literature has established that the advances proposed in this project on which RAMP are based are not available via any commercially available process. In addition, the development and supply of tailored materials by Empire and a dedicated high temperature rig by Ludlow will involve further, critical degrees of innovation that will help to build a portfolio of IP to enhance commercial exploitation. NB. RAMP does not simply reduce stresses by working at higher temperatures; it involves a novel step based on manufacturing engineering and material science that completely eliminates stresses.</p>
 
-                <div class="form-group download">
+                <div class="govuk-form-group download">
                     <h3 class="govuk-heading-s govuk-!-margin-0">View innovation appendix:</h3>
                     <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
                 </div>
@@ -1020,7 +1020,7 @@
         <h2>7. Risks</h2>
 
         <div class="question">
-            <div class="form-group" th:unless="${param.status != null and param.status[0] == 'notSubmitted'}">
+            <div class="govuk-form-group" th:unless="${param.status != null and param.status[0] == 'notSubmitted'}">
 
                 <h3 class="govuk-heading-s">What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h3>
 
@@ -1060,7 +1060,7 @@
         <h2>8. Project team</h2>
 
         <div class="question">
-            <div class="form-group">
+            <div class="govuk-form-group">
 
                 <h3 class="govuk-heading-s">Does your project team have the skills, experience and facilities to deliver this project?</h3>
 
@@ -1070,7 +1070,7 @@
 
                 <p class="govuk-body">The Fabricators ? Are a leading team within complex engineering fabrication. They have work on multiple high budget engineering solutions and consist of a team of people with many years? experience in a range of industries</p>
 
-                <div class="form-group download">
+                <div class="govuk-form-group download">
                     <h3 class="govuk-heading-s govuk-!-margin-0">View project team appendix:</h3>
                     <a href="#">CVs-of-team.pdf (161.96 KB)</a>
                 </div>
@@ -1102,7 +1102,7 @@
         <h2>9. Funding</h2>
 
         <div class="question">
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <h3 class="govuk-heading-s">What will your project cost?</h3>
                 <p class="govuk-body">The amount of money needed to complete this project is large.</p>
                 <p class="govuk-body">The academic phase will require the acquisition of several pieces of lab equipment and the employ of additional graduates to ensure the experiments run smoothly.</p>
@@ -1135,7 +1135,7 @@
         <h2>10. Adding value</h2>
 
         <div class="question">
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <h3 class="govuk-heading-s">How does financial support from Innovate UK and its funding partners add value?</h3>
                 <p class="govuk-body">Although steps are under way to get this project off the ground, investment by Innovate UK will stimulate Industry leads to supply additional resource funding and use of their facilities as required to advance the progress of this project.</p>
                 <p class="govuk-body">UK Investment will ensure that we are able to retain the onward manufacture internally instead of needing to create international deals taking work and profit out of the country.</p>
@@ -1206,16 +1206,16 @@
 <div th:fragment="prototype-companies-house-lookup">
 
         <form th:class="${(status == 'projectSetup' ? 'extra-margin' : '')}">
-            <fieldset>
+            <fieldset class="govuk-fieldset">
                 <legend class="govuk-visually-hidden">Business organisation</legend>
 
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label" for="org-name">
                         <span class="form-label-bold">Find your organisation on Companies House
-                        <span class="form-hint">Enter your company name or registration number</span>
+                        <span class="govuk-hint">Enter your company name or registration number</span>
 
                         <th:block th:if="${status == 'projectSetup'}">
-                            <span class="form-hint">Name given in application: Nomensa</span>
+                            <span class="govuk-hint">Name given in application: Nomensa</span>
                         </th:block>
 
                         </span>
@@ -1259,22 +1259,22 @@
             <a href="#" id="manual-company-trigger" th:unless="${status == 'projectSetup'}">Not on companies House?</a>
 
             <div id="manual-company-input" class="extra-margin">
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">Organisation details</legend>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label" for="organisation-name">
                             <span class="form-label-bold">Organisation name</span>
                         </label>
                         <input class="form-control" id="organisation-name" name="organisation-name" type="text" />
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label" for="postcode-check">
                             <span class="form-label-bold">Postcode</span>
                         </label>
                         <input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
                         <button type="submit" id="postcode-lookup" class="govuk-button">Find UK address</button>
                     </div>
-                    <div class="form-group" id="select-address-block" style="display: none">
+                    <div class="govuk-form-group" id="select-address-block" style="display: none">
                         <label class="form-label" for="title">
                             <span class="form-label-bold">Select your address</span>
                         </label>
@@ -1289,37 +1289,37 @@
                 </fieldset>
                 <fieldset id="address-details" class="extra-margin">
                     <legend class="govuk-visually-hidden">Address details</legend>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label" for="street">
                             <span class="form-label-bold">Street</span>
                         </label>
                         <input class="form-control" id="street" name="street" type="text" />
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label govuk-visually-hidden" for="street-2">
                             <span class="form-label-bold">Street line 2</span>
                         </label>
                         <input class="form-control" id="street-2" name="street-2" type="text" />
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label" for="street-2">
                             <span class="form-label-bold govuk-visually-hidden">Street line 3</span>
                         </label>
                         <input class="form-control" id="street-3" name="street-2" type="text" />
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label" for="town">
                             <span class="form-label-bold">Town</span>
                         </label>
                         <input class="form-control" id="town" name="town" type="text" />
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label" for="county">
                             <span class="form-label-bold">County</span>
                         </label>
                         <input class="form-control" id="county" name="county" type="text" />
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label" for="postcode">
                             <span class="form-label-bold">Postcode</span>
                         </label>

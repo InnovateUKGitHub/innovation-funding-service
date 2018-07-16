@@ -86,7 +86,7 @@
         </div>
     </h2>
     <div class="question">
-        <div class="form-group">
+        <div class="govuk-form-group">
             <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${question.feedback}" />
             <p class="govuk-body"><a th:href="@{/{id}/question/{quid}(id=${assessmentId}, quid=${question.questionId})}" class="govuk-link">Return to this question in the application</a></p>
             <p th:unless="${question.applicationInScope == null}" class="govuk-body assessor-score alignright">
@@ -131,7 +131,7 @@
             </ul>
         </div>
 
-        <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'form-group-error'">
+        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'govuk-form-group--error'">
             <label class="form-label" th:for="rejectReason">
                 Please select a reason for rejecting the application
                 <th:block th:if="${#fields.hasErrors('rejectReason')}">
@@ -149,7 +149,7 @@
                         th:text="${reason.displayLabel}">Conflict of interest</option>
             </select>
         </div>
-        <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'form-group-error'">
+        <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'govuk-form-group--error'">
             <label class="form-label" th:for="rejectComment">
                 Use this space to provide more information
                 <th:block th:if="${#fields.hasErrors('rejectComment')}">

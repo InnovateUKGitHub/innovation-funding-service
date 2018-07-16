@@ -67,7 +67,7 @@
                         <td th:text="${app.leadOrganisation}">Lead organisation</td>
                         <td>
                             <div th:with="fieldName=${'feedback[' + iterStat.index + ']'},isError=${#fields.hasErrors(fieldName)}"
-                                 th:class="${isError ? 'form-group-error' : ''}">
+                                 th:class="${isError ? 'govuk-form-group--error' : ''}">
                                 <th:block th:if="${isError}">
                                     <th:block th:if="${isError}">
                                         <span class="error-message" th:each="err : ${#fields.errors(fieldName)}" th:text="${err}" />
@@ -90,7 +90,7 @@
                                                th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
                                                target="_blank"
                                                class="govuk-link">Uploaded-file.pdf</a>
-                                            <p class="form-hint">(opens in a new window)</p>
+                                            <p class="govuk-hint">(opens in a new window)</p>
                                         </div>
                                         <div class="govuk-grid-column-one-third">
                                             <button name="removeFeedbackApplicationId" th:value="${app.applicationId}" class="button-clear">Remove</button>
@@ -108,7 +108,7 @@
             </div>
             <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
 
-            <div class="form-group govuk-!-margin-bottom-6 govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+            <div class="form-group govuk-!-margin-bottom-6 govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
                 <label class="form-label-bold" th:for="${#ids.next('subject')}">
                     <span>Email subject</span>
                     <th:block th:if="${#fields.hasErrors('subject')}">
@@ -124,7 +124,7 @@
             </div>
 
             <h3 class="govuk-heading-s">Message</h3>
-            <p th:utext="${model.content}" class="form-hint" style="white-space: pre-wrap">Read-only email content</p>
+            <p th:utext="${model.content}" class="govuk-hint" style="white-space: pre-wrap">Read-only email content</p>
 
             <div class="form-group govuk-!-margin-top-6">
                 <label class="form-label-bold" for="message">Additional text</label>
@@ -134,11 +134,11 @@
                 </div>
             </div>
 
-            <p class="form-hint govuk-!-margin-top-6">
+            <p class="govuk-hint govuk-!-margin-top-6">
                 Yours sincerely,
             </p>
 
-            <p class="form-hint govuk-!-margin-top-6">
+            <p class="govuk-hint govuk-!-margin-top-6">
                 Innovate UK, part of UK Research and Innovation <br />
                 Tel: 0300 321 4357 <br />
                 Email: competitions@innovateuk.ukri.org

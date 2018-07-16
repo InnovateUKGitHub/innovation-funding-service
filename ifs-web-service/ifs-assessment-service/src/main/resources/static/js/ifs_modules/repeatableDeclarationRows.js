@@ -33,14 +33,14 @@ IFS.assessment.repeatableDeclarationRows = (function () {
       var uniqueRowId = jQuery(target).children().length || 0
       if (jQuery(el).attr('name') === 'hasAppointments' || jQuery(el).attr('name') === 'addAppointment') {
         newRow = jQuery('<tr class="form-group-row-validated">' +
-          '<td class="form-group">' +
+          '<td class="govuk-form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-position-org" class="form-control width-full appointment-field" type="text" ' +
           'id="appointments' + uniqueRowId + '.organisation" ' +
           'name="appointments[' + uniqueRowId + '].organisation" value="" ' +
           'data-required-errormessage="Please enter an organisation." required="required" />' +
           '</td>' +
-          '<td class="form-group">' +
+          '<td class="govuk-form-group">' +
           '<label></label>' +
           '<input aria-labelledby="aria-position-pos" class="form-control width-full appointment-field" type="text" ' +
           'id="appointments' + uniqueRowId + '.position" ' +
@@ -53,21 +53,21 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           '</tr>')
       } else {
         newRow = jQuery('<tr class="form-group-row-validated">' +
-          '<td class="form-group">' +
+          '<td class="govuk-form-group">' +
           '<label><span class="form-label">Relation</span></label>' +
           '<input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.relation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].relation" value="" ' +
           'data-required-errormessage="Please enter a relation." required="required" />' +
           '</td>' +
-          '<td class="form-group">' +
+          '<td class="govuk-form-group">' +
           '<label><span class="form-label">Organisation</span></label>' +
           '<input aria-labelledby="aria-family-org" class="form-control width-full family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.organisation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].organisation" value="" ' +
           'data-required-errormessage="Please enter an organisation." required="required" />' +
           '</td>' +
-          '<td class="form-group">' +
+          '<td class="govuk-form-group">' +
           '<label><span class="form-label">Position</span></label>' +
           '<input aria-labelledby="aria-family-pos" class="form-control width-full family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.position" ' +

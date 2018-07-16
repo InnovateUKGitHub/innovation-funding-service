@@ -13,17 +13,18 @@
           th:action="@{(${model.general.editable} ? '' : 'additional/edit')}"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
-        <fieldset th:if="${model.general.editable}">
+        <fieldset th:if="${model.general.editable}"
+                  class="govuk-fieldset">
             <legend class="govuk-visually-hidden">Funding information</legend>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <span class="form-label-bold">Funder</span>
                     </div>
                 </div>
 
                 <div class="govuk-grid-column-one-half">
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <span class="form-label-bold">Budget</span>
                     </div>
                 </div>
@@ -31,7 +32,7 @@
 
             <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="govuk-grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funder')} ? 'form-group-error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funder')} ? 'govuk-form-group--error'">
                         <label class="form-label" th:for="funders[__${iteration.index}__].funder">
                             <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
@@ -47,7 +48,7 @@
                 </div>
 
                 <div class="govuk-grid-column-one-half">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')} ? 'form-group-error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')} ? 'govuk-form-group--error'">
                         <label class="form-label" th:for="funders[__${iteration.index}__].funderBudget">
                             <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}"></span>
@@ -88,10 +89,12 @@
 
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-            <fieldset>
-                <legend class="govuk-heading-m">Reporting fields</legend>
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h2 class="govuk-fieldset__heading">Reporting fields</h2>
+                </legend>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('pafNumber')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('pafNumber')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="pafNumber">
                         <span class="form-label-bold">PAF number</span>
                     <th:block th:if="${#fields.hasErrors('pafNumber')}">
@@ -105,7 +108,7 @@
                            th:field="${competitionSetupForm.pafNumber}" />
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('budgetCode')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('budgetCode')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="budgetCode">
                         <span class="form-label-bold">Budget code</span>
                         <th:block th:if="${#fields.hasErrors('budgetCode')}">
@@ -120,7 +123,7 @@
                 </div>
 
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('activityCode')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('activityCode')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="activityCode">
                         <span class="form-label-bold">Activity code</span>
                         <th:block th:if="${#fields.hasErrors('activityCode')}">
@@ -137,7 +140,7 @@
 
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('competitionCode')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('competitionCode')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="competitionCode">
                         <span class="form-label-bold">Competition code</span>
                         <th:block th:if="${#fields.hasErrors('competitionCode')}">
@@ -161,7 +164,7 @@
             <button class="govuk-button">Done</button>
         </fieldset>
 
-        <fieldset th:if="${!model.general.editable}" id="section-2-">
+        <fieldset th:if="${!model.general.editable}" id="section-2-" class="govuk-fieldset">
             <table>
                 <thead>
                 <tr>

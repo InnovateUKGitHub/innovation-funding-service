@@ -21,7 +21,7 @@
     <p class="govuk-body">Enter the new user's details below to add them to your invite list.</p>
     <h2 class="govuk-visually-hidden">User information</h2>
     <form action="/prototypes/27-add-internal-user-overview.html" novalidate="novalidate">
-    <div class="form-group">
+    <div class="govuk-form-group">
         <label class="form-label" for="firstName">
             <span>First name</span>
         </label>
@@ -35,7 +35,7 @@
                                     data-maxlength-errormessage=#{validation.standard.firstname.length.max},
                                     data-required-errormessage=#{validation.standard.firstname.required}" />
     </div>
-    <div class="form-group">
+    <div class="govuk-form-group">
         <label class="form-label" for="lastName">
             <span>Last name</span>
         </label>
@@ -50,7 +50,7 @@
                                     data-maxlength-errormessage=#{validation.standard.lastname.length.max},
                                     data-required-errormessage=#{validation.standard.lastname.required}" />
     </div>
-    <div class="form-group">
+    <div class="govuk-form-group">
         <label class="form-label" for="email">
             <span>Email</span>
         </label>
@@ -62,10 +62,10 @@
                th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
                                     data-required-errormessage=#{validation.standard.email.required}" />
     </div>
-    <div class="form-group">
+    <div class="govuk-form-group">
         <label class="form-label" for="role">
             <span class="form-label-bold">IFS role</span>
-            <p class="form-hint">Please choose the appropriate IFS role for the user.</p>
+            <p class="govuk-hint">Please choose the appropriate IFS role for the user.</p>
         </label>
         <select name="role" class="form-control" id="role" required="required" data-required-errormessage="Please select a role">
             <option value="a">IFS Administrator</option>
@@ -74,7 +74,7 @@
             <option value="d">Customer Support</option>
         </select>
     </div>
-    <div class="form-group extra-margin">
+    <div class="govuk-form-group extra-margin">
         <button class="govuk-button">Send invite</button>
         <a href="/prototypes/27-add-internal-user-overview.html">Cancel</a>
     </div>

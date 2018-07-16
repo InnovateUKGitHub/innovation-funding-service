@@ -62,7 +62,7 @@ The question is enabled for the assignee
     When the user clicks the button/link  jQuery=.govuk-button:contains("Review")
     And the user expands the section      Public description
     Then the user should see the element  jQuery=button:contains("Assign to lead for review")
-    And the user clicks the button/link   jQuery=.form-group button:contains("Return and edit")
+    And the user clicks the button/link   jQuery=.govuk-form-group button:contains("Return and edit")
     And the user should see the element   css=.textarea-wrapped .editor
 
 Collaborator should see the terms and conditions from the overview page

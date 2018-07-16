@@ -28,7 +28,7 @@
                 </p>
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="firstName">
                     <span class="form-label-bold">First name</span>
                     <th:block th:if="${#fields.hasErrors('firstName')}">
@@ -50,7 +50,7 @@
                                 data-pattern-errormessage=#{validation.standard.firstname.invalid}" />
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="lastName">
                     <span class="form-label-bold">Last name</span>
                     <th:block th:if="${#fields.hasErrors('lastName')}">
@@ -71,10 +71,10 @@
                                 data-required-errormessage=#{validation.standard.lastname.required},
                                 data-pattern-errormessage=#{validation.standard.lastname.invalid}" />
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="phoneNumber">
                     <span class="form-label-bold">Phone number</span>
-                    <span class="form-hint">We may use this to contact you about the application.</span>
+                    <span class="govuk-hint">We may use this to contact you about the application.</span>
                     <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                     </th:block>
@@ -87,19 +87,19 @@
                        required="required"
                        th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('email') and invitee == null} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email') and invitee == null} ? 'govuk-form-group--error'">
                 <label class="form-label" for="email">
                     <span class="form-label-bold">Email</span>
 
                     <th:block th:if="${invitee}">
-                        <span class="form-hint">You will need this to sign into your account, the provided email is:
+                        <span class="govuk-hint">You will need this to sign into your account, the provided email is:
                             <br/>
                             <strong th:text="${registrationForm.email}"></strong>
                         </span>
                         <input type="hidden" th:field="*{email}">
                     </th:block>
                     <th:block th:unless="${invitee}">
-                        <span class="form-hint">You will need this to sign into your account.</span>
+                        <span class="govuk-hint">You will need this to sign into your account.</span>
                         <th:block th:if="${#fields.hasErrors('email')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
                         </th:block>
@@ -121,12 +121,12 @@
 
             <th:block th:insert="fragments/password :: registration"/>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('termsAndConditions')} ? 'form-group-error'">
-                <fieldset>
-                    <legend>
-                        <span class="govuk-visually-hidden">Terms and conditions</span>
-                        <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('termsAndConditions')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                        <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
                     </legend>
+                    <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
                     <div class="multiple-choice">
                         <input id="termsAndConditions"
                                value="1"
@@ -139,7 +139,7 @@
                 </fieldset>
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <div class="multiple-choice">
                     <input id="allowMarketing"
                            type="checkbox"

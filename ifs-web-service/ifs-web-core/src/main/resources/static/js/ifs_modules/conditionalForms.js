@@ -56,7 +56,7 @@ IFS.core.conditionalForms = (function () {
         }
         if (clearForm || clearValidation) {
           // clear validation
-          var formGroup = target.find('.form-group')
+          var formGroup = target.find('.govuk-form-group')
           formGroup.each(function () {
             var field = jQuery(this).find('input, textarea')
             var requiredAttribute = 'required'

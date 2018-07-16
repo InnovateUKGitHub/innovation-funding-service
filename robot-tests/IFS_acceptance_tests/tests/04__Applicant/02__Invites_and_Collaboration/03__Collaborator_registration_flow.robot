@@ -37,12 +37,12 @@ User is able to select only one type
 The type of organisation navigates to the correct page
     [Documentation]    INFUND-1780, INFUND-1231, INFUND 8531
     [Tags]
-    When the user should see the element           jQuery=.form-hint:contains("UK based business.")
+    When the user should see the element           jQuery=.govuk-hint:contains("UK based business.")
     And the user selects the radio button          organisationType    1
     And the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
     Then the user should see the text in the page  Enter your organisation name or registration number.
     When the user goes back to the previous page
-    And the user should see the element            jQuery=.form-hint:contains("Higher education and organisations registered with Je-S.")
+    And the user should see the element            jQuery=.govuk-hint:contains("Higher education and organisations registered with Je-S.")
     Given the user selects the radio button        organisationType    2
     And the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
     Then the user should see the text in the page  This is the organisation that you work for, this will search all organisations available on Je-S.
@@ -54,13 +54,13 @@ The type of organisation navigates to the correct page
     When the user goes back to the previous page
     Then the user should see the text in the page  This is the organisation that you work for, this will search all organisations available on Je-S.
     Given the user clicks the button/link          jQuery=a:contains("Back to choose your organisation type")
-    Then the user should see the element           jQuery=.form-hint:contains("Organisations which solely promote and conduct collaborative research and innovation.")
+    Then the user should see the element           jQuery=.govuk-hint:contains("Organisations which solely promote and conduct collaborative research and innovation.")
     Given the user selects the radio button        organisationType    3
     And the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
     Then the user should see the text in the page  Research and technology organisation (RTO)
     And the user should see the text in the page   Enter your organisation name or registration number.
     When the user goes back to the previous page
-    And the user should see the element            jQuery=.form-hint:contains("A not-for-profit public sector body or charity working on innovation.")
+    And the user should see the element            jQuery=.govuk-hint:contains("A not-for-profit public sector body or charity working on innovation.")
     Given the user selects the radio button        organisationType    4
     And the user clicks the button/link            jQuery=.govuk-button:contains("Continue")
     Then the user should see the text in the page  Public sector, charity or non Je-S registered research organisation

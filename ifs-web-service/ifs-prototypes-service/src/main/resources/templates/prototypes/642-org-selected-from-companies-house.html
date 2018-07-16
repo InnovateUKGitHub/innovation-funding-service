@@ -20,12 +20,12 @@
 
 	<h1 class="govuk-heading-l">Create your account</h1>
 
-	<p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p>
+	<p class="govuk-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p>
 
 	<h2 class="govuk-heading-m">Business Organisation</h2>
 
 	<form>
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 			<legend class="govuk-visually-hidden">Business Organisation</legend>
 			<div class="form-block">
 				<h3 class="govuk-heading-s">Organisation name</h3>
@@ -41,7 +41,7 @@
 		</fieldset>
 
 		<h2 class="govuk-heading-m">Operating address</h2>
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 			<legend class="govuk-visually-hidden">Operating address</legend>
 			<div class="form-block">
 				<label class="block-label selection-button-checkbox" for="address-same">
@@ -52,16 +52,16 @@
 		</fieldset>
 
 		<div id="manual-company-input" class="extra-margin" style="display: block">
-			<fieldset>
+			<fieldset class="govuk-fieldset">
 				<legend class="govuk-visually-hidden">Organisation details</legend>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="postcode-check">
 						<span class="form-label-bold">Postcode</span>
 					</label>
 					<input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
 					<button type="submit" id="postcode-lookup" class="govuk-button">Find UK address</button>
 				</div>
-				<div class="form-group" id="select-address-block" style="display: none">
+				<div class="govuk-form-group" id="select-address-block" style="display: none">
 					<label class="form-label" for="title">
 						<span class="form-label-bold">Select your address</span>
 					</label>
@@ -76,37 +76,37 @@
 			</fieldset>
 			<fieldset id="address-details" class="extra-margin">
 				<legend class="govuk-visually-hidden">Address details</legend>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="street">
 						<span class="form-label-bold">Street</span>
 					</label>
 					<input class="form-control" id="street" name="street" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label govuk-visually-hidden" for="street-2">
 						<span class="form-label-bold">Street line 2</span>
 					</label>
 					<input class="form-control" id="street-2" name="street-2" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="street-2">
 						<span class="form-label-bold govuk-visually-hidden">Street line 3</span>
 					</label>
 					<input class="form-control" id="street-3" name="street-2" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="town">
 						<span class="form-label-bold">Town</span>
 					</label>
 					<input class="form-control" id="town" name="town" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="county">
 						<span class="form-label-bold">County</span>
 					</label>
 					<input class="form-control" id="county" name="county" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="postcode">
 						<span class="form-label-bold">Postcode</span>
 					</label>
@@ -116,9 +116,9 @@
 		</div>
 
 		<!-- <h2 class="govuk-heading-m">Organisation size</h2>
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 			<legend class="govuk-visually-hidden">Organisation size</legend>
-			<p class="form-hint">More information on defining your company size is available from the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a></p>
+			<p class="govuk-hint">More information on defining your company size is available from the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a></p>
 			<div class="form-block">
 				<label class="block-label selection-button-radio" for="radio-1">
 					<input id="radio-1" type="radio" name="radio-group" value="Micro"/>

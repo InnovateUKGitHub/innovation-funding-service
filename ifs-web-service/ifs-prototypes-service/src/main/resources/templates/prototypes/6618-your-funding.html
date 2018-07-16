@@ -24,10 +24,10 @@
         <form>
 
           <fieldset th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-          	<div class="form-group">
+          	<div class="govuk-form-group">
           		<label class="form-label" for="other-funding">
           			<span class="govuk-heading-m">Enter your funding level (maximum 50%)</span>
-          			<span class="form-hint">The maximum funding level is 50%. This is based on your organisation size and the project research area.</span>
+          			<span class="govuk-hint">The maximum funding level is 50%. This is based on your organisation size and the project research area.</span>
           		</label>
           		<details>
           		    <summary><span class="summary">What funding level should I enter?</span></summary>
@@ -48,9 +48,9 @@
 
           <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Other funding for this project</h2>
-            	<fieldset>
+            	<fieldset class="govuk-fieldset">
             		<legend class="govuk-visually-hidden">Other funding for this project</legend>
-            		<p class="form-hint">Please tell us if you have applied for or received any other public sector funding for this project. You should also include details any offers of funding you have received.</p>
+            		<p class="govuk-hint">Please tell us if you have applied for or received any other public sector funding for this project. You should also include details any offers of funding you have received.</p>
             		<details>
             			    <summary><span class="summary">What should I include in other funding?</span></summary>
             			    <div class="panel">
@@ -70,7 +70,7 @@
 
             		<div class="question" id="finance-other-funding">
             			<div data-finance-subsection-table-container="34">
-            			    <div class="form-group">
+            			    <div class="govuk-form-group">
             			        <table>
             			            <thead>
             			                <tr>
@@ -139,8 +139,8 @@
           </th:block>
 
 
-          <div class="form-group extra-margin-top" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-            <fieldset>
+          <div class="govuk-form-group extra-margin-top" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+            <fieldset class="govuk-fieldset">
               <label for="agree-terms" class="block-label">
                 <input id="agree-terms" value="agree-terms" type="checkbox"/>
                 As a member of this consortium I agree to the funding <a href="#">terms and conditions</a> set out by Innovate UK.

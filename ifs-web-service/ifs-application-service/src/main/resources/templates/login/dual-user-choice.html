@@ -27,17 +27,26 @@
 
                 <form th:action="@{/roleSelection}" method="post" th:object="${form}" class="govuk-!-margin-top-6" novalidate="novalidate">
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('selectedRole')} ? form-group-error">
-                        <fieldset class="inline">
-                            <legend id="selectedRole">
-                                <span class="govuk-heading-s">Please choose the role you are signing in as today</span>
-                                <th:block th:if="${#fields.hasErrors('selectedRole')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
-                                </th:block>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('selectedRole')} ? govuk-form-group--error">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="selectedRole">
+                                <h2 class="govuk-fieldset__heading">Please choose the role you are signing in as today</h2>
                             </legend>
-                            <div class="multiple-choice" th:each="role : ${model.ACCEPTED_ROLES}">
-                                <input th:field="*{selectedRole}" th:value="${role}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />
-                                <label th:for="${#ids.prev('selectedRole')}" th:text="${role.displayName}"></label>
+                            <th:block th:if="${#fields.hasErrors('selectedRole')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
+                            </th:block>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item" th:each="role : ${model.ACCEPTED_ROLES}">
+                                    <input th:field="*{selectedRole}"
+                                           class="govuk-radios__input"
+                                           th:value="${role}"
+                                           type="radio"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.standard.role.required}" />
+                                    <label th:for="${#ids.prev('selectedRole')}"
+                                           th:text="${role.displayName}"
+                                           class="govuk-label govuk-radios__label"></label>
+                                </div>
                             </div>
                         </fieldset>
                     </div>

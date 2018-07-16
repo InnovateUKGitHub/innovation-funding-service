@@ -48,7 +48,7 @@
         <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
 
             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Company details</h2>
-            <div class="form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('organisationName')} ? 'form-group-error'">
+            <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('organisationName')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="organisationName">
                     <span class="form-label-bold">Company name</span>
                     <th:block th:if="${#fields.hasErrors('organisationName')}">
@@ -64,14 +64,14 @@
                         th:field="*{organisationName}"
                         th:attr="data-required-errormessage=#{validation.standard.organisationname.required}" />
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('registrationNumber')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('registrationNumber')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="registrationNumber">
                     <span class="form-label-bold">Companies house number</span>
                     <th:block th:if="${#fields.hasErrors('registrationNumber')}">
                       <span class="error-message" th:each="err : ${#fields.errors('registrationNumber')}" th:text="${err}"></span>
                     </th:block>
                 </label>
-                <p class="form-hint">For example: 15489657</p>
+                <p class="govuk-hint">For example: 15489657</p>
                 <input type="text"
                        th:attr="data-required-errormessage=#{validation.standard.registrationnumber.required},
                                 data-minlength-errormessage=#{validation.standard.registrationnumber.format}"
@@ -86,15 +86,15 @@
             </div>
 
             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Account details</h2>
-            <p class="form-hint">This is the bank account that the applicant will use for the duration of the project</p>
-            <div class="form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('accountNumber')} ? 'form-group-error'">
+            <p class="govuk-hint">This is the bank account that the applicant will use for the duration of the project</p>
+            <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('accountNumber')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="accountNumber">
                     <span class="form-label-bold">Account number</span>
                     <th:block th:if="${#fields.hasErrors('accountNumber')}">
                       <span class="error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
                   </th:block>
                 </label>
-                <p class="form-hint">For example: 15489657</p>
+                <p class="govuk-hint">For example: 15489657</p>
                 <input type="text"
                        th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},
                                 data-minlength-errormessage=#{validation.standard.accountnumber.format}"
@@ -108,14 +108,14 @@
                        th:field="*{accountNumber}"
                        data-switches-button-status="#modal-change-bank-details"/>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="sortCode">
                     <span class="form-label-bold">Sort code</span>
                     <th:block th:if="${#fields.hasErrors('sortCode')}">
                       <span class="error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}"></span>
                     </th:block>
                 </label>
-                <p class="form-hint">For example: 311212</p>
+                <p class="govuk-hint">For example: 311212</p>
                 <input type="text"
                        th:attr="data-required-errormessage=#{validation.standard.sortcode.required},
                                 data-minlength-errormessage=#{validation.standard.sortcode.format}"
@@ -129,13 +129,13 @@
                        th:field="*{sortCode}"
                        data-switches-button-status="#modal-change-bank-details"/>
             </div>
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Billing address</h2>
-            <p class="form-hint">This is the billing address of the bank account. This is not the address of the bank.</p>
 
-
-            <fieldset id="address-details" class="govuk-!-margin-top-6">
-                <legend class="govuk-visually-hidden">Address details</legend>
-                <div class="form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine1')} ? 'form-group-error'">
+            <fieldset id="address-details" class="govuk-fieldset govuk-!-margin-top-6">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h2 class="govuk-fieldset__heading">Billing address</h2>
+                </legend>
+                <span class="govuk-hint">This is the billing address of the bank account. This is not the address of the bank.</span>
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine1')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="addressForm.selectedPostcode.addressLine1">
                         <span class="form-label-bold">Street</span>
                         <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.addressLine1')}">
@@ -149,7 +149,7 @@
                            th:attr="data-required-errormessage=#{validation.standard.addressline1.required}"
                            th:field="*{addressForm.selectedPostcode.addressLine1}" />
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine2')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine2')} ? 'govuk-form-group--error'">
                     <label class="form-label govuk-visually-hidden" for="addressForm.selectedPostcode.addressLine2">
                         <span class="form-label-bold">Street line 2</span>
                         <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.addressLine2')}">
@@ -158,7 +158,7 @@
                     </label>
                     <input class="form-control" type="text" th:errorclass="form-control-error" th:field="*{addressForm.selectedPostcode.addressLine2}"/>
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine3')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine3')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="addressForm.selectedPostcode.addressLine3">
                         <span class="govuk-visually-hidden">Street line 3</span>
                         <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.addressLine3')}">
@@ -167,7 +167,7 @@
                     </label>
                     <input class="form-control" type="text"  th:errorclass="form-control-error"  th:field="*{addressForm.selectedPostcode.addressLine3}"/>
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.town')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.town')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="addressForm.selectedPostcode.town">
                         <span class="form-label-bold">Town</span>
                         <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.town')}">
@@ -176,7 +176,7 @@
                     </label>
                     <input class="form-control" type="text" th:errorclass="form-control-error" required="required" th:attr="data-required-errormessage=#{validation.standard.town.required}" th:field="*{addressForm.selectedPostcode.town}"/>
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.county')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.county')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="addressForm.selectedPostcode.county">
                         <span class="form-label-bold">County</span>
                         <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.county')}">
@@ -185,7 +185,7 @@
                     </label>
                     <input class="form-control" type="text" th:errorclass="form-control-error" th:field="*{addressForm.selectedPostcode.county}"/>
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.postcode')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.postcode')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="addressForm.selectedPostcode.postcode">
                         <span class="form-label-bold">Postcode</span>
                         <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.postcode')}">

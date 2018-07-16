@@ -482,7 +482,7 @@
 
     <form id="form-essential">
 
-        <fieldset id="section-1-done">
+        <fieldset id="section-1-done" class="govuk-fieldset">
 
             <dl class="standard-definition-list">
 
@@ -525,18 +525,18 @@
 
         </fieldset>
 
-        <fieldset id="section-1-edit">
+        <fieldset id="section-1-edit" class="govuk-fieldset">
 
             <legend class="govuk-visually-hidden">Initial details</legend>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="compTitle">
                     <span class="form-label-bold">Competition title</span>
                 </label>
                 <input class="form-control width-x-large" id="compTitle" name="compTitle" value="" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="compType">
                     <span class="form-label-bold">Competition type</span>
                 </label>
@@ -550,7 +550,7 @@
                 </select>
             </div>
 
-             <div class="form-group" id="stateAid" style="display: none">
+             <div class="govuk-form-group" id="stateAid" style="display: none">
                 <h3 class="govuk-heading-s">State aid</h3>
                 <p class="govuk-body">
                     <span class="yes">Yes</span>
@@ -558,7 +558,7 @@
                 </p>
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="compInnovationSector">
                     <span class="form-label-bold">Innovation sector</span>
                 </label>
@@ -572,7 +572,7 @@
                 </select>
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="compInnovationArea">
                     <span class="form-label-bold">Innovation area</span>
                 </label>
@@ -599,7 +599,7 @@
                     <option value="Urban living and built" class="infrastructure">Urban living and built</option>
                 </select>
             </div>
-            <div class="form-group" id="innovation-area2-form-group">
+            <div class="govuk-form-group" id="innovation-area2-form-group">
                 <label class="form-label" for="compInnovationArea2">
                     <span class="form-label-bold govuk-visually-hidden">Innovation area</span>
                 </label>
@@ -631,10 +631,10 @@
                 <a href="#">+ add another innovation area</a>
             </p>
 
-            <fieldset class="form-group">
+            <fieldset class="govuk-fieldset form-group">
                 <h3 class="govuk-heading-s govuk-!-margin-0">Opening date</h3>
                 <legend class="govuk-visually-hidden">Opening date</legend>
-                <p class="form-hint">You are able to edit this date if needed in the milestones section.</p>
+                <p class="govuk-hint">You are able to edit this date if needed in the milestones section.</p>
                 <div class="date-group">
                     <div class="day">
                         <label class="form-label" for="startDay">
@@ -659,7 +659,7 @@
                 </div>
             </fieldset>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="compLeadTechnologist">
                     <span class="form-label-bold">Innovation lead</span>
                 </label>
@@ -671,7 +671,7 @@
                 </select>
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="compExecutive">
                     <span class="form-label-bold">Competition executive</span>
                 </label>
@@ -712,13 +712,13 @@
     </div>
 
     <form>
-        <fieldset id="section-2-edit">
+        <fieldset id="section-2-edit" class="govuk-fieldset">
             <legend class="govuk-visually-hidden">Funding information</legend>
 
 
             <div class="govuk-grid-row" id="co-funder-row-1">
                 <div class="govuk-grid-column-one-half">
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label" for="comp-co-funder-1">
                             <span class="form-label-bold">Funder</span>
                         </label>
@@ -727,7 +727,7 @@
                 </div>
 
                 <div class="govuk-grid-column-one-half">
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label" for="comp-co-funders-budget-1">
                             <span class="form-label-bold">Budget</span>
                         </label>
@@ -740,7 +740,7 @@
 
                 <div class="govuk-grid-row" id="co-funder-row-2">
                     <div class="govuk-grid-column-one-half">
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label govuk-visually-hidden" for="comp-co-funder-2">
                                 <span class="form-label-bold">Funder</span>
                             </label>
@@ -749,7 +749,7 @@
                     </div>
 
                     <div class="govuk-grid-column-one-half">
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label govuk-visually-hidden" for="comp-co-funders-budget-2">
                                 <span class="form-label-bold">Budget</span>
                             </label>
@@ -776,32 +776,32 @@
 
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
-            <fieldset>
+            <fieldset class="govuk-fieldset">
 
                 <legend class="govuk-heading-m">Reporting fields</legend>
 
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label" for="compPaf">
                         <span class="form-label-bold">PAF number</span>
                     </label>
                     <input class="form-control width-large" id="compPaf" name="compPaf" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
                 </div>
 
-               <div class="form-group">
+               <div class="govuk-form-group">
                     <label class="form-label" for="compBudgetCode">
                         <span class="form-label-bold">Budget code</span>
                     </label>
                     <input class="form-control width-large" id="compBudgetCode" name="compBudgetCode" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
                 </div>
 
-                <div class="form-group extra-margin">
+                <div class="govuk-form-group extra-margin">
                     <label class="form-label" for="comp-activity-code">
                         <span class="form-label-bold">Activity code</span>
                     </label>
                     <input class="form-control width-large" id="comp-activity-code" name="comp-activity-code" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
                 </div>
 
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label" for="compCode">
                         <span class="form-label-bold">Competition code</span>
                     </label>
@@ -813,7 +813,7 @@
 
         </fieldset>
 
-        <fieldset id="section-2-done">
+        <fieldset id="section-2-done" class="govuk-fieldset">
 
             <table class="section-2-done">
                 <thead>
@@ -882,11 +882,11 @@
     </div>
 
     <form>
-        <fieldset id="section-3-edit">
+        <fieldset id="section-3-edit" class="govuk-fieldset">
             <legend class="govuk-visually-hidden">Eligibility</legend>
 
-            <div class="form-group">
-                <fieldset class="inline">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset inline">
                     <legend class="form-label-bold">Does the competition have multiple streams?</legend>
                     <label class="block-label selection-button-radio" for="comp-stream-yes">
                         <input id="comp-stream-yes" name="comp-streams-group" value="Yes" type="radio" />
@@ -906,7 +906,7 @@
         </fieldset>
 
 
-        <fieldset id="section-3-done">
+        <fieldset id="section-3-done" class="govuk-fieldset">
 
             <dl class="standard-definition-list">
                 <dt>Multiple stream</dt>
@@ -960,8 +960,8 @@
 
 <div th:fragment="prototype-section-eligibility-stream">
 
-    <fieldset class="comp-stream-group extra-margin" style="display: none;">
-        <div class="form-group">
+    <fieldset class="govuk-fieldset comp-stream-group extra-margin" style="display: none;">
+        <div class="govuk-form-group">
             <label class="form-label" th:for="${'stream-'+streamNo+'-comp-stream'}">
                 <span class="form-label-bold">Stream name or number</span>
             </label>
@@ -973,7 +973,7 @@
 
         <div class="govuk-grid-row">
             <div class="column-quarter">
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label" th:for="${'stream-'+streamNo+'-project-size-from'}">
                         <span class="form-label">From (min)</span>
                     </label>
@@ -981,7 +981,7 @@
                 </div>
             </div>
             <div class="column-quarter">
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label" th:for="${'stream-'+streamNo+'-project-size-to'}">
                         <span class="form-label">To (max)</span>
                     </label>
@@ -995,7 +995,7 @@
 
         <div class="govuk-grid-row">
             <div class="column-quarter">
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label" th:for="${'stream-'+streamNo+'-project-length-from'}">
                         <span class="form-label">From (min)</span>
                     </label>
@@ -1003,7 +1003,7 @@
                 </div>
             </div>
             <div class="column-quarter">
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label" th:for="${'stream-'+streamNo+'-project-length-to'}">
                         <span class="form-label">To (max)</span>
                     </label>
@@ -1014,8 +1014,8 @@
 
     </fieldset>
 
-    <div class="form-group">
-        <fieldset class="inline">
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset inline">
             <legend class="form-label-bold">Should applications be from single partner or collaborative projects?</legend>
             <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-type-single'}">
                 <input th:id="${'stream-'+streamNo+'-comp-type-single'}" th:name="${'stream-'+streamNo+'-comp-type-group'}" value="Single" type="radio" />
@@ -1032,8 +1032,8 @@
         </fieldset>
     </div>
 
-    <div class="form-group">
-        <fieldset class="inline">
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset inline">
             <legend class="form-label-bold">What research categories are in scope for this competition?</legend>
             <label class="block-label selection-button-checkbox" th:for="${'stream-'+streamNo+'-comp-research-tech-feasibilty'}">
                 <input th:id="${'stream-'+streamNo+'-comp-research-tech-feasibilty'}" value="comp-research-tech-feasibilty" type="checkbox" />
@@ -1050,8 +1050,8 @@
         </fieldset>
     </div>
 
-    <div class="form-group">
-        <fieldset class="inline">
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset inline">
             <legend class="form-label-bold">Lead applicant</legend>
             <p class="govuk-body">Select the lead applicant type required</p>
             <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-lead-business'}">
@@ -1069,10 +1069,10 @@
         </fieldset>
     </div>
 
-    <div class="form-group">
+    <div class="govuk-form-group">
         <label class="form-label" th:for="${'stream-'+streamNo+'-comp-participation'}">
             <span class="form-label-bold">Research participation</span>
-            <span class="form-hint">This indicates the maximum level of research participation allowed</span>
+            <span class="govuk-hint">This indicates the maximum level of research participation allowed</span>
         </label>
         <select class="form-control width-large" th:id="${'stream-'+streamNo+'-comp-participation'}" th:name="${'stream-'+streamNo+'-comp-participation'}">
             <option value="">30%</option>
@@ -1082,8 +1082,8 @@
         </select>
     </div>
 
-    <div class="form-group extra-margin">
-        <fieldset class="inline">
+    <div class="govuk-form-group extra-margin">
+        <fieldset class="govuk-fieldset inline">
             <legend class="form-label-bold">Are resubmissions allowed?</legend>
             <p class="govuk-body">Please indicate whether applicants are able to reference a resubmitted application for this competition</p>
             <label class="block-label selection-button-radio" th:for="${'stream-'+streamNo+'-comp-resubmission-yes'}">
@@ -1118,7 +1118,7 @@
 
     <form>
 
-        <fieldset id="section-4-edit">
+        <fieldset id="section-4-edit" class="govuk-fieldset">
 
             <table>
                 <thead>
@@ -1152,7 +1152,7 @@
 
         </fieldset>
 
-        <fieldset id="section-4-done">
+        <fieldset id="section-4-done" class="govuk-fieldset">
 
             <table>
                 <thead>
@@ -1503,35 +1503,35 @@
 
             <div class="question">
 
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label" th:for="${'question-'+ questionNo +'-title'}">
                         <span class="form-label-bold">Question title</span>
                     </label>
                     <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-title'}" th:name="${'question-'+ questionNo +'-title'}" value="" th:value="${question}"/>
                 </div>
 
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label" th:for="${'question-'+ questionNo +'-subtitle'}">
                         <span class="form-label-bold">Question subtitle</span>
                     </label>
                     <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-subtitle'}" th:name="${'question-'+ questionNo +'-subtitle'}" />
                 </div>
 
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label" th:for="${'question-'+ questionNo +'-guidance-title'}">
                         <span class="form-label-bold">Question guidance title</span>
                     </label>
                     <input class="form-control width-x-large" th:id="${'question-'+ questionNo +'-guidance-title'}" th:name="${'question-'+ questionNo +'-guidance-title'}" />
                 </div>
 
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label form-label-bold" th:for="${'question-'+ questionNo +'-guidance'}">Question guidance</label>
                     <div class="textarea-wrapped ">
                         <textarea data-max_words="500" th:id="${'question-'+ questionNo +'-guidance'}" th:name="${'question-'+ questionNo +'-guidance'}"></textarea>
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label" th:for="${'question-'+ questionNo +'-word-count'}">
                         <span class="form-label-bold">Max word count</span>
                     </label>
@@ -1540,7 +1540,7 @@
 
                 <div class="govuk-grid-row">
                      <div class="govuk-grid-column-one-half">
-                        <fieldset class="inline">
+                        <fieldset class="govuk-fieldset inline">
                             <legend class="form-label-bold">Is the answer scored?</legend>
                             <label class="block-label selection-button-radio" th:for="${'question-'+ questionNo +'-scored-yes'}">
                                 <input th:id="${'question-'+ questionNo +'-scored-yes'}" th:name="${'question-'+ questionNo +'-group-scored'}" value="Yes" type="radio" />
@@ -1555,7 +1555,7 @@
 
 
                     <div class="govuk-grid-column-one-half">
-                        <fieldset class="inline">
+                        <fieldset class="govuk-fieldset inline">
                             <legend class="form-label-bold">Allow appendix?</legend>
                             <label class="block-label selection-button-radio" th:for="${'question-'+ questionNo +'-appendix-yes'}">
                                 <input th:id="${'question-'+ questionNo +'-appendix-yes'}" th:name="${'question-'+ questionNo +'-group-appendix'}" value="Yes" type="radio" />
@@ -1673,35 +1673,35 @@
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
-            <fieldset>
-                <div class="form-group">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="short-description">
                         Short description
-                        <span class="form-hint">Appears at the top of the competition page.</span>
+                        <span class="govuk-hint">Appears at the top of the competition page.</span>
                     </label>
                     <input class="form-control width-full prot-section-0-empty" id="short-description" type="text" value="" />
                     <input class="form-control width-full prot-section-0-populated" id="short-description" type="text" value="Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow." />
                 </div>
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="funding-range">
                         Project funding range
-                        <span class="form-hint">Appears against the competition search result.</span>
+                        <span class="govuk-hint">Appears against the competition search result.</span>
                     </label>
                     <input class="form-control prot-section-0-empty" id="funding-range" type="text" value="" />
                     <input class="form-control prot-section-0-populated" id="funding-range" type="text" value="Up to £35,000" />
                 </div>
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="eligibility-summary">
                         Eligibility summary
-                        <span class="form-hint">Appears against the competition search result.</span>
+                        <span class="govuk-hint">Appears against the competition search result.</span>
                     </label>
                     <input class="form-control prot-section-0-empty" id="eligibility-summary" type="text" value="" />
                     <input class="form-control prot-section-0-populated" id="eligibility-summary" type="text" value="UK based business of any size. Must involve at least one SME." />
                 </div>
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="keywords">
                         Keywords
-                        <span class="form-hint">Keywords help competitions appear in search but are not visible to applicants. Separate keywords with commas.</span>
+                        <span class="govuk-hint">Keywords help competitions appear in search but are not visible to applicants. Separate keywords with commas.</span>
                     </label>
                     <input class="form-control width-full prot-section-0-empty" id="keywords" type="text" value="" />
                     <input class="form-control width-full prot-section-0-populated" id="keywords" type="text" value="innovation, drones, drone" />
@@ -1742,9 +1742,9 @@
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
-            <fieldset>
+            <fieldset class="govuk-fieldset">
                 <legend class="govuk-heading-m govuk-!-margin-bottom-6">Mandatory content</legend>
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="competition-description">
                         Competition description
                     </label>
@@ -1759,8 +1759,8 @@
 <!--There are 2 options to apply into this competition, dependent on project size and length, these are referred to as streams. Stream 1 is for projects under 12 months duration and under £100,000. Stream 2 is for projects lasting longer than 12 months or costing over £100,000.-->
                     <!--</textarea>-->
                 </div>
-                <div class="form-group">
-                    <fieldset>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
                         <legend class="form-label-bold">Funding type</legend>
                         <label class="block-label selection-button-radio" for="grant">
                             <input id="grant" name="funding-type-radio-group" value="grant" type="radio" />
@@ -1772,7 +1772,7 @@
                         </label>
                     </fieldset>
                 </div>
-                <!--<div class="form-group">-->
+                <!--<div class="govuk-form-group">-->
                     <!--<label class="form-label-bold" for="funding-type">-->
                         <!--Funding type-->
                     <!--</label>-->
@@ -1780,7 +1780,7 @@
                         <!--<option value="">Sector competition</option>-->
                     <!--</select>-->
                 <!--</div>-->
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="project-size">
                         Project size
                     </label>
@@ -1788,7 +1788,7 @@
                     <!--<input class="form-control" id="project-size" type="text" value="£15,000,000" />-->
                 </div>
             </fieldset>
-            <fieldset>
+            <fieldset class="govuk-fieldset">
                 <legend class="govuk-heading-m govuk-!-margin-bottom-6">
                     Additional content
                 </legend>
@@ -1860,18 +1860,18 @@
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
-            <fieldset>
+            <fieldset class="govuk-fieldset">
                 <legend class="govuk-heading-m govuk-!-margin-0">Content</legend>
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="heading-one">
                             Heading
                         </label>
                         <input class="form-control" id="heading-one" type="text" value="" />
                         <!--<input class="form-control" id="heading-one" type="text" value="Lead applicant eligibility" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="content-one">
                             Content
                         </label>
@@ -1886,27 +1886,27 @@
                         <!--</textarea>-->
                     </div>
                     <!--<div class="upload-section">-->
-                        <!--<div class="form-group">-->
+                        <!--<div class="govuk-form-group">-->
                             <!--<label class="form-label-bold" for="attachment-name-one">-->
                                 <!--Attachment name-->
                             <!--</label>-->
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         <!--</div>-->
-                        <!--<div class="form-group">-->
+                        <!--<div class="govuk-form-group">-->
                             <!--<h3 class="govuk-heading-s govuk-!-margin-0">Attachment file</h3>-->
                             <!--<a href="#" class="uploaded-file">additional_documentation.pdf</a>-->
                             <!--<div class="alignright"><a href="#">Remove file</a></div>-->
                         <!--</div>-->
                     <!--</div>-->
                     <div class="upload-section">
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label-bold" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -1920,15 +1920,15 @@
                 </ul>
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             </fieldset>
-            <fieldset>
-                <div class="form-group">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="heading-two">
                         Heading
                     </label>
                     <input class="form-control" id="heading-two" type="text" value="" />
                     <!--<input class="form-control" id="heading-two" type="text" value="Consortium eligibility" />-->
                 </div>
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="content-two">
                         Content
                     </label>
@@ -1944,14 +1944,14 @@
                     <!--</textarea>-->
                 </div>
                 <div class="upload-section">
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="attachment-name-one">
                             Attachment name
                         </label>
                         <input class="form-control" id="attachment-name-one" type="text" value="" />
                         <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <input type="file" name="file" id="file" class="inputfile" />
                         <label for="file" class="button-secondary extra-margin">+ Upload</label>
                         <p class="uploaded-file">No file currently uploaded</p>
@@ -1965,15 +1965,15 @@
                 </ul>
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             </fieldset>
-            <fieldset>
-                <div class="form-group">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="heading-three">
                         Heading
                     </label>
                     <input class="form-control" id="heading-three" type="text" value="" />
                     <!--<input class="form-control" id="heading-three" type="text" value="Project types" />-->
                 </div>
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="content-three">
                         Content
                     </label>
@@ -1996,14 +1996,14 @@
                     <!--</textarea>-->
                 </div>
                 <div class="upload-section">
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="attachment-name-one">
                             Attachment name
                         </label>
                         <input class="form-control" id="attachment-name-one" type="text" value="" />
                         <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <input type="file" name="file" id="file" class="inputfile" />
                         <label for="file" class="button-secondary extra-margin">+ Upload</label>
                         <p class="uploaded-file">No file currently uploaded</p>
@@ -2016,15 +2016,15 @@
                 </ul>
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
             </fieldset>
-            <fieldset>
-                <div class="form-group">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="heading-four">
                         Heading
                     </label>
                     <input class="form-control" id="heading-four" type="text" value="" />
                     <!--<input class="form-control" id="heading-four" type="text" value="Projects we won't fund" />-->
                 </div>
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="content-four">
                         Content
                     </label>
@@ -2043,13 +2043,13 @@
                     <!--</textarea>-->
                 </div>
                 <div class="upload-section">
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="attachment-name-one">
                             Attachment name
                         </label>
                         <input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <input type="file" name="file" id="file" class="inputfile" />
                         <label for="file" class="button-secondary extra-margin">+ Upload</label>
                         <p class="uploaded-file">No file currently uploaded</p>
@@ -2143,18 +2143,18 @@
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
-            <fieldset>
+            <fieldset class="govuk-fieldset">
                 <legend class="govuk-heading-m govuk-!-margin-0">Content</legend>
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="heading-one">
                             Heading
                         </label>
                         <input class="form-control" id="heading-one" type="text" value="" />
                         <!--<input class="form-control" id="heading-one" type="text" value="Project scope" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="content-one">
                             Content
                         </label>
@@ -2198,14 +2198,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label-bold" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2217,16 +2217,16 @@
                     <!--<li><a href="#">Move section up</a></li>-->
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="heading-two">
                             Heading
                         </label>
                         <input class="form-control" id="heading-two" type="text" value="" />
                         <!--<input class="form-control" id="heading-two" type="text" value="Specific competition themes" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="content-two">
                             Content
                         </label>
@@ -2262,14 +2262,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label-bold" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2332,8 +2332,8 @@
         </dl>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <form>
-            <fieldset>
-                <div class="form-group">
+            <fieldset class="govuk-fieldset">
+                <div class="govuk-form-group">
                     <legend class="form-label form-label-bold">Date</legend>
                     <div class="date-group">
                         <div class="day">
@@ -2353,7 +2353,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <label class="form-label-bold" for="date-content-one">
                         Content
                     </label>
@@ -2362,13 +2362,13 @@
 <!--Briefing event in Belfast. More information-->
                     <!--</textarea>-->
                 </div>
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <a href="#">Remove event</a>
                 </div>
             </fieldset>
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-            <!--<fieldset>-->
-                <!--<div class="form-group">-->
+            <!--<fieldset class="govuk-fieldset">-->
+                <!--<div class="govuk-form-group">-->
                     <!--<legend class="form-label form-label-bold">Date</legend>-->
                     <!--<div class="date-group">-->
                         <!--<div class="day">-->
@@ -2385,7 +2385,7 @@
                         <!--</div>-->
                     <!--</div>-->
                 <!--</div>-->
-                <!--<div class="form-group">-->
+                <!--<div class="govuk-form-group">-->
                     <!--<label class="form-label-bold" for="date-content-two">-->
                         <!--Content-->
                     <!--</label>-->
@@ -2393,7 +2393,7 @@
 <!--Briefing event in Cardiff. More information-->
                     <!--</textarea>-->
                 <!--</div>-->
-                <!--<div class="form-group">-->
+                <!--<div class="govuk-form-group">-->
                     <!--<a href="#">Remove event</a>-->
                 <!--</div>-->
             <!--</fieldset>-->
@@ -2445,18 +2445,18 @@
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
-            <fieldset>
+            <fieldset class="govuk-fieldset">
                 <legend class="govuk-heading-m govuk-!-margin-0">Content</legend>
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="heading-one">
                             Heading
                         </label>
                         <input class="form-control" id="heading-one" type="text" value="" />
                         <!--<input class="form-control" id="heading-one" type="text" value="How to apply" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="content-one">
                             Content
                         </label>
@@ -2466,14 +2466,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label-bold" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2485,16 +2485,16 @@
                     <!--<li><a href="#">Move section up</a></li>-->
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="heading-two">
                             Heading
                         </label>
                         <input class="form-control" id="heading-two" type="text" value="" />
                         <!--<input class="form-control" id="heading-two" type="text" value="The application process" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="content-two">
                             Content
                         </label>
@@ -2510,14 +2510,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label-bold" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2530,16 +2530,16 @@
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
 
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="heading-three">
                             Heading
                         </label>
                         <input class="form-control" id="heading-three" type="text" value="" />
                         <!--<input class="form-control" id="heading-three" type="text" value="Application questions" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="content-three">
                             Content
                         </label>
@@ -2549,14 +2549,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label-bold" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2569,16 +2569,16 @@
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
 
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="heading-four">
                             Heading
                         </label>
                         <input class="form-control" id="heading-four" type="text" value="" />
                         <!--<input class="form-control" id="heading-four" type="text" value="Competition contact" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="content-four">
                             Content
                         </label>
@@ -2588,14 +2588,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label-bold" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2608,16 +2608,16 @@
                     <!--<li><a href="#">Move section down</a></li>-->
                 </ul>
 
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="heading-five">
                             Heading
                         </label>
                         <input class="form-control" id="heading-five" type="text" value="" />
                         <!--<input class="form-control" id="heading-five" type="text" value="Rules" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="content-five">
                             Content
                         </label>
@@ -2629,14 +2629,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label-bold" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>
@@ -2686,18 +2686,18 @@
     </th:block>
     <th:block th:if="${(param.state != null and param.state[0] == 'edit')}">
         <form>
-            <fieldset>
+            <fieldset class="govuk-fieldset">
                 <legend class="govuk-heading-m govuk-!-margin-0">Content</legend>
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="heading-one">
                             Heading
                         </label>
                         <input class="form-control" id="heading-one" type="text" value="" />
                         <!--<input class="form-control" id="heading-one" type="text" value="Background and further information" />-->
                     </div>
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <label class="form-label-bold" for="content-one">
                             Content
                         </label>
@@ -2721,14 +2721,14 @@
                         <!--</textarea>-->
                     </div>
                     <div class="upload-section">
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <label class="form-label-bold" for="attachment-name-one">
                                 Attachment name
                             </label>
                             <input class="form-control" id="attachment-name-one" type="text" value="" />
                             <!--<input class="form-control" id="attachment-name-one" type="text" value="Additional documentation" />-->
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <input type="file" name="file" id="file" class="inputfile" />
                             <label for="file" class="button-secondary extra-margin">+ Upload</label>
                             <p class="uploaded-file">No file currently uploaded</p>

@@ -35,10 +35,10 @@
 
         <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
                 <label class="form-label" th:for="*{organisationSearchName}">
                     <span class="form-label-bold" th:text="${searchLabel}">Find your ? organisation</span>
-                    <span class="form-hint" th:text="${searchHint}">Enter your organisation name</span>
+                    <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
                     <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}">
                           <span class="error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
                     </th:block>
@@ -48,11 +48,11 @@
             </div>
             <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <th:block th:if="${organisationForm.research}">
-                    <p class="form-hint">Choose your organisation:</p>
+                    <span class="govuk-hint">Choose your organisation:</span>
                 </th:block>
                 <th:block th:unless="${organisationForm.research}">
                     <h2 class="govuk-heading-m govuk-!-margin-0">Companies House search results</h2>
-                    <p class="form-hint">Select your organisation from the options below</p>
+                    <span class="govuk-hint">Select your organisation from the options below</span>
                 </th:block>
             </th:block>
             <ul id="org-results" class="results-list panel" th:if="${organisationForm.organisationSearching}"

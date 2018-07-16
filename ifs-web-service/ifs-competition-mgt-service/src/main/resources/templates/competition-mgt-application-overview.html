@@ -75,7 +75,7 @@
             <h2 class="govuk-heading-m">Appendices</h2>
 
             <th:block th:each="appendix : ${appendices}">
-                <div class="form-group download">
+                <div class="govuk-form-group download">
                     <h3 class="govuk-heading-s govuk-!-margin-0" th:text="${appendix.title}">
                         View project management appendix:
                     </h3>
@@ -98,7 +98,7 @@
                       method="POST"
                       novalidate="novalidate">
 
-                    <div class="form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'form-group-error'">
+                    <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'govuk-form-group--error'">
                         <label class="form-label" th:for="ineligibleReason">
                             Please enter the reason for removing this application from assessment
                             <th:block th:if="${#fields.hasErrors('ineligibleReason')}">

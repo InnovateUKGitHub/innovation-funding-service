@@ -39,7 +39,7 @@
 		</details>
 	<div>
 	<div data-finance-subsection-table-container="28">
-		<div class="form-group">
+		<div class="govuk-form-group">
 			<table>
 				<tbody>
 					<tr>
@@ -184,7 +184,7 @@
 
 			<div id="admin-support-2">
 			<h3 class="govuk-heading-m">20% of labour costs</h3>
-			<div class="form-group alignright">
+			<div class="govuk-form-group alignright">
 				<label>
 					Total administration support cost
 					<input type="number" name="admin-support-20" class="form-control form-control-1-4 alignright" readonly="" id="id_admin-support-20" value="£ 0" />
@@ -197,12 +197,12 @@
 			<h3 class="govuk-heading-m">Calculate overheads</h3>
 			<p class="govuk-body">If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadheet available below. The model shows you which types of indirect costs associated with your project you may claim. For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review. This will assess the appropriateness of your claim if your grant application is successful.</p>
 
-      <div class="form-group download">
+      <div class="govuk-form-group download">
 	        <h3 class="govuk-heading-s govuk-!-margin-0">Download the overhead calculation spreadsheet</h3>
 	        <a href="#">Overhead calculation spreadsheet.pdf (56kb)</a>
 	    </div>
 
-      <fieldset>
+      <fieldset class="govuk-fieldset">
         <legend class="govuk-visually-hidden">Upload your completed spreadsheet</legend>
 
         <th:block th:if="${param.status == null or param.status[0] == 'overheadRemoved'}">
@@ -227,7 +227,7 @@
 
       </fieldset>
 
-      <div class="form-group alignright">
+      <div class="govuk-form-group alignright">
 				<label>
 					Enter the total cost of overheads as calculated in the spreadsheet &pound;
 					<input type="number" name="admin-support-custom" class="form-control form-control-1-4 alignright"  id="id_admin-support-custom" value="" />
@@ -238,13 +238,13 @@
 		<div id="admin-support-4">
 			<h3 class="govuk-heading-m">Special rate agreed with Innovate UK</h3>
 			<p class="govuk-body">I confirm that I will need to justify this rate if this project is granted funding by Innovate UK.</p>
-			<div class="form-group alignright">
+			<div class="govuk-form-group alignright">
 				<label>
 					Rate agreed with Innovate UK (%)
 					<input type="number" name="admin-support-special" class="form-control form-control-1-4 alignright"  id="id_admin-support-special" value="£ 0" />
 				</label>
 			</div>
-			<div class="form-group alignright">
+			<div class="govuk-form-group alignright">
 				<label>
 					Total administration support cost
 					<input type="number" name="admin-support-special-2" class="form-control form-control-1-4 alignright" readonly="" id="id_admin-support-special-2" value="£ 0" />
@@ -282,7 +282,7 @@
 					</strong>
 				</div>
 				<br />
-				<fieldset>
+				<fieldset class="govuk-fieldset">
 					<legend>Do you choose to accept this rate?</legend>
 					<ul id="id_overheads-acceptRate">
 						<li>
@@ -302,7 +302,7 @@
 				</fieldset>
 				<br />
 
-				<div class="form-group form-group--align-right alignright">
+				<div class="govuk-form-group form-group--align-right alignright">
 					<label>
 						Total overhead costs
 						<input type="number" name="overheads-totalCosts" class="form-control form-control-1-4 alignright" readonly="" id="id_overheads-totalCosts" data-calculation-field="[data-calculation-input=overhead-calculated]" data-calculation-operations="+" data-binding-input="subsection-total-10" value="£ 0" />
@@ -460,7 +460,7 @@
 		            <a class="add-another-row" data-clone-rows="0" href="#">Add another asset</a>
 		        </p>
 		        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-		        <div class="form-group form-group--align-right alignright">
+		        <div class="govuk-form-group form-group--align-right alignright">
 		            <label>
 		                Total capital usage costs
 		                <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="capital-usage-costs-total-field" data-binding-input="subsection-total-12" value="£ 0" />
@@ -503,20 +503,20 @@
 		<div data-finance-subsection-table-container="32">
 		    <div class="form-row">
 		        <div>
-		            <div class="form-group" data-cost-row="13">
+		            <div class="govuk-form-group" data-cost-row="13">
 		                <label class="form-label" for="cost-subcontracting-13-companyName">Subcontractor name</label>
 		                <input type="text" class="form-control form-finances-subcontracting-company" name="subcontracting_costs-name-13" id="cost-subcontracting-13-companyName" value="Mr Francis Bois" />
 		                <a class="delete-row" data-cost-row="13" href="/application/1/form/deletecost/7/13">Remove</a>
 		            </div>
-		            <div class="form-group" data-cost-row="13">
+		            <div class="govuk-form-group" data-cost-row="13">
 		                <label class="form-label" for="cost-subcontracting-13-country">Country where the subcontractor will work</label>
 		                <input type="text" class="form-control form-finances-subcontracting-country" name="subcontracting_costs-country-13" id="cost-subcontracting-13-country" value="France" />
 		            </div>
-		            <div class="form-group" data-cost-row="13">
+		            <div class="govuk-form-group" data-cost-row="13">
 		                <label class="form-label" for="cost-subcontracting-13-role">Role of the subcontractor in the project and description of the work they’ll do</label>
 		                <textarea id="cost-subcontracting-13-role" name="formInput[cost-subcontracting-13-role]"></textarea>
 		            </div>
-		            <div class="form-group" data-cost-row="13">
+		            <div class="govuk-form-group" data-cost-row="13">
 		                <label class="form-label" for="${'cost-subcontracting-'+subContractingCost.id+'-cost'}">Cost</label>
 		                <input type="number" class="form-control form-finances-subcontracting-cost width-medium" data-calculation-input="subcontracting-cost-row" name="subcontracting_costs-cost-13" id="cost-subcontracting-13-subcontractingCost" value="150000" />
 		            </div>
@@ -525,7 +525,7 @@
 		    <p class="alignright">
 		        <a class="add-another-row" data-clone-rows="0" href="/application/1/form/addcost/7/32">Add another subcontractor</a>
 		    </p>
-		    <div class="form-group form-group--align-right alignright">
+		    <div class="govuk-form-group form-group--align-right alignright">
 		        <label>
 		            Total subcontracting costs
 		            <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="cost-subcontracting-total" data-calculation-fields="[id*=subcontractingCost]" data-calculation-operations="+" data-binding-input="subsection-total-13" data-calculation-rawvalue="150000" value="£ 150,000" />
@@ -555,7 +555,7 @@
 		<div>
 		<p class="govuk-body"></p>
 		<div data-finance-subsection-table-container="33">
-		    <div class="form-group">
+		    <div class="govuk-form-group">
 		        <table id="travel-costs-table">
 		            <thead>
 		                <tr>
@@ -574,7 +574,7 @@
 		            <a class="add-another-row" data-clone-rows="0" href="/application/1/form/addcost/7/33">Add another travel cost</a>
 		        </p>
 		    </div>
-		    <div class="form-group form-group--align-right alignright">
+		    <div class="govuk-form-group form-group--align-right alignright">
 		        <label>
 		            Total travel &amp; subsistence costs
 		            <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="travel-costs-total-field" data-binding-input="subsection-total-14" value="£ 0" />
@@ -612,7 +612,7 @@
 		<p class="govuk-body">Please note that legal or project audit and accountancy fees are not eligible and should not be included as an 'other cost'. Patent filing costs of NEW IP relating to the project are limited to £5,000 for SME applicants only.
 		Please provide estimates of other costs that do not fit within any other cost headings.</p>
 		<div data-finance-subsection-table-container="34">
-		    <div class="form-group">
+		    <div class="govuk-form-group">
 		        <table id="other-costs-table">
 		            <thead>
 		                <tr>
@@ -629,7 +629,7 @@
 		            <a class="add-another-row" data-clone-rows="0" href="/application/1/form/addcost/7/34">Add another cost</a>
 		        </p>
 		    </div>
-		    <div class="form-group form-group--align-right alignright">
+		    <div class="govuk-form-group form-group--align-right alignright">
 		        <label>
 		            Total other costs
 		            <input class="form-control form-control-1-4 alignright" readonly="" type="text" id="other-costs-total-field" data-binding-input="subsection-total-15" value="£ 0" />
@@ -655,9 +655,9 @@
 <div th:fragment="finance-other-funding">
 
 <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Other funding for this project</h2>
-	<fieldset>
+	<fieldset class="govuk-fieldset">
 		<legend class="govuk-visually-hidden">Other funding for this project</legend>
-		<p class="form-hint">Please tell us if you have applied for or received any other public sector funding for this project. Any other funding received will need to be deducted from the total value of any funding you are claiming for this project.</p>
+		<p class="govuk-hint">Please tell us if you have applied for or received any other public sector funding for this project. Any other funding received will need to be deducted from the total value of any funding you are claiming for this project.</p>
 		<details>
 			    <summary><span class="summary">What should I include in other funding?</span></summary>
 			    <div class="panel">
@@ -677,7 +677,7 @@
 
 		<div class="question" id="finance-other-funding">
 			<div data-finance-subsection-table-container="34">
-			    <div class="form-group">
+			    <div class="govuk-form-group">
 			        <table>
 			            <thead>
 			                <tr>

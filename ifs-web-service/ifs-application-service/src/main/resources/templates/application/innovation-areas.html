@@ -15,34 +15,43 @@
                 <p class="govuk-body">Choose the primary innovation area for your project. This will help us to select suitable assessors for your application.</p>
 
                 <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('*{__innovationAreaChoice__}')} ? 'form-group-error'">
-                        <fieldset>
-                            <legend class="govuk-!-margin-bottom-6">
-                                <span class="govuk-visually-hidden">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__innovationAreaChoice__}')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-visually-hidden">
+                                <span class="govuk-fieldset__heading">
                                     Choose the primary innovation area for your project. This will help us to select suitable assessors for your application.
                                 </span>
-                                <th:block th:if="${#fields.hasErrors('innovationAreaChoice')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaChoice')}" th:text="${err}" />
-                                </th:block>
                             </legend>
-                            <th:block th:each="innovationArea : ${model.availableInnovationAreas}">
-                                <div class="multiple-choice">
+                            <th:block th:if="${#fields.hasErrors('innovationAreaChoice')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaChoice')}" th:text="${err}" />
+                            </th:block>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item" th:each="innovationArea : ${model.availableInnovationAreas}">
                                     <input type="radio" name="innovationAreaChoice" required="required"
+                                           class="govuk-radios__input"
                                            th:id="${'innovationAreaChoice-'+innovationArea.id}"
                                            th:value="${innovationArea.id}"
                                            th:checked="${model.selectedInnovationAreaId} == ${innovationArea.id}"
                                            th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}">
-                                   <label th:for="${'innovationAreaChoice-'+innovationArea.id}">
+                                   <label th:for="${'innovationAreaChoice-'+innovationArea.id}"
+                                          class="govuk-label govuk-radios__label">
                                        <th:block th:text="${innovationArea.name}" />
-                                       <span class="form-hint" th:text="${innovationArea.description}">description</span>
+                                       <span class="govuk-hint" th:text="${innovationArea.description}">description</span>
                                    </label>
                                 </div>
-                            </th:block>
-                            <p class="form-block">or</p>
-                            <div class="multiple-choice">
-                                <input type="radio" name="innovationAreaChoice" value="NOT_APPLICABLE" th:checked="${model.noInnovationAreaApplicable}" required="required" />
-                                <label>My innovation area is not listed</label>
                             </div>
+                            <p class="form-block">or</p>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input type="radio" name="innovationAreaChoice"
+                                           class="govuk-radios__input"
+                                           value="NOT_APPLICABLE"
+                                           th:checked="${model.noInnovationAreaApplicable}"
+                                           required="required" />
+                                    <label class="govuk-label govuk-radios__label">My innovation area is not listed</label>
+                                </div>
+                            </div>
+
                         </fieldset>
                     </div>
                     <button class="govuk-button" name="save-innovation-area">Save</button>

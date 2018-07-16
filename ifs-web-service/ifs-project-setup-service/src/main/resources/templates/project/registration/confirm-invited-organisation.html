@@ -14,9 +14,10 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',size='govuk-heading-l'" />
 
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Business organisation</h2>
-        <fieldset>
-            <legend class="govuk-visually-hidden">Business organisation</legend>
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-0">
+                <h2 class="govuk-fieldset__heading">Business organisation</h2>
+            </legend>
             <div class="form-block">
                 <h3 class="govuk-heading-s">Organisation name</h3>
                 <p class="govuk-body" th:text="${organisation.name}">Nomensa</p>

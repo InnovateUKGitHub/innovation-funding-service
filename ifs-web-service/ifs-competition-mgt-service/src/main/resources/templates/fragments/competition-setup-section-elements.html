@@ -1,9 +1,10 @@
 <!-- =================Application question=========================== -->
 <div th:fragment="application-question(question, editable)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:unless="${editable}">
-        <fieldset>
-            <legend class="govuk-visually-hidden">Application question</legend>
-            <h2 class="govuk-heading-m govuk-!-margin-top-6">Application question</h2>
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
+                <h2 class="govuk-fieldset__heading">Application question</h2>
+            </legend>
 
             <dl class="application-question-list govuk-grid-row">
                 <dt class="govuk-grid-column-one-third">Question heading</dt>
@@ -47,9 +48,11 @@
             </dl>
         </fieldset>
         <fieldset
-            th:if="${question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null}">
-            <legend class="govuk-visually-hidden">Assessment of this question</legend>
-            <h2 class="govuk-heading-m govuk-!-margin-top-6">Assessment of this question</h2>
+            th:if="${question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null}"
+            class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
+                <h2 class="govuk-fieldset__heading">Assessment of this question</h2>
+            </legend>
 
             <dl class="application-question-list govuk-grid-row">
                 <th:block th:if="${question.scored != null}">
@@ -110,7 +113,7 @@
                th:value="${question.type}"/>
 
         <div class="question">
-            <div class="form-group" th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="question.shortTitle">
                     <span class="form-label-bold">Question heading</span>
                     <th:block th:if="${#fields.hasErrors('question.shortTitle')}">
@@ -128,7 +131,7 @@
                        th:value="${question.shortTitle}"
                        maxlength="255"/>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('question.title')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="question.title">
                     <span class="form-label-bold">Question title</span>
                     <th:block th:if="${#fields.hasErrors('question.title')}">
@@ -146,7 +149,7 @@
                        th:value="${question.title}"
                        maxlength="255"/>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('question.subTitle')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="question.subTitle">
                     <span class="form-label-bold">Question subtitle</span>
                     <th:block th:if="${#fields.hasErrors('question.subTitle')}">
@@ -162,8 +165,8 @@
                        th:value="${question.subTitle}"
                        maxlength="255"/>
             </div>
-            <div class="form-group"
-                 th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'form-group-error'">
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="question.guidanceTitle">
                     <span class="form-label-bold">Question guidance title</span>
                     <th:block th:if="${#fields.hasErrors('question.guidanceTitle')}">
@@ -180,7 +183,7 @@
                        th:value="${question.guidanceTitle}"
                        maxlength="255"/>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('question.guidance')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.guidance')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="question.guidance">
                     <span class="form-label-bold">Question guidance</span>
                     <th:block th:if="${#fields.hasErrors('question.guidance')}">
@@ -202,7 +205,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="question.maxWords">
                     <span class="form-label-bold">Max word count</span>
                     <th:block th:if="${#fields.hasErrors('question.maxWords')}">
@@ -222,48 +225,56 @@
             </div>
 
             <th:block th:if="${question.appendix != null or #fields.hasErrors('question.appendix')}">
-                <div class="form-group"
-                     th:classappend="${#fields.hasErrors('question.appendix')} ? 'form-group-error'">
-                    <fieldset class="inline">
-                        <legend class="form-label-bold" id="question.appendix">Appendix</legend>
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('question.appendix')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.appendix">
+                            <h2 class="govuk-fieldset__heading">Appendix</h2>
+                        </legend>
                         <th:block th:if="${#fields.hasErrors('question.appendix')}">
                         <span class="error-message" th:each="err : ${#fields.errors('question.appendix')}"
                               th:text="${err}"></span>
                         </th:block>
-                        <div class="multiple-choice" data-target="allowedFileTypesDiv" data-target-clear-form="true">
-                            <input id="appendix-yes"
-                                   th:name="question.appendix"
-                                   th:checked="${question.appendix != null and question.appendix}"
-                                   value="1"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                   type="radio"/>
-                            <label for="appendix-yes">Yes</label>
-                        </div>
-                        <div class="multiple-choice">
-                            <input id="appendix-no"
-                                   th:name="question.appendix"
-                                   th:checked="${question.appendix != null and !question.appendix}"
-                                   value="0"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                   type="radio"/>
-                            <label for="appendix-no">No</label>
+                        <div class="govuk-radios govuk-radios--inline">
+                            <div class="govuk-radios__item" data-target="allowedFileTypesDiv" data-target-clear-form="true">
+                                <input id="appendix-yes"
+                                       class="govuk-radios__input"
+                                       th:name="question.appendix"
+                                       th:checked="${question.appendix != null and question.appendix}"
+                                       value="1"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
+                                <label for="appendix-yes"
+                                       class="govuk-label govuk-radios__label">Yes</label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input id="appendix-no"
+                                       class="govuk-radios__input"
+                                       th:name="question.appendix"
+                                       th:checked="${question.appendix != null and !question.appendix}"
+                                       value="0"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
+                                <label for="appendix-no"
+                                       class="govuk-label govuk-radios__label">No</label>
+                            </div>
                         </div>
                     </fieldset>
                 </div>
                 <div id="allowedFileTypesDiv" class="form-group panel">
-                    <div class="form-group"
-                         th:classappend="${#fields.hasErrors('question.allowedFileTypes')} ? 'form-group-error'">
-                        <fieldset>
-                            <legend id="question.allowedFileTypes">
-                                <span class="form-label-bold">Accepted appendix file types</span>
-                                <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.allowedFileTypes')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.allowedFileTypes">
+                                <h2 class="govuk-fieldset__heading">Accepted appendix file types</h2>
+                            </legend>
+                            <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
                                 <span class="error-message"
                                       th:each="err : ${#fields.errors('question.allowedFileTypes')}"
                                       th:text="${err}"></span>
-                                </th:block>
-                            </legend>
+                            </th:block>
                             <div class="multiple-choice"
                                  th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
                                 <input type="checkbox"
@@ -276,8 +287,8 @@
                             </div>
                         </fieldset>
                     </div>
-                    <div class="form-group"
-                         th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'form-group-error'">
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'govuk-form-group--error'">
                         <label class="form-label" for="question.appendixGuidance">
                             <span class="form-label-bold">Appendix guidance</span>
                             <th:block th:if="${#fields.hasErrors('question.appendixGuidance')}">
@@ -312,71 +323,88 @@
 
                 <th:block th:if="${question.researchCategoryQuestion != null}">
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('question.researchCategoryQuestion')} ? 'form-group-error'">
-                        <fieldset class="inline">
-                            <legend class="form-label-bold" id="question.researchCategoryQuestion">Research category question</legend>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.researchCategoryQuestion')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.researchCategoryQuestion">
+                                <h2 class="govuk-fieldset__heading">Research category question</h2>
+                            </legend>
                             <th:block th:if="${#fields.hasErrors('question.researchCategoryQuestion')}">
                                 <span class="error-message" th:each="err : ${#fields.errors('question.researchCategoryQuestion')}"
                                 th:text="${err}"></span>
                             </th:block>
-                            <div class="multiple-choice">
-                                <input id="research-category-yes"
-                                       th:name="question.researchCategoryQuestion"
-                                       th:checked="${question.researchCategoryQuestion != null and question.researchCategoryQuestion}"
-                                       value="1"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="research-category-yes">Yes</label>
-                            </div>
-                            <div class="multiple-choice">
-                                <input id="research-category-no"
-                                       th:name="question.researchCategoryQuestion"
-                                       th:checked="${question.researchCategoryQuestion != null and !question.researchCategoryQuestion}"
-                                       value="0"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="research-category-no">No</label>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item">
+                                    <input id="research-category-yes"
+                                           class="govuk-radios__input"
+                                           th:name="question.researchCategoryQuestion"
+                                           th:checked="${question.researchCategoryQuestion != null and question.researchCategoryQuestion}"
+                                           value="1"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="research-category-yes"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input id="research-category-no"
+                                           class="govuk-radios__input"
+                                           th:name="question.researchCategoryQuestion"
+                                           th:checked="${question.researchCategoryQuestion != null and !question.researchCategoryQuestion}"
+                                           value="0"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="research-category-no"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
                             </div>
                         </fieldset>
                     </div>
 
                 </th:block>
                 <th:block th:if="${question.scored != null or #fields.hasErrors('question.scored')}">
-                    <div class="form-group"
-                         th:classappend="${#fields.hasErrors('question.scored')} ? 'form-group-error'">
-                        <fieldset class="inline">
-                            <legend class="form-label-bold" id="question.scored">Scored</legend>
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.scored')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.scored">
+                                <h2 class="govuk-fieldset__heading">Scored</h2>
+                            </legend>
                             <th:block th:if="${#fields.hasErrors('question.scored')}">
                             <span class="error-message" th:each="err : ${#fields.errors('question.scored')}"
                                   th:text="${err}"></span>
                             </th:block>
-                            <div class="multiple-choice" data-target="score-total">
-                                <input id="scored-yes"
-                                       th:name="question.scored"
-                                       th:checked="${question.scored != null and question.scored}"
-                                       value="1"
-                                       require
-                                       d="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="scored-yes">Yes</label>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item" data-target="score-total">
+                                    <input id="scored-yes"
+                                           class="govuk-radios__input"
+                                           th:name="question.scored"
+                                           th:checked="${question.scored != null and question.scored}"
+                                           value="1"
+                                           require
+                                           d="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="scored-yes"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input id="scored-no"
+                                           class="govuk-radios__input"
+                                           th:name="question.scored"
+                                           th:checked="${question.scored != null and !question.scored}"
+                                           value="0"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="scored-no"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
                             </div>
-                            <div class="multiple-choice">
-                                <input id="scored-no"
-                                       th:name="question.scored"
-                                       th:checked="${question.scored != null and !question.scored}"
-                                       value="0"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="scored-no">No</label>
-                            </div>
+
                         </fieldset>
                     </div>
-                    <div class="form-group"
-                         th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'form-group-error'"
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'govuk-form-group--error'"
                          id="score-total">
                         <label class="form-label" for="question.scoreTotal">
                             <span class="form-label-bold">Out of</span>
@@ -398,18 +426,32 @@
 
                 <th:block th:if="${question.scope != null}">
 
-                    <div class="form-group">
-                        <fieldset class="inline">
-                            <legend class="form-label-bold">Scope 'Y/N' question</legend>
-                            <div class="multiple-choice">
-                                <input id="scoped-yes" th:name="question.scope" th:checked="${question.scope == true}"
-                                       value="1" type="radio"/>
-                                <label for="scoped-yes">Yes</label>
-                            </div>
-                            <div class="multiple-choice">
-                                <input id="scoped-no" th:name="question.scope" th:checked="${question.scope == false}"
-                                       value="0" type="radio"/>
-                                <label for="scoped-no">No</label>
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-fieldset__heading">Scope 'Y/N' question</h2>
+                            </legend>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item">
+                                    <input id="scoped-yes"
+                                           class="govuk-radios__input"
+                                           th:name="question.scope"
+                                           th:checked="${question.scope == true}"
+                                           value="1"
+                                           type="radio"/>
+                                    <label for="scoped-yes"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="multiple-choice">
+                                    <input id="scoped-no"
+                                           class="govuk-radios__input"
+                                           th:name="question.scope"
+                                           th:checked="${question.scope == false}"
+                                           value="0"
+                                           type="radio"/>
+                                    <label for="scoped-no"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
                             </div>
                         </fieldset>
                     </div>
@@ -418,39 +460,47 @@
 
                 <th:block th:if="${question.writtenFeedback != null or #fields.hasErrors('question.writtenFeedback')}">
 
-                    <div class="form-group"
-                         th:classappend="${#fields.hasErrors('question.writtenFeedback')} ? 'form-group-error'">
-                        <fieldset class="inline">
-                            <legend class="form-label-bold" id="question.writtenFeedback">Written feedback</legend>
+                    <div class="govuk-form-group"
+                         th:classappend="${#fields.hasErrors('question.writtenFeedback')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.writtenFeedback">
+                                <h2 class="">Written feedback</h2>
+                            </legend>
                             <th:block th:if="${#fields.hasErrors('question.writtenFeedback')}">
                             <span class="error-message" th:each="err : ${#fields.errors('question.writtenFeedback')}"
                                   th:text="${err}"></span>
                             </th:block>
-                            <div class="multiple-choice" data-target="scored-options" data-target-clear-validation="true">
-                                <input id="writtenFeedback-yes"
-                                       th:name="question.writtenFeedback"
-                                       th:checked="${question.writtenFeedback != null and question.writtenFeedback}"
-                                       value="1"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="writtenFeedback-yes">Yes</label>
-                            </div>
-                            <div class="multiple-choice">
-                                <input id="writtenFeedback-no"
-                                       th:name="question.writtenFeedback"
-                                       th:checked="${question.writtenFeedback != null and !question.writtenFeedback}"
-                                       value="0"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="writtenFeedback-no">No</label>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item" data-target="scored-options" data-target-clear-validation="true">
+                                    <input id="writtenFeedback-yes"
+                                           class="govuk-radios__input"
+                                           th:name="question.writtenFeedback"
+                                           th:checked="${question.writtenFeedback != null and question.writtenFeedback}"
+                                           value="1"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="writtenFeedback-yes"
+                                           class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input id="writtenFeedback-no"
+                                           class="govuk-radios__input"
+                                           th:name="question.writtenFeedback"
+                                           th:checked="${question.writtenFeedback != null and !question.writtenFeedback}"
+                                           value="0"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                           type="radio"/>
+                                    <label for="writtenFeedback-no"
+                                           class="govuk-label govuk-radios__label">No</label>
+                                </div>
                             </div>
                         </fieldset>
                     </div>
                     <div class="js-hidden" id="scored-options">
-                        <div class="form-group"
-                             th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'form-group-error'">
+                        <div class="govuk-form-group"
+                             th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'govuk-form-group--error'">
                             <label class="form-label" for="question.assessmentGuidanceTitle">
                                 <span class="form-label-bold">Guidance title</span>
                                 <th:block th:if="${#fields.hasErrors('question.assessmentGuidanceTitle')}">
@@ -468,8 +518,8 @@
                                    required="required"/>
                         </div>
 
-                        <div class="form-group"
-                             th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'form-group-error'">
+                        <div class="govuk-form-group"
+                             th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'govuk-form-group--error'">
                             <label class="form-label" for="question.assessmentGuidance">
                                 <span class="form-label-bold">Guidance</span>
                                 <th:block th:if="${#fields.hasErrors('question.assessmentGuidance')}">
@@ -488,7 +538,7 @@
                                    required="required"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="govuk-form-group">
 
                             <input type="hidden" name="removeGuidanceRow"/>
                             <h3 class="govuk-heading-s">Guidance table</h3>
@@ -507,9 +557,9 @@
 
                                     <tr th:id="${'guidance-'+iteration.index}"
                                         class="form-group-row-validated"
-                                        th:classappend="((${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')})) ? 'form-group-error'">
-                                        <td class="form-group"
-                                            th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')} ? 'form-group-error'">
+                                        th:classappend="((${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')})) ? 'govuk-form-group--error'">
+                                        <td class="govuk-form-group"
+                                            th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')} ? 'govuk-form-group--error'">
                                             <label class="form-label"
                                                    th:for="guidanceRows[__${iteration.index}__].scoreFrom">
                                                 <span class="govuk-visually-hidden">Score from</span>
@@ -530,8 +580,8 @@
                                                    th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-min-errormessage=#{validation.applicationquestionform.scorefrom.min}"/>
                                         </td>
-                                        <td class="form-group"
-                                            th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')} ? 'form-group-error'">
+                                        <td class="govuk-form-group"
+                                            th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')} ? 'govuk-form-group--error'">
                                             <label class="form-label"
                                                    th:for="guidanceRows[__${iteration.index}__].scoreTo">
                                                 <span class="govuk-visually-hidden">Score to</span>
@@ -551,8 +601,8 @@
                                                    th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-min-errormessage=#{validation.applicationquestionform.scoreto.min}"/>
                                         </td>
-                                        <td class="form-group"
-                                            th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')} ? 'form-group-error'">
+                                        <td class="govuk-form-group"
+                                            th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')} ? 'govuk-form-group--error'">
                                             <label class="form-label"
                                                    th:for="guidanceRows[__${iteration.index}__].justification">
                                                 <span class="govuk-visually-hidden">Justification</span>
@@ -598,9 +648,9 @@
                                 <th:block th:each="(score, iteration : ${competitionSetupForm.question.guidanceRows})">
                                     <tr th:id="${'guidance-'+iteration.index}"
                                         class="form-group-row-validated"
-                                        th:classappend="((${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}) or (${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')})) ? 'form-group-error'">
-                                        <td class="form-group"
-                                            th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')} ? 'form-group-error'">
+                                        th:classappend="((${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}) or (${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')})) ? 'govuk-form-group--error'">
+                                        <td class="govuk-form-group"
+                                            th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')} ? 'govuk-form-group--error'">
                                             <label class="form-label"
                                                    th:for="${'guidanceRow-'+iteration.index+'-subject'}">
                                                 <span class="govuk-visually-hidden">Subject</span>
@@ -620,8 +670,8 @@
                                                    th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.subject.maxlength}"/>
                                         </td>
-                                        <td class="form-group"
-                                            th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')} ? 'form-group-error'">
+                                        <td class="govuk-form-group"
+                                            th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')} ? 'govuk-form-group--error'">
                                             <label class="form-label"
                                                    th:for="${'guidanceRow-'+iteration.index+'-justification'}">
                                                 <span class="govuk-visually-hidden">Justification</span>
@@ -658,8 +708,8 @@
                                 </button>
                             </div>
 
-                            <div class="form-group"
-                                 th:classappend="${#fields.hasErrors('question.assessmentMaxWords')} ? 'form-group-error'">
+                            <div class="govuk-form-group"
+                                 th:classappend="${#fields.hasErrors('question.assessmentMaxWords')} ? 'govuk-form-group--error'">
                                 <label class="form-label" for="question.assessmentMaxWords">
                                     <span class="form-label-bold">Max word count</span>
                                     <th:block th:if="${#fields.hasErrors('question.assessmentMaxWords')}">

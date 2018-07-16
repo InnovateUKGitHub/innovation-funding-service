@@ -30,21 +30,26 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('createNewApplication')} ? 'form-group-error'">
-                    <fieldset>
-                        <legend id="createNewApplication">
-                            <span class="govuk-visually-hidden">Create a new application?</span>
-                            <th:block th:if="${#fields.hasErrors('createNewApplication')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('createNewApplication')}" th:text="${err}"></span>
-                             </th:block>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('createNewApplication')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-visually-hidden" id="createNewApplication">
+                            <span class="govuk-fieldset__heading">Create a new application?</span>
                         </legend>
-                        <div class="multiple-choice" th:each="value : ${ {true, false} }">
+                        <th:block th:if="${#fields.hasErrors('createNewApplication')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('createNewApplication')}" th:text="${err}"></span>
+                        </th:block>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item" th:each="value : ${ {true, false} }">
                                 <input type="radio"
+                                       class="govuk-radios__input"
                                        th:field="*{createNewApplication}"
                                        th:value="${value}"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.field.confirm.new.application}"/>
-                            <label th:for="${#ids.prev('createNewApplication')}" th:text="${value} ? 'Yes, I want to create a new application.' : 'No, I want to continue with my existing application.'"/>
+                                <label class="govuk-label govuk-radios__label"
+                                       th:for="${#ids.prev('createNewApplication')}"
+                                       th:text="${value} ? 'Yes, I want to create a new application.' : 'No, I want to continue with my existing application.'"/>
+                            </div>
                         </div>
                     </fieldset>
                     </div>

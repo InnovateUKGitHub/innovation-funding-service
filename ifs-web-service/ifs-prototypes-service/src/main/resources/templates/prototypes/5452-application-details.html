@@ -24,53 +24,53 @@
     <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
       <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <label class="form-label form-label-bold" for="application_details-title">
                 <span class="govuk-heading-m">Project title</span>
-                <span class="form-hint">Enter the full title of your project</span>
+                <span class="govuk-hint">Enter the full title of your project</span>
             </label>
             <input class="form-control width-full" type="text" id="application_details-title" required="required" data-required-errormessage="Please enter the full title of the project" name="application.name" value="A novel solution to an old problem" />
         </div>
-        <fieldset>
+        <fieldset class="govuk-fieldset">
           <legend>
               <span class="govuk-heading-m">Estimated timescales</span>
           </legend>
           <h2 class="govuk-heading-s">When do you wish to start your project?</h2>
-          <p class="form-hint" id="project-start-hint">For example: 31 12 2015</p>
+          <p class="govuk-hint" id="project-start-hint">For example: 31 12 2015</p>
 
           <div class="form-date">
-            <div class="form-group form-group-day">
+            <div class="govuk-form-group form-group-day">
               <label class="form-label-bold" for="application_details-startdate_day">Day</label>
               <input class="form-control" id="application_details-startdate_day" name="project-start-day" type="number" pattern="[0-9]*" min="0" max="31" aria-describedby="project-start-hint" />
             </div>
 
-            <div class="form-group form-group-month">
+            <div class="govuk-form-group form-group-month">
               <label class="form-label-bold" for="application_details-startdate_month">Month</label>
               <input class="form-control" id="application_details-startdate_month" name="project-start-month" type="number" pattern="[0-9]*" min="0" max="12" aria-describedby="project-start-hint" />
             </div>
 
-            <div class="form-group form-group-year">
+            <div class="govuk-form-group form-group-year">
               <label class="form-label-bold" for="application_details-startdate_year">Year</label>
               <input class="form-control" id="application_details-startdate_year" name="project-start-year" type="number" pattern="[0-9]*" min="2016" max="2050" />
             </div>
           </div>
 
-          <div class="form-group form-group-month">
+          <div class="govuk-form-group form-group-month">
               <label class="form-label-bold" for="application_details-duration">Duration in months</label>
               <input class="form-control width-small" id="application_details-duration" name="application.durationInMonths" type="number" pattern="[0-9]*" min="0" value="51" />
           </div>
         </fieldset>
 
-        <!-- <fieldset>
+        <!-- <fieldset class="govuk-fieldset">
             <legend class="govuk-visually-hidden">Type of research</legend>
             <div class="message-alert govuk-!-margin-bottom-6">
               <h2 class="govuk-heading-s govuk-!-margin-0">What type of research are you undertaking in this project? </h2>
               <p class="govuk-body">The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.</p>
             </div>
-            <div class="form-group">
+            <div class="govuk-form-group">
               <legend>
                   <span class="govuk-heading-m">Research category</span>
-                  <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development" target="_blank">Innovate UK funding rules</a>.</span>
+                  <span class="govuk-hint">What type of research is your project undertaking? Further guidance is available from <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development" target="_blank">Innovate UK funding rules</a>.</span>
               </legend>
               <label class="block-label selected selection-button-radio" for="feasibility-studies">
                   <input type="radio" value="feasibility-studies" required="required" id="feasibility-studies" checked="checked" name="researchArea" />
@@ -89,7 +89,7 @@
 
         <div class="govuk-!-margin-bottom-6">
             <h2 class="govuk-heading-m govuk-!-margin-0">Research category </h2>
-            <p class="form-hint">The type of research affects the level of funding a business can receive under UK state
+            <p class="govuk-hint">The type of research affects the level of funding a business can receive under UK state
                 aid rules. Changing the research category will reset the funding level for all business
                 participants.</p>
 
@@ -106,11 +106,11 @@
             </th:block>
         </div>
 
-      <!-- <div class="form-group">
+      <!-- <div class="govuk-form-group">
           <h2 class="govuk-heading-s govuk-!-margin-0">Lead organisation</h2>
           <div>Empire Ltd</div>
       </div>
-      <div class="form-group">
+      <div class="govuk-form-group">
           <h2 class="govuk-heading-s govuk-!-margin-0">Partners</h2>
           <ul class="govuk-list govuk-list--bullet">
               <li>
@@ -131,7 +131,7 @@
 
     <div class="govuk-!-margin-bottom-6">
       <h2 class="govuk-heading-m">Innovation area</h2>
-        <p class="form-hint">This is the primary innovation area for your project. This will help Innovate UK select
+        <p class="govuk-hint">This is the primary innovation area for your project. This will help Innovate UK select
             suitable assessors for your application.</p>
 
       <th:block th:if="${param.categoryGroup != null}">
@@ -148,12 +148,12 @@
 
     </div>
 
-      <fieldset>
+      <fieldset class="govuk-fieldset">
         <legend class="govuk-visually-hidden">Application resubmission?</legend>
-          <div class="form-group">
+          <div class="govuk-form-group">
               <legend>
                   <span class="govuk-heading-m">Is this application a resubmission of a previous application?</span>
-                  <span class="form-hint">Let us know if this application has been previously submitted to Innovate UK.</span>
+                  <span class="govuk-hint">Let us know if this application has been previously submitted to Innovate UK.</span>
               </legend>
               <label data-target="resubmission-details" class="block-label selection-button-radio" for="resubmission-yes">
                   <input type="radio" value="true" required="required" id="resubmission-yes" name="application.resubmission" />
@@ -168,18 +168,18 @@
 
 
     <div id="resubmission-details" class="cf">
-      <fieldset>
+      <fieldset class="govuk-fieldset">
         <legend class="govuk-visually-hidden">Previous application details</legend>
-        <div class="form-group">
+        <div class="govuk-form-group">
             <h2 class="govuk-heading-m govuk-!-margin-0">Please provide the details of this previous application</h2>
         </div>
-        <div class="form-group">
+        <div class="govuk-form-group">
             <label class="form-label form-label-bold" for="application_details-previousapplicationnumber">
                 <span>Previous application number</span>
             </label>
             <input class="form-control" type="text" id="application_details-previousapplicationnumber" name="application.previousApplicationNumber" value="" />
         </div>
-        <div class="form-group">
+        <div class="govuk-form-group">
             <label class="form-label form-label-bold" for="application_details-previousapplicationtitle">
                 <span>Previous application title</span>
             </label>

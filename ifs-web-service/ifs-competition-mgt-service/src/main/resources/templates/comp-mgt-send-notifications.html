@@ -80,7 +80,7 @@
                     </div>
                 </details>
 
-                <div class="form-group govuk-!-margin-top-6">
+                <div class="govuk-form-group govuk-!-margin-top-6">
                     <label class="form-label-bold" for="subject">
                         Subject
                     </label>
@@ -91,9 +91,9 @@
                            value="<competition name>: Notification regarding your application <application number>: <application title>" />
                 </div>
 
-                <div class="form-group">
+                <div class="govuk-form-group">
                     <span class="form-label-bold">Message</span>
-                    <p class="form-hint">
+                    <p class="govuk-hint">
                         Dear [recipient name] <br/>
                         Innovate UK <br/>
                         [competition name] <br/>
@@ -101,7 +101,7 @@
                     </p>
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('message')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('message')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="body-text">
                         <span class="form-label-bold">Body text</span>
                         <th:block th:if="${#fields.hasErrors('message')}">
@@ -123,11 +123,11 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <p class="form-hint">
+                <div class="govuk-form-group">
+                    <p class="govuk-hint">
                         Yours sincerely,
                     </p>
-                    <p class="form-hint govuk-!-margin-top-6">
+                    <p class="govuk-hint govuk-!-margin-top-6">
                         Innovate UK, part of UK Research and Innovation <br />
                         Tel: 0300 321 4357 <br />
                         Email: competitions@innovateuk.ukri.org

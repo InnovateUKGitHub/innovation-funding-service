@@ -16,10 +16,10 @@
 
         <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div class="search-filters govuk-!-margin-top-6">
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-half">
-                            <div class="form-group">
+                            <div class="govuk-form-group">
                                 <label class="form-label" for="searchString">
                                 <span class="form-label">Look for</span>
                                 <th:block th:if="${#fields.hasErrors('searchString')}">
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="govuk-grid-column-one-half">
-                            <div class="form-group">
+                            <div class="govuk-form-group">
                                 <label class="form-label" for="searchCategory">in</label>
                                 <select th:field="*{searchCategory}" class="form-control" id="searchCategory" name="searchCategory">
                                     <option th:each="category : ${T(org.innovateuk.ifs.user.resource.SearchCategory).values()}"

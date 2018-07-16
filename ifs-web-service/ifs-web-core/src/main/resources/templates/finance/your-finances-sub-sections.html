@@ -46,9 +46,11 @@
             </div>
         </th:block>
 
-        <fieldset th:unless="${model.financeOverviewRows.isEmpty()}">
-            <legend class="govuk-heading-m govuk-!-margin-bottom-0">Financial overview</legend>
-            <span class="form-hint">Details relating to your organisation over the last financial year.</span><br>
+        <fieldset th:unless="${model.financeOverviewRows.isEmpty()}" class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-0">
+                <h2 class="govuk-fieldset__heading">Financial overview</h2>
+            </legend>
+            <span class="govuk-hint">Details relating to your organisation over the last financial year.</span><br>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
                     <table class="govuk-!-margin-bottom-6">
@@ -59,7 +61,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="formInputViewModel, status : ${model.financeOverviewRows}" th:with="formInput=${formInputViewModel.formInput}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''" class="form-group">
+                        <tr th:each="formInputViewModel, status : ${model.financeOverviewRows}" th:with="formInput=${formInputViewModel.formInput}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''" class="govuk-form-group">
                             <td>
                                 <label th:for="${'input-'+formInput.id}">
                                     <span th:text="${formInput.description}"></span>
@@ -182,7 +184,7 @@
     </th:block>
 
     <th:block th:fragment="your_finance_summary (model)">
-        <div class="form-group" style="overflow:auto;">
+        <div class="govuk-form-group" style="overflow:auto;">
             <table>
                 <thead>
                     <tr>
@@ -254,7 +256,7 @@
             <th:block th:unless="${model.readonly}">
                 <p class="govuk-body">Where will most of the project work take place?</p>
                 <!--/* edit */-->
-                <div class="form-group" th:classappend="${#fields.hasErrors('projectLocation')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectLocation')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="projectLocation">
                         <span class="form-label-bold">Postcode</span>
                         <th:block th:if="${#fields.hasErrors('projectLocation')}">

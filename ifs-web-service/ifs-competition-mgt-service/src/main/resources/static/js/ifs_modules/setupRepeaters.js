@@ -113,15 +113,15 @@ IFS.competitionManagement.repeater = (function () {
       var contentRequiredErrorMessage = 'Please enter content.'
 
       var html = '<div class="contentGroup" id="contentGroup-row-' + idCount + '">' +
-                    '<div class="form-group">' +
+                    '<div class="govuk-form-group">' +
                       '<label class="form-label-bold" for="contentGroups[' + idCount + '].heading">Heading</label>' +
                       '<input class="form-control" id="contentGroups[' + idCount + '].heading" type="text" name="contentGroups[' + count + '].heading" data-required-errormessage="' + headerRequiredErrorMessage + '" required="required" />' +
                     '</div>' +
-                    '<div class="form-group textarea-wrapped">' +
+                    '<div class="govuk-form-group textarea-wrapped">' +
                       '<label class="form-label-bold" for="contentGroups[' + idCount + '].content">Content</label>' +
                           '<textarea id="contentGroups[' + idCount + '].content" cols="30" rows="10" class="width-full form-control" data-editor="html" name="contentGroups[' + count + '].content" data-required-errormessage="' + contentRequiredErrorMessage + '" required="required"></textarea>' +
                       '</div>' +
-                    '<div class="form-group upload-section">' +
+                    '<div class="govuk-form-group upload-section">' +
                         '<input type="file" id="contentGroups-' + idCount + '.attachment" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
                         '<label for="contentGroups-' + idCount + '.attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>' +
                         '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="contentGroups-' + idCount + '.attachment" value="' + count + '">Save</button>' +
@@ -148,7 +148,7 @@ IFS.competitionManagement.repeater = (function () {
       }
 
       var html = '<div class="contentGroup" id="contentDateGroup-row-' + idCount + '">' +
-                 '<div class="form-group"><fieldset>' +
+                 '<div class="govuk-form-group"><fieldset>' +
                     '<legend><span class="form-label form-label-bold">Date</span></legend>' +
                     '<div class="date-group">' +
                         '<input type="hidden" disabled name="dates[' + count + '].combined" />' +
@@ -166,13 +166,13 @@ IFS.competitionManagement.repeater = (function () {
                         '</div>' +
                     '</div>' +
                 '</fieldset></div>' +
-                '<div class="form-group textarea-wrapped">' +
+                '<div class="govuk-form-group textarea-wrapped">' +
                     '<label class="form-label" for="dates[' + idCount + '].content">' +
                         '<span class="form-label-bold">Content</span>' +
                     '</label>' +
                     '<textarea cols="30" rows="5" id="dates[' + idCount + '].content" name="dates[' + count + '].content" data-editor="html" class="width-full form-control-error" required="required" th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}"></textarea>' +
                 '</div>' +
-                '<div class="form-group"><button class="button-clear" type="button" data-remove-row="dateContentGroup">Remove event</button></div>' +
+                '<div class="govuk-form-group"><button class="button-clear" type="button" data-remove-row="dateContentGroup">Remove event</button></div>' +
             '</div>'
       if (rows.length) {
         rows.last().after(html)
@@ -192,12 +192,12 @@ IFS.competitionManagement.repeater = (function () {
       }
       var html = '<div class="govuk-grid-row funder-row" id="funder-row-' + idCount + '">' +
                     '<div class="govuk-grid-column-one-half">' +
-                      '<div class="form-group">' +
+                      '<div class="govuk-form-group">' +
                         '<input type="text" maxlength="255" data-maxlength-errormessage="Funders has a maximum length of 255 characters" class="form-control width-x-large" id="' + idCount + '-funder" name="funders[' + count + '].funder" value="">' +
                       '</div>' +
                     '</div>' +
                     '<div class="govuk-grid-column-one-half">' +
-                      '<div class="form-group">' +
+                      '<div class="govuk-form-group">' +
                         '<input type="number" min="0" class="form-control width-x-large" id="' + idCount + '-funderBudget" name="funders[' + count + '].funderBudget" value=""><input required="required" type="hidden" id="' + idCount + '-coFunder" name="funders[' + count + '].coFunder" value="true">' +
                         '<button class="button-clear" name="remove-funder" value="' + count + '" data-remove-row="cofunder">Remove</button>' +
                       '</div>' +
@@ -218,21 +218,21 @@ IFS.competitionManagement.repeater = (function () {
       }
       var html = '<tr id="guidance-' + idCount + '" class="form-group-row-validated">'
       if (isAssessed) {
-        html += '<td class="form-group">' +
+        html += '<td class="govuk-form-group">' +
                 '<label class="form-label" for="guidanceRows[' + idCount + '].scoreFrom"><span class="govuk-visually-hidden">Score from</span></label>' +
                 '<input required="required" type="number" min="0" class="form-control width-small" data-required-errormessage="Please enter a from score." data-min-errormessage="Please enter a valid number." id="guidanceRows[' + idCount + '].scoreFrom" name="guidanceRows[' + count + '].scoreFrom" value="">' +
               '</td>' +
-              '<td class="form-group">' +
+              '<td class="govuk-form-group">' +
                 '<label class="form-label" for="guidanceRows[' + idCount + '].scoreTo"><span class="govuk-visually-hidden">Score to</span></label>' +
                 '<input required="required" type="number" min="0" class="form-control width-small" value="" data-required-errormessage="Please enter a to score." data-min-errormessage="Please enter a valid number." id="guidanceRows[' + idCount + '].scoreTo" name="guidanceRows[' + count + '].scoreTo" value="">' +
               '</td>'
       } else {
-        html += '<td class="form-group">' +
+        html += '<td class="govuk-form-group">' +
                 '<label class="form-label" for="guidanceRows[' + idCount + '].subject"><span class="govuk-visually-hidden">Subject</span></label>' +
                 '<input required="required" class="form-control width-small" data-maxlength-errormessage="Subject has a maximum length of 255 characters." data-required-errormessage="Please enter a subject." id="guidanceRows[' + idCount + '].subject" name="question.guidanceRows[' + count + '].subject" value="">' +
               '</td>'
       }
-      html += '<td class="form-group">' +
+      html += '<td class="govuk-form-group">' +
               '<label class="form-label" for="guidanceRows[' + idCount + '].justification"><span class="govuk-visually-hidden">Justification</span></label>' +
               '<textarea required="required" rows="3" class="form-control width-full" data-maxlength-errormessage="Justification has a maximum length of 255 characters." data-required-errormessage="Please enter a justification." id="guidanceRows[' + idCount + '].justification" name="' + (isAssessed ? '' : 'question.') + 'guidanceRows[' + count + '].justification"></textarea>' +
             '</td>' +

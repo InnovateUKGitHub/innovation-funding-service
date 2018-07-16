@@ -256,15 +256,15 @@ the user clicks previous and goes to the page
     the user should see the text in the page  ${page_content}
 
 the finance summary total should be correct
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    30%
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    990
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    990
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    0
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    0
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    30%
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    990
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    990
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    0
+    Element Should Contain    css=.govuk-form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    0
 
 the project cost breakdown total should be correct
     Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    200,903

@@ -23,11 +23,11 @@
     <h1 class="govuk-heading-xl" th:text="${param.action != null and param.action[0] == 'new'} ? 'Add a new assessor' : 'Edit assessor profile'">EDIT OR NEW ASSESOR PROFILE</h1>
 
     <form action="#">
-        <div class="form-group">
+        <div class="govuk-form-group">
             <label class="form-label" for="first-name">First name</label>
             <input class="form-control" id="first-name" name="first-name" type="text" th:value="${param.action != null and param.action[0] == 'new'} ? '' : 'Veronica'" required>
         </div>
-        <div class="form-group">
+        <div class="govuk-form-group">
             <label class="form-label" for="last-name">Last name</label>
             <input class="form-control" id="last-name" name="last-name" type="text" th:value="${param.action != null and param.action[0] == 'new'} ? '' : 'Lederman'" required>
         </div>
@@ -38,7 +38,7 @@
         </th:block>
 
         <th:block th:if="${param.action != null and param.action[0] == 'new'}">
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="email-address">Email address</label>
                 <input class="form-control" id="email-address" name="email-address" type="text" required>
             </div>

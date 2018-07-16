@@ -28,7 +28,7 @@
 		<dd>Innovate UK</dd>
 	</dl>
 
-	<p class="form-hint" th:unless="${param.status != null and param.status[0] == 'setup-complete'}">You need to complete the following steps before you can start your project. All partners have individual steps to complete.</p>
+	<p class="govuk-hint" th:unless="${param.status != null and param.status[0] == 'setup-complete'}">You need to complete the following steps before you can start your project. All partners have individual steps to complete.</p>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'setup-complete'}">
 		<div class="success-alert govuk-!-margin-bottom-6">

@@ -99,7 +99,7 @@
                             <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
                                 enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                     <h2 class="govuk-heading-m">Respond to query</h2>
-                                    <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
+                                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
                                         <label for="response-1">
                                             <span class="form-label-bold">Response</span>
                                             <th:block th:if="${#fields.hasErrors('response')}">
@@ -136,7 +136,7 @@
                                             </ul>
                                         </th:block>
                                         <h3 class="govuk-heading-s">Upload supporting documentation in pdf format</h3>
-                                        <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
+                                        <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                             <th:block th:if="${#fields.hasErrors('attachment')}">
                                                 <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                             </th:block>
@@ -194,7 +194,7 @@
                             <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
                                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                 <h2 class="govuk-heading-m">Respond to query</h2>
-                                <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
+                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
                                     <label for="response-2">
                                         <span class="form-label-bold">Response</span>
                                         <th:block th:if="${#fields.hasErrors('response')}">
@@ -231,7 +231,7 @@
                                         </ul>
                                     </th:block>
                                     <h3 class="govuk-heading-s">Upload supporting documentation in pdf format</h3>
-                                    <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
+                                    <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                         <th:block th:if="${#fields.hasErrors('attachment')}">
                                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                         </th:block>
@@ -287,7 +287,7 @@
                             <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
                                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                 <h2 class="govuk-heading-m">Respond to query</h2>
-                                <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
+                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
                                     <label for="response-3">
                                         <span class="form-label-bold">Response</span>
                                         <th:block th:if="${#fields.hasErrors('response')}">
@@ -324,7 +324,7 @@
                                         </ul>
                                     </th:block>
                                     <h3 class="govuk-heading-s">Upload supporting documentation in pdf format</h3>
-                                    <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
+                                    <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                         <th:block th:if="${#fields.hasErrors('attachment')}">
                                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                         </th:block>

@@ -27,11 +27,11 @@
               data-th-attr="data-competition=${model.general.competition.id}"
               data-section="application" data-subsection="detail" novalidate="novalidate">
 
-            <fieldset>
-                <legend>
-                    <h2 class="govuk-heading-m">Project duration in months</h2>
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h2 class="govuk-fieldset__heading">Project duration in months</h2>
                 </legend>
-                <div class="form-group" th:classappend="${#fields.hasErrors('minProjectDuration')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('minProjectDuration')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="minProjectDuration">
                         <span>Minimum</span>
                         <th:block th:if="${#fields.hasErrors('minProjectDuration')}">
@@ -50,7 +50,7 @@
                            max="60"
                            data-lowerthan="maxProjectDuration" />
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('maxProjectDuration')} ? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('maxProjectDuration')} ? 'govuk-form-group--error'">
                     <label class="form-label" for="maxProjectDuration">
                         <span>Maximum</span>
                         <th:block th:if="${#fields.hasErrors('maxProjectDuration')}">
@@ -71,34 +71,41 @@
                 </div>
             </fieldset>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('useResubmissionQuestion')} ? 'form-group-error'">
-                <fieldset class="inline">
-                    <legend id="useResubmissionQuestion">
-                        <h2 class="govuk-heading-m">Include the resubmission question?</h2>
-                        <th:block th:if="${#fields.hasErrors('useResubmissionQuestion')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('useResubmissionQuestion')}" th:text="${err}"></span>
-                        </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('useResubmissionQuestion')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="useResubmissionQuestion">
+                        <h2 class="govuk-fieldset__heading">Include the resubmission question?</h2>
                     </legend>
-                    <div class="multiple-choice">
-                        <input id="use-resubmission-question-yes"
-                               value="true"
-                               type="radio"
-                               th:field="*{useResubmissionQuestion}"
-                               required="required" />
-                        <label for="use-resubmission-question-yes">
-                            Yes
-                        </label>
+                    <th:block th:if="${#fields.hasErrors('useResubmissionQuestion')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('useResubmissionQuestion')}" th:text="${err}"></span>
+                    </th:block>
+                    <div class="govuk-radios govuk-radios--inline">
+                        <div class="govuk-radios__item">
+                            <input id="use-resubmission-question-yes"
+                                   class="govuk-radios__input"
+                                   value="true"
+                                   type="radio"
+                                   th:field="*{useResubmissionQuestion}"
+                                   required="required" />
+                            <label for="use-resubmission-question-yes"
+                                   class="govuk-label govuk-radios__label">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input id="use-resubmission-question-no"
+                                   class="govuk-radios__input"
+                                   value="false"
+                                   type="radio"
+                                   th:field="*{useResubmissionQuestion}"
+                                   required="required" />
+                            <label for="use-resubmission-question-no"
+                                   class="govuk-label govuk-radios__label">
+                                No
+                            </label>
+                        </div>
                     </div>
-                    <div class="multiple-choice">
-                        <input id="use-resubmission-question-no"
-                               value="false"
-                               type="radio"
-                               th:field="*{useResubmissionQuestion}"
-                               required="required" />
-                        <label for="use-resubmission-question-no">
-                            No
-                        </label>
-                    </div>
+
                 </fieldset>
             </div>
 

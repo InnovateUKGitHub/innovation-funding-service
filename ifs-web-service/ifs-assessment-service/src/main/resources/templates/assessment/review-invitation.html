@@ -49,31 +49,43 @@
         <p class="govuk-body govuk-!-margin-top-6">Read the project summary above to make sure you do not have a conflict of interest with this application.</p>
 
         <form th:action="@{/review/{reviewId}/respond(reviewId=${model.reviewId})}" method="post" novalidate="novalidate" th:object="${form}">
-            <div class="form-group" th:classappend="${#fields.hasErrors('reviewAccept')} ? 'form-group-error'">
-                <fieldset>
-                    <legend id="reviewAccept">
-                        <h2 class="govuk-heading-m">Choose your option</h2>
-                        <th:block th:if="${#fields.hasErrors('reviewAccept')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('reviewAccept')}" th:text="${err}" />
-                        </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('reviewAccept')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="reviewAccept">
+                        <h2 class="govuk-fieldset__heading">Choose your option</h2>
                     </legend>
+                    <th:block th:if="${#fields.hasErrors('reviewAccept')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('reviewAccept')}" th:text="${err}" />
+                    </th:block>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" data-target="accept-application">
+                            <input id="acceptReview"
+                                   class="govuk-radios__input"
+                                   value="true"
+                                   th:field="*{reviewAccept}"
+                                   type="radio"
+                                   required="required">
+                            <label for="acceptReview"
+                                   class="govuk-label govuk-radios__label">Yes, I am able to review this application.</label>
+                        </div>
 
-                    <div class="multiple-choice" data-target="accept-application">
-                        <input id="acceptReview" value="true" th:field="*{reviewAccept}" type="radio" required="required">
-                        <label for="acceptReview">Yes, I am able to review this application.</label>
+                        <div class="panel js-hidden" id="accept-application">
+                            <p class="govuk-body">You will still have the option to reject after accepting and viewing the full application.</p>
+                        </div>
+
+                        <label class="govuk-radios__item" data-target="reject-application">
+                            <input id="rejectReview"
+                                   class="govuk-radios__input"
+                                   value="false"
+                                   th:field="*{reviewAccept}"
+                                   type="radio"
+                                   required="required">
+                            <label for="rejectReview"
+                                   class="govuk-label govuk-radios__label">No, I am not able to review this application.</label>
+                        </label>
                     </div>
-
-                    <div class="panel js-hidden" id="accept-application">
-                        <p class="govuk-body">You will still have the option to reject after accepting and viewing the full application.</p>
-                    </div>
-
-                    <label class="multiple-choice" data-target="reject-application">
-                        <input id="rejectReview" value="false" th:field="*{reviewAccept}" type="radio" required="required">
-                        <label for="rejectReview">No, I am not able to review this application.</label>
-                    </label>
-
                     <div class="panel js-hidden" id="reject-application">
-                        <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'form-group-error'">
+                        <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'govuk-form-group--error'">
                             <label class="form-label" th:for="${#ids.next('rejectComment')}">
                                 Use this space to tell us why.
                                 <th:block th:if="${#fields.hasErrors('rejectComment')}">

@@ -4,7 +4,7 @@
 <!-- ===========================Spend profile intro area  =========================== -->
 <div th:fragment="prototype-academic-form">
     <form>
-        <fieldset>
+        <fieldset class="govuk-fieldset">
 
             <th:block th:if="${user == 'partner'}">
 
@@ -24,10 +24,10 @@
 
             </th:block>
 
-            <div class="form-group" th:unless="${type == 'checks'}">
+            <div class="govuk-form-group" th:unless="${type == 'checks'}">
                 <label class="form-label" for="tsb-ref">
                     <span class="form-label-bold">TSB reference
-                        <span class="form-hint">This number is found at the top of your Je-S form.</span>
+                        <span class="govuk-hint">This number is found at the top of your Je-S form.</span>
                     </span>
 
                 </label>
@@ -35,12 +35,12 @@
             </div>
 
         </fieldset>
-        <fieldset class="form-inline">
+        <fieldset class="govuk-fieldset form-inline">
             <h2 class="govuk-heading-m govuk-!-margin-0">Financial resources</h2>
             <legend class="govuk-visually-hidden">Financial resources</legend>
             <p class="govuk-body">Please enter the following costs from the summary of resources section on your Je-S form.</p>
 
-            <div class="form-group underline">
+            <div class="govuk-form-group underline">
                 <span class="form-label">
                     <span class="form-label-bold">Directly incurred
                     </span>
@@ -48,7 +48,7 @@
                 <span class="form-text form-label-bold">TSB contribution (please refer to the TSB contribution column).</span>
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="staff">
                     <span>Staff
                     </span>
@@ -60,7 +60,7 @@
 
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="travel">
                     <span>Travel and subsistence
                     </span>
@@ -72,7 +72,7 @@
 
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="other">
                     <span>Other costs
                     </span>
@@ -82,7 +82,7 @@
                 <input class="form-control" id="other" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;0' : '')}" th:unless="${type != 'checks'}" />
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <span class="form-label">
                     <span class="form-label-bold">Subtotal
                     </span>
@@ -96,18 +96,18 @@
         </fieldset>
 
 
-        <fieldset class="form-inline">
+        <fieldset class="govuk-fieldset form-inline">
 
             <legend class="govuk-visually-hidden">Directly allocated</legend>
 
-            <div class="form-group underline">
+            <div class="govuk-form-group underline">
                 <span class="form-label">
                     <span class="form-label-bold">Directly allocated
                     </span>
                 </span>
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="investigations">
                     <span>Investigations
                     </span>
@@ -117,7 +117,7 @@
                 <input class="form-control" id="investigations" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;2,000' : '')}" th:unless="${type != 'checks'}" />
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="estates">
                     <span>Estates costs
                     </span>
@@ -129,7 +129,7 @@
 
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="other-direct">
                     <span>Other costs
                     </span>
@@ -139,7 +139,7 @@
                 <input class="form-control" id="other-direct" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;2,000' : '')}" th:unless="${type != 'checks'}"/>
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <span class="form-label">
                     <span class="form-label-bold">Subtotal
                     </span>
@@ -150,10 +150,10 @@
             </div>
         </fieldset>
 
-        <fieldset class="form-inline">
+        <fieldset class="govuk-fieldset form-inline">
             <legend class="govuk-visually-hidden">Indirect costs</legend>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="indirect">
                     <span class="form-label-bold">Indirect costs
                     </span>
@@ -165,17 +165,17 @@
 
          </fieldset>
 
-         <fieldset class="form-inline">
+         <fieldset class="govuk-fieldset form-inline">
             <legend class="govuk-visually-hidden">Exceptions</legend>
 
-            <div class="form-group underline extra-margin">
+            <div class="govuk-form-group underline extra-margin">
                 <span class="form-label">
                     <span class="form-label-bold">Exceptions
                     </span>
                 </span>
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="exceptions-staff">
                     <span>Staff
                     </span>
@@ -185,7 +185,7 @@
                 <input class="form-control" id="exceptions-staff" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;1,000' : '')}" th:unless="${type != 'checks'}" />
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label" for="exceptions-other-direct">
                     <span>Other costs
                     </span>
@@ -195,7 +195,7 @@
                 <input class="form-control" id="exceptions-other-direct" type="text" th:value="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;1,000' : '')}"  th:unless="${type != 'checks'}" />
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <span class="form-label">
                     <span class="form-label-bold">Subtotal
                     </span>
@@ -205,7 +205,7 @@
                 <span class="form-control" th:text="${(user == 'internal' and param.status != null and param.status[0] == 'approved' ? '&pound;2,000' : '*Calculated figure from above numbers*')}" th:unless="${type != 'checks'}">*Calculated figure from above numbers *</span>
             </div>
 
-            <div class="form-group totals">
+            <div class="govuk-form-group totals">
                 <span class="form-label">
                     <span class="form-label-bold">Total
                     </span>

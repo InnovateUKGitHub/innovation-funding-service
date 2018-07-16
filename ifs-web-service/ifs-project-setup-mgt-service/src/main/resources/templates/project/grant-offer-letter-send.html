@@ -118,40 +118,46 @@
         <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}">
             <h2 class="govuk-heading-m">Confirm signed grant offer letter</h2>
             <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" id="gol-decision-form" method="post" novalidate="novalidate">
-                <div class="form-group">
-                    <fieldset>
-                        <legend id="decisionGOL" class="govuk-!-margin-bottom-6">
-                            Please confirm that these documents meet the requirements for the grant offer letter.
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend id="decisionGOL" class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-6">
+                            <h2 class="govuk-fieldset__heading">Please confirm that these documents meet the requirements for the grant offer letter.</h2>
                         </legend>
-                        <div class="multiple-choice">
-                            <input id="acceptGOL"
-                                   value="APPROVED"
-                                   type="radio"
-                                   name="approvalType"
-                                   required="required"
-                                   data-switches-button-status="#submit-button"
-                                   data-switches-modal-target="#submit-button"
-                                   data-switches-modal-target-value="modal-accept-signed-gol"
-                            />
-                            <label for="acceptGOL">
-                                Accept documents
-                            </label>
-                        </div>
-                        <div class="multiple-choice" data-target="reject-gol">
-                            <input id="rejectGOL"
-                                   value="REJECTED"
-                                   type="radio"
-                                   name="approvalType"
-                                   required="required"
-                                   data-switches-modal-target="#submit-button"
-                                   data-switches-modal-target-value="modal-reject-signed-gol"
-                            />
-                            <label for="rejectGOL">
-                                Reject documents
-                            </label>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input id="acceptGOL"
+                                       class="govuk-radios__input"
+                                       value="APPROVED"
+                                       type="radio"
+                                       name="approvalType"
+                                       required="required"
+                                       data-switches-button-status="#submit-button"
+                                       data-switches-modal-target="#submit-button"
+                                       data-switches-modal-target-value="modal-accept-signed-gol"
+                                />
+                                <label for="acceptGOL"
+                                       class="govuk-label govuk-radios__label">
+                                    Accept documents
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item" data-target="reject-gol">
+                                <input id="rejectGOL"
+                                       class="govuk-radios__input"
+                                       value="REJECTED"
+                                       type="radio"
+                                       name="approvalType"
+                                       required="required"
+                                       data-switches-modal-target="#submit-button"
+                                       data-switches-modal-target-value="modal-reject-signed-gol"
+                                />
+                                <label for="rejectGOL"
+                                       class="govuk-label govuk-radios__label">
+                                    Reject documents
+                                </label>
+                            </div>
                         </div>
                         <div class="panel js-hidden" id="reject-gol">
-                            <div class="form-group">
+                            <div class="govuk-form-group">
                                 <label for="gol-reject-reason" class="form-label">
                                     Reason for rejection (this will not be seen by the project team)
                                 </label>

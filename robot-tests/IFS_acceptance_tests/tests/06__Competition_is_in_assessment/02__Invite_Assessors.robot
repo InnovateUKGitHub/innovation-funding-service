@@ -72,7 +72,7 @@ The User can Add and Remove Assessors
     And the user clicks the button/link    jQuery=a:contains("41 to")
     And the user clicks the button/link    jQuery=a:contains("61 to")
     Then the user clicks the button/link   jQuery=input[value="${getUserId("${invitedAssessor}")}"] ~ label
-    And the user should see the element    jQuery=.form-hint:contains("1 assessors selected")
+    And the user should see the element    jQuery=.govuk-hint:contains("1 assessors selected")
     And the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
     Then The user should see the text in the page  ${invitedAssessor}
     And The user should see the element  jQuery=td:contains("Will Smith") ~ td .yes

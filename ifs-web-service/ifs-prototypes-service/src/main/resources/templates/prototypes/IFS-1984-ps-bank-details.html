@@ -37,32 +37,32 @@
 
         <legend class="govuk-visually-hidden">Account details</legend>
 
-        <p class="form-hint" th:unless="${user == 'internal'}">Please enter the bank account that you wish to use to receive the grant.</p>
+        <p class="govuk-hint" th:unless="${user == 'internal'}">Please enter the bank account that you wish to use to receive the grant.</p>
 
-        <p class="form-hint" th:unless="${user == null}">This is the bank account that the applicant will use for the duration of the project</p>
+        <p class="govuk-hint" th:unless="${user == null}">This is the bank account that the applicant will use for the duration of the project</p>
 
-        <div class="form-group extra-margin">
+        <div class="govuk-form-group extra-margin">
             <label for="bank-acc-number">
                 <span class="form-label-bold">Account number</span>
-                <span class="form-hint">For example: 1548965</span>
+                <span class="govuk-hint">For example: 1548965</span>
             </label>
             <input class="form-control width-medium" id="bank-acc-number" name="bank-acc-number" value="" type="text" />
         </div>
 
-        <div class="form-group">
+        <div class="govuk-form-group">
             <label for="bank-sort-code">
                 <span class="form-label-bold">Sort code</span>
-                <span class="form-hint">For example: 311212</span>
+                <span class="govuk-hint">For example: 311212</span>
             </label>
             <input class="form-control width-medium" id="bank-sort-code" name="bank-sort-code" value="" type="text" />
         </div>
 
-        <div class="form-group">
-            <fieldset>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
                 <legend id="addressType">
                     <h2 class="govuk-heading-m">Billing address</h2>
                 </legend>
-                <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
+                <p class="govuk-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
 
                 <th:block th:insert="prototypes/fragments/project-setup :: prototype-select-address" th:with="address='bankDetails'"  th:unless="${user == 'internal'}"/>
             </fieldset>

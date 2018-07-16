@@ -189,7 +189,7 @@ IFS.core.autoSave = (function () {
         }
 
         var name = field.prop('name')
-        var formGroup = field.closest('.form-group')
+        var formGroup = field.closest('.govuk-form-group')
         var autoSaveInfo = formGroup.find('.autosave-info')
         var startAjaxTime = new Date().getTime()
 

@@ -50,34 +50,37 @@
                 </section>
 
                 <form th:action="@{/invite/competition/{inviteHash}/decision(inviteHash=${model.competitionInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'form-group-error'">
-                        <fieldset>
-                            <legend id="acceptInvitation">
-                                <span class="govuk-heading-m">Select your ability to assess the competition</span>
-                                <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
-                                </th:block>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="acceptInvitation">
+                                <h2 class="govuk-fieldset__heading">Select your ability to assess the competition</h2>
                             </legend>
-
-                            <div class="multiple-choice">
-                                <input id="acceptCompetition" value="true" type="radio" required="required"
-                                       th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.competitioninvitedecision.required}" />
-                                <label for="acceptCompetition">
-                                    Yes, I am able to assess applications to this competition
-                                    <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
-                                </label>
+                            <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
+                            </th:block>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input id="acceptCompetition" value="true" type="radio" required="required"
+                                           class="govuk-radios__input"
+                                           th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.competitioninvitedecision.required}" />
+                                    <label for="acceptCompetition"
+                                           class="govuk-label govuk-radios__label">
+                                        Yes, I am able to assess applications to this competition
+                                        <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item" data-target="reject-competition">
+                                    <input id="rejectCompetition" value="false" type="radio" required="required"
+                                           class="govuk-radios__input"
+                                           th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.competitioninvitedecision.required}"/>
+                                    <label for="rejectCompetition"
+                                           class="govuk-label govuk-radios__label">
+                                        No, I am not able to assess applications to this competition
+                                    </label>
+                                </div>
                             </div>
-
-                            <div class="multiple-choice" data-target="reject-competition">
-                                <input id="rejectCompetition" value="false" type="radio" required="required"
-                                       th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.competitioninvitedecision.required}"/>
-                                <label for="rejectCompetition">
-                                    No, I am not able to assess applications to this competition
-                                </label>
-                            </div>
-
                             <div class="panel js-hidden" id="reject-competition">
-                                <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'form-group-error'">
+                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'govuk-form-group--error'">
                                     <label class="form-label" for="rejectReasonValid">
                                         Please select a reason for rejecting the competition
                                         <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
@@ -92,7 +95,7 @@
                                                 value="1">Not available</option>
                                     </select>
                                 </div>
-                                <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'form-group-error'">
+                                <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'govuk-form-group--error'">
                                     <label class="form-label" th:for="${#ids.next('rejectComment')}">
                                         Use this space to provide more information
                                         <th:block th:if="${#fields.hasErrors('rejectComment')}">

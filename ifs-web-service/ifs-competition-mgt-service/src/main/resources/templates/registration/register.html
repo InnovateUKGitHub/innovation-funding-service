@@ -21,7 +21,7 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create account',size='govuk-heading-l'"/>
             <h2 class="govuk-heading-m">Your details</h2>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
                 <label class="form-label" th:for="${#ids.next('firstName')}">
                     <span>First name</span>
                     <th:block th:if="${#fields.hasErrors('firstName')}">
@@ -41,7 +41,7 @@
                                 data-pattern-errormessage=#{validation.standard.firstname.invalid},
                                 data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
                 <label class="form-label" th:for="${#ids.next('lastName')}">
                     <span>Last name</span>
                     <th:block th:if="${#fields.hasErrors('lastName')}">
@@ -66,18 +66,18 @@
             <p class="govuk-body" th:text="${model.roleName}">Customer support</p>
             <h3 class="govuk-heading-s">Email</h3>
             <p class="govuk-body">
-                <span class="form-hint">You will need this to sign into your account.</span>
+                <span class="govuk-hint">You will need this to sign into your account.</span>
                 <th:block th:text="${model.email}">robertplant@innovateuk.org</th:block>
             </p>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('password')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="password">
                     <span class="form-label-bold">Create password</span>
                     <th:block th:if="${#fields.hasErrors('password')}">
                         <span class="error-message" th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
                     </th:block>
                 </label>
-                <div class="form-hint" id="password-hint">
+                <div class="govuk-hint" id="password-hint">
                     <p class="govuk-body">Your password is case-sensitive and needs to:</p>
                     <ul class="govuk-list govuk-list--bullet status">
                         <li data-minlength-validationstatus="">be at least 8 characters long</li>

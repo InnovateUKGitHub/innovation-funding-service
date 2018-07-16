@@ -36,7 +36,7 @@
         <form class="govuk-!-margin-top-6" id="post-new-query-form" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
               th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
                 <h2 class="govuk-heading-m">Post a new query</h2>
-                <div class="form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'govuk-form-group--error'">
                     <label for="queryTitle">
                         <span class="form-label-bold">Title</span>
                         <th:block th:if="${#fields.hasErrors('queryTitle')}">
@@ -54,7 +54,7 @@
                                     data-required-errormessage=#{validation.field.must.not.be.blank},
                                     data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('section')}? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('section')}? 'govuk-form-group--error'">
                     <label for="section">
                         <span class="form-label-bold">Section</span>
                         <th:block th:if="${#fields.hasErrors('section')}">
@@ -82,7 +82,7 @@
                         </th:block>
                     </select>
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('query')}? 'form-group-error'">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('query')}? 'govuk-form-group--error'">
                     <label for="query">
                         <span class="form-label-bold">Query</span>
                         <th:block th:if="${#fields.hasErrors('query')}">
@@ -119,7 +119,7 @@
                         </ul>
                     </th:block>
                     <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Upload supporting documentation in PDF format.</h3>
-                    <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error': ''">
+                    <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error': ''">
                         <th:block th:if="${#fields.hasErrors('attachment')}">
                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}"></span>
                         </th:block>

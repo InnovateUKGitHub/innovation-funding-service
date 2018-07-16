@@ -47,7 +47,7 @@
 
 	<h2 class="govuk-heading-m">10294856: Novel bioreactor design for fermentation of syngas to industrially relevant chemicals</h2>
 
-		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
+		<!-- <p class="govuk-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 		<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
 
@@ -61,11 +61,11 @@
 		<div class="govuk-grid-column-one-half">
 			<h2 class="govuk-heading-l">Monitoring Officer</h2>
 			<form>
-				<fieldset>
+				<fieldset class="govuk-fieldset">
 					<legend class="govuk-visually-hidden">
 						Monitoring Officer
 					</legend>
-					<div class="form-group">
+					<div class="govuk-form-group">
 						<label class="form-label" for="first-name">
 							<span class="form-label-bold">First name</span>
 						</label>
@@ -74,7 +74,7 @@
 						<input class="form-control width-full" id="first-name" name="first-name" value="" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
 					</div>
 
-					<div class="form-group">
+					<div class="govuk-form-group">
 						<label class="form-label" for="last-name">
 							<span class="form-label-bold">Last name</span>
 						</label>
@@ -82,7 +82,7 @@
 						<input class="form-control width-full" id="last-name" name="last-name" value="" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
 					</div>
 
-					<div class="form-group">
+					<div class="govuk-form-group">
 						<label class="form-label" for="email">
 							<span class="form-label-bold">Email</span>
 						</label>
@@ -90,7 +90,7 @@
 						<input class="form-control width-full" id="email" name="email" value="" type="text" disabled="disabled" th:unless="${param.status == null or param.status[0] != 'edit'}"/>
 					</div>
 
-					<div class="form-group">
+					<div class="govuk-form-group">
 						<label class="form-label" for="phone-number">
 							<span class="form-label-bold">Phone number</span>
 						</label>
@@ -145,7 +145,7 @@
 			<p class="govuk-body">Technology</p>
 
 			<h3 class="govuk-heading-m govuk-!-margin-0">Primary address</h3>
-			<p class="form-hint">This has been designated by the lead organisation as the main work location for the project.</p>
+			<p class="govuk-hint">This has been designated by the lead organisation as the main work location for the project.</p>
 			<p class="govuk-body">Algate Solutions<br />
 				21 Ballygowen Road<br />
 				Bristol<br />
@@ -153,11 +153,11 @@
 			</p>
 
 			<h3 class="govuk-heading-m govuk-!-margin-0">Target project start date</h3>
-			<p class="form-hint">Planned start date for the project.</p>
+			<p class="govuk-hint">Planned start date for the project.</p>
 			<p class="govuk-body">1st January 2017</p>
 
 			<h3 class="govuk-heading-m govuk-!-margin-0">Project Manager</h3>
-			<p class="form-hint">Project Manager for the project, designated by the lead organisation.</p>
+			<p class="govuk-hint">Project Manager for the project, designated by the lead organisation.</p>
 			<p class="govuk-body">David Smith</p>
 
 			<h3 class="govuk-heading-m govuk-!-margin-0">Project partners</h3>

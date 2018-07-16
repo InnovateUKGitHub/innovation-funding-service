@@ -64,7 +64,7 @@
                             <h2 class="govuk-heading-m">Add your comment</h2>
                             <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}"
                                   method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
-                                <div class="form-group" th:classappend="${#fields.hasErrors('comment')} ? 'form-group-error'">
+                                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('comment')} ? 'govuk-form-group--error'">
                                     <label for="comment">
                                         <span class="form-label-bold">Comment</span>
                                         <th:block th:if="${#fields.hasErrors('comment')}">
@@ -101,7 +101,7 @@
                                         </ul>
                                     </th:block>
                                     <h3 class="govuk-heading-s govuk-!-margin-0">Upload supporting documentation in pdf format</h3>
-                                    <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error' : ''">
+                                    <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                         <th:block th:if="${#fields.hasErrors('attachment')}">
                                             <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                         </th:block>

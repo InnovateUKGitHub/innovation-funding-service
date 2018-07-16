@@ -72,11 +72,13 @@
 
                 <form method="GET" th:object="${filterForm}">
                     <div class="search-filters govuk-!-margin-top-6">
-                        <fieldset>
-                            <legend class="govuk-heading-m govuk-!-margin-top-0">Filter assessors</legend>
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                                <h2 class="govuk-fieldset__heading">Filter assessors</h2>
+                            </legend>
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-one-third">
-                                    <div class="form-group">
+                                    <div class="govuk-form-group">
                                         <label class="form-label" for="filterInnovationArea">Innovation area</label>
                                         <select name="innovationArea" id="filterInnovationArea" class="form-control" th:field="*{innovationArea}">
                                             <option value="">Any</option>
@@ -87,7 +89,7 @@
                                     </div>
                                 </div>
                                 <div class="govuk-grid-column-one-third">
-                                     <div class="form-group">
+                                     <div class="govuk-form-group">
                                          <label class="form-label" for="filterStatus">Status</label>
                                          <select name="status" id="filterStatus" class="form-control" th:field="*{status}">
                                              <option value="">All</option>
@@ -97,7 +99,7 @@
                                      </div>
                                 </div>
                                 <div class="govuk-grid-column-one-third">
-                                     <div class="form-group">
+                                     <div class="govuk-form-group">
                                          <label class="form-label" for="filterContract">Contract and DOI</label>
                                          <select name="compliant" id="filterContract" class="form-control" th:field="*{compliant}">
                                              <option value="">Show all</option>
@@ -151,7 +153,7 @@
                                     Select all assessors
                                 </label>
                             </div>
-                            <span class="form-hint">
+                            <span class="govuk-hint">
                             <span data-count-selected="" th:text="${#lists.size(overviewSelectionForm.selectedInviteIds)}"></span> assessors selected</span>
                         </div>
                         <div class="govuk-grid-column-one-half select-all alignright">

@@ -35,22 +35,22 @@
 	<h2 class="govuk-heading-l">Your affiliations</h2>
 
 	<form>
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 			<h3 class="govuk-heading-m govuk-!-margin-0">Principal employer and role</h3>
 			<legend class="govuk-visually-hidden">Principal employer and role</legend>
-			<p class="form-hint govuk-!-margin-bottom-6">Tell us about your current employer and position</p>
+			<p class="govuk-hint govuk-!-margin-bottom-6">Tell us about your current employer and position</p>
 
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<label for="doi-principal-employer" class="form-label-bold">Prinicipal employer</label>
 				<input name="doi-principal-employer" id="doi-principal-employer" class="form-control width-full" th:value="(${param.status != null and param.status[0] == 'edit'} ? 'ASDF solutions ' : '')"/>
 			</div>
 
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<label for="doi-principal-employer-role" class="form-label-bold">Role</label>
 				<input name="doi-principal-employer-role" id="doi-principal-employer-role" class="form-control width-full" th:value="(${param.status != null and param.status[0] == 'edit'} ? 'CEO' : '')"/>
 			</div>
 
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<label for="doi-affiliations" class="form-label-bold">Professional affiliations</label>
 				<textarea name="doi-affiliations" id="doi-affiliations" cols="30" rows="3" class="form-control width-full"><div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">None declared</div></textarea>
 			</div>
@@ -61,7 +61,7 @@
 			<h2 class="govuk-heading-s govuk-!-margin-0">Do you have any appointments, directorships or consultancies?</h2>
 			<legend class="govuk-visually-hidden">Do you have any appointments, directorships or consultancies?</legend>
 
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<fieldset class="inline">
 					<label class="block-label selection-button-radio" for="appointments-1">
 						<input id="appointments-1" name="appointments-group" value="Yes" type="radio" th:checked="${param.status != null and param.status[0] == 'edit'}" />
@@ -103,19 +103,19 @@
 
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-third">
-            <div class="form-group">
+            <div class="govuk-form-group">
               <label class="form-label-bold" for="doi-appointments-organisation">Organisation</label>
               <input type="text" id="doi-appointments-organisation" name="doi-appointments-organisation" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Aptrans Ltd' : '')}" />
             </div>
           </div>
           <div class="govuk-grid-column-one-third">
-            <div class="form-group">
+            <div class="govuk-form-group">
               <label class="form-label-bold" for="doi-appointments-position">Position</label>
               <input type="text" id="doi-appointments-position" name="doi-appointments-position" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Executive consultant' : '')}" />
             </div>
           </div>
           <div class="govuk-grid-column-one-third extra-margin-top alignright">
-            <div class="form-group">
+            <div class="govuk-form-group">
               <a href="#">Remove</a>
             </div>
           </div>
@@ -123,19 +123,19 @@
 
         <!-- <div class="govuk-grid-row section-divide">
           <div class="govuk-grid-column-one-third">
-            <div class="form-group">
+            <div class="govuk-form-group">
               <label class="form-label-bold" for="doi-appointments-organisation">Organisation</label>
               <input type="text" id="doi-appointments-organisation" name="doi-appointments-organisation" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Aptrans Ltd' : '')}" />
             </div>
           </div>
           <div class="govuk-grid-column-one-third">
-            <div class="form-group">
+            <div class="govuk-form-group">
               <label class="form-label-bold" for="doi-appointments-position">Position</label>
               <input type="text" id="doi-appointments-position" name="doi-appointments-position" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Executive consultant' : '')}" />
             </div>
           </div>
           <div class="govuk-grid-column-one-third extra-margin-top alignright">
-            <div class="form-group">
+            <div class="govuk-form-group">
               <a href="#">Remove</a>
             </div>
           </div>
@@ -149,11 +149,11 @@
 
 			</div>
 
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<h2 class="govuk-heading-s">Do you have any other financial interests?</h2>
-				<p class="form-hint">Do you have a position or investment in a company from which you can benefit financially?</p>
+				<p class="govuk-hint">Do you have a position or investment in a company from which you can benefit financially?</p>
 
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<fieldset class="inline">
 						<label class="block-label selection-button-radio" for="pecuniary-1">
 							<input id="pecuniary-1" name="pecuniary-group" value="Yes" type="radio" th:checked="${param.status != null and param.status[0] == 'edit'}" />
@@ -178,11 +178,11 @@
 
 		<h2 class="govuk-heading-m govuk-!-margin-top-0">Close family member affiliations</h2>
 
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 			<h3 class="govuk-heading-s govuk-!-margin-0">Do any of your close family members have any appointments, directorships or consultancies?</h3>
 			<legend class="govuk-visually-hidden">Do any of your close family members have any appointments, directorships or consultancies?</legend>
 
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<fieldset class="inline">
 					<label class="block-label selection-button-radio" for="family-1">
 						<input id="family-1" name="family-group" value="Yes" type="radio" />
@@ -227,25 +227,25 @@
       <div id="add-family" class="govuk-!-margin-bottom-6 govuk-visually-hidden">
         <div class="govuk-grid-row">
           <div class="column-one-quarter">
-            <div class="form-group">
+            <div class="govuk-form-group">
               <label class="form-label-bold" for="doi-family-relation">Relation</label>
               <input type="text" id="doi-family-relation" name="doi-family-relation" class="form-control width-full" />
             </div>
           </div>
           <div class="column-one-quarter">
-            <div class="form-group">
+            <div class="govuk-form-group">
               <label class="form-label-bold" for="doi-family-organisation">Organisation</label>
               <input type="text" id="doi-family-organisation" name="doi-family-organisation" class="form-control width-full" />
             </div>
           </div>
           <div class="column-one-quarter">
-            <div class="form-group">
+            <div class="govuk-form-group">
               <label class="form-label-bold" for="doi-family-position">Position</label>
               <input type="text" id="doi-family-position" name="doi-family-position" class="form-control width-full" />
             </div>
           </div>
           <div class="column-one-quarter extra-margin-top alignright">
-            <div class="form-group">
+            <div class="govuk-form-group">
               <a href="#">Remove</a>
             </div>
           </div>
@@ -260,13 +260,13 @@
 
 		</fieldset>
 
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 			<h3 class="govuk-heading-s govuk-!-margin-0">Do any of your close family members have any other financial interests?</h3>
 			<legend class="govuk-visually-hidden">Do any of your close family members have any other financial interests?</legend>
 
-			<p class="form-hint">Do any of your close family members have a position or investment in a company from which you can benefit financially?</p>
+			<p class="govuk-hint">Do any of your close family members have a position or investment in a company from which you can benefit financially?</p>
 
-			<div class="form-group">
+			<div class="govuk-form-group">
 				<fieldset class="inline">
 					<label class="block-label selection-button-radio" for="family-pecuniary-1">
 						<input id="family-pecuniary-1" name="family-pecuniary-group" value="Yes" type="radio" />
@@ -279,7 +279,7 @@
 				</fieldset>
 			</div>
 
-			<div class="form-group govuk-visually-hidden govuk-!-margin-bottom-6" id="add-family-pecuniary">
+			<div class="govuk-form-group govuk-visually-hidden govuk-!-margin-bottom-6" id="add-family-pecuniary">
 				<label for="doi-close-pecuniary" class="form-label-bold">Please describe these interests</label>
 				<textarea name="doi-close-pecuniary" id="doi-close-pecuniary" cols="30" rows="3" class="form-control width-full"><div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">N/A</div></textarea>
 			</div>

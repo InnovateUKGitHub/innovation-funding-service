@@ -218,7 +218,7 @@ Lead partner can edit his spend profile with invalid values and see the error me
     When the user enters text to a text field  jQuery=th:contains("Labour") + td input   520
     And the user moves focus to the element    jQuery=th:contains("Overheads") + td input
     Then the user should see the element       jQuery=.govuk-error-summary:contains("Unable to submit spend profile.")
-    And the user should see the element        jQuery=.form-group-error th:contains("Labour")
+    And the user should see the element        jQuery=.govuk-form-group--error th:contains("Labour")
     And the user should see the element        jQuery=th:contains("Labour") ~ .fix-right.cell-error input[data-calculation-rawvalue="3495"]
     # Project costs for financial year are instantly reflecting the financial values INFUND-3971, INFUND-6148
     And the user should see the element        jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£56,289")
@@ -226,7 +226,7 @@ Lead partner can edit his spend profile with invalid values and see the error me
     Then the user should see the element       jQuery=.govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
     When the user clicks the button/link       jQuery=.govuk-button:contains("Edit spend profile")
     Then the user enters text to a text field  jQuery=th:contains("Labour") + td input  10
-    And the user should not see the element   jQuery=.form-group-error th:contains("Labour")
+    And the user should not see the element   jQuery=.govuk-form-group--error th:contains("Labour")
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  -55
     And the user moves focus to the element    jQuery=th:contains("Overheads") ~ td:nth-child(5)
     Then the user should see the element       jQuery=.govuk-error-summary__list li:contains("This field should be 0 or higher")

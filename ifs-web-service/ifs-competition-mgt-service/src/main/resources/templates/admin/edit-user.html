@@ -21,7 +21,7 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit internal user details',size='govuk-heading-xl'" />
         <form th:object="${form}" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
-            <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
               <label class="form-label" th:for="${#ids.next('firstName')}">
                   <span class="form-label-bold">First name</span>
                   <th:block th:if="${#fields.hasErrors('firstName')}">
@@ -41,7 +41,7 @@
                               data-pattern-errormessage=#{validation.standard.firstname.invalid},
                               data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'govuk-form-group--error'">
               <label class="form-label" th:for="${#ids.next('lastName')}">
                   <span class="form-label-bold">Last name</span>
                   <th:block th:if="${#fields.hasErrors('lastName')}">
@@ -66,7 +66,7 @@
                 <dd th:text="${form.emailAddress}">mark.smith@innovate.gov.uk</dd>
             </dl>
             <p/>
-            <div class="form-group" th:classappend="${#fields.hasErrors('role')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('role')} ? 'govuk-form-group--error'">
                 <label class="form-label" th:for="${#ids.next('role')}">
                     <span class="form-label-bold">Role</span>
                     <th:block th:if="${#fields.hasErrors('role')}">
@@ -83,7 +83,7 @@
                 <th:block th:insert="fragments/modals :: modal-confirm-deactivate-user" />
             </th:block>
 
-            <div class="form-group govuk-!-margin-top-6">
+            <div class="govuk-form-group govuk-!-margin-top-6">
                 <button class="govuk-button">Save and return</button>
                 <a class="button-clear" th:href="@{/admin/users/active}">Cancel</a>
             </div>

@@ -27,11 +27,11 @@
 	<!--<p class="govuk-body" th:unless="${param.edit != null}">Before you can assess we need you to provide some additional information about your skills. We can then allocate you applications relevant to your expertise and skills.</p>-->
 
 	<form>
-		<!-- <fieldset>
+		<!-- <fieldset class="govuk-fieldset">
 			<legend class="govuk-visually-hidden">Areas of expertise</legend>
 			<div class="govuk-grid-row">
 				<div class="govuk-grid-column-one-half">
-					<div class="form-group">
+					<div class="govuk-form-group">
 						<label class="block-label selection-button-checkbox" for="skill">
 							<input id="skill" type="checkbox" name="skill" value="" />
 							Advanced Materials
@@ -173,15 +173,15 @@
     <label class="form-label" for="skills-areas">
         <span class="govuk-heading-m">Skill areas</span>
     </label>
-    <p class="form-hint">
+    <p class="govuk-hint">
         Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.<br />
         For example; Solar Power, Genetics, Recycling
     </p>
     <textarea name="skills-areas" id="skills-areas" cols="30" rows="5" class="width-full"><div th:if="${param.edit != null}" th:remove="tag">Human Computer Interaction, Wearables, IoT</div></textarea>
-		<div class="form-group">
+		<div class="govuk-form-group">
 			<fieldset class="inline">
 				<legend class="govuk-heading-m">Assessor type</legend>
-				<p class="form-hint">
+				<p class="govuk-hint">
 					Please select your current area of work. If you are working in both please select the most dominant.
 				</p>
 				<label class="block-label selection-button-radio" for="radio-inline-1">
@@ -198,7 +198,7 @@
 			</fieldset>
 		</div>
 
-		<div th:if="${param.edit == null}" class="form-group extra-margin">
+		<div th:if="${param.edit == null}" class="govuk-form-group extra-margin">
 
 			<th:block th:if="${param.version != null and param.version[0] == 'v2'}">
 				<input type="hidden" name="version" value="v2" />
@@ -211,7 +211,7 @@
 		</div>
 
 
-		<div th:if="${param.edit != null}" class="form-group extra-margin">
+		<div th:if="${param.edit != null}" class="govuk-form-group extra-margin">
 			<button class="govuk-button" formaction="/prototypes/1178-assessor-profile-skills">Save and return to your skills</button>
 			<a href="#">Cancel</a>
 		</div>

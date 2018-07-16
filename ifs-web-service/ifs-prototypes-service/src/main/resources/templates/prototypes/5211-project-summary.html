@@ -28,7 +28,7 @@
 	<p class="govuk-body extra-margin">Make changes to the question 'Project summary'. You can amend how this is presented to the applicant, and also the wording and guidance assessors are given for scoring this question.</p>
 
 	<form>
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 			<legend class="govuk-visually-hidden">Application question</legend>
 			<h2 class="govuk-heading-m extra-margin">Application question</h2>
 
@@ -58,31 +58,31 @@
 				</dl>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="question-heading">
 						<span class="form-label-bold">Question heading</span>
 					</label>
 					<input class="form-control" id="question-heading" name="question-heading" value="Project summary" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="question-title">
 						<span class="form-label-bold">Question title</span>
 					</label>
 					<input class="form-control" id="question-title" name="question-title" value="Project summary" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="question-subtitle">
 						<span class="form-label-bold">Question subtitle</span>
 					</label>
 					<input class="form-control" id="question-subtitle" name="question-subtitle" value="Please provide a short summary of your project. Make sure you include what is innovative about it." type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="guidance-title">
 						<span class="form-label-bold">Guidance title</span>
 					</label>
 					<input class="form-control" id="guidance-title" name="guidance-title" value="What should I include in the project summary?" type="text" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="guidance">
 						<span class="form-label-bold">Guidance</span>
 					</label>
@@ -95,13 +95,13 @@ To show how your project aligns with the scope of this competition, you need to:
 
 					</textarea>
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<label class="form-label" for="word-count">
 						<span class="form-label-bold">Max word count</span>
 					</label>
 					<input class="form-control width-medium" id="word-count" name="word-count" value="400" type="number" />
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<fieldset class="inline">
 						<h3 class="govuk-heading-s">Appendix</h3>
 						<legend class="govuk-visually-hidden">Appendix</legend>
@@ -117,7 +117,7 @@ To show how your project aligns with the scope of this competition, you need to:
 				</div>
 			</th:block>
 		</fieldset>
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 			<legend class="govuk-visually-hidden">Assessment of this question</legend>
 			<h2 class="govuk-heading-m extra-margin">Assessment of this question</h2>
 
@@ -130,7 +130,7 @@ To show how your project aligns with the scope of this competition, you need to:
 				</dl>
 			</th:block>
 			<th:block th:if="${param.status != null and param.status[0] == 'edit'}">
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<fieldset class="inline">
 						<h3 class="govuk-heading-s">Scored</h3>
 						<legend class="govuk-visually-hidden">Scored</legend>
@@ -144,7 +144,7 @@ To show how your project aligns with the scope of this competition, you need to:
 						</label>
 					</fieldset>
 				</div>
-				<div class="form-group">
+				<div class="govuk-form-group">
 					<fieldset class="inline">
 						<h3 class="govuk-heading-s">Written feedback</h3>
 						<legend class="govuk-visually-hidden">Written feedback</legend>

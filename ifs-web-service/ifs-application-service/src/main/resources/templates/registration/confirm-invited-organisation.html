@@ -16,9 +16,10 @@
         <p class="govuk-body">The lead applicant has invited you to participate on this application as part of the following organisation:
             <strong th:text="${model.partOfOrganisation}"></strong></p>
 
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Confirm your organisation details are correct</h2>
-        <fieldset>
-            <legend class="govuk-visually-hidden">Confirm your organisation details are correct</legend>
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <h2 class="govuk-fieldset__heading">Confirm your organisation details are correct</h2>
+            </legend>
             <div class="form-block">
                 <h3 class="govuk-heading-s">Organisation type</h3>
                 <p class="govuk-body" th:text="${model.organisationType}"></p>

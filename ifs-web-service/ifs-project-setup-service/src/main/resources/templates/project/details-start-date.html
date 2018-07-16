@@ -34,15 +34,15 @@
                 </ol>
 
                 <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate')} ? 'form-group-error'">
-                        <fieldset>
-                            <legend id="projectStartDate">
-                                <span class="govuk-heading-m">Target start date</span>
-                                <th:block th:if="${#fields.hasErrors('projectStartDate')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('projectStartDate')}" th:text="${err}" />
-                                </th:block>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectStartDate')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="projectStartDate">
+                                <h2 class="govuk-fieldset__heading">Target start date</h2>
                             </legend>
-                            <p class="form-hint">Projects must start on the first day of a month so please choose the month and year of your project start.</p>
+                            <span class="govuk-hint">Projects must start on the first day of a month so please choose the month and year of your project start.</span>
+                            <th:block th:if="${#fields.hasErrors('projectStartDate')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('projectStartDate')}" th:text="${err}" />
+                            </th:block>
                             <th:block th:insert="question-type/form-elements :: form-dateinput (id='projectStartDate', field='projectStartDate', dayReadonly=true)" />
                         </fieldset>
                     </div>

@@ -21,13 +21,13 @@
 
 	<form action="#">
 
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 
 			<h2 class="govuk-heading-l govuk-!-margin-top-0">Finance contact</h2>
 
 			<legend class="govuk-visually-hidden">Finance contact</legend>
 
-			<p class="form-hint">Who will be responsible for the project finances in your organisation?</p>
+			<p class="govuk-hint">Who will be responsible for the project finances in your organisation?</p>
 
 			<details>
 			    <summary><span class="summary">What should I include in the finance contact section?</span></summary>
@@ -36,7 +36,7 @@
 			    </div>
 			</details>
 
-			<div class="form-group extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
+			<div class="govuk-form-group extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
 				<label for="finances-name-1" class="block-label selection-button-radio">
 					<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
 					John Smith
@@ -53,7 +53,7 @@
 				</label>
 			</div>
 
-            <div class="form-group extra-margin" th:if="${param.user != null and param.user[0] == 'nonLead'}">
+            <div class="govuk-form-group extra-margin" th:if="${param.user != null and param.user[0] == 'nonLead'}">
 
                 <input type="hidden" name="user" value="nonLead">
 

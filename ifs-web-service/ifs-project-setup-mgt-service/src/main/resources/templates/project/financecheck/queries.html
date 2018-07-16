@@ -54,7 +54,7 @@
                 </th:block>
             </div>
             <div class="govuk-grid-column-one-half">
-                <fieldset>
+                <fieldset class="govuk-fieldset">
                     <div class="alignright">
                         <label for="querySection">Query section</label>
                         <select id="querySection" onchange="IFS.core.filtering.with(this.options[this.selectedIndex].dataset)" class="form-control">
@@ -108,7 +108,7 @@
                     <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                         <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:id="${'form-query-' + query.id}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                             <h3 class="govuk-heading-m">Respond to query</h3>
-                            <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
                                 <label for="response">
                                     <span class="form-label-bold">Response</span>
                                     <th:block th:if="${#fields.hasErrors('response')}">
@@ -145,7 +145,7 @@
                                     </ul>
                                 </th:block>
                                 <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Upload supporting documentation in pdf format</h3>
-                                <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error': ''">
+                                <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error': ''">
                                     <th:block th:if="${#fields.hasErrors('attachment')}">
                                         <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}"></span>
                                     </th:block>

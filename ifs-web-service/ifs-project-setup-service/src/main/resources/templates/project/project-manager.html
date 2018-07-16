@@ -20,38 +20,64 @@
                 <p class="govuk-body">As lead partner you must choose a Project Manager who will be responsible for setting up your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
 
                 <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${form}">
-                    <fieldset>
-                        <div class="form-group" id="project-manager-section" th:classappend="${#fields.hasErrors('*') ? 'form-group-error' : ''}">
-                            <legend>
-                                <span class="govuk-heading-m">Project Manager</span>
-                                <th:block th:if="${#fields.hasErrors('*')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}"></span>
-                                </th:block>
+                    <fieldset class="govuk-fieldset">
+                        <div class="govuk-form-group" id="project-manager-section" th:classappend="${#fields.hasErrors('*') ? 'govuk-form-group--error' : ''}">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                <h2 class="govuk-fieldset__heading">Project Manager</h2>
                             </legend>
-                            <p class="form-hint">Who will be the Project Manager for your project?</p>
-                            <div class="multiple-choice" th:each="user : ${model.organisationUsers}" >
-                                <input type="radio" th:field="*{projectManager}" th:value="${user.id}" required="required" th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />
-                                <label th:for="${#ids.prev('projectManager')}" th:text="${user.name}" data-set-section-valid="#project-manager-section" data-clear-inputs="#name-project-manager,#email-project-manager"></label>
-                            </div>
+                            <span class="govuk-hint">Who will be the Project Manager for your project?</span>
+                            <th:block th:if="${#fields.hasErrors('*')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}"></span>
+                            </th:block>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item" th:each="user : ${model.organisationUsers}" >
+                                    <input type="radio"
+                                           class="govuk-radios__input"
+                                           th:field="*{projectManager}"
+                                           th:value="${user.id}"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />
+                                    <label th:for="${#ids.prev('projectManager')}"
+                                           th:text="${user.name}"
+                                           data-set-section-valid="#project-manager-section"
+                                           data-clear-inputs="#name-project-manager,#email-project-manager"
+                                           class="govuk-label govuk-radios__label"></label>
+                                </div>
 
-                            <div class="multiple-choice" th:each="user : ${model.invitedUsers}">
-                                <input th:id="'invite-'+${user.id}" value="" type="radio" disabled="disabled" />
-                                <label th:for="'invite-'+${user.id}" th:text="${user.name}"></label>
-                                <a th:inline="text"
-                                    data-js-modal="modal-resend-project-manager"
-                                    th:attr="data-modal-form-action=@{/project/{projectId}/details/project-manager(projectId=${model.projectId})},data-modal-input-resend-pm-invite=${user.id}"
-                                    th:href="@{/project/{projectId}/details/project-manager/confirm?resend-pm-invite={userId}(projectId=${model.projectId},userId=${user.id})}"
-                                    class="button-clear govuk-!-margin-0">
-                                    Resend invite
-                                </a>
-                            </div>
+                                <div class="govuk-radios__item"
+                                     th:each="user : ${model.invitedUsers}">
+                                    <input th:id="'invite-'+${user.id}"
+                                           class="govuk-radios__input"
+                                           value=""
+                                           type="radio"
+                                           disabled="disabled" />
+                                    <label th:for="'invite-'+${user.id}"
+                                           th:text="${user.name}"
+                                           class="govuk-label govuk-radios__label"></label>
+                                    <a th:inline="text"
+                                       data-js-modal="modal-resend-project-manager"
+                                       th:attr="data-modal-form-action=@{/project/{projectId}/details/project-manager(projectId=${model.projectId})},data-modal-input-resend-pm-invite=${user.id}"
+                                       th:href="@{/project/{projectId}/details/project-manager/confirm?resend-pm-invite={userId}(projectId=${model.projectId},userId=${user.id})}"
+                                       class="button-clear govuk-!-margin-0">
+                                        Resend invite
+                                    </a>
+                                </div>
 
-                            <div class="multiple-choice" data-target="project-manager-table">
-                                <input id="new" name="projectManager" th:checked="${model.inviteAction} or *{projectManager == -1}" required="required"  type="radio" value="-1" th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />
-                                <label for="new">
-                                    Add new team member
-                                    <span class="form-hint">A new team member will be invited to join the project</span>
-                                </label>
+                                <div class="govuk-radios__item" data-target="project-manager-table">
+                                    <input id="new"
+                                           class="govuk-radios__input"
+                                           name="projectManager"
+                                           th:checked="${model.inviteAction} or *{projectManager == -1}"
+                                           required="required"
+                                           type="radio"
+                                           value="-1"
+                                           th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />
+                                    <label for="new"
+                                           class="govuk-label govuk-radios__label">
+                                        Add new team member
+                                        <span class="govuk-hint">A new team member will be invited to join the project</span>
+                                    </label>
+                                </div>
                             </div>
 
                             <table id="project-manager-table">

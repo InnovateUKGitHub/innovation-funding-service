@@ -41,30 +41,34 @@
                 </section>
 
                 <form th:action="@{/invite/panel/{inviteHash}/decision(inviteHash=${model.panelInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'form-group-error'">
-                        <fieldset>
-                            <legend id="acceptInvitation">
-                                <span class="govuk-heading-m">Are you able to attend the assessment panel?</span>
-                                <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
-                                </th:block>
-                                <p class="govuk-body">You should reject this invitation if you are unavailable for the assessment panel date.</p>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="acceptInvitation">
+                                <h2 class="govuk-fieldset__heading">Are you able to attend the assessment panel?</h2>
                             </legend>
-
-                            <div class="multiple-choice">
-                                <input id="acceptPanel" value="true" type="radio" required="required"
-                                       th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}" />
-                                <label for="acceptPanel">
-                                    Yes, I am able to attend the assessment panel.
-                                </label>
-                            </div>
-
-                            <div class="multiple-choice" data-target="reject-panel">
-                                <input id="rejectPanel" value="false" type="radio" required="required"
-                                       th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}"/>
-                                <label for="rejectPanel">
-                                    No, I am not able to attend the assessment panel.
-                                </label>
+                            <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
+                            </th:block>
+                            <p class="govuk-body">You should reject this invitation if you are unavailable for the assessment panel date.</p>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input id="acceptPanel" value="true" type="radio" required="required"
+                                           class="govuk-radios__input"
+                                           th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}" />
+                                    <label for="acceptPanel"
+                                           class="govuk-label govuk-radios__label">
+                                        Yes, I am able to attend the assessment panel.
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item" data-target="reject-panel">
+                                    <input id="rejectPanel" value="false" type="radio" required="required"
+                                           class="govuk-radios__input"
+                                           th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}"/>
+                                    <label for="rejectPanel"
+                                           class="govuk-label govuk-radios__label">
+                                        No, I am not able to attend the assessment panel.
+                                    </label>
+                                </div>
                             </div>
                         </fieldset>
                     </div>

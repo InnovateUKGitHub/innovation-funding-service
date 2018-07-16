@@ -27,7 +27,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your skills',size='govuk-heading-xl'" />
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Innovation areas</h2>
 
-                <p class="form-hint">These innovation areas have been chosen as your current areas of expertise. They will influence the types
+                <p class="govuk-hint">These innovation areas have been chosen as your current areas of expertise. They will influence the types
                     of competition you will be invited to assess. If you would like to amend them or add new ones please
                     contact Innovate UK <a href="mailto:support@innovateuk.gov.uk" class="govuk-link">support@innovateuk.gov.uk</a>.
                 </p>
@@ -42,14 +42,14 @@
                 </ul>
 
                 <form th:action="@{/profile/skills/edit}" method="post" th:object="${form}" class="govuk-!-margin-top-6" novalidate="novalidate">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'form-group-error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'govuk-form-group--error'">
                         <label class="form-label" th:for="skillAreas">
                             <span class="govuk-heading-m">Skill areas</span>
                             <th:block th:if="${#fields.hasErrors('skillAreas')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <p class="form-hint">
+                        <p class="govuk-hint">
                             Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.<br />
                             For example; Solar Power, Genetics, Recycling
                         </p>
@@ -70,23 +70,29 @@
                         </div>
                     </div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')} ? 'form-group-error'">
-                        <fieldset>
-                            <legend id="assessorType">
-                                <span class="govuk-heading-m">Assessor type</span>
-                                <th:block th:if="${#fields.hasErrors('assessorType')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
-                                </th:block>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorType')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="assessorType">
+                                <h2 class="govuk-fieldset__heading">Assessor type</h2>
                             </legend>
-                            <p class="form-hint">Please select your current area of work. If you are working in both areas please select the most dominant.</p>
-                            <div class="multiple-choice" th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
-                                <input th:field="*{assessorType}"
-                                       th:value="${type}"
-                                       type="radio"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.standard.assessortype.required}" />
-                                <label th:for="${#ids.prev('assessorType')}" th:text="${type.displayName}">Label</label>
+                            <span class="govuk-hint">Please select your current area of work. If you are working in both areas please select the most dominant.</span>
+                            <th:block th:if="${#fields.hasErrors('assessorType')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
+                            </th:block>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item" th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
+                                    <input th:field="*{assessorType}"
+                                           th:value="${type}"
+                                           type="radio"
+                                           class="govuk-radios__input"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.standard.assessortype.required}" />
+                                    <label th:for="${#ids.prev('assessorType')}"
+                                           th:text="${type.displayName}"
+                                           class="govuk-label govuk-radios__label">Label</label>
+                                </div>
                             </div>
+
                         </fieldset>
                     </div>
 

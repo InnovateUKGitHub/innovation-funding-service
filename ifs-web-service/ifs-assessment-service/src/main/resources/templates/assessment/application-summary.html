@@ -40,45 +40,56 @@
                     <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
                     <div class="question" th:id="form-input-fundingConfirmation">
-                        <div class="form-group" th:classappend="${#fields.hasErrors('fundingConfirmation')} ? 'form-group-error'">
-                            <fieldset class="inline">
-                                <legend id="fundingConfirmation">
-                                    <span class="form-label-bold">Do you believe that this application is suitable for funding?</span>
-                                    <th:block th:if="${#fields.hasErrors('fundingConfirmation')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}"></span>
-                                    </th:block>
+                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingConfirmation')} ? 'govuk-form-group--error'">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="fundingConfirmation">
+                                    <h2 class="govuk-fieldset__heading">Do you believe that this application is suitable for funding?</h2>
                                 </legend>
-                                <div class="multiple-choice">
-                                    <input
-                                    value="true"
-                                    type="radio"
-                                    th:field="*{fundingConfirmation}"
-                                    required="required"
-                                    th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
-                                    data-conditionally-remove-required="#feedback" />
-                                    <label class="form-label" th:for="${#ids.prev('fundingConfirmation')}">Yes</label>
+                                <th:block th:if="${#fields.hasErrors('fundingConfirmation')}">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}"></span>
+                                </th:block>
+                                <div class="govuk-radios govuk-radios--inline">
+                                    <div class="govuk-radios__item">
+                                        <input
+                                            value="true"
+                                            type="radio"
+                                            class="govuk-radios__input"
+                                            th:field="*{fundingConfirmation}"
+                                            required="required"
+                                            th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
+                                            data-conditionally-remove-required="#feedback" />
+                                        <label class="form-label"
+                                               th:for="${#ids.prev('fundingConfirmation')}"
+                                               class="govuk-label govuk-radios__label">Yes</label>
+                                    </div>
+                                    <div class="govuk-radios__item">
+                                        <input
+                                            value="false"
+                                            type="radio"
+                                            class="govuk-radios__input"
+                                            th:field="*{fundingConfirmation}"
+                                            required="required"
+                                            th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
+                                            data-conditionally-add-required="#feedback, .form-group input" />
+                                        <label class="form-label"
+                                               th:for="${#ids.prev('fundingConfirmation')}"
+                                               class="govuk-label govuk-radios__label">No</label>
+                                    </div>
                                 </div>
-                                <div class="multiple-choice">
-                                    <input
-                                    value="false"
-                                    type="radio"
-                                    th:field="*{fundingConfirmation}"
-                                    required="required"
-                                    th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
-                                    data-conditionally-add-required="#feedback, .form-group input" />
-                                    <label class="form-label" th:for="${#ids.prev('fundingConfirmation')}">No</label>
-                                </div>
+
                             </fieldset>
                         </div>
                     </div>
 
-                    <fieldset>
-                        <legend class="govuk-visually-hidden">Question feedback</legend>
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-visually-hidden">
+                            <h2 class="govuk-fieldset__heading">Question feedback</h2>
+                        </legend>
                         <div class="question" th:id="form-input-feedback">
-                            <div class="form-group" th:classappend="${#fields.hasErrors('feedback')} ? 'form-group-error'">
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('feedback')} ? 'govuk-form-group--error'">
                                 <label class="form-label form-label-bold" th:for="feedback">
                                     Your feedback
-                                    <span class="form-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
+                                    <span class="govuk-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
                                     <th:block th:if="${#fields.hasErrors('feedback')}">
                                         <span class="error-message"  th:each="err : ${#fields.errors('feedback')}" th:text="${err}"></span>
                                     </th:block>
@@ -103,7 +114,7 @@
                         </div>
 
                         <div class="question" th:id="form-input-comments">
-                            <div class="form-group" th:classappend="${#fields.hasErrors('comment')} ? 'form-group-error'">
+                            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('comment')} ? 'govuk-form-group--error'">
                                 <label class="form-label form-label-bold" th:for="comment">
                                     Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
                                     <th:block th:if="${#fields.hasErrors('comment')}">

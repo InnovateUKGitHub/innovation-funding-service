@@ -26,14 +26,14 @@ IFS.application.repeatableOrgApplicantRows = (function () {
 
       if (jQuery(el).data('applicant-table') === 'update-org') {
         newRow = jQuery('<tr class="repeatable-row form-group-row-validated">' +
-          '<td class="form-group">' +
+          '<td class="govuk-form-group">' +
           '<label for="stagedInvite.name"><span class="govuk-visually-hidden">Applicant name</span></label>' +
           '<input class="form-control width-full" type="text" ' +
           'id="stagedInvite.name" ' +
           'name="stagedInvite.name" value="" ' +
           'data-required-errormessage="Please enter a name." required="required" />' +
           '</td>' +
-          '<td class="form-group">' +
+          '<td class="govuk-form-group">' +
           '<label for="stagedInvite.email"><span class="govuk-visually-hidden">Applicant email</span></label>' +
           '<input class="form-control width-full" type="email" ' +
           'id="stagedInvite.email" ' +
@@ -47,14 +47,14 @@ IFS.application.repeatableOrgApplicantRows = (function () {
           '</tr>')
       } else {
         newRow = jQuery('<tr class="repeatable-row form-group-row-validated">' +
-          '<td class="form-group">' +
+          '<td class="govuk-form-group">' +
           '<label for="applicants[' + uniqueRowId + '].name"><span class="govuk-visually-hidden">Applicant name</span></label>' +
           '<input class="form-control width-full" type="text" ' +
           'id="applicants[' + uniqueRowId + '].name" ' +
           'name="applicants[' + uniqueRowId + '].name" value="" ' +
           'data-required-errormessage="Please enter a name." required="required" />' +
           '</td>' +
-          '<td class="form-group">' +
+          '<td class="govuk-form-group">' +
           '<label for="applicants[' + uniqueRowId + '].email"><span class="govuk-visually-hidden">Applicant email</span></label>' +
           '<input class="form-control width-full" type="email" ' +
           'id="applicants[' + uniqueRowId + '].email" ' +

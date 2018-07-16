@@ -87,17 +87,17 @@
 
 		<h2 class="govuk-heading-m">Appendices</h2>
 
-			<div class="form-group download">
+			<div class="govuk-form-group download">
 		        <h3 class="govuk-heading-s govuk-!-margin-0">View project management appendix:</h3>
 		        <a href="#">Project-plan.pdf (161.96 KB)</a>
 		    </div>
 
-		    <div class="form-group download">
+		    <div class="govuk-form-group download">
 		        <h3 class="govuk-heading-s govuk-!-margin-0">View innovation appendix:</h3>
 		        <a href="#">Diagram-of-innovation.pdf (161.96 KB)</a>
 		    </div>
 
-		    <div class="form-group download">
+		    <div class="govuk-form-group download">
 		        <h3 class="govuk-heading-s govuk-!-margin-0">View project team appendix:</h3>
 		        <a href="#">CVs-of-team.pdf (161.96 KB)</a>
 		    </div>
@@ -108,10 +108,10 @@
 
 			<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="govuk-!-margin-bottom-6">
 				<form action="/prototypes/5698-draft-email" id="removeApp">
-					<fieldset>
+					<fieldset class="govuk-fieldset">
 						<legend class="govuk-heading-m">Remove application from assessment</legend>
 					</fieldset>
-					<div class="form-group govuk-!-margin-bottom-0">
+					<div class="govuk-form-group govuk-!-margin-bottom-0">
 						<label for="remove-application-reason">Please enter the reason for removing this application from assessment</label>
 						<textarea name="remove-application-reason" id="remove-application-reason" class="width-full" cols="30" rows="10"></textarea>
 						<div class="textarea-footer">

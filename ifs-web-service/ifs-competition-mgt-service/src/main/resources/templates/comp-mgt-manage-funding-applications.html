@@ -23,17 +23,19 @@
         <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
         <form method="GET" th:object="${fundingNotificationFilterForm}">
             <div class="search-filters govuk-!-margin-top-6">
-                <fieldset>
-                    <legend class="govuk-heading-m govuk-!-margin-top-0">Filter applications</legend>
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
+                        <h2 class="govuk-fieldset__heading">Filter applications</h2>
+                    </legend>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-third">
-                            <div class="form-group">
+                            <div class="govuk-form-group">
                                 <label class="form-label" for="stringFilter">Search by application number.</label>
                                 <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:field="*{stringFilter}" />
                             </div>
                         </div>
                         <div class="govuk-grid-column-one-third">
-                            <div class="form-group">
+                            <div class="govuk-form-group">
                                 <label class="form-label" for="sendFilter">Sent</label>
                                 <select name="sendFilter" id="sendFilter" class="form-control" th:field="*{sendFilter}">
                                     <option value="">All</option>
@@ -43,7 +45,7 @@
                             </div>
                         </div>
                         <div class="govuk-grid-column-one-third">
-                            <div class="form-group">
+                            <div class="govuk-form-group">
                                 <label class="form-label" for="fundingFilter">Funding</label>
                                 <select name="fundingFilter" id="fundingFilter" class="form-control" th:field="*{fundingFilter}">
                                     <option value="">Show all</option>
@@ -76,7 +78,7 @@
             <div class="govuk-grid-row sorting">
                 <div class="govuk-grid-column-one-half">
                     <div class="select-all">
-                        <fieldset>
+                        <fieldset class="govuk-fieldset">
                             <legend class="govuk-visually-hidden">Select applications</legend>
 
                             <div class="multiple-choice">
@@ -87,19 +89,19 @@
                                         Select all applications
                                     </label>
                             </div>
-                            <span class="form-hint"><span data-count-selected="" th:text="${#lists.size(selectionForm.ids)}">3</span> applications selected</span>
+                            <span class="govuk-hint"><span data-count-selected="" th:text="${#lists.size(selectionForm.ids)}">3</span> applications selected</span>
                         </fieldset>
                     </div>
                 </div>
                 <div class="govuk-grid-column-one-half">
-                    <fieldset class="mark-applications">
+                    <fieldset class="govuk-fieldset mark-applications">
                         <button class="govuk-button button-notification" data-submit-el="" type="submit" name="write-and-send-email"
                                 th:attr="disabled=${#lists.isEmpty(selectionForm.ids)}">Write and send email</button>
                     </fieldset>
                 </div>
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('selectionForm.ids')} ? form-group-error : ''">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('selectionForm.ids')} ? govuk-form-group--error : ''">
                 <div class="table-overflow">
                     <table id="application-list">
                         <thead>

@@ -28,7 +28,7 @@
 
                 <form th:action="@{/profile/details/edit}" method="post" th:object="${form}" novalidate="novalidate">
                     <h2 class="govuk-heading-m">Your details</h2>
-                    <div class="form-group" th:classappend="${#fields.hasErrors('firstName')}? 'form-group-error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')}? 'govuk-form-group--error'">
                         <label class="form-label" th:for="firstName">
                             <span class="form-label-bold">First name</span>
                             <th:block th:if="${#fields.hasErrors('firstName')}">
@@ -49,7 +49,7 @@
                                         data-pattern-errormessage=#{validation.standard.firstname.invalid}" />
                     </div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'govuk-form-group--error'">
                         <label class="form-label" for="lastName">
                             <span class="form-label-bold">Last name</span>
                             <th:block th:if="${#fields.hasErrors('lastName')}">
@@ -72,9 +72,11 @@
                     </div>
 
 
-                    <fieldset class="govuk-!-margin-top-6">
-                        <legend class="govuk-visually-hidden">Address details</legend>
-                        <div class="form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'form-group-error'">
+                    <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+                        <legend class="govuk-fieldset__legend govuk-visually-hidden">
+                            <span class="govuk-fieldset__heading">Address details</span>
+                        </legend>
+                        <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('*{addressForm.addressLine1}')} ? 'govuk-form-group--error'">
                             <label class="form-label" for="addressForm.addressLine1">
                                 <span class="form-label-bold">Street</span>
                                 <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine1}')}">
@@ -83,7 +85,7 @@
                             </label>
                             <input class="form-control" th:attr="data-required-errormessage=#{validation.standard.addressline1.required}" required="required" th:field="*{addressForm.addressLine1}" th:errorclass="form-control-error" type="text" />
                         </div>
-                        <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine2}')} ? 'form-group-error'">
+                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine2}')} ? 'govuk-form-group--error'">
                             <label class="form-label govuk-visually-hidden" for="addressForm.addressLine2">
                                 <span class="form-label-bold">Street line 2</span>
                                 <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine2}')}">
@@ -92,7 +94,7 @@
                             </label>
                             <input class="form-control" th:field="*{addressForm.addressLine2}" th:errorclass="form-control-error" type="text" />
                         </div>
-                        <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine3}')} ? 'form-group-error'">
+                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.addressLine3}')} ? 'govuk-form-group--error'">
                             <label class="form-label" for="addressForm.addressLine3">
                                 <span class="form-label-bold govuk-visually-hidden">Street line 3</span>
                                 <th:block th:if="${#fields.hasErrors('*{addressForm.addressLine3}')}">
@@ -101,7 +103,7 @@
                             </label>
                             <input class="form-control" th:field="*{addressForm.addressLine3}"  th:errorclass="form-control-error" type="text" />
                         </div>
-                        <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.town}')} ? 'form-group-error'">
+                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.town}')} ? 'govuk-form-group--error'">
                             <label class="form-label" for="addressForm.town">
                                 <span class="form-label-bold">Town</span>
                                 <th:block th:if="${#fields.hasErrors('*{addressForm.town}')}">
@@ -110,7 +112,7 @@
                             </label>
                             <input class="form-control" required="required" th:attr="data-required-errormessage=#{validation.standard.town.required}" th:field="*{addressForm.town}"  th:errorclass="form-control-error" type="text" />
                         </div>
-                        <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.county}')} ? 'form-group-error'">
+                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.county}')} ? 'govuk-form-group--error'">
                             <label class="form-label" for="addressForm.county">
                                 <span class="form-label-bold">County</span>
                                 <th:block th:if="${#fields.hasErrors('*{addressForm.county}')}">
@@ -119,7 +121,7 @@
                             </label>
                             <input class="form-control" th:field="*{addressForm.county}" th:errorclass="form-control-error"  type="text" />
                         </div>
-                        <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcode}')} ? 'form-group-error'">
+                        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcode}')} ? 'govuk-form-group--error'">
                             <label class="form-label" for="addressForm.postcode" >
                                 <span class="form-label-bold">Postcode</span>
                                 <th:block th:if="${#fields.hasErrors('*{addressForm.postcode}')}">
@@ -130,10 +132,10 @@
                         </div>
                     </fieldset>
 
-                    <div class="form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
+                    <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
                         <label class="form-label" th:for="phoneNumber">
                             <span class="form-label-bold">Phone number</span>
-                            <span class="form-hint">We may use this to contact you about the application.</span>
+                            <span class="govuk-hint">We may use this to contact you about the application.</span>
                             <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                                   <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                             </th:block>
@@ -147,9 +149,9 @@
 
                     </div>
 
-                    <div class="form-group">
+                    <div class="govuk-form-group">
                         <h3 class="govuk-heading-s">Email</h3>
-                        <p class="form-hint">
+                        <p class="govuk-hint">
                             Your email address cannot be changed in the system.<br />
                             <strong th:text="${model.email}">jsmith@assessor.co.uk</strong>
                         </p>

@@ -14,25 +14,27 @@
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
 
-                <div aria-labelledby="error-summary-title" th:if="${#fields.hasErrors('${form.*}')}">
-                    <h2 class="govuk-heading-m error-summary-heading">We were unable to save your changes.</h2>
-                    <ul class="error-summary-list">
-                        <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
-                    </ul>
+                <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+                        </ul>
+                    </div>
                 </div>
 
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your skills',size='govuk-heading-xl'" />
                 <p class="govuk-body">Before you can assess we need you to provide some additional information about your skills. We can then allocate you applications relevant to your expertise and skills.</p>
 
                 <form th:action="@{/profile/skills}" method="post" th:object="${form}" class="govuk-!-margin-top-6">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'form-group-error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'govuk-form-group--error'">
                         <label class="form-label" th:for="skillAreas">
                             <span class="govuk-heading-l">Skill areas</span>
                             <th:block th:if="${#fields.hasErrors('skillAreas')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}" />
                             </th:block>
                         </label>
-                        <p class="form-hint">
+                        <p class="govuk-hint">
                             Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.<br />
                             For example; Solar Power, Genetics, Recycling
                         </p>
@@ -51,19 +53,30 @@
                         </div>
                     </div>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')} ? 'form-group-error'">
-                        <fieldset class="inline">
-                            <legend>
-                                <span class="govuk-heading-l">Assessor type</span>
-                                <th:block th:if="${#fields.hasErrors('assessorType')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
-                                </th:block>
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorType')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h2 class="govuk-fieldset__heading">Assessor type</h2>
                             </legend>
-                            <p class="form-hint">Please select your current area of work. If you are working in both please select the most dominant.</p>
-                            <div class="multiple-choice" th:each="type : ${T(com.worth.ifs.user.resource.BusinessType).values()}">
-                                <input th:field="*{assessorType}" th:value="${type}" type="radio" required="required" data-required-errormessage="Please select an assessor type" />
-                                <label th:for="${#ids.prev('assessorType')}" th:text="${type.displayName}">Label</label>
+                            <span class="govuk-hint">Please select your current area of work. If you are working in both please select the most dominant.</span>
+                            <th:block th:if="${#fields.hasErrors('assessorType')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
+                            </th:block>
+                            <div class="govuk-radios govuk-radios--inline">
+                                <div class="govuk-radios__item"
+                                     th:each="type : ${T(com.worth.ifs.user.resource.BusinessType).values()}">
+                                    <input th:field="*{assessorType}"
+                                           th:value="${type}"
+                                           type="radio"
+                                           class="govuk-radios__input"
+                                           required="required"
+                                           data-required-errormessage="Please select an assessor type" />
+                                    <label th:for="${#ids.prev('assessorType')}"
+                                           th:text="${type.displayName}"
+                                           class="govuk-label govuk-radios__label">Label</label>
+                                </div>
                             </div>
+
                         </fieldset>
                     </div>
 

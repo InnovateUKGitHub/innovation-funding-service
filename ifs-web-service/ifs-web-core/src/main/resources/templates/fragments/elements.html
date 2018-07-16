@@ -138,15 +138,14 @@
 
 <!--  ========================== Element: Agree to application terms =============== -->
 <th:block th:fragment="application-agree-to-terms (competitionId)">
-    <div class="form-group" th:classappend="${#fields.hasErrors('termsAgreed')} ? 'form-group-error'">
-        <fieldset>
-            <legend>
-                <span class="govuk-visually-hidden">Terms and conditions</span>
-                <th:block th:if="${#fields.hasErrors('termsAgreed')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
-                </th:block>
+    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('termsAgreed')} ? 'govuk-form-group--error'">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
             </legend>
-
+            <th:block th:if="${#fields.hasErrors('termsAgreed')}">
+                <span class="error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
+            </th:block>
             <div class="multiple-choice">
                 <input id="agree-terms-page" th:field="${form.termsAgreed}" type="checkbox" value="yes"
                        data-switches-button-status="#mark-all-as-complete" data-autosave-disabled />
@@ -160,7 +159,7 @@
 
 <!--  ========================== Element: Agree to application terms =============== -->
 <th:block th:fragment="application-agree-to-state-aid">
-    <div  th:class="${#fields.hasErrors('stateAidAgreed')}? 'form-block form-group-error':'form-block'">
+    <div  th:class="${#fields.hasErrors('stateAidAgreed')}? 'form-block govuk-form-group--error':'form-block'">
         <th:block th:if="${#fields.hasErrors('stateAidAgreed')}">
             <span class="error-message"  th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}" />
         </th:block>

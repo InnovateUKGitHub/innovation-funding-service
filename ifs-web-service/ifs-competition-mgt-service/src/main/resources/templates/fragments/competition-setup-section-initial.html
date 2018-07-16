@@ -17,7 +17,7 @@
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
         <th:block th:if="${model.general.editable}" id="section-1-edit">
-            <div class="form-group" th:classappend="${#fields.hasErrors('title')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('title')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="title">
                     <span class="form-label-bold">Competition title</span>
                     <th:block th:if="${#fields.hasErrors('title')}">
@@ -34,7 +34,7 @@
                        th:readonly="${model.general.state.setupAndLive}" />
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('competitionTypeId')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('competitionTypeId')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="competitionTypeId">
                     <span class="form-label-bold">Competition type</span>
                     <th:block th:if="${#fields.hasErrors('competitionTypeId')}">
@@ -59,7 +59,7 @@
                 <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit) or model.general.competition.setupAndLive}" type="hidden" th:field="${competitionSetupForm.competitionTypeId}" />
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="innovationSectorCategoryId">
                     <span class="form-label-bold">Innovation sector</span>
                     <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
@@ -79,12 +79,12 @@
                 </select>
                 <input th:if="${model.general.state.setupAndLive}" type="hidden" th:field="${competitionSetupForm.innovationSectorCategoryId}" />
             </div>
-            <fieldset>
-                <legend id="innovationAreaCategoryIdsLegend">
-                    <span class="govuk-visually-hidden">Innovation areas</span>
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" id="innovationAreaCategoryIdsLegend">
+                    <h2 class="govuk-visually-hidden">Innovation areas</h2>
                 </legend>
             <th:block th:each="innovationAreaCategoryId,status : ${competitionSetupForm.innovationAreaCategoryIds}">
-                <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')} ? 'form-group-error'" th:id="innovation-row-__${status.index}__">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')} ? 'govuk-form-group--error'" th:id="innovation-row-__${status.index}__">
                     <label class="form-label" th:for="innovationAreaCategoryIds[__${status.index}__]">
                         <span class="form-label-bold" th:classappend="${status.index > 0} ? 'govuk-visually-hidden': ''">Innovation area</span>
                         <th:block th:if="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')}">
@@ -107,7 +107,7 @@
             </th:block>
             </fieldset>
             <th:block th:if="${competitionSetupForm.innovationAreaCategoryIds == null or competitionSetupForm.innovationAreaCategoryIds.size() == 0}">
-                <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryIds')}? 'form-group-error'" th:id="innovation-row-0">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryIds')}? 'govuk-form-group--error'" th:id="innovation-row-0">
                     <label class="form-label" th:for="innovationAreaCategoryIds">
                         <span class="form-label-bold">Innovation area</span>
                         <th:block th:if="${#fields.hasErrors('innovationAreaCategoryIds')}">
@@ -128,19 +128,19 @@
                 </div>
             </th:block>
             <input type="hidden" name="autosaveInnovationAreaIds" />
-            <div class="form-group" th:unless="${model.general.state.setupAndLive}">
+            <div class="govuk-form-group" th:unless="${model.general.state.setupAndLive}">
                 <button class="button-clear" type="button" data-add-row="innovationArea">+ add another innovation area</button>
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('openingDate*')} ? 'form-group-error'">
-                <fieldset>
-                    <legend id="openingDate">
-                      <span class="govuk-heading-s">Opening date</span>
-                      <th:block th:if="${#fields.hasErrors('openingDate*')}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}"></span>
-                      </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('openingDate*')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="openingDate">
+                      <h2 class="govuk-fieldset__heading">Opening date</h2>
                     </legend>
-                    <p class="form-hint">You are able to edit this date if needed in the milestones section.</p>
+                    <th:block th:if="${#fields.hasErrors('openingDate*')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}"></span>
+                    </th:block>
+                    <p class="govuk-hint">You are able to edit this date if needed in the milestones section.</p>
                     <div class="date-group" data-future-date="">
                         <div class="day">
                             <label class="form-label" for="openingDateDay">
@@ -199,7 +199,7 @@
                 </fieldset>
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('innovationLeadUserId')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationLeadUserId')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="innovationLeadUserId">
                     <span class="form-label-bold">Competition Innovation Lead</span>
                     <th:block th:if="${#fields.hasErrors('innovationLeadUserId')}">
@@ -216,7 +216,7 @@
                 </select>
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('executiveUserId')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('executiveUserId')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="executiveUserId">
                     <span class="form-label-bold">Portfolio Manager</span>
                     <th:block th:if="${#fields.hasErrors('executiveUserId')}">
@@ -233,23 +233,29 @@
                 </select>
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('stateAid')} ? 'form-group-error'">
-                <fieldset class="inline">
-                    <legend id="stateAid" class="govuk-heading-s">
-                        State aid
-                        <th:block th:if="${#fields.hasErrors('stateAid')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('stateAid')}" th:text="${err}"></span>
-                        </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('stateAid')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend id="stateAid" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        <h2 class="govuk-fieldset__heading">State aid</h2>
                     </legend>
-                    <div class="multiple-choice" th:each="value : ${ {true, false} }">
-                        <input
-                            type="radio"
-                            th:field="*{stateAid}"
-                            th:value="${value}"
-                            required="required"
-                            th:attr="data-required-errormessage=#{validation.initialdetailsform.stateaid.required}"/>
-                        <label th:for="${#ids.prev('stateAid')}" th:text="${value} ? 'Yes' : 'No'"></label>
+                    <th:block th:if="${#fields.hasErrors('stateAid')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('stateAid')}" th:text="${err}"></span>
+                    </th:block>
+                    <div class="govuk-radios govuk-radios--inline">
+                        <div class="govuk-radios__item" th:each="value : ${ {true, false} }">
+                            <input
+                                type="radio"
+                                class="govuk-radios__input"
+                                th:field="*{stateAid}"
+                                th:value="${value}"
+                                required="required"
+                                th:attr="data-required-errormessage=#{validation.initialdetailsform.stateaid.required}"/>
+                            <label th:for="${#ids.prev('stateAid')}"
+                                   th:text="${value} ? 'Yes' : 'No'"
+                                   class="govuk-label govuk-radios__label"></label>
+                        </div>
                     </div>
+
                 </fieldset>
             </div>
 

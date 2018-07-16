@@ -21,7 +21,7 @@
     <!--/* please change method="get" for method="post" when really implementing */-->
     <form action="/prototypes/ifs-606-review-user-profile.html" method="get">
         <h2 class="govuk-heading-m">Personal details</h2>
-        <div class="form-group">
+        <div class="govuk-form-group">
           <label class="form-label" for="firstName">
               <span>First name</span>
           </label>
@@ -36,7 +36,7 @@
                           data-maxlength-errormessage=#{validation.standard.firstname.length.max},
                           data-required-errormessage=#{validation.standard.firstname.required}" />
         </div>
-        <div class="form-group">
+        <div class="govuk-form-group">
           <label class="form-label" for="lastName">
               <span>Last name</span>
           </label>
@@ -55,10 +55,10 @@
             <dt>Email address</dt>
             <dd>mark.smith@innovate.gov.uk</dd>
         </dl>
-        <div class="form-group">
+        <div class="govuk-form-group">
             <label class="form-label" for="role">
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0">IFS role</h2>
-                <span class="form-hint">Please choose the appropriate IFS role for the user.</span>
+                <span class="govuk-hint">Please choose the appropriate IFS role for the user.</span>
             </label>
             <select name="role" class="form-control" id="role" required="required" data-required-errormessage="Please select a role">
                 <option value="IFS Administrator" selected>IFS Administrator</option>
@@ -68,7 +68,7 @@
             </select>
         </div>
 
-        <div class="form-group extra-margin">
+        <div class="govuk-form-group extra-margin">
             <button class="govuk-button">Save and return</button>
             <a class="govuk-button button-clear" href="/prototypes/606-review-user-profile.html">Cancel</a>
         </div>

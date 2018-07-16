@@ -15,7 +15,7 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Research category',subTitle=${model.currentCompetitionName},size='govuk-heading-xl'" />
 
         <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{__researchCategoryChoice__}')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__researchCategoryChoice__}')} ? 'govuk-form-group--error'">
                 <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.hasApplicationFinances}">
                     <h2 class="govuk-heading-s govuk-!-margin-0">What type of research are you undertaking in this project?</h2>
                     <p class="govuk-body">The type of research affects the level of funding a business can receive under UK state aid rules.
@@ -23,29 +23,31 @@
                     </p>
                 </div>
 
-                <fieldset>
-                    <legend class="govuk-!-margin-bottom-6">
-                        <h2 class="govuk-heading-m">Research category</h2>
-                        <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a
-                            href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
-                            target="_blank">Innovate UK funding rules</a>.</span>
-                        <th:block th:if="${#fields.hasErrors('researchCategoryChoice')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryChoice')}" th:text="${err}"></span>
-                        </th:block>
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h2 class="govuk-fieldset__heading">Research category</h2>
                     </legend>
-                    <th:block th:each="researchCategory : ${model.availableResearchCategories}">
-                        <div class="multiple-choice">
+                    <span class="govuk-hint">What type of research is your project undertaking? Further guidance is available from <a
+                        href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
+                        target="_blank">Innovate UK funding rules</a>.</span>
+                    <th:block th:if="${#fields.hasErrors('researchCategoryChoice')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryChoice')}" th:text="${err}"></span>
+                    </th:block>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" th:each="researchCategory : ${model.availableResearchCategories}">
                             <input type="radio" name="researchCategoryChoice" required="required"
+                                   class="govuk-radios__input"
                                    th:id="${'researchCategoryChoice-'+researchCategory.id}"
                                    th:value="${researchCategory.id}"
                                    th:checked="${model.selectedResearchCategoryId} == ${researchCategory.id}"
                                    th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}" />
-                            <label th:for="${'researchCategoryChoice-'+researchCategory.id}">
+                            <label th:for="${'researchCategoryChoice-'+researchCategory.id}"
+                                   class="govuk-label govuk-radios__label">
                                 <th:block th:text="${researchCategory.name}" />
-                                <span class="form-hint" th:text="${researchCategory.description}">description</span>
+                                <span class="govuk-hint" th:text="${researchCategory.description}">description</span>
                             </label>
                         </div>
-                    </th:block>
+                    </div>
                 </fieldset>
             </div>
             <button class="govuk-button" name="save-research-category">Save</button>

@@ -33,13 +33,13 @@
 		<li><a href="/prototypes/5645-annex?page=c">Annex C</a></li>
 	</ul>
 
-	<p class="form-hint extra-margin">
+	<p class="govuk-hint extra-margin">
 		You can access these terms of contract at any time from your profile. <a href="#">Download terms of contract</a>.
 	</p>
 
 	<form th:unless="${param.status != null and param.status[0] == 'signed'}">
 
-		<fieldset>
+		<fieldset class="govuk-fieldset">
 
 			<legend class="govuk-visually-hidden">Confirm terms and conditions</legend>
 

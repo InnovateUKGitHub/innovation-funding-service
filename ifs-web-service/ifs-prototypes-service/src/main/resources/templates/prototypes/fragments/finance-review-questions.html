@@ -4,7 +4,7 @@
 <!-- ===========================Question - other funding  =========================== -->
 
 <div th:fragment="finance-question-other-funding">
-	<fieldset class="collapsible-content">
+	<fieldset class="govuk-fieldset collapsible-content">
 		<legend class="govuk-visually-hidden">Other funding</legend>
 		<table>
 			<thead>
@@ -76,7 +76,7 @@
 <!-- ===========================Question - labour  =========================== -->
 
 <div th:fragment="finance-question-labour">
-	<fieldset class="collapsible-content">
+	<fieldset class="govuk-fieldset collapsible-content">
 		<legend class="govuk-visually-hidden">Labour</legend>
 
 		<p class="govuk-body">Labour costs of all individuals you have working on your project.</p>
@@ -218,7 +218,7 @@
 
 	<p class="govuk-body">Overheads are related expenses incurred as a result of delivering the project.</p>
 
-	<fieldset class="extra-margin">
+	<fieldset class="govuk-fieldset extra-margin">
 		<legend class="govuk-visually-hidden">Admin support</legend>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'edit-admin'}">
@@ -246,7 +246,7 @@
 
 	</fieldset>
 
-	<fieldset class="collapsible-content">
+	<fieldset class="govuk-fieldset collapsible-content">
 
 		<legend class="govuk-visually-hidden">Support details</legend>
 
@@ -266,7 +266,7 @@
 					</tr>
           <tr>
             <td>
-              <div class="form-group download">
+              <div class="govuk-form-group download">
         	        <h3 class="govuk-heading-s govuk-!-margin-0">Download the overhead calculation spreadsheet</h3>
         	        <a href="#">Overhead calculation spreadsheet.pdf (56kb)</a>
         	    </div>
@@ -349,7 +349,7 @@
 <!-- ===========================Question - admin support  =========================== -->
 
 <div th:fragment="finance-question-materials">
-	<fieldset class="collapsible-content">
+	<fieldset class="govuk-fieldset collapsible-content">
 		<legend class="govuk-visually-hidden">Materials</legend>
 
 		<p class="govuk-body">The costs of materials used on your project</p>
@@ -478,7 +478,7 @@
 <!-- ===========================Question -  Capital usage  =========================== -->
 
 <div th:fragment="finance-question-capital">
-	<fieldset class="collapsible-content">
+	<fieldset class="govuk-fieldset collapsible-content">
 		<legend class="govuk-visually-hidden">Capital usage</legend>
 
 		<p class="govuk-body">Details of capital equipment and tools you will buy for, or use on, your project.</p>
@@ -576,7 +576,7 @@
 
 
 <div th:fragment="finance-question-subcontracting">
-	<fieldset class="collapsible-content">
+	<fieldset class="govuk-fieldset collapsible-content">
 		<legend class="govuk-visually-hidden">Subcontracting costs</legend>
 
 		<p class="govuk-body">Subcontracting costs relate to work carried out by third party organisations. These organisations are not part of your project or collaboration.</p>
@@ -664,7 +664,7 @@
 <!-- ===========================Question - Travel and subsistence  =========================== -->
 
 <div th:fragment="finance-question-travel">
-	<fieldset class="collapsible-content">
+	<fieldset class="govuk-fieldset collapsible-content">
 		<legend class="govuk-visually-hidden">Travel and sudsistence</legend>
 
 		<p class="govuk-body">Itemised travel and subsistence costs that relate only to this project</p>
@@ -741,7 +741,7 @@
 <!-- ===========================Question - Other costs  =========================== -->
 
 <div th:fragment="finance-question-other">
-	<fieldset class="collapsible-content">
+	<fieldset class="govuk-fieldset collapsible-content">
 		<legend class="govuk-visually-hidden">Other costs</legend>
 
 		<p class="govuk-body">Costs that do not fit under the other cost headings. You should describe each type of cost and explain why you have included it.</p>

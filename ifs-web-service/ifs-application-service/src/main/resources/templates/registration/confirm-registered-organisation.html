@@ -18,9 +18,10 @@
 
         <p class="govuk-body">Please review the organisation details below and confirm that they are correct.</p>
 
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Confirm your organisation details are correct</h2>
-        <fieldset>
-            <legend class="govuk-visually-hidden">Confirm your organisation details are correct</legend>
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <h2 class="govuk-fieldset__heading">Confirm your organisation details are correct</h2>
+            </legend>
             <div class="form-block">
                 <h3 class="govuk-heading-s">Organisation type</h3>
                 <p class="govuk-body" th:text="${model.organisationType}"></p>

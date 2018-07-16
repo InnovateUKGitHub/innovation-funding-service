@@ -237,7 +237,7 @@ Administrator is able to disable internal users
     [Setup]  log in as a different user   &{ifs_admin_user_credentials}
     Given the user navigates to the View internal user details  Innovation Lead  active
     And the user clicks the button/link   link=Edit
-    Then the user should see the element  css=.form-group input
+    Then the user should see the element  css=.govuk-form-group input
     When the user clicks the button/link  jQuery=button:contains("Deactivate user")
     Then the user clicks the button/link  jQuery=button:contains("Cancel")
     When the user clicks the button/link  jQuery=button:contains("Deactivate user")

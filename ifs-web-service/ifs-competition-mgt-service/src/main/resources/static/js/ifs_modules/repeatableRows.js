@@ -22,14 +22,14 @@ IFS.competitionManagement.repeatableRows = (function () {
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children().length || 0
       var newRow = jQuery('<tr class="form-group-row-validated">' +
-        '<td class="width-40-percent form-group">' +
+        '<td class="width-40-percent govuk-form-group">' +
         '<label></label>' +
         '<input aria-labelledby="invite-label-assessor-name" class="form-control width-full" type="text" ' +
         'id="invites' + uniqueRowId + '.name" ' +
         'name="invites[' + uniqueRowId + '].name" value="" ' +
         'data-required-errormessage="Please enter a name." required="required" />' +
         '</td>' +
-        '<td class="width-40-percent form-group">' +
+        '<td class="width-40-percent govuk-form-group">' +
         '<label></label>' +
         '<input aria-labelledby="invite-label-assessor-email" class="form-control width-full" type="email" ' +
         'id="invites' + uniqueRowId + '.email" ' +

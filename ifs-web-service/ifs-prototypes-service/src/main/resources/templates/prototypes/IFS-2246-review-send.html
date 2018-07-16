@@ -96,7 +96,7 @@
                         <td>Empire Ltd</td>
                         <td>
                             <div class="upload-section">
-                                <div th:class="${param.status != null and param.status[0] == 'error'} ? 'form-group-error'">
+                                <div th:class="${param.status != null and param.status[0] == 'error'} ? 'govuk-form-group--error'">
                                     <th:block th:if="${param.status != null and param.status[0] == 'error'}">
                                         <span class="error-message">Your upload must be a PDF.</span>
                                         <p class="uploaded-file">No file currently uploaded</p>
@@ -132,7 +132,7 @@
                                 <div class="govuk-grid-row">
                                     <div class="column-two-thirds">
                                         <a class="uploaded-file-1" href="#" target="_blank">Uploaded-file.pdf</a>
-                                        <p class="form-hint">(opens in a new window)</p>
+                                        <p class="govuk-hint">(opens in a new window)</p>
                                     </div>
                                    <div class="govuk-grid-column-one-third">
                                        <button name="remove_uploaded_file" value="" class="govuk-button button-clear" type="submit">Remove</button>
@@ -168,7 +168,7 @@
                                 <div class="govuk-grid-row">
                                     <div class="column-two-thirds">
                                         <a class="uploaded-file-1" href="#" target="_blank">Uploaded-file.pdf</a>
-                                        <p class="form-hint">(opens in a new window)</p>
+                                        <p class="govuk-hint">(opens in a new window)</p>
                                     </div>
                                     <div class="govuk-grid-column-one-third">
                                         <button name="remove_uploaded_file" value="" class="govuk-button button-clear" type="submit">Remove</button>
@@ -188,20 +188,20 @@
 
             <legend class="govuk-visually-hidden">Email invite for interview</legend>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label-bold" for="subject">Email subject</label>
                 <input class="form-control width-full" id="subject" type="text" value="Please attend an interview for an Innovate UK funding competition" />
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
               <h3 class="govuk-heading-s govuk-!-margin-0">Message</h3>
-              <p class="form-hint" style="white-space: pre-wrap">Competition: [competition title]
+              <p class="govuk-hint" style="white-space: pre-wrap">Competition: [competition title]
 Application number: [application number]
 Project title: [project title]
               </p>
             </div>
 
-            <div class="form-group">
+            <div class="govuk-form-group">
                 <label class="form-label-bold" for="message">Additional text</label>
                 <div class="textarea-wrapped">
                     <textarea id="message" rows="8" data-editor="md" class="width-full">
@@ -209,11 +209,11 @@ Project title: [project title]
                 </div>
             </div>
 
-            <p class="form-hint">
+            <p class="govuk-hint">
               Yours sincerely,
             </p>
 
-            <p class="form-hint extra-margin">
+            <p class="govuk-hint extra-margin">
                 Innovate UK, part of UK Research and Innovation <br />
                 Tel: 0300 321 4357 <br />
                 Email: competitions@innovateuk.ukri.org

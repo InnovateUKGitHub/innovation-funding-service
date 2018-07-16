@@ -74,7 +74,7 @@ jQuery(document).ready(function(){
 
     function addTableRow(el){
         el = jQuery(el);
-        var html = '<tr class="form-group">\
+        var html = '<tr class="govuk-form-group">\
                     <td>\
                         <input type="text" value="" placeholder="name" id="name-item-1" class="form-control width-full" name="name-item-1">\
                     </td>\

@@ -32,7 +32,7 @@
                 <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" novalidate="novalidate" method="post">
                     <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
 
-                    <div class="form-group" th:classappend="${#fields.hasErrors('organisationName')} ? 'form-group-error'">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('organisationName')} ? 'govuk-form-group--error'">
                         <label class="form-label-bold" for="organisationName">
                             <span>Organisation name</span>
                             <th:block th:if="${#fields.hasErrors('organisationName')}">
@@ -57,7 +57,7 @@
                         </thead>
                         <tbody>
                             <tr th:each="applicant, applicantStat : *{applicants}" class="repeatable-row">
-                                <td class="form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}? 'form-group-error'">
+                                <td class="govuk-form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}? 'govuk-form-group--error'">
                                     <label th:for="applicants[__${applicantStat.index}__].name">
                                         <span class="govuk-visually-hidden">Applicant name</span>
                                         <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
@@ -74,7 +74,7 @@
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                                 </td>
-                                <td class="form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}? 'form-group-error'">
+                                <td class="govuk-form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}? 'govuk-form-group--error'">
                                     <label th:for="applicants[__${applicantStat.index}__].email">
                                         <span class="govuk-visually-hidden">Applicant email</span>
                                         <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">

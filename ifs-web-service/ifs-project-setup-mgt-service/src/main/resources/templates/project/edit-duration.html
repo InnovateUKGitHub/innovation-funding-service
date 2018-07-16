@@ -38,7 +38,7 @@
             th:object="${form}"
             method="post"
             novalidate="novalidate">
-        <div class="form-group" th:classappend="${#fields.hasErrors('durationInMonths')} ? 'form-group-error'" >
+        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('durationInMonths')} ? 'govuk-form-group--error'" >
           <label for="durationInMonths">
             <span class="form-label-bold">Duration</span>
             <th:block th:if="${#fields.hasErrors('durationInMonths')}">

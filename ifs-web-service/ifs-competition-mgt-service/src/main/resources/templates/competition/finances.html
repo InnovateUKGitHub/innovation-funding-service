@@ -30,61 +30,87 @@
               data-section="application"
               data-subsection="finance">
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('applicationFinanceType')}? 'form-group-error'">
-                <fieldset>
-                    <legend id="applicationFinanceType">
-                        <span class="form-label-bold">Finances form</span>
-                        <th:block th:if="${#fields.hasErrors('applicationFinanceType')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('applicationFinanceType')}" th:text="${err}"></span>
-                        </th:block>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('applicationFinanceType')}? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="applicationFinanceType">
+                        <h2 class="govuk-fieldset__heading">Finances form</h2>
                     </legend>
-                    <div class="multiple-choice">
-                        <input id="application-finance-full"
-                               th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).FULL}"
-                               th:disabled="${model.subsection.noneFinanceCompetition}" type="radio"
-                               th:field="*{applicationFinanceType}" required="required"/>
-                        <label for="application-finance-full" th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).FULL.name}" />
-                    </div>
-                    <div class="multiple-choice">
-                        <input id="application-finance-light"
-                               th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).LIGHT}"
-                               disabled="disabled" type="radio"
-                               th:field="*{applicationFinanceType}" required="required" />
-                        <label for="application-finance-light" th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).LIGHT.name}" />
-                    </div>
-                    <div class="multiple-choice">
-                        <input id="application-finance-none"
-                               th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).NONE}"
-                               th:disabled="${!model.subsection.noneFinanceCompetition}"
-                               type="radio" th:field="*{applicationFinanceType}" required="required"/>
-                        <label for="application-finance-none" th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).NONE.name}" />
+                    <th:block th:if="${#fields.hasErrors('applicationFinanceType')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('applicationFinanceType')}" th:text="${err}"></span>
+                    </th:block>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input id="application-finance-full"
+                                   class="govuk-radios__input"
+                                   th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).FULL}"
+                                   th:disabled="${model.subsection.noneFinanceCompetition}" type="radio"
+                                   th:field="*{applicationFinanceType}" required="required"/>
+                            <label for="application-finance-full"
+                                   th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).FULL.name}"
+                                   class="govuk-label govuk-radios__label"/>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input id="application-finance-light"
+                                   class="govuk-radios__input"
+                                   th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).LIGHT}"
+                                   disabled="disabled" type="radio"
+                                   th:field="*{applicationFinanceType}" required="required" />
+                            <label for="application-finance-light"
+                                   th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).LIGHT.name}"
+                                   class="govuk-label govuk-radios__label"/>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input id="application-finance-none"
+                                   class="govuk-radios__input"
+                                   th:value="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).NONE}"
+                                   th:disabled="${!model.subsection.noneFinanceCompetition}"
+                                   type="radio" th:field="*{applicationFinanceType}" required="required"/>
+                            <label for="application-finance-none"
+                                   th:text="${T(org.innovateuk.ifs.setup.resource.ApplicationFinanceType).NONE.name}"
+                                   class="govuk-label govuk-radios__label"/>
+                        </div>
                     </div>
                 </fieldset>
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('includeGrowthTable')} ? 'form-group-error'" th:unless="${model.subsection.noneFinanceCompetition}">
-                <fieldset class="inline">
-                    <legend id="includeGrowthTable">
-                        <span class="form-label-bold">Include project growth table</span>
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('includeGrowthTable')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noneFinanceCompetition}">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includeGrowthTable">
+                        <h2 class="govuk-fieldset__heading">Include project growth table</h2>
                         <th:block th:if="${#fields.hasErrors('includeGrowthTable')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
-                    <div class="multiple-choice">
-                        <input id="include-growth-table-yes" value="true" type="radio" th:field="*{includeGrowthTable}" required="required" />
-                        <label for="include-growth-table-yes">
-                            Yes
-                        </label>
-                    </div>
-                    <div class="multiple-choice">
-                        <input id="include-growth-table-no" value="false" type="radio" th:field="*{includeGrowthTable}" required="required" th:disabled="${model.subsection.sectorCompetition}" />
-                        <label for="include-growth-table-no">
-                            No
-                        </label>
+                    <div class="govuk-radios govuk-radios--inline">
+                        <div class="govuk-radios__item">
+                            <input id="include-growth-table-yes"
+                                   class="govuk-radios__input"
+                                   value="true"
+                                   type="radio"
+                                   th:field="*{includeGrowthTable}"
+                                   required="required" />
+                            <label for="include-growth-table-yes"
+                                   class="govuk-label govuk-radios__label">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input id="include-growth-table-no"
+                                   class="govuk-radios__input"
+                                   value="false"
+                                   type="radio"
+                                   th:field="*{includeGrowthTable}"
+                                   required="required"
+                                   th:disabled="${model.subsection.sectorCompetition}" />
+                            <label for="include-growth-table-no"
+                                   class="govuk-label govuk-radios__label">
+                                No
+                            </label>
+                        </div>
                     </div>
                 </fieldset>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-group-error'" th:unless="${model.subsection.noneFinanceCompetition}">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingRules')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noneFinanceCompetition}">
                   <label for="fundingRules">
                       <span class="form-label-bold">Funding rules for this competition</span>
                       <th:block th:if="${#fields.hasErrors('fundingRules')}">

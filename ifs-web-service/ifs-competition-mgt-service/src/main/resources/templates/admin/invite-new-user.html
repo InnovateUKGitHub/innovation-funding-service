@@ -21,7 +21,7 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite a new internal user',size='govuk-heading-l'" />
 
         <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
                 <label class="form-label" th:for="${#ids.next('firstName')}">
                     <span>First name</span>
                     <th:block th:if="${#fields.hasErrors('firstName')}">
@@ -41,7 +41,7 @@
                                 data-maxlength-errormessage=#{validation.standard.firstname.length.max},
                                 data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
                 <label class="form-label" th:for="${#ids.next('lastName')}">
                     <span>Last name</span>
                     <th:block th:if="${#fields.hasErrors('lastName')}">
@@ -61,7 +61,7 @@
                                 data-pattern-errormessage=#{validation.standard.lastname.invalid},
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{emailAddress}')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{emailAddress}')} ? 'govuk-form-group--error'">
                 <label class="form-label" th:for="${#ids.next('emailAddress')}">
                     <span>Email address</span>
                     <th:block th:if="${#fields.hasErrors('emailAddress')}">
@@ -77,7 +77,7 @@
                        th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
                                         data-required-errormessage=#{validation.invite.email.required}" />
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
                 <label class="form-label" th:for="${#ids.next('role')}">
                     <span>Role</span>
                     <th:block th:if="${#fields.hasErrors('role')}">
@@ -88,7 +88,7 @@
                     <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.Role).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
                 </select>
             </div>
-            <div class="form-group govuk-!-margin-top-6">
+            <div class="govuk-form-group govuk-!-margin-top-6">
                 <button class="govuk-button">Send invite</button>
                 <a th:href="@{/admin/users/active}" class="govuk-link">Cancel</a>
             </div>

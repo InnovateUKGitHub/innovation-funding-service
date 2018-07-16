@@ -25,7 +25,7 @@
               th:object="${form}"
               novalidate="novalidate"
               data-section="milestones">
-          <div class="form-group" th:classappend="${#fields.hasErrors('title')} ? 'form-group-error'">
+          <div class="govuk-form-group" th:classappend="${#fields.hasErrors('title')} ? 'govuk-form-group--error'">
               <label class="form-label" for="title">
                   <span class="form-label-bold">Competition title</span>
                   <th:block th:if="${#fields.hasErrors('title')}">
@@ -40,7 +40,7 @@
                      required="required"
                      th:attr="data-required-errormessage=#{validation.standard.title.required}" />
           </div>
-          <div class="form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'form-group-error'">
+          <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'govuk-form-group--error'">
               <label class="form-label" for="innovationSectorCategoryId">
                   <span class="form-label-bold">Innovation sector</span>
                   <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
@@ -58,7 +58,7 @@
               </select>
           </div>
 
-          <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryId')} ? 'form-group-error'">
+          <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryId')} ? 'govuk-form-group--error'">
               <label class="form-label" for="innovationAreaCategoryId">
                   <span class="form-label-bold">Innovation area</span>
                   <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">
@@ -75,7 +75,7 @@
               </select>
           </div>
 
-            <fieldset>
+            <fieldset class="govuk-fieldset">
 
                 <legend class="govuk-visually-hidden">Milestones</legend>
 
@@ -299,10 +299,10 @@
                 </table>
             </fieldset>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('url')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('url')} ? 'govuk-form-group--error'">
                 <label class="form-label" for="url">
                     <span class="form-label-bold">Competition URL</span>
-                    <span class="form-hint">This is the non-IFS page that the public will go to when they 'apply'</span>
+                    <span class="govuk-hint">This is the non-IFS page that the public will go to when they 'apply'</span>
                     <th:block th:if="${#fields.hasErrors('url')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('url')}" th:text="${err}"></span>
                     </th:block>

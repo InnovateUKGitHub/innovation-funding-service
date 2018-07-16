@@ -219,7 +219,7 @@
 	</div>
 
 	<h2 th:class="(${param.internal != null} ? 'govuk-heading-m' : 'govuk-heading-m govuk-!-margin-bottom-0')">Application details</h2>
-	<p class="form-hint" th:unless="${param.internal != null}">Assessors do not provide scores on these sections of the application.</p>
+	<p class="govuk-hint" th:unless="${param.internal != null}">Assessors do not provide scores on these sections of the application.</p>
 
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-application-details-panel" />
 
@@ -231,7 +231,7 @@
 					<h3 class="govuk-heading-s">Application details</h3>
 				</div>
 				<div class="govuk-grid-column-one-third">
-					<p class="form-hint govuk-!-margin-0">No feedback provided</p>
+					<p class="govuk-hint govuk-!-margin-0">No feedback provided</p>
 				</div>
 			</div>
 		</li> -->
@@ -241,7 +241,7 @@
 					<h3 class="govuk-heading-s">Project summary</h3>
 				</div>
 				<div class="govuk-grid-column-one-third">
-					<p class="form-hint govuk-!-margin-0">No feedback provided</p>
+					<p class="govuk-hint govuk-!-margin-0">No feedback provided</p>
 				</div>
 			</div>
 		</li>
@@ -251,7 +251,7 @@
 					<h3 class="govuk-heading-s">Public description</h3>
 				</div>
 				<div class="govuk-grid-column-one-third">
-					<p class="form-hint govuk-!-margin-0">No feedback provided</p>
+					<p class="govuk-hint govuk-!-margin-0">No feedback provided</p>
 				</div>
 			</div>
 		</li>
@@ -268,7 +268,7 @@
 	</ul>
 
 	<h2 th:class="(${param.internal != null} ? 'govuk-heading-m' : 'govuk-heading-m govuk-!-margin-bottom-0')">Application questions</h2>
-	<p class="form-hint" th:unless="${param.internal != null}">Each question has been assessed by several independent assessors. They have given a score out of 10 and written feedback.</p>
+	<p class="govuk-hint" th:unless="${param.internal != null}">Each question has been assessed by several independent assessors. They have given a score out of 10 and written feedback.</p>
 	<ul class="govuk-list list-overview">
 		<li class="section-status">
 			<div class="govuk-grid-row">
