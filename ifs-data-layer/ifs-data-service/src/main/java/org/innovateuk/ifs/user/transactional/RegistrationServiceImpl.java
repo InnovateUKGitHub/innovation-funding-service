@@ -132,7 +132,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
         User newUser = assembleUserFromResource(userResource);
-        return validateUser(userResource).
+        return validateUserWithOrganisation(userResource, organisationId).
                 andOnSuccess(
                         () -> addUserToOrganisation(newUser, organisationId)).
                 andOnSuccess(
@@ -147,6 +147,19 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<UserResource> validateUser(UserResource userResource) {
         return passwordPolicyValidator.validatePassword(userResource.getPassword(), userResource)
+                .handleSuccessOrFailure(
+                        failure -> serviceFailure(
+                                simpleMap(
+                                        failure.getErrors(),
+                                        error -> fieldError("password", error.getFieldRejectedValue(), error.getErrorKey())
+                                )
+                        ),
+                        success -> serviceSuccess(userResource)
+                );
+    }
+
+    private ServiceResult<UserResource> validateUserWithOrganisation(UserResource userResource, Long organisationId) {
+        return passwordPolicyValidator.validatePassword(userResource.getPassword(), userResource, organisationId)
                 .handleSuccessOrFailure(
                         failure -> serviceFailure(
                                 simpleMap(
