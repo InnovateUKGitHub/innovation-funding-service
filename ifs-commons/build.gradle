@@ -9,6 +9,8 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.jsoup:jsoup:1.10.2'
     compile "com.google.guava:guava:21.0"
+    compile "org.springframework:spring-web:4.3.15.RELEASE"
+    compile "javax.servlet:javax.servlet-api:3.1.0"
     compile "com.fasterxml.jackson.core:jackson-databind:2.8.11.1"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.11"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.11"

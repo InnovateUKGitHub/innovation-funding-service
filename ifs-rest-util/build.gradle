@@ -10,7 +10,7 @@ ext {
 }
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.boot:spring-boot-starter-security:1.5.11.RELEASE"
     compile project(':ifs-commons')
     compile project(':ifs-error-util')
 }
