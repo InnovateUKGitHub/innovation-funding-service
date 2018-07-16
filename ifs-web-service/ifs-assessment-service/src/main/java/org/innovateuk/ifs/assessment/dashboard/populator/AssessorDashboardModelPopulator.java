@@ -49,7 +49,7 @@ public class AssessorDashboardModelPopulator {
         this.competitionService = competitionService;
     }
 
-    public AssessorDashboardViewModel populateModel(Long userId) {
+    public AssessorDashboardViewModel populateModel(long userId) {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
                 .getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR).getSuccess();
 

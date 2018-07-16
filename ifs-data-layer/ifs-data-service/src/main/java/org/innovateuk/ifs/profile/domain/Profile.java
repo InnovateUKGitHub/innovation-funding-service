@@ -10,8 +10,10 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import javax.persistence.*;
+import java.time.Period;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
  */
 @Entity
 public class Profile extends AuditableEntity {
+
+    private static final Period DOI_EXPIRE_PERIOD = Period.ofYears(1);
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -124,10 +129,14 @@ public class Profile extends AuditableEntity {
     // TODO the profile belongs to a User so should the User be a member?
     public boolean isCompliant(User user) {
         boolean skillsComplete = skillsAreas != null;
-        boolean affiliationsComplete = user != null && user.getAffiliations() != null
-                && !user.getAffiliations().isEmpty();
+        boolean affiliationsComplete = isAffiliationsComplete(user);
         boolean agreementComplete = agreementSignedDate != null;
         return skillsComplete && affiliationsComplete && agreementComplete;
+    }
+
+    public static boolean isAffiliationsComplete(User user) {
+        Optional<ZonedDateTime> doiLastSignedDateTime = user.getAffiliations().stream().findAny().map(AuditableEntity::getModifiedOn);
+        return doiLastSignedDateTime.isPresent() && doiLastSignedDateTime.get().isAfter(ZonedDateTime.now().minus(DOI_EXPIRE_PERIOD));
     }
 
     @Override
