@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.application.form.AbstractQuestionForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
@@ -49,8 +50,11 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
-	@Autowired
+    @Autowired
     private CompetitionSetupPopulator competitionSetupPopulator;
+
+    @Autowired
+	private CompetitionRestService competitionRestService;
 
     private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
     private Map<CompetitionSetupSubsection, CompetitionSetupSubsectionFormPopulator> subsectionFormPopulators;
@@ -318,6 +322,16 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
                         return competitionSetupRestService.delete(competitionId).toServiceResult();
                     }
                 });
+    }
+
+    @Override
+    public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
+        return competitionRestService.addInnovationLead(competitionId, innovationLeadUserId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
+        return competitionRestService.removeInnovationLead(competitionId, innovationLeadUserId).toServiceResult();
     }
 
     private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {

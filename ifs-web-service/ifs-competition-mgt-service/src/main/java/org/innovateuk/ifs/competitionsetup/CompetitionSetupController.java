@@ -379,9 +379,8 @@ public class CompetitionSetupController {
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @GetMapping("/{competitionId}/manage-innovation-leads/find")
-    public String manageInnovationLead(@P("competitionId")@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                       Model model,
-                                       UserResource loggedInUser) {
+    public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                       Model model) {
 
 
         CompetitionResource competition = competitionService.getById(competitionId);
@@ -397,9 +396,8 @@ public class CompetitionSetupController {
 
     @PreAuthorize("hasPermission(#competitionId,'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @GetMapping("/{competitionId}/manage-innovation-leads/overview")
-    public String manageInnovationLeadOverview(@P("competitionId") @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                       Model model,
-                                       UserResource loggedInUser) {
+    public String manageInnovationLeadOverview(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                               Model model) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
@@ -414,10 +412,9 @@ public class CompetitionSetupController {
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @PostMapping("/{competitionId}/add-innovation-lead/{innovationLeadUserId}")
-    public String addInnovationLead(@P("competitionId")@PathVariable(COMPETITION_ID_KEY) long competitionId,
+    public String addInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                     @PathVariable("innovationLeadUserId") long innovationLeadUserId,
-                                    Model model,
-                                    UserResource loggedInUser) {
+                                    Model model) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
@@ -425,18 +422,20 @@ public class CompetitionSetupController {
             return "redirect:/competition/setup/" + competitionId;
         }
 
-        competitionService.addInnovationLead(competitionId, innovationLeadUserId);
-        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-
-        return "competition/manage-innovation-leads-find";
+        return competitionSetupService.addInnovationLead(competitionId, innovationLeadUserId).handleSuccessOrFailure(
+                failure -> "competition/setup/" + competitionId,
+                success -> {
+                    model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
+                    return "competition/manage-innovation-leads-find";
+                }
+        );
     }
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @PostMapping("/{competitionId}/remove-innovation-lead/{innovationLeadUserId}")
-    public String removeInnovationLead(@P("competitionId") @PathVariable(COMPETITION_ID_KEY) long competitionId,
+    public String removeInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        @PathVariable("innovationLeadUserId") long innovationLeadUserId,
-                                       Model model,
-                                       UserResource loggedInUser) {
+                                       Model model) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
@@ -444,12 +443,14 @@ public class CompetitionSetupController {
             return "redirect:/competition/setup/" + competitionId;
         }
 
-        competitionService.removeInnovationLead(competitionId, innovationLeadUserId);
-        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-
-        return "competition/manage-innovation-leads-overview";
+        return competitionSetupService.removeInnovationLead(competitionId, innovationLeadUserId).handleSuccessOrFailure(
+                failure -> "competition/setup/" + competitionId,
+                success -> {
+                    model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
+                    return "competition/manage-innovation-leads-overview";
+                }
+        );
     }
-
 
     /* AJAX Function */
     @GetMapping("/{competitionId}/generateCompetitionCode")

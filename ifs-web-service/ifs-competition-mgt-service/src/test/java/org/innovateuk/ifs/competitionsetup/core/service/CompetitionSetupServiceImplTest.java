@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.application.form.DetailsForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
@@ -68,6 +69,9 @@ public class CompetitionSetupServiceImplTest {
 
     @Mock
     private CompetitionInviteRestService competitionInviteRestService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
 
     @Before
     public void setup() {
@@ -498,6 +502,26 @@ public class CompetitionSetupServiceImplTest {
 
         verify(competitionInviteRestService, only()).getInviteStatistics(COMPETITION_ID);
         verify(competitionSetupRestService, never()).delete(isA(Long.class));
+    }
+
+    @Test
+    public void addInnovationLead() throws Exception {
+        Long competitionId = 1L;
+        Long innovationLeadUserId = 2L;
+        when(competitionRestService.addInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
+
+        service.addInnovationLead(competitionId, innovationLeadUserId);
+        verify(competitionRestService, only()).addInnovationLead(competitionId, innovationLeadUserId);
+    }
+
+    @Test
+    public void removeInnovationLead() throws Exception {
+        Long competitionId = 1L;
+        Long innovationLeadUserId = 2L;
+        when(competitionRestService.removeInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
+
+        service.removeInnovationLead(competitionId, innovationLeadUserId);
+        verify(competitionRestService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionSetupSection section, CompetitionResource competition) {

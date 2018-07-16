@@ -22,10 +22,6 @@ public interface CompetitionService {
 
     List<UserResource> findInnovationLeads(Long competitionId);
 
-    void addInnovationLead(Long competitionId, Long innovationLeadUserId);
-
-    void removeInnovationLead(Long competitionId, Long innovationLeadUserId);
-
     CompetitionResource getPublishedById(Long id);
 
     List<CompetitionResource> getAllCompetitions();

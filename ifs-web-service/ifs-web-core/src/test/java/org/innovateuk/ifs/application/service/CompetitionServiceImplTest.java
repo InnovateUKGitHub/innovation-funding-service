@@ -143,24 +143,4 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(userResources, result);
         verify(competitionRestService, only()).findInnovationLeads(competitionId);
     }
-
-    @Test
-    public void addInnovationLead() throws Exception {
-        Long competitionId = 1L;
-        Long innovationLeadUserId = 2L;
-        when(competitionRestService.addInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
-
-        service.addInnovationLead(competitionId, innovationLeadUserId);
-        verify(competitionRestService, only()).addInnovationLead(competitionId, innovationLeadUserId);
-    }
-
-    @Test
-    public void removeInnovationLead() throws Exception {
-        Long competitionId = 1L;
-        Long innovationLeadUserId = 2L;
-        when(competitionRestService.removeInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
-
-        service.removeInnovationLead(competitionId, innovationLeadUserId);
-        verify(competitionRestService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
-    }
 }

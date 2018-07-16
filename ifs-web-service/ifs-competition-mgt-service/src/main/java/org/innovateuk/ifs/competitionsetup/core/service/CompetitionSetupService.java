@@ -51,4 +51,8 @@ public interface CompetitionSetupService {
 	ServiceResult<Void> setCompetitionAsCompetitionSetup(Long competitionId);
 
     ServiceResult<Void> deleteCompetition(long competitionId);
+
+	ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId);
+
+	ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId);
 }

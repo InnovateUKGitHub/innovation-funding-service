@@ -51,16 +51,6 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public void addInnovationLead(Long competitionId, Long innovationLeadUserId){
-        competitionRestService.addInnovationLead(competitionId, innovationLeadUserId);
-    }
-
-    @Override
-    public void removeInnovationLead(Long competitionId, Long innovationLeadUserId){
-        competitionRestService.removeInnovationLead(competitionId, innovationLeadUserId);
-    }
-
-    @Override
     public CompetitionResource getPublishedById(Long competitionId){
         return competitionRestService.getPublishedCompetitionById(competitionId).getSuccess();
     }

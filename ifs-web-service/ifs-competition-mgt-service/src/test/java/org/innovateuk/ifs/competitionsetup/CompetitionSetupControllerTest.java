@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupSummaryForm;
@@ -95,6 +96,9 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Mock
     private CompetitionService competitionService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
 
     @Override
     protected CompetitionSetupController supplyControllerUnderTest() {
@@ -1120,35 +1124,34 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void addInnovationLeadWhenInitialDetailsNotComplete() throws Exception {
-
+        Long innovationLeadUserId = 2L;
         CompetitionResource competitionResource = newCompetitionResource().build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
         when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(Boolean.FALSE);
 
-        Long innovationLeadUserId = 2L;
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/add-innovation-lead/" + innovationLeadUserId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/setup/" + COMPETITION_ID));
 
-        verify(competitionService, never()).addInnovationLead(COMPETITION_ID, innovationLeadUserId);
+        verify(competitionSetupService, never()).addInnovationLead(COMPETITION_ID, innovationLeadUserId);
         verify(manageInnovationLeadsModelPopulator, never()).populateModel(any());
     }
 
     @Test
     public void addInnovationLead() throws Exception {
-
+        Long innovationLeadUserId = 2L;
         CompetitionResource competitionResource = newCompetitionResource()
                 .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+        when(competitionSetupService.addInnovationLead(COMPETITION_ID, innovationLeadUserId)).thenReturn(serviceSuccess());
 
-        Long innovationLeadUserId = 2L;
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/add-innovation-lead/" + innovationLeadUserId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-innovation-leads-find"));
 
-        verify(competitionService).addInnovationLead(COMPETITION_ID, innovationLeadUserId);
+        verify(competitionSetupService).addInnovationLead(COMPETITION_ID, innovationLeadUserId);
         verify(manageInnovationLeadsModelPopulator).populateModel(any());
     }
 
@@ -1165,25 +1168,42 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/setup/" + COMPETITION_ID));
 
-        verify(competitionService, never()).removeInnovationLead(COMPETITION_ID, innovationLeadUserId);
+        verify(competitionSetupService, never()).removeInnovationLead(COMPETITION_ID, innovationLeadUserId);
         verify(manageInnovationLeadsModelPopulator, never()).populateModel(any());
     }
 
     @Test
     public void removeInnovationLead() throws Exception {
-
+        Long innovationLeadUserId = 2L;
         CompetitionResource competitionResource = newCompetitionResource()
                 .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+        when(competitionSetupService.removeInnovationLead(COMPETITION_ID, innovationLeadUserId)).thenReturn(serviceSuccess());
 
-        Long innovationLeadUserId = 2L;
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/remove-innovation-lead/" + innovationLeadUserId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-innovation-leads-overview"));
 
-        verify(competitionService).removeInnovationLead(COMPETITION_ID, innovationLeadUserId);
+        verify(competitionSetupService).removeInnovationLead(COMPETITION_ID, innovationLeadUserId);
         verify(manageInnovationLeadsModelPopulator).populateModel(any());
+    }
+
+    public void removeInnovationLeadFailure() throws Exception {
+        Long innovationLeadUserId = 2L;
+        CompetitionResource competitionResource = newCompetitionResource()
+                .build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+        when(competitionSetupService.removeInnovationLead(COMPETITION_ID, innovationLeadUserId)).thenReturn(
+                serviceFailure(new Error(COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED, HttpStatus.BAD_REQUEST)));
+
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/remove-innovation-lead/" + innovationLeadUserId))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(view().name("competition/setup"))
+                .andReturn();
     }
 
     @Test
