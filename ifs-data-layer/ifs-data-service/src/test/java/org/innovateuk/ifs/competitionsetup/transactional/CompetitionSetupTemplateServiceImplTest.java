@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
@@ -19,6 +20,7 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -123,13 +125,11 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withId(2L)
                 .withSections(templateSections)
                 .build();
+        List<Competition> competitions = asList(competitionTemplate);
 
         List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum()
-                .withCompetition(competitionTemplate)
-                .withDef(50, 100)
-                .withSmall(15, 30)
-                .withMedium(30, 60)
-                .withLarge(45, 90)
+                .withCompetitions(competitions)
+                .withMaximum(50, 100)
                 .build(2);
         competitionTemplate.setGrantClaimMaximums(grantClaimMaximums);
 
@@ -178,12 +178,11 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withAcademicGrantPercentage(30)
                 .build();
 
+        List<Competition> competitions = asList(competitionTemplate);
+
         List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum()
-                .withCompetition(competitionTemplate)
-                .withDef(50, 100)
-                .withSmall(15, 30)
-                .withMedium(30, 60)
-                .withLarge(45, 90)
+                .withCompetitions(competitions)
+                .withMaximum(50, 100)
                 .build(2);
         competitionTemplate.setGrantClaimMaximums(grantClaimMaximums);
 

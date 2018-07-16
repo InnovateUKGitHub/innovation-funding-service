@@ -3,14 +3,16 @@ package org.innovateuk.ifs.finance.domain;
 import org.hibernate.annotations.Immutable;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Reference data that describes the maximum funding levels that can be applied for.
  */
-@Entity(name = "grant_claim_maximums")
+@Entity
 @Immutable
 public class GrantClaimMaximum {
 
@@ -18,9 +20,10 @@ public class GrantClaimMaximum {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "competitionId", referencedColumnName = "id")
-    private Competition competition;
+    @ManyToMany(fetch = FetchType.LAZY,
+            mappedBy = "grantClaimMaximums",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Competition> competitions;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoryId", referencedColumnName = "id")
@@ -30,13 +33,10 @@ public class GrantClaimMaximum {
     @JoinColumn(name = "organisationTypeId", referencedColumnName = "id")
     private OrganisationType organisationType;
 
-    private Integer def;
+    @Column(name = "organisation_size_id")
+    private OrganisationSize organisationSize;
 
-    private Integer small;
-
-    private Integer medium;
-
-    private Integer large;
+    private Integer maximum;
 
     public Long getId() {
         return id;
@@ -46,12 +46,12 @@ public class GrantClaimMaximum {
         this.id = id;
     }
 
-    public Competition getCompetition() {
-        return competition;
+    public List<Competition> getCompetitions() {
+        return competitions;
     }
 
-    public void setCompetition(final Competition competition) {
-        this.competition = competition;
+    public void setCompetitions(final List<Competition> competitions) {
+        this.competitions = competitions;
     }
 
     public ResearchCategory getResearchCategory() {
@@ -70,35 +70,19 @@ public class GrantClaimMaximum {
         this.organisationType = organisationType;
     }
 
-    public Integer getDef() {
-        return def;
+    public OrganisationSize getOrganisationSize() {
+        return organisationSize;
     }
 
-    public void setDef(final Integer def) {
-        this.def = def;
+    public void setOrganisationSize(final OrganisationSize organisationSize) {
+        this.organisationSize = organisationSize;
     }
 
-    public Integer getSmall() {
-        return small;
+    public Integer getMaximum() {
+        return maximum;
     }
 
-    public void setSmall(final Integer small) {
-        this.small = small;
-    }
-
-    public Integer getMedium() {
-        return medium;
-    }
-
-    public void setMedium(final Integer medium) {
-        this.medium = medium;
-    }
-
-    public Integer getLarge() {
-        return large;
-    }
-
-    public void setLarge(final Integer large) {
-        this.large = large;
+    public void setMaximum(final Integer maximum) {
+        this.maximum = maximum;
     }
 }

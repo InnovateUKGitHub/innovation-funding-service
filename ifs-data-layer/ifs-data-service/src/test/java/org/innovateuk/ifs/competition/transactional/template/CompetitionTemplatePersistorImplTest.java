@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.transactional.template;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competitionsetup.transactional.template.GrantClaimMaximumTemplatePersistor;
 import org.innovateuk.ifs.question.transactional.template.SectionTemplatePersistorImpl;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -17,9 +16,6 @@ import static org.mockito.Mockito.when;
 public class CompetitionTemplatePersistorImplTest extends BaseServiceUnitTest<CompetitionTemplatePersistorImpl> {
 
     @Mock
-    private GrantClaimMaximumTemplatePersistor grantClaimMaximumTemplatePersistor;
-
-    @Mock
     private SectionTemplatePersistorImpl sectionTemplateService;
 
     @Mock
@@ -29,8 +25,7 @@ public class CompetitionTemplatePersistorImplTest extends BaseServiceUnitTest<Co
     private EntityManager entityManagerMock;
 
     public CompetitionTemplatePersistorImpl supplyServiceUnderTest() {
-        return new CompetitionTemplatePersistorImpl(
-                grantClaimMaximumTemplatePersistor, sectionTemplateService, competitionRepository);
+        return new CompetitionTemplatePersistorImpl(sectionTemplateService, competitionRepository);
     }
 
     @Test
@@ -42,7 +37,6 @@ public class CompetitionTemplatePersistorImplTest extends BaseServiceUnitTest<Co
         service.cleanByEntityId(competition.getId());
 
         verify(sectionTemplateService).cleanForParentEntity(competition);
-        verify(grantClaimMaximumTemplatePersistor).cleanForParentEntity(competition);
     }
 
     @Test
@@ -56,6 +50,5 @@ public class CompetitionTemplatePersistorImplTest extends BaseServiceUnitTest<Co
         verify(entityManagerMock).detach(competition);
         verify(competitionRepository).save(competition);
         verify(sectionTemplateService).persistByParentEntity(competition);
-        verify(grantClaimMaximumTemplatePersistor).persistByParentEntity(competition);
     }
 }
