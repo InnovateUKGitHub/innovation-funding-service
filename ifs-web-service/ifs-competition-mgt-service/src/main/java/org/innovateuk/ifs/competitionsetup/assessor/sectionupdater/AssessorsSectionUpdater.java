@@ -3,8 +3,10 @@ package org.innovateuk.ifs.competitionsetup.assessor.sectionupdater;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.service.AssessorCountOptionsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.assessor.form.AssessorsForm;
@@ -13,6 +15,8 @@ import org.innovateuk.ifs.competitionsetup.core.sectionupdater.CompetitionSetupS
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -25,7 +29,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 public class AssessorsSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
 	@Autowired
-	private CompetitionService competitionService;
+	private AssessorCountOptionsRestService assessorCountOptionsRestService;
 
 	@Autowired
 	private CompetitionSetupRestService competitionSetupRestService;
@@ -41,7 +45,10 @@ public class AssessorsSectionUpdater extends AbstractSectionUpdater implements C
 		AssessorsForm assessorsForm = (AssessorsForm) competitionSetupForm;
 
 		if(!sectionToSave().preventEdit(competition)) {
-			if(competitionService.getAssessorOptionsForCompetitionType(competition.getCompetitionType()).stream().anyMatch(assessorOption -> assessorsForm.getAssessorCount().equals(assessorOption.getOptionValue()))) {
+
+
+			List<AssessorCountOptionResource> assessorCountOptions = assessorCountOptionsRestService.findAllByCompetitionType(competition.getCompetitionType()).getSuccess();
+			if(assessorCountOptions.stream().anyMatch(assessorOption -> assessorsForm.getAssessorCount().equals(assessorOption.getOptionValue()))) {
                 setFieldsDisallowedFromChangeAfterSetupAndLive(competition, assessorsForm);
                 setFieldsAllowedFromChangeAfterSetupAndLive(competition, assessorsForm);
 

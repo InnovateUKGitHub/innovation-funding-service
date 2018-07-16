@@ -5,9 +5,11 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
@@ -23,6 +25,7 @@ import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.mockito.Matchers.any;
@@ -50,6 +53,9 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
 
     @Mock
     private CompetitionService competitionService;
+
+    @Mock
+    private PublicContentItemRestService publicContentItemRestService;
 
     @Override
     protected ApplicationCreationController supplyControllerUnderTest() {
@@ -81,7 +87,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .withCompetitionCloseDate(ZonedDateTime.now().plusDays(1))
                 .withNonIfs(false)
                 .build();
-        when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
 
         MvcResult result = mockMvc.perform(get("/application/create/start-application/{competitionId}", competitionId))
                 .andExpect(status().is2xxSuccessful())
@@ -101,7 +107,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .withCompetitionCloseDate(ZonedDateTime.now().plusDays(1))
                 .withNonIfs(true)
                 .build();
-        when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
 
         mockMvc.perform(get("/application/create/start-application/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())
@@ -120,7 +126,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .withCompetitionCloseDate(ZonedDateTime.now().plusDays(2))
                 .withNonIfs(false)
                 .build();
-        when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
 
         mockMvc.perform(get("/application/create/start-application/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())
@@ -138,7 +144,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .withCompetitionCloseDate(ZonedDateTime.now().minusDays(1))
                 .withNonIfs(false)
                 .build();
-        when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
 
         mockMvc.perform(get("/application/create/start-application/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())

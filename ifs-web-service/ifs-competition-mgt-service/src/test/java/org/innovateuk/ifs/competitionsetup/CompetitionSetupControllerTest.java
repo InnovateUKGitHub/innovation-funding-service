@@ -143,7 +143,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .withName("Programme")
                 .withCompetitions(singletonList(COMPETITION_ID))
                 .build(1);
-        when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypeResources);
+        when(competitionRestService.getCompetitionTypes()).thenReturn(restSuccess(competitionTypeResources));
 
         when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(true);
     }

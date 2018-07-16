@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competitionsetup.core.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -37,9 +36,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
-
-	@Autowired
-	private CompetitionService competitionService;
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -295,7 +291,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     @Override
 	public ServiceResult<Void> setCompetitionAsReadyToOpen(Long competitionId) {
-		CompetitionResource competitionResource = competitionService.getById(competitionId);
+		CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 		if (competitionResource.getCompetitionStatus() == CompetitionStatus.READY_TO_OPEN) {
             return serviceSuccess();
 		}

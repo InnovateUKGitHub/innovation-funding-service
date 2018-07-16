@@ -7,9 +7,11 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemRe
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.mockito.Mockito.verify;
@@ -30,6 +32,9 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     @Mock
     private CompetitionService competitionService;
 
+    @Mock
+    private PublicContentItemRestService publicContentItemRestService;
+
     @Test
     public void competitionOverview() throws Exception {
         final long competitionId = 20L;
@@ -37,7 +42,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         final PublicContentItemResource publicContentItem = newPublicContentItemResource().build();
         final CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
 
-        when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
         when(overviewPopulator.populateViewModel(publicContentItem, true)).thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{id}/overview", competitionId))
@@ -54,7 +59,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         final PublicContentItemResource publicContentItem = newPublicContentItemResource().build();
         final CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
 
-        when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
         when(overviewPopulator.populateViewModel(publicContentItem, false)).thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{id}/overview", competitionId))

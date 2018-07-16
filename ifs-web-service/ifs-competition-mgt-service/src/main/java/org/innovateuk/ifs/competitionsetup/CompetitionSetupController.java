@@ -65,7 +65,8 @@ public class CompetitionSetupController {
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String SECTION_PATH_KEY = "sectionPath";
     private static final String SUBSECTION_PATH_KEY = "subsectionPath";
-    public static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
+    private static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
+    private static final String DASHBOARD_REDIRECT = "redirect:/dashboard";
     private static final String MODEL = "model";
 
     @Autowired
@@ -114,25 +115,28 @@ public class CompetitionSetupController {
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
         if (section == null) {
             LOG.error("Invalid section path specified: " + sectionPath);
-            return "redirect:/dashboard";
+            return DASHBOARD_REDIRECT;
         }
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
         if (section.preventEdit(competition)) {
-            return "redirect:/dashboard";
+            return DASHBOARD_REDIRECT;
         }
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        competitionSetupRestService.markSectionIncomplete(competitionId, section).getSuccess();
-        if (!competition.isSetupAndLive()) {
-            competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
-        }
-
-        return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
+        return competitionSetupRestService.markSectionIncomplete(competitionId, section).handleSuccessOrFailure(
+                failure -> "redirect:/competition/setup/" + competition.getId(),
+                success -> {
+                    if (!competition.isSetupAndLive()) {
+                        competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
+                    }
+                    return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
+                }
+        );
     }
 
     @GetMapping("/{competitionId}/section/{sectionPath}")
@@ -148,7 +152,7 @@ public class CompetitionSetupController {
 
         if (section == null) {
             LOG.error("Invalid section path specified: " + sectionPath);
-            return "redirect:/dashboard";
+            return DASHBOARD_REDIRECT;
         } else if (section == CompetitionSetupSection.APPLICATION_FORM) {
             return format(APPLICATION_LANDING_REDIRECT, competitionId);
         } else if (section == CompetitionSetupSection.CONTENT) {
@@ -374,7 +378,7 @@ public class CompetitionSetupController {
         ServiceResult<Void> deleteResult = competitionSetupService.deleteCompetition(competitionId);
 
         return validationHandler.addAnyErrors(deleteResult, asGlobalErrors())
-                .failNowOrSucceedWith(failureView, () -> "redirect:/dashboard");
+                .failNowOrSucceedWith(failureView, () -> DASHBOARD_REDIRECT);
     }
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")

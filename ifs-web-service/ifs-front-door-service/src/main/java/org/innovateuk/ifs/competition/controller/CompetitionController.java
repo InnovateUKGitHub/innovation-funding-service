@@ -7,6 +7,8 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemRe
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.publiccontent.service.ContentGroupRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -35,11 +37,17 @@ public class CompetitionController {
     @Autowired
     private CompetitionOverviewPopulator overviewPopulator;
 
+    @Autowired
+    private ContentGroupRestService contentGroupRestService;
+
+    @Autowired
+    private PublicContentItemRestService publicContentItemRestService;
+
     @GetMapping("overview")
     public String competitionOverview(final Model model,
                                       @PathVariable("competitionId") final long competitionId,
                                       UserResource loggedInUser) {
-        final PublicContentItemResource publicContentItem = competitionService.getPublicContentOfCompetition(competitionId);
+        final PublicContentItemResource publicContentItem = publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
         model.addAttribute("model", overviewPopulator.populateViewModel(publicContentItem, loggedInUser != null));
         return "competition/overview";
     }
@@ -47,8 +55,8 @@ public class CompetitionController {
     @GetMapping("download/{contentGroupId}")
     public ResponseEntity<ByteArrayResource> getFileDetails(@PathVariable("competitionId") final long competitionId,
                                                             @PathVariable("contentGroupId") final long contentGroupId) {
-        final ByteArrayResource resource = competitionService.downloadPublicContentAttachment(contentGroupId);
-        final FileEntryResource fileDetails = competitionService.getPublicContentFileDetails(contentGroupId);
+        final ByteArrayResource resource = contentGroupRestService.getFileAnonymous(contentGroupId).getSuccess();
+        final FileEntryResource fileDetails = contentGroupRestService.getFileDetailsAnonymous(contentGroupId).getSuccess();
         return getFileResponseEntity(resource, fileDetails);
     }
 

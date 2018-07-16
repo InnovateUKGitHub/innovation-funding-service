@@ -306,12 +306,12 @@ public class CompetitionSetupServiceImplTest {
                 .withCompetitionStatus(CompetitionStatus.READY_TO_OPEN)
                 .build();
 
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
 
         assertTrue(service.setCompetitionAsReadyToOpen(COMPETITION_ID).isSuccess());
 
-        verify(competitionService, only()).getById(COMPETITION_ID);
-        verifyNoMoreInteractions(competitionService, competitionSetupRestService);
+        verify(competitionRestService, only()).getCompetitionById(COMPETITION_ID);
+        verifyNoMoreInteractions(competitionSetupRestService);
     }
 
     @Test
@@ -332,14 +332,14 @@ public class CompetitionSetupServiceImplTest {
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(restSuccess(testSectionStatus));
         when(competitionSetupRestService.markAsSetup(COMPETITION_ID)).thenReturn(restSuccess());
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
 
         service.setCompetitionAsReadyToOpen(COMPETITION_ID).getSuccess();
 
-        verify(competitionService, only()).getById(COMPETITION_ID);
+        verify(competitionRestService, only()).getCompetitionById(COMPETITION_ID);
         verify(competitionSetupRestService, times(1)).getSectionStatuses(COMPETITION_ID);
         verify(competitionSetupRestService, times(1)).markAsSetup(COMPETITION_ID);
-        verifyNoMoreInteractions(competitionService, competitionSetupRestService);
+        verifyNoMoreInteractions(competitionSetupRestService);
     }
 
     @Test
@@ -357,7 +357,7 @@ public class CompetitionSetupServiceImplTest {
                 .build();
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(restSuccess(testSectionStatus));
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
 
         ServiceResult<Void> updateResult = service.setCompetitionAsReadyToOpen(COMPETITION_ID);
 
@@ -365,9 +365,9 @@ public class CompetitionSetupServiceImplTest {
         assertTrue(updateResult.getFailure().is(
                 new org.innovateuk.ifs.commons.error.Error("competition.setup.not.ready.to.open", BAD_REQUEST)));
 
-        verify(competitionService, only()).getById(COMPETITION_ID);
+        verify(competitionRestService, only()).getCompetitionById(COMPETITION_ID);
         verify(competitionSetupRestService, times(1)).getSectionStatuses(COMPETITION_ID);
-        verifyNoMoreInteractions(competitionService, competitionSetupRestService);
+        verifyNoMoreInteractions(competitionSetupRestService);
     }
 
     @Test

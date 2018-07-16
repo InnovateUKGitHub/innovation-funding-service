@@ -36,12 +36,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Mock
     private CompetitionRestService competitionRestService;
 
-    @Mock
-    private PublicContentItemRestService publicContentItemRestService;
-
-    @Mock
-    private AssessorCountOptionsRestService assessorCountOptionsRestService;
-
     @Override
     protected CompetitionService supplyServiceUnderTest() {
         return new CompetitionServiceImpl();
@@ -62,85 +56,4 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(Long.valueOf(1L), found.getId());
     }
 
-    @Test
-    public void getAllCompetitions() throws Exception {
-        CompetitionResource comp1 = newCompetitionResource().withName("Competition 1").withId(1L).build();
-
-        CompetitionResource comp2 = newCompetitionResource().withName("Competition 2").withId(2L).build();
-
-        final List<CompetitionResource> expected = new ArrayList<>(asList(comp1, comp2));
-        when(competitionRestService.getAll()).thenReturn(restSuccess(expected));
-
-        final List<CompetitionResource> found = service.getAllCompetitions();
-        assertEquals(2, found.size());
-        assertEquals(Long.valueOf(1L), found.get(0).getId());
-        assertEquals(Long.valueOf(2L), found.get(1).getId());
-    }
-
-    @Test
-    public void getAllCompetitionsNotInSetup() throws Exception {
-        CompetitionResource comp1 = newCompetitionResource().withName("Competition 1").withId(1L).withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
-
-        CompetitionResource comp2 = newCompetitionResource().withName("Competition 2").withId(2L).build();
-
-        final List<CompetitionResource> expected = new ArrayList<>(asList(comp1, comp2));
-        when(competitionRestService.getAll()).thenReturn(restSuccess(expected));
-
-        final List<CompetitionResource> found = service.getAllCompetitionsNotInSetup();
-        assertEquals(1, found.size());
-        assertEquals(Long.valueOf(2L), found.get(0).getId());
-    }
-
-    @Test
-    public void getAllCompetitionTypes() throws Exception {
-        CompetitionTypeResource type1 = newCompetitionTypeResource().withName("Type 1").withId(1L).build();
-
-        CompetitionTypeResource type2 = newCompetitionTypeResource().withName("Type 2").withId(2L).build();
-
-        final List<CompetitionTypeResource> expected = new ArrayList<>(asList(type1, type2));
-
-        when(competitionRestService.getCompetitionTypes()).thenReturn(restSuccess(expected));
-
-        final List<CompetitionTypeResource> found = service.getAllCompetitionTypes();
-        assertEquals(2, found.size());
-        assertEquals(Long.valueOf(1L), found.get(0).getId());
-        assertEquals(Long.valueOf(2L), found.get(1).getId());
-    }
-
-    @Test
-    public void testGetAssessorOptionsForCompetitionType() throws Exception {
-        AssessorCountOptionResource expectedResource = newAssessorCountOptionResource()
-                .withId(1L).withAssessorOptionName("1").withAssessorOptionValue(1).withDefaultOption(Boolean.FALSE).build();
-
-        final List<AssessorCountOptionResource> expectedList = new ArrayList<>(asList(expectedResource));
-
-        when(assessorCountOptionsRestService.findAllByCompetitionType(1L)).thenReturn(restSuccess(expectedList));
-
-        final List<AssessorCountOptionResource> found = service.getAssessorOptionsForCompetitionType(1L);
-        assertEquals(1, found.size());
-        assertEquals(Long.valueOf(1L), found.get(0).getId());
-    }
-
-    @Test
-    public void getPublicContentOfCompetition() throws Exception {
-        Long competitionId = 12314L;
-        PublicContentItemResource expected = newPublicContentItemResource().build();
-
-        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(expected));
-
-        PublicContentItemResource result = service.getPublicContentOfCompetition(competitionId);
-
-        assertEquals(expected, result);
-    }
-
-    @Test
-    public void findInnovationLeads() throws Exception {
-        Long competitionId = 1L;
-        List<UserResource> userResources = Collections.emptyList();
-        when(competitionRestService.findInnovationLeads(competitionId)).thenReturn(restSuccess(userResources));
-
-        List<UserResource> result = service.findInnovationLeads(competitionId);
-        assertEquals(userResources, result);
-        verify(competitionRestService, only()).findInnovationLeads(competitionId);
-    }
 }
