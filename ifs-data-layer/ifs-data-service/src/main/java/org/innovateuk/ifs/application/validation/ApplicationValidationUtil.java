@@ -140,7 +140,7 @@ public class ApplicationValidationUtil {
         if (formInput.getFormValidators().isEmpty() && !hasValidator(formInput)) {
             // no validator? question is valid!
         } else {
-            BindingResult validationResult = applicationValidatorService.validateFormInputResponse(application, formInput.getId(), markedAsCompleteById);
+            ValidationMessages validationResult = applicationValidatorService.validateFormInputResponse(application, formInput.getId(), markedAsCompleteById);
 
             if (validationResult.hasErrors()) {
                 validationMessages.add(new ValidationMessages(formInput.getId(), validationResult));

@@ -45,6 +45,11 @@ public class ValidationMessages implements ErrorHolder, Serializable {
         populateFromBindingResult(objectId, bindingResult);
     }
 
+    public ValidationMessages(Long objectId, ValidationMessages messages) {
+        this.objectId = objectId;
+        this.errors = new LinkedHashSet<>(messages.getErrors());
+    }
+
     public <T> ValidationMessages(Set<ConstraintViolation<T>> constraintViolations) {
         List<Error> fieldErrors = simpleMap(constraintViolations,
                 violation -> fieldError(violation.getPropertyPath().toString(),

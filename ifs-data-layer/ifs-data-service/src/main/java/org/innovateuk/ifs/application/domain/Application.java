@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Application defines database relations and a model to use client side and server side.
  */
@@ -362,14 +360,5 @@ public class Application implements ProcessActivity {
 
     public void setInAssessmentReviewPanel(boolean inAssessmentReviewPanel) {
         this.inAssessmentReviewPanel = inAssessmentReviewPanel;
-    }
-
-    /** Placeholder function for mapping errors to field in Thymeleaf */
-    public String getJesFileUpload() {
-        return "";
-    }
-
-    /** Placeholder function for mapping errors to field in Thymeleaf */
-    public void setJesFileUpload(String jesFileUpload) {
     }
 }

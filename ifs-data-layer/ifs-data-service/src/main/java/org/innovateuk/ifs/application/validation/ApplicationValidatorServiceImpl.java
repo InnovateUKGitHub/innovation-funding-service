@@ -4,7 +4,9 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.validator.ApplicationMarkAsCompleteValidator;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
@@ -18,17 +20,21 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.fromBindingResult;
+import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 
 /**
  * Class to validate several objects
@@ -59,6 +65,9 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     @Autowired
     private OrganisationService organisationService;
 
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
+
     @Override
     public List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId) {
         List<BindingResult> results = new ArrayList<>();
@@ -81,13 +90,14 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
     }
 
     @Override
-    public BindingResult validateFormInputResponse(Application application, Long formInputId, Long markedAsCompleteById) {
+    public ValidationMessages validateFormInputResponse(Application application, Long formInputId, Long markedAsCompleteById) {
         FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
         BindingResult result = applicationValidationUtil.validateResponse(response, false);
 
-        validateFileUploads(application, formInputId).forEach(objectError -> result.addError(objectError));
+        ValidationMessages validationMessages = fromBindingResult(result);
+        validationMessages.addAll(validateFileUploads(application, formInputId));
 
-        return result;
+        return validationMessages;
     }
 
 
@@ -112,15 +122,17 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         return projectFinanceRowService.getCostHandler(costItem);
     }
 
-    private List<ObjectError> validateFileUploads(Application application, Long formInputId) {
-        List<ObjectError> errors = new ArrayList<>();
+    private ValidationMessages val  idateFileUploads(Application application, Long formInputId) {
         FormInput formInput = formInputRepository.findOne(formInputId);
 
         if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser()) {
-            errors.addAll(applicationValidationUtil.addValidation(application, academicJesValidator).getAllErrors());
+            if (financeFileIsEmpty(application)) {
+                Error error = fieldError("jesFileUpload", null, "validation.application.jes.upload.required");
+                return new ValidationMessages(error);
+            }
         }
 
-        return errors;
+        return noErrors(formInputId);
     }
 
     private boolean isResearchUser() {
@@ -133,5 +145,21 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         }
 
         return false;
+    }
+
+    private boolean financeFileIsEmpty(Application application) {
+        List<ApplicationFinance> applicationFinances = application.getApplicationFinances();
+        Optional<OrganisationResource> organisationOpt = organisationService.getPrimaryForUser(loggedInUserSupplier.get().getId()).getOptionalSuccessObject();
+
+        if (applicationFinances == null || !organisationOpt.isPresent()) {
+            return true;
+        }
+
+        Optional<ApplicationFinance> applicationFinanceOpt = applicationFinances
+                .stream()
+                .filter(applicationFinance -> applicationFinance.getOrganisation().getId().equals(organisationOpt.get().getId()))
+                .findAny();
+
+        return !applicationFinanceOpt.isPresent() || applicationFinanceOpt.get().getFinanceFileEntry() == null;
     }
 }
