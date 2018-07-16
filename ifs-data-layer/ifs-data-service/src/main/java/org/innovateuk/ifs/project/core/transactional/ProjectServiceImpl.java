@@ -248,7 +248,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         removeDuplicates(simpleMap(projectUsers, ProjectUser::getOrganisation));
 
                 List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations, org ->
-                        new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisationId())));
+                                createPartnerOrganisation(application, project, org, leadApplicantRole));
 
                 project.setProjectUsers(projectUsers);
                 project.setPartnerOrganisations(partnerOrganisations);
@@ -260,6 +260,17 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                             andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
                             andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
+    }
+
+    private PartnerOrganisation createPartnerOrganisation(Application application, Project project, Organisation org, ProcessRole leadApplicantRole) {
+        PartnerOrganisation partnerOrganisation = new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisationId()));
+
+        application.getApplicationFinances().stream()
+                .filter(applicationFinance -> applicationFinance.getOrganisation().getId().equals(org.getId()))
+                .findFirst()
+                .ifPresent(applicationFinance -> partnerOrganisation.setPostcode(applicationFinance.getWorkPostcode()));
+
+        return partnerOrganisation;
     }
 
     private ServiceResult<ProjectUser> createPartnerProjectUser(Project project, User user, Organisation organisation) {
