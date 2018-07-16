@@ -11,7 +11,6 @@ import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightSt
 import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.navigation.Pagination;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -24,14 +23,17 @@ public class ManageFundingApplicationsModelPopulator {
 
     private static int DEFAULT_PAGE_SIZE = 20;
 
-    @Autowired
     private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
-
-    @Autowired
     private CompetitionService competitionService;
-
-    @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
+
+    public ManageFundingApplicationsModelPopulator(CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator,
+                                                   CompetitionService competitionService,
+                                                   ApplicationSummaryRestService applicationSummaryRestService) {
+        this.competitionInFlightStatsModelPopulator = competitionInFlightStatsModelPopulator;
+        this.competitionService = competitionService;
+        this.applicationSummaryRestService = applicationSummaryRestService;
+    }
 
     public ManageFundingApplicationViewModel populate(FundingNotificationFilterForm queryForm,
                                                       long competitionId,
