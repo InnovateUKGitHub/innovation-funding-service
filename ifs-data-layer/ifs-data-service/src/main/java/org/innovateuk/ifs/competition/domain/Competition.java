@@ -121,7 +121,10 @@ public class Competition implements ProcessActivity {
     @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
     private GrantTermsAndConditions termsAndConditions;
 
-    @OneToMany(mappedBy="competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "grant_claim_maximum_competition",
+            joinColumns = {@JoinColumn(name = "competition_id", referencedColumnName = "id"),},
+            inverseJoinColumns = {@JoinColumn(name = "grant_claim_maximum_id", referencedColumnName = "id")})
     private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
 
     private boolean locationPerPartner = true;

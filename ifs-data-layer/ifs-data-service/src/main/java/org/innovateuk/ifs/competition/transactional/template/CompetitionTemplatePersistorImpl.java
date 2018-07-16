@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competitionsetup.transactional.template.GrantClaimMaximumTemplatePersistor;
 import org.innovateuk.ifs.question.transactional.template.SectionTemplatePersistorImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,14 +15,11 @@ import javax.persistence.PersistenceContext;
 @Component
 public class CompetitionTemplatePersistorImpl implements BaseTemplatePersistor<Competition> {
 
-    private GrantClaimMaximumTemplatePersistor grantClaimMaximumTemplatePersistor;
     private SectionTemplatePersistorImpl sectionTemplateService;
     private CompetitionRepository competitionRepository;
 
-    public CompetitionTemplatePersistorImpl(GrantClaimMaximumTemplatePersistor grantClaimMaximumTemplatePersistor,
-                                            SectionTemplatePersistorImpl sectionTemplateService,
+    public CompetitionTemplatePersistorImpl(SectionTemplatePersistorImpl sectionTemplateService,
                                             CompetitionRepository competitionRepository) {
-        this.grantClaimMaximumTemplatePersistor = grantClaimMaximumTemplatePersistor;
         this.sectionTemplateService = sectionTemplateService;
         this.competitionRepository = competitionRepository;
     }
@@ -35,19 +31,17 @@ public class CompetitionTemplatePersistorImpl implements BaseTemplatePersistor<C
     public void cleanByEntityId(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
         sectionTemplateService.cleanForParentEntity(competition);
-        grantClaimMaximumTemplatePersistor.cleanForParentEntity(competition);
     }
 
     @Override
     @Transactional
-    public Competition persistByEntity(Competition template) {
-        entityManager.detach(template);
+    public Competition persistByEntity(Competition competition) {
+        entityManager.detach(competition);
 
-        Competition competition = competitionRepository.save(template);
-        template.setId(competition.getId());
-        sectionTemplateService.persistByParentEntity(template);
-        grantClaimMaximumTemplatePersistor.persistByParentEntity(template);
+        Competition saved = competitionRepository.save(competition);
+        competition.setId(saved.getId());
+        sectionTemplateService.persistByParentEntity(competition);
 
-        return competition;
+        return saved;
     }
 }
