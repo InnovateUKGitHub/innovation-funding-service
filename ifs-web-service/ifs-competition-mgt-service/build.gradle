@@ -58,9 +58,6 @@ dependencies {
     testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
     testCompile "net.sf.opencsv:opencsv:2.3"
-
-    testCompile 'org.assertj:assertj-core:3.9.0'
-
 }
 
 processResources {

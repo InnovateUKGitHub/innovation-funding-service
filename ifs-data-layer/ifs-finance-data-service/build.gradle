@@ -74,7 +74,6 @@ dependencies {
 
     compile project(':ifs-data-layer:data-service-commons')
 
-    testCompile 'org.assertj:assertj-core:3.9.0'
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
