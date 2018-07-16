@@ -26,10 +26,10 @@ WHERE grant_claim_maximum.id > gcm.id
 -- Create the new many-to-many relationship
 CREATE TABLE grant_claim_maximum_competition
 (
-	`competition_id` bigint(20) NOT NULL,
-	`grant_claim_maximum_id` bigint(20) NOT NULL,
-	PRIMARY KEY (`competition_id`,`grant_claim_maximum_id`),
-	CONSTRAINT grant_claim_maximum_competition_competition_fk FOREIGN KEY (competition_id) REFERENCES competition (id),
+  `competition_id` bigint(20) NOT NULL,
+  `grant_claim_maximum_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`competition_id`,`grant_claim_maximum_id`),
+  CONSTRAINT grant_claim_maximum_competition_competition_fk FOREIGN KEY (competition_id) REFERENCES competition (id),
   CONSTRAINT grant_claim_maximum_competition_grant_claim_maximum_fk FOREIGN KEY (grant_claim_maximum_id) REFERENCES
   grant_claim_maximum (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
