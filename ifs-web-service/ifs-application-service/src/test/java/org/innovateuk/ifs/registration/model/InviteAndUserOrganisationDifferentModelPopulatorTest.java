@@ -49,7 +49,7 @@ public class InviteAndUserOrganisationDifferentModelPopulatorTest extends BaseUn
                 build();
         UserResource user = newUserResource().withEmail(inviteEmail).build();
         when(userService.findUserByEmail(inviteEmail)).thenReturn(of(user));
-        when(organisationService.getOrganisationForUser(user.getId())).thenReturn(inviteesExistingOrganisation);
+        when(organisationService.getPrimaryForUser(user.getId())).thenReturn(inviteesExistingOrganisation);
 
         // Method under test
         InviteAndUserOrganisationDifferentViewModel model = populator.populateModel(invite);

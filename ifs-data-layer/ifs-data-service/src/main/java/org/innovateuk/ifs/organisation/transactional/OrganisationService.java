@@ -27,6 +27,12 @@ public interface OrganisationService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationResource> getPrimaryForUser(Long userId);
 
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<OrganisationResource> getByUserAndApplicationId(Long userId, Long applicationId);
+
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    ServiceResult<OrganisationResource> getByUserAndProjectId(Long userId, Long projectId);
+
     @PreAuthorize("hasPermission(#organisation, 'CREATE')")
     ServiceResult<OrganisationResource> create(@P("organisation") OrganisationResource organisation);
 
@@ -44,4 +50,5 @@ public interface OrganisationService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationSearchResult> getSearchOrganisation(@P("organisationId") Long searchOrganisationId);
+
 }

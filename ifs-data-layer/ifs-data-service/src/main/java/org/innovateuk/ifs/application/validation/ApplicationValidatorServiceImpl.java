@@ -116,17 +116,17 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         List<ObjectError> errors = new ArrayList<>();
         FormInput formInput = formInputRepository.findOne(formInputId);
 
-        if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser()) {
+        if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser(application.getId())) {
             errors.addAll(applicationValidationUtil.addValidation(application, academicJesValidator).getAllErrors());
         }
 
         return errors;
     }
 
-    private boolean isResearchUser() {
+    private boolean isResearchUser(long applicationId) {
         Optional<User> userResult = getCurrentlyLoggedInUser().getOptionalSuccessObject();
         if(userResult.isPresent()) {
-            Optional<OrganisationResource> organisationResult = organisationService.getPrimaryForUser(userResult.get().getId()).getOptionalSuccessObject();
+            Optional<OrganisationResource> organisationResult = organisationService.getByUserAndApplicationId(userResult.get().getId(), applicationId).getOptionalSuccessObject();
             if(organisationResult.isPresent()) {
                 return OrganisationTypeEnum.RESEARCH.getId().equals(organisationResult.get().getOrganisationType());
             }

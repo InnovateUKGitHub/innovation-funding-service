@@ -10,7 +10,6 @@ import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationCompositeId;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
@@ -200,10 +199,10 @@ public class SetupSectionsPermissionRules {
     }
 
     @PermissionRule(value = "IS_NOT_FROM_OWN_ORGANISATION", description = "A lead partner cannot mark their own spend profiles as incomplete")
-    public boolean userCannotMarkOwnSpendProfileIncomplete(OrganisationCompositeId organisationCompositeId, UserResource user) {
-        OrganisationResource organisation = organisationService.getOrganisationForUser(user.getId());
+    public boolean userCannotMarkOwnSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        OrganisationResource organisation = organisationService.getByUserAndProjectId(user.getId(), projectOrganisationCompositeId.getProjectId());
 
-        return !organisation.getId().equals(organisationCompositeId.id());
+        return !organisation.getId().equals(projectOrganisationCompositeId.getOrganisationId());
     }
 
     private boolean doSectionCheck(long projectId, UserResource user, BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> sectionCheckFn) {

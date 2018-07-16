@@ -6,6 +6,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.form.SpendProfileForm;
@@ -167,7 +168,7 @@ public class ProjectSpendProfileController {
 
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'MARK_SPEND_PROFILE_INCOMPLETE') && hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationCompositeId', 'IS_NOT_FROM_OWN_ORGANISATION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'MARK_SPEND_PROFILE_INCOMPLETE') && hasPermission(#projectOrganisationCompositeId, 'IS_NOT_FROM_OWN_ORGANISATION')")
     @PostMapping("/incomplete")
     public String markAsActionRequiredSpendProfile(Model model,
                                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
@@ -175,6 +176,7 @@ public class ProjectSpendProfileController {
                                                    ValidationHandler validationHandler,
                                                    @P("projectId")@PathVariable("projectId") final Long projectId,
                                                    @P("organisationId")@PathVariable("organisationId") final Long organisationId,
+                                                   ProjectOrganisationCompositeId projectOrganisationCompositeId,
                                                    UserResource loggedInUser) {
 
         Supplier<String> failureView = () -> reviewSpendProfilePage(model, projectId, organisationId, loggedInUser);
@@ -206,10 +208,11 @@ public class ProjectSpendProfileController {
         return "project/spend-profile-confirm";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'MARK_SPEND_PROFILE_INCOMPLETE') && hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationCompositeId', 'IS_NOT_FROM_OWN_ORGANISATION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'MARK_SPEND_PROFILE_INCOMPLETE') && hasPermission(#projectOrganisationCompositeId, 'IS_NOT_FROM_OWN_ORGANISATION')")
     @GetMapping("/incomplete")
     public String viewConfirmEditSpendProfilePage(@P("projectId")@PathVariable("projectId") final Long projectId,
                                                   @PathVariable("organisationId") final Long organisationId,
+                                                  ProjectOrganisationCompositeId projectOrganisationCompositeId,
                                                   Model model,
                                                   UserResource loggedInUser) {
         ProjectSpendProfileViewModel viewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);

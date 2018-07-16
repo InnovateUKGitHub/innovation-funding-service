@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationCompositeId;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
@@ -297,12 +296,13 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     public void userCannotMarkOwnOrganisationAsIncomplete() {
         Long userId = 1L;
         Long organisationId = 2L;
+        Long projectId = 3L;
         UserResource userResource = newUserResource().withId(userId).build();
         OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).build();
 
-        when(organisationServiceMock.getOrganisationForUser(userId)).thenReturn(organisationResource);
-        assertFalse(rules.userCannotMarkOwnSpendProfileIncomplete(OrganisationCompositeId.id(organisationId), userResource));
-        verify(organisationServiceMock).getOrganisationForUser(userId);
+        when(organisationServiceMock.getByUserAndProjectId(userId, projectId)).thenReturn(organisationResource);
+        assertFalse(rules.userCannotMarkOwnSpendProfileIncomplete(new ProjectOrganisationCompositeId(projectId, organisationId), userResource));
+        verify(organisationServiceMock).getByUserAndProjectId(userId, projectId);
     }
 
     @Test
@@ -310,12 +310,13 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         Long userId = 1L;
         Long organisationId = 2L;
         Long otherOrganisationId = 3L;
+        Long projectId = 4L;
         UserResource userResource = newUserResource().withId(userId).build();
-        OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).build();
+        OrganisationResource organisationResource = newOrganisationResource().withId(otherOrganisationId).build();
 
-        when(organisationServiceMock.getOrganisationForUser(userId)).thenReturn(organisationResource);
-        assertTrue(rules.userCannotMarkOwnSpendProfileIncomplete(OrganisationCompositeId.id(otherOrganisationId), userResource));
-        verify(organisationServiceMock).getOrganisationForUser(userId);
+        when(organisationServiceMock.getByUserAndProjectId(userId, projectId)).thenReturn(organisationResource);
+        assertTrue(rules.userCannotMarkOwnSpendProfileIncomplete(new ProjectOrganisationCompositeId(projectId, organisationId), userResource));
+        verify(organisationServiceMock).getByUserAndProjectId(userId, projectId);
     }
 
     @Test

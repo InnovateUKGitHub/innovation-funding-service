@@ -35,9 +35,21 @@ public class OrganisationController {
         return organisationService.findById(organisationId).toGetResponse();
     }
 
-    @GetMapping("/getPrimaryForUser/{userId}")
+    @GetMapping("/primary-for-user/{userId}")
     public RestResult<OrganisationResource> getPrimaryForUser(@PathVariable("userId") final Long userId) {
         return organisationService.getPrimaryForUser(userId).toGetResponse();
+    }
+
+    @GetMapping("/by-user-and-application-id/{userId}/{applicationId}")
+    public RestResult<OrganisationResource> getByUserAndApplicationId(@PathVariable("userId") final Long userId,
+                                                              @PathVariable("applicationId") final Long applicationId) {
+        return organisationService.getByUserAndApplicationId(userId, applicationId).toGetResponse();
+    }
+
+    @GetMapping("/by-user-and-project-id/{userId}/{projectId}")
+    public RestResult<OrganisationResource> getByUserAndProjectId(@PathVariable("userId") final Long userId,
+                                                                      @PathVariable("projectId") final Long projectId) {
+        return organisationService.getByUserAndProjectId(userId, projectId).toGetResponse();
     }
 
     @PostMapping("/createOrMatch")

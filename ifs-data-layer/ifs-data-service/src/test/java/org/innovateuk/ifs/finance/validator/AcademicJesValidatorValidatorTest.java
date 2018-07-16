@@ -53,7 +53,7 @@ public class AcademicJesValidatorValidatorTest {
                                 .build(1)
                 )).build();
         when(loggedInUserSupplier.get()).thenReturn(newUser().withId(USER_ID).build());
-        when(organisationService.getPrimaryForUser(USER_ID))
+        when(organisationService.getByUserAndApplicationId(USER_ID, application.getId()))
                 .thenReturn(ServiceResult.serviceSuccess(newOrganisationResource().withId(ORGANISATION_ID).build()));
         bindingResult = getBindingResult(application);
     }
@@ -71,6 +71,8 @@ public class AcademicJesValidatorValidatorTest {
         application = newApplication()
                 .with(application -> application.setApplicationFinances(null))
                 .build();
+        when(organisationService.getByUserAndApplicationId(USER_ID, application.getId())).thenReturn(ServiceResult.serviceSuccess(newOrganisationResource().withId(1202020L).build()));
+
 
         validator.validate(application, bindingResult);
 
@@ -79,7 +81,7 @@ public class AcademicJesValidatorValidatorTest {
 
     @Test
     public void testValidate_NoApplicationFinanceWithSameOrg() throws Exception {
-        when(organisationService.getPrimaryForUser(USER_ID)).thenReturn(ServiceResult.serviceSuccess(newOrganisationResource().withId(1202020L).build()));
+        when(organisationService.getByUserAndApplicationId(USER_ID, application.getId())).thenReturn(ServiceResult.serviceSuccess(newOrganisationResource().withId(1202020L).build()));
 
         validator.validate(application, bindingResult);
 

@@ -74,7 +74,7 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
 
         when(organisationServiceMock.getPrimaryForUser(userId)).thenReturn(serviceSuccess(organisationResource));
 
-        mockMvc.perform(get("/organisation/getPrimaryForUser/{userId}", userId))
+        mockMvc.perform(get("/organisation/primary-for-user/{userId}", userId))
                 .andExpect(status().isOk())
                 .andDo(document("organisation/{method-name}",
                         pathParameters(

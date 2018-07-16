@@ -80,6 +80,22 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    public ServiceResult<OrganisationResource> getByUserAndApplicationId(Long userId, Long applicationId) {
+        Organisation org = organisationRepository.findByProcessRolesUserIdAndProcessRolesApplicationId(userId, applicationId);
+        return find(org, notFoundError(Organisation.class, userId, applicationId)).andOnSuccessReturn(o ->
+                organisationMapper.mapToResource(o)
+        );
+    }
+
+    @Override
+    public ServiceResult<OrganisationResource> getByUserAndProjectId(Long userId, Long projectId) {
+        Organisation org = organisationRepository.findByUserAndProjectId(userId, projectId);
+        return find(org, notFoundError(Organisation.class, userId, projectId)).andOnSuccessReturn(o ->
+                organisationMapper.mapToResource(o)
+        );
+    }
+
+    @Override
     @Transactional
     public ServiceResult<OrganisationResource> create(final OrganisationResource organisationToCreate) {
         return update(organisationToCreate);
