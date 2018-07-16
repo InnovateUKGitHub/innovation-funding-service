@@ -122,7 +122,7 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
         return projectFinanceRowService.getCostHandler(costItem);
     }
 
-    private ValidationMessages val  idateFileUploads(Application application, Long formInputId) {
+    private ValidationMessages validateFileUploads(Application application, Long formInputId) {
         FormInput formInput = formInputRepository.findOne(formInputId);
 
         if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser()) {
