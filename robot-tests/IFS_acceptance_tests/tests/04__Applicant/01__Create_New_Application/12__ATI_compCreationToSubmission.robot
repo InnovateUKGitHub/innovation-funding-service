@@ -41,7 +41,8 @@ Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
     [Tags]  HappyPath  MySQL
     When the competition is open                                 ${ATIcompetitionTitle}
-    Then Lead Applicant applies to the new created competition   ${ATIcompetitionTitle}  &{lead_applicant_credentials}
+    And Log in as a different user            &{lead_applicant_credentials}
+    Then logged in user applies to competition                  ${ATIcompetitionTitle}  1
 
 Applicant submits his application
     [Documentation]  IFS-2286  IFS-2332  IFS-1497

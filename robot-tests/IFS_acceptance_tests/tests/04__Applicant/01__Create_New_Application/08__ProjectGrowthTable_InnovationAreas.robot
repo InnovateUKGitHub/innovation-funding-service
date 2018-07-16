@@ -74,7 +74,8 @@ Competition is Open to Applications
 
 Create new Application for this Competition
     [Tags]  MySQL
-    Lead Applicant applies to the new created competition    ${compWithoutGrowth}  &{lead_applicant_credentials}
+    Given Log in as a different user  &{lead_applicant_credentials}
+    Then logged in user applies to competition    ${compWithoutGrowth}  1
 
 Applicant visits his Finances
     [Documentation]    INFUND-6393
@@ -130,7 +131,8 @@ Once the project growth table is selected
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
     [Tags]    MySQL
-    Given Lead Applicant applies to the new created competition  ${compWithGrowth}  &{lead_applicant_credentials}
+    Given Log in as a different user  &{lead_applicant_credentials}
+    And logged in user applies to competition                   ${compWithGrowth}  1
     When the user clicks the button/link                         link=Your finances
     And the user clicks the button/link                          link=Your organisation
     Then the user should not see the text in the page            Turnover (£)
@@ -332,14 +334,14 @@ Non-lead can can edit and remark Organisation as Complete
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
     [Documentation]  IFS-1015
     [Tags]
-    Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}
+    Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}  3
     When the user should see the element           jQuery=h1:contains("You are not eligible to start an application")
     Then the user should see the text in the page  ${ineligibleMessage}
 
 Business organisation is not allowed to apply on Comp where only RTOs are allowed to lead
     [Documentation]  IFS-1015
     [Tags]
-    Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${openCompetitionRTO_name}
+    Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${openCompetitionRTO_name}  1
     When the user should see the element           jQuery=h1:contains("You are not eligible to start an application")
     Then the user should see the text in the page  ${ineligibleMessage}
 
@@ -467,8 +469,10 @@ the user fills in the Open-All Initial details
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
 
 the logged in user should not be able to apply in a competition he has not right to
-    [Arguments]  ${email}  ${competition}
+    [Arguments]  ${email}  ${competition}  ${applicationType}
     log in as a different user       ${email}  ${short_password}
     the user clicks the button/link  id=proposition-name
     the user clicks the button/link in the paginated list  link=${competition}
     the user clicks the button/link  link=Start new application
+    the user selects the radio button   organisationTypeId  ${applicationType}
+    the user clicks the button/link     jQuery = button:contains("Save and continue")

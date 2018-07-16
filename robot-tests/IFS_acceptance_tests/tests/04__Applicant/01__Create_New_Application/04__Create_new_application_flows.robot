@@ -15,6 +15,7 @@ Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../10__Project_setup/PS_Common.robot
+Resource          ../Applicant_Commons.robot
 
 *** Test Cases ***
 Non registered users non companies house route
@@ -76,11 +77,6 @@ the new application should be visible in the dashboard page
     the user clicks the button/link           link=Dashboard
     the user should see the text in the page  ${test_title}
     the user should see the text in the page  Application number:
-
-the user clicks the Not on company house link
-    the user clicks the button/link    jQuery=summary:contains("Enter details manually")
-    The user enters text to a text field  name=organisationName    org2
-    the user clicks the button/link       jQuery=.button:contains("Continue")
 
 the user edits the application title
     the user clicks the button/link         link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
