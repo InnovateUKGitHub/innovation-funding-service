@@ -12,7 +12,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
-import org.innovateuk.ifs.finance.validator.AcademicJesValidator;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -58,9 +57,6 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private ApplicationValidationUtil applicationValidationUtil;
-
-    @Autowired
-    private AcademicJesValidator academicJesValidator;
 
     @Autowired
     private OrganisationService organisationService;
