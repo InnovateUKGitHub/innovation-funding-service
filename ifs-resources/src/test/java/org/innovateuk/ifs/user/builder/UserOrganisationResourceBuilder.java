@@ -50,6 +50,6 @@ public class UserOrganisationResourceBuilder extends BaseBuilder<UserOrganisatio
     }
 
     public UserOrganisationResourceBuilder withOrganisationType(String... organisationTypes) {
-        return withArray((organisationType, userOrganisation) -> setField("organisationType", organisationType, userOrganisation), organisationTypes);
+        return withArraySetFieldByReflection("organisationType", organisationTypes);
     }
 }
