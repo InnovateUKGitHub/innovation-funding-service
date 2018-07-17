@@ -76,6 +76,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -376,8 +377,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .withCompetition(competitionResource.getId())
                 .build();
 
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
-        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
+        ProcessRoleResource assessorRole = newProcessRoleResource().withUser(assessor).build();
 
         SortedSet<OrganisationResource> orgSet = setupOrganisations();
         List<ApplicationFinanceResource> appFinanceList = setupFinances(applicationResource, orgSet);
@@ -385,6 +385,13 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .withApplicationId(applicationResource.getId())
                 .withOrganisationFinances(appFinanceList)
                 .build();
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
+        when(processRoleService.findProcessRolesByApplicationId(applicationResource.getId())).thenReturn(asList(assessorRole));
+        when(organisationService.getApplicationOrganisations(asList(assessorRole))).thenReturn(orgSet);
+        when(organisationService.getApplicationLeadOrganisation(asList(assessorRole))).thenReturn(Optional.ofNullable(newOrganisationResource().build()));
+
 
         AssessmentFinancesSummaryViewModel expectedViewModel = new AssessmentFinancesSummaryViewModel(
                 assessmentResource.getId(), applicationResource.getId(), "Application name", 3, 50);
@@ -780,8 +787,8 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {
         List<OrganisationResource> orgList = orgSet.stream().collect(Collectors.toList());
         List<ApplicationFinanceResource> appFinanceList = new ArrayList<>();
-        appFinanceList.add(new ApplicationFinanceResource(1L, orgList.get(0).getId(), app.getId(), 2L, ""));
-        appFinanceList.add(new ApplicationFinanceResource(2L, orgList.get(1).getId(), app.getId(), 2L, ""));
+        appFinanceList.add(new ApplicationFinanceResource(1L, orgList.get(0).getId(), app.getId(),MEDIUM, ""));
+        appFinanceList.add(new ApplicationFinanceResource(2L, orgList.get(1).getId(), app.getId(), MEDIUM, ""));
 
         when(financeService.getApplicationFinanceTotals(app.getId())).thenReturn(appFinanceList);
 

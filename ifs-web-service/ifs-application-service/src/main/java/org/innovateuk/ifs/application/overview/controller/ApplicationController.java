@@ -79,8 +79,7 @@ public class ApplicationController {
         changeApplicationStatusToOpen(application, user);
 
         Long userId = user.getId();
-        model.addAttribute("form", form);
-        model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, userId));
+        model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, userId, form));
         return "application-overview";
     }
 
