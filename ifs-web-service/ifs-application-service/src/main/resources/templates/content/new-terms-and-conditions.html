@@ -36,15 +36,20 @@
                     <span th:if="${#fields.hasErrors('agree')}"
                           th:errors="*{agree}"
                           class="error-message">In order to continue you must agree to the terms and conditions.</span>
-                    <div class="multiple-choice">
-                        <input id="agree"
-                               type="checkbox"
-                               th:field="*{agree}"
-                               th:errorclass="form-control-error"
-                               required="required"
-                               data-required-errormessage="In order to continue you must agree to the terms and conditions." />
-                        <label for="agree">I agree to the <a href="/info/terms-and-conditions" class="govuk-link" target="_blank">terms and conditions</a> (this link will open in a new window).</label>
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input id="agree"
+                                   class="govuk-checkboxes__input"
+                                   type="checkbox"
+                                   th:field="*{agree}"
+                                   th:errorclass="form-control-error"
+                                   required="required"
+                                   data-required-errormessage="In order to continue you must agree to the terms and conditions." />
+                            <label for="agree"
+                                   class="govuk-label govuk-checkboxes__label">I agree to the <a href="/info/terms-and-conditions" class="govuk-link" target="_blank">terms and conditions</a> (this link will open in a new window).</label>
+                        </div>
                     </div>
+
                 </fieldset>
             </div>
             <button class="govuk-button" type="submit">Continue</button>

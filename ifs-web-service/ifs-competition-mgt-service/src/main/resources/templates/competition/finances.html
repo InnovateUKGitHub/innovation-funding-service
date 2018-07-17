@@ -111,23 +111,23 @@
                 </fieldset>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('fundingRules')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noneFinanceCompetition}">
-                  <label for="fundingRules">
-                      <span class="form-label-bold">Funding rules for this competition</span>
-                      <th:block th:if="${#fields.hasErrors('fundingRules')}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('fundingRules')}" th:text="${err}"></span>
-                      </th:block>
-                  </label>
-                  <div class="textarea-wrapped ">
-                      <textarea data-editor="html"
-                                class="form-control"
-                                id="fundingRules"
-                                th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-control-error'"
-                                th:field="${competitionSetupForm.fundingRules}"
-                                required="required"
-                                th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                ifs:utext="${competitionSetupForm.fundingRules}">
-                      </textarea>
-                  </div>
+                <label class="govuk-label" for="fundingRules">
+                  Funding rules for this competition
+                </label>
+                <th:block th:if="${#fields.hasErrors('fundingRules')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('fundingRules')}" th:text="${err}"></span>
+                </th:block>
+                <div class="textarea-wrapped ">
+                    <textarea data-editor="html"
+                            class="form-control"
+                            id="fundingRules"
+                            th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-control-error'"
+                            th:field="${competitionSetupForm.fundingRules}"
+                            required="required"
+                            th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                            ifs:utext="${competitionSetupForm.fundingRules}">
+                    </textarea>
+                </div>
             </div>
             <button type="submit" class="govuk-button">Done</button>
 

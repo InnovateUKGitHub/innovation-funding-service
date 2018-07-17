@@ -37,13 +37,13 @@
                 </fieldset>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorPay')} ? 'govuk-form-group--error'">
-                <label class="form-label" for="assessorPay">
-                    <span class="form-label-bold">How much do assessors receive per application?</span>
-                    <span class="govuk-hint">This information will be available in the assessor invites.</span>
-                     <th:block th:if="${#fields.hasErrors('assessorPay')}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" for="assessorPay">
+                    How much do assessors receive per application?
                 </label>
+                <span class="govuk-hint">This information will be available in the assessor invites.</span>
+                <th:block th:if="${#fields.hasErrors('assessorPay')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
+                </th:block>
                 <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" max="99999999"
                         th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
                        data-th-attr="data-max-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},

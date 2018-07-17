@@ -92,16 +92,21 @@
 
                     <div class="govuk-grid-row sorting">
                         <div class="govuk-grid-column-one-half select-all">
-                            <div class="multiple-choice">
-                                <input type="checkbox"
-                                       data-select-all=""
-                                       id="select-all-check"
-                                       th:checked="${assessorPanelOverviewSelectionForm.getAllSelected()}"
-                                       th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
-                                <label for="select-all-check">
-                                    Select all assessors
-                                </label>
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input type="checkbox"
+                                           class="govuk-checkboxes__input"
+                                           data-select-all=""
+                                           id="select-all-check"
+                                           th:checked="${assessorPanelOverviewSelectionForm.getAllSelected()}"
+                                           th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
+                                    <label for="select-all-check"
+                                           class="govuk-label govuk-checkboxes__label">
+                                        Select all assessors
+                                    </label>
+                                </div>
                             </div>
+
                             <span class="govuk-hint">
                             <span data-count-selected="" th:text="${#lists.size(assessorPanelOverviewSelectionForm.selectedInviteIds)}"></span> assessors selected</span>
                         </div>
@@ -128,15 +133,20 @@
                             <tbody>
                             <tr th:each="assessor, index : ${model.assessors}">
                                 <td>
-                                    <div class="multiple-choice">
-                                        <input type="checkbox"
-                                               th:id="|assessor-row-${index.count}|"
-                                               th:field="*{selectedInviteIds}"
-                                               th:value="${assessor.inviteId}"/>
-                                        <label th:for="|assessor-row-${index.count}|">
-                                            <span class="invisible">Add</span>
-                                        </label>
+                                    <div class="govuk-checkboxes">
+                                        <div class="govuk-checkboxes__item">
+                                            <input type="checkbox"
+                                                   class="govuk-checkboxes__input"
+                                                   th:id="|assessor-row-${index.count}|"
+                                                   th:field="*{selectedInviteIds}"
+                                                   th:value="${assessor.inviteId}"/>
+                                            <label th:for="|assessor-row-${index.count}|"
+                                                   class="govuk-label govuk-checkboxes__label">
+                                                <span class="invisible">Add</span>
+                                            </label>
+                                        </div>
                                     </div>
+
                                 </td>
                                 <td>
                                     <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}" th:if="${assessor.id}"

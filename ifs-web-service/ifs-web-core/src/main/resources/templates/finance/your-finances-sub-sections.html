@@ -257,12 +257,12 @@
                 <p class="govuk-body">Where will most of the project work take place?</p>
                 <!--/* edit */-->
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectLocation')} ? 'govuk-form-group--error'">
-                    <label class="form-label" for="projectLocation">
-                        <span class="form-label-bold">Postcode</span>
-                        <th:block th:if="${#fields.hasErrors('projectLocation')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
-                        </th:block>
+                    <label class="govuk-label" for="projectLocation">
+                        Postcode
                     </label>
+                    <th:block th:if="${#fields.hasErrors('projectLocation')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
+                    </th:block>
                     <input class="form-control width-large"
                            id="projectLocation"
                            th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"

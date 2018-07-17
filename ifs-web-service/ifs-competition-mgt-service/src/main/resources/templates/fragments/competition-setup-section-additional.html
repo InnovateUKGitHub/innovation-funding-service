@@ -19,13 +19,13 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-form-group">
-                        <span class="form-label-bold">Funder</span>
+                        <span class="govuk-label">Funder</span>
                     </div>
                 </div>
 
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-form-group">
-                        <span class="form-label-bold">Budget</span>
+                        <span class="govuk-label">Budget</span>
                     </div>
                 </div>
             </div>
@@ -33,11 +33,11 @@
             <div th:each="(funder, iteration : ${competitionSetupForm.funders})" class="govuk-grid-row funder-row" th:id="'funder-row-'+${iteration.index}">
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funder')} ? 'govuk-form-group--error'">
-                        <label class="form-label" th:for="funders[__${iteration.index}__].funder">
-                            <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" th:for="funders[__${iteration.index}__].funder">
                         </label>
+                        <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
+                        </th:block>
                         <input required="required" class="form-control width-x-large"
                                th:errorclass="form-control-error"
                                th:id="funders[__${iteration.index}__].funder"
@@ -49,11 +49,11 @@
 
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')} ? 'govuk-form-group--error'">
-                        <label class="form-label" th:for="funders[__${iteration.index}__].funderBudget">
-                            <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" th:for="funders[__${iteration.index}__].funderBudget">
                         </label>
+                        <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funderBudget')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}"></span>
+                        </th:block>
                         <input required="required" type="number" min="0"
                                class="form-control width-x-large"
                                th:errorclass="form-control-error"
@@ -95,12 +95,12 @@
                 </legend>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('pafNumber')} ? 'govuk-form-group--error'">
-                    <label class="form-label" for="pafNumber">
-                        <span class="form-label-bold">PAF number</span>
-                    <th:block th:if="${#fields.hasErrors('pafNumber')}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('pafNumber')}" th:text="${err}"></span>
-                    </th:block>
+                    <label class="govuk-label" for="pafNumber">
+                        PAF number
                     </label>
+                    <th:block th:if="${#fields.hasErrors('pafNumber')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('pafNumber')}" th:text="${err}"></span>
+                    </th:block>
                     <input class="form-control width-large"
                            th:errorclass="form-control-error"
                            type="text"
@@ -109,12 +109,12 @@
                 </div>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('budgetCode')} ? 'govuk-form-group--error'">
-                    <label class="form-label" for="budgetCode">
-                        <span class="form-label-bold">Budget code</span>
-                        <th:block th:if="${#fields.hasErrors('budgetCode')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('budgetCode')}" th:text="${err}"></span>
-                        </th:block>
+                    <label class="govuk-label" for="budgetCode">
+                        Budget code
                     </label>
+                    <th:block th:if="${#fields.hasErrors('budgetCode')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('budgetCode')}" th:text="${err}"></span>
+                    </th:block>
                     <input class="form-control width-large"
                            id="budgetCode"
                            th:errorclass="form-control-error"
@@ -124,12 +124,12 @@
 
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('activityCode')} ? 'govuk-form-group--error'">
-                    <label class="form-label" for="activityCode">
-                        <span class="form-label-bold">Activity code</span>
-                        <th:block th:if="${#fields.hasErrors('activityCode')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}"></span>
-                        </th:block>
+                    <label class="govuk-label" for="activityCode">
+                        Activity code
                     </label>
+                    <th:block th:if="${#fields.hasErrors('activityCode')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}"></span>
+                    </th:block>
                     <input class="form-control width-large"
                            th:errorclass="form-control-error"
                            type="text"
@@ -141,12 +141,12 @@
                 </div>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('competitionCode')} ? 'govuk-form-group--error'">
-                    <label class="form-label" for="competitionCode">
-                        <span class="form-label-bold">Competition code</span>
-                        <th:block th:if="${#fields.hasErrors('competitionCode')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('competitionCode')}" th:text="${err}"></span>
-                        </th:block>
+                    <label class="govuk-label" for="competitionCode">
+                        Competition code
                     </label>
+                    <th:block th:if="${#fields.hasErrors('competitionCode')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('competitionCode')}" th:text="${err}"></span>
+                    </th:block>
                     <input readonly="readonly"
                            class="form-control width-large readonly-boxed"
                            th:classappend="${#fields.hasErrors('competitionCode')} ? 'form-control-error'"

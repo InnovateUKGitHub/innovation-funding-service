@@ -22,12 +22,12 @@
             <h2 class="govuk-heading-m">Your details</h2>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
-                <label class="form-label" th:for="${#ids.next('firstName')}">
-                    <span>First name</span>
-                    <th:block th:if="${#fields.hasErrors('firstName')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" th:for="${#ids.next('firstName')}">
+                    First name
                 </label>
+                <th:block th:if="${#fields.hasErrors('firstName')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                </th:block>
                 <input class="form-control"
                        type="text"
                        th:errorclass="form-control-error"
@@ -42,12 +42,12 @@
                                 data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
-                <label class="form-label" th:for="${#ids.next('lastName')}">
-                    <span>Last name</span>
-                    <th:block th:if="${#fields.hasErrors('lastName')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" th:for="${#ids.next('lastName')}">
+                    Last name
                 </label>
+                <th:block th:if="${#fields.hasErrors('lastName')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                </th:block>
                 <input class="form-control"
                        type="text"
                        th:errorclass="form-control-error"
@@ -71,12 +71,12 @@
             </p>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('password')} ? 'govuk-form-group--error'">
-                <label class="form-label" for="password">
-                    <span class="form-label-bold">Create password</span>
-                    <th:block th:if="${#fields.hasErrors('password')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" for="password">
+                    Create password
                 </label>
+                <th:block th:if="${#fields.hasErrors('password')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
+                </th:block>
                 <div class="govuk-hint" id="password-hint">
                     <p class="govuk-body">Your password is case-sensitive and needs to:</p>
                     <ul class="govuk-list govuk-list--bullet status">

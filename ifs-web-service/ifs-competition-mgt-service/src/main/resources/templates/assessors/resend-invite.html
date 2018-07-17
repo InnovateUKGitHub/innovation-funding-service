@@ -19,12 +19,12 @@
 
                 <form th:action="@{/competition/{competitionId}/assessors/invite/{inviteId}/resend(competitionId=${model.competitionId}, inviteId=${model.inviteId})}" method="post" enctype="multipart/form-data" th:object="${form}">
                     <div class="govuk-form-group">
-                        <label class="form-label-bold" for="subject">Subject</label>
+                        <label class="govuk-label" for="subject">Subject</label>
                         <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
                     </div>
 
                     <div class="govuk-form-group">
-                        <label class="form-label-bold" for="message">Message</label>
+                        <label class="govuk-label" for="message">Message</label>
                         <textarea id="message" rows="16" class="form-control width-full" th:field="*{content}"></textarea>
                     </div>
 

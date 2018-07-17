@@ -30,13 +30,13 @@
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-third">
                             <div class="govuk-form-group">
-                                <label class="form-label" for="stringFilter">Search by application number.</label>
+                                <label class="govuk-label" for="stringFilter">Search by application number.</label>
                                 <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:field="*{stringFilter}" />
                             </div>
                         </div>
                         <div class="govuk-grid-column-one-third">
                             <div class="govuk-form-group">
-                                <label class="form-label" for="sendFilter">Sent</label>
+                                <label class="govuk-label" for="sendFilter">Sent</label>
                                 <select name="sendFilter" id="sendFilter" class="form-control" th:field="*{sendFilter}">
                                     <option value="">All</option>
                                     <option value="1">Yes</option>
@@ -46,7 +46,7 @@
                         </div>
                         <div class="govuk-grid-column-one-third">
                             <div class="govuk-form-group">
-                                <label class="form-label" for="fundingFilter">Funding</label>
+                                <label class="govuk-label" for="fundingFilter">Funding</label>
                                 <select name="fundingFilter" id="fundingFilter" class="form-control" th:field="*{fundingFilter}">
                                     <option value="">Show all</option>
                                     <option value="FUNDED">Successful</option>
@@ -80,15 +80,21 @@
                     <div class="select-all">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-visually-hidden">Select applications</legend>
-
-                            <div class="multiple-choice">
-                                    <input data-select-all="" id="select-all-1" type="checkbox"
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input data-select-all=""
+                                           id="select-all-1"
+                                           class="govuk-checkboxes__input"
+                                           type="checkbox"
                                            th:checked="${selectionForm.isAllSelected()}"
                                            th:disabled="${model.selectAllDisabled || !model.anythingChangeable}"/>
-                                    <label for="select-all-1">
+                                    <label for="select-all-1"
+                                           class="govuk-label govuk-checkboxes__label">
                                         Select all applications
                                     </label>
+                                </div>
                             </div>
+
                             <span class="govuk-hint"><span data-count-selected="" th:text="${#lists.size(selectionForm.ids)}">3</span> applications selected</span>
                         </fieldset>
                     </div>
@@ -118,17 +124,22 @@
                         <tbody>
                         <tr th:each="applicationSummary, stat : ${model.content}">
                             <td class="form-group-cell">
-                                <div class="multiple-choice" th:if="${applicationSummary.applicationFundingDecisionIsChangeable()}">
-                                    <input type="checkbox"
-                                           class="app-row-select row-successful"
-                                           th:field="*{selectionForm.ids}"
-                                           th:value="${applicationSummary.id}"
-                                           aria-labelledby="select-applications-label"
-                                           th:id="'app-row-' + ${applicationSummary.id}" />
-                                    <label th:for="'app-row-' + ${applicationSummary.id}">
-                                        <span class="invisible">Select application</span>
-                                    </label>
+                                <div class="govuk-checkboxes">
+                                    <div class="govuk-checkboxes__item"
+                                         th:if="${applicationSummary.applicationFundingDecisionIsChangeable()}">
+                                        <input type="checkbox"
+                                               class="govuk-checkboxes__input app-row-select row-successful"
+                                               th:field="*{selectionForm.ids}"
+                                               th:value="${applicationSummary.id}"
+                                               aria-labelledby="select-applications-label"
+                                               th:id="'app-row-' + ${applicationSummary.id}" />
+                                        <label th:for="'app-row-' + ${applicationSummary.id}"
+                                               class="govuk-label govuk-checkboxes__label">
+                                            <span class="invisible">Select application</span>
+                                        </label>
+                                    </div>
                                 </div>
+
                                 <th:block th:unless="${applicationSummary.applicationFundingDecisionIsChangeable()}">
                                     <span class="empty-table-cell-select">-</span>
                                 </th:block>

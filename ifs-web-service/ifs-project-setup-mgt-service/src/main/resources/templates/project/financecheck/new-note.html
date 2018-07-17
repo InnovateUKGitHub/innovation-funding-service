@@ -23,12 +23,12 @@
                       enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                     <h2 class="govuk-heading-m">New note</h2>
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('noteTitle')} ? 'govuk-form-group--error'">
-                        <label for="noteTitle">
-                            <span class="form-label-bold">Title</span>
-                            <th:block th:if="${#fields.hasErrors('noteTitle')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('noteTitle')}" th:text="${err}" />
-                            </th:block>
+                        <label class="govuk-label" for="noteTitle">
+                            Title
                         </label>
+                        <th:block th:if="${#fields.hasErrors('noteTitle')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('noteTitle')}" th:text="${err}" />
+                        </th:block>
                         <input name="noteTitle"
                                id="noteTitle"
                                type="text"
@@ -41,12 +41,12 @@
                                         data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
                     </div>
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('note')} ? 'govuk-form-group--error'">
-                        <label for="note">
-                            <span class="form-label-bold">Note</span>
-                            <th:block th:if="${#fields.hasErrors('note')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('note')}" th:text="${err}" />
-                            </th:block>
+                        <label class="govuk-label" for="note">
+                            Note
                         </label>
+                        <th:block th:if="${#fields.hasErrors('note')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('note')}" th:text="${err}" />
+                        </th:block>
                         <div class="textarea-wrapped word-count">
                             <textarea data-editor="md"
                                       required = "required"

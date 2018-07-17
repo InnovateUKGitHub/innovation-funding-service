@@ -86,7 +86,7 @@
 				<tr>
 					<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 						<th class="width-large">
-							<label class="form-label" for="working-days">Working days per year</label>
+							<label class="govuk-label" for="working-days">Working days per year</label>
 						</th>
 						<td>
 							<input type="text" class="width-small form-control" id="working-days" name="working-days" value="232" th:readonly="${param.status == null or param.status[0] == 'save-labour'}" />

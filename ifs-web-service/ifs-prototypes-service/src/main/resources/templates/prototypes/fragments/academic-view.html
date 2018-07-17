@@ -25,8 +25,8 @@
             </th:block>
 
             <div class="govuk-form-group" th:unless="${type == 'checks'}">
-                <label class="form-label" for="tsb-ref">
-                    <span class="form-label-bold">TSB reference
+                <label class="govuk-label" for="tsb-ref">
+                    <span class="govuk-label">TSB reference
                         <span class="govuk-hint">This number is found at the top of your Je-S form.</span>
                     </span>
 
@@ -41,15 +41,15 @@
             <p class="govuk-body">Please enter the following costs from the summary of resources section on your Je-S form.</p>
 
             <div class="govuk-form-group underline">
-                <span class="form-label">
-                    <span class="form-label-bold">Directly incurred
+                <span class="govuk-label">
+                    <span class="govuk-label">Directly incurred
                     </span>
                 </span>
-                <span class="form-text form-label-bold">TSB contribution (please refer to the TSB contribution column).</span>
+                <span class="form-text govuk-hint">TSB contribution (please refer to the TSB contribution column).</span>
             </div>
 
             <div class="govuk-form-group">
-                <label class="form-label" for="staff">
+                <label class="govuk-label" for="staff">
                     <span>Staff
                     </span>
                 </label>
@@ -61,7 +61,7 @@
             </div>
 
             <div class="govuk-form-group">
-                <label class="form-label" for="travel">
+                <label class="govuk-label" for="travel">
                     <span>Travel and subsistence
                     </span>
                 </label>
@@ -73,7 +73,7 @@
             </div>
 
             <div class="govuk-form-group">
-                <label class="form-label" for="other">
+                <label class="govuk-label" for="other">
                     <span>Other costs
                     </span>
                 </label>
@@ -83,8 +83,8 @@
             </div>
 
             <div class="govuk-form-group">
-                <span class="form-label">
-                    <span class="form-label-bold">Subtotal
+                <span class="govuk-label">
+                    <span class="govuk-label">Subtotal
                     </span>
                 </span>
 
@@ -101,14 +101,14 @@
             <legend class="govuk-visually-hidden">Directly allocated</legend>
 
             <div class="govuk-form-group underline">
-                <span class="form-label">
-                    <span class="form-label-bold">Directly allocated
+                <span class="govuk-label">
+                    <span class="govuk-label">Directly allocated
                     </span>
                 </span>
             </div>
 
             <div class="govuk-form-group">
-                <label class="form-label" for="investigations">
+                <label class="govuk-label" for="investigations">
                     <span>Investigations
                     </span>
                 </label>
@@ -118,7 +118,7 @@
             </div>
 
             <div class="govuk-form-group">
-                <label class="form-label" for="estates">
+                <label class="govuk-label" for="estates">
                     <span>Estates costs
                     </span>
                 </label>
@@ -130,7 +130,7 @@
             </div>
 
             <div class="govuk-form-group">
-                <label class="form-label" for="other-direct">
+                <label class="govuk-label" for="other-direct">
                     <span>Other costs
                     </span>
                 </label>
@@ -140,8 +140,8 @@
             </div>
 
             <div class="govuk-form-group">
-                <span class="form-label">
-                    <span class="form-label-bold">Subtotal
+                <span class="govuk-label">
+                    <span class="govuk-label">Subtotal
                     </span>
                 </span>
                 <span class="form-control" th:text="${(user == 'internal' ? '&pound;6,000' : '*Calculated figure from above numbers*')}" th:unless="${type == 'checks'}">*Calculated figure from above numbers*</span>
@@ -154,8 +154,8 @@
             <legend class="govuk-visually-hidden">Indirect costs</legend>
 
             <div class="govuk-form-group">
-                <label class="form-label" for="indirect">
-                    <span class="form-label-bold">Indirect costs
+                <label class="govuk-label" for="indirect">
+                    <span class="govuk-label">Indirect costs
                     </span>
                 </label>
                 <input class="form-control" id="indirect" type="text" th:value="${(user == 'internal' ? '&pound;1,000' : '')}" th:readonly="${param.status == null or param.status[0] != 'edit-academic'}" th:unless="${type == 'checks'}" />
@@ -169,14 +169,14 @@
             <legend class="govuk-visually-hidden">Exceptions</legend>
 
             <div class="govuk-form-group underline extra-margin">
-                <span class="form-label">
-                    <span class="form-label-bold">Exceptions
+                <span class="govuk-label">
+                    <span class="govuk-label">Exceptions
                     </span>
                 </span>
             </div>
 
             <div class="govuk-form-group">
-                <label class="form-label" for="exceptions-staff">
+                <label class="govuk-label" for="exceptions-staff">
                     <span>Staff
                     </span>
                 </label>
@@ -186,7 +186,7 @@
             </div>
 
             <div class="govuk-form-group">
-                <label class="form-label" for="exceptions-other-direct">
+                <label class="govuk-label" for="exceptions-other-direct">
                     <span>Other costs
                     </span>
                 </label>
@@ -196,8 +196,8 @@
             </div>
 
             <div class="govuk-form-group">
-                <span class="form-label">
-                    <span class="form-label-bold">Subtotal
+                <span class="govuk-label">
+                    <span class="govuk-label">Subtotal
                     </span>
                 </span>
                 <span class="form-control" th:text="${(user == 'internal' ? '&pound;2,000' : '*Calculated figure from above numbers*')}" th:unless="${type == 'checks'}">*Calculated figure from above numbers*</span>
@@ -206,8 +206,8 @@
             </div>
 
             <div class="govuk-form-group totals">
-                <span class="form-label">
-                    <span class="form-label-bold">Total
+                <span class="govuk-label">
+                    <span class="govuk-label">Total
                     </span>
                 </span>
                 <span class="form-control" th:text="${(user == 'internal' ? '&pound;60,000' : '*Calculated figure from above numbers*')}" th:unless="${type == 'checks'}">*&pound; Calculated figure from above numbers*</span>

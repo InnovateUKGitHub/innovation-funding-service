@@ -681,7 +681,7 @@ all the fields are completed
     the matching status checkbox is updated  project-details  3  yes
 
 the user should not see duplicated select options
-    ${NO_OPTIONs}=    Get Matching Xpath Count    //*[@class="multiple-choice"]
+    ${NO_OPTIONs}=    Get Matching Xpath Count    //*[@class="govuk-radios__item"]
     Should Be Equal As Integers    ${NO_OPTIONs}    5    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
 
 the user can see all project details completed

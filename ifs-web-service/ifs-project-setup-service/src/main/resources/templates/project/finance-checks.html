@@ -100,12 +100,12 @@
                                 enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                     <h2 class="govuk-heading-m">Respond to query</h2>
                                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
-                                        <label for="response-1">
-                                            <span class="form-label-bold">Response</span>
-                                            <th:block th:if="${#fields.hasErrors('response')}">
-                                                <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
-                                            </th:block>
+                                        <label class="govuk-label" for="response-1">
+                                            Response
                                         </label>
+                                        <th:block th:if="${#fields.hasErrors('response')}">
+                                            <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
+                                        </th:block>
                                         <div class="textarea-wrapped word-count">
                                             <textarea data-editor="md"
                                                       required = "required"
@@ -195,12 +195,12 @@
                                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                 <h2 class="govuk-heading-m">Respond to query</h2>
                                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
-                                    <label for="response-2">
-                                        <span class="form-label-bold">Response</span>
-                                        <th:block th:if="${#fields.hasErrors('response')}">
-                                            <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
-                                        </th:block>
+                                    <label class="govuk-label" for="response-2">
+                                        Response
                                     </label>
+                                    <th:block th:if="${#fields.hasErrors('response')}">
+                                        <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
+                                    </th:block>
                                     <div class="textarea-wrapped word-count">
                                             <textarea data-editor="md"
                                                       required = "required"
@@ -288,12 +288,12 @@
                                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                 <h2 class="govuk-heading-m">Respond to query</h2>
                                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
-                                    <label for="response-3">
-                                        <span class="form-label-bold">Response</span>
-                                        <th:block th:if="${#fields.hasErrors('response')}">
-                                            <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
-                                        </th:block>
+                                    <label class="govuk-label" for="response-3">
+                                        Response
                                     </label>
+                                    <th:block th:if="${#fields.hasErrors('response')}">
+                                        <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
+                                    </th:block>
                                     <div class="textarea-wrapped word-count">
                                             <textarea data-editor="md"
                                                       required = "required"

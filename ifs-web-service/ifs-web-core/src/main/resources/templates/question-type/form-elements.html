@@ -3,13 +3,13 @@
 
 <!-- =========================== Form label =========================== -->
 <th:block th:fragment="form-label (name)">
-    <label th:class="${bold}? 'form-label form-label-bold' : 'form-label'" th:if="${name}" th:for="${id}">
+    <label class=govuk-label" th:if="${name}" th:for="${id}">
         <span th:text="${name}"></span>
     </label>
 </th:block>
 <!-- =========================== Form label hidden =========================== -->
 <th:block th:fragment="form-label-hidden (name,id)">
-    <label class="form-label govuk-visually-hidden"
+    <label class="govuk-label govuk-visually-hidden"
     th:if="${name}"
     th:for="${id}"
     th:text="${name}"
@@ -143,7 +143,7 @@
         <th:block th:with="dateFieldPresent=*{__${field}__ != null}">
 
             <div class="day">
-                <th:block th:insert="question-type/form-elements :: form-label (name='Day',id=${id}+'_day',bold=false)" />
+                <th:block th:insert="question-type/form-elements :: form-label (name='Day',id=${id}+'_day')" />
                 <th:block th:if="${dateFieldPresent}">
                     <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${(readonly != null and readonly) or (dayReadonly != null and dayReadonly)},required=true,min=1,max=31)" />
                  </th:block>
@@ -152,7 +152,7 @@
                  </th:block>
             </div>
             <div class="month">
-                <th:block th:insert="question-type/form-elements :: form-label (name='Month',id=${id}+'_month',bold=false)" />
+                <th:block th:insert="question-type/form-elements :: form-label (name='Month',id=${id}+'_month')" />
                 <th:block th:if="${dateFieldPresent}">
                     <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_month', field=${field}+'.monthValue',placeholder='MM',required=true,min=1,max=12)" />
                 </th:block>
@@ -161,7 +161,7 @@
                 </th:block>
             </div>
             <div class="year">
-                <th:block th:insert="question-type/form-elements :: form-label (name='Year',id=${id}+'_year',bold=false)" />
+                <th:block th:insert="question-type/form-elements :: form-label (name='Year',id=${id}+'_year')" />
                 <th:block th:if="${dateFieldPresent}">
             		    <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', field=${field}+'.year',placeholder='YYYY',required=true)" />
                 </th:block>
@@ -182,7 +182,7 @@
 
 
 <th:block th:fragment="form-percentage (id, title, field)">
-    <th:block th:insert="question-type/form-elements :: form-label (name=${title},id=${id},bold=false)" />
+    <th:block th:insert="question-type/form-elements :: form-label (name=${title},id=${id})" />
     <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}, field=${field}, min=0, max=100)" />
 </th:block>
 <!-- ========================= textarea  =========================== -->

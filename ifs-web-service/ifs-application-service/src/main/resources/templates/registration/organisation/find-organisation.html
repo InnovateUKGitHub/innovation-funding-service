@@ -43,8 +43,9 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
                     </th:block>
                 </label>
+
                 <input class="form-control" th:field="*{organisationSearchName}" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-control-error'" type="text" value="" />
-                <govuk-button type="submit" id="org-search" name="search-organisation" class="govuk-button">Search</button>
+                <button type="submit" id="org-search" name="search-organisation" class="govuk-button">Search</button>
             </div>
             <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <th:block th:if="${organisationForm.research}">

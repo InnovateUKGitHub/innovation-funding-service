@@ -25,13 +25,13 @@
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-half">
                             <div class="govuk-form-group">
-                                <label class="form-label" for="stringFilter">Search by application number</label>
+                                <label class="govuk-label" for="stringFilter">Search by application number</label>
                                 <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:value="*{stringFilterValue}"/>
                             </div>
                         </div>
                         <div class="govuk-grid-column-one-half">
                             <div class="govuk-form-group">
-                                <label class="form-label" for="fundingFilter">Funding decision</label>
+                                <label class="govuk-label" for="fundingFilter">Funding decision</label>
                                 <select name="fundingFilter" id="fundingFilter" class="form-control" th:field="*{fundingFilter}">
                                     <option value="">Show all</option>
                                     <option value="UNDECIDED">Blank</option>
@@ -79,12 +79,22 @@
                     <div class="select-all">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-visually-hidden">Select applications</legend>
-                            <div class="multiple-choice">
-                                <input th:disabled="${selectAllDisabled || selectionLimitWarning}" th:checked="${selectionForm.isAllSelected()}" class="select-all" id="select-all-1" value="select-all" type="checkbox" data-select-all="" />
-                                <label for="select-all-1">
-                                    Select all applications
-                                </label>
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input th:disabled="${selectAllDisabled || selectionLimitWarning}"
+                                           th:checked="${selectionForm.isAllSelected()}"
+                                           class="govuk-checkboxes__input select-all"
+                                           id="select-all-1"
+                                           value="select-all"
+                                           type="checkbox"
+                                           data-select-all="" />
+                                    <label for="select-all-1"
+                                           class="govuk-label govuk-checkboxes__label">
+                                        Select all applications
+                                    </label>
+                                </div>
                             </div>
+
                             <span class="govuk-hint"><span th:text="${selectionForm.applicationIds.size()}" data-count-selected="">0</span> applications selected</span>
                         </fieldset>
                     </div>
@@ -117,13 +127,21 @@
                     <tbody>
                     <tr th:each="result, index : ${results.content}">
                         <td>
-                            <div class="multiple-choice" th:if="${result.applicationFundingDecisionIsChangeable()}">
-                                <input type="checkbox" name="applicationIds" th:id="${'app-row-'+index.count}" th:checked="${#lists.contains(selectionForm.applicationIds, result.id)}" th:value="${result.id}" aria-labelledby="select-applications-label" />
-                                <label th:for="${'app-row-'+index.count}">
-                                    <span class="invisible">Select application</span>
-                                </label>
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item" th:if="${result.applicationFundingDecisionIsChangeable()}">
+                                    <input type="checkbox"
+                                           class="govuk-checkboxes__input"
+                                           name="applicationIds"
+                                           th:id="${'app-row-'+index.count}"
+                                           th:checked="${#lists.contains(selectionForm.applicationIds, result.id)}"
+                                           th:value="${result.id}"
+                                           aria-labelledby="select-applications-label" />
+                                    <label th:for="${'app-row-'+index.count}"
+                                           class="govuk-label govuk-checkboxes__label">
+                                        <span class="invisible">Select application</span>
+                                    </label>
+                                </div>
                             </div>
-
                             <th:block th:unless="${result.applicationFundingDecisionIsChangeable()}">
                                 <span class="empty-table-cell-select">-</span>
                             </th:block>

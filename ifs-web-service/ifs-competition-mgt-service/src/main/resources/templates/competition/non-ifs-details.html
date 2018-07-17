@@ -26,12 +26,12 @@
               novalidate="novalidate"
               data-section="milestones">
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('title')} ? 'govuk-form-group--error'">
-              <label class="form-label" for="title">
-                  <span class="form-label-bold">Competition title</span>
-                  <th:block th:if="${#fields.hasErrors('title')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
-                  </th:block>
+              <label class="govuk-label" for="title">
+                  Competition title
               </label>
+              <th:block th:if="${#fields.hasErrors('title')}">
+                  <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
+              </th:block>
               <input id="title"
                      class="form-control width-xlarge"
                      th:errorclass="form-control-error"
@@ -41,13 +41,12 @@
                      th:attr="data-required-errormessage=#{validation.standard.title.required}" />
           </div>
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'govuk-form-group--error'">
-              <label class="form-label" for="innovationSectorCategoryId">
-                  <span class="form-label-bold">Innovation sector</span>
-                  <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
-                  </th:block>
+              <label class="govuk-label" for="innovationSectorCategoryId">
+                  Innovation sector
               </label>
-
+              <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
+                  <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
+              </th:block>
               <select class="form-control width-x-large"
                       id="innovationSectorCategoryId"
                       th:field="${form.innovationSectorCategoryId}"
@@ -59,12 +58,12 @@
           </div>
 
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryId')} ? 'govuk-form-group--error'">
-              <label class="form-label" for="innovationAreaCategoryId">
-                  <span class="form-label-bold">Innovation area</span>
-                  <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
-                  </th:block>
+              <label class="govuk-label" for="innovationAreaCategoryId">
+                  Innovation area
               </label>
+              <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">
+                  <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
+              </th:block>
               <select class="form-control width-x-large"
                       th:field="${form.innovationAreaCategoryId}"
                       id="innovationAreaCategoryId"
@@ -300,13 +299,13 @@
             </fieldset>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('url')} ? 'govuk-form-group--error'">
-                <label class="form-label" for="url">
-                    <span class="form-label-bold">Competition URL</span>
-                    <span class="govuk-hint">This is the non-IFS page that the public will go to when they 'apply'</span>
-                    <th:block th:if="${#fields.hasErrors('url')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('url')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" for="url">
+                    Competition URL
                 </label>
+                <span class="govuk-hint">This is the non-IFS page that the public will go to when they 'apply'</span>
+                <th:block th:if="${#fields.hasErrors('url')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('url')}" th:text="${err}"></span>
+                </th:block>
                 <input id="url"
                        class="form-control width-x-large"
                        th:errorclass="form-control-error"

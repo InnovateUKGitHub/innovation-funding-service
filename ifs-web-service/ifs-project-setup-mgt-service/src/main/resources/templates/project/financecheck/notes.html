@@ -65,12 +65,12 @@
                             <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}"
                                   method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('comment')} ? 'govuk-form-group--error'">
-                                    <label for="comment">
-                                        <span class="form-label-bold">Comment</span>
-                                        <th:block th:if="${#fields.hasErrors('comment')}">
-                                            <span class="error-message" th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
-                                        </th:block>
+                                    <label class="govuk-label" for="comment">
+                                        Comment
                                     </label>
+                                    <th:block th:if="${#fields.hasErrors('comment')}">
+                                        <span class="error-message" th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
+                                    </th:block>
                                     <div class="textarea-wrapped word-count">
                                         <textarea data-editor="md"
                                           required = "required"

@@ -22,12 +22,12 @@
 
         <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
-                <label class="form-label" th:for="${#ids.next('firstName')}">
-                    <span>First name</span>
-                    <th:block th:if="${#fields.hasErrors('firstName')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" th:for="${#ids.next('firstName')}">
+                    First name
                 </label>
+                <th:block th:if="${#fields.hasErrors('firstName')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                </th:block>
                 <input class="form-control"
                        type="text"
                        th:errorclass="form-control-error"
@@ -42,12 +42,12 @@
                                 data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
-                <label class="form-label" th:for="${#ids.next('lastName')}">
-                    <span>Last name</span>
-                    <th:block th:if="${#fields.hasErrors('lastName')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" th:for="${#ids.next('lastName')}">
+                    Last name
                 </label>
+                <th:block th:if="${#fields.hasErrors('lastName')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                </th:block>
                 <input class="form-control"
                        type="text"
                        th:errorclass="form-control-error"
@@ -62,12 +62,12 @@
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{emailAddress}')} ? 'govuk-form-group--error'">
-                <label class="form-label" th:for="${#ids.next('emailAddress')}">
-                    <span>Email address</span>
-                    <th:block th:if="${#fields.hasErrors('emailAddress')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" th:for="${#ids.next('emailAddress')}">
+                    Email address
                 </label>
+                <th:block th:if="${#fields.hasErrors('emailAddress')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}"></span>
+                </th:block>
                 <input class="form-control"
                        type="email"
                        th:errorclass="form-control-error"
@@ -78,12 +78,12 @@
                                         data-required-errormessage=#{validation.invite.email.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
-                <label class="form-label" th:for="${#ids.next('role')}">
-                    <span>Role</span>
-                    <th:block th:if="${#fields.hasErrors('role')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" th:for="${#ids.next('role')}">
+                    Role
                 </label>
+                <th:block th:if="${#fields.hasErrors('role')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                </th:block>
                 <select name="role" class="form-control" id="role" th:field="*{role}" required="required" data-required-errormessage="Please select a role">
                     <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.Role).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
                 </select>

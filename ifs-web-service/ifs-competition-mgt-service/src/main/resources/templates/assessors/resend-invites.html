@@ -26,12 +26,12 @@
 
                 <form th:action="@{/competition/{competitionId}/assessors/invite/resend(competitionId=${model.competitionId})}" novalidate="novalidate" method="post" enctype="multipart/form-data" th:object="${form}">
                     <div class="govuk-form-group govuk-!-margin-bottom-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
-                        <label class="form-label-bold" th:for="${#ids.next('subject')}">
-                            <span>Subject</span>
-                            <th:block th:if="${#fields.hasErrors('subject')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" th:for="${#ids.next('subject')}">
+                            Subject
                         </label>
+                        <th:block th:if="${#fields.hasErrors('subject')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                        </th:block>
                         <input class="form-control width-full"
                                id="subject"
                                type="text"
@@ -44,7 +44,7 @@
                     <p th:utext="${model.content}" class="govuk-hint" style="white-space: pre-wrap">Read-only email content</p>
 
                     <div class="govuk-form-group govuk-!-margin-top-6">
-                        <label class="form-label-bold" for="message">Additional text</label>
+                        <label class="govuk-label" for="message">Additional text</label>
                         <textarea
                             id="message" rows="8" class="form-control width-full"
                             th:field="*{content}">

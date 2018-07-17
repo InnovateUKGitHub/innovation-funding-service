@@ -39,12 +39,12 @@
             method="post"
             novalidate="novalidate">
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('durationInMonths')} ? 'govuk-form-group--error'" >
-          <label for="durationInMonths">
-            <span class="form-label-bold">Duration</span>
-            <th:block th:if="${#fields.hasErrors('durationInMonths')}">
-                  <span class="error-message" th:each="err : ${#fields.errors('durationInMonths')}" th:text="${err}"></span>
-            </th:block>
+          <label class="govuk-label" for="durationInMonths">
+            Duration
           </label>
+          <th:block th:if="${#fields.hasErrors('durationInMonths')}">
+              <span class="error-message" th:each="err : ${#fields.errors('durationInMonths')}" th:text="${err}"></span>
+          </th:block>
           <input name="durationInMonths"
                  id="durationInMonths"
                  th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},data-pattern-errormessage=#{validation.field.non.decimal.format}"

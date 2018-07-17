@@ -99,12 +99,12 @@
                       novalidate="novalidate">
 
                     <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'govuk-form-group--error'">
-                        <label class="form-label" th:for="ineligibleReason">
+                        <label class="govuk-label" th:for="ineligibleReason">
                             Please enter the reason for removing this application from assessment
-                            <th:block th:if="${#fields.hasErrors('ineligibleReason')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}"></span>
-                            </th:block>
                         </label>
+                        <th:block th:if="${#fields.hasErrors('ineligibleReason')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}"></span>
+                        </th:block>
                         <textarea class="form-control width-full"
                                   maxlength="5000"
                                   data-max_words="400"

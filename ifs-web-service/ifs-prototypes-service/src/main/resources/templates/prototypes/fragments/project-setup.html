@@ -66,8 +66,8 @@
 
 
     <div class="govuk-form-group extra-margin" id="postcode-block" style="display: none;">
-        <label class="form-label" for="postcode-check">
-            <span class="form-label-bold">Postcode</span>
+        <label class="govuk-label" for="postcode-check">
+            <span class="govuk-label">Postcode</span>
         </label>
         <input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
         <button type="submit" id="postcode-lookup" class="govuk-button">Find UK address</button>
@@ -78,8 +78,8 @@
 
 
     <div class="govuk-form-group" id="select-address-block" style="display: none">
-        <label class="form-label" for="select-address">
-            <span class="form-label-bold">Select your address</span>
+        <label class="govuk-label" for="select-address">
+            <span class="govuk-label">Select your address</span>
         </label>
         <select class="form-control" id="select-address" name="select-address">
             <option value="">SN1 2BD, 1, Station Road, Swindon </option>
@@ -100,38 +100,38 @@
     <fieldset id="address-details" class="govuk-fieldset extra-margin" th:style="${(user=='internal'?'display: block':'display: none')}">
         <legend class="govuk-visually-hidden">Address details</legend>
         <div class="govuk-form-group">
-            <label class="form-label" for="street">
-                <span class="form-label-bold">Street</span>
+            <label class="govuk-label" for="street">
+                <span class="govuk-label">Street</span>
             </label>
             <input class="form-control street" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>
         </div>
         <div class="govuk-form-group">
-            <label class="form-label govuk-visually-hidden" for="street-2">
-                <span class="form-label-bold">Street line 2</span>
+            <label class="govuk-label govuk-visually-hidden" for="street-2">
+                <span class="govuk-label">Street line 2</span>
             </label>
             <input class="form-control street-2" id="street-2" name="street-2" type="text" />
         </div>
         <div class="govuk-form-group">
-            <label class="form-label" for="street-2">
-                <span class="form-label-bold govuk-visually-hidden">Street line 3</span>
+            <label class="govuk-label" for="street-2">
+                <span class="govuk-label govuk-visually-hidden">Street line 3</span>
             </label>
             <input class="form-control street-3" id="street-3" name="street-2" type="text" />
         </div>
         <div class="govuk-form-group">
-            <label class="form-label" for="town">
-                <span class="form-label-bold">Town</span>
+            <label class="govuk-label" for="town">
+                <span class="govuk-label">Town</span>
             </label>
             <input class="form-control town" id="town" name="town" type="text" th:value="${(param.edit == null ? '':'Swindon')}" />
         </div>
         <div class="govuk-form-group">
-            <label class="form-label" for="county">
-                <span class="form-label-bold">County</span>
+            <label class="govuk-label" for="county">
+                <span class="govuk-label">County</span>
             </label>
             <input class="form-control county" id="county" name="county" type="text" th:value="${(param.edit == null ? '':'Wiltshire')}" />
         </div>
         <div class="govuk-form-group">
-            <label class="form-label" for="postcode">
-                <span class="form-label-bold">Postcode</span>
+            <label class="govuk-label" for="postcode">
+                <span class="govuk-label">Postcode</span>
             </label>
             <input class="form-control postcode" id="postcode" name="postcode" type="text" th:value="${(param.edit == null ? '':'SN1 2BD')}" />
         </div>
@@ -150,16 +150,16 @@
         <legend class="govuk-visually-hidden">Company details</legend>
 
         <div class="govuk-form-group extra-margin">
-            <label class="form-label" for="company-name">
-                <span class="form-label-bold">Company name</span>
+            <label class="govuk-label" for="company-name">
+                <span class="govuk-label">Company name</span>
             </label>
             <input class="form-control" id="company-name" name="company-name" value="Aptrans Ltd" type="text" />
         </div>
 
         <th:block th:unless="${param.status != null and param.status[0] == 'noCompHouse'}">
             <div class="govuk-form-group">
-                <label class="form-label" for="companies-house-number">
-                    <span class="form-label-bold">Companies House number</span>
+                <label class="govuk-label" for="companies-house-number">
+                    <span class="govuk-label">Companies House number</span>
                 </label>
                 <p class="govuk-hint">For example: 1548965</p>
                 <input class="form-control" id="companies-house-number" name="companies-house-number" value="6567388" type="text" />
@@ -178,16 +178,16 @@
         <p class="govuk-hint" th:unless="${user == null}">This is the bank account that the applicant will use for the duration of the project</p>
 
         <div class="govuk-form-group extra-margin">
-            <label class="form-label" for="bank-acc-number">
-                <span class="form-label-bold">Account number</span>
+            <label class="govuk-label" for="bank-acc-number">
+                <span class="govuk-label">Account number</span>
             </label>
             <p class="govuk-hint">For example: 1548965</p>
             <input class="form-control" id="bank-acc-number" name="bank-acc-number" value="" type="text" />
         </div>
 
         <div class="govuk-form-group ">
-            <label class="form-label" for="bank-sort-code">
-                <span class="form-label-bold">Sort code</span>
+            <label class="govuk-label" for="bank-sort-code">
+                <span class="govuk-label">Sort code</span>
             </label>
             <p class="govuk-hint">For example: 311212</p>
             <input class="form-control width-medium" id="bank-sort-code" name="bank-sort-code" value="" type="text" />
@@ -455,12 +455,12 @@
                     <legend class="govuk-heading-m">Post new query</legend>
 
                     <div class="govuk-form-group">
-                        <label for="queryTitle" class="form-label-bold">Title</label>
+                        <label for="queryTitle" class="govuk-label">Title</label>
                         <input name="queryTitle" id="queryTitle"  class="width-full" required="required" />
                     </div>
 
                     <div class="govuk-form-group">
-                        <label for="section" class="form-label-bold">Section</label>
+                        <label for="section" class="govuk-label">Section</label>
                         <select name="section" id="section" class="form-control">
                             <option value="Viability">Viability</option>
                             <option value="Eligibility">Eligibility</option>
@@ -468,7 +468,7 @@
                     </div>
 
                     <div class="govuk-form-group">
-                        <label for="query" class="form-label-bold">Query</label>
+                        <label for="query" class="govuk-label">Query</label>
                         <textarea name="query" id="query" cols="30" rows="10" class="width-full" required="required"></textarea>
                         <div class="count-label alignright">
                             <small>
@@ -486,13 +486,13 @@
                     <legend class="govuk-heading-m">New note</legend>
 
                     <div class="govuk-form-group">
-                        <label for="noteTitle" class="form-label-bold">Title</label>
+                        <label for="noteTitle" class="govuk-label">Title</label>
                         <input name="noteTitle" id="noteTitle"  class="width-full" required="required" />
                     </div>
 
 
                     <div class="govuk-form-group">
-                        <label for="noteDetails" class="form-label-bold">Note</label>
+                        <label for="noteDetails" class="govuk-label">Note</label>
                         <textarea name="noteDetails" id="query" cols="30" rows="10" class="width-full" required="required"></textarea>
                         <div class="count-label alignright">
                             <small>
@@ -646,7 +646,7 @@
                 <legend class="govuk-heading-m" th:text="${(queryType == 'query' ? 'Respond to query' : 'Comment')}">RESPOND TITLE</legend>
 
                 <div class="govuk-form-group">
-                    <label for="response" class="form-label-bold" th:text="${(queryType == 'query' ? 'Response' : 'Add your comment')}">RESPONSE LABEL</label>
+                    <label for="response" class="govuk-label" th:text="${(queryType == 'query' ? 'Response' : 'Add your comment')}">RESPONSE LABEL</label>
                     <textarea name="response" id="response" cols="30" rows="10" class="width-full" required="required"></textarea>
                     <div class="count-label alignright">
                         <small>

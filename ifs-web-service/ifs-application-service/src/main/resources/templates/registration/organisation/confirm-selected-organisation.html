@@ -33,12 +33,20 @@
                     <span class="error-message" th:each="err : ${#fields.errors('*{useSearchResultAddress}')}" th:text="${err}"></span>
                 </th:block>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'govuk-form-group--error'">
-                    <div class="multiple-choice" data-target="manual-company-input" data-target-inverted="true">
-                        <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes" />
-                        <label for="address-same">
-                            The operating address is the same as the registered organisation address
-                        </label>
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item" data-target="manual-company-input" data-target-inverted="true">
+                            <input id="address-same"
+                                   class="govuk-checkboxes__input"
+                                   th:field="*{useSearchResultAddress}"
+                                   type="checkbox"
+                                   value="yes" />
+                            <label for="address-same"
+                                   class="govuk-label govuk-checkboxes__label">
+                                The operating address is the same as the registered organisation address
+                            </label>
+                        </div>
                     </div>
+
                 </div>
             </fieldset>
 

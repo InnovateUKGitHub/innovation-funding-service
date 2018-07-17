@@ -86,13 +86,13 @@
                             <p class="govuk-body">Enter the new assessor's details below to add them to your invite list.</p>
 
                             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('selectedInnovationArea')} ? 'govuk-form-group--error'">
-                                <label for="grouped-innovation-area" class="form-label-bold">
+                                <label for="grouped-innovation-area" class="govuk-label">
                                     Innovation area
-                                    <th:block th:if="${#fields.hasErrors('selectedInnovationArea')}">
-                                        <span class="error-message" th:each="err : ${#fields.errors('selectedInnovationArea')}" th:text="${err}"></span>
-                                    </th:block>
                                 </label>
                                 <p class="govuk-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
+                                <th:block th:if="${#fields.hasErrors('selectedInnovationArea')}">
+                                    <span class="error-message" th:each="err : ${#fields.errors('selectedInnovationArea')}" th:text="${err}"></span>
+                                </th:block>
                                 <select th:field="*{selectedInnovationArea}"
                                         class="form-control width-full"
                                         data-progressive-group-select="Innovation sector"

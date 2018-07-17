@@ -43,12 +43,12 @@
                 <form th:action="@{/project/{projectId}/monitoring-officer/confirm(projectId=${model.projectId})}" th:object="${form}" method="post" th:with="readonly=${model.readOnly}" novalidate="novalidate">
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
-                        <label class="form-label" for="firstName">
-                            <span class="form-label-bold">First name</span>
-                              <th:block th:if="${#fields.hasErrors('firstName')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" for="firstName">
+                            First name
                         </label>
+                        <th:block th:if="${#fields.hasErrors('firstName')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                        </th:block>
                         <input id="firstName"
                                type="text"
                                pattern="\D{2,}"
@@ -63,12 +63,12 @@
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'govuk-form-group--error'">
-                        <label class="form-label" for="lastName">
-                            <span class="form-label-bold">Last name</span>
-                            <th:block th:if="${#fields.hasErrors('lastName')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" for="lastName">
+                            Last name
                         </label>
+                        <th:block th:if="${#fields.hasErrors('lastName')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                        </th:block>
                         <input id="lastName"
                                type="text"
                                pattern="\D{2,}"
@@ -83,12 +83,12 @@
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('emailAddress')} ? 'govuk-form-group--error'">
-                        <label class="form-label" for="emailAddress">
-                            <span class="form-label-bold">Email</span>
-                            <th:block th:if="${#fields.hasErrors('emailAddress')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" for="emailAddress">
+                            Email
                         </label>
+                        <th:block th:if="${#fields.hasErrors('emailAddress')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}"></span>
+                        </th:block>
                         <input id="emailAddress"
                                type="email"
                                th:errorclass="form-control-error"
@@ -100,12 +100,12 @@
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
-                        <label class="form-label" for="phoneNumber">
-                            <span class="form-label-bold">Phone number</span>
-                            <th:block th:if="${#fields.hasErrors('phoneNumber')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" for="phoneNumber">
+                            Phone number
                         </label>
+                        <th:block th:if="${#fields.hasErrors('phoneNumber')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
+                        </th:block>
                         <input type="tel"
                                th:errorclass="form-control-error"
                                class="form-control"

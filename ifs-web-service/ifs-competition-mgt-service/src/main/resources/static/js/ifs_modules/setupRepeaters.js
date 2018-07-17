@@ -88,7 +88,7 @@ IFS.competitionManagement.repeater = (function () {
       newRow.find('[disabled]').first().attr('selected', '')
 
       // hide new row label for styling
-      newRow.find('.form-label').children().addClass('govuk-visually-hidden')
+      newRow.find('.govuk-label').children().addClass('govuk-visually-hidden')
       // change name attributes and empty values
       newRow.find('[name]').prop('name', 'innovationAreaCategoryIds[' + count + ']').val('')
       // add remove button
@@ -114,11 +114,11 @@ IFS.competitionManagement.repeater = (function () {
 
       var html = '<div class="contentGroup" id="contentGroup-row-' + idCount + '">' +
                     '<div class="govuk-form-group">' +
-                      '<label class="form-label-bold" for="contentGroups[' + idCount + '].heading">Heading</label>' +
+                      '<label class="govuk-label" for="contentGroups[' + idCount + '].heading">Heading</label>' +
                       '<input class="form-control" id="contentGroups[' + idCount + '].heading" type="text" name="contentGroups[' + count + '].heading" data-required-errormessage="' + headerRequiredErrorMessage + '" required="required" />' +
                     '</div>' +
                     '<div class="govuk-form-group textarea-wrapped">' +
-                      '<label class="form-label-bold" for="contentGroups[' + idCount + '].content">Content</label>' +
+                      '<label class="govuk-label" for="contentGroups[' + idCount + '].content">Content</label>' +
                           '<textarea id="contentGroups[' + idCount + '].content" cols="30" rows="10" class="width-full form-control" data-editor="html" name="contentGroups[' + count + '].content" data-required-errormessage="' + contentRequiredErrorMessage + '" required="required"></textarea>' +
                       '</div>' +
                     '<div class="govuk-form-group upload-section">' +
@@ -149,26 +149,26 @@ IFS.competitionManagement.repeater = (function () {
 
       var html = '<div class="contentGroup" id="contentDateGroup-row-' + idCount + '">' +
                  '<div class="govuk-form-group"><fieldset>' +
-                    '<legend><span class="form-label form-label-bold">Date</span></legend>' +
+                    '<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><span class="govuk-fieldset__heading">Date</span></legend>' +
                     '<div class="date-group">' +
                         '<input type="hidden" disabled name="dates[' + count + '].combined" />' +
                         '<div class="day">' +
-                            '<label class="form-label" for="dates[' + idCount + '].day">Day</label>' +
+                            '<label class="govuk-label" for="dates[' + idCount + '].day">Day</label>' +
                             '<input class="form-control width-extra-small" placeholder="DD" id="dates[' + idCount + '].day" name="dates[' + count + '].day" required="required">' +
                         '</div>' +
                         '<div class="month">' +
-                            '<label class="form-label" for="dates[' + idCount + '].month">Month</label>' +
+                            '<label class="govuk-label" for="dates[' + idCount + '].month">Month</label>' +
                             '<input class="form-control width-extra-small" placeholder="MM" id="dates[' + idCount + '].month" name="dates[' + count + '].month" required="required"/>' +
                         '</div>' +
                         '<div class="year">' +
-                            '<label class="form-label" for="dates[' + idCount + '].year">Year</label>' +
+                            '<label class="govuk-label" for="dates[' + idCount + '].year">Year</label>' +
                             '<input class="form-control width-extra-small" placeholder="YYYY" id="dates[' + idCount + '].year" name="dates[' + count + '].year" required="required"/>' +
                         '</div>' +
                     '</div>' +
                 '</fieldset></div>' +
                 '<div class="govuk-form-group textarea-wrapped">' +
-                    '<label class="form-label" for="dates[' + idCount + '].content">' +
-                        '<span class="form-label-bold">Content</span>' +
+                    '<label class="govuk-label" for="dates[' + idCount + '].content">' +
+                        'Content' +
                     '</label>' +
                     '<textarea cols="30" rows="5" id="dates[' + idCount + '].content" name="dates[' + count + '].content" data-editor="html" class="width-full form-control-error" required="required" th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}"></textarea>' +
                 '</div>' +
@@ -219,21 +219,21 @@ IFS.competitionManagement.repeater = (function () {
       var html = '<tr id="guidance-' + idCount + '" class="form-group-row-validated">'
       if (isAssessed) {
         html += '<td class="govuk-form-group">' +
-                '<label class="form-label" for="guidanceRows[' + idCount + '].scoreFrom"><span class="govuk-visually-hidden">Score from</span></label>' +
+                '<label class="govuk-label" for="guidanceRows[' + idCount + '].scoreFrom"><span class="govuk-visually-hidden">Score from</span></label>' +
                 '<input required="required" type="number" min="0" class="form-control width-small" data-required-errormessage="Please enter a from score." data-min-errormessage="Please enter a valid number." id="guidanceRows[' + idCount + '].scoreFrom" name="guidanceRows[' + count + '].scoreFrom" value="">' +
               '</td>' +
               '<td class="govuk-form-group">' +
-                '<label class="form-label" for="guidanceRows[' + idCount + '].scoreTo"><span class="govuk-visually-hidden">Score to</span></label>' +
+                '<label class="govuk-label" for="guidanceRows[' + idCount + '].scoreTo"><span class="govuk-visually-hidden">Score to</span></label>' +
                 '<input required="required" type="number" min="0" class="form-control width-small" value="" data-required-errormessage="Please enter a to score." data-min-errormessage="Please enter a valid number." id="guidanceRows[' + idCount + '].scoreTo" name="guidanceRows[' + count + '].scoreTo" value="">' +
               '</td>'
       } else {
         html += '<td class="govuk-form-group">' +
-                '<label class="form-label" for="guidanceRows[' + idCount + '].subject"><span class="govuk-visually-hidden">Subject</span></label>' +
+                '<label class="govuk-label" for="guidanceRows[' + idCount + '].subject"><span class="govuk-visually-hidden">Subject</span></label>' +
                 '<input required="required" class="form-control width-small" data-maxlength-errormessage="Subject has a maximum length of 255 characters." data-required-errormessage="Please enter a subject." id="guidanceRows[' + idCount + '].subject" name="question.guidanceRows[' + count + '].subject" value="">' +
               '</td>'
       }
       html += '<td class="govuk-form-group">' +
-              '<label class="form-label" for="guidanceRows[' + idCount + '].justification"><span class="govuk-visually-hidden">Justification</span></label>' +
+              '<label class="govuk-label" for="guidanceRows[' + idCount + '].justification"><span class="govuk-visually-hidden">Justification</span></label>' +
               '<textarea required="required" rows="3" class="form-control width-full" data-maxlength-errormessage="Justification has a maximum length of 255 characters." data-required-errormessage="Please enter a justification." id="guidanceRows[' + idCount + '].justification" name="' + (isAssessed ? '' : 'question.') + 'guidanceRows[' + count + '].justification"></textarea>' +
             '</td>' +
             '<td><button class="button-clear alignright remove-guidance-row" name="remove-guidance-row" data-remove-row="guidance" value="' + count + '">Remove</button></td>'

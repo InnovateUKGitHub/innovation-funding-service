@@ -81,13 +81,18 @@
                             </div>
                             <div class="panel js-hidden" id="reject-competition">
                                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'govuk-form-group--error'">
-                                    <label class="form-label" for="rejectReasonValid">
+                                    <label class="govuk-label" for="rejectReasonValid">
                                         Please select a reason for rejecting the competition
                                         <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
                                             <span class="error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
                                         </th:block>
                                     </label>
-                                    <select id="rejectReasonValid" class="form-control" th:attr="data-required-errormessage=#{validation.competitionrejectionresource.rejectReason.required}" th:errorclass="form-control-error" required="required" th:field="*{rejectReason}">
+                                    <select id="rejectReasonValid"
+                                            class="govuk-select"
+                                            th:attr="data-required-errormessage=#{validation.competitionrejectionresource.rejectReason.required}"
+                                            th:errorclass="govuk-select--error"
+                                            required="required"
+                                            th:field="*{rejectReason}">
                                         <option value="">Select a reason</option>
                                         <option th:each="reason : ${rejectionReasons}"
                                                 th:value="${reason.id}"
@@ -96,7 +101,7 @@
                                     </select>
                                 </div>
                                 <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'govuk-form-group--error'">
-                                    <label class="form-label" th:for="${#ids.next('rejectComment')}">
+                                    <label class="govuk-label" th:for="${#ids.next('rejectComment')}">
                                         Use this space to provide more information
                                         <th:block th:if="${#fields.hasErrors('rejectComment')}">
                                             <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />

@@ -258,7 +258,7 @@
 
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-third" th:unless="${type == 'fundingDecision'} or ${type == 'openApplications'} or ${type == 'notSubmittedApplications'} or ${type == 'manageNotifications'}">
-                        <label class="form-label" for="filterInnovationArea">Innovation area</label>
+                        <label class="govuk-label" for="filterInnovationArea">Innovation area</label>
                         <select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
 
                             <option th:if="${param.filterInnovationArea != null}" th:remove="tag">
@@ -276,7 +276,7 @@
 
                     <div th:if="${filterTitle == 'assessors'}" th:remove="tag">
                         <div class="govuk-grid-column-one-third">
-                            <label class="form-label" for="filterType">Type</label>
+                            <label class="govuk-label" for="filterType">Type</label>
                             <select class="form-control" id="filterType" name="filterType">
 
                                 <option th:if="${param.filterType != null}" th:remove="tag">
@@ -297,7 +297,7 @@
                     <th:block th:unless="${type == 'fundingDecision'} or ${type == 'manageNotifications'}">
 
                       <div th:class="${(type == 'openApplications' or type == 'notSubmittedApplications' ? 'column-two-thirds' : 'govuk-grid-column-one-third')}">
-                          <label class="form-label" for="filterSearch">Search</label>
+                          <label class="govuk-label" for="filterSearch">Search</label>
                           <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
                           <a href="#">Clear all filters</a>
                       </div>
@@ -320,14 +320,14 @@
 
                         <div class="govuk-grid-column-one-half">
                           <div class="govuk-form-group">
-                            <label class="form-label" for="filterSearch">Search</label>
+                            <label class="govuk-label" for="filterSearch">Search</label>
                             <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
                           </div>
                         </div>
 
                         <div class="govuk-grid-column-one-half">
             							<div class="govuk-form-group">
-            								<label class="form-label" for="fundingDecision">Funding decision</label>
+            								<label class="govuk-label" for="fundingDecision">Funding decision</label>
             								<select class="form-control" id="fundingDecision" name="fundingDecision">
 
                               <th:block th:if="${param.fundingDecision != null}">
@@ -369,7 +369,7 @@
                     <div class="govuk-grid-row">
                       <div class="column-two-thirds">
                         <div class="govuk-form-group">
-                          <label class="form-label" for="filterSearch">Search</label>
+                          <label class="govuk-label" for="filterSearch">Search</label>
                           <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
                         </div>
                         <a href="#">Clear all filters</a>
@@ -1914,7 +1914,7 @@
             </div>
 
             <div class="govuk-form-group extra-margin">
-                <label class="form-label-bold" for="comments">Comments</label>
+                <label class="govuk-label" for="comments">Comments</label>
                 <textarea class="form-control" id="comments" rows="6" style="width: 100%"></textarea>
             </div>
         </div>

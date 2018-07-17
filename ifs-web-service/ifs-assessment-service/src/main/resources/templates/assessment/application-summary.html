@@ -58,8 +58,7 @@
                                             required="required"
                                             th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
                                             data-conditionally-remove-required="#feedback" />
-                                        <label class="form-label"
-                                               th:for="${#ids.prev('fundingConfirmation')}"
+                                        <label th:for="${#ids.prev('fundingConfirmation')}"
                                                class="govuk-label govuk-radios__label">Yes</label>
                                     </div>
                                     <div class="govuk-radios__item">
@@ -71,8 +70,7 @@
                                             required="required"
                                             th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
                                             data-conditionally-add-required="#feedback, .form-group input" />
-                                        <label class="form-label"
-                                               th:for="${#ids.prev('fundingConfirmation')}"
+                                        <label th:for="${#ids.prev('fundingConfirmation')}"
                                                class="govuk-label govuk-radios__label">No</label>
                                     </div>
                                 </div>
@@ -87,14 +85,13 @@
                         </legend>
                         <div class="question" th:id="form-input-feedback">
                             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('feedback')} ? 'govuk-form-group--error'">
-                                <label class="form-label form-label-bold" th:for="feedback">
+                                <label class="govuk-label" th:for="feedback">
                                     Your feedback
-                                    <span class="govuk-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
-                                    <th:block th:if="${#fields.hasErrors('feedback')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('feedback')}" th:text="${err}"></span>
-                                    </th:block>
                                 </label>
-
+                                <span class="govuk-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
+                                <th:block th:if="${#fields.hasErrors('feedback')}">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('feedback')}" th:text="${err}"></span>
+                                </th:block>
                                 <div class="textarea-wrapped word-count">
                                     <textarea
                                         class="form-control width-full"
@@ -115,13 +112,12 @@
 
                         <div class="question" th:id="form-input-comments">
                             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('comment')} ? 'govuk-form-group--error'">
-                                <label class="form-label form-label-bold" th:for="comment">
+                                <label class="govuk-label" th:for="comment">
                                     Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
-                                    <th:block th:if="${#fields.hasErrors('comment')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
-                                    </th:block>
                                 </label>
-
+                                <th:block th:if="${#fields.hasErrors('comment')}">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
+                                </th:block>
                                 <div class="textarea-wrapped word-count">
                                     <textarea
                                         class="form-control width-full"

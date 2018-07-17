@@ -54,21 +54,21 @@ IFS.assessment.repeatableDeclarationRows = (function () {
       } else {
         newRow = jQuery('<tr class="form-group-row-validated">' +
           '<td class="govuk-form-group">' +
-          '<label><span class="form-label">Relation</span></label>' +
+          '<label class="govuk-label">Relation</label>' +
           '<input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.relation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].relation" value="" ' +
           'data-required-errormessage="Please enter a relation." required="required" />' +
           '</td>' +
           '<td class="govuk-form-group">' +
-          '<label><span class="form-label">Organisation</span></label>' +
+          '<label class="govuk-label">Organisation</label>' +
           '<input aria-labelledby="aria-family-org" class="form-control width-full family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.organisation" ' +
           'name="familyAffiliations[' + uniqueRowId + '].organisation" value="" ' +
           'data-required-errormessage="Please enter an organisation." required="required" />' +
           '</td>' +
           '<td class="govuk-form-group">' +
-          '<label><span class="form-label">Position</span></label>' +
+          '<label class="govuk-label">Position</label>' +
           '<input aria-labelledby="aria-family-pos" class="form-control width-full family-affiliation-field" type="text" ' +
           'id="familyAffiliations' + uniqueRowId + '.position" ' +
           'name="familyAffiliations[' + uniqueRowId + '].position" value="" ' +

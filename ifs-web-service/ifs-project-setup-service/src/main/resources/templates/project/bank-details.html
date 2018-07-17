@@ -49,13 +49,13 @@
         <th:block th:unless="${readonly}">
 
           <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('accountNumber')} ? 'govuk-form-group--error' : (${#fields.hasErrors('${form}')} ? 'govuk-form-group--error') ">
-            <label for="accountNumber">
-              <span class="form-label-bold">Account number</span>
-              <span class="govuk-hint">For example: 15481965</span>
-              <th:block th:if="${#fields.hasErrors('accountNumber')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
-              </th:block>
+            <label class="govuk-label" for="accountNumber">
+              Account number
             </label>
+            <span class="govuk-hint">For example: 15481965</span>
+            <th:block th:if="${#fields.hasErrors('accountNumber')}">
+                <span class="error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
+            </th:block>
             <input type="text"
                    th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},
                             data-pattern-errormessage=#{validation.standard.accountnumber.format}"
@@ -73,7 +73,7 @@
 
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'govuk-form-group--error' : (${#fields.hasErrors('${form}')} ? 'govuk-form-group--error')">
             <label for="sortCode">
-              <span class="form-label-bold">Sort code</span>
+              <span class="govuk-label">Sort code</span>
               <span class="govuk-hint">For example: 311212</span>
               <th:block th:if="${#fields.hasErrors('sortCode')}">
                     <span class="error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}"></span>

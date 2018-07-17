@@ -37,12 +37,12 @@
               th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
                 <h2 class="govuk-heading-m">Post a new query</h2>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'govuk-form-group--error'">
-                    <label for="queryTitle">
-                        <span class="form-label-bold">Title</span>
-                        <th:block th:if="${#fields.hasErrors('queryTitle')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('queryTitle')}" th:text="${err}"></span>
-                        </th:block>
+                    <label class="govuk-label" for="queryTitle">
+                        Title
                     </label>
+                    <th:block th:if="${#fields.hasErrors('queryTitle')}">
+                        <span class="error-message" th:each="err : ${#fields.errors('queryTitle')}" th:text="${err}"></span>
+                    </th:block>
                     <input name="queryTitle"
                            id="queryTitle"
                            type="text"
@@ -55,12 +55,12 @@
                                     data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('section')}? 'govuk-form-group--error'">
-                    <label for="section">
-                        <span class="form-label-bold">Section</span>
-                        <th:block th:if="${#fields.hasErrors('section')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('section')}" th:text="${err}"></span>
-                        </th:block>
+                    <label class="govuk-label" for="section">
+                        Section
                     </label>
+                    <th:block th:if="${#fields.hasErrors('section')}">
+                        <span class="error-message" th:each="err : ${#fields.errors('section')}" th:text="${err}"></span>
+                    </th:block>
                     <select name="section" id="section" class="form-control">
                         <th:block th:each="section_type : ${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).values()}">
                             <th:block th:if="*{section}">
@@ -83,12 +83,12 @@
                     </select>
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('query')}? 'govuk-form-group--error'">
-                    <label for="query">
-                        <span class="form-label-bold">Query</span>
-                        <th:block th:if="${#fields.hasErrors('query')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('query')}" th:text="${err}"></span>
-                        </th:block>
+                    <label class="govuk-label" for="query">
+                        Query
                     </label>
+                    <th:block th:if="${#fields.hasErrors('query')}">
+                        <span class="error-message" th:each="err : ${#fields.errors('query')}" th:text="${err}"></span>
+                    </th:block>
                     <div class="textarea-wrapped word-count">
                         <textarea data-editor="md"
                                   required = "required"

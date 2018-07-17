@@ -72,11 +72,18 @@
 
             <h2 class="govuk-heading-m">Credit report</h2>
             <div class="govuk-form-group">
-                <div class="multiple-choice">
-                    <input th:disabled="${model.isReadOnly()}" id="costs-reviewed" type="checkbox" th:field="*{creditReportConfirmed}" />
-                    <label for="costs-reviewed">
-                        A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
-                    </label>
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input th:disabled="${model.isReadOnly()}"
+                               id="costs-reviewed"
+                               class="govuk-checkboxes__input"
+                               type="checkbox"
+                               th:field="*{creditReportConfirmed}" />
+                        <label for="costs-reviewed"
+                               class="govuk-label govuk-checkboxes__label">
+                            A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
+                        </label>
+                    </div>
                 </div>
           </div>
           <div class="govuk-!-margin-top-6">
@@ -88,15 +95,23 @@
               <p class="govuk-body">Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
               <p class="govuk-body">Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
               <div class="govuk-form-group">
-                  <div class="multiple-choice" data-target="add-rag-rating">
-                      <input  id="project-viable" type="checkbox" th:field="*{confirmViabilityChecked}" data-switches-button-status="#confirm-button" />
-                      <label for="project-viable">
-                          <th:block th:text="${model.organisationName}" /> is viable for this project
-                      </label>
+                  <div class="govuk-checkboxes">
+                      <div class="govuk-checkboxes__item" data-target="add-rag-rating">
+                          <input  id="project-viable"
+                                  class="govuk-checkboxes__input"
+                                  type="checkbox"
+                                  th:field="*{confirmViabilityChecked}"
+                                  data-switches-button-status="#confirm-button" />
+                          <label for="project-viable"
+                                 class="govuk-label govuk-checkboxes__label">
+                              <th:block th:text="${model.organisationName}" /> is viable for this project
+                          </label>
+                      </div>
                   </div>
+
               </div>
               <div class="govuk-form-group" id="add-rag-rating">
-                <label for="rag-rating" class="form-label">Please enter the RAG rating for this viability review</label>
+                <label for="rag-rating" class="govuk-label">Please enter the RAG rating for this viability review</label>
                 <select th:field="*{ragStatus}" id="rag-rating" class="form-control" data-switches-button-status="#confirm-button">
                   <option value="UNSET" th:selected="${form.ragStatus == null}">--</option>
                   <option value="GREEN">Green</option>

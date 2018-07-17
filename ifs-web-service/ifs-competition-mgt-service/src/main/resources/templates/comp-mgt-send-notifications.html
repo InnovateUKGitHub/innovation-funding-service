@@ -81,7 +81,7 @@
                 </details>
 
                 <div class="govuk-form-group govuk-!-margin-top-6">
-                    <label class="form-label-bold" for="subject">
+                    <label class="govuk-label" for="subject">
                         Subject
                     </label>
                     <input class="form-control width-full"
@@ -92,7 +92,7 @@
                 </div>
 
                 <div class="govuk-form-group">
-                    <span class="form-label-bold">Message</span>
+                    <span class="govuk-label">Message</span>
                     <p class="govuk-hint">
                         Dear [recipient name] <br/>
                         Innovate UK <br/>
@@ -102,12 +102,12 @@
                 </div>
 
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('message')} ? 'govuk-form-group--error'">
-                    <label class="form-label" for="body-text">
-                        <span class="form-label-bold">Body text</span>
-                        <th:block th:if="${#fields.hasErrors('message')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
-                        </th:block>
+                    <label class="govuk-label" for="body-text">
+                        Body text
                     </label>
+                    <th:block th:if="${#fields.hasErrors('message')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
+                    </th:block>
                     <div class="textarea-wrapped">
                             <textarea id="body-text"
                                       th:field="${form.message}"

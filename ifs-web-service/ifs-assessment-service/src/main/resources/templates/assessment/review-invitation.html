@@ -86,12 +86,12 @@
                     </div>
                     <div class="panel js-hidden" id="reject-application">
                         <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'govuk-form-group--error'">
-                            <label class="form-label" th:for="${#ids.next('rejectComment')}">
+                            <label class="govuk-label" th:for="${#ids.next('rejectComment')}">
                                 Use this space to tell us why.
-                                <th:block th:if="${#fields.hasErrors('rejectComment')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
-                                </th:block>
                             </label>
+                            <th:block th:if="${#fields.hasErrors('rejectComment')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                            </th:block>
                             <textarea class="form-control width-full"
                                       maxlength="5000"
                                       data-max_words="100"

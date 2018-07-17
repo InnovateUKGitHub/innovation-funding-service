@@ -32,12 +32,12 @@
                     <h2 class="govuk-fieldset__heading">Project duration in months</h2>
                 </legend>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('minProjectDuration')} ? 'govuk-form-group--error'">
-                    <label class="form-label" for="minProjectDuration">
-                        <span>Minimum</span>
-                        <th:block th:if="${#fields.hasErrors('minProjectDuration')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('minProjectDuration')}" th:text="${err}"></span>
-                        </th:block>
+                    <label class="govuk-hint" for="minProjectDuration">
+                        Minimum
                     </label>
+                    <th:block th:if="${#fields.hasErrors('minProjectDuration')}">
+                        <span class="error-message" th:each="err : ${#fields.errors('minProjectDuration')}" th:text="${err}"></span>
+                    </th:block>
                     <input class="form-control width-small"
                            id="minProjectDuration"
                            name="minimum"
@@ -51,12 +51,12 @@
                            data-lowerthan="maxProjectDuration" />
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('maxProjectDuration')} ? 'govuk-form-group--error'">
-                    <label class="form-label" for="maxProjectDuration">
-                        <span>Maximum</span>
-                        <th:block th:if="${#fields.hasErrors('maxProjectDuration')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('maxProjectDuration')}" th:text="${err}"></span>
-                        </th:block>
+                    <label class="govuk-label" for="maxProjectDuration">
+                        Maximum
                     </label>
+                    <th:block th:if="${#fields.hasErrors('maxProjectDuration')}">
+                        <span class="error-message" th:each="err : ${#fields.errors('maxProjectDuration')}" th:text="${err}"></span>
+                    </th:block>
                     <input class="form-control width-small"
                            id="maxProjectDuration"
                            name="maximum"

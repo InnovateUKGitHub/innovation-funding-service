@@ -20,11 +20,11 @@
             UK</p>
         <p class="govuk-body">Enter the figures from the following fields on the Je-S form:</p>
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-' + academicFinance.tsbReference?.id + '-item]}')} ? 'govuk-form-group--error'">
-            <label class="form-label" th:for="|formInput[cost-${academicFinance.tsbReference?.id}-item]|">
-                <span class="form-label-bold">TSB reference</span>
-                <span class="govuk-hint">This number is found at the top of your Je-S form</span>
-                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + academicFinance.tsbReference?.id + '-item'})" />
+            <label class="govuk-label" th:for="|formInput[cost-${academicFinance.tsbReference?.id}-item]|">
+                TSB reference
             </label>
+            <span class="govuk-hint">This number is found at the top of your Je-S form</span>
+            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + academicFinance.tsbReference?.id + '-item'})" />
             <input type="text"
                    class="form-control"
                    th:name="${'cost-' + academicFinance.tsbReference?.id + '-tsb_reference'}"
@@ -68,7 +68,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredStaff?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                <label class="form-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.incurredStaff?.id} + -cost]">
+                <label class="govuk-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.incurredStaff?.id} + -cost]">
                     <span>Staff</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.incurredStaff?.id+'-cost'})" />
                 </label>
@@ -89,7 +89,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')} ? 'govuk-form-group--error'">
 
-                <label class="form-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -cost]">
+                <label class="govuk-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -cost]">
                     <span>Travel &amp; subsistence </span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+ academicFinance.incurredTravelAndSubsistence?.id+'-cost'})" />
                 </label>
@@ -109,7 +109,7 @@
         </div>
         <div class="govuk-grid-row">
             <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                <label class="form-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.incurredOtherCosts?.id} + -cost]">
+                <label class="govuk-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.incurredOtherCosts?.id} + -cost]">
                     <span>Other costs</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.incurredOtherCosts?.id+'-cost'})" />
                 </label>
@@ -129,8 +129,8 @@
         </div>
         <div class="govuk-grid-row">
             <div class="govuk-form-group">
-                <label class="form-label govuk-grid-column-one-third" for="subtotal-resources">
-                    <span class="form-label-bold">Subtotal</span>
+                <label class="govuk-label govuk-grid-column-one-third" for="subtotal-resources">
+                    Subtotal
                 </label>
                 <div class="govuk-grid-column-two-thirds">
                     <input class="form-control width-full" id="subtotal-resources"
@@ -153,7 +153,7 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                <label class="form-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.allocatedInvestigators?.id} + -cost]">
+                <label class="govuk-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.allocatedInvestigators?.id} + -cost]">
                     <span>Investigators</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedInvestigators?.id+'-cost'})" />
                 </label>
@@ -172,7 +172,7 @@
         </div>
         <div class="govuk-grid-row">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                <label class="form-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.allocatedEstatesCosts?.id} + -cost]">
+                <label class="govuk-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.allocatedEstatesCosts?.id} + -cost]">
                     <span>Estates Costs</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedEstatesCosts?.id+'-cost'})" />
                 </label>
@@ -191,7 +191,7 @@
         </div>
         <div class="govuk-grid-row">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'govuk-form-group--error'">
-                <label class="form-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.allocatedOtherCosts?.id} + -cost]">
+                <label class="govuk-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.allocatedOtherCosts?.id} + -cost]">
                     <span>Other costs</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedOtherCosts?.id+'-cost'})" />
                 </label>
@@ -210,8 +210,8 @@
         </div>
         <div class="govuk-grid-row">
             <div class="govuk-form-group">
-                <label class="form-label govuk-grid-column-one-third" for="subtotal-directly-allocated">
-                    <span class="form-label-bold">Subtotal</span>
+                <label class="govuk-label govuk-grid-column-one-third" for="subtotal-directly-allocated">
+                    Subtotal
                 </label>
                 <div class="govuk-grid-column-two-thirds">
                     <input class="form-control width-full"
@@ -231,8 +231,8 @@
         <legend class="govuk-visually-hidden">Indirect costs</legend>
         <div class="govuk-grid-row">
             <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                <label class="form-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.indirectCosts?.id} + -cost]">
-                    <span class="form-label-bold">Indirect costs </span>
+                <label class="govuk-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.indirectCosts?.id} + -cost]">
+                    <span>Indirect costs</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.indirectCosts?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
@@ -258,7 +258,7 @@
         <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-2 govuk-!-margin-bottom-4" />
         <div class="govuk-grid-row">
             <div class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                <label class="form-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.exceptionsStaff?.id} + -cost]">
+                <label class="govuk-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.exceptionsStaff?.id} + -cost]">
                     <span>Staff</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.exceptionsStaff?.id+'-cost'})" />
                 </label>
@@ -277,7 +277,7 @@
         </div>
         <div class="govuk-grid-row">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')} ? 'govuk-form-group--error'">
-                <label class="form-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.exceptionsOtherCosts?.id} + -cost]">
+                <label class="govuk-label govuk-grid-column-one-third" th:for="formInput[cost- + ${academicFinance.exceptionsOtherCosts?.id} + -cost]">
                     <span>Other costs</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.exceptionsOtherCosts?.id+'-cost'})" />
                 </label>
@@ -297,8 +297,8 @@
         </div>
         <div class="govuk-grid-row">
             <div class="govuk-form-group">
-                <label class="form-label govuk-grid-column-one-third" for="subtotal-exceptions">
-                    <span class="form-label-bold">Subtotal</span>
+                <label class="govuk-label govuk-grid-column-one-third" for="subtotal-exceptions">
+                    <span>Subtotal</span>
                 </label>
                 <div class="govuk-grid-column-two-thirds">
                     <input id="subtotal-exceptions" class="form-control width-full"
@@ -311,8 +311,8 @@
         </div>
         <div class="govuk-grid-row">
             <div class="govuk-form-group totals">
-                <label class="form-label govuk-grid-column-one-third" for="total">
-                    <span class="form-label-bold">Total</span>
+                <label class="govuk-label govuk-grid-column-one-third" for="total">
+                    <span>Total</span>
                 </label>
                 <div class="govuk-grid-column-two-thirds">
                     <input class="form-control width-full"

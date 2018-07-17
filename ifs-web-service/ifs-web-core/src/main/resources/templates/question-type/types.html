@@ -17,12 +17,13 @@
 
     <div th:fragment="textinput(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="govuk-form-group " th:classappend="${#fields.hasErrors(validationId)} ? adminclass : userclass">
 
-        <label class="form-label form-label-bold" th:for="${formInput.id}">
-          <span th:if="${question.name}" th:text="question.name" />
-          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
-          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+        <label th:if="${question.name}"
+               class="govuk-label"
+               th:for="${formInput.id}"
+               th:text="question.name">
         </label>
-
+        <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
+        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:insert="question-type/form-elements :: form-textinput (id=${formInput.id}, response=${model.response.value})" />
     </div>
@@ -54,7 +55,7 @@
 
         </div>
 
-        <label class="form-label form-label-bold"
+        <label class="govuk-label"
                th:for="formInput[__${formInput.id}__]"
                th:id="'form-label-'+${formInput.id}">
             <th:block th:if="${model.closed or model.summary}">
@@ -65,9 +66,8 @@
               <span class="govuk-heading-s" th:if="${question.name}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
               <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
             </th:block>
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
-
+        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         <th:block th:unless="${model.closed or model.summary}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:unless="${hideDetails}" th:insert="question-type/form-elements :: form-textarea-wrapped(${model})" />
         <th:block th:if="${hideDetails}" th:insert="question-type/form-elements :: form-text-only(${model})" />
@@ -76,11 +76,13 @@
     <!-- ===========================Form: Date input =========================== -->
 
     <div th:fragment="date(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="govuk-form-group">
-        <label class="form-label form-label-bold" th:for="${formInput.id}">
-          <span th:if="${question.getName()}" th:text="${question.name}" />
-          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
-          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+        <label th:if="${question.getName()}"
+               th:text="${question.name}"
+               class="govuk-label"
+               th:for="${formInput.id}">
         </label>
+        <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
+        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:insert="question-type/form-elements :: form-dateinput (id=${formInput.id}, day='', month='', year='')" />
     </div>
@@ -155,11 +157,13 @@
     <!-- ===========================Form: Percentage =========================== -->
 
     <div th:fragment="percentage(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="govuk-form-group">
-        <label class="form-label" th:for="${formInput.id}">
-          <span th:if="${question.getName()}" th:text="${question.name}" />
-          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
-          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+        <label th:if="${question.getName()}"
+               th:text="${question.name}"
+               class="govuk-label"
+               th:for="${formInput.id}">
         </label>
+        <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
+        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${formInput.id}, field=${field})" />
         <span>%</span>

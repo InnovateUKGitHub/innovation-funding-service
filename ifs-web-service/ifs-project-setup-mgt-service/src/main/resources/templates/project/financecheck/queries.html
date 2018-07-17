@@ -109,12 +109,12 @@
                         <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:id="${'form-query-' + query.id}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                             <h3 class="govuk-heading-m">Respond to query</h3>
                             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
-                                <label for="response">
-                                    <span class="form-label-bold">Response</span>
-                                    <th:block th:if="${#fields.hasErrors('response')}">
-                                        <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
-                                    </th:block>
+                                <label class="govuk-label" for="response">
+                                    Response
                                 </label>
+                                <th:block th:if="${#fields.hasErrors('response')}">
+                                    <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
+                                </th:block>
                                 <div class="textarea-wrapped word-count">
                                     <textarea data-editor="md"
                                       required = "required"

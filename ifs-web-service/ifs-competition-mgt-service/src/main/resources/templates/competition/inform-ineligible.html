@@ -34,12 +34,12 @@
 
         <form th:action="@{/competition/application/{applicationId}/ineligible/send(applicationId=${model.applicationId})}" novalidate="novalidate" method="post" enctype="multipart/form-data" th:object="${form}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
-                <label class="form-label" th:for="${#ids.next('subject')}">
-                    <span>Subject</span>
-                    <th:block th:if="${#fields.hasErrors('subject')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" th:for="${#ids.next('subject')}">
+                    Subject
                 </label>
+                <th:block th:if="${#fields.hasErrors('subject')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                </th:block>
                 <input class="form-control width-full"
                        id="subject"
                        type="text"
@@ -49,7 +49,7 @@
             </div>
 
             <div class="govuk-form-group">
-                <span class="form-label-bold">Message</span>
+                <span class="govuk-label">Message</span>
                 <p class="govuk-hint">
                     Dear [recipient name] <br/>
                     Innovate UK <br/>
@@ -59,12 +59,12 @@
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{message}')} ? 'govuk-form-group--error'">
-                <label class="form-label" th:for="${#ids.next('message')}">
-                    <span>Body text</span>
-                    <th:block th:if="${#fields.hasErrors('message')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" th:for="${#ids.next('message')}">
+                    Body text
                 </label>
+                <th:block th:if="${#fields.hasErrors('message')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
+                </th:block>
                 <div class="textarea-wrapped">
                     <textarea id="message"
                               rows="16"
