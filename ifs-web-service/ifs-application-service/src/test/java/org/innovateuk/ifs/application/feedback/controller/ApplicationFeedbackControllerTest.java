@@ -17,6 +17,7 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -95,6 +96,9 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
     @Mock
     private ProjectService projectService;
 
+    @Mock
+    private InviteService inviteService;
+
     @Before
     public void setUp() {
         super.setUp();
@@ -128,7 +132,6 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
                 .thenReturn(restSuccess());
 
         MockMultipartFile file = new MockMultipartFile("response", "testFile.pdf", "application/pdf", "My content!".getBytes());
-
 
         mockMvc.perform(
                 fileUpload("/application/" + app.getId() + "/feedback")
