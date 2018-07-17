@@ -11,5 +11,5 @@ import java.util.Map;
  **/
 public interface GrantOfferLetterFinanceTablePopulatorInterface {
 
-    GrantOfferLetterFinanceTable createTable(Map<Organisation, List<Cost>> finances);
+    BaseGrantOfferLetterFinanceTable createTable(Map<Organisation, List<Cost>> finances);
 }

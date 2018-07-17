@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.project.grantofferletter.model;
 
-
-import org.springframework.stereotype.Component;
-
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -10,8 +7,7 @@ import java.util.*;
  * Holder of values for the grant offer letter finance totals table, used by the pdf renderer
  */
 
-@Component
-public class GrantOfferLetterFinanceTotalsTable extends GrantOfferLetterFinanceTable {
+public class GrantOfferLetterFinanceTotalsTable extends BaseGrantOfferLetterFinanceTable {
 
     private List<String> industrialOrgs;
     private List<String> academicOrgs;
@@ -27,11 +23,6 @@ public class GrantOfferLetterFinanceTotalsTable extends GrantOfferLetterFinanceT
     private BigDecimal industryTotalGrantClaim;
     private BigDecimal academicTotalGrantClaim;
     private BigDecimal allTotalGrantClaim;
-
-
-    public GrantOfferLetterFinanceTotalsTable() {
-
-    }
 
     public GrantOfferLetterFinanceTotalsTable(Map<String, BigDecimal> grantClaims,
                                               Map<String, BigDecimal> totalEligibleCosts,

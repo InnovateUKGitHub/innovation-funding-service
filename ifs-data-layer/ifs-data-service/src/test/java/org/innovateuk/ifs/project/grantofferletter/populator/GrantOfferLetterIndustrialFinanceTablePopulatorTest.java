@@ -176,4 +176,30 @@ public class GrantOfferLetterIndustrialFinanceTablePopulatorTest {
         assertTrue(table == null);
     }
 
+    @Test
+    public void nullCostValuesHandledGracefully() {
+        Map<Organisation, List<Cost>> finances = new HashMap<>();
+
+        BigDecimal nullTest = null;
+        cost1 = newCost()
+                .withCostCategory(newCostCategory()
+                                          .withName("Labour")
+                                          .build())
+                .withValue(nullTest)
+                .build();
+
+        cost2 = newCost()
+                .withCostCategory(newCostCategory()
+                                          .withName("Labour")
+                                          .build())
+                .withValue(BigDecimal.valueOf(58))
+                .build();
+
+        finances.put(organisation1, asList(cost1, cost2));
+        GrantOfferLetterIndustrialFinanceTable table = populator.createTable(finances);
+
+        assertEquals(BigDecimal.valueOf(58), table.getLabour(organisation1.getName()));
+        assertEquals(BigDecimal.valueOf(58), table.getLabourTotal());
+    }
+
 }

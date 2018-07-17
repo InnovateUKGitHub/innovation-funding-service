@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
  * Populator for the grant offer letter finance totals table
@@ -28,25 +29,25 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
     @Autowired
     private ProjectFinanceRowRepository projectFinanceRowRepository;
 
+    public static final String GRANT_CLAIM_IDENTIFIER = "grant-claim";
+
     public GrantOfferLetterFinanceTotalsTable createTable(Map<Organisation, List<Cost>> finances, long projectId) {
 
         Map<String, BigDecimal> grantClaims = getGrantClaimsForOrgs(finances.keySet(), projectId);
 
         Map<String, List<Cost>> orgNameFinances =
-                finances
-                        .entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(e -> e.getKey().getName(),
-                                                  Map.Entry::getValue));
+                simpleToMap(finances.entrySet(),
+                            e -> e.getKey().getName(),
+                            Map.Entry::getValue);
 
         Map<String, BigDecimal> totalEligibleCosts = new HashMap<>();
-        orgNameFinances.forEach(
-                (org, finance) ->
-                        totalEligibleCosts.put(org,
-                                               finance.stream()
-                                                       .map(Cost::getValue)
-                                                       .filter(Objects::nonNull)
-                                                       .reduce(BigDecimal.ZERO, BigDecimal::add))
+        orgNameFinances.forEach((org, finance) ->
+                                        totalEligibleCosts.put(org,
+                                                               finance
+                                                                       .stream()
+                                                                       .map(Cost::getValue)
+                                                                       .filter(Objects::nonNull)
+                                                                       .reduce(BigDecimal.ZERO, BigDecimal::add))
         );
 
         Map<String, BigDecimal> totalGrant = totalEligibleCosts.entrySet()
@@ -97,7 +98,7 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
                         .multiply(BigDecimal.valueOf(100));
 
         BigDecimal allTotalGrantClaim = allTotalEligibleCosts.equals(BigDecimal.ZERO) ?
-                BigDecimal.ZERO : 
+                BigDecimal.ZERO :
                 allTotalGrant
                         .divide(allTotalEligibleCosts,2, BigDecimal.ROUND_HALF_UP)
                         .multiply(BigDecimal.valueOf(100));
@@ -119,9 +120,10 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
     }
 
     private Map<String, BigDecimal> getGrantClaimsForOrgs(Set<Organisation> organisations, long projectId) {
-        return organisations.stream()
-                .collect(Collectors.toMap(Organisation::getName,
-                                          org -> getGrantClaimForOrg(projectId, org.getId())));
+
+        return simpleToMap(organisations,
+                           Organisation::getName,
+                           org -> getGrantClaimForOrg(projectId, org.getId()));
     }
 
 
@@ -129,7 +131,7 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
         ProjectFinance orgFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
         List<ProjectFinanceRow> rows = projectFinanceRowRepository.findByTargetId(orgFinance.getId());
         Optional<ProjectFinanceRow> grantClaimRow = simpleFindFirst(rows,
-                                                                    pfr -> "grant-claim".equals(pfr.getName()));
+                                                                    pfr -> GRANT_CLAIM_IDENTIFIER.equals(pfr.getName()));
 
         return grantClaimRow
                 .map(row -> BigDecimal.valueOf(row.getQuantity()))
