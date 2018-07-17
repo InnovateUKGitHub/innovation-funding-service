@@ -24,6 +24,7 @@ public class FinanceChecksQueriesViewModel {
     private int maxQueryWords;
     private int maxQueryCharacters;
     private Long queryId;
+    private Long applicationId;
 
     public FinanceChecksQueriesViewModel(String organisationName,
                                          boolean leadPartnerOrganisation,
@@ -37,7 +38,8 @@ public class FinanceChecksQueriesViewModel {
                                          Map<Long, String> newAttachmentLinks,
                                          int maxQueryWords,
                                          int maxQueryCharacters,
-                                         Long queryId) {
+                                         Long queryId,
+                                         Long applicationId) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContact= financeContact;
@@ -51,6 +53,8 @@ public class FinanceChecksQueriesViewModel {
         this.maxQueryWords = maxQueryWords;
         this.maxQueryCharacters = maxQueryCharacters;
         this.queryId = queryId;
+        this.applicationId = applicationId;
+
     }
 
     public String getOrganisationName() {
@@ -146,6 +150,14 @@ public class FinanceChecksQueriesViewModel {
 
     public void setQueryId(Long queryId) {
         this.queryId = queryId;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 
     public Map<Long, String> getNewAttachmentLinks() {

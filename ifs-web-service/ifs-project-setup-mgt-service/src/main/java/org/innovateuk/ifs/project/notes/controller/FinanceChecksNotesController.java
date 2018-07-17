@@ -319,7 +319,8 @@ public class FinanceChecksNotesController {
                 attachmentLinks,
                 FinanceChecksNotesFormConstraints.MAX_NOTE_WORDS,
                 FinanceChecksNotesFormConstraints.MAX_NOTE_CHARACTERS,
-                noteId
+                noteId,
+                project.getApplication()
         );
     }
 

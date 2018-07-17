@@ -19,7 +19,7 @@
 
         <div class="grid-row">
             <div class="column-two-thirds">
-                <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|">
+                <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionSummary.competitionName)} ? |${model.competitionSummary.competitionId}: $#{ifs.competition.no_title}| : |${model.competitionSummary.competitionId}: ${model.competitionSummary.competitionName}|">
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionSummary.competitionName},subTitle=${competitionTitle},size='heading-xlarge'" />
                 </th:block>
             </div>

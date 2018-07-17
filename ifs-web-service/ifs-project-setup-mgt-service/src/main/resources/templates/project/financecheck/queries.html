@@ -23,7 +23,7 @@
         </ul>
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId} : ${model.projectName}|,size='heading-xlarge',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${model.projectName}|,size='heading-xlarge',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
 
 
     <h2 class="heading-medium">Finance Contact</h2>

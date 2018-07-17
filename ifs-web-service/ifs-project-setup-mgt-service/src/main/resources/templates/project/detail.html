@@ -13,7 +13,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=|${model.applicationId} : ${model.project.name}|,size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=|${model.project.application}: ${model.project.name}|,size='heading-xlarge'" />
 
     <h2 class="heading-medium">Project details</h2>
     <p>These project details were supplied by the lead partner on behalf of the project.</p>

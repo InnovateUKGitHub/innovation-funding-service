@@ -20,6 +20,7 @@ public class FinanceChecksNotesViewModel {
     private int maxNoteWords;
     private int maxNoteCharacters;
     private Long noteId;
+    private Long applicationId;
 
     public FinanceChecksNotesViewModel(String organisationName,
                                          boolean leadPartnerOrganisation,
@@ -31,7 +32,8 @@ public class FinanceChecksNotesViewModel {
                                          Map<Long, String> newAttachmentLinks,
                                          int maxNoteWords,
                                          int maxNoteCharacters,
-                                         Long noteId) {
+                                         Long noteId,
+                                         Long applicationId) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.projectId = projectId;
@@ -43,6 +45,7 @@ public class FinanceChecksNotesViewModel {
         this.maxNoteWords = maxNoteWords;
         this.maxNoteCharacters = maxNoteCharacters;
         this.noteId = noteId;
+        this.applicationId = applicationId;
     }
 
     public String getOrganisationName() {
@@ -123,6 +126,14 @@ public class FinanceChecksNotesViewModel {
 
     public void setNoteId(Long noteId) {
         this.noteId = noteId;
+    }
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 
     public Map<Long, String> getNewAttachmentLinks() {

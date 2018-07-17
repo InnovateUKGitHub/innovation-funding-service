@@ -14,7 +14,7 @@
               th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}"/>
 
     <th:block
-        th:with="competitionTitle=${#strings.isEmpty(model.financeCheckSummaryResource.competitionName)} ? |${model.financeCheckSummaryResource.competitionId} : $#{ifs.competition.no_title}| : |${model.financeCheckSummaryResource.competitionId} : ${model.financeCheckSummaryResource.competitionName}|">
+        th:with="competitionTitle=${#strings.isEmpty(model.financeCheckSummaryResource.competitionName)} ? |${model.financeCheckSummaryResource.competitionId}: $#{ifs.competition.no_title}| : |${model.financeCheckSummaryResource.competitionId} : ${model.financeCheckSummaryResource.competitionName}|">
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Finance checks',subTitle=${competitionTitle},size='heading-xlarge'"/>
     </th:block>

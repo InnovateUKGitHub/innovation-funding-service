@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,16 +124,17 @@ public class FinanceChecksViabilityController {
         return statusToSend;
     }
 
-    private String doViewViability(Long projectId, Long organisationId, Model model, FinanceChecksViabilityForm form) {
-        model.addAttribute("model", getViewModel(projectId, organisationId));
+    private String doViewViability(Long projectId, Long organisationId, Long applicationId, Model model, FinanceChecksViabilityForm form) {
+        model.addAttribute("model", getViewModel(projectId, organisationId, applicationId));
         model.addAttribute("form", form);
         return "project/financecheck/viability";
     }
 
-    private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId) {
+    private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId, Long applicationId) {
 
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        ProjectResource application = projectService.getByApplicationId(applicationId);
 
         if(viability.getViability().isNotApplicable()){
             throw new ObjectNotFoundException(VIABILITY_CHECKS_NOT_APPLICABLE.getErrorKey(), singletonList(organisation.getName()));
@@ -177,7 +179,7 @@ public class FinanceChecksViabilityController {
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
                 companyRegistrationNumber, turnover, headCount, projectId, viabilityConfirmed,
                 viabilityConfirmed, approver, approvalDate, organisationId,
-                organisationSizeDescription);
+                organisationSizeDescription, applicationId);
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {

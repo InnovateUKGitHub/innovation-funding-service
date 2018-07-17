@@ -20,7 +20,7 @@
                     </th:block>
                 </ul>
             </div>
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId} : ${model.projectName}|,size='heading-xlarge',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=|${model.applicationId}: ${model.projectName}|,size='heading-xlarge',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
             <h2 class="heading-medium">Review notes</h2>
             <p>
                 Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.

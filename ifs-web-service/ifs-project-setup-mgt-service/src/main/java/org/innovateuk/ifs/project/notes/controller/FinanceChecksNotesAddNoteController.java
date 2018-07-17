@@ -262,7 +262,8 @@ public class FinanceChecksNotesAddNoteController {
                 FinanceChecksNotesFormConstraints.MAX_NOTE_CHARACTERS,
                 FinanceChecksNotesFormConstraints.MAX_TITLE_CHARACTERS,
                 organisationId,
-                FINANCE_CHECKS_NOTES_NEW_NOTE_BASE_URL
+                FINANCE_CHECKS_NOTES_NEW_NOTE_BASE_URL,
+                project.getApplication()
         );
     }
 

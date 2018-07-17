@@ -256,7 +256,8 @@ public class FinanceChecksQueriesAddQueryController {
                 FinanceChecksQueriesFormConstraints.MAX_QUERY_CHARACTERS,
                 FinanceChecksQueriesFormConstraints.MAX_TITLE_CHARACTERS,
                 organisationId,
-                FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL
+                FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL,
+                project.getApplication()
         );
     }
 
