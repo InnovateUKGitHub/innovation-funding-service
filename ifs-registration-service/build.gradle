@@ -1,6 +1,11 @@
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
+
 description = """"""
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
