@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.fromBindingResult;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * Class to validate several objects
@@ -151,11 +152,9 @@ public class ApplicationValidatorServiceImpl extends BaseTransactionalService im
             return true;
         }
 
-        Optional<ApplicationFinance> applicationFinanceOpt = applicationFinances
-                .stream()
-                .filter(applicationFinance -> applicationFinance.getOrganisation().getId().equals(organisationOpt.get().getId()))
-                .findAny();
+        Optional<ApplicationFinance> applicationFinanceOpt =
+                simpleFindFirst(applicationFinances, af -> af.getOrganisation().getId().equals(organisationOpt.get().getId()));
 
-        return !applicationFinanceOpt.isPresent() || applicationFinanceOpt.get().getFinanceFileEntry() == null;
+        return applicationFinanceOpt.map(applicationFinance -> applicationFinance.getFinanceFileEntry() == null).orElse(true);
     }
 }
