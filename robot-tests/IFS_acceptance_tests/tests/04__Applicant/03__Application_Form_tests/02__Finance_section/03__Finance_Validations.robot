@@ -237,18 +237,6 @@ Custom Suite Setup
     the user selects Research category    Feasibility studies
     the user fills in the organisation information  ${OPEN_COMPETITION_APPLICATION_5_NAME}  ${SMALL_ORGANISATION_SIZE}
 
-the field with the wrong input should be saved
-    the user should see the element    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    ${input_value} =    Get Value    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    Should Be Equal As Strings    ${input_value}    -1
-
-the user reloads the page with validation errors
-    the user moves focus to the element  jQuery=button:contains("Mark as complete")
-    wait for autosave
-    the user reloads the page
-    wait for autosave
-    Run Keyword And Ignore Error Without Screenshots    Confirm Action
-
 the user enters invalid inputs in the other funding fields
     [Arguments]    ${SOURCE}    ${DATE}    ${FUNDING}
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${SOURCE}
