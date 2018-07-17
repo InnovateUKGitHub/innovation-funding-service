@@ -50,9 +50,6 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     @Autowired
     private CookieUtil cookieUtil;
 
-    private static final String INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_VIEW = "registration/invite-for-different-organisation-than-users";
-    private static final String INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_BUT_SAME_NAME_VIEW = "registration/invite-for-different-organisation-than-users-but-same-name";
-
     @GetMapping("/accept-invite-authenticated/confirm-invited-organisation")
     public String existingUserAndOrganisation(HttpServletResponse response,
                                 HttpServletRequest request,
