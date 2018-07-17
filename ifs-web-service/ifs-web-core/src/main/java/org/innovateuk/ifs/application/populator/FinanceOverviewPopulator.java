@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;

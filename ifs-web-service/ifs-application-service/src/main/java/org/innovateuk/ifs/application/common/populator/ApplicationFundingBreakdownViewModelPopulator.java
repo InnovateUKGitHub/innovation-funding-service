@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -14,10 +13,8 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -25,7 +22,6 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,7 +37,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     private SectionService sectionService;
     private UserService userService;
     private OrganisationService organisationService;
-    private InviteRestService inviteRestService;
+    private InviteService inviteService;
 
     public ApplicationFundingBreakdownViewModelPopulator(FinanceService financeService,
                                                          FileEntryRestService fileEntryRestService,
@@ -53,7 +49,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                                                          FormInputRestService formInputRestService,
                                                          UserService userService,
                                                          OrganisationService organisationService,
-                                                         InviteRestService inviteRestService) {
+                                                         InviteService inviteService) {
         super(sectionService, formInputRestService, questionService);
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
@@ -63,7 +59,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         this.sectionService = sectionService;
         this.userService = userService;
         this.organisationService = organisationService;
-        this.inviteRestService = inviteRestService;
+        this.inviteService = inviteService;
     }
 
     public ApplicationFundingBreakdownViewModel populate(long applicationId) {
@@ -128,23 +124,13 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
     }
 
-    private List<ApplicationInviteResource> pendingInvitations(final Long applicationId) {
-        final RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(applicationId);
-
-        return pendingAssignableUsersResult.handleSuccessOrFailure(
-                failure -> new ArrayList<>(0),
-                success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                        .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
-                        .collect(Collectors.toList()));
-    }
-
     private List<String> getPendingOrganisationNames(List<OrganisationResource> applicationOrganisations, Long applicationId) {
         final List<String> activeApplicationOrganisationNames = applicationOrganisations
                 .stream()
                 .map(OrganisationResource::getName)
                 .collect(Collectors.toList());
 
-        return pendingInvitations(applicationId).stream()
+        return inviteService.getPendingInvitationsByApplicationId(applicationId).stream()
                 .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
                 .distinct()
                 .filter(orgName -> StringUtils.hasText(orgName)
