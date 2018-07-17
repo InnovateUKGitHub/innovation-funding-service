@@ -209,12 +209,12 @@ ShibCompatValidUser On
   ProxyPass /Shibboleth.sso !
   ProxyPass /Logout !
 
-  ProxyPass  /assessment/ ajp://assessment-svc:8009/assessment/ timeout=30 connectiontimeout=30 retry=2
-  ProxyPass  /management/ ajp://competition-mgt-svc:8009/management/ timeout=30 connectiontimeout=30 retry=2
-  ProxyPass  /project-setup-management/ ajp://project-setup-mgt-svc:8009/project-setup-management/ timeout=30 connectiontimeout=30 retry=2
-  ProxyPass  /project-setup/ ajp://project-setup-svc:8009/project-setup/ timeout=30 connectiontimeout=30 retry=2
-  ProxyPass  /competition/ ajp://front-door-svc:8009/competition/ timeout=30 connectiontimeout=30 retry=2
-  ProxyPass  / ajp://application-svc:8009/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /assessment/ http://assessment-svc:8080/assessment/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /management/ http://competition-mgt-svc:8080/management/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /project-setup-management/ http://project-setup-mgt-svc:8080/project-setup-management/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /project-setup/ http://project-setup-svc:8080/project-setup/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /competition/ http://front-door-svc:8080/competition/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  / http://application-svc:8080/ timeout=30 connectiontimeout=30 retry=2
 
   LogLevel warn proxy:info proxy_ajp:info
   ErrorLog /dev/stderr
