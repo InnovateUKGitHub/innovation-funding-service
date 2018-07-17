@@ -84,24 +84,9 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-       /*
-        *
-        * redirect if not in assesor feedback or funder panel
-        *
-        *
-        *
-        */
         CompetitionResource competition = getCompetitionIfExist(competitionId);
 
-        List<CompetitionStatus> acceptedCompStates = Arrays.asList(CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.FUNDERS_PANEL);
-
-        if (!acceptedCompStates.contains(competition.getCompetitionStatus())) {
-            return "redirect:/";
-        }
-
-        if (bindingResult.hasErrors()) {
-            return "redirect:/competition/" + competitionId + "/funding";
-        }
+        redirectIfErrorsOrCompNotInCorrectState(competition, bindingResult);
 
         FundingDecisionSelectionCookie selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
 
@@ -139,15 +124,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
 
         CompetitionResource competition = getCompetitionIfExist(competitionId);
 
-        List<CompetitionStatus> acceptedCompStates = Arrays.asList(CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.FUNDERS_PANEL);
-
-        if (!acceptedCompStates.contains(competition.getCompetitionStatus())) {
-            return "redirect:/";
-        }
-
-        if (bindingResult.hasErrors()) {
-            return "redirect:/competition/" + competitionId + "/funding";
-        }
+        redirectIfErrorsOrCompNotInCorrectState(competition, bindingResult);
 
         FundingDecisionSelectionCookie selectionForm = getSelectionFormFromCookie(request, competitionId)
                 .orElse(new FundingDecisionSelectionCookie(fundingDecisionSelectionForm));
@@ -283,5 +260,20 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
 
     private CompetitionResource getCompetitionIfExist(long competitionId) {
         return competitionService.getById(competitionId);
+    }
+
+    private String redirectIfErrorsOrCompNotInCorrectState(CompetitionResource competition, BindingResult bindingResult) {
+
+        List<CompetitionStatus> acceptedCompStates = Arrays.asList(CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.FUNDERS_PANEL);
+
+        if (!acceptedCompStates.contains(competition.getCompetitionStatus())) {
+            return "redirect:/";
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "redirect:/competition/" + competition.getId() + "/funding";
+        }
+
+        return null;
     }
 }
