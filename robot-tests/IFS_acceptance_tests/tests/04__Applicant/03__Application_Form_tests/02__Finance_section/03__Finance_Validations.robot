@@ -3,7 +3,7 @@ Documentation     INFUND-844: As an applicant I want to receive a validation err
 ...
 ...               INFUND-2214: As an applicant I want to be prevented from marking my finances as complete if I have not fully completed the Other funding section so that I can be sure I am providing all the required information
 Suite Setup       Custom Suite Setup
-Suite Teardown    The user closes the browser      #Mark application details as incomplete and the user closes the browser  Robot test application
+Suite Teardown    Mark application details as incomplete and the user closes the browser  ${OPEN_COMPETITION_APPLICATION_5_NAME}
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../Applicant_Commons.robot
@@ -85,6 +85,20 @@ Labour server side
     [Teardown]    Run keywords    the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    21
     ...    AND    Remove row    jQuery=button:contains("Labour")    jQuery=.labour-costs-table button:contains("Remove")
 
+Overhead cost client side
+    [Documentation]    INFUND-844
+    Given the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    When the user selects the radio button   overheads-type-649-1839  cost-overheads-1839-rateType_3
+    And the user uploads the file            id=overheadfile  ${text_file}
+    Then the user should see a field and summary error    Please upload a file in .xls, .xlsx or .ods format only.
+    #TODO Add validaions for text feild once IFS-2555 done
+
+Overhead cost server side
+    [Documentation]    INFUND-844
+    Given the user selects the checkbox    agree-terms-page
+    When the user clicks the button/link   jQuery=button:contains("Mark as complete")
+    Then the user should see a summary error   You should upload a completed overheads spreadsheet.
+
 Materials client side
     [Documentation]    INFUND-844
     [Tags]  HappyPath
@@ -136,9 +150,9 @@ Capital usage client side
 
 Capital usage server side
     [Documentation]    INFUND-844
-    When the user enters text to a text field  css=.form-row:nth-child(1) .form-finances-capital-usage-npv    -1
-    And the user enters text to a text field   css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    -2
-    And the user enters text to a text field   css=.form-finances-capital-usage-utilisation    -1
+    When the user enters text to a text field  css=.form-row:nth-child(1) .form-finances-capital-usage-npv    66.66
+    And the user enters text to a text field   css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    66.67
+    And the user enters text to a text field   css=.form-finances-capital-usage-utilisation    50.58
     And the user enters text to a text field   css=.form-finances-capital-usage-depreciation    ${EMPTY}
     And the user clicks the button/link        jQuery=button:contains("Mark as complete")
     Then the user should see a summary error   This field should be 1 or higher.
