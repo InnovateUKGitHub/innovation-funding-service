@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -52,6 +53,9 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
     private InviteRestService inviteRestService;
 
     @Mock
+    private InviteService inviteService;
+
+    @Mock
     private ProcessRoleService processRoleService;
 
     private Long applicationId;
@@ -71,7 +75,7 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testPopulateModelWithValidObjects() throws Exception {
+    public void populateModelWithValidObjects() throws Exception {
         setupSuccess();
         List<ApplicantResource> applicantResources = userApplicationRoles.stream().map(processRoleResource -> newApplicantResource().withProcessRole(processRoleResource).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).withId(processRoleResource.getOrganisationId()).build()).build()).collect(Collectors.toList());
         ApplicantQuestionResource question = newApplicantQuestionResource().withApplication(newApplicationResource().build()).withApplicants(applicantResources).build();
@@ -88,7 +92,7 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void testPopulateModelWithInvalidObjects() throws Exception {
+    public void populateModelWithInvalidObjects() throws Exception {
         userApplicationRoles.forEach(
                 processRoleResource -> setupOrganisationServicesFailure(processRoleResource.getOrganisationId()));
 
@@ -99,7 +103,7 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testPopulateModelOnlyLong() throws Exception {
+    public void populateModelOnlyLong() throws Exception {
         setupSuccess();
         when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(userApplicationRoles);
         List<ApplicantResource> applicantResources = userApplicationRoles.stream().map(processRoleResource -> newApplicantResource().withProcessRole(processRoleResource).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).withId(processRoleResource.getOrganisationId()).build()).build()).collect(Collectors.toList());
@@ -131,15 +135,11 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
                             applicationInviteResource.setInviteOrganisationNameConfirmed("OrgNameConfirmed");
                         }).build(1))
                 .build(1);
-        setupInviteServicesSuccess(applicationId, pendingInvites);
+        setupInviteServiceSuccess(applicationId, pendingInvites);
     }
 
     private void setupOrganisationServicesSuccess(Long organisationId, OrganisationResource organisation) {
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(RestResult.restSuccess(organisation));
-    }
-
-    private void setupInviteServicesSuccess(Long applicationId, List<InviteOrganisationResource> pendingInvites) {
-        when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(RestResult.restSuccess(pendingInvites));
     }
 
     private void setupOrganisationServicesFailure(Long organisationId) {
@@ -148,6 +148,10 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTest {
 
     private void setupInviteServicesFailure(Long applicationId) {
         when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(RestResult.restFailure(new Error("", HttpStatus.NOT_FOUND)));
+    }
+
+    private void setupInviteServiceSuccess(long applicationId, List<InviteOrganisationResource> pendingInvites) {
+        when(inviteService.getPendingInvitationsByApplicationId(applicationId)).thenReturn(pendingInvites.get(0).getInviteResources());
     }
 
 }

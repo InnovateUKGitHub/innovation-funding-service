@@ -27,6 +27,7 @@ import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -91,6 +92,9 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
     @Mock
     private CategoryRestService categoryRestService;
+
+    @Mock
+    private InviteService inviteService;
 
     @Test
     public void testAddMappedSectionsDetails() {

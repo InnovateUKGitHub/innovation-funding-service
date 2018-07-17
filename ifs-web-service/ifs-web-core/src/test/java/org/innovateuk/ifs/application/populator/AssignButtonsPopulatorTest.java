@@ -7,7 +7,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,11 +23,9 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionStatusResour
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
-import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -46,7 +44,7 @@ public class AssignButtonsPopulatorTest {
     private AssignButtonsPopulator assignButtonsPopulator;
 
     @Mock
-    private InviteRestService inviteRestService;
+    private InviteService inviteService;
 
     private ApplicantResource assignedBy = applicantResource(false).build();
     private ApplicantResource assignee = applicantResource(true).build();
@@ -57,7 +55,7 @@ public class AssignButtonsPopulatorTest {
         ApplicantQuestionResource question = applicantQuestionResource().build();
         boolean hideAssignButtons = false;
         List<ApplicationInviteResource> invites = newApplicationInviteResource().withStatus(InviteStatus.SENT).build(1);
-        when(inviteRestService.getInvitesByApplication(question.getApplication().getId())).thenReturn(restSuccess(newInviteOrganisationResource().withInviteResources(invites).build(1)));
+        when(inviteService.getPendingInvitationsByApplicationId(question.getApplication().getId())).thenReturn(invites);
         AssignButtonsViewModel viewModel = assignButtonsPopulator.populate(question, question, hideAssignButtons);
 
         assertThat(viewModel.getAssignedBy(), equalTo(assignedBy));
