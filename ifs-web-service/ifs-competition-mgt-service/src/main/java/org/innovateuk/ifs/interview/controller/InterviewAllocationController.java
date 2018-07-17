@@ -15,7 +15,7 @@ import org.innovateuk.ifs.interview.model.InterviewAcceptedAssessorsModelPopulat
 import org.innovateuk.ifs.interview.model.UnallocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.interview.resource.InterviewNotifyAllocationResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
-import org.innovateuk.ifs.management.application.populator.AllocateInterviewApplicationsModelPopulator;
+import org.innovateuk.ifs.interview.AllocateInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.navigation.NavigationOrigin;
