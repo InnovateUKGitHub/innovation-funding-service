@@ -54,7 +54,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     private static final String INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_BUT_SAME_NAME_VIEW = "registration/invite-for-different-organisation-than-users-but-same-name";
 
     @GetMapping("/accept-invite-authenticated/confirm-invited-organisation")
-    public String confirmInvite(HttpServletResponse response,
+    public String existingUserAndOrganisation(HttpServletResponse response,
                                 HttpServletRequest request,
                                 UserResource loggedInUser,
                                 Model model) {
@@ -78,7 +78,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     }
 
     @GetMapping("/accept-invite-authenticated/confirm-invited-organisation/confirm")
-    public String confirmedInvite(HttpServletResponse response,
+    public String confirmExistingUserAndOrganisation(HttpServletResponse response,
                                   HttpServletRequest request,
                                   UserResource loggedInUser,
                                   Model model) {
@@ -102,8 +102,8 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
         return view.getSuccess();
     }
 
-    @GetMapping("/accept-invite-authenticated/confirm-logged-in-invite")
-    public String acceptInviteLogin(HttpServletResponse response,
+    @GetMapping("/accept-invite-authenticated/confirm-new-organisation")
+    public String existingUserAndNewOrganisation(HttpServletResponse response,
                                     HttpServletRequest request,
                                     UserResource loggedInUser,
                                     Model model) {

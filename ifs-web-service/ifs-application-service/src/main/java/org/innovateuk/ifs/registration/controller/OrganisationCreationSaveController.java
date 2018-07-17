@@ -150,27 +150,27 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         }
 
         Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
+
+        ApplicationResource application = null;
         if (inviteHash.isPresent()) {
-            long applicationId = acceptInvite(inviteHash.get(), response, request, user);
-            ApplicationResource application = applicationService.getById(applicationId);
-            return redirectToApplication(application);
-        } else {
-            if (competitionId.isPresent()) {
-                ApplicationResource application = applicationService.createApplication(competitionId.get(), user.getId(), organisationId, "");
-                if (application != null) {
-                    return redirectToApplication(application);
-                }
-            }
+            application = acceptInvite(inviteHash.get(), response, request, user);
+        } else if (competitionId.isPresent()) {
+            application = applicationService.createApplication(competitionId.get(), user.getId(), organisationId, "");
         }
-            throw new ObjectNotFoundException("Could not create a new application",
-                Arrays.asList(String.valueOf(competitionId.orElse(null)), String.valueOf(user.getId())));
+
+        if (application == null) {
+            throw new ObjectNotFoundException("Could not create or find application",
+                    Arrays.asList(String.valueOf(competitionId.orElse(null)), inviteHash.orElse(null), String.valueOf(user.getId())));
+        }
+
+        return redirectToApplication(application);
     }
 
-    private long acceptInvite(String inviteHash, HttpServletResponse response, HttpServletRequest request, UserResource userResource) {
+    private ApplicationResource acceptInvite(String inviteHash, HttpServletResponse response, HttpServletRequest request, UserResource userResource) {
         ApplicationInviteResource invite = inviteRestService.getInviteByHash(inviteHash).getSuccess();
         inviteRestService.acceptInvite(inviteHash, userResource.getId()).getSuccess();
         registrationCookieService.deleteInviteHashCookie(response);
-        return invite.getApplication();
+        return applicationService.getById(invite.getApplication());
     }
 
     private String redirectToApplication(ApplicationResource application) {
