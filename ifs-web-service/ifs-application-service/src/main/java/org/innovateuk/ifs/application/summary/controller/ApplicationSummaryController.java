@@ -83,7 +83,7 @@ public class ApplicationSummaryController {
             user = userService.findById(leadProcessRoleResource.getUser());
         }
 
-        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(applicationId, user, form));
+        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(applicationId, user, form, isSupport));
         return "application-summary";
     }
 
