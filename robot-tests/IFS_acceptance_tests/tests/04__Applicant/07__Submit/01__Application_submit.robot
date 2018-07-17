@@ -86,8 +86,8 @@ Satisfaction survey:validations
     #The survey needs to be set to enabled in gradle.properties
     [Documentation]  IFS-3603
     [Tags]  survey
-    Given the user clicks the button/link                 link=Finished
-    When the user clicks the button/link                  css=.button[type="submit"]  #Send feedback
+    Given the user clicks the button/link                 link = Finished
+    When the user clicks the button/link                  css = .button[type="submit"]  #Send feedback
     Then the user should see a field and summary error    Please select a level of satisfaction.
     And the user should see a field and summary error     This field cannot be left blank.
 
@@ -96,8 +96,8 @@ Applicant submit satisfaction survey after submitting application
     [Documentation]  IFS-3603
     [Tags]  survey
     Given the user selects the radio button      satisfaction  5
-    When the user enters text to a text field    name=comments  Very satisfied
-    Then the user clicks the button/link         css=.button[type="submit"]  #Send feedback
+    When the user enters text to a text field    name = comments  Very satisfied
+    Then the user clicks the button/link         css = .button[type="submit"]  #Send feedback
     When the user clicks the button/link         jQuery = h1:contains("Dashboard")
 
 The applicant should get a confirmation email
