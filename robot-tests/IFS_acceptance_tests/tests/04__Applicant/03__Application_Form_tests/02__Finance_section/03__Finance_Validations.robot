@@ -206,12 +206,6 @@ Other costs client side
     Then the user should see a field error      This field cannot be left blank.
     Then the user should see a field error      This field should be 1 or higher.
 
-Save with validation errors
-    [Documentation]    INFUND-844
-    [Tags]  Pending
-    When the user reloads the page with validation errors
-    Then the field with the wrong input should be saved
-
 Other costs server side
     [Documentation]    INFUND-844
     When the user enters text to a text field   css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    -1
@@ -225,18 +219,22 @@ Other costs server side
 
 Funding level server side
     [Documentation]    INFUND-844
-    [Tags]  Pending
-    When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]  61
+    [Setup]  the user clicks the button/link     link=Your finances
+    Given the user clicks the button/link        link=Your funding
+    And the user clicks the button/link          jQuery=button:contains("Edit your funding")
+    When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]  71
+    And the user selects the checkbox            agree-terms-page
     And the user clicks the button/link          jQuery=button:contains("Mark as complete")
-    Then the user should see a field and summary error   This field should be 60% or lower.
-    Then the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]  59
+    Then the user should see a field and summary error   This field should be 70% or lower.
+    Then the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]  69
     And the user moves focus to the element      css=[data-target="other-funding-table"] label
 
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
-    the user logs-in in new browser   &{lead_applicant_credentials}
-    log in and create new application if there is not one already with complete application details  ${OPEN_COMPETITION_APPLICATION_5_NAME}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the user logs-in in new browser       &{lead_applicant_credentials}
+    log in and create new application if there is not one already with complete application details  ${OPEN_COMPETITION_APPLICATION_5_NAME}  ${tomorrowday}  ${month}  ${nextyear}
+    the user selects Research category    Feasibility studies
     the user fills in the organisation information  ${OPEN_COMPETITION_APPLICATION_5_NAME}  ${SMALL_ORGANISATION_SIZE}
 
 the field with the wrong input should be saved
