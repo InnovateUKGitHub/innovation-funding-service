@@ -84,9 +84,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        CompetitionResource competition = getCompetitionIfExist(competitionId);
-
-        redirectIfErrorsOrCompNotInCorrectState(competition, bindingResult);
+        redirectIfErrorsOrCompNotInCorrectState(competitionId, bindingResult);
 
         FundingDecisionSelectionCookie selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
 
@@ -122,9 +120,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        CompetitionResource competition = getCompetitionIfExist(competitionId);
-
-        redirectIfErrorsOrCompNotInCorrectState(competition, bindingResult);
+        redirectIfErrorsOrCompNotInCorrectState(competitionId, bindingResult);
 
         FundingDecisionSelectionCookie selectionForm = getSelectionFormFromCookie(request, competitionId)
                 .orElse(new FundingDecisionSelectionCookie(fundingDecisionSelectionForm));
@@ -262,8 +258,9 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         return competitionService.getById(competitionId);
     }
 
-    private String redirectIfErrorsOrCompNotInCorrectState(CompetitionResource competition, BindingResult bindingResult) {
+    private String redirectIfErrorsOrCompNotInCorrectState(long competitionId, BindingResult bindingResult) {
 
+        CompetitionResource competition = getCompetitionIfExist(competitionId);
         List<CompetitionStatus> acceptedCompStates = Arrays.asList(CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.FUNDERS_PANEL);
 
         if (!acceptedCompStates.contains(competition.getCompetitionStatus())) {

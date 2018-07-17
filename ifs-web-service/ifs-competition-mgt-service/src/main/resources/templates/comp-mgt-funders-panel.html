@@ -11,7 +11,6 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionSummary.competitionId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision',subTitle=|${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|,size='heading-xlarge'" />
 
-
     <form method="GET" th:object="${model.fundingDecisionFilterForm}">
         <div class="search-filters extra-margin">
             <fieldset>
@@ -26,7 +25,6 @@
                     <div class="column-half">
                         <div class="form-group">
                             <label class="form-label" for="fundingFilter">Funding decision</label>
-
                             <select name="fundingFilter" id="fundingFilter" class="form-control" th:value="*{fundingFilterValue}">
                                 <option value="">Show all</option>
                                 <option value="UNDECIDED">Blank</option>
@@ -49,10 +47,6 @@
         </div>
         <input type="hidden" name="filterChanged" value="1"/>
     </form>
-
-    <!--<div th:if="${model.fundingNotDecidedForAllApplications}" class="event-alert">-->
-        <!--<p><span>A funding decision is required for all applications to the competition.</span></p>-->
-    <!--</div>-->
 
     <div class="warning-alert extra-margin-bottom" th:if="${model.selectionLimitWarning}">
         <p th:text="#{competition.management.limit.warning}"></p>

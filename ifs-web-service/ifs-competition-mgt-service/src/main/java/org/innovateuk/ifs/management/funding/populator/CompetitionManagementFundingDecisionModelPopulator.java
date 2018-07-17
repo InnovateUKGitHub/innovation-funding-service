@@ -95,6 +95,4 @@ public class CompetitionManagementFundingDecisionModelPopulator  {
     protected boolean limitIsExceeded(long amountOfIds) {
         return amountOfIds > SELECTION_LIMIT;
     }
-
-
 }
