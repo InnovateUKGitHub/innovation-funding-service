@@ -212,7 +212,7 @@ the academic fills in the project costs
     The user enters text to a text field  css=[name$="exceptions_staff"]  123
     The user enters text to a text field  css=[name$="exceptions_other_costs"]  7890
     The user enters text to a text field  css=input[name$="tsb_reference"]  L33t
-    Textfield Value Should Be             id=total  £23,784
+    Textfield Value Should Be             id=total  £23,789
     the user uploads the file             css=.inputfile  ${valid_pdf}
     the user should see the element       link=testing.pdf (opens in a new window)
     the user selects the checkbox         termsAgreed

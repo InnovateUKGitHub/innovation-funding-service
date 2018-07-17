@@ -17,7 +17,7 @@ import org.innovateuk.ifs.interview.resource.*;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAllocateApplicationsViewModel;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.management.application.populator.AllocateInterviewApplicationsModelPopulator;
+import org.innovateuk.ifs.interview.AllocateInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.InterviewAcceptedAssessorsRowViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InterviewAcceptedAssessorsViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InterviewAssessorApplicationsViewModel;

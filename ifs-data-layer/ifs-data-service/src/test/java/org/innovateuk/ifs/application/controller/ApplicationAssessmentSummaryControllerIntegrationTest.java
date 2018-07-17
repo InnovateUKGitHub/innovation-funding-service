@@ -53,7 +53,6 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
         assertEquals(Collections.emptyList(), applicationAssessorResources);
     }
 
-
     @Test
     public void getApplicationAssessmentSummary() {
         Competition competition = competitionRepository.save(newCompetition()
