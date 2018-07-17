@@ -83,71 +83,72 @@
           <span class="bold">Competition:</span> ${CompetitionName}
         </p>
         <p><span class="bold">Date:</span> ${sendDate?string["d MMMM yyyy"]}</p>
-        <#if industrialFinanceTable.organisations??>
-            <table class="table-overview extra-margin-bottom">
-                <col style="width:40%"/>
-                <col style="width:20%"/>
-                <col style="width:20%"/>
-                <col style="width:20%"/>
-                <thead>
+        <#if industrialFinanceTable?? && industrialFinanceTable.organisations??>
+        <table class="table-overview extra-margin-bottom">
+            <col style="width:40%"/>
+            <col style="width:20%"/>
+            <col style="width:20%"/>
+            <col style="width:20%"/>
+            <thead>
+            <tr>
+                <th scope="col">Industry costs</th>
+                <th scope="col">Total eligible costs</th>
+                <th scope="col">Rate of grant</th>
+                <th scope="col">Total grant</th>
+            </tr>
+            </thead>
+            <tbody>
+            <#list financeTotalsTable.industrialOrgs as org>
                 <tr>
-                    <th scope="col">Industry costs</th>
-                    <th scope="col">Total eligible costs</th>
-                    <th scope="col">Rate of grant</th>
-                    <th scope="col">Total grant</th>
+                    <td>${org}</td>
+                    <td>${financeTotalsTable.getTotalEligibleCosts(org)}</td>
+                    <td>${financeTotalsTable.getGrantClaim(org)}</td>
+                    <td>${financeTotalsTable.getTotalGrant(org)}</td>
                 </tr>
-                </thead>
-                <tbody>
-                <#list financeTotalsTable.industrialOrgs as org>
-                    <tr>
-                        <td>${org}</td>
-                        <td>${financeTotalsTable.getTotalEligibleCosts(org)}</td>
-                        <td>${financeTotalsTable.getGrantClaim(org)}</td>
-                        <td>${financeTotalsTable.getTotalGrant(org)}</td>
-                    </tr>
-                </#list>
-                <tr>
-                    <td class="bold">Total (industry)</td>
-                    <td class="bold">${financeTotalsTable.getIndustryTotalEligibleCosts()}</td>
-                    <td class="bold">${financeTotalsTable.getIndustryTotalGrantClaim()}</td>
-                    <td class="bold">${financeTotalsTable.getIndustryTotalGrant()}</td>
-                </tr>
-                </tbody>
-            </table>
+            </#list>
+            <tr>
+                <td class="bold">Total (industry)</td>
+                <td class="bold">${financeTotalsTable.getIndustryTotalEligibleCosts()}</td>
+                <td class="bold">${financeTotalsTable.getIndustryTotalGrantClaim()}</td>
+                <td class="bold">${financeTotalsTable.getIndustryTotalGrant()}</td>
+            </tr>
+            </tbody>
+        </table>
         </#if>
-        <#if academicFinanceTable.organisations??>
-            <table class="table-overview extra-margin-bottom">
-                <col style="width:40%"/>
-                <col style="width:20%"/>
-                <col style="width:20%"/>
-                <col style="width:20%"/>
-                <thead>
+        <#if academicFinanceTable?? && academicFinanceTable.organisations??>
+        <table class="table-overview extra-margin-bottom">
+            <col style="width:40%"/>
+            <col style="width:20%"/>
+            <col style="width:20%"/>
+            <col style="width:20%"/>
+            <thead>
+            <tr>
+                <th scope="col" class="bold">Academic costs</th>
+                <th scope="col">Total eligible costs</th>
+                <th scope="col">Rate of grant</th>
+                <th scope="col">Total grant</th>
+            </tr>
+            </thead>
+            <tbody>
+            <#list financeTotalsTable.academicOrgs as org>
                 <tr>
-                    <th scope="col" class="bold">Academic costs</th>
-                    <th scope="col">Total eligible costs</th>
-                    <th scope="col">Rate of grant</th>
-                    <th scope="col">Total grant</th>
+                    <td>${org}</td>
+                    <td>${financeTotalsTable.getTotalEligibleCosts(org)}</td>
+                    <td>${financeTotalsTable.getGrantClaim(org)}</td>
+                    <td>${financeTotalsTable.getTotalGrant(org)}</td>
                 </tr>
-                </thead>
-                <tbody>
-                <#list financeTotalsTable.academicOrgs as org>
-                    <tr>
-                        <td>${org}</td>
-                        <td>${financeTotalsTable.getTotalEligibleCosts(org)}</td>
-                        <td>${financeTotalsTable.getGrantClaim(org)}</td>
-                        <td>${financeTotalsTable.getTotalGrant(org)}</td>
-                    </tr>
-                </#list>
-                <tr>
-                    <td class="bold">Total (academic)</td>
-                    <td class="bold">${financeTotalsTable.getAcademicTotalEligibleCosts()}</td>
-                    <td class="bold">${financeTotalsTable.getAcademicTotalGrantClaim()}</td>
-                    <td class="bold">${financeTotalsTable.getAcademicTotalGrant()}</td>
-                </tr>
-                </tbody>
-            </table>
+            </#list>
+            <tr>
+                <td class="bold">Total (academic)</td>
+                <td class="bold">${financeTotalsTable.getAcademicTotalEligibleCosts()}</td>
+                <td class="bold">${financeTotalsTable.getAcademicTotalGrantClaim()}</td>
+                <td class="bold">${financeTotalsTable.getAcademicTotalGrant()}</td>
+            </tr>
+            </tbody>
+        </table>
         </#if>
-        <#if industrialFinanceTable.organisations??  && academicFinanceTable.organisations??>
+
+        <#if industrialFinanceTable?? && academicFinanceTable?? && industrialFinanceTable.organisations??  && academicFinanceTable.organisations??>
         <table class="table-overview extra-margin-bottom">
             <col style="width:40%"/>
             <col style="width:20%"/>
@@ -164,57 +165,57 @@
         </table>
         </#if>
   </div>
-  <#if industrialFinanceTable.organisations??>
+  <#if industrialFinanceTable?? && industrialFinanceTable.organisations??>
       <div class="page landscape">
-            <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS</h2>
-            <p><span class="bold">Project finances:</span> ${ProjectTitle}</p>
-            <p>
-              <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
-              <span class="bold">Project title:</span> ${ProjectTitle}<br/>
-              <span class="bold">Competition:</span> ${CompetitionName}
-            </p>
-            <p><span class="bold">Date:</span> ${sendDate?string["d MMMM yyyy"]}</p>
-            <table class="table-overview">
-                <thead>
+        <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS</h2>
+        <p><span class="bold">Project finances:</span> ${ProjectTitle}</p>
+        <p>
+          <span class="bold">Application number:</span> ${ApplicationNumber}<br/>
+          <span class="bold">Project title:</span> ${ProjectTitle}<br/>
+          <span class="bold">Competition:</span> ${CompetitionName}
+        </p>
+        <p><span class="bold">Date:</span> ${sendDate?string["d MMMM yyyy"]}</p>
+        <table class="table-overview">
+            <thead>
+            <tr>
+                <th scope="col" class="bold">Industry costs</th>
+                <th scope="col">Labour</th>
+                <th scope="col">Overheads</th>
+                <th scope="col">Materials</th>
+                <th scope="col">Capital usage</th>
+                <th scope="col">Subcontract</th>
+                <th scope="col">Travel and subsistence</th>
+                <th scope="col">Other costs</th>
+            </tr>
+            </thead>
+            <tbody>
+            <#list industrialFinanceTable.organisations as org>
                 <tr>
-                    <th scope="col" class="bold">Industry costs</th>
-                    <th scope="col">Labour</th>
-                    <th scope="col">Overheads</th>
-                    <th scope="col">Materials</th>
-                    <th scope="col">Capital usage</th>
-                    <th scope="col">Subcontract</th>
-                    <th scope="col">Travel and subsistence</th>
-                    <th scope="col">Other costs</th>
+                    <td>${org}</td>
+                    <td>${industrialFinanceTable.getLabour(org)}</td>
+                    <td>${industrialFinanceTable.getOverheads(org)}</td>
+                    <td>${industrialFinanceTable.getMaterials(org)}</td>
+                    <td>${industrialFinanceTable.getCapitalUsage(org)}</td>
+                    <td>${industrialFinanceTable.getSubcontract(org)}</td>
+                    <td>${industrialFinanceTable.getTravel(org)}</td>
+                    <td>${industrialFinanceTable.getOtherCosts(org)}</td>
                 </tr>
-                </thead>
-                <tbody>
-                <#list industrialFinanceTable.organisations as org>
-                    <tr>
-                        <td>${org}</td>
-                        <td>${industrialFinanceTable.getLabour(org)}</td>
-                        <td>${industrialFinanceTable.getOverheads(org)}</td>
-                        <td>${industrialFinanceTable.getMaterials(org)}</td>
-                        <td>${industrialFinanceTable.getCapitalUsage(org)}</td>
-                        <td>${industrialFinanceTable.getSubcontract(org)}</td>
-                        <td>${industrialFinanceTable.getTravel(org)}</td>
-                        <td>${industrialFinanceTable.getOtherCosts(org)}</td>
-                    </tr>
-                </#list>
-                <tr>
-                    <td class="bold">Total (industry)</td>
-                    <td class="bold">${industrialFinanceTable.getLabourTotal()}</td>
-                    <td class="bold">${industrialFinanceTable.getOverheadsTotal()}</td>
-                    <td class="bold">${industrialFinanceTable.getMaterialsTotal()}</td>
-                    <td class="bold">${industrialFinanceTable.getCapitalUsageTotal()}</td>
-                    <td class="bold">${industrialFinanceTable.getSubcontractTotal()}</td>
-                    <td class="bold">${industrialFinanceTable.getTravelTotal()}</td>
-                    <td class="bold">${industrialFinanceTable.getOtherCostsTotal()}</td>
-                </tr>
-                </tbody>
-            </table>
+            </#list>
+            <tr>
+                <td class="bold">Total (industry)</td>
+                <td class="bold">${industrialFinanceTable.getLabourTotal()}</td>
+                <td class="bold">${industrialFinanceTable.getOverheadsTotal()}</td>
+                <td class="bold">${industrialFinanceTable.getMaterialsTotal()}</td>
+                <td class="bold">${industrialFinanceTable.getCapitalUsageTotal()}</td>
+                <td class="bold">${industrialFinanceTable.getSubcontractTotal()}</td>
+                <td class="bold">${industrialFinanceTable.getTravelTotal()}</td>
+                <td class="bold">${industrialFinanceTable.getOtherCostsTotal()}</td>
+            </tr>
+            </tbody>
+        </table>
       </div>
   </#if>
-  <#if academicFinanceTable.organisations??>
+  <#if academicFinanceTable?? && academicFinanceTable.organisations??>
       <div class="page landscape">
             <h2>ELIGIBLE COSTS AND GRANT ALLOCATIONS #2</h2>
             <p><span class="bold">Project finances:</span> ${ProjectTitle}</p>
