@@ -2,10 +2,10 @@ package org.innovateuk.ifs.application.finance.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -39,7 +39,7 @@ public class FinanceServiceImpl implements FinanceService {
     private FileEntryRestService fileEntryRestService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -49,7 +49,7 @@ public class FinanceServiceImpl implements FinanceService {
         ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
 
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
         if(processRole.getOrganisationId()!=null && competitionResource.isOpen()) {
             return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisationId()).getSuccess();

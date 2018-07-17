@@ -8,13 +8,13 @@ import org.innovateuk.ifs.application.overview.viewmodel.*;
 import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -49,7 +49,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 public class ApplicationOverviewModelPopulator extends AbstractApplicationModelPopulator {
 
     private AssignButtonsPopulator assignButtonsPopulator;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private ProcessRoleService processRoleService;
     private OrganisationService organisationService;
     private UserService userService;
@@ -62,7 +62,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
     public ApplicationOverviewModelPopulator(SectionService sectionService,
                                              QuestionService questionService,
                                              AssignButtonsPopulator assignButtonsPopulator,
-                                             CompetitionService competitionService,
+                                             CompetitionRestService competitionRestService,
                                              ProcessRoleService processRoleService,
                                              OrganisationService organisationService,
                                              UserService userService,
@@ -73,7 +73,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
         this.questionService = questionService;
         this.sectionService = sectionService;
         this.assignButtonsPopulator = assignButtonsPopulator;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.processRoleService = processRoleService;
         this.organisationService = organisationService;
         this.userService = userService;
@@ -83,7 +83,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
     }
     
     public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId){
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
         ProjectResource projectResource = projectService.getByApplicationId(application.getId());

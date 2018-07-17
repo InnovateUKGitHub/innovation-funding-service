@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.assessor.sectionupdater;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;

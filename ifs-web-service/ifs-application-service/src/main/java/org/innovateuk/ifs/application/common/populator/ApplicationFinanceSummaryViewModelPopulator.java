@@ -6,10 +6,10 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -38,7 +38,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     private OrganisationService organisationService;
     private ProcessRoleService processRoleService;
     private UserService userService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     public ApplicationFinanceSummaryViewModelPopulator(ApplicationService applicationService,
                                                        SectionService sectionService,
@@ -48,7 +48,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                                                        OrganisationService organisationService,
                                                        ProcessRoleService processRoleService,
                                                        UserService userService,
-                                                       CompetitionService competitionService) {
+                                                       CompetitionRestService competitionRestService) {
         this.applicationService = applicationService;
         this.sectionService = sectionService;
         this.financeService = financeService;
@@ -57,13 +57,13 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         this.organisationService = organisationService;
         this.processRoleService = processRoleService;
         this.userService = userService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
     }
 
     public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
                 financeService,

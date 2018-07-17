@@ -5,10 +5,10 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
 import org.junit.Before;
@@ -41,7 +41,7 @@ public class SendNotificationsModelPopulatorTest {
     private SendNotificationsModelPopulator sendNotificationsModelPopulator;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private ApplicationSummaryRestService applicationSummaryRestServiceMock;
@@ -66,7 +66,7 @@ public class SendNotificationsModelPopulatorTest {
         applicationResults.setContent(Arrays.asList(application1, application2, application3));
 
         when(applicationSummaryRestServiceMock.getAllApplications(COMPETITION_ID, null, 0, Integer.MAX_VALUE, empty())).thenReturn(restSuccess(applicationResults));
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
 
         List<Long> requestedIds = Arrays.asList(application1.getId(), application3.getId());
         List<ApplicationSummaryResource> expectedApplications = Arrays.asList(application1, application3);

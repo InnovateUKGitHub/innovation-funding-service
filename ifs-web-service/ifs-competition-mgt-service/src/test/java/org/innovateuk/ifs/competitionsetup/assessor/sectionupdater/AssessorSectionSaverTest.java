@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.assessor.sectionupdater;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.AssessorCountOptionsRestService;
@@ -32,9 +30,6 @@ public class AssessorSectionSaverTest {
 	@InjectMocks
 	private AssessorsSectionUpdater saver;
 	
-	@Mock
-	private CompetitionService competitionService;
-
 	@Mock
 	private AssessorCountOptionsRestService assessorCountOptionsRestService;
 

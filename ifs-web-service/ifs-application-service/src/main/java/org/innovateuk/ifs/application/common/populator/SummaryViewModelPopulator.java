@@ -15,6 +15,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -38,7 +39,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 public class SummaryViewModelPopulator extends AbstractApplicationModelPopulator {
 
     private ApplicationService applicationService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private SectionService sectionService;
     private QuestionService questionService;
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
@@ -56,7 +57,7 @@ public class SummaryViewModelPopulator extends AbstractApplicationModelPopulator
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     public SummaryViewModelPopulator(ApplicationService applicationService,
-                                     CompetitionService competitionService,
+                                     CompetitionRestService competitionRestService,
                                      SectionService sectionService,
                                      QuestionService questionService,
                                      AssessorFormInputResponseRestService assessorFormInputResponseRestService,
@@ -74,7 +75,7 @@ public class SummaryViewModelPopulator extends AbstractApplicationModelPopulator
                                      ApplicationTeamModelPopulator applicationTeamModelPopulator) {
         super(sectionService, questionService);
         this.applicationService = applicationService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.sectionService = sectionService;
         this.questionService = questionService;
         this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
@@ -95,7 +96,7 @@ public class SummaryViewModelPopulator extends AbstractApplicationModelPopulator
     public SummaryViewModel populate (long applicationId, UserResource user, ApplicationForm form) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         Map<Long, List<QuestionResource>> sectionQuestions = getSectionQuestions(competition.getId());
         ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();

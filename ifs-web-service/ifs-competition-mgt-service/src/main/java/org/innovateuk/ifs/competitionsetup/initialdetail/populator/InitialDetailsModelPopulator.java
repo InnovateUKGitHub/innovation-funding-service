@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.initialdetail.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -28,7 +27,7 @@ import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 public class InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator {
 
 	@Autowired
-	private CompetitionRestService competitionService;
+	private CompetitionRestService competitionRestService;
 
 	@Autowired
 	private UserService userService;
@@ -47,7 +46,7 @@ public class InitialDetailsModelPopulator implements CompetitionSetupSectionMode
                 userService.findUserByType(COMP_ADMIN),
 				categoryRestService.getInnovationSectors().getSuccess(),
 				addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccess()),
-                competitionService.getCompetitionTypes().getSuccess(),
+                competitionRestService.getCompetitionTypes().getSuccess(),
                 userService.findUserByType(INNOVATION_LEAD));
 	}
 

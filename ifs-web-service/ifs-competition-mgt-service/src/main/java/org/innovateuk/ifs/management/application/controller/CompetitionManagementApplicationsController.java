@@ -2,10 +2,10 @@ package org.innovateuk.ifs.management.application.controller;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.form.IneligibleApplicationsForm;
 import org.innovateuk.ifs.management.application.populator.*;
 import org.innovateuk.ifs.management.navigation.NavigationOrigin;
@@ -67,7 +67,7 @@ public class CompetitionManagementApplicationsController {
     private NavigateApplicationsModelPopulator navigateApplicationsModelPopulator;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and Innovation Leads can view the applications menu")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
@@ -164,7 +164,7 @@ public class CompetitionManagementApplicationsController {
     }
 
     private void checkCompetitionIsOpen(long competitionId) {
-        if (!competitionService.getById(competitionId).getCompetitionStatus().isLaterThan(CompetitionStatus.READY_TO_OPEN)) {
+        if (!competitionRestService.getCompetitionById(competitionId).getSuccess().getCompetitionStatus().isLaterThan(CompetitionStatus.READY_TO_OPEN)) {
             throw new IncorrectStateForPageException("Competition is not yet open.");
         }
     }

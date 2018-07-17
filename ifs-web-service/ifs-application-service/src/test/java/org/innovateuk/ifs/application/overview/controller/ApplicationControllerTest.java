@@ -161,7 +161,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         assertEquals(app, viewModel.getCurrentApplication());
         assertEquals(sections, viewModel.getCompleted().getCompletedSections());
-        assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
+        assertEquals(competitionRestService.getCompetitionById(app.getCompetition()).getSuccess(), viewModel.getCurrentCompetition());
 
         assertTrue(viewModel.getAssignable().getPendingAssignableUsers().size() == 0);
     }
@@ -215,7 +215,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         assertEquals(app, viewModel.getCurrentApplication());
         assertEquals(sections, viewModel.getCompleted().getCompletedSections());
-        assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
+        assertEquals(competitionRestService.getCompetitionById(app.getCompetition()).getSuccess(), viewModel.getCurrentCompetition());
 
         assertTrue(viewModel.getAssignable().getPendingAssignableUsers().size() == 3);
         assertTrue(viewModel.getAssignable().getPendingAssignableUsers().contains(inv1));
@@ -257,7 +257,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         assertEquals(app, viewModel.getCurrentApplication());
         assertEquals(sections, viewModel.getCompleted().getCompletedSections());
-        assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
+        assertEquals(competitionRestService.getCompetitionById(app.getCompetition()).getSuccess(), viewModel.getCurrentCompetition());
 
         assertTrue(viewModel.getAssignable().getPendingAssignableUsers().size() == 2);
         assertTrue(viewModel.getAssignable().getPendingAssignableUsers().contains(inv1));
@@ -297,7 +297,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
 
         assertEquals(app, viewModel.getCurrentApplication());
         assertEquals(sections, viewModel.getCompleted().getCompletedSections());
-        assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
+        assertEquals(competitionRestService.getCompetitionById(app.getCompetition()).getSuccess(), viewModel.getCurrentCompetition());
 
         assertTrue(viewModel.getAssignable().getPendingAssignableUsers().size() == 2);
         assertTrue(viewModel.getAssignable().getPendingAssignableUsers().contains(inv1));

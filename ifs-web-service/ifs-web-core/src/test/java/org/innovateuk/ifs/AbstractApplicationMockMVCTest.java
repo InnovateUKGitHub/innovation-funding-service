@@ -78,8 +78,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     @Mock
     protected OrganisationService organisationService;
     @Mock
-    protected CompetitionService competitionService;
-    @Mock
     protected QuestionService questionService;
     @Mock
     protected QuestionRestService questionRestService;
@@ -101,15 +99,14 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     protected DefaultFinanceFormHandler defaultFinanceFormHandler;
     @Mock
     protected UserService userService;
+    @Mock
+    protected CompetitionRestService competitionRestService;
 
     @Mock
     private OrganisationTypeRestService organisationTypeRestService;
 
     @Mock
     private OrganisationRestService organisationRestService;
-
-    @Mock
-    private CompetitionRestService competitionRestService;
 
     @Mock
     private FormInputResponseService formInputResponseService;
@@ -359,7 +356,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess
                 (competitionResource));
         when(competitionRestService.getAll()).thenReturn(restSuccess(competitionResources));
-        when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(any(Long.class))).thenReturn(restSuccess(competitionResource));
 
         when(formInputRestService.getByCompetitionIdAndScope(competitionResource.getId(), APPLICATION)).thenReturn
                 (restSuccess(new ArrayList<>()));

@@ -3,9 +3,7 @@ package org.innovateuk.ifs.application.creation.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
@@ -50,9 +48,6 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
 
     @Mock
     private ApplicationService applicationService;
-
-    @Mock
-    private CompetitionService competitionService;
 
     @Mock
     private PublicContentItemRestService publicContentItemRestService;

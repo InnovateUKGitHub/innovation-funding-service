@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.core.service;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
@@ -57,9 +56,6 @@ public class CompetitionSetupServiceImplTest {
 
     @InjectMocks
     private CompetitionSetupServiceImpl service;
-
-    @Mock
-    private CompetitionService competitionService;
 
     @Mock
     private CompetitionSetupRestService competitionSetupRestService;

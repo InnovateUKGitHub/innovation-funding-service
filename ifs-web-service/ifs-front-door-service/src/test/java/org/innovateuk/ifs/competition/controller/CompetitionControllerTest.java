@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     private CompetitionOverviewPopulator overviewPopulator;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private PublicContentItemRestService publicContentItemRestService;
@@ -79,12 +79,12 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
                 .withTermsAndConditions(termsAndConditions)
                 .build();
 
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get("/competition/{id}/info/terms-and-conditions", competitionResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/info/special-terms-and-conditions"));
 
-        verify(competitionService).getById(competitionResource.getId());
+        verify(competitionRestService).getCompetitionById(competitionResource.getId());
     }
 }

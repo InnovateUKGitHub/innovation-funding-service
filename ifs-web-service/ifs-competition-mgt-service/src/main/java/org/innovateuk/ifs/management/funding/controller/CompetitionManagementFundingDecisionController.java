@@ -8,10 +8,10 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.navigation.NavigationOrigin;
 import org.innovateuk.ifs.management.navigation.Pagination;
@@ -49,15 +49,15 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
 
     private ApplicationSummaryRestService applicationSummaryRestService;
     private ApplicationFundingDecisionService applicationFundingDecisionService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     public CompetitionManagementFundingDecisionController(ApplicationSummaryRestService applicationSummaryRestService,
                                                           ApplicationFundingDecisionService applicationFundingDecisionService,
-                                                          CompetitionService competitionService) {
+                                                          CompetitionRestService competitionRestService) {
         this.applicationSummaryRestService = applicationSummaryRestService;
         this.applicationFundingDecisionService = applicationFundingDecisionService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
     }
 
     public CompetitionManagementFundingDecisionController() {
@@ -318,6 +318,6 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     }
 
     private CompetitionResource getCompetitionIfExist(long competitionId) {
-        return competitionService.getById(competitionId);
+        return competitionRestService.getCompetitionById(competitionId).getSuccess();
     }
 }

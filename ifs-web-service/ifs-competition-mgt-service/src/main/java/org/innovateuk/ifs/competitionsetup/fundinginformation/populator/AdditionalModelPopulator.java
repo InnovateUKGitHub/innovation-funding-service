@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.fundinginformation.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -17,9 +16,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AdditionalModelPopulator implements CompetitionSetupSectionModelPopulator {
-
-	@Autowired
-	private CompetitionService competitionService;
 
 	@Autowired
 	private UserService userService;

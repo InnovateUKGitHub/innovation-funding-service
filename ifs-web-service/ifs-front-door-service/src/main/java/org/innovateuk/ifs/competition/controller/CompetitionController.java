@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.publiccontent.service.ContentGroupRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 public class CompetitionController {
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private CompetitionOverviewPopulator overviewPopulator;
@@ -63,7 +63,7 @@ public class CompetitionController {
     @GetMapping("info/terms-and-conditions")
     public String termsAndConditions(@PathVariable("competitionId") final long competitionId) {
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         GrantTermsAndConditionsResource termsAndConditions = competition.getTermsAndConditions();
         return "competition/info/" + termsAndConditions.getTemplate();
     }

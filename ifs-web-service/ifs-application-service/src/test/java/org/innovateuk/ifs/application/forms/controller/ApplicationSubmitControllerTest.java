@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
@@ -41,6 +42,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -172,13 +174,19 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
 
     @Test
     public void testApplicationSubmitAgreeingToTerms() throws Exception {
-        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(OPEN).build();
+        CompetitionResource competition = newCompetitionResource().build();
+        ApplicationResource app = newApplicationResource()
+                .withId(1L)
+                .withCompetitionStatus(OPEN)
+                .withCompetition(competition.getId())
+                .build();
         when(userService.isLeadApplicant(applicant.getId(), app)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app.getId())).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(applicationRestService.updateApplicationState(app.getId(), SUBMITTED)).thenReturn(restSuccess());
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competition));
 
 
         mockMvc.perform(post("/application/" + app.getId() + "/submit")
@@ -212,7 +220,7 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.SUBMITTED);
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(competitionService.getById(anyLong())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get("/application/" + app.getId() + "/track"))
                 .andExpect(view().name("application-track"))
@@ -227,7 +235,7 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
         app.setApplicationState(ApplicationState.OPEN);
 
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(competitionService.getById(app.getCompetition())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(app.getCompetition())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get("/application/" + app.getId() + "/track"))
                 .andExpect(status().is3xxRedirection())

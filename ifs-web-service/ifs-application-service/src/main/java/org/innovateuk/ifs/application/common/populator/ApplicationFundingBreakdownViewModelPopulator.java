@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -36,7 +37,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     private OrganisationRestService organisationRestService;
     private FinanceService financeService;
     private FileEntryRestService fileEntryRestService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private ApplicationService applicationService;
     private SectionService sectionService;
     private UserService userService;
@@ -46,7 +47,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     public ApplicationFundingBreakdownViewModelPopulator(FinanceService financeService,
                                                          FileEntryRestService fileEntryRestService,
                                                          OrganisationRestService organisationRestService,
-                                                         CompetitionService competitionService,
+                                                         CompetitionRestService competitionRestService,
                                                          ApplicationService applicationService,
                                                          SectionService sectionService,
                                                          QuestionService questionService,
@@ -58,7 +59,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
         this.organisationRestService = organisationRestService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.applicationService = applicationService;
         this.sectionService = sectionService;
         this.userService = userService;
@@ -69,7 +70,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     public ApplicationFundingBreakdownViewModel populate(long applicationId) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantUser.getOrganisationId());

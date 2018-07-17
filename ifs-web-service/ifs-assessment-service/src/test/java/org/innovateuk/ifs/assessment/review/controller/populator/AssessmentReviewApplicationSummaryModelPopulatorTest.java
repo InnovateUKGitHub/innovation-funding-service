@@ -6,13 +6,13 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewApplicationSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
@@ -73,7 +73,7 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
     private ApplicationService applicationService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private ProcessRoleService processRoleService;
@@ -126,7 +126,7 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
 
         when(formInputResponseRestService.getResponsesByApplicationId(applicationResource.getId())).thenReturn(restSuccess(formInputResponseResources));
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
-        when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(applicationResource.getCompetition())).thenReturn(restSuccess(competitionResource));
         when(formInputResponseService.mapFormInputResponsesToFormInput(formInputResponseResources)).thenReturn(mappedResponses);
         when(processRoleService.findProcessRolesByApplicationId(applicationResource.getId())).thenReturn(userApplicationRoles);
         when(assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(applicationResource.getId())).thenReturn(restSuccess(assessorFormInputResponseResources));
