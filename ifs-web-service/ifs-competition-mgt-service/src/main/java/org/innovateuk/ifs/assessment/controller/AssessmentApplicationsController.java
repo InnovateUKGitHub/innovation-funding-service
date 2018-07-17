@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResour
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.application.populator.ManageApplicationsModelPopulator;
+import org.innovateuk.ifs.management.application.list.populator.ManageApplicationsModelPopulator;
 import org.innovateuk.ifs.management.navigation.NavigationOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

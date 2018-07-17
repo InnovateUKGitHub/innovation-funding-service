@@ -16,8 +16,7 @@ import org.mapstruct.Mappings;
     uses = {
             OrganisationMapper.class,
             ApplicationMapper.class,
-            FileEntryMapper.class,
-            OrganisationSizeMapper.class
+            FileEntryMapper.class
     }
 )
 public abstract class ApplicationFinanceMapper extends BaseMapper<ApplicationFinance, ApplicationFinanceResource, Long> {

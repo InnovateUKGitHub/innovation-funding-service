@@ -1,17 +1,16 @@
 package org.innovateuk.ifs.management.model;
 
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.application.populator.NavigateApplicationsModelPopulator;
-import org.innovateuk.ifs.management.application.viewmodel.NavigateApplicationsViewModel;
+import org.innovateuk.ifs.management.application.list.populator.NavigateApplicationsModelPopulator;
+import org.innovateuk.ifs.management.application.list.viewmodel.NavigateApplicationsViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -22,7 +21,7 @@ public class NavigateApplicationsModelPopulatorTest {
     private NavigateApplicationsModelPopulator manageApplicationsModelPopulator;
 
     @Mock
-    private CompetitionRestService competitionRestService;
+    private CompetitionService competitionService;
 
     @Test
     public void populateModel() throws Exception {
@@ -35,7 +34,7 @@ public class NavigateApplicationsModelPopulatorTest {
                 .withName(competitionName)
                 .build();
 
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
+        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
 
         NavigateApplicationsViewModel viewModel = manageApplicationsModelPopulator.populateModel(competitionId);
 

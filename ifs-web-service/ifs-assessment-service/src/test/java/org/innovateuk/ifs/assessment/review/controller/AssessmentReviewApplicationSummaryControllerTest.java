@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
-import org.hamcrest.Matchers;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
@@ -12,12 +15,14 @@ import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeRe
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewApplicationSummaryModelPopulator;
+import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewApplicationSummaryViewModel;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -38,6 +43,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static java.util.Arrays.stream;
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
@@ -61,7 +67,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -84,6 +91,22 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
     @InjectMocks
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private SummaryViewModelFragmentPopulator summaryViewModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationFinanceSummaryViewModelPopulator applicationFinanceSummaryViewModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationFundingBreakdownViewModelPopulator applicationFundingBreakdownViewModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private ApplicationResearchParticipationViewModelPopulator applicationResearchParticipationViewModelPopulator;
+
     @Mock
     private ApplicantRestService applicantRestService;
 
@@ -101,6 +124,9 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
 
     @Mock
     private AssessmentRestService assessmentRestService;
+
+    @Mock
+    private InviteService inviteService;
 
     @Mock
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
@@ -134,19 +160,19 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
+        when(assessmentRestService.getByUserAndApplication(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(emptyList()));
 
-        mockMvc.perform(get("/review/{reviewId}/application/{applicationId}", reviewId, app.getId()   ))
+
+        MvcResult result = mockMvc.perform(get("/review/{reviewId}/application/{applicationId}", reviewId, app.getId()   ))
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessor-panel-application-overview"))
-                .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition", competitionRestService.getCompetitionById(app.getCompetition()).getSuccess()))
-                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(1))))
-                .andExpect(model().attribute("responses", formInputsToFormInputResponses))
-                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
-                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
+                .andReturn();
+
+        AssessmentReviewApplicationSummaryViewModel resultModel = (AssessmentReviewApplicationSummaryViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(resultModel.getSummaryViewModel().getCurrentApplication(), app);
+        assertEquals(resultModel.getCompetition(), competitionResource);
+        assertEquals(resultModel.getSummaryViewModel().getFeedbackSummary(), emptyList());
     }
 
     @Test
@@ -218,30 +244,20 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
         MvcResult result = mockMvc.perform(get("/review/{reviewId}/application/{applicationId}", reviewId, application.getId()   ))
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessor-panel-application-overview"))
-                .andExpect(model().attribute("currentApplication", application))
-                .andExpect(model().attribute("currentCompetition", competitionRestService.getCompetitionById(application.getCompetition()).getSuccess()))
-                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(2)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(1))))
-                .andExpect(model().attribute("responses", formInputsToFormInputResponses))
-                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
-                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
-                .andExpect(model().attribute("score", Matchers.hasItem(responses.get(0))))
-                .andExpect(model().attribute("feedback", Matchers.hasItem(responses.get(1))))
-                .andExpect(model().attribute("feedbackSummary", assessment))
                 .andReturn();
 
-        List<AssessmentResource> resultAssessment = (List<AssessmentResource>) result.getModelAndView().getModel().get("feedbackSummary");
+        AssessmentReviewApplicationSummaryViewModel resultModel = (AssessmentReviewApplicationSummaryViewModel) result.getModelAndView().getModel().get("model");
+
+        List<AssessmentResource> resultAssessment = resultModel.getSummaryViewModel().getFeedbackSummary();
         AssessmentFundingDecisionOutcomeResource fundingDecisionOutcome = resultAssessment.get(0).getFundingDecision();
         assertEquals(true, fundingDecisionOutcome.getFundingConfirmation());
         assertEquals(expectedAssessmentFeedback, fundingDecisionOutcome.getFeedback());
         assertEquals(expectedAssessmentComment, fundingDecisionOutcome.getComment());
 
-        List<AssessorFormInputResponseResource> assessorScoreResponse = (List<AssessorFormInputResponseResource>) result.getModelAndView().getModel().get("score");
+        List<AssessorFormInputResponseResource> assessorScoreResponse = resultModel.getFeedbackViewModel().getScore();
         assertEquals(expectedQuestionScore, assessorScoreResponse.get(0).getValue());
 
-        List<AssessorFormInputResponseResource> assessorFeedbackResponse = (List<AssessorFormInputResponseResource>) result.getModelAndView().getModel().get("feedback");
+        List<AssessorFormInputResponseResource> assessorFeedbackResponse = resultModel.getFeedbackViewModel().getFeedback();
         assertEquals(expectedQuestionFeedback, assessorFeedbackResponse.get(0).getValue());
     }
 

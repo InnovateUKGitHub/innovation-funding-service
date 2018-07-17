@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.feedback.populator;
 
-import org.innovateuk.ifs.application.common.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
@@ -9,6 +8,7 @@ import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackView
 import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.populator.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;

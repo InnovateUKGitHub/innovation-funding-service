@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 
 import javax.persistence.Entity;
@@ -17,15 +18,15 @@ import javax.persistence.ManyToOne;
 public class ApplicationFinance extends Finance {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="applicationId", referencedColumnName="id")
+    @JoinColumn(name = "applicationId", referencedColumnName = "id")
     private Application application;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="financeFileEntryId", referencedColumnName="id")
+    @JoinColumn(name = "financeFileEntryId", referencedColumnName = "id")
     private FileEntry financeFileEntry;
 
     public ApplicationFinance() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public ApplicationFinance(Application application, Organisation organisation) {
@@ -56,7 +57,8 @@ public class ApplicationFinance extends Finance {
     }
 
     public Integer getMaximumFundingLevel() {
-        return getOrganisation().getOrganisationType().getGrantClaimMaximums().stream()
+        return getApplication().getCompetition().getGrantClaimMaximums()
+                .stream()
                 .filter(this::isMatchingGrantClaimMaximum)
                 .findAny()
                 .map(GrantClaimMaximum::getMaximum)
@@ -64,19 +66,21 @@ public class ApplicationFinance extends Finance {
     }
 
     private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum) {
-         return isMatchingCompetitionType(grantClaimMaximum)
+        return isMatchingOrganisationType(grantClaimMaximum)
                 && isMatchingOrganisationSize(grantClaimMaximum)
                 && isMatchingResearchCategory(grantClaimMaximum);
     }
 
-    private boolean isMatchingCompetitionType(GrantClaimMaximum grantClaimMaximum) {
-        return grantClaimMaximum.getCompetitionType().getId().equals(getApplication().getCompetition().getCompetitionType().getId());
+    private boolean isMatchingOrganisationType(GrantClaimMaximum grantClaimMaximum) {
+        return getOrganisation().getOrganisationType().getId().equals(grantClaimMaximum.getOrganisationType().getId());
     }
 
     private boolean isMatchingOrganisationSize(GrantClaimMaximum grantClaimMaximum) {
-        return (grantClaimMaximum.getOrganisationSize() == null && getOrganisationSize() == null)
-                || (getOrganisationSize() != null
-                && grantClaimMaximum.getOrganisationSize().getId().equals(getOrganisationSize().getId()));
+        OrganisationSize organisationSize = getOrganisationSize();
+        if (organisationSize == null) {
+            return grantClaimMaximum.getOrganisationSize() == null;
+        }
+        return organisationSize == grantClaimMaximum.getOrganisationSize();
     }
 
     private boolean isMatchingResearchCategory(GrantClaimMaximum grantClaimMaximum) {

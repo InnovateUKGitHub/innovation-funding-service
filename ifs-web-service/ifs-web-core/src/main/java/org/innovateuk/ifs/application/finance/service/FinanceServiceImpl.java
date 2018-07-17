@@ -17,8 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 /**
  * {@code FinanceServiceImpl} implements {@link FinanceService} handles the finances for each of the organisations.
@@ -82,7 +83,7 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public List<ApplicationFinanceResource> getApplicationFinanceDetails(Long applicationId) {
         return applicationFinanceRestService.getFinanceDetails(applicationId).handleSuccessOrFailure(
-                failure -> Collections.<ApplicationFinanceResource> emptyList(),
+                failure -> emptyList(),
                 success -> success
         );
     }
@@ -90,7 +91,7 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId) {
         return applicationFinanceRestService.getFinanceTotals(applicationId).handleSuccessOrFailure(
-                failure -> Collections.<ApplicationFinanceResource> emptyList(),
+                failure -> emptyList(),
                 success -> success
         );
     }

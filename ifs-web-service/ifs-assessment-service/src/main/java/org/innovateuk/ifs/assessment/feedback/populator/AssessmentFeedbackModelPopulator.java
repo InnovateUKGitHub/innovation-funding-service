@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
@@ -61,9 +63,12 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
                 assessment.getApplication(),
                 applicationFormInputs);
         List<FormInputResource> assessmentFormInputs = getAssessmentFormInputs(question.getId());
-        List<ResearchCategoryResource> researchCategories = hasFormInputWithType(assessmentFormInputs, ASSESSOR_RESEARCH_CATEGORY)
-                ? categoryRestService.getResearchCategories().getSuccess()
-                : null;
+
+
+        List<ResearchCategoryResource> researchCategories =
+                findFormInputWithType(assessmentFormInputs, ASSESSOR_RESEARCH_CATEGORY).
+                        map(fi -> categoryRestService.getResearchCategories().getSuccess()).
+                        orElse(null);
 
         String applicantResponseValue = getApplicantResponseValue(applicationFormInputs, applicantResponses);
         FileDetailsViewModel appendixDetails = getAppendixDetails(applicationFormInputs, applicantResponses);
@@ -73,8 +78,8 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
                 question,
                 applicantResponseValue,
                 formatGuidanceScores(assessmentFormInputs),
-                hasFormInputWithType(assessmentFormInputs, ASSESSOR_SCORE),
-                hasFormInputWithType(assessmentFormInputs, ASSESSOR_APPLICATION_IN_SCOPE),
+                findFormInputWithType(assessmentFormInputs, ASSESSOR_SCORE).isPresent(),
+                findFormInputWithType(assessmentFormInputs, ASSESSOR_APPLICATION_IN_SCOPE).isPresent(),
                 appendixDetails,
                 researchCategories);
     }
@@ -90,19 +95,14 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
 
     private FileDetailsViewModel getAppendixDetails(List<FormInputResource> applicationFormInputs,
                                                     Map<Long, FormInputResponseResource> applicantResponses) {
-        FileDetailsViewModel appendixDetails = null;
-        if (hasFormInputWithType(applicationFormInputs, FILEUPLOAD)) {
 
-            FormInputResource appendixFormInput = applicationFormInputs.get(1);
+        return findFormInputWithType(applicationFormInputs, FILEUPLOAD).map(appendixFormInput -> {
             FormInputResponseResource applicantAppendixResponse = applicantResponses.get(appendixFormInput.getId());
             boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
-            if (applicantAppendixResponseExists) {
-                appendixDetails = new FileDetailsViewModel(appendixFormInput.getId(),
+            return applicantAppendixResponseExists ? new FileDetailsViewModel(appendixFormInput.getId(),
                         applicantAppendixResponse.getFilename(),
-                        applicantAppendixResponse.getFilesizeBytes());
-            }
-        }
-        return appendixDetails;
+                        applicantAppendixResponse.getFilesizeBytes()) : null;
+        }).orElse(null);
     }
 
     private String getApplicantResponseValue(List<FormInputResource> applicationFormInputs, Map<Long, FormInputResponseResource> applicantResponses) {
@@ -129,8 +129,8 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
         );
     }
 
-    private boolean hasFormInputWithType(List<FormInputResource> formInputs, FormInputType type) {
-        return formInputs.stream().anyMatch(formInput -> type == formInput.getType());
+    private Optional<FormInputResource> findFormInputWithType(List<FormInputResource> formInputs, FormInputType type) {
+        return simpleFindFirst(formInputs, formInput -> type.equals(formInput.getType()));
     }
 
     private List<FormInputResource> formatGuidanceScores(List<FormInputResource> assessorInputs) {
