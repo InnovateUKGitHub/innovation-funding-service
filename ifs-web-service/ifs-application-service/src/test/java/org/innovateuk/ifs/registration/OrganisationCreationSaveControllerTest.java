@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.controller.OrganisationCreationSaveController;
@@ -33,6 +34,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
@@ -91,6 +93,9 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     @Mock
     private CookieUtil cookieUtil;
 
+    @Mock
+    private InviteRestService inviteRestService;
+
     private OrganisationTypeForm organisationTypeForm;
     private OrganisationCreationForm organisationForm;
 
@@ -145,12 +150,10 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         setLoggedInUser(loggedInUser);
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-        when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
-        when(inviteOrganisationRestService.getByIdForAnonymousUserFlow(anyLong())).thenReturn(restSuccess(newInviteOrganisationResource().build()));
-        when(organisationService.createAndLinkByInvite(any(), any())).thenReturn(newOrganisationResource().withId(ORGANISATION_ID).build());
-        when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
+        when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.empty());
+        when(organisationService.createOrMatch(any())).thenReturn(newOrganisationResource().withId(ORGANISATION_ID).build());
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(COMPETITION_ID));
-        when(applicationService.createApplication(COMPETITION_ID, loggedInUser.getId(), ORGANISATION_ID, "")).thenReturn(newApplicationResource().withId(APPLICATION_ID).build());
+        when(applicationService.createApplication(COMPETITION_ID, loggedInUser.getId(), ORGANISATION_ID, "")).thenReturn(newApplicationResource().withId(APPLICATION_ID).withCompetition(COMPETITION_ID).build());
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                                 .thenReturn(restSuccess(newQuestionResource().withId(TEAM_QUESTION_ID).build()));
 
@@ -167,12 +170,10 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         setLoggedInUser(loggedInUser);
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-        when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
-        when(inviteOrganisationRestService.getByIdForAnonymousUserFlow(anyLong())).thenReturn(restSuccess(newInviteOrganisationResource().build()));
-        when(organisationService.createAndLinkByInvite(any(), any())).thenReturn(newOrganisationResource().withId(ORGANISATION_ID).build());
-        when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
+        when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.empty());
+        when(organisationService.createOrMatch(any())).thenReturn(newOrganisationResource().withId(ORGANISATION_ID).build());
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(COMPETITION_ID));
-        when(applicationService.createApplication(COMPETITION_ID, loggedInUser.getId(), ORGANISATION_ID, "")).thenReturn(newApplicationResource().withId(APPLICATION_ID).build());
+        when(applicationService.createApplication(COMPETITION_ID, loggedInUser.getId(), ORGANISATION_ID, "")).thenReturn(newApplicationResource().withId(APPLICATION_ID).withCompetition(COMPETITION_ID).build());
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restFailure(Collections.emptyList(), HttpStatus.NOT_FOUND));
 
@@ -189,13 +190,11 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         setLoggedInUser(newUserResource().withId(ASSESSOR_ID).withRolesGlobal(asList(Role.ASSESSOR)).build());
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
-        when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
-        when(inviteOrganisationRestService.getByIdForAnonymousUserFlow(anyLong())).thenReturn(restSuccess(newInviteOrganisationResource().build()));
-        when(organisationService.createAndLinkByInvite(any(), any())).thenReturn(newOrganisationResource().withId(ORGANISATION_ID).build());
-        when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
+        when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.empty());
+        when(organisationService.createOrMatch(any())).thenReturn(newOrganisationResource().withId(ORGANISATION_ID).build());
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(COMPETITION_ID));
         when(userRestService.grantRole(ASSESSOR_ID, Role.APPLICANT)).thenReturn(restSuccess());
-        when(applicationService.createApplication(COMPETITION_ID, ASSESSOR_ID, ORGANISATION_ID, "")).thenReturn(newApplicationResource().withId(APPLICATION_ID).build());
+        when(applicationService.createApplication(COMPETITION_ID, ASSESSOR_ID, ORGANISATION_ID, "")).thenReturn(newApplicationResource().withId(APPLICATION_ID).withCompetition(COMPETITION_ID).build());
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(newQuestionResource().withId(TEAM_QUESTION_ID).build()));
 
@@ -209,6 +208,30 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         verify(userRestService).grantRole(ASSESSOR_ID, Role.APPLICANT);
     }
 
+    @Test
+    public void saveOrganisation_loggedInInvitee() throws Exception {
+        setLoggedInUser(loggedInUser);
+        when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
+        when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
+        when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
+
+        when(inviteRestService.acceptInvite(INVITE_HASH, loggedInUser.getId())).thenReturn(restSuccess());
+        when(inviteRestService.getInviteByHash(INVITE_HASH)).thenReturn(restSuccess(newApplicationInviteResource().withApplication(APPLICATION_ID).build()));
+        when(applicationService.getById(APPLICATION_ID)).thenReturn(newApplicationResource().withId(APPLICATION_ID).withCompetition(COMPETITION_ID).build());
+
+        when(organisationService.createAndLinkByInvite(any(), any())).thenReturn(newOrganisationResource().withId(2L).build());
+        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.empty());
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
+                .thenReturn(restSuccess(newQuestionResource().withId(TEAM_QUESTION_ID).build()));
+
+        mockMvc.perform(post("/organisation/create/save-organisation")
+                .param("searchOrganisationId", "123"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(String.format("redirect:/application/%s/form/question/%s", APPLICATION_ID, TEAM_QUESTION_ID)));
+
+        verify(inviteRestService).acceptInvite(INVITE_HASH, loggedInUser.getId());
+        verify(registrationCookieService).deleteInviteHashCookie(any());
+    }
 
     @Test
     public void saveOrganisation_createOrMatchServiceCallIsMadeWhenHashIsNotPresent() throws Exception {

@@ -18,6 +18,7 @@ public class ConfirmOrganisationInviteOrganisationViewModel {
     private AddressResource organisationAddress;
     private String registerUrl;
 
+
     public ConfirmOrganisationInviteOrganisationViewModel(ApplicationInviteResource inviteResource, OrganisationResource organisation, AddressResource organisationAddress, String registerUrl) {
         this.partOfOrganisation = inviteResource.getInviteOrganisationNameConfirmedSafe();
         this.organisationType = organisation.getOrganisationTypeName();
@@ -60,4 +61,5 @@ public class ConfirmOrganisationInviteOrganisationViewModel {
     public String getRegisterUrl() {
         return registerUrl;
     }
+
 }

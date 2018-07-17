@@ -13,4 +13,6 @@ public interface InviteOrganisationRepository extends JpaRepository<InviteOrgani
     List<InviteOrganisation> findDistinctByInvitesApplicationId(Long applicationId);
 
     Optional<InviteOrganisation> findFirstByOrganisationIdAndInvitesApplicationId(Long organisationId, Long applicationId);
+
+    Optional<InviteOrganisation> findFirstByOrganisationIdAndInvitesUserId(Long organisationId, Long userId);
 }
