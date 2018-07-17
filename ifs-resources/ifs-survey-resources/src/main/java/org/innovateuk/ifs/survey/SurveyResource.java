@@ -15,6 +15,21 @@ public class SurveyResource {
 
     private String comments;
 
+    public SurveyResource() {
+    }
+
+    public SurveyResource(SurveyType surveyType,
+                          SurveyTargetType targetType,
+                          Long targetId,
+                          Satisfaction satisfaction,
+                          String comments) {
+        this.surveyType = surveyType;
+        this.targetType = targetType;
+        this.targetId = targetId;
+        this.satisfaction = satisfaction;
+        this.comments = comments;
+    }
+
     public SurveyType getSurveyType() {
         return surveyType;
     }
