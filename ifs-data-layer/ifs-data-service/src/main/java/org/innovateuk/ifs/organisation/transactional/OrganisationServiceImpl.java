@@ -77,8 +77,8 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         return serviceSuccess(new LinkedHashSet<>(organisationResources));
     }
 
-    private boolean isLeadOrganisation(long organisationId, long leadOrganisationId) {
-        return leadOrganisationId == organisationId;
+    private boolean isLeadOrganisation(long organisationId, Long leadOrganisationId) {
+        return leadOrganisationId.equals(organisationId);
     }
 
     @Override
