@@ -91,11 +91,8 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
                         .divide(industryTotalEligibleCosts,2, BigDecimal.ROUND_HALF_UP)
                         .multiply(BigDecimal.valueOf(100));
 
-        BigDecimal academicTotalGrantClaim = academicTotalEligibleCosts.equals(BigDecimal.ZERO) ?
-                BigDecimal.ZERO :
-                academicTotalGrant
-                        .divide(academicTotalEligibleCosts,2, BigDecimal.ROUND_HALF_UP)
-                        .multiply(BigDecimal.valueOf(100));
+        // Grant claim is always 100% for academic organisations
+        BigDecimal academicTotalGrantClaim = BigDecimal.valueOf(100);
 
         BigDecimal allTotalGrantClaim = allTotalEligibleCosts.equals(BigDecimal.ZERO) ?
                 BigDecimal.ZERO :
@@ -123,19 +120,31 @@ public class GrantOfferLetterFinanceTotalsTablePopulator extends BaseGrantOfferL
 
         return simpleToMap(organisations,
                            Organisation::getName,
-                           org -> getGrantClaimForOrg(projectId, org.getId()));
+                           org -> getGrantClaimForOrg(projectId, org));
     }
 
 
-    private BigDecimal getGrantClaimForOrg(long projectId, long organisationId) {
-        ProjectFinance orgFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        List<ProjectFinanceRow> rows = projectFinanceRowRepository.findByTargetId(orgFinance.getId());
-        Optional<ProjectFinanceRow> grantClaimRow = simpleFindFirst(rows,
-                                                                    pfr -> GRANT_CLAIM_IDENTIFIER.equals(pfr.getName()));
+    private BigDecimal getGrantClaimForOrg(long projectId, Organisation organisation) {
+        if(isAcademic(organisation.getOrganisationType())) {
 
-        return grantClaimRow
-                .map(row -> BigDecimal.valueOf(row.getQuantity()))
-                .orElse(BigDecimal.ZERO);
+            // Grant claim is always 100% for academic organisations
+            return BigDecimal.valueOf(100);
+        } else {
+            
+            ProjectFinance orgFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(
+                    projectId,
+                    organisation.getId()
+            );
+            List<ProjectFinanceRow> rows = projectFinanceRowRepository.findByTargetId(orgFinance.getId());
+            Optional<ProjectFinanceRow> grantClaimRow = simpleFindFirst(
+                    rows,
+                    pfr -> GRANT_CLAIM_IDENTIFIER.equals(pfr.getName())
+            );
+
+            return grantClaimRow
+                    .map(row -> BigDecimal.valueOf(row.getQuantity()))
+                    .orElse(BigDecimal.ZERO);
+        }
     }
 
     private BigDecimal getTotalOfOrgs(Map<String, BigDecimal> finances, List<String> orgs) {
