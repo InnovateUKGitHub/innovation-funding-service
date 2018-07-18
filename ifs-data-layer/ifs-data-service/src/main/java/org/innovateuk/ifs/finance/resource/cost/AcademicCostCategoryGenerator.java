@@ -38,10 +38,13 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<Acade
         this.financeRowName = financeRowName;
     }
 
+    private static List<AcademicCostCategoryGenerator> excludedFromSpendProfileCategories = asList(DIRECTLY_INCURRED_EQUIPMENT,
+                                                                                                   INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE,
+                                                                                                   INDIRECT_COSTS_EQUIPMENT);
 
     @Override
     public boolean isIncludedInSpendProfile() {
-        return true;
+        return !excludedFromSpendProfileCategories.contains(this);
     }
 
     @Override
