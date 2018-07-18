@@ -46,7 +46,7 @@
                                     <h2 class="govuk-fieldset__heading">Do you believe that this application is suitable for funding?</h2>
                                 </legend>
                                 <th:block th:if="${#fields.hasErrors('fundingConfirmation')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}"></span>
+                                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}"></span>
                                 </th:block>
                                 <div class="govuk-radios govuk-radios--inline">
                                     <div class="govuk-radios__item">
@@ -58,8 +58,7 @@
                                             required="required"
                                             th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
                                             data-conditionally-remove-required="#feedback" />
-                                        <label class="form-label"
-                                               th:for="${#ids.prev('fundingConfirmation')}"
+                                        <label th:for="${#ids.prev('fundingConfirmation')}"
                                                class="govuk-label govuk-radios__label">Yes</label>
                                     </div>
                                     <div class="govuk-radios__item">
@@ -71,8 +70,7 @@
                                             required="required"
                                             th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
                                             data-conditionally-add-required="#feedback, .form-group input" />
-                                        <label class="form-label"
-                                               th:for="${#ids.prev('fundingConfirmation')}"
+                                        <label th:for="${#ids.prev('fundingConfirmation')}"
                                                class="govuk-label govuk-radios__label">No</label>
                                     </div>
                                 </div>
@@ -87,23 +85,22 @@
                         </legend>
                         <div class="question" th:id="form-input-feedback">
                             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('feedback')} ? 'govuk-form-group--error'">
-                                <label class="form-label form-label-bold" th:for="feedback">
+                                <label class="govuk-label" th:for="feedback">
                                     Your feedback
-                                    <span class="govuk-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
-                                    <th:block th:if="${#fields.hasErrors('feedback')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('feedback')}" th:text="${err}"></span>
-                                    </th:block>
                                 </label>
-
+                                <span class="govuk-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
+                                <th:block th:if="${#fields.hasErrors('feedback')}">
+                                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('feedback')}" th:text="${err}"></span>
+                                </th:block>
                                 <div class="textarea-wrapped word-count">
                                     <textarea
-                                        class="form-control width-full"
+                                        class="govuk-textarea width-full"
                                         maxlength="5000"
                                         data-max_words="100"
                                         data-maxwordslength="100"
                                         data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                                         th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                                        th:errorclass="form-control-error"
+                                        th:errorclass="govuk-textarea--error"
                                         rows="4"
                                         th:field="*{feedback}"></textarea>
                                     <div class="textarea-footer" th:with="feedback=*{feedback}" aria-live="polite" aria-atomic="true" role="status">
@@ -115,22 +112,21 @@
 
                         <div class="question" th:id="form-input-comments">
                             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('comment')} ? 'govuk-form-group--error'">
-                                <label class="form-label form-label-bold" th:for="comment">
+                                <label class="govuk-label" th:for="comment">
                                     Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
-                                    <th:block th:if="${#fields.hasErrors('comment')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
-                                    </th:block>
                                 </label>
-
+                                <th:block th:if="${#fields.hasErrors('comment')}">
+                                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
+                                </th:block>
                                 <div class="textarea-wrapped word-count">
                                     <textarea
-                                        class="form-control width-full"
+                                        class="govuk-textarea width-full"
                                         maxlength="5000"
                                         data-max_words="100"
                                         data-maxwordslength="100"
                                         data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                                         th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
-                                        th:errorclass="form-control-error"
+                                        th:errorclass="govuk-textarea--error"
                                         rows="4"
                                         th:field="*{comment}"></textarea>
 

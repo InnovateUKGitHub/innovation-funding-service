@@ -17,7 +17,7 @@
                         <h2 class="govuk-fieldset__heading">How many assessors are required for each application?</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('assessorCount')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" th:each="assessorOption : ${model.assessorOptions}">
@@ -37,19 +37,24 @@
                 </fieldset>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorPay')} ? 'govuk-form-group--error'">
-                <label class="form-label" for="assessorPay">
-                    <span class="form-label-bold">How much do assessors receive per application?</span>
-                    <span class="govuk-hint">This information will be available in the assessor invites.</span>
-                     <th:block th:if="${#fields.hasErrors('assessorPay')}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" for="assessorPay">
+                    How much do assessors receive per application?
                 </label>
-                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" max="99999999"
-                        th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
+                <span class="govuk-hint">This information will be available in the assessor invites.</span>
+                <th:block th:if="${#fields.hasErrors('assessorPay')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input width-medium"
+                       id="assessorPay"
+                       name="assessorPay"
+                       type="number"
+                       min="0"
+                       max="99999999"
+                       th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
                        data-th-attr="data-max-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
                                      data-min-errormessage=#{validation.assessorsform.assessorPay.min},
                                      data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
-                       th:errorclass="form-control-error"
+                       th:errorclass="govuk-input--error"
                        th:readonly="${model.general.state.setupAndLive}"/>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('hasAssessmentPanel')} ? 'govuk-form-group--error'">
@@ -58,7 +63,7 @@
                         <h2 class="govuk-fieldset__heading">Enable assessment panel for this competition?</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('hasAssessmentPanel')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('hasAssessmentPanel')}" th:text="${err}" />
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('hasAssessmentPanel')}" th:text="${err}" />
                     </th:block>
                     <div class="govuk-radios govuk-radios--inline">
                         <div class="govuk-radios__item">
@@ -98,7 +103,7 @@
                         <h2 class="govuk-fieldset__heading">Enable interview stage for this competition?</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('hasInterviewStage')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('hasInterviewStage')}" th:text="${err}" />
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('hasInterviewStage')}" th:text="${err}" />
                     </th:block>
                     <div class="govuk-radios govuk-radios--inline">
                         <div class="govuk-radios__item">
@@ -139,7 +144,7 @@
                         <h2 class="govuk-fieldset__heading">Assessor view of finances</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('assessorFinanceView')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('assessorFinanceView')}" th:text="${err}" />
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('assessorFinanceView')}" th:text="${err}" />
                     </th:block>
                     <div th:if="${model.general.state.competitionStatus != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}"
                          class="govuk-radios govuk-radios--inline">

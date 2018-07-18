@@ -114,10 +114,10 @@ the user fills in Labour
     the user clicks the button/link            jQuery=button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
     the user enters text to a text field       css=input[name^="labour-labourDaysYearly"]    230
-    the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
-    the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first    anotherrole
-    the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
-    the user enters text to a text field       jQuery=input.form-control[name^=labour-labour][value=""]:first    100
+    the user should see the element            jQuery=input.govuk-input[name^=labour-role]:text[value=""]:first
+    the user enters text to a text field       jQuery=input.govuk-input[name^=labour-role]:text[value=""]:first    anotherrole
+    the user enters text to a text field       jQuery=input.govuk-input[name^=labour-gross][value=""]:first    120000
+    the user enters text to a text field       jQuery=input.govuk-input[name^=labour-labour][value=""]:first    100
     the user clicks the button/link            jQuery=button:contains("Labour")
 
 the user fills in Overhead costs
@@ -159,7 +159,7 @@ the user fills in Material
 
 the user fills in Capital usage
     the user clicks the button/link       jQuery=button:contains("Capital usage")
-    the user enters text to a text field  css=textarea.form-control[name^=capital_usage-description]  some description
+    the user enters text to a text field  css=textarea.govuk-textarea[name^=capital_usage-description]  some description
     Click Element                         jQuery=label:contains("New")
     the user enters text to a text field  css=.form-finances-capital-usage-depreciation  10
     the user enters text to a text field  css=.form-finances-capital-usage-npv  5000
@@ -172,9 +172,9 @@ the user fills in Capital usage
 the user fills in Subcontracting costs
     the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
     the user enters text to a text field  css=.form-finances-subcontracting-company  SomeName
-    the user enters text to a text field  css=input.form-control[name^=subcontracting-country]  Netherlands
-    the user enters text to a text field  css=textarea.form-control[name^=subcontracting-role]  Quality Assurance
-    the user enters text to a text field  css=input.form-control[name^=subcontracting-subcontractingCost]  1000
+    the user enters text to a text field  css=input.govuk-input[name^=subcontracting-country]  Netherlands
+    the user enters text to a text field  css=textarea.govuk-textarea[name^=subcontracting-role]  Quality Assurance
+    the user enters text to a text field  css=input.govuk-input[name^=subcontracting-subcontractingCost]  1000
     the user clicks the button/link       jQuery=button:contains("Subcontracting costs")
 
 the user fills in Travel and subsistence
@@ -187,8 +187,8 @@ the user fills in Travel and subsistence
 the user fills in Other costs
     the user clicks the button/link       jQuery=button:contains("Other costs")
     the user removes prev costs if there are any
-    the user enters text to a text field  css=textarea.form-control[name^=other_costs-description]  some other costs
-    the user enters text to a text field  css=input.form-control[name^=other_costs-otherCost]  50
+    the user enters text to a text field  css=textarea.govuk-textarea[name^=other_costs-description]  some other costs
+    the user enters text to a text field  css=input.govuk-input[name^=other_costs-otherCost]  50
     the user clicks the button/link       jQuery=button:contains("Other costs")
 
 the user removes prev costs if there are any

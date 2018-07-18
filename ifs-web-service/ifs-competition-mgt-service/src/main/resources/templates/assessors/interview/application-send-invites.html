@@ -70,7 +70,7 @@
                                  th:class="${isError ? 'govuk-form-group--error' : ''}">
                                 <th:block th:if="${isError}">
                                     <th:block th:if="${isError}">
-                                        <span class="error-message" th:each="err : ${#fields.errors(fieldName)}" th:text="${err}" />
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors(fieldName)}" th:text="${err}" />
                                     </th:block>
                                     <p class="uploaded-file">No file currently uploaded</p>
                                 </th:block>
@@ -109,13 +109,13 @@
             <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
 
             <div class="form-group govuk-!-margin-bottom-6 govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
-                <label class="form-label-bold" th:for="${#ids.next('subject')}">
-                    <span>Email subject</span>
-                    <th:block th:if="${#fields.hasErrors('subject')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" th:for="${#ids.next('subject')}">
+                    Email subject
                 </label>
-                <input class="form-control width-full"
+                <th:block th:if="${#fields.hasErrors('subject')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input width-full"
                        id="subject"
                        type="text"
                        th:field="*{subject}"
@@ -127,9 +127,13 @@
             <p th:utext="${model.content}" class="govuk-hint" style="white-space: pre-wrap">Read-only email content</p>
 
             <div class="form-group govuk-!-margin-top-6">
-                <label class="form-label-bold" for="message">Additional text</label>
+                <label class="govuk-label" for="message">Additional text</label>
                 <div class="textarea-wrapped">
-                    <textarea id="message" rows="8" data-editor="html" class="width-full" th:field="*{content}">
+                    <textarea id="message"
+                              rows="8"
+                              data-editor="html"
+                              class="govuk-textarea width-full"
+                              th:field="*{content}">
                     </textarea>
                 </div>
             </div>

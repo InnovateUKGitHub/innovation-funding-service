@@ -32,21 +32,21 @@
             <h2 class="govuk-heading-m">Project location</h2>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'govuk-form-group--error'" >
-                <label class="form-label-bold" for="postcode">
+                <label class="govuk-label" for="postcode">
                     Postcode
-                    <span class="govuk-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>
                 </label>
+                <span class="govuk-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>
                 <th:block th:if="${#fields.hasErrors('postcode')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('postcode')}" th:text="${err}" />
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('postcode')}" th:text="${err}" />
                 </th:block>
                 <input name="postcode"
                        id="postcode"
                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                        type="text"
-                       class="form-control width-medium"
+                       class="govuk-input width-medium"
                        required="required"
                        th:value="${form.getPostcode() != null ? form.getPostcode() : NULL}"
-                       th:errorclass="form-control-error"
+                       th:errorclass="govuk-input--error"
                        th:field="*{postcode}" />
             </div>
 

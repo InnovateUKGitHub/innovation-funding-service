@@ -43,72 +43,72 @@
                 <form th:action="@{/project/{projectId}/monitoring-officer/confirm(projectId=${model.projectId})}" th:object="${form}" method="post" th:with="readonly=${model.readOnly}" novalidate="novalidate">
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
-                        <label class="form-label" for="firstName">
-                            <span class="form-label-bold">First name</span>
-                              <th:block th:if="${#fields.hasErrors('firstName')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" for="firstName">
+                            First name
                         </label>
+                        <th:block th:if="${#fields.hasErrors('firstName')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                        </th:block>
                         <input id="firstName"
                                type="text"
                                pattern="\D{2,}"
                                minlength="2"
                                maxlength="70"
-                               th:errorclass="form-control-error"
+                               th:errorclass="govuk-input--error"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.standard.firstname.required},data-pattern-errormessage=#{validation.standard.firstname.invalid},data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)}"
-                               class="form-control width-full"
+                               class="govuk-input width-full"
                                th:readonly="${readonly}"
                                th:field="*{firstName}" />
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'govuk-form-group--error'">
-                        <label class="form-label" for="lastName">
-                            <span class="form-label-bold">Last name</span>
-                            <th:block th:if="${#fields.hasErrors('lastName')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" for="lastName">
+                            Last name
                         </label>
+                        <th:block th:if="${#fields.hasErrors('lastName')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                        </th:block>
                         <input id="lastName"
                                type="text"
                                pattern="\D{2,}"
                                minlength="2"
                                maxlength="70"
-                               th:errorclass="form-control-error"
+                               th:errorclass="govuk-input--error"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.standard.lastname.required},data-pattern-errormessage=#{validation.standard.lastname.invalid},data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)}"
-                               class="form-control width-full"
+                               class="govuk-input width-full"
                                th:readonly="${readonly}"
                                th:field="*{lastName}" />
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('emailAddress')} ? 'govuk-form-group--error'">
-                        <label class="form-label" for="emailAddress">
-                            <span class="form-label-bold">Email</span>
-                            <th:block th:if="${#fields.hasErrors('emailAddress')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" for="emailAddress">
+                            Email
                         </label>
+                        <th:block th:if="${#fields.hasErrors('emailAddress')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}"></span>
+                        </th:block>
                         <input id="emailAddress"
                                type="email"
-                               th:errorclass="form-control-error"
+                               th:errorclass="govuk-input--error"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.invite.email.required}"
-                               class="form-control width-full"
+                               class="govuk-input width-full"
                                th:readonly="${readonly}"
                                th:field="*{emailAddress}" />
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
-                        <label class="form-label" for="phoneNumber">
-                            <span class="form-label-bold">Phone number</span>
-                            <th:block th:if="${#fields.hasErrors('phoneNumber')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" for="phoneNumber">
+                            Phone number
                         </label>
+                        <th:block th:if="${#fields.hasErrors('phoneNumber')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
+                        </th:block>
                         <input type="tel"
-                               th:errorclass="form-control-error"
-                               class="form-control"
+                               th:errorclass="govuk-input--error"
+                               class="govuk-input"
                                th:readonly="${readonly}"
                                th:field="*{phoneNumber}"
                                required="required"

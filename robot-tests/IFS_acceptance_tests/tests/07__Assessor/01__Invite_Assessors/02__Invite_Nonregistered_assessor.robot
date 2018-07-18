@@ -132,7 +132,7 @@ the user should not see the validation error in the create assessor form
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=button:contains("Continue")
     Wait for autosave
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.govuk-error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
 
 the assessor shouldn't be able to reject the rejected competition

@@ -8,12 +8,12 @@
         <fieldset class="govuk-fieldset">
             <legend class="govuk-visually-hidden">Sign in</legend>
             <div class="govuk-form-group">
-                <label class="form-label" for="id_email">Email address</label>
+                <label class="govuk-label" for="id_email">Email address</label>
                 <input class="form-control width-full" type="text" id="id_email" name="email" value="" />
             </div><!-- .form-group -->
 
             <div class="govuk-form-group">
-                <label class="form-label" for="id_password" style="position: relative">
+                <label class="govuk-label" for="id_password" style="position: relative">
                   Password
                   <input class="form-control width-full" type="password" id="id_password" name="password1" value="" />
 
@@ -42,11 +42,11 @@
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">Sign in</legend>
                     <div class="govuk-form-group">
-                        <label class="form-label" for="id_email">Email address</label>
+                        <label class="govuk-label" for="id_email">Email address</label>
                         <input class="form-control width-full" type="text" id="id_email" name="email" value="" />
                     </div><!-- .form-group -->
                     <div class="govuk-form-group">
-                        <label class="form-label" for="id_password" style="position: relative">
+                        <label class="govuk-label" for="id_password" style="position: relative">
                             Password
                             <input class="form-control width-full" type="password" id="id_password" name="password1" value="" />
                             <th:block th:if="${param.action != null and param.action[0] == 'toggle'}">
@@ -151,10 +151,10 @@
         <fieldset class="govuk-fieldset">
             <legend class="govuk-visually-hidden">Your details</legend>
             <div class="govuk-form-group">
-                <label class="form-label" for="title">
-                    <span class="form-label-bold">Title</span>
+                <label class="govuk-label" for="title">
+                    <span class="govuk-label">Title</span>
                 </label>
-                <select class="form-control width-medium" id="title" name="title">
+                <select class="govuk-select width-medium" id="title" name="title">
                     <option value="">Mr</option>
                     <option value="">Miss</option>
                     <option value="">Mrs</option>
@@ -163,20 +163,20 @@
                 </select>
             </div>
             <div class="govuk-form-group">
-                <label class="form-label" for="first-name">
-                    <span class="form-label-bold">First name</span>
+                <label class="govuk-label" for="first-name">
+                    <span class="govuk-label">First name</span>
                 </label>
                 <input class="form-control" id="first-name" name="first-name" type="text" />
             </div>
             <div class="govuk-form-group">
-                <label class="form-label" for="last-name">
-                    <span class="form-label-bold">Last name</span>
+                <label class="govuk-label" for="last-name">
+                    <span class="govuk-label">Last name</span>
                 </label>
                 <input class="form-control" id="last-name" name="last-name" type="text" />
             </div>
             <div class="govuk-form-group">
-                <label class="form-label" for="phone-number">
-                    <span class="form-label-bold">Phone number</span>
+                <label class="govuk-label" for="phone-number">
+                    <span class="govuk-label">Phone number</span>
                     <span class="govuk-hint">We may use this to contact you about the application</span>
                 </label>
                 <input class="form-control" id="phone-number" name="phone-number" type="text" />
@@ -186,14 +186,14 @@
                 <p class="govuk-hint">You will need this to sign into your account, the provided email is:<br /><strong>andy.jones@nomensa.com</strong></p>
             </div>
             <div class="govuk-form-group">
-                <label class="form-label" for="password">
-                    <span class="form-label-bold">Password</span>
+                <label class="govuk-label" for="password">
+                    <span class="govuk-label">Password</span>
                 </label>
                 <input class="form-control" id="password" name="password" type="password" />
             </div>
             <div class="govuk-form-group">
-                <label class="form-label" for="retype-password">
-                    <span class="form-label-bold">Re-type password</span>
+                <label class="govuk-label" for="retype-password">
+                    <span class="govuk-label">Re-type password</span>
                 </label>
                 <input class="form-control" id="retype-password" name="retype-password" type="password" />
             </div>
@@ -1210,8 +1210,8 @@
                 <legend class="govuk-visually-hidden">Business organisation</legend>
 
                 <div class="govuk-form-group">
-                    <label class="form-label" for="org-name">
-                        <span class="form-label-bold">Find your organisation on Companies House
+                    <label class="govuk-label" for="org-name">
+                        <span class="govuk-label">Find your organisation on Companies House
                         <span class="govuk-hint">Enter your company name or registration number</span>
 
                         <th:block th:if="${status == 'projectSetup'}">
@@ -1262,23 +1262,23 @@
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">Organisation details</legend>
                     <div class="govuk-form-group">
-                        <label class="form-label" for="organisation-name">
-                            <span class="form-label-bold">Organisation name</span>
+                        <label class="govuk-label" for="organisation-name">
+                            <span class="govuk-label">Organisation name</span>
                         </label>
                         <input class="form-control" id="organisation-name" name="organisation-name" type="text" />
                     </div>
                     <div class="govuk-form-group">
-                        <label class="form-label" for="postcode-check">
-                            <span class="form-label-bold">Postcode</span>
+                        <label class="govuk-label" for="postcode-check">
+                            <span class="govuk-label">Postcode</span>
                         </label>
                         <input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
                         <button type="submit" id="postcode-lookup" class="govuk-button">Find UK address</button>
                     </div>
                     <div class="govuk-form-group" id="select-address-block" style="display: none">
-                        <label class="form-label" for="title">
-                            <span class="form-label-bold">Select your address</span>
+                        <label class="govuk-label" for="title">
+                            <span class="govuk-label">Select your address</span>
                         </label>
-                        <select class="form-control" id="select-address" name="select-address">
+                        <select class="govuk-select" id="select-address" name="select-address">
                             <option value="">BS1 4NT, Peter Brett Associates, 10, Queen Square, Bristol </option>
                             <option value="">BS1 4NT, Sybase (UK) Ltd, 10, Queen Square, Bristol  </option>
                             <option value="">BS1 4NT, Hydrock, 11-12, Queen Square, Bristol </option>
@@ -1290,38 +1290,38 @@
                 <fieldset id="address-details" class="extra-margin">
                     <legend class="govuk-visually-hidden">Address details</legend>
                     <div class="govuk-form-group">
-                        <label class="form-label" for="street">
-                            <span class="form-label-bold">Street</span>
+                        <label class="govuk-label" for="street">
+                            <span class="govuk-label">Street</span>
                         </label>
                         <input class="form-control" id="street" name="street" type="text" />
                     </div>
                     <div class="govuk-form-group">
-                        <label class="form-label govuk-visually-hidden" for="street-2">
-                            <span class="form-label-bold">Street line 2</span>
+                        <label class="govuk-label govuk-visually-hidden" for="street-2">
+                            <span class="govuk-label">Street line 2</span>
                         </label>
                         <input class="form-control" id="street-2" name="street-2" type="text" />
                     </div>
                     <div class="govuk-form-group">
-                        <label class="form-label" for="street-2">
-                            <span class="form-label-bold govuk-visually-hidden">Street line 3</span>
+                        <label class="govuk-label" for="street-2">
+                            <span class="govuk-label govuk-visually-hidden">Street line 3</span>
                         </label>
                         <input class="form-control" id="street-3" name="street-2" type="text" />
                     </div>
                     <div class="govuk-form-group">
-                        <label class="form-label" for="town">
-                            <span class="form-label-bold">Town</span>
+                        <label class="govuk-label" for="town">
+                            <span class="govuk-label">Town</span>
                         </label>
                         <input class="form-control" id="town" name="town" type="text" />
                     </div>
                     <div class="govuk-form-group">
-                        <label class="form-label" for="county">
-                            <span class="form-label-bold">County</span>
+                        <label class="govuk-label" for="county">
+                            <span class="govuk-label">County</span>
                         </label>
                         <input class="form-control" id="county" name="county" type="text" />
                     </div>
                     <div class="govuk-form-group">
-                        <label class="form-label" for="postcode">
-                            <span class="form-label-bold">Postcode</span>
+                        <label class="govuk-label" for="postcode">
+                            <span class="govuk-label">Postcode</span>
                         </label>
                         <input class="form-control" id="postcode" name="postcode" type="text" />
                     </div>

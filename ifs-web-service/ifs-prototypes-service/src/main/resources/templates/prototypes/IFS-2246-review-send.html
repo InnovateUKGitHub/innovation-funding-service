@@ -98,7 +98,7 @@
                             <div class="upload-section">
                                 <div th:class="${param.status != null and param.status[0] == 'error'} ? 'govuk-form-group--error'">
                                     <th:block th:if="${param.status != null and param.status[0] == 'error'}">
-                                        <span class="error-message">Your upload must be a PDF.</span>
+                                        <span class="govuk-error-message">Your upload must be a PDF.</span>
                                         <p class="uploaded-file">No file currently uploaded</p>
                                     </th:block>
                                     <button class="button-secondary" th:formaction="${#httpServletRequest.requestURI}">+ Upload</button>

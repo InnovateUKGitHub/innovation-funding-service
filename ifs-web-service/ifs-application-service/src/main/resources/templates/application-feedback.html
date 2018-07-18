@@ -72,7 +72,7 @@
                                 </details>
                                 <div th:unless="${model.interviewFeedbackViewModel.hasResponse()}"th:classappend="${#fields.hasErrors('response')} ? 'govuk-form-group--error'">
                                     <th:block th:if="${#fields.hasErrors('response')}">
-                                        <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
                                     </th:block>
                                     <p class="uploaded-file">No file currently uploaded</p>
                                     <input type="file" id="response" name="response" class="inputfile">

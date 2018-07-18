@@ -21,7 +21,7 @@
                         <h2 class="govuk-fieldset__heading">Please choose the project type.</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('singleOrCollaborative')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" th:each="collaborationLevel : ${model.collaborationLevels}">
@@ -49,18 +49,24 @@
                         <h2 class="govuk-fieldset__heading">Please choose the research categories.</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('researchCategoryId')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}"></span>
                     </th:block>
-                    <div class="multiple-choice" th:each="researchCategory : ${model.researchCategories}" >
-                        <input th:value="${researchCategory.id}"
-                                type="checkbox"
-                                name="researchCategoryId"
-                                th:id="${'research-categories-' + researchCategory.id}"
-                                th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}"
-                                required="required"
-                                th:attr="data-required-errormessage=#{validation.eligibilityform.researchcategoryid.required}" />
-                        <label th:for="${'research-categories-' + researchCategory.id}" th:text="${researchCategory.name}"></label>
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item" th:each="researchCategory : ${model.researchCategories}" >
+                            <input th:value="${researchCategory.id}"
+                                   type="checkbox"
+                                   class="govuk-checkboxes__input"
+                                   name="researchCategoryId"
+                                   th:id="${'research-categories-' + researchCategory.id}"
+                                   th:checked="${competitionSetupForm.includesResearchCategory(researchCategory.id)}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.eligibilityform.researchcategoryid.required}" />
+                            <label th:for="${'research-categories-' + researchCategory.id}"
+                                   th:text="${researchCategory.name}"
+                                   class="govuk-label govuk-checkboxes__label"></label>
+                        </div>
                     </div>
+
                 </fieldset>
             </div>
 
@@ -74,16 +80,23 @@
                     <th:block th:if="${#fields.hasErrors('leadApplicantTypes')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('leadApplicantTypes')}" th:text="${err}"></span>
                     </th:block>
-                     <div class="multiple-choice" th:each="leadApplicantType : ${model.leadApplicantTypes}">
-                        <input th:id="${'lead-applicant-type-' + leadApplicantType.id}"
-                               name="leadApplicantTypes"
-                               th:value="${leadApplicantType.id}"
-                               type="checkbox"
-                               required="required"
-                               th:checked="${competitionSetupForm.includesLeadApplicantType(leadApplicantType.id)}"
-                               th:attr="data-required-errormessage=#{validation.eligibilityform.leadApplicantTypes.required}"/>
-                        <label th:for="${'lead-applicant-type-' + leadApplicantType.id}" th:text="${leadApplicantType.name}"></label>
-                     </div>
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item"
+                             th:each="leadApplicantType : ${model.leadApplicantTypes}">
+                            <input th:id="${'lead-applicant-type-' + leadApplicantType.id}"
+                                   class="govuk-checkboxes__input"
+                                   name="leadApplicantTypes"
+                                   th:value="${leadApplicantType.id}"
+                                   type="checkbox"
+                                   required="required"
+                                   th:checked="${competitionSetupForm.includesLeadApplicantType(leadApplicantType.id)}"
+                                   th:attr="data-required-errormessage=#{validation.eligibilityform.leadApplicantTypes.required}"/>
+                            <label th:for="${'lead-applicant-type-' + leadApplicantType.id}"
+                                   th:text="${leadApplicantType.name}"
+                                   class="govuk-label govuk-checkboxes__label"></label>
+                        </div>
+                    </div>
+
                 </fieldset>
             </div>
 
@@ -98,7 +111,7 @@
                     <th:block th:if="${#fields.hasErrors('researchParticipationAmountId')}">
                         <span class="error-message" th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}"></span>
                     </th:block>
-                    <select class="form-control width-large"
+                    <select class="govuk-select width-large"
                             name="researchParticipationAmountId"
                             id="researchParticipation"
                             required="required"

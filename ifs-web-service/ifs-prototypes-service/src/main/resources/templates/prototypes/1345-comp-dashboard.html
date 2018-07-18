@@ -54,7 +54,7 @@
 			<div class="govuk-grid-row">
 				<div class="govuk-grid-column-one-third">
 					<label class="form-label" for="filterStatus">Status</label>
-					<select class="form-control" id="filterStatus" name="filterStatus">
+					<select class="govuk-select" id="filterStatus" name="filterStatus">
 
 						<option th:if="${param.filterStatus != null}" th:remove="tag">
 							<option th:text="${param.filterStatus[0]}" selected="selected">TEST</option>
@@ -75,7 +75,7 @@
 				</div>
 				<div class="govuk-grid-column-one-third">
 					<label class="form-label" for="filterCompType">Competition type</label>
-					<select class="form-control" id="filterCompType" name="filterCompType">
+					<select class="govuk-select" id="filterCompType" name="filterCompType">
 
 						<option th:if="${param.filterCompType != null}" th:remove="tag">
 							<option th:text="${param.filterCompType[0]}" selected="selected">TEST</option>
@@ -93,7 +93,7 @@
 				</div>
 				<div class="govuk-grid-column-one-third">
 					<label class="form-label" for="filterInnovationArea">Innovation area</label>
-					<select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
+					<select class="govuk-select" id="filterInnovationArea" name="filterInnovationArea">
 
 						<option th:if="${param.filterInnovationArea != null}" th:remove="tag">
 							<option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
@@ -111,7 +111,7 @@
 			<div class="govuk-grid-row extra-margin">
 				<div class="column-two-thirds">
 					<label class="form-label" for="filterSearch">Search</label>
-					<input type="text" class="form-control" id="filterSearch"/>
+					<input type="text" class="govuk-input" id="filterSearch"/>
 				</div>
 				<div class="govuk-grid-column-one-third">
 					<button class="govuk-button">Filter</button>
@@ -152,7 +152,7 @@
 
 		<div class="govuk-grid-column-one-third alignright">
 			<label for="sort-by">Sort by</label>
-			<select name="sort-by" id="sort-by" class="form-control">
+			<select name="sort-by" id="sort-by" class="govuk-select">
 				<option value="priority">Priority</option>
 				<option value="closing-date">Closing date</option>
 			</select>

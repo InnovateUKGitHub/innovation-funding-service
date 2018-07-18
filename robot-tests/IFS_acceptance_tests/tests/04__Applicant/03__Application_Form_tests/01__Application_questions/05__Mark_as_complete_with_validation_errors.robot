@@ -16,7 +16,7 @@ Mark as complete is impossible for empty questions
     And the user clicks the button/link    link=Public description
     When the "Project Summary" question is empty
     And The user clicks the button/link    css=.textarea-wrapped .button-clear[name="mark_as_complete"]
-    Then the user should see the element    css=.question .error-message
+    Then the user should see the element    css=.question .govuk-error-message
     And the user should see the element    css=.govuk-error-summary li
 
 Error should not be visible when the text area is not empty
@@ -42,7 +42,7 @@ the applicant inserts some text again in the "Project Summary" question
 
 applicant should be able to mark the question as complete
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    the user should not see the element    css=.textarea-wrapped .error-message
+    the user should not see the element    css=.textarea-wrapped .govuk-error-message
     the user should not see the element    css=.govuk-error-summary li
 
 the applicant can click edit to make the section editable again

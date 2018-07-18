@@ -258,8 +258,8 @@
 
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-third" th:unless="${type == 'fundingDecision'} or ${type == 'openApplications'} or ${type == 'notSubmittedApplications'} or ${type == 'manageNotifications'}">
-                        <label class="form-label" for="filterInnovationArea">Innovation area</label>
-                        <select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
+                        <label class="govuk-label" for="filterInnovationArea">Innovation area</label>
+                        <select class="govuk-select" id="filterInnovationArea" name="filterInnovationArea">
 
                             <option th:if="${param.filterInnovationArea != null}" th:remove="tag">
                             <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
@@ -276,8 +276,8 @@
 
                     <div th:if="${filterTitle == 'assessors'}" th:remove="tag">
                         <div class="govuk-grid-column-one-third">
-                            <label class="form-label" for="filterType">Type</label>
-                            <select class="form-control" id="filterType" name="filterType">
+                            <label class="govuk-label" for="filterType">Type</label>
+                            <select class="govuk-select" id="filterType" name="filterType">
 
                                 <option th:if="${param.filterType != null}" th:remove="tag">
                                 <option th:text="${param.filterType[0]}" selected="selected">TEST</option>
@@ -297,8 +297,8 @@
                     <th:block th:unless="${type == 'fundingDecision'} or ${type == 'manageNotifications'}">
 
                       <div th:class="${(type == 'openApplications' or type == 'notSubmittedApplications' ? 'column-two-thirds' : 'govuk-grid-column-one-third')}">
-                          <label class="form-label" for="filterSearch">Search</label>
-                          <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                          <label class="govuk-label" for="filterSearch">Search</label>
+                          <input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />
                           <a href="#">Clear all filters</a>
                       </div>
 
@@ -320,15 +320,15 @@
 
                         <div class="govuk-grid-column-one-half">
                           <div class="govuk-form-group">
-                            <label class="form-label" for="filterSearch">Search</label>
-                            <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                            <label class="govuk-label" for="filterSearch">Search</label>
+                            <input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />
                           </div>
                         </div>
 
                         <div class="govuk-grid-column-one-half">
             							<div class="govuk-form-group">
-            								<label class="form-label" for="fundingDecision">Funding decision</label>
-            								<select class="form-control" id="fundingDecision" name="fundingDecision">
+            								<label class="govuk-label" for="fundingDecision">Funding decision</label>
+            								<select class="govuk-select" id="fundingDecision" name="fundingDecision">
 
                               <th:block th:if="${param.fundingDecision != null}">
                                 <option th:value="${param.fundingDecision[0]}" th:text="${param.fundingDecision[0]}">FUNDING DECISION FILTER ITEM</option>
@@ -369,8 +369,8 @@
                     <div class="govuk-grid-row">
                       <div class="column-two-thirds">
                         <div class="govuk-form-group">
-                          <label class="form-label" for="filterSearch">Search</label>
-                          <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                          <label class="govuk-label" for="filterSearch">Search</label>
+                          <input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />
                         </div>
                         <a href="#">Clear all filters</a>
                       </div>
@@ -431,7 +431,7 @@
         <div th:if="${filterTitle == 'assessors'}">
             <div class="govuk-grid-column-one-third alignright">
                 <label for="sort-by">Sort by</label>
-                <select name="sort-by" id="sort-by" class="form-control">
+                <select name="sort-by" id="sort-by" class="govuk-select">
                     <option value="Name">Name</option>
                     <option value="closing-date">Contract and DOI</option>
                 </select>
@@ -443,7 +443,7 @@
                 <label for="sort-by">Sort by</label>
 
                 <div th:if="${type == null}" th:remove="tag">
-                    <select name="sort-by" id="sort-by" class="form-control">
+                    <select name="sort-by" id="sort-by" class="govuk-select">
                         <option value="Application number">Application number</option>
                         <option value="Project title">Project title</option>
                         <option value="Innovation area">Innovation area</option>
@@ -460,7 +460,7 @@
                 </div>
 
                 <div th:if="${type == 'submittedApplications'}" th:remove="tag">
-                    <select name="sort-by" id="sort-by" class="form-control">
+                    <select name="sort-by" id="sort-by" class="govuk-select">
                         <option value="Application no.">Application number</option>
                         <option value="Project title">Project title</option>
                         <option value="Lead">Lead</option>
@@ -473,7 +473,7 @@
                 </div>
 
                 <div th:if="${type == 'openApplications'} or ${type == 'notSubmittedApplications'}" th:remove="tag">
-                    <select name="sort-by" id="sort-by" class="form-control">
+                    <select name="sort-by" id="sort-by" class="govuk-select">
                         <option value="Application no.">Application number</option>
                         <option value="Project title">Project title</option>
                         <option value="Lead">Lead</option>
@@ -1837,13 +1837,13 @@
                     <tbody>
                         <tr>
                             <th scope="row">Bill Newman</th>
-                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="form-control width-small" value="8" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="form-control width-small" value="6" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="form-control width-small" value="5" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
                             <td class="numeric">20</td>
                             <td class="numeric">80</td>
                             <td class="numeric">
-                                <select name="" aria-labelledby="funding-approved" class="form-control">
+                                <select name="" aria-labelledby="funding-approved" class="govuk-select">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
@@ -1852,13 +1852,13 @@
 
                         <tr>
                             <th scope="row">Ted Mosby</th>
-                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="form-control width-small" value="8" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="form-control width-small" value="6" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="form-control width-small" value="5" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
                             <td class="numeric">20</td>
                             <td class="numeric">80</td>
                             <td class="numeric">
-                                <select name="" aria-labelledby="funding-approved" class="form-control">
+                                <select name="" aria-labelledby="funding-approved" class="govuk-select">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
@@ -1867,13 +1867,13 @@
 
                         <tr>
                             <th scope="row">Barney Stinson</th>
-                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="form-control width-small" value="8" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="form-control width-small" value="6" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="form-control width-small" value="5" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
                             <td class="numeric">20</td>
                             <td class="numeric">80</td>
                             <td class="numeric">
-                                <select name="" aria-labelledby="funding-approved" class="form-control">
+                                <select name="" aria-labelledby="funding-approved" class="govuk-select">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
@@ -1882,13 +1882,13 @@
 
                         <tr>
                             <th scope="row">Ted Rodgers</th>
-                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="form-control width-small" value="8" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="form-control width-small" value="6" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="form-control width-small" value="5" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
                             <td class="numeric">20</td>
                             <td class="numeric">80</td>
                             <td class="numeric">
-                                <select name="" aria-labelledby="funding-approved" class="form-control">
+                                <select name="" aria-labelledby="funding-approved" class="govuk-select">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
@@ -1897,13 +1897,13 @@
 
                         <tr>
                             <th scope="row">Sam Davies</th>
-                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="form-control width-small" value="8" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="form-control width-small" value="6" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="form-control width-small" value="5" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
+                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
                             <td class="numeric">20</td>
                             <td class="numeric">80</td>
                             <td class="numeric">
-                                <select name="" aria-labelledby="funding-approved" class="form-control">
+                                <select name="" aria-labelledby="funding-approved" class="govuk-select">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
                                 </select>
@@ -1914,8 +1914,8 @@
             </div>
 
             <div class="govuk-form-group extra-margin">
-                <label class="form-label-bold" for="comments">Comments</label>
-                <textarea class="form-control" id="comments" rows="6" style="width: 100%"></textarea>
+                <label class="govuk-label" for="comments">Comments</label>
+                <textarea class="govuk-textarea" id="comments" rows="6" style="width: 100%"></textarea>
             </div>
         </div>
     </div>

@@ -223,7 +223,7 @@ the user should not see the validation error
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=.govuk-button:contains("Assign Monitoring Officer")
     Wait for autosave
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.govuk-error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
 
 the user edits the MO details

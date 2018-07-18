@@ -75,7 +75,10 @@
 <!-- Applications sort -->
 <th:block th:fragment="applications-sort(activeTab, activeSortField)">
 	<label for="sort-by">Sort by</label>
-    <select id="sort-by" name="sort" class="js-auto-submit form-control" th:if="${activeTab == 'submitted'}">
+    <select id="sort-by"
+            name="sort"
+            class="js-auto-submit govuk-select"
+            th:if="${activeTab == 'submitted'}">
         <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
         <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
         <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
@@ -85,7 +88,10 @@
         <option value="duration" th:selected="${(activeSortField == 'duration')}">Duration</option>
 
     </select>
-    <select id="sort-by" name="sort" class="js-auto-submit form-control" th:if="${activeTab == 'notSubmitted'}">
+    <select id="sort-by"
+            name="sort"
+            class="js-auto-submit govuk-select"
+            th:if="${activeTab == 'notSubmitted'}">
         <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
         <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
         <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>

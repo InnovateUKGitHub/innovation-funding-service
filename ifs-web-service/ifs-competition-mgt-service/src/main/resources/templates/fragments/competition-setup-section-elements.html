@@ -114,16 +114,15 @@
 
         <div class="question">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-form-group--error'">
-                <label class="form-label" for="question.shortTitle">
-                    <span class="form-label-bold">Question heading</span>
-                    <th:block th:if="${#fields.hasErrors('question.shortTitle')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.shortTitle')}"
-                              th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" for="question.shortTitle">
+                    Question heading
                 </label>
-
-                <input class="form-control width-x-large"
-                       th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'form-control-error'"
+                <th:block th:if="${#fields.hasErrors('question.shortTitle')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.shortTitle')}"
+                              th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input width-x-large"
+                       th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-input--error'"
                        type="text"
                        required="required"
                        id="question.shortTitle"
@@ -132,16 +131,15 @@
                        maxlength="255"/>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-form-group--error'">
-                <label class="form-label" for="question.title">
-                    <span class="form-label-bold">Question title</span>
-                    <th:block th:if="${#fields.hasErrors('question.title')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.title')}"
-                              th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" for="question.title">
+                    Question title
                 </label>
-
-                <input th:classappend="${#fields.hasErrors('question.title')} ? 'form-control-error'"
-                       class="form-control width-x-large"
+                <th:block th:if="${#fields.hasErrors('question.title')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.title')}"
+                              th:text="${err}"></span>
+                </th:block>
+                <input th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-input--error'"
+                       class="govuk-input width-x-large"
                        type="text"
                        required="required"
                        id="question.title"
@@ -150,15 +148,15 @@
                        maxlength="255"/>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-form-group--error'">
-                <label class="form-label" for="question.subTitle">
-                    <span class="form-label-bold">Question subtitle</span>
-                    <th:block th:if="${#fields.hasErrors('question.subTitle')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.subTitle')}"
-                              th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" for="question.subTitle">
+                    Question subtitle
                 </label>
-                <input th:classappend="${#fields.hasErrors('question.subTitle')} ? 'form-control-error'"
-                       class="form-control width-x-large"
+                <th:block th:if="${#fields.hasErrors('question.subTitle')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.subTitle')}"
+                              th:text="${err}"></span>
+                </th:block>
+                <input th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-input--error'"
+                       class="govuk-input width-x-large"
                        type="text"
                        id="question.subTitle"
                        th:name="question.subTitle"
@@ -167,15 +165,15 @@
             </div>
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-form-group--error'">
-                <label class="form-label" for="question.guidanceTitle">
-                    <span class="form-label-bold">Question guidance title</span>
-                    <th:block th:if="${#fields.hasErrors('question.guidanceTitle')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.guidanceTitle')}"
-                              th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" for="question.guidanceTitle">
+                    Question guidance title
                 </label>
-                <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'form-control-error'"
-                       class="form-control width-x-large"
+                <th:block th:if="${#fields.hasErrors('question.guidanceTitle')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.guidanceTitle')}"
+                              th:text="${err}"></span>
+                </th:block>
+                <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-input--error'"
+                       class="govuk-input width-x-large"
                        type="text"
                        id="question.guidanceTitle"
                        required="required"
@@ -184,18 +182,19 @@
                        maxlength="255"/>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.guidance')} ? 'govuk-form-group--error'">
-                <label class="form-label" for="question.guidance">
-                    <span class="form-label-bold">Question guidance</span>
-                    <th:block th:if="${#fields.hasErrors('question.guidance')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.guidance')}"
-                              th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" for="question.guidance">
+                    Question guidance
                 </label>
+                <th:block th:if="${#fields.hasErrors('question.guidance')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.guidance')}"
+                              th:text="${err}"></span>
+                </th:block>
                 <div class="textarea-wrapped">
                         <textarea data-max_words="500"
                                   data-editor="html"
                                   id="question.guidance"
-                                  th:classappend="${#fields.hasErrors('question.guidance')} ? 'form-control-error'"
+                                  class="govuk-textarea"
+                                  th:classappend="${#fields.hasErrors('question.guidance')} ? 'govuk-textarea--error'"
                                   th:name="question.guidance"
                                   required="required"
                                   ifs:utext="${question.guidance}">
@@ -206,15 +205,15 @@
                 </div>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-form-group--error'">
-                <label class="form-label" for="question.maxWords">
-                    <span class="form-label-bold">Max word count</span>
-                    <th:block th:if="${#fields.hasErrors('question.maxWords')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.maxWords')}"
-                              th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" for="question.maxWords">
+                    Max word count
                 </label>
-                <input class="form-control width-medium"
-                       th:classappend="${#fields.hasErrors('question.maxWords')} ? 'form-control-error'"
+                <th:block th:if="${#fields.hasErrors('question.maxWords')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.maxWords')}"
+                              th:text="${err}"></span>
+                </th:block>
+                <input class="govuk-input width-medium"
+                       th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-input--error'"
                        type="number"
                        id="question.maxWords"
                        min="1"
@@ -232,7 +231,7 @@
                             <h2 class="govuk-fieldset__heading">Appendix</h2>
                         </legend>
                         <th:block th:if="${#fields.hasErrors('question.appendix')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.appendix')}"
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.appendix')}"
                               th:text="${err}"></span>
                         </th:block>
                         <div class="govuk-radios govuk-radios--inline">
@@ -271,36 +270,43 @@
                                 <h2 class="govuk-fieldset__heading">Accepted appendix file types</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
-                                <span class="error-message"
+                                <span class="govuk-error-message"
                                       th:each="err : ${#fields.errors('question.allowedFileTypes')}"
                                       th:text="${err}"></span>
                             </th:block>
-                            <div class="multiple-choice"
-                                 th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
-                                <input type="checkbox"
-                                       th:field="*{question.allowedFileTypes}"
-                                       th:value="${fileTypeCategory}"
-                                       required="required"
-                                       data-autosave-list/> <!-- data-autosave-disabled -->
-                                <label th:for="${#ids.prev('question.allowedFileTypes')}"
-                                       th:text="${fileTypeCategory.displayName}">PDF</label>
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item"
+                                     th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
+                                    <input type="checkbox"
+                                           class="govuk-checkboxes__input"
+                                           th:field="*{question.allowedFileTypes}"
+                                           th:value="${fileTypeCategory}"
+                                           required="required"
+                                           data-autosave-list/> <!-- data-autosave-disabled -->
+                                    <label th:for="${#ids.prev('question.allowedFileTypes')}"
+                                           th:text="${fileTypeCategory.displayName}"
+                                           class="govuk-label govuk-checkboxes__label">PDF</label>
+                                </div>
                             </div>
+
                         </fieldset>
                     </div>
                     <div class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'govuk-form-group--error'">
-                        <label class="form-label" for="question.appendixGuidance">
-                            <span class="form-label-bold">Appendix guidance</span>
-                            <th:block th:if="${#fields.hasErrors('question.appendixGuidance')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('question.appendixGuidance')}"
-                                  th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label"
+                               for="question.appendixGuidance">
+                            Appendix guidance
                         </label>
+                        <th:block th:if="${#fields.hasErrors('question.appendixGuidance')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.appendixGuidance')}"
+                                  th:text="${err}"></span>
+                        </th:block>
                         <div class="textarea-wrapped">
                         <textarea data-max_words="500"
                                   data-editor="html"
+                                  class="govuk-textarea"
                                   id="question.appendixGuidance"
-                                  th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'form-control-error'"
+                                  th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'govuk-textarea--error'"
                                   th:name="question.appendixGuidance"
                                   required="required"
                                   ifs:utext="${question.appendixGuidance}">
@@ -329,7 +335,7 @@
                                 <h2 class="govuk-fieldset__heading">Research category question</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('question.researchCategoryQuestion')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('question.researchCategoryQuestion')}"
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('question.researchCategoryQuestion')}"
                                 th:text="${err}"></span>
                             </th:block>
                             <div class="govuk-radios govuk-radios--inline">
@@ -370,7 +376,7 @@
                                 <h2 class="govuk-fieldset__heading">Scored</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('question.scored')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('question.scored')}"
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.scored')}"
                                   th:text="${err}"></span>
                             </th:block>
                             <div class="govuk-radios govuk-radios--inline">
@@ -406,15 +412,15 @@
                     <div class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'govuk-form-group--error'"
                          id="score-total">
-                        <label class="form-label" for="question.scoreTotal">
-                            <span class="form-label-bold">Out of</span>
-                            <th:block th:if="${#fields.hasErrors('question.scoreTotal')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('question.scoreTotal')}"
-                                      th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" for="question.scoreTotal">
+                            Out of
                         </label>
-                        <input class="form-control width-medium"
-                               th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'form-control-error'"
+                        <th:block th:if="${#fields.hasErrors('question.scoreTotal')}">
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('question.scoreTotal')}"
+                                      th:text="${err}"></span>
+                        </th:block>
+                        <input class="govuk-input width-medium"
+                               th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'govuk-input--error'"
                                type="number"
                                id="question.scoreTotal"
                                min="1"
@@ -467,7 +473,7 @@
                                 <h2 class="">Written feedback</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('question.writtenFeedback')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('question.writtenFeedback')}"
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.writtenFeedback')}"
                                   th:text="${err}"></span>
                             </th:block>
                             <div class="govuk-radios govuk-radios--inline">
@@ -501,16 +507,16 @@
                     <div class="js-hidden" id="scored-options">
                         <div class="govuk-form-group"
                              th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'govuk-form-group--error'">
-                            <label class="form-label" for="question.assessmentGuidanceTitle">
-                                <span class="form-label-bold">Guidance title</span>
-                                <th:block th:if="${#fields.hasErrors('question.assessmentGuidanceTitle')}">
-                                    <span class="error-message"
+                            <label class="govuk-label" for="question.assessmentGuidanceTitle">
+                                Guidance title
+                            </label>
+                            <th:block th:if="${#fields.hasErrors('question.assessmentGuidanceTitle')}">
+                                    <span class="govuk-error-message"
                                           th:each="err : ${#fields.errors('question.assessmentGuidanceTitle')}"
                                           th:text="${err}"></span>
-                                </th:block>
-                            </label>
-                            <input class="form-control width-x-large"
-                                   th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'form-control-error'"
+                            </th:block>
+                            <input class="govuk-input width-x-large"
+                                   th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'govuk-input--error'"
                                    type="text"
                                    id="question.assessmentGuidanceTitle"
                                    th:name="question.assessmentGuidanceTitle"
@@ -520,16 +526,16 @@
 
                         <div class="govuk-form-group"
                              th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'govuk-form-group--error'">
-                            <label class="form-label" for="question.assessmentGuidance">
-                                <span class="form-label-bold">Guidance</span>
-                                <th:block th:if="${#fields.hasErrors('question.assessmentGuidance')}">
-                                    <span class="error-message"
+                            <label class="govuk-label" for="question.assessmentGuidance">
+                                Guidance
+                            </label>
+                            <th:block th:if="${#fields.hasErrors('question.assessmentGuidance')}">
+                                    <span class="govuk-error-message"
                                           th:each="err : ${#fields.errors('question.assessmentGuidance')}"
                                           th:text="${err}"></span>
-                                </th:block>
-                            </label>
-                            <input class="form-control width-x-large"
-                                   th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'form-control-error'"
+                            </th:block>
+                            <input class="govuk-input width-x-large"
+                                   th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'govuk-input--error'"
                                    type="text"
                                    id="question.assessmentGuidance"
                                    th:name="question.assessmentGuidance"
@@ -560,21 +566,21 @@
                                         th:classappend="((${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')})) ? 'govuk-form-group--error'">
                                         <td class="govuk-form-group"
                                             th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')} ? 'govuk-form-group--error'">
-                                            <label class="form-label"
+                                            <label class="govuk-label govuk-visually-hidden"
                                                    th:for="guidanceRows[__${iteration.index}__].scoreFrom">
-                                                <span class="govuk-visually-hidden">Score from</span>
-                                                <th:block
-                                                    th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}">
-                                                    <span class="error-message"
+                                                Score from
+                                            </label>
+                                            <th:block
+                                                th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}">
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].scoreFrom')}"
                                                           th:text="${err}"></span>
-                                                </th:block>
-                                            </label>
+                                            </th:block>
                                             <input required="required"
                                                    type="number"
                                                    min="0"
-                                                   class="form-control width-small"
-                                                   th:errorclass="form-control-error"
+                                                   class="govuk-input width-small"
+                                                   th:errorclass="govuk-input--error"
                                                    th:id="guidanceRows[__${iteration.index}__].scoreFrom"
                                                    th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreFrom}"
                                                    th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
@@ -582,19 +588,19 @@
                                         </td>
                                         <td class="govuk-form-group"
                                             th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')} ? 'govuk-form-group--error'">
-                                            <label class="form-label"
+                                            <label class="govuk-label govuk-visually-hidden"
                                                    th:for="guidanceRows[__${iteration.index}__].scoreTo">
-                                                <span class="govuk-visually-hidden">Score to</span>
-                                                <th:block
-                                                    th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}">
-                                                    <span class="error-message"
+                                                Score to
+                                            </label>
+                                            <th:block
+                                                th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}">
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].scoreTo')}"
                                                           th:text="${err}"></span>
-                                                </th:block>
-                                            </label>
+                                            </th:block>
                                             <input required="required" type="number" min="0"
-                                                   class="form-control width-small"
-                                                   th:errorclass="form-control-error"
+                                                   class="govuk-input width-small"
+                                                   th:errorclass="govuk-input--error"
                                                    th:id="guidanceRows[__${iteration.index}__].scoreTo"
                                                    th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreTo}"
                                                    value=""
@@ -603,19 +609,19 @@
                                         </td>
                                         <td class="govuk-form-group"
                                             th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')} ? 'govuk-form-group--error'">
-                                            <label class="form-label"
+                                            <label class="govuk-label govuk-visually-hidden"
                                                    th:for="guidanceRows[__${iteration.index}__].justification">
-                                                <span class="govuk-visually-hidden">Justification</span>
-                                                <th:block
-                                                    th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}">
-                                                    <span class="error-message"
+                                                Justification
+                                            </label>
+                                            <th:block
+                                                th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}">
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].justification')}"
                                                           th:text="${err}"></span>
-                                                </th:block>
-                                            </label>
+                                            </th:block>
                                             <textarea required="required"
-                                                      class="form-control width-full"
-                                                      th:errorclass="form-control-error"
+                                                      class="govuk-textarea width-full"
+                                                      th:errorclass="govuk-textarea--error"
                                                       th:id="guidanceRows[__${iteration.index}__].justification"
                                                       th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
                                                       maxlength="5000"
@@ -651,19 +657,19 @@
                                         th:classappend="((${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}) or (${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')})) ? 'govuk-form-group--error'">
                                         <td class="govuk-form-group"
                                             th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')} ? 'govuk-form-group--error'">
-                                            <label class="form-label"
+                                            <label class="govuk-label govuk-visually-hidden"
                                                    th:for="${'guidanceRow-'+iteration.index+'-subject'}">
-                                                <span class="govuk-visually-hidden">Subject</span>
-                                                <th:block
-                                                    th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}">
-                                                    <span class="error-message"
+                                                Subject
+                                            </label>
+                                            <th:block
+                                                th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}">
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('question.guidanceRows[__${iteration.index}__].subject')}"
                                                           th:text="${err}"></span>
-                                                </th:block>
-                                            </label>
+                                            </th:block>
                                             <input required="required"
-                                                   class="form-control width-small"
-                                                   th:errorclass="form-control-error"
+                                                   class="govuk-input width-small"
+                                                   th:errorclass="govuk-input--error"
                                                    th:id="${'guidanceRow-'+iteration.index+'-subject'}"
                                                    th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].subject}"
                                                    maxlength="255"
@@ -672,20 +678,20 @@
                                         </td>
                                         <td class="govuk-form-group"
                                             th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')} ? 'govuk-form-group--error'">
-                                            <label class="form-label"
+                                            <label class="govuk-label govuk-visually-hidden"
                                                    th:for="${'guidanceRow-'+iteration.index+'-justification'}">
-                                                <span class="govuk-visually-hidden">Justification</span>
-                                                <th:block
-                                                    th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')}">
-                                                    <span class="error-message"
+                                                Justification
+                                            </label>
+                                            <th:block
+                                                th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')}">
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('question.guidanceRows[__${iteration.index}__].justification')}"
                                                           th:text="${err}"></span>
-                                                </th:block>
-                                            </label>
+                                            </th:block>
                                             <textarea required="required"
-                                                      class="form-control width-full"
+                                                      class="govuk-textarea width-full"
                                                       rows="3"
-                                                      th:errorclass="form-control-error"
+                                                      th:errorclass="govuk-textarea--error"
                                                       th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                       th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].justification}"
                                                       maxlength="5000"
@@ -710,16 +716,16 @@
 
                             <div class="govuk-form-group"
                                  th:classappend="${#fields.hasErrors('question.assessmentMaxWords')} ? 'govuk-form-group--error'">
-                                <label class="form-label" for="question.assessmentMaxWords">
-                                    <span class="form-label-bold">Max word count</span>
-                                    <th:block th:if="${#fields.hasErrors('question.assessmentMaxWords')}">
-                                        <span class="error-message"
+                                <label class="govuk-label" for="question.assessmentMaxWords">
+                                    Max word count
+                                </label>
+                                <th:block th:if="${#fields.hasErrors('question.assessmentMaxWords')}">
+                                        <span class="govuk-error-message"
                                               th:each="err : ${#fields.errors('question.assessmentMaxWords')}"
                                               th:text="${err}"></span>
-                                    </th:block>
-                                </label>
-                                <input class="form-control width-medium"
-                                       th:classappend="${#fields.hasErrors('question.assessmentMaxWords')} ? 'form-control-error'"
+                                </th:block>
+                                <input class="govuk-input width-medium"
+                                       th:classappend="${#fields.hasErrors('question.assessmentMaxWords')} ? 'govuk-input--error'"
                                        type="number"
                                        id="question.assessmentMaxWords"
                                        min="0"

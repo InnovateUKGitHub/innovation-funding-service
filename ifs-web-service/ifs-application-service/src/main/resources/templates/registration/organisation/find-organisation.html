@@ -36,15 +36,21 @@
         <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-form-group--error'">
-                <label class="form-label" th:for="*{organisationSearchName}">
-                    <span class="form-label-bold" th:text="${searchLabel}">Find your ? organisation</span>
-                    <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
-                    <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
-                    </th:block>
+                <label class="govuk-label"
+                       th:for="*{organisationSearchName}"
+                       th:text="${searchLabel}">
+                    Find your ? organisation
                 </label>
-                <input class="form-control" th:field="*{organisationSearchName}" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-control-error'" type="text" value="" />
-                <govuk-button type="submit" id="org-search" name="search-organisation" class="govuk-button">Search</button>
+                <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
+                <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
+                </th:block>
+                <input class="govuk-input"
+                       th:field="*{organisationSearchName}"
+                       th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-input--error'"
+                       type="text"
+                       value="" />
+                <button type="submit" id="org-search" name="search-organisation" class="govuk-button">Search</button>
             </div>
             <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <th:block th:if="${organisationForm.research}">

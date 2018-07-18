@@ -23,36 +23,36 @@
                       enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                     <h2 class="govuk-heading-m">New note</h2>
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('noteTitle')} ? 'govuk-form-group--error'">
-                        <label for="noteTitle">
-                            <span class="form-label-bold">Title</span>
-                            <th:block th:if="${#fields.hasErrors('noteTitle')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('noteTitle')}" th:text="${err}" />
-                            </th:block>
+                        <label class="govuk-label" for="noteTitle">
+                            Title
                         </label>
+                        <th:block th:if="${#fields.hasErrors('noteTitle')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('noteTitle')}" th:text="${err}" />
+                        </th:block>
                         <input name="noteTitle"
                                id="noteTitle"
                                type="text"
-                               class="form-control width-full"
+                               class="govuk-input width-full"
                                required="required"
-                               th:errorclass="form-control-error"
+                               th:errorclass="govuk-input--error"
                                th:field="*{noteTitle}"
                                th:attr="maxlength=${model.maxTitleCharacters},
                                         data-required-errormessage=#{validation.field.must.not.be.blank},
                                         data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
                     </div>
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('note')} ? 'govuk-form-group--error'">
-                        <label for="note">
-                            <span class="form-label-bold">Note</span>
-                            <th:block th:if="${#fields.hasErrors('note')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('note')}" th:text="${err}" />
-                            </th:block>
+                        <label class="govuk-label" for="note">
+                            Note
                         </label>
+                        <th:block th:if="${#fields.hasErrors('note')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('note')}" th:text="${err}" />
+                        </th:block>
                         <div class="textarea-wrapped word-count">
                             <textarea data-editor="md"
                                       required = "required"
                                       th:field="*{note}"
-                                      class="form-control"
-                                      th:errorclass="form-control-error"
+                                      class="govuk-textarea"
+                                      th:errorclass="govuk-textarea--error"
                                       id="note"
                                       name="note"
                                       th:attr="maxlength=${model.maxNoteCharacters},
@@ -79,7 +79,7 @@
                         <h2 class="govuk-heading-s">Upload supporting documentation in pdf format</h2>
                         <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                             <th:block th:if="${#fields.hasErrors('attachment')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                             </th:block>
                             <input type="file" id="attachment" class="inputfile" name="attachment">
                             <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>

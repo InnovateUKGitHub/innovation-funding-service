@@ -26,29 +26,28 @@
               novalidate="novalidate"
               data-section="milestones">
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('title')} ? 'govuk-form-group--error'">
-              <label class="form-label" for="title">
-                  <span class="form-label-bold">Competition title</span>
-                  <th:block th:if="${#fields.hasErrors('title')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
-                  </th:block>
+              <label class="govuk-label" for="title">
+                  Competition title
               </label>
+              <th:block th:if="${#fields.hasErrors('title')}">
+                  <span class="govuk-error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
+              </th:block>
               <input id="title"
-                     class="form-control width-xlarge"
-                     th:errorclass="form-control-error"
+                     class="govuk-input width-xlarge"
+                     th:errorclass="govuk-input--error"
                      type="text"
                      th:field="${form.title}"
                      required="required"
                      th:attr="data-required-errormessage=#{validation.standard.title.required}" />
           </div>
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'govuk-form-group--error'">
-              <label class="form-label" for="innovationSectorCategoryId">
-                  <span class="form-label-bold">Innovation sector</span>
-                  <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
-                  </th:block>
+              <label class="govuk-label" for="innovationSectorCategoryId">
+                  Innovation sector
               </label>
-
-              <select class="form-control width-x-large"
+              <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
+                  <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
+              </th:block>
+              <select class="govuk-select width-x-large"
                       id="innovationSectorCategoryId"
                       th:field="${form.innovationSectorCategoryId}"
                       required="required"
@@ -59,13 +58,13 @@
           </div>
 
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryId')} ? 'govuk-form-group--error'">
-              <label class="form-label" for="innovationAreaCategoryId">
-                  <span class="form-label-bold">Innovation area</span>
-                  <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
-                  </th:block>
+              <label class="govuk-label" for="innovationAreaCategoryId">
+                  Innovation area
               </label>
-              <select class="form-control width-x-large"
+              <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">
+                  <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
+              </th:block>
+              <select class="govuk-select width-x-large"
                       th:field="${form.innovationAreaCategoryId}"
                       id="innovationAreaCategoryId"
                       required="required"
@@ -101,8 +100,8 @@
                             <td class="js-addWeekDay">Wed</td>
                             <td class="day">
                                 <input id="openDate-day"
-                                       th:errorclass="form-control-error"
-                                       class="form-control width-small"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input width-small"
                                        type="number"
                                        placeholder="DD"
                                        required="required"
@@ -114,8 +113,8 @@
                             </td>
                             <td class="month">
                                 <input id="openDate-month"
-                                       th:errorclass="form-control-error"
-                                       class="form-control width-small"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input width-small"
                                        type="number"
                                        placeholder="MM"
                                        required="required"
@@ -127,8 +126,8 @@
                             </td>
                             <td class="year">
                                 <input id="openDate-year"
-                                       class="form-control width-small"
-                                       th:errorclass="form-control-error"
+                                       class="govuk-input width-small"
+                                       th:errorclass="govuk-input--error"
                                        type="number"
                                        placeholder="YYYY"
                                        required="required"
@@ -147,7 +146,7 @@
                             </th>
                             <td class="time">
                                 <select id="registrationCloseDate-time"
-                                        class="form-control"
+                                        class="govuk-select"
                                         required="required"
                                         th:attr="data-required-errormessage=#{typeMismatch.competitionSetupForm.milestoneEntries.time}"
                                         th:field="${form.registrationCloseDate.time}" >
@@ -158,8 +157,8 @@
                             <td class="js-addWeekDay">-</td>
                             <td class="day">
                                 <input id="registrationCloseDate-day"
-                                       th:errorclass="form-control-error"
-                                       class="form-control width-small"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input width-small"
                                        type="number"
                                        placeholder="DD"
                                        required="required"
@@ -171,8 +170,8 @@
                             </td>
                             <td class="month">
                                 <input id="registrationCloseDate-month"
-                                       th:errorclass="form-control-error"
-                                       class="form-control width-small"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input width-small"
                                        type="number"
                                        placeholder="MM"
                                        required="required"
@@ -184,8 +183,8 @@
                             </td>
                             <td class="year">
                                 <input id="registrationCloseDate-year"
-                                       class="form-control width-small"
-                                       th:errorclass="form-control-error"
+                                       class="govuk-input width-small"
+                                       th:errorclass="govuk-input--error"
                                        type="number"
                                        placeholder="YYYY"
                                        required="required"
@@ -204,7 +203,7 @@
                             </th>
                             <td class="time">
                                 <select id="closeDate-time"
-                                        class="form-control"
+                                        class="govuk-select"
                                         required="required"
                                         th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                         th:field="${form.closeDate.time}" >
@@ -215,8 +214,8 @@
                             <td class="js-addWeekDay">-</td>
                             <td class="day">
                                 <input id="closeDate-day"
-                                       th:errorclass="form-control-error"
-                                       class="form-control width-small"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input width-small"
                                        type="number"
                                        placeholder="DD"
                                        required="required"
@@ -228,8 +227,8 @@
                             </td>
                             <td class="month">
                                 <input id="closeDate-month"
-                                       class="form-control width-small"
-                                       th:errorclass="form-control-error"
+                                       class="govuk-input width-small"
+                                       th:errorclass="govuk-input--error"
                                        type="number"
                                        placeholder="MM"
                                        required="required"
@@ -241,8 +240,8 @@
                             </td>
                             <td class="year">
                                 <input id="closeDate-year"
-                                       class="form-control width-small"
-                                       th:errorclass="form-control-error"
+                                       class="govuk-input width-small"
+                                       th:errorclass="govuk-input--error"
                                        type="number"
                                        placeholder="YYYY"
                                        required="required"
@@ -263,8 +262,8 @@
                             <td class="js-addWeekDay">-</td>
                             <td class="day">
                                 <input id="applicantNotifiedDate-day"
-                                       class="form-control width-small"
-                                       th:errorclass="form-control-error"
+                                       class="govuk-input width-small"
+                                       th:errorclass="govuk-input--error"
                                        type="number"
                                        placeholder="DD"
                                        min="1"
@@ -274,8 +273,8 @@
                             </td>
                             <td class="month">
                                 <input id="applicantNotifiedDate-month"
-                                       th:errorclass="form-control-error"
-                                       class="form-control width-small"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input width-small"
                                        type="number"
                                        placeholder="MM"
                                        min="1"
@@ -285,8 +284,8 @@
                             </td>
                             <td class="year">
                                 <input id="applicantNotifiedDate-year"
-                                       th:errorclass="form-control-error"
-                                       class="form-control width-small"
+                                       th:errorclass="govuk-input--error"
+                                       class="govuk-input width-small"
                                        type="number"
                                        placeholder="YYYY"
                                        min="2000"
@@ -300,16 +299,16 @@
             </fieldset>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('url')} ? 'govuk-form-group--error'">
-                <label class="form-label" for="url">
-                    <span class="form-label-bold">Competition URL</span>
-                    <span class="govuk-hint">This is the non-IFS page that the public will go to when they 'apply'</span>
-                    <th:block th:if="${#fields.hasErrors('url')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('url')}" th:text="${err}"></span>
-                    </th:block>
+                <label class="govuk-label" for="url">
+                    Competition URL
                 </label>
+                <span class="govuk-hint">This is the non-IFS page that the public will go to when they 'apply'</span>
+                <th:block th:if="${#fields.hasErrors('url')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('url')}" th:text="${err}"></span>
+                </th:block>
                 <input id="url"
-                       class="form-control width-x-large"
-                       th:errorclass="form-control-error"
+                       class="govuk-input width-x-large"
+                       th:errorclass="govuk-input--error"
                        type="text"
                        th:field="${form.url}"
                        required="required"

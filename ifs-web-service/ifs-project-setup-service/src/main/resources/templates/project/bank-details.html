@@ -49,48 +49,48 @@
         <th:block th:unless="${readonly}">
 
           <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('accountNumber')} ? 'govuk-form-group--error' : (${#fields.hasErrors('${form}')} ? 'govuk-form-group--error') ">
-            <label for="accountNumber">
-              <span class="form-label-bold">Account number</span>
-              <span class="govuk-hint">For example: 15481965</span>
-              <th:block th:if="${#fields.hasErrors('accountNumber')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
-              </th:block>
+            <label class="govuk-label" for="accountNumber">
+              Account number
             </label>
+            <span class="govuk-hint">For example: 15481965</span>
+            <th:block th:if="${#fields.hasErrors('accountNumber')}">
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
+            </th:block>
             <input type="text"
                    th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},
                             data-pattern-errormessage=#{validation.standard.accountnumber.format}"
-                   th:errorclass="form-control-error"
+                   th:errorclass="govuk-input--error"
                    required="required"
                    pattern="[0-9]{8,}"
                    data-prevent-input-regex="[^0-9]"
                    maxlength="8"
                    minlength="8"
                    id="accountNumber"
-                   class="form-control width-medium"
-                   th:classappend="${#fields.hasErrors('${form}')} ? 'form-control-error'"
+                   class="govuk-input width-medium"
+                   th:classappend="${#fields.hasErrors('${form}')} ? 'govuk-input--error'"
                    th:field="*{accountNumber}"/>
           </div>
 
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'govuk-form-group--error' : (${#fields.hasErrors('${form}')} ? 'govuk-form-group--error')">
             <label for="sortCode">
-              <span class="form-label-bold">Sort code</span>
+              <span class="govuk-label">Sort code</span>
               <span class="govuk-hint">For example: 311212</span>
               <th:block th:if="${#fields.hasErrors('sortCode')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}"></span>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}"></span>
               </th:block>
             </label>
             <input type="text"
                    th:attr="data-required-errormessage=#{validation.standard.sortcode.required},
                             data-pattern-errormessage=#{validation.standard.sortcode.format}"
-                   th:errorclass="form-control-error"
+                   th:errorclass="govuk-input--error"
                    required="required"
                    pattern="[0-9]{6,}"
                    data-prevent-input-regex="[^0-9]"
                    maxlength="6"
                    minlength="6"
                    id="sortCode"
-                   class="form-control width-medium"
-                   th:classappend="${#fields.hasErrors('${form}')} ? 'form-control-error'"
+                   class="govuk-input width-medium"
+                   th:classappend="${#fields.hasErrors('${form}')} ? 'govuk-input--error'"
                    th:field="*{sortCode}"/>
           </div>
 
@@ -101,7 +101,7 @@
                 </legend>
                 <span class="govuk-hint">This is the billing address connected to this bank account. This is not the address of the bank.</span>
                 <th:block th:if="${#fields.hasErrors('*{addressType}')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
                 </th:block>
                 <div class="govuk-radios">
                     <th:block th:if="${model.registeredAddress}">

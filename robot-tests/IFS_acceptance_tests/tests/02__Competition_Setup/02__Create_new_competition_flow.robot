@@ -395,8 +395,8 @@ Application: Application details validations
     # TODO IFS-3188
 
     When the user selects the radio button     useResubmissionQuestion  true
-    Then the user should see the element       jQuery=[for="minProjectDuration"] .error-message:contains("This field cannot be left blank.")
-    And the user should see the element        jQuery=[for="maxProjectDuration"] .error-message:contains("This field cannot be left blank.")
+    Then the user should see the element       jQuery=[for="minProjectDuration"] .govuk-error-message:contains("This field cannot be left blank.")
+    And the user should see the element        jQuery=[for="maxProjectDuration"] .govuk-error-message:contains("This field cannot be left blank.")
     When the user clicks the button/link       css=button[type="submit"]
     Then the user should see the element       css=.govuk-error-summary__list
 

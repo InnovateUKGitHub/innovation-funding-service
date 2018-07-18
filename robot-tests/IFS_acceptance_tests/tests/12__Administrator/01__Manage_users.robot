@@ -71,14 +71,14 @@ Client side validations for invite new internal user
     [Tags]
     Given the user navigates to the page       ${server}/management/admin/invite-user
     When the user enters text to a text field  id=firstName  A
-    Then the user should not see the element   jQuery=.error-message:contains("Please enter a first name.")
-    And the user should see the element        jQuery=.error-message:contains("Your first name should have at least 2 characters.")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("Please enter a first name.")
+    And the user should see the element        jQuery=.govuk-error-message:contains("Your first name should have at least 2 characters.")
     When the user enters text to a text field  id=lastName  D
-    Then the user should not see the element   jQuery=.error-message:contains("Please enter a last name.")
-    And the user should see the element        jQuery=.error-message:contains("Your last name should have at least 2 characters.")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("Please enter a last name.")
+    And the user should see the element        jQuery=.govuk-error-message:contains("Your last name should have at least 2 characters.")
     When the user enters text to a text field  id=emailAddress  astle
-    Then the user should not see the element   jQuery=.error-message:contains("Please enter an email address.")
-    And the user should see the element        jQuery=.error-message:contains("Please enter a valid email address.")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("Please enter an email address.")
+    And the user should see the element        jQuery=.govuk-error-message:contains("Please enter a valid email address.")
 
 Administrator can successfully invite a new user
     [Documentation]  IFS-27 IFS-983
@@ -200,11 +200,11 @@ Client side validations for edit internal user details
     [Documentation]  IFS-18
     [Tags]
     Given the user enters text to a text field  id=firstName  A
-    Then the user should not see the element   jQuery=.error-message:contains("Please enter a first name.")
-    And the user should see the element        jQuery=.error-message:contains("Your first name should have at least 2 characters.")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("Please enter a first name.")
+    And the user should see the element        jQuery=.govuk-error-message:contains("Your first name should have at least 2 characters.")
     When the user enters text to a text field  id=lastName  D
-    Then the user should not see the element   jQuery=.error-message:contains("Please enter a last name.")
-    And the user should see the element        jQuery=.error-message:contains("Your last name should have at least 2 characters.")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("Please enter a last name.")
+    And the user should see the element        jQuery=.govuk-error-message:contains("Your last name should have at least 2 characters.")
 
 Administrator can successfully edit internal user details
     [Documentation]  IFS-18

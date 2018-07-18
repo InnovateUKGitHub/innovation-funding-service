@@ -31,7 +31,7 @@
                         href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
                         target="_blank">Innovate UK funding rules</a>.</span>
                     <th:block th:if="${#fields.hasErrors('researchCategoryChoice')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryChoice')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('researchCategoryChoice')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" th:each="researchCategory : ${model.availableResearchCategories}">

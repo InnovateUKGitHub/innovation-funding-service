@@ -32,10 +32,10 @@
 		<fieldset class="govuk-fieldset">
 			<legend class="govuk-visually-hidden">Your details</legend>
 			<div class="govuk-form-group">
-				<label class="form-label" for="title">
-					<span class="form-label-bold">Title</span>
+				<label class="govuk-label" for="title">
+					<span class="govuk-label">Title</span>
 				</label>
-				<select class="form-control width-medium" id="title" name="title">
+				<select class="govuk-select width-medium" id="title" name="title">
 					<option value="">Mr</option>
 					<option value="">Miss</option>
 					<option value="">Mrs</option>
@@ -44,34 +44,34 @@
 				</select>
 			</div>
 			<div class="govuk-form-group">
-				<label class="form-label" for="first-name">
-					<span class="form-label-bold">First name</span>
+				<label class="govuk-label" for="first-name">
+					<span class="govuk-label">First name</span>
 				</label>
-				<input class="form-control" id="first-name" name="first-name" type="text" />
+				<input class="govuk-input" id="first-name" name="first-name" type="text" />
 			</div>
 			<div class="govuk-form-group">
-				<label class="form-label" for="last-name">
-					<span class="form-label-bold">Last name</span>
+				<label class="govuk-label" for="last-name">
+					<span class="govuk-label">Last name</span>
 				</label>
-				<input class="form-control" id="last-name" name="last-name" type="text" />
+				<input class="govuk-input" id="last-name" name="last-name" type="text" />
 			</div>
 			<div class="govuk-form-group">
-				<label class="form-label" for="phone-number">
-					<span class="form-label-bold">Phone number</span>
+				<label class="govuk-label" for="phone-number">
+					<span class="govuk-label">Phone number</span>
 					<span class="govuk-hint">We may use this to contact you about the application</span>
 				</label>
-				<input class="form-control" id="phone-number" name="phone-number" type="text" />
+				<input class="govuk-input" id="phone-number" name="phone-number" type="text" />
 			</div>
 			<div class="govuk-form-group">
-				<label class="form-label" for="email">
-					<span class="form-label-bold">Email</span>
+				<label class="govuk-label" for="email">
+					<span class="govuk-label">Email</span>
 					<span class="govuk-hint">You will need this to sign into your account</span>
 				</label>
-				<input class="form-control" id="email" name="email" type="text" />
+				<input class="govuk-input" id="email" name="email" type="text" />
 			</div>
 			<div class="govuk-form-group">
-				<label class="form-label" for="password">
-					<span class="form-label-bold">Password</span>
+				<label class="govuk-label" for="password">
+					<span class="govuk-label">Password</span>
 					<span class="govuk-hint">
 						Your password is case-sensitive and needs to:<br />
 						<ul class="govuk-list govuk-list--bullet">
@@ -93,8 +93,8 @@
 				</label>
 			</div>
 			<div class="govuk-form-group" th:unless="${param.action != null and param.action[0] == 'toggle'}">
-				<label class="form-label" for="retype-password">
-					<span class="form-label-bold">Re-type password</span>
+				<label class="govuk-label" for="retype-password">
+					<span class="govuk-label">Re-type password</span>
 				</label>
 				<input class="form-control" id="retype-password" name="retype-password" type="password" />
 			</div>

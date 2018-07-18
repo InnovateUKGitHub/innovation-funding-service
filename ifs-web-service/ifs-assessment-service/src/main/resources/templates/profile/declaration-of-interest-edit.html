@@ -44,39 +44,39 @@
                     <h3 class="govuk-heading-m govuk-!-margin-0">Principal employer and role</h3>
 
                     <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('principalEmployer')} ? 'govuk-form-group--error'">
-                        <label class="form-label-bold" th:for="${#ids.next('principalEmployer')}">
+                        <label class="govuk-label" th:for="${#ids.next('principalEmployer')}">
                             Prinicipal employer
                             <th:block th:if="${#fields.hasErrors('principalEmployer')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('principalEmployer')}" th:text="${err}"></span>
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('principalEmployer')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <input class="form-control width-full" type="text" th:field="*{principalEmployer}"
-                               th:errorclass="form-control-error" required="required"
+                        <input class="govuk-input width-full" type="text" th:field="*{principalEmployer}"
+                               th:errorclass="fgovuk-input--error" required="required"
                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.principalEmployer.required}" />
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('role')} ? 'govuk-form-group--error'">
-                        <label class="form-label-bold" th:for="${#ids.next('role')}">
+                        <label class="govuk-label" th:for="${#ids.next('role')}">
                             Role
                             <th:block th:if="${#fields.hasErrors('role')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <input class="form-control width-full" type="text" th:field="*{role}"
-                               th:errorclass="form-control-error" required="required"
+                        <input class="govuk-input width-full" type="text" th:field="*{role}"
+                               th:errorclass="govuk-input--error" required="required"
                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.role.required}" />
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')} ? 'govuk-form-group--error'">
-                        <label class="form-label-bold"  th:for="${#ids.next('professionalAffiliations')}">
+                        <label class="govuk-label"  th:for="${#ids.next('professionalAffiliations')}">
                             List any bodies you are currently a member of as part of your profession.
                             <th:block th:if="${#fields.hasErrors('professionalAffiliations')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('professionalAffiliations')}" th:text="${err}"></span>
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('professionalAffiliations')}" th:text="${err}"></span>
                             </th:block>
                         </label>
                         <div class="textarea-wrapped word-count">
                             <textarea
-                                class="form-control width-full"
+                                class="govuk-textarea width-full"
                                 cols="30"
                                 rows="3"
                                 maxlength="5000"
@@ -84,7 +84,7 @@
                                 data-maxwordslength="100"
                                 data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                                 th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
-                                th:errorclass="field-error"
+                                th:errorclass="govuk-textarea--error"
                                 th:field="*{professionalAffiliations}"></textarea>
                             <div class="textarea-footer" th:with="professionalAffiliations=*{professionalAffiliations}" aria-live="polite" aria-atomic="true" role="status">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, professionalAffiliations)})" />
@@ -98,7 +98,7 @@
                                 <h3 class="govuk-fieldset__heading">Do you hold any appointments or directorships?</h3>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('hasAppointments')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}"></span>
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}"></span>
                             </th:block>
                             <div class="govuk-radios govuk-radios--inline">
                                 <div class="govuk-radios__item" data-target="toggle-appointments">
@@ -126,7 +126,7 @@
 
                         <div class="panel js-hidden" id="toggle-appointments">
                             <th:block th:if="${#fields.hasErrors('appointments')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('appointments')}" th:text="${err}"></span>
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('appointments')}" th:text="${err}"></span>
                             </th:block>
                             <table id="position-table">
                                 <thead>
@@ -143,13 +143,13 @@
                                     <td class="govuk-form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')} ? 'govuk-form-group--error'">
                                         <label>
                                             <th:block th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}">
-                                                <span class="error-message"
+                                                <span class="govuk-error-message"
                                                       th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].organisation')}"
                                                       th:text="${err}"></span>
                                             </th:block>
                                         </label>
-                                        <input aria-labelledby="aria-position-org" class="form-control width-full appointment-field" type="text"
-                                               th:errorclass="form-control-error"
+                                        <input aria-labelledby="aria-position-org" class="govuk-input width-full appointment-field" type="text"
+                                               th:errorclass="govuk-input--error"
                                                th:id="appointments[__${appointmentStat.index}__].organisation"
                                                th:name="appointments[__${appointmentStat.index}__].organisation"
                                                th:field="*{appointments[__${appointmentStat.index}__].organisation}"
@@ -160,13 +160,13 @@
                                     <td class="govuk-form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')} ? 'govuk-form-group--error'">
                                         <label>
                                                 <th:block th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}">
-                                                    <span class="error-message"
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('appointments[__${appointmentStat.index}__].position')}"
                                                           th:text="${err}"></span>
                                                 </th:block>
                                         </label>
-                                        <input aria-labelledby="aria-position-pos" class="form-control width-full appointment-field" type="text"
-                                               th:errorclass="form-control-error"
+                                        <input aria-labelledby="aria-position-pos" class="govuk-input width-full appointment-field" type="text"
+                                               th:errorclass="fgovuk-input--error"
                                                th:id="appointments[__${appointmentStat.index}__].position"
                                                th:name="appointments[__${appointmentStat.index}__].position"
                                                th:field="*{appointments[__${appointmentStat.index}__].position}"
@@ -193,7 +193,7 @@
                             </legend>
                             <span class="govuk-hint">Do you have a position or investment in a company from which you can benefit financially?</span>
                             <th:block th:if="${#fields.hasErrors('hasFinancialInterests')}">
-                                    <span class="error-message"
+                                    <span class="govuk-error-message"
                                           th:each="err : ${#fields.errors('hasFinancialInterests')}"
                                           th:text="${err}"></span>
                             </th:block>
@@ -223,23 +223,23 @@
 
                     <div class="govuk-form-group js-hidden" id="toggle-interest" th:classappend="${#fields.hasErrors('financialInterests')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
-                            <label class="form-label-bold">
+                            <label class="govuk-label">
                                 Please describe these interests
                                 <th:block th:if="${#fields.hasErrors('financialInterests')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('financialInterests')}" th:text="${err}"></span>
+                                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('financialInterests')}" th:text="${err}"></span>
                                 </th:block>
                             </label>
 
                             <div class="textarea-wrapped word-count">
                                 <textarea
-                                    class="form-control width-full"
+                                    class="govuk-textarea width-full"
                                     cols="30"
                                     rows="3"
                                     data-max_words="100"
                                     data-maxwordslength="100"
                                     data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                                     th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)},data-required-errormessage=#{validation.assessorprofiledeclarationform.financialInterests.required}"
-                                    th:errorclass="form-control-error"
+                                    th:errorclass="govuk-textarea--error"
                                     th:field="*{financialInterests}"
                                     th:required="*{hasFinancialInterests}"></textarea>
                                 <div class="textarea-footer" th:with="financialInterests=*{financialInterests}" aria-live="polite" aria-atomic="true" role="status">
@@ -257,7 +257,7 @@
                                 <h4 class="govuk-fieldset__heading">Do any of your immediate family members have any appointments or directorships?</h4>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('hasFamilyAffiliations')}">
-                                    <span class="error-message"
+                                    <span class="govuk-error-message"
                                           th:each="err : ${#fields.errors('hasFamilyAffiliations')}"
                                           th:text="${err}"></span>
                             </th:block>
@@ -287,7 +287,7 @@
 
                         <div class="panel js-hidden" id="toggle-familyAffiliations">
                             <th:block th:if="${#fields.hasErrors('familyAffiliations')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('familyAffiliations')}" th:text="${err}"></span>
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('familyAffiliations')}" th:text="${err}"></span>
                             </th:block>
                             <table id="family-table" class="table-stacked-mobile">
                                 <thead>
@@ -303,16 +303,14 @@
                                     class="form-group-row-validated"
                                     th:classappend="((${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')})) ? 'govuk-form-group--error'">
                                     <td class="govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')} ? 'govuk-form-group--error'">
-                                        <label>
-                                            <span class="form-label">Relation</span>
-                                            <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}">
-                                                <span class="error-message"
-                                                      th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}"
-                                                      th:text="${err}"></span>
-                                            </th:block>
-                                        </label>
-                                        <input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field"
-                                               th:errorclass="form-control-error" type="text"
+                                        <label class="govuk-label">Relation</label>
+                                        <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}">
+                                            <span class="govuk-error-message"
+                                                  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}"
+                                                  th:text="${err}"></span>
+                                        </th:block>
+                                        <input aria-labelledby="aria-family-rel" class="govuk-input width-full family-affiliation-field"
+                                               th:errorclass="govuk-input--error" type="text"
                                                th:id="familyAffiliations[__${familyAffiliationStat.index}__].relation"
                                                th:name="familyAffiliations[__${familyAffiliationStat.index}__].relation"
                                                th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}"
@@ -320,16 +318,14 @@
                                                th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.relation.required}" />
                                     </td>
                                     <td class="govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')} ? 'govuk-form-group--error'">
-                                        <label>
-                                            <span class="form-label">Organisation</span>
-                                            <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}">
-                                                <span class="error-message"
-                                                      th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}"
-                                                      th:text="${err}"></span>
-                                            </th:block>
-                                        </label>
-                                        <input aria-labelledby="aria-family-org" class="form-control width-full family-affiliation-field"
-                                               th:errorclass="form-control-error" type="text"
+                                        <label class="govuk-label">Organisation</label>
+                                        <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}">
+                                            <span class="govuk-error-message"
+                                                  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}"
+                                                  th:text="${err}"></span>
+                                        </th:block>
+                                        <input aria-labelledby="aria-family-org" class="govuk-input width-full family-affiliation-field"
+                                               th:errorclass="govuk-input--error" type="text"
                                                th:id="familyAffiliations[__${familyAffiliationStat.index}__].organisation"
                                                th:name="familyAffiliations[__${familyAffiliationStat.index}__].organisation"
                                                th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}"
@@ -337,17 +333,14 @@
                                                th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.organisation.required}" />
                                     </td>
                                     <td class="govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')} ? 'govuk-form-group--error'">
-                                        <label>
-                                            <span class="form-label">Position</span>
-                                            <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}">
-                                                <span class="error-message"
-                                                      th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}"
-                                                      th:text="${err}"></span>
-                                            </th:block>
-                                        </label>
-
-                                        <input aria-labelledby="aria-family-pos" class="form-control width-full family-affiliation-field"
-                                               th:errorclass="form-control-error" type="text"
+                                        <label class="govuk-label">Position</label>
+                                        <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}">
+                                            <span class="govuk-error-message"
+                                                  th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}"
+                                                  th:text="${err}"></span>
+                                        </th:block>
+                                        <input aria-labelledby="aria-family-pos" class="govuk-input width-full family-affiliation-field"
+                                               th:errorclass="govuk-input--error" type="text"
                                                th:id="familyAffiliations[__${familyAffiliationStat.index}__].position"
                                                th:name="familyAffiliations[__${familyAffiliationStat.index}__].position"
                                                th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}"
@@ -371,7 +364,7 @@
                                 <h4 class="govuk-fieldset__heading">Do any of your immediate family members have any other financial interests?</h4>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('hasFamilyFinancialInterests')}">
-                                <span class="error-message"
+                                <span class="govuk-error-message"
                                       th:each="err : ${#fields.errors('hasFamilyFinancialInterests')}"
                                       th:text="${err}"></span>
                             </th:block>
@@ -401,21 +394,21 @@
 
                     <div class="govuk-form-group js-hidden" id="toggle-family-interest" th:classappend="${#fields.hasErrors('familyFinancialInterests')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
-                            <label class="form-label-bold">Please describe these interests
+                            <label class="govuk-label">Please describe these interests
                                 <th:block th:if="${#fields.hasErrors('familyFinancialInterests')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('familyFinancialInterests')}" th:text="${err}"></span>
+                                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('familyFinancialInterests')}" th:text="${err}"></span>
                                 </th:block>
                             </label>
                             <div class="textarea-wrapped word-count">
                                 <textarea
-                                    class="form-control width-full"
+                                    class="govuk-textarea width-full"
                                     cols="30"
                                     rows="3"
                                     data-max_words="100"
                                     data-maxwordslength="100"
                                     data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                                     th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.familyFinancialInterests.required},data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
-                                    th:errorclass="form-control-error"
+                                    th:errorclass="govuk-textarea--error"
                                     th:field="*{familyFinancialInterests}"
                                     th:required="*{hasFamilyFinancialInterests}"></textarea>
                                 <div class="textarea-footer" th:with="familyFinancialInterests=*{familyFinancialInterests}" aria-live="polite" aria-atomic="true" role="status">
@@ -431,18 +424,23 @@
                                 <span class="govuk-fieldset__heading">Confirm declaration of interest</span>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('accurateAccount')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('accurateAccount')}" th:text="${err}"></span>
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('accurateAccount')}" th:text="${err}"></span>
                             </th:block>
-                            <div class="multiple-choice">
-                                <input type="checkbox"
-                                       th:field="*{accurateAccount}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.accurateAccount.required}" />
-                                <label th:for="${#ids.prev('accurateAccount')}">
-                                    I confirm that the above is an accurate account, to the best of my knowledge, of my active financial interests.
-                                    I agree to inform Innovate UK immediately of any changes which may affect this declaration.
-                                </label>
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input type="checkbox"
+                                           class="govuk-checkboxes__input"
+                                           th:field="*{accurateAccount}"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.accurateAccount.required}" />
+                                    <label th:for="${#ids.prev('accurateAccount')}"
+                                           class="govuk-label govuk-checkboxes__label">
+                                        I confirm that the above is an accurate account, to the best of my knowledge, of my active financial interests.
+                                        I agree to inform Innovate UK immediately of any changes which may affect this declaration.
+                                    </label>
+                                </div>
                             </div>
+
                         </fieldset>
                     </div>
 

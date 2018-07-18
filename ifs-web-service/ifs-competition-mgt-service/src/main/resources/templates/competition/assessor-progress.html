@@ -217,9 +217,10 @@
                     </legend>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
-                            <label class="form-label" for="filterSearch">Search by application number.</label>
+                            <label class="govuk-label"
+                                   for="filterSearch">Search by application number.</label>
                             <input type="text"
-                                   class="form-control"
+                                   class="govuk-input"
                                    id="filterSearch"
                                    name="filterSearch"
                                    th:value="${model.filter}"/>
@@ -238,7 +239,7 @@
                     <div class="govuk-grid-column-one-half alignright">
                     <div class="govuk-form-group">
                         <label for="sort-by">Sort by</label>
-                        <select id="sort-by" name="sortField" class="js-auto-submit form-control">
+                        <select id="sort-by" name="sortField" class="js-auto-submit govuk-select">
                             <option value="id" th:selected="${(model.applicationsView.sortField == 'id')}">Application no.</option>
                             <option value="appTitle" th:selected="${(model.applicationsView.sortField == 'appTitle')}">Title</option>
                             <option value="leadOrg" th:selected="${(model.applicationsView.sortField == 'leadOrg')}">Lead organisation</option>

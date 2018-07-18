@@ -70,7 +70,7 @@ IFS.competitionManagement.multipageSelect = (function () {
           }
         }).fail(function (data) {
           var errorMessage = IFS.core.autoSave.getErrorMessage(data)
-          checkbox.closest('fieldset').find('legend').append('<span class="error-message">' + errorMessage + '</span>')
+          checkbox.closest('fieldset').find('legend').after('<span class="govuk-error-message">' + errorMessage + '</span>')
         }).always(function () {
           defer.resolve()
         })

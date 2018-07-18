@@ -57,8 +57,13 @@
                             </legend>
                             <div class="govuk-grid-column-one-quarter">
                                 <div class="govuk-grid-column-two-thirds">
-                                    <label class="form-label" for="filterSearch">Search by application number.</label>
-                                    <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
+                                    <label class="govuk-label"
+                                           for="filterSearch">Search by application number.</label>
+                                    <input type="text"
+                                           class="govuk-input"
+                                           id="filterSearch"
+                                           name="filterSearch"
+                                           th:value="${model.filter}"/>
                                 </div>
 
                                 <div class="govuk-grid-column-one-third">
@@ -78,7 +83,9 @@
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
                             <label for="sort-by">Sort by</label>
-                            <select id="sort-by" name="sort" class="js-auto-submit form-control">
+                            <select id="sort-by"
+                                    name="sort"
+                                    class="js-auto-submit govuk-select">
                                 <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>
                                 <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead</option>
                                 <option value="percentageComplete" th:selected="${(model.sorting == 'percentageComplete')}">Percentage complete</option>

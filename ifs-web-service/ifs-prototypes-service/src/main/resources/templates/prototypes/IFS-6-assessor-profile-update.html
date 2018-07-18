@@ -24,11 +24,11 @@
 
     <form action="#">
         <div class="govuk-form-group">
-            <label class="form-label" for="first-name">First name</label>
+            <label class="govuk-label" for="first-name">First name</label>
             <input class="form-control" id="first-name" name="first-name" type="text" th:value="${param.action != null and param.action[0] == 'new'} ? '' : 'Arden'" required>
         </div>
         <div class="govuk-form-group">
-            <label class="form-label" for="last-name">Last name</label>
+            <label class="govuk-label" for="last-name">Last name</label>
             <input class="form-control" id="last-name" name="last-name" type="text" th:value="${param.action != null and param.action[0] == 'new'} ? '' : 'Pimenta'" required>
         </div>
 
@@ -39,7 +39,7 @@
 
         <th:block th:if="${param.action != null and param.action[0] == 'new'}">
             <div class="govuk-form-group">
-                <label class="form-label" for="email-address">Email address</label>
+                <label class="govuk-label" for="email-address">Email address</label>
                 <input class="form-control" id="email-address" name="email-address" type="text" required>
             </div>
         </th:block>

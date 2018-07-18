@@ -3,13 +3,13 @@
 
 <!-- =========================== Form label =========================== -->
 <th:block th:fragment="form-label (name)">
-    <label th:class="${bold}? 'form-label form-label-bold' : 'form-label'" th:if="${name}" th:for="${id}">
+    <label class=govuk-label" th:if="${name}" th:for="${id}">
         <span th:text="${name}"></span>
     </label>
 </th:block>
 <!-- =========================== Form label hidden =========================== -->
 <th:block th:fragment="form-label-hidden (name,id)">
-    <label class="form-label govuk-visually-hidden"
+    <label class="govuk-label govuk-visually-hidden"
     th:if="${name}"
     th:for="${id}"
     th:text="${name}"
@@ -18,13 +18,13 @@
 <!-- =========================== Form validation messages =========================== -->
 <th:block th:fragment="form-validation-messages (id)">
     <th:block th:if="${(form != null) and #fields.hasErrors('${form.formInput[__${id}__]}')}">
-        <span class="error-message" th:each="err : ${#fields.errors('${form.formInput[__${id}__]}')}" th:text="${err}" />
+        <span class="govuk-error-message" th:each="err : ${#fields.errors('${form.formInput[__${id}__]}')}" th:text="${err}" />
     </th:block>
 </th:block>
 
 <th:block th:fragment="form-validation-custom-messages (errorId)">
     <th:block th:if="${(form != null) and #fields.hasErrors('{__${errorId}__}')}">
-        <p class="error-message govuk-!-margin-0" th:each="err : ${#fields.errors('{__${errorId}__}')}" th:text="${err}" />
+        <span class="govuk-error-message" th:each="err : ${#fields.errors('{__${errorId}__}')}" th:text="${err}" />
     </th:block>
 </th:block>
 <!-- ===========================Form hint =========================== -->
@@ -68,7 +68,7 @@
 <!-- ========================= input field type text =========================== -->
 
 <th:block th:fragment="form-textinput (id, response)">
-    <input class="form-control"
+    <input class="govuk-input"
            th:readonly="${readonly}"
            type="text"
            th:id="${id}"
@@ -84,7 +84,7 @@
 <!-- ========================= input field type number =========================== -->
 
 <th:block th:fragment="form-number (id, response)">
-    <input class="form-control"
+    <input class="govuk-input"
            th:readonly="${readonly}"
            type="number"
            th:id="${id}"
@@ -104,13 +104,13 @@
     however with the possibility to make 1 field readonly (i.e. day) we need to add the class
     worst case all three of them are readonly and there is a class that does nothing.
       */-->
-    <input class="form-control width-extra-small"
+    <input class="govuk-input width-extra-small"
            th:classAppend="${inputCssClass}+' '+${readonly == true ? 'js-visited':''}"
            th:readonly="${readonly}"
            type="number"
            th:id="${id}"
            th:field="*{__${field}__}"
-           th:errorclass="form-control-error"
+           th:errorclass="govuk-input--error"
            th:attrappend="placeholder=${placeholder != null}?@{${placeholder}}"
            th:min="${min}"
            th:max="${max}"
@@ -121,7 +121,7 @@
 <!-- ========================= empty input field type number =========================== -->
 
 <th:block th:fragment="form-number-extra-small-empty (id, field)">
-    <input class="form-control width-extra-small"
+    <input class="govuk-input width-extra-small"
            th:classAppend="${inputCssClass}+' '+${readonly == true ? 'js-visited':''}"
            th:readonly="${readonly}"
            type="number"
@@ -143,7 +143,7 @@
         <th:block th:with="dateFieldPresent=*{__${field}__ != null}">
 
             <div class="day">
-                <th:block th:insert="question-type/form-elements :: form-label (name='Day',id=${id}+'_day',bold=false)" />
+                <th:block th:insert="question-type/form-elements :: form-label (name='Day',id=${id}+'_day')" />
                 <th:block th:if="${dateFieldPresent}">
                     <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${(readonly != null and readonly) or (dayReadonly != null and dayReadonly)},required=true,min=1,max=31)" />
                  </th:block>
@@ -152,7 +152,7 @@
                  </th:block>
             </div>
             <div class="month">
-                <th:block th:insert="question-type/form-elements :: form-label (name='Month',id=${id}+'_month',bold=false)" />
+                <th:block th:insert="question-type/form-elements :: form-label (name='Month',id=${id}+'_month')" />
                 <th:block th:if="${dateFieldPresent}">
                     <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_month', field=${field}+'.monthValue',placeholder='MM',required=true,min=1,max=12)" />
                 </th:block>
@@ -161,7 +161,7 @@
                 </th:block>
             </div>
             <div class="year">
-                <th:block th:insert="question-type/form-elements :: form-label (name='Year',id=${id}+'_year',bold=false)" />
+                <th:block th:insert="question-type/form-elements :: form-label (name='Year',id=${id}+'_year')" />
                 <th:block th:if="${dateFieldPresent}">
             		    <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', field=${field}+'.year',placeholder='YYYY',required=true)" />
                 </th:block>
@@ -182,13 +182,14 @@
 
 
 <th:block th:fragment="form-percentage (id, title, field)">
-    <th:block th:insert="question-type/form-elements :: form-label (name=${title},id=${id},bold=false)" />
+    <th:block th:insert="question-type/form-elements :: form-label (name=${title},id=${id})" />
     <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}, field=${field}, min=0, max=100)" />
 </th:block>
 <!-- ========================= textarea  =========================== -->
 
 <th:block th:fragment="form-finance-textarea (type, id, name, value,readonly,required)">
-		<textarea  class="form-control"
+		<textarea
+                class="govuk-textarea"
                 th:id="|formInput[cost-${id}-${name}]|"
                 th:name="${(id == null) ? type +'-'+name+'-'+question.id : type +'-'+name+'-'+question.id+'-' + id}"
                 th:text="${value}"
@@ -196,7 +197,7 @@
                 rows="4"
                 th:readonly="${readonly}"
                 th:required="${required}"
-                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-'+name+']}')} ? 'form-control-error'">
+                th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ cost.id +'-'+name+']}')} ? 'govuk-textarea--error'">
                 >
 		</textarea>
 </th:block>
@@ -209,9 +210,10 @@
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
 
         <textarea th:id="formInput[__${formInput.id}__]"
+                  class="govuk-textarea"
                   th:name="formInput[__${formInput.id}__]"
                   th:field="*{formInput[__${formInput.id}__]}"
-                  th:errorclass="form-control-error"
+                  th:errorclass="govuk-textarea--error"
                   th:readonly="${model.readonly}"
                   th:attrappend="data-max_words=${formInput.getWordCount()}, data-maxwordslength=${formInput.getWordCount()},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+formInput.getWordCount()+'.'}"
                   data-editor="md"

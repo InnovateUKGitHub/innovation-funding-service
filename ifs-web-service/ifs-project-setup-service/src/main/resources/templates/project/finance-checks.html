@@ -100,18 +100,18 @@
                                 enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                     <h2 class="govuk-heading-m">Respond to query</h2>
                                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
-                                        <label for="response-1">
-                                            <span class="form-label-bold">Response</span>
-                                            <th:block th:if="${#fields.hasErrors('response')}">
-                                                <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
-                                            </th:block>
+                                        <label class="govuk-label" for="response-1">
+                                            Response
                                         </label>
+                                        <th:block th:if="${#fields.hasErrors('response')}">
+                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
+                                        </th:block>
                                         <div class="textarea-wrapped word-count">
                                             <textarea data-editor="md"
                                                       required = "required"
                                                       th:field="*{response}"
-                                                      class="form-control"
-                                                      th:errorclass="field-group-error"
+                                                      class="govuk-textarea"
+                                                      th:errorclass="govuk-textarea--error"
                                                       id="response-1"
                                                       name="response"
                                                       th:attr="maxlength=${model.maxQueryCharacters},
@@ -138,7 +138,7 @@
                                         <h3 class="govuk-heading-s">Upload supporting documentation in pdf format</h3>
                                         <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                             <th:block th:if="${#fields.hasErrors('attachment')}">
-                                                <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                                                <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                             </th:block>
                                             <input type="file" id="attachment-1" class="inputfile" name="attachment">
                                             <label for="attachment-1" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
@@ -195,18 +195,18 @@
                                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                 <h2 class="govuk-heading-m">Respond to query</h2>
                                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
-                                    <label for="response-2">
-                                        <span class="form-label-bold">Response</span>
-                                        <th:block th:if="${#fields.hasErrors('response')}">
-                                            <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
-                                        </th:block>
+                                    <label class="govuk-label" for="response-2">
+                                        Response
                                     </label>
+                                    <th:block th:if="${#fields.hasErrors('response')}">
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
+                                    </th:block>
                                     <div class="textarea-wrapped word-count">
                                             <textarea data-editor="md"
                                                       required = "required"
                                                       th:field="*{response}"
-                                                      class="form-control"
-                                                      th:errorclass="field-group-error"
+                                                      class="govuk-textarea"
+                                                      th:errorclass="govuk-textarea--error"
                                                       id="response-2"
                                                       name="response"
                                                       th:attr="maxlength=${model.maxQueryCharacters},
@@ -233,7 +233,7 @@
                                     <h3 class="govuk-heading-s">Upload supporting documentation in pdf format</h3>
                                     <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                         <th:block th:if="${#fields.hasErrors('attachment')}">
-                                            <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                         </th:block>
                                         <input type="file" id="attachment-2" class="inputfile" name="attachment">
                                         <label for="attachment-2" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
@@ -288,18 +288,18 @@
                                   enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                                 <h2 class="govuk-heading-m">Respond to query</h2>
                                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
-                                    <label for="response-3">
-                                        <span class="form-label-bold">Response</span>
-                                        <th:block th:if="${#fields.hasErrors('response')}">
-                                            <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
-                                        </th:block>
+                                    <label class="govuk-label" for="response-3">
+                                        Response
                                     </label>
+                                    <th:block th:if="${#fields.hasErrors('response')}">
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
+                                    </th:block>
                                     <div class="textarea-wrapped word-count">
                                             <textarea data-editor="md"
                                                       required = "required"
                                                       th:field="*{response}"
-                                                      class="form-control"
-                                                      th:errorclass="field-group-error"
+                                                      class="govuk-textarea"
+                                                      th:errorclass="govuk-textarea--error"
                                                       id="response-3"
                                                       name="response"
                                                       th:attr="maxlength=${model.maxQueryCharacters},
@@ -326,7 +326,7 @@
                                     <h3 class="govuk-heading-s">Upload supporting documentation in pdf format</h3>
                                     <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                         <th:block th:if="${#fields.hasErrors('attachment')}">
-                                            <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                         </th:block>
                                         <input type="file" id="attachment-3" class="inputfile" name="attachment">
                                         <label for="attachment-3" class="button-secondary govuk-!-margin-top-6">+ Upload</label>

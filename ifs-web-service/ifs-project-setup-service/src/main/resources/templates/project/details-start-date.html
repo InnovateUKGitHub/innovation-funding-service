@@ -41,7 +41,7 @@
                             </legend>
                             <span class="govuk-hint">Projects must start on the first day of a month so please choose the month and year of your project start.</span>
                             <th:block th:if="${#fields.hasErrors('projectStartDate')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('projectStartDate')}" th:text="${err}" />
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('projectStartDate')}" th:text="${err}" />
                             </th:block>
                             <th:block th:insert="question-type/form-elements :: form-dateinput (id='projectStartDate', field='projectStartDate', dayReadonly=true)" />
                         </fieldset>
