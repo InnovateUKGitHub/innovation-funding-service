@@ -10,7 +10,9 @@
         </label>
         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
         <span class="govuk-hint">More <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development" class="govuk-link" target="_blank">guidance on research categories</a> (opens in a new window).</span>
-        <select class="form-control research-category" th:id="formInput[__${field.id}__]" th:field="*{formInput[__${field.id}__]}"
+        <select class="govuk-select research-category"
+                th:id="formInput[__${field.id}__]"
+                th:field="*{formInput[__${field.id}__]}"
                 th:attr="data-required-errormessage=#{validation.application.research.category.required}"
                 required="required">
             <option value="">Please select...</option>
@@ -64,7 +66,7 @@
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'govuk-form-group--error'">
         <label class="govuk-label" th:for="formInput[__${field.id}__]">Question score</label>
         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})"/>
-        <select class="form-control width-medium assessor-question-score"
+        <select class="govuk-select width-medium assessor-question-score"
                 aria-describedby="info"
                 th:id="formInput[__${field.id}__]"
                 th:field="*{formInput[__${field.id}__]}"

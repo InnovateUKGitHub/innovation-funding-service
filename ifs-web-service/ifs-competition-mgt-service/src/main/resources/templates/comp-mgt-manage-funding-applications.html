@@ -31,13 +31,21 @@
                         <div class="govuk-grid-column-one-third">
                             <div class="govuk-form-group">
                                 <label class="govuk-label" for="stringFilter">Search by application number.</label>
-                                <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:field="*{stringFilter}" />
+                                <input type="text"
+                                       class="govuk-input"
+                                       id="stringFilter"
+                                       name="stringFilter"
+                                       th:field="*{stringFilter}" />
                             </div>
                         </div>
                         <div class="govuk-grid-column-one-third">
                             <div class="govuk-form-group">
-                                <label class="govuk-label" for="sendFilter">Sent</label>
-                                <select name="sendFilter" id="sendFilter" class="form-control" th:field="*{sendFilter}">
+                                <label class="govuk-label"
+                                       for="sendFilter">Sent</label>
+                                <select name="sendFilter"
+                                        id="sendFilter"
+                                        class="govuk-select"
+                                        th:field="*{sendFilter}">
                                     <option value="">All</option>
                                     <option value="1">Yes</option>
                                     <option value="0">No</option>
@@ -46,8 +54,12 @@
                         </div>
                         <div class="govuk-grid-column-one-third">
                             <div class="govuk-form-group">
-                                <label class="govuk-label" for="fundingFilter">Funding</label>
-                                <select name="fundingFilter" id="fundingFilter" class="form-control" th:field="*{fundingFilter}">
+                                <label class="govuk-label"
+                                       for="fundingFilter">Funding</label>
+                                <select name="fundingFilter"
+                                        id="fundingFilter"
+                                        class="govuk-select"
+                                        th:field="*{fundingFilter}">
                                     <option value="">Show all</option>
                                     <option value="FUNDED">Successful</option>
                                     <option value="UNFUNDED">Unsuccessful</option>

@@ -6,53 +6,108 @@
         <label class="govuk-label" for="firstName">
             First name
         </label>
-        <input class="form-control" type="text" required="required" minlength="2" maxlength="70" data-required-errormessage="Please enter a first name." data-minlength-errormessage="Your first name should have at least 2 characters." data-maxlength-errormessage="Your first name cannot have more than 70 characters." data-invalid-errormessage="Invalid first name." id="firstName" name="firstName" value="Felix">
+        <input class="govuk-input"
+               type="text"
+               required="required"
+               minlength="2"
+               maxlength="70"
+               data-required-errormessage="Please enter a first name."
+               data-minlength-errormessage="Your first name should have at least 2 characters."
+               data-maxlength-errormessage="Your first name cannot have more than 70 characters."
+               data-invalid-errormessage="Invalid first name."
+               id="firstName"
+               name="firstName"
+               value="Felix">
     </div>
 
     <div class="govuk-form-group">
-        <label class="govuk-label" for="lastName">
+        <label class="govuk-label"
+               for="lastName">
             Last name
         </label>
-        <input class="form-control" id="lastName" type="text" required="required" minlength="2" maxlength="70" data-required-errormessage="Please enter a last name." data-minlength-errormessage="Your last name should have at least 2 characters." data-maxlength-errormessage="Your last name cannot have more than 70 characters." data-invalid-errormessage="Invalid last name." name="lastName" value="Wilson">
+        <input class="govuk-input"
+               id="lastName"
+               type="text"
+               required="required"
+               minlength="2"
+               maxlength="70"
+               data-required-errormessage="Please enter a last name."
+               data-minlength-errormessage="Your last name should have at least 2 characters."
+               data-maxlength-errormessage="Your last name cannot have more than 70 characters."
+               data-invalid-errormessage="Invalid last name."
+               name="lastName"
+               value="Wilson">
     </div>
 
     <fieldset class="govuk-fieldset govuk-!-margin-top-6">
         <legend class="govuk-visually-hidden">Address details</legend>
         <div class="govuk-form-group govuk-!-margin-top-6">
-            <label class="govuk-label" for="addressForm.addressLine1">
+            <label class="govuk-label"
+                   for="addressForm.addressLine1">
                 Street
             </label>
-            <input class="form-control" required="required" type="text" data-required-errormessage="The address cannot be blank." id="addressForm.addressLine1" name="addressForm.addressLine1" value="10 Station Road">
+            <input class="govuk-input"
+                   required="required"
+                   type="text"
+                   data-required-errormessage="The address cannot be blank."
+                   id="addressForm.addressLine1"
+                   name="addressForm.addressLine1" v
+                   alue="10 Station Road">
         </div>
         <div class="govuk-form-group">
-            <label class="govuk-label govuk-visually-hidden" for="addressForm.addressLine2">
+            <label class="govuk-label govuk-visually-hidden"
+                   for="addressForm.addressLine2">
                 Street line 2
             </label>
-            <input class="form-control" type="text" id="addressForm.addressLine2" name="addressForm.addressLine2" value="">
+            <input class="govuk-input"
+                   type="text"
+                   id="addressForm.addressLine2"
+                   name="addressForm.addressLine2"
+                   value="">
         </div>
         <div class="govuk-form-group">
-            <label class="govuk-label govuk-visually-hidden" for="addressForm.addressLine3">
+            <label class="govuk-label govuk-visually-hidden"
+                   for="addressForm.addressLine3">
                 Street line 3
             </label>
-            <input class="form-control" type="text" id="addressForm.addressLine3" name="addressForm.addressLine3" value="">
+            <input class="govuk-input"
+                   type="text"
+                   id="addressForm.addressLine3"
+                   name="addressForm.addressLine3" value="">
         </div>
         <div class="govuk-form-group">
             <label class="govuk-label" for="addressForm.town">
                 Town
             </label>
-            <input class="form-control" required="required" type="text" data-required-errormessage="The town cannot be blank." id="addressForm.town" name="addressForm.town" value="Sheffield">
+            <input class="govuk-input"
+                   required="required"
+                   type="text"
+                   data-required-errormessage="The town cannot be blank."
+                   id="addressForm.town"
+                   name="addressForm.town"
+                   value="Sheffield">
         </div>
         <div class="govuk-form-group">
             <label class="govuk-label" for="addressForm.county">
                 County
             </label>
-            <input class="form-control" type="text" id="addressForm.county" name="addressForm.county" value="South Yorkshire">
+            <input class="govuk-input"
+                   type="text"
+                   id="addressForm.county"
+                   name="addressForm.county"
+                   value="South Yorkshire">
         </div>
         <div class="govuk-form-group">
             <label class="govuk-label" for="addressForm.postcode">
                 Postcode
             </label>
-            <input class="form-control" required="required" type="text" data-required-errormessage="The postcode cannot be blank." id="addressForm.postcode" name="addressForm.postcode" value="S11 2AA">
+            <input class="govuk-input"
+                   required="required"
+                   type="text"
+                   data-required-errormessage="The postcode cannot be blank."
+                   id="addressForm.postcode"
+                   name="addressForm.postcode"
+                   value="S11 2AA">
         </div>
     </fieldset>
 
@@ -61,7 +116,13 @@
             Phone number
         </label>
         <span class="govuk-hint">We may use this to contact you about the application.</span>
-        <input class="form-control" type="tel" required="required" data-required-errormessage="Please enter a phone number." id="phoneNumber" name="phoneNumber" value="094073497201">
+        <input class="govuk-input"
+               type="tel"
+               required="required"
+               data-required-errormessage="Please enter a phone number."
+               id="phoneNumber"
+               name="phoneNumber"
+               value="094073497201">
     </div>
 
     <button class="govuk-button" type="submit">Save and return to your details</button>

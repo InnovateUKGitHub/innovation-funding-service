@@ -128,7 +128,7 @@
                     </div>
                     <div class="govuk-form-group alignright inline">
                         <label for="other-funding-total">Total other funding</label>
-                        <input class="form-control form-control-1-4 alignright"
+                        <input class="govuk-input form-control-1-4 alignright"
                                data-calculation-fields="[id*=fundingAmount]"
                                data-calculation-operations="+"
                                id="other-funding-total"
@@ -155,10 +155,10 @@
                     <input type="text"
                            th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${'other_funding-fundingSource-' + question.id + '-' + costIdentifier}"
-                           class="form-control width-full"
+                           class="govuk-input width-full"
                            th:id="${'cost-other_funding-'+costIdentifier+'-source'}"
                            th:value="${rejectedValue != null ? rejectedValue : cost.fundingSource}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'form-control-error'"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-input--error'"
                            required="required"
                            maxlength="255"
                            th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}" />
@@ -171,14 +171,14 @@
                     <input type="text"
                            th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${'other_funding-securedDate-' + question.id + '-' + costIdentifier}"
-                           class="form-control width-medium"
+                           class="govuk-input width-medium"
                            th:id="${'cost-other_funding-'+costIdentifier+'-date'}"
                            placeholder="MM-YYYY"
                            pattern="(0[1-9]|1[012])-[0-9]{4}"
                            th:attr="data-pattern-errormessage=#{validation.finance.secured.date.invalid}"
                            maxlength="7"
                            th:value="${rejectedValue != null ? rejectedValue : cost.securedDate}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'form-control-error'"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-input--error'"
                            required="required" />
                 </td>
 
@@ -187,13 +187,13 @@
                     <span class="govuk-visually-hidden">Funding amount (&pound;)</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
                   </label>
-                    <input class="form-control width-medium"
+                    <input class="govuk-input width-medium"
                            type="number"
                            th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${'other_funding-fundingAmount-' + question.id + '-' + costIdentifier}"
                            th:id="${'cost-other_funding-'+costIdentifier+'-fundingAmount'}"
                            ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : (cost.fundingAmount != null ? #numbers.formatDecimal(cost.fundingAmount,0,0) : '0')}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'form-control-error'"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-input--error'"
                            required="required"
                            placeholder="0"
                            min="1"

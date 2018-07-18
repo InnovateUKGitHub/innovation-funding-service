@@ -119,9 +119,9 @@
                 </th:block>
                 <div class="textarea-wrapped ">
                     <textarea data-editor="html"
-                            class="form-control"
+                            class="govuk-textarea"
                             id="fundingRules"
-                            th:classappend="${#fields.hasErrors('fundingRules')} ? 'form-control-error'"
+                            th:classappend="${#fields.hasErrors('fundingRules')} ? 'govuk-textarea--error'"
                             th:field="${competitionSetupForm.fundingRules}"
                             required="required"
                             th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"

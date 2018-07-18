@@ -13,7 +13,11 @@
                 <th:block th:if="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch}">
                     <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcodeInput')}" th:text="${err}" />
                 </th:block>
-                <input id="addressForm.postcodeInput" class="form-control" th:field="*{addressForm.postcodeInput}" th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch} ? 'form-control-error'" type="text" />
+                <input id="addressForm.postcodeInput"
+                       class="govuk-input"
+                       th:field="*{addressForm.postcodeInput}"
+                       th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch} ? 'govuk-input--error'"
+                       type="text" />
                 <button type="submit" id="postcode-lookup" class="govuk-button" name="search-address">Find UK address</button>
                 <div th:if='${form.addressForm.postcodeInput != ""} and ${#lists.isEmpty(form.addressForm.postcodeOptions)}'>No results were found</div>
             </div>
@@ -25,7 +29,9 @@
                 <th:block th:if="${#fields.hasErrors('*{addressForm.postcodeOptions}')}">
                     <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcodeOptions')}" th:text="${err}" />
                 </th:block>
-                <select id="addressForm.selectedPostcodeIndex" class="form-control" th:field="*{addressForm.selectedPostcodeIndex}">
+                <select id="addressForm.selectedPostcodeIndex"
+                        class="govuk-select"
+                        th:field="*{addressForm.selectedPostcodeIndex}">
                     <option th:value="${status.index}"
                             th:each="address,status : ${form.addressForm.postcodeOptions}"
                             th:text="${address.combinedString}"></option>
@@ -49,9 +55,9 @@
                     <span class="error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine1')}" th:text="${err}" />
                 </th:block>
                 <input id="addressForm.selectedPostcode.addressLine1"
-                       class="form-control"
+                       class="govuk-input"
                        th:field="*{addressForm.selectedPostcode.addressLine1}"
-                       th:errorclass="form-control-error"
+                       th:errorclass="govuk-input--error"
                        th:attr="data-required-errormessage=#{validation.standard.addressline1.required}"
                        type="text"
                        required="required" />
@@ -64,9 +70,9 @@
                     <span class="error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine2')}" th:text="${err}" />
                 </th:block>
                 <input id="addressForm.selectedPostcode.addressLine2"
-                       class="form-control"
+                       class="govuk-input"
                        th:field="*{addressForm.selectedPostcode.addressLine2}"
-                       th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine2}') and form.addressForm.triedToSave} ? 'form-control-error'"
+                       th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine2}') and form.addressForm.triedToSave} ? 'govuk-input--error'"
                        type="text" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine3}') and form.addressForm.triedToSave} ? 'govuk-form-group--error'">
@@ -77,9 +83,9 @@
                     <span class="error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine3')}" th:text="${err}" />
                 </th:block>
                 <input id="addressForm.selectedPostcode.addressLine3"
-                       class="form-control"
+                       class="govuk-input"
                        th:field="*{addressForm.selectedPostcode.addressLine3}"
-                       th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine3}') and form.addressForm.triedToSave} ? 'form-control-error'"
+                       th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine3}') and form.addressForm.triedToSave} ? 'govuk-input--error'"
                        type="text" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.town}') and form.addressForm.triedToSave} ? 'govuk-form-group--error'">
@@ -90,9 +96,9 @@
                     <span class="error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.town')}" th:text="${err}" />
                 </th:block>
                 <input id="addressForm.selectedPostcode.town"
-                       class="form-control"
+                       class="govuk-input"
                        th:field="*{addressForm.selectedPostcode.town}"
-                       th:errorclass="form-control-error"
+                       th:errorclass="govuk-input--error"
                        th:attr="data-required-errormessage=#{validation.standard.town.required}"
                        type="text"
                        required="required" />
@@ -105,9 +111,9 @@
                     <span class="error-message"  th:each="err : ${#fields.errors('addressForm.selectedPostcode.county')}" th:text="${err}" />
                 </th:block>
                 <input id="addressForm.selectedPostcode.county"
-                       class="form-control"
+                       class="govuk-input"
                        th:field="*{addressForm.selectedPostcode.county}"
-                       th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.county}') and form.addressForm.triedToSave} ? 'form-control-error'"
+                       th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.county}') and form.addressForm.triedToSave} ? 'fgovuk-input--error'"
                        type="text" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcode.postcode}') and form.addressForm.triedToSave} ? 'govuk-form-group--error'">
@@ -118,9 +124,9 @@
                     <span class="error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.postcode')}" th:text="${err}" />
                 </th:block>
                 <input id="addressForm.selectedPostcode.postcode"
-                       class="form-control"
+                       class="govuk-input"
                        th:field="*{addressForm.selectedPostcode.postcode}"
-                       th:errorclass="form-control-error"
+                       th:errorclass="govuk-input--error"
                        th:attr="data-required-errormessage=#{validation.standard.postcode.required}"
                        type="text"
                        required="required" />
@@ -208,11 +214,15 @@
 
 <th:block th:fragment="organisation-name">
     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationName}') and form.addressForm.triedToSave} ? 'govuk-form-group--error'">
-        <label class="govuk-label" for="org-name">
+        <label class="govuk-label"
+               for="org-name">
             Organisation name
         </label>
         <span class="error-message" th:if="${#fields.hasErrors('*{organisationName}') and form.addressForm.triedToSave}" th:errors="*{organisationName}"></span>
-        <input class="form-control" id="org-name" th:field="*{organisationName}" type="text" value="" />
+        <input class="govuk-input"
+               id="org-name"
+               th:field="*{organisationName}"
+               type="text" value="" />
     </div>
 </th:block>
 

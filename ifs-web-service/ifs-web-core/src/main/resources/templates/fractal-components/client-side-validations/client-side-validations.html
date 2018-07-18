@@ -9,12 +9,25 @@
     <label class="govuk-label" for="minlength-field">
       Minimum length validation
     </label>
-    <input class="form-control" type="text" id="minlength-field" minlength="8" value="" name="minlength" data-minlength-errormessage="This field requires at least 8 characters." />
+    <input class="govuk-input"
+           type="text"
+           id="minlength-field"
+           minlength="8"
+           value=""
+           name="minlength"
+           data-minlength-errormessage="This field requires at least 8 characters." />
 </div>
 
 <div class="govuk-form-group">
-    <label class="govuk-label" for="required-field">Empty field validation</label>
-    <input class="form-control" type="text" id="required-field" required="required" value="" name="empty"  data-required-errormessage="This field cannot be empty." />
+    <label class="govuk-label"
+           for="required-field">Empty field validation</label>
+    <input class="govuk-input"
+           type="text"
+           id="required-field"
+           required="required"
+           value=""
+           name="empty"
+           data-required-errormessage="This field cannot be empty." />
 </div>
 
 <div class="govuk-form-group">
@@ -24,22 +37,44 @@
     <span class="govuk-hint">
             We can also use the pattern attributes, see <a href="http://html5pattern.com">html5pattern.com</a> for examples.
         </span>
-    <input class="form-control" type="text" id="pattern-field"  pattern="(0[1-9]|1[012])-[0-9]{4}" value="" name="date"  data-pattern-errormessage="Invalid date. Please use MM-YYYY format." />
+    <input class="govuk-input"
+           type="text"
+           id="pattern-field"
+           pattern="(0[1-9]|1[012])-[0-9]{4}"
+           value=""
+           name="date"
+           data-pattern-errormessage="Invalid date. Please use MM-YYYY format." />
 </div>
 
 <div class="govuk-form-group">
     <label class="govuk-label" for="min-field">Minimum amount number field</label>
-    <input class="form-control" type="number" id="min-field" min="15" data-min-errormessage="This field should be 15 or higher." value="" name="number2"  />
+    <input class="govuk-input"
+           type="number"
+           id="min-field"
+           min="15"
+           data-min-errormessage="This field should be 15 or higher."
+           value=""
+           name="number2"  />
 </div>
 
 <div class="govuk-form-group">
     <label class="govuk-label" for="max-field">Maximum amount number field</label>
-    <input class="form-control" type="number" id="max-field" max="15" data-max-errormessage="This field should be 15 or lower." value="" name="number1"  />
+    <input class="govuk-input"
+           type="number"
+           id="max-field"
+           max="15"
+           data-max-errormessage="This field should be 15 or lower."
+           value=""
+           name="number1"  />
 </div>
 
 <div class="govuk-form-group">
     <label class="govuk-label" for="required-field">Email field</label>
-    <input class="form-control" type="email" data-email-errormessage="Please enter a valid email address." value="" name="email" />
+    <input class="govuk-input"
+           type="email"
+           data-email-errormessage="Please enter a valid email address."
+           value=""
+           name="email" />
 </div>
 
 
@@ -48,7 +83,12 @@
 
 <div class="govuk-form-group">
     <label class="govuk-label" for="required-field">Email field</label>
-    <input class="form-control" data-email-showmessage="none" type="email" data-email-errormessage="Please enter a valid email address." value="" name="email" />
+    <input class="govuk-input"
+           data-email-showmessage="none"
+           type="email"
+           data-email-errormessage="Please enter a valid email address."
+           value=""
+           name="email" />
 </div>
 
 <h2 class="govuk-heading-m">Advanced use cases; getting the status</h2>
@@ -61,7 +101,7 @@
           <li data-minlength-validationStatus="">at least 5 characters</li>
       </ul>
   </div>
-    <label for="advanced-use-case">
+    <label class="govuk-label" for="advanced-use-case">
       Type characters in the field underneath (at least 5)
     </label>
     <div>
@@ -70,7 +110,7 @@
              type="text"
              value=""
              name="advanced"
-             class="form-control"
+             class="govuk-input"
              minlength="5"
         />
     </div>

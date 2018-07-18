@@ -398,7 +398,7 @@ the user should view the project growth table
 the user can edit the project growth table
     the user clicks the button/link         jQuery=button.button-clear:contains('Edit')
     the user selects the radio button       financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
-    the user enters text to a text field    css=tr:nth-child(1) .form-control    4000
+    the user enters text to a text field    css=tr:nth-child(1) .govuk-input    4000
     the user enters text to a text field    css=td input[value="65000"]    5000
 
 the applicant enters valid inputs

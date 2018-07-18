@@ -95,7 +95,7 @@
 			<div class="govuk-grid-row">
 				<div class="column-two-thirds">
 					<label class="form-label" for="filterResponse">Response</label>
-					<select class="form-control" id="filterResponse" name="filterResponse">
+					<select class="govuk-select" id="filterResponse" name="filterResponse">
 
 						<option th:if="${param.filterResponse != null}" th:remove="tag">
 							<option th:text="${param.filterResponse[0]}" selected="selected">TEST</option>

@@ -69,12 +69,12 @@
                                 </label>
                             </td>
                             <td class="numeric">
-                                <input class="form-control width-large"
+                                <input class="govuk-input width-large"
                                        th:disabled="${formInputViewModel.readonly}"
                                        th:id="${'input-'+formInput.id}"
                                        th:name="'formInput['+${formInput.id}+']'"
                                        th:value="*{formInput[__${formInput.id}__]}"
-                                       th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-control-error'"
+                                       th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'govuk-input--error'"
                                        required="required"
                                        type="number"/>
                             </td>
@@ -263,7 +263,7 @@
                     <th:block th:if="${#fields.hasErrors('projectLocation')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="form-control width-large"
+                    <input class="govuk-input width-large"
                            id="projectLocation"
                            th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"
                            type="text"

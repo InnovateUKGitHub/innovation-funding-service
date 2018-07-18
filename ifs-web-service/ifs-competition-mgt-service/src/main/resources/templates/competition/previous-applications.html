@@ -25,7 +25,7 @@
                         <div class="grid-row">
                             <div class="govuk-grid-column-two-thirds">
                                 <label class="govuk-label" for="filter">Status</label>
-                                <select class="form-control" id="filter" name="filter">
+                                <select class="govuk-select" id="filter" name="filter">
                                     <option id="all" th:href="@{/competition/{cid}/applications/previous?filter=}" value="ALL" th:selected="${(param.filter != null) and (param.filter[0] == 'ALL')}">All</option>
                                     <option id="unsuccessful" th:href="@{/competition/{cid}/applications/previous?filter=}" value="REJECTED" th:selected="${(param.filter != null) and (param.filter[0] == 'REJECTED')}">Unsuccessful</option>
                                     <option id="withdrawn" th:href="@{/competition/{cid}/applications/previous?filter=}" value="WITHDRAWN" th:selected="${(param.filter != null) and (param.filter[0] == 'WITHDRAWN')}">Withdrawn</option>

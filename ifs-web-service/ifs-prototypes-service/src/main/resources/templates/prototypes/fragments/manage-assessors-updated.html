@@ -304,7 +304,7 @@
             <!--<div class="govuk-grid-column-one-half">-->
             <!--<div class="govuk-form-group">-->
             <!--<label class="govuk-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>-->
-            <!--<input type="text" class="form-control" id="filterSearch" name="filterSearch" />-->
+            <!--<input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />-->
             <!--</div>-->
             <!--</div>-->
 
@@ -344,7 +344,7 @@
 
             <!--<div class="govuk-grid-column-one-half alignright">-->
             <!--<label for="inviteFilter">Sort by-->
-            <!--<select class="form-control" id="inviteFilter" name="inviteFilter">-->
+            <!--<select class="govuk-select" id="inviteFilter" name="inviteFilter">-->
             <!--<option value="">All</option>-->
             <!--<option value="">To be invited</option>-->
             <!--<option value="">Invite sent</option>-->
@@ -483,7 +483,7 @@
 
                                 <p class="govuk-hint">The innovation area will remain the same until you click 'Add assessors to list' button.</p>
 
-                                <select class="form-control" required="required" aria-labelledby="innovation-area" id="grouped-innovation-area" data-required-errormessage="Please select an innovation area." name="selectedInnovationArea">
+                                <select class="govuk-select" required="required" aria-labelledby="innovation-area" id="grouped-innovation-area" data-required-errormessage="Please select an innovation area." name="selectedInnovationArea">
                               <option value="">Please select an innovation area</option>
                               <optgroup label="Emerging and enabling technologies">
                                   <option value="15">Creative economy</option>
@@ -617,7 +617,7 @@
                 <div class="govuk-grid-column-one-third alignright">
                     <div class="govuk-form-group">
                         <label for="sort-by">Sort by</label>
-                        <select name="sort-by" id="sort-by" class="form-control">
+                        <select name="sort-by" id="sort-by" class="govuk-select">
                         <option value="Title">Assessor name</option>
                         <option value="Employer">Email address</option>
                         <option value="Innovation Area">Innovation area</option>
@@ -719,7 +719,7 @@
                   <div class="govuk-grid-column-one-third">
                       <div class="govuk-form-group">
                         <label for="filterInnovationType">Type</label>
-                        <select name="filterInnovationType" id="filterInnovationType" class="form-control">
+                        <select name="filterInnovationType" id="filterInnovationType" class="govuk-select">
 
                           <th:block th:if="${param.filterInnovationType != null}">
                               <option th:text="${param.filterInnovationType[0]}" selected="selected">TEST</option>
@@ -739,7 +739,7 @@
                     <div class="govuk-form-group">
                       <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
 
-                      <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
+                      <select name="filterInnovationArea" id="filterInnovationArea" class="govuk-select">
 
                         <th:block th:if="${param.filterInnovationArea != null}">
                             <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
@@ -757,7 +757,7 @@
                   <div class="govuk-grid-column-one-third">
                       <div class="govuk-form-group">
                         <label class="govuk-label" for="filterStatus">Status</label>
-                        <select name="filterStatus" id="filterStatus" class="form-control width-full">
+                        <select name="filterStatus" id="filterStatus" class="govuk-select width-full">
                              <option value="All">All</option>
                              <option value="Invite accepted">Invite accepted</option>
                              <option value="Invite sent">Invite sent</option>
@@ -773,13 +773,13 @@
                 <div class="govuk-grid-column-one-third">
                     <div class="govuk-form-group">
                         <label class="govuk-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
-                        <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                        <input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />
                     </div>
                 </div>
 
                 <div class="govuk-grid-column-one-third">
                     <label class="govuk-label" for="filterContract">Contract and DOI</label>
-                    <select name="filterContract" id="filterContract" class="form-control width-full">
+                    <select name="filterContract" id="filterContract" class="govuk-select width-full">
                          <option value="Yes">Yes</option>
                          <option value="No">No</option>
                          <option value="Show all">Show all</option>
@@ -822,7 +822,7 @@
         <div class="govuk-grid-column-one-third alignright">
             <div class="govuk-form-group">
                 <label for="inviteFilter">Sort by
-                        <select class="form-control" id="inviteFilter" name="inviteFilter">
+                        <select class="govuk-select" id="inviteFilter" name="inviteFilter">
                             <option value="">All</option>
                             <option value="">To be invited</option>
                             <option value="">Invite sent</option>
@@ -1021,7 +1021,7 @@
 
                     <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
 
-                    <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
+                    <select name="filterInnovationArea" id="filterInnovationArea" class="govuk-select">
 
                             <option th:if="${param.filterInnovationArea != null}" th:remove="tag">
                                 <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
@@ -1037,7 +1037,7 @@
                 <div class="govuk-grid-column-one-half" th:unless="${site == 'rc'}">
                     <label for="filterType">Type</label>
 
-                    <select name="filterType" id="filterType" class="form-control">
+                    <select name="filterType" id="filterType" class="govuk-select">
                             <option th:if="${param.filterType != null}" th:remove="tag">
                                 <option th:text="${param.filterType[0]}" selected="selected">TEST</option>
                             </option>
@@ -1055,7 +1055,7 @@
             <div class="govuk-grid-row extra-margin">
                 <div class="govuk-grid-column-one-half">
                     <label class="govuk-label" for="filterSearch" th:text="${(site == 'rc' ? 'Name and/or organisation' : 'Keyword')}">FILTER SEARCH</label>
-                    <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                    <input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />
                 </div>
 
                 <div class="govuk-grid-column-one-half">
@@ -1125,7 +1125,7 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
                     <label class="govuk-label" for="filterSearch">Filter by keyword</label>
-                    <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                    <input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />
                 </div>
 
                 <div class="govuk-grid-column-one-half">

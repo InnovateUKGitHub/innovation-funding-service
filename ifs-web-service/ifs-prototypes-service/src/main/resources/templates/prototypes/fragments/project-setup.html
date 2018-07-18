@@ -15,10 +15,10 @@
         <tbody>
             <tr>
                 <td>
-                    <input type="text" th:name="${'name-'+ addUserType +'1'}" th:id="${'name-'+ addUserType +'1'}" class="form-control width-full" aria-labelledby="user-name" value="" />
+                    <input type="text" th:name="${'name-'+ addUserType +'1'}" th:id="${'name-'+ addUserType +'1'}" class="govuk-input width-full" aria-labelledby="user-name" value="" />
                 </td>
                 <td>
-                    <input type="email" th:name="${'email-'+ addUserType +'1'}" th:id="${'email-'+ addUserType +'1'}" class="form-control width-full" aria-labelledby="user-email" value="" />
+                    <input type="email" th:name="${'email-'+ addUserType +'1'}" th:id="${'email-'+ addUserType +'1'}" class="govuk-input width-full" aria-labelledby="user-email" value="" />
                 </td>
                 <td class="alignright">
                     <button class="button-clear govuk-!-margin-bottom-0" th:id="${'invite-' +addUserType}">Invite to project</button>
@@ -69,7 +69,7 @@
         <label class="govuk-label" for="postcode-check">
             <span class="govuk-label">Postcode</span>
         </label>
-        <input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
+        <input class="govuk-input width-medium" id="postcode-check" name="postcode-check" type="text" />
         <button type="submit" id="postcode-lookup" class="govuk-button">Find UK address</button>
         <div>
             <a href="#" id="enter-address-manually">Enter address manually</a>
@@ -81,7 +81,7 @@
         <label class="govuk-label" for="select-address">
             <span class="govuk-label">Select your address</span>
         </label>
-        <select class="form-control" id="select-address" name="select-address">
+        <select class="govuk-select" id="select-address" name="select-address">
             <option value="">SN1 2BD, 1, Station Road, Swindon </option>
             <option value="">SN1 2BD, 1A, Station Road, Swindon  </option>
             <option value="">SN1 2BD, 2, Station Road, Swindon </option>
@@ -103,37 +103,37 @@
             <label class="govuk-label" for="street">
                 <span class="govuk-label">Street</span>
             </label>
-            <input class="form-control street" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>
+            <input class="govuk-input street" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>
         </div>
         <div class="govuk-form-group">
             <label class="govuk-label govuk-visually-hidden" for="street-2">
                 <span class="govuk-label">Street line 2</span>
             </label>
-            <input class="form-control street-2" id="street-2" name="street-2" type="text" />
+            <input class="govuk-input street-2" id="street-2" name="street-2" type="text" />
         </div>
         <div class="govuk-form-group">
             <label class="govuk-label" for="street-2">
                 <span class="govuk-label govuk-visually-hidden">Street line 3</span>
             </label>
-            <input class="form-control street-3" id="street-3" name="street-2" type="text" />
+            <input class="govuk-input street-3" id="street-3" name="street-2" type="text" />
         </div>
         <div class="govuk-form-group">
             <label class="govuk-label" for="town">
                 <span class="govuk-label">Town</span>
             </label>
-            <input class="form-control town" id="town" name="town" type="text" th:value="${(param.edit == null ? '':'Swindon')}" />
+            <input class="govuk-input town" id="town" name="town" type="text" th:value="${(param.edit == null ? '':'Swindon')}" />
         </div>
         <div class="govuk-form-group">
             <label class="govuk-label" for="county">
                 <span class="govuk-label">County</span>
             </label>
-            <input class="form-control county" id="county" name="county" type="text" th:value="${(param.edit == null ? '':'Wiltshire')}" />
+            <input class="govuk-input county" id="county" name="county" type="text" th:value="${(param.edit == null ? '':'Wiltshire')}" />
         </div>
         <div class="govuk-form-group">
             <label class="govuk-label" for="postcode">
                 <span class="govuk-label">Postcode</span>
             </label>
-            <input class="form-control postcode" id="postcode" name="postcode" type="text" th:value="${(param.edit == null ? '':'SN1 2BD')}" />
+            <input class="govuk-input postcode" id="postcode" name="postcode" type="text" th:value="${(param.edit == null ? '':'SN1 2BD')}" />
         </div>
     </fieldset>
 </div>
@@ -153,7 +153,7 @@
             <label class="govuk-label" for="company-name">
                 <span class="govuk-label">Company name</span>
             </label>
-            <input class="form-control" id="company-name" name="company-name" value="Aptrans Ltd" type="text" />
+            <input class="govuk-input" id="company-name" name="company-name" value="Aptrans Ltd" type="text" />
         </div>
 
         <th:block th:unless="${param.status != null and param.status[0] == 'noCompHouse'}">
@@ -162,7 +162,7 @@
                     <span class="govuk-label">Companies House number</span>
                 </label>
                 <p class="govuk-hint">For example: 1548965</p>
-                <input class="form-control" id="companies-house-number" name="companies-house-number" value="6567388" type="text" />
+                <input class="govuk-input" id="companies-house-number" name="companies-house-number" value="6567388" type="text" />
             </div>
         </th:block>
 
@@ -182,7 +182,7 @@
                 <span class="govuk-label">Account number</span>
             </label>
             <p class="govuk-hint">For example: 1548965</p>
-            <input class="form-control" id="bank-acc-number" name="bank-acc-number" value="" type="text" />
+            <input class="govuk-input" id="bank-acc-number" name="bank-acc-number" value="" type="text" />
         </div>
 
         <div class="govuk-form-group ">
@@ -190,7 +190,7 @@
                 <span class="govuk-label">Sort code</span>
             </label>
             <p class="govuk-hint">For example: 311212</p>
-            <input class="form-control width-medium" id="bank-sort-code" name="bank-sort-code" value="" type="text" />
+            <input class="govuk-input width-medium" id="bank-sort-code" name="bank-sort-code" value="" type="text" />
         </div>
 
         <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Billing address</h2>
@@ -269,45 +269,45 @@
 <div th:fragment="prototype-spend-row-edit">
     <tr th:class="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
         <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left">Labour</th>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month1'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month2'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month3'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month4'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month5'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month6'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month7'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month8'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month9'}"/></td>
-        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month10'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month1'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month2'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month3'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month4'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month5'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month6'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month7'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month8'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month9'}"/></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month10'}"/></td>
 
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month11'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month12'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month13'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month14'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month15'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month16'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month17'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month18'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month19'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month20'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month21'}"/></td>
-        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month22'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month11'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month12'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month13'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month14'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month15'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month16'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month17'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month18'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month19'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month20'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month21'}"/></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month22'}"/></td>
 
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month23'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month24'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month25'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month26'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month27'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month28'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month29'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month30'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month31'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month32'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month33'}"/></td>
-        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month34'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month23'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month24'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month25'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month26'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month27'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month28'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month29'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month30'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month31'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month32'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month33'}"/></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month34'}"/></td>
 
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month35'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month36'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month35'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month36'}"/></td>
 
         <td th:text="${total}" class="total fix-right2">450,000</td>
         <td th:text="${total}" class="total eligible fix-right">450,000</td>
@@ -372,45 +372,45 @@
     <tr th:class="${border != null ? 'cell-border-bottom-divide' : ''}" th:classappend="${(spend == 'high' ? 'error-in-row' : 'spend-ok')}">
         <th th:text="${section}" class="fix-left1">Directly Incurred</th>
         <th scope="row" th:text="${header}" th:id="${#strings.substringBefore(header, ' ')}" class="fix-left2">Staff</th>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month1'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month2'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month3'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month4'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month5'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month6'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month7'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month8'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month9'}"/></td>
-        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month10'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month1'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month2'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month3'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month4'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month5'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month6'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month7'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month8'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month9'}"/></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month10'}"/></td>
 
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month11'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month12'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month13'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month14'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month15'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month16'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month17'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month18'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month19'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month20'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month21'}"/></td>
-        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month22'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month11'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month12'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month13'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month14'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month15'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month16'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month17'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month18'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month19'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month20'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month21'}"/></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month22'}"/></td>
 
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month23'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month24'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month25'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month26'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month27'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month28'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month29'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month30'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month31'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month32'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month33'}"/></td>
-        <td class="separate-cell year"><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month34'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month23'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month24'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month25'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month26'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month27'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month28'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month29'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month30'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month31'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month32'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month33'}"/></td>
+        <td class="separate-cell year"><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month34'}"/></td>
 
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month35'}"/></td>
-        <td><input type="text" th:value="${value}" class="form-control" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month36'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month35'}"/></td>
+        <td><input type="text" th:value="${value}" class="govuk-input" th:attr="aria-labelledby=${#strings.substringBefore(header, ' ')+ ' month36'}"/></td>
 
         <td th:text="${total}" class="total fix-right2">450,000</td>
         <td th:text="${total}" class="total eligible fix-right">450,000</td>
@@ -430,7 +430,7 @@
 
            <div class="govuk-form-group alignright">
                <label for="querySection">Query section</label>
-               <select class="form-control">
+               <select class="govuk-select">
                    <th:block th:if="${param.section != null}">
                      <option th:text="${#httpServletRequest.getParameter('section')}" th:value="${#httpServletRequest.getParameter('section')}"></option>
                    </th:block>
@@ -461,7 +461,7 @@
 
                     <div class="govuk-form-group">
                         <label for="section" class="govuk-label">Section</label>
-                        <select name="section" id="section" class="form-control">
+                        <select name="section" id="section" class="govuk-select">
                             <option value="Viability">Viability</option>
                             <option value="Eligibility">Eligibility</option>
                         </select>

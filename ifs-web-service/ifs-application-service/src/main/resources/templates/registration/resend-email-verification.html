@@ -26,8 +26,8 @@
                     <th:block th:if="${#fields.hasErrors('email')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="form-control form-control-3-4"
-                           th:errorclass="form-control-error"
+                    <input class="govuk-input form-control-3-4"
+                           th:errorclass="govuk-input--error"
                            type="email"
                            th:field="*{email}"
                            required="required"

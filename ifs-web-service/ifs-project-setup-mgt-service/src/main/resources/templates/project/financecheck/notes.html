@@ -77,14 +77,14 @@
                                           th:field="*{comment}"
                                           id="comment"
                                           name="comment"
-                                          class="form-control"
+                                          class="govuk-textarea"
                                           th:attr="maxlength=${model.maxNoteCharacters},
                                                    data-max_words=${model.maxNoteWords},
                                                    data-maxwordslength=${model.maxNoteWords},
                                                    data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxNoteWords})},
                                                    data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxNoteCharacters})},
                                                    data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                          th:errorclass="field-group-error"></textarea>
+                                          th:errorclass="govuk-textarea--error"></textarea>
                                         <div class="textarea-footer" th:with="comment=*{comment}" aria-live="polite" aria-atomic="true" role="status">
                                             <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})" />
                                         </div>

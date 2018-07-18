@@ -25,8 +25,8 @@
                     <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
                 </th:block>
                 <input id="title"
-                       class="form-control width-x-large"
-                       th:errorclass="form-control-error"
+                       class="govuk-input width-x-large"
+                       th:errorclass="govuk-input--error"
                        type="text"
                        th:field="${competitionSetupForm.title}"
                        required="required"
@@ -41,7 +41,7 @@
                 <th:block th:if="${#fields.hasErrors('competitionTypeId')}">
                     <span class="error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}"></span>
                 </th:block>
-                <select class="form-control width-x-large"
+                <select class="govuk-select width-x-large"
                         th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit) or model.general.competition.setupAndLive}"
                         name="competitionTypeId"
                         id="competitionTypeId"
@@ -68,7 +68,7 @@
                 </th:block>
                 <select th:disabled="${model.general.state.setupAndLive}"
                         th:readonly="${model.general.state.setupAndLive}"
-                        class="form-control width-x-large"
+                        class="govuk-select width-x-large"
                         id="innovationSectorCategoryId"
                         name="innovationSectorCategoryId"
                         required="required"
@@ -94,7 +94,7 @@
                         <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
                     </th:block>
                     <select th:disabled="${model.general.state.setupAndLive}"
-                            class="form-control width-x-large"
+                            class="govuk-select width-x-large"
                             th:name="innovationAreaCategoryIds[__${status.index}__]"
                             th:id="innovationAreaCategoryIds[__${status.index}__]"
                             required="required"
@@ -117,7 +117,7 @@
                         <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryIds')}" th:text="${err}"></span>
                     </th:block>
                     <select th:disabled="${model.general.state.setupAndLive}"
-                            class="form-control width-x-large"
+                            class="govuk-select width-x-large"
                             name="innovationAreaCategoryIds[0]"
                             id="innovationAreaCategoryIds"
                             required="required"
@@ -149,8 +149,8 @@
                                 Day
                             </label>
                             <input th:readonly="${model.general.state.setupAndLive}"
-                                 class="form-control width-extra-small"
-                                 th:errorclass="form-control-error"
+                                 class="govuk-input width-extra-small"
+                                 th:errorclass="govuk-input--error"
                                  type="number"
                                  placeholder="DD"
                                  min="1"
@@ -167,8 +167,8 @@
                                 Month
                             </label>
                             <input th:readonly="${model.general.state.setupAndLive}"
-                                 class="form-control width-extra-small"
-                                 th:errorclass="form-control-error"
+                                 class="govuk-input width-extra-small"
+                                 th:errorclass="govuk-input--error"
                                  type="number"
                                  placeholder="MM"
                                  required="required"
@@ -185,8 +185,8 @@
                                 Year
                             </label>
                             <input th:readonly="${model.general.state.setupAndLive}"
-                                 class="form-control width-extra-small"
-                                 th:errorclass="form-control-error"
+                                 class="govuk-input width-extra-small"
+                                 th:errorclass="govuk-input--error"
                                  type="number"
                                  placeholder="YYYY"
                                  required="required"
@@ -208,7 +208,7 @@
                 <th:block th:if="${#fields.hasErrors('innovationLeadUserId')}">
                     <span class="error-message"  th:each="err : ${#fields.errors('innovationLeadUserId')}" th:text="${err}"></span>
                 </th:block>
-                <select class="form-control width-x-large"
+                <select class="govuk-select width-x-large"
                         name="innovationLeadUserId"
                         id="innovationLeadUserId"
                         required="required"
@@ -225,7 +225,7 @@
                 <th:block th:if="${#fields.hasErrors('executiveUserId')}">
                     <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}"></span>
                 </th:block>
-                <select class="form-control width-x-large"
+                <select class="govuk-select width-x-large"
                         name="executiveUserId"
                         id="executiveUserId"
                         required="required"

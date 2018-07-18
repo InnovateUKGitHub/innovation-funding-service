@@ -33,7 +33,7 @@
                 <th:block th:if="${#fields.hasErrors('subject')}">
                     <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
                 </th:block>
-                <input class="form-control width-full"
+                <input class="govuk-input width-full"
                        id="subject"
                        type="text"
                        th:field="*{subject}"
@@ -47,9 +47,11 @@
             <div class="govuk-form-group govuk-!-margin-top-6">
                 <label class="govuk-label" for="message">Additional text</label>
                 <textarea
-                    id="message" rows="8" class="form-control width-full"
+                    id="message"
+                    rows="8"
+                    class="govuk-textarea width-full"
                     th:field="*{content}">
-                        </textarea>
+                </textarea>
             </div>
 
             <p class="govuk-hint govuk-!-margin-top-6">

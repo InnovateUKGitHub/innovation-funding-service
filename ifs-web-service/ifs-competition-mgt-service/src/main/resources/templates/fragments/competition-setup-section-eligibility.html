@@ -111,7 +111,7 @@
                     <th:block th:if="${#fields.hasErrors('researchParticipationAmountId')}">
                         <span class="error-message" th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}"></span>
                     </th:block>
-                    <select class="form-control width-large"
+                    <select class="govuk-select width-large"
                             name="researchParticipationAmountId"
                             id="researchParticipation"
                             required="required"

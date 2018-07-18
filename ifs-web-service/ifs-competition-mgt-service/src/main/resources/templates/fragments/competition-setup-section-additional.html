@@ -38,8 +38,9 @@
                         <th:block th:if="${#fields.hasErrors('funders[__${iteration.index}__].funder')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
                         </th:block>
-                        <input required="required" class="form-control width-x-large"
-                               th:errorclass="form-control-error"
+                        <input required="required"
+                               class="govuk-input width-x-large"
+                               th:errorclass="govuk-input--error"
                                th:id="funders[__${iteration.index}__].funder"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
                                th:attr="data-required-errormessage=#{validation.additionalinfoform.fundername.required},
@@ -55,8 +56,8 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}"></span>
                         </th:block>
                         <input required="required" type="number" min="0"
-                               class="form-control width-x-large"
-                               th:errorclass="form-control-error"
+                               class="govuk-input width-x-large"
+                               th:errorclass="govuk-input--error"
                                th:id="funders[__${iteration.index}__].funderBudget"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}"
                                value=""
@@ -101,8 +102,8 @@
                     <th:block th:if="${#fields.hasErrors('pafNumber')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('pafNumber')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="form-control width-large"
-                           th:errorclass="form-control-error"
+                    <input class="govuk-input width-large"
+                           th:errorclass="govuk-input--error"
                            type="text"
                            id="pafNumber"
                            th:field="${competitionSetupForm.pafNumber}" />
@@ -115,9 +116,9 @@
                     <th:block th:if="${#fields.hasErrors('budgetCode')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('budgetCode')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="form-control width-large"
+                    <input class="govuk-input width-large"
                            id="budgetCode"
-                           th:errorclass="form-control-error"
+                           th:errorclass="govuk-input--error"
                            type="text"
                            th:field="${competitionSetupForm.budgetCode}" />
                 </div>
@@ -130,8 +131,8 @@
                     <th:block th:if="${#fields.hasErrors('activityCode')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="form-control width-large"
-                           th:errorclass="form-control-error"
+                    <input class="govuk-input width-large"
+                           th:errorclass="govuk-input--error"
                            type="text"
                            id="activityCode"
                            th:field="${competitionSetupForm.activityCode}"
@@ -148,8 +149,8 @@
                         <span class="error-message"  th:each="err : ${#fields.errors('competitionCode')}" th:text="${err}"></span>
                     </th:block>
                     <input readonly="readonly"
-                           class="form-control width-large readonly-boxed"
-                           th:classappend="${#fields.hasErrors('competitionCode')} ? 'form-control-error'"
+                           class="govuk-input width-large readonly-boxed"
+                           th:classappend="${#fields.hasErrors('competitionCode')} ? 'govuk-input--error'"
                            type="text"
                            id="competitionCode"
                            name="competitionCode"

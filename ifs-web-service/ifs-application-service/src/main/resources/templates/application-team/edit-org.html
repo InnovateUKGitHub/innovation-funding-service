@@ -82,8 +82,8 @@
                                     </label>
                                     <input type="text"
                                            th:field="*{stagedInvite.name}"
-                                           class="form-control width-full"
-                                           th:errorclass="form-control-error"
+                                           class="govuk-input width-full"
+                                           th:errorclass="govuk-input--error"
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                                 </td>
@@ -98,8 +98,8 @@
                                     </label>
                                     <input type="email"
                                            th:field="*{stagedInvite.email}"
-                                           class="form-control width-full"
-                                           th:errorclass="form-control-error"
+                                           class="govuk-input width-full"
+                                           th:errorclass="govuk-input--error"
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.invite.email.required},
                                                     data-email-errormessage=#{validation.standard.email.format},

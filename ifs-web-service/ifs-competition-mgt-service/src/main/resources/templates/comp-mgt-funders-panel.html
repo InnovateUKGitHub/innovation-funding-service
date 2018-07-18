@@ -25,14 +25,23 @@
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-one-half">
                             <div class="govuk-form-group">
-                                <label class="govuk-label" for="stringFilter">Search by application number</label>
-                                <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:value="*{stringFilterValue}"/>
+                                <label class="govuk-label"
+                                       for="stringFilter">Search by application number</label>
+                                <input type="text"
+                                       class="govuk-input"
+                                       id="stringFilter"
+                                       name="stringFilter"
+                                       th:value="*{stringFilterValue}"/>
                             </div>
                         </div>
                         <div class="govuk-grid-column-one-half">
                             <div class="govuk-form-group">
-                                <label class="govuk-label" for="fundingFilter">Funding decision</label>
-                                <select name="fundingFilter" id="fundingFilter" class="form-control" th:field="*{fundingFilter}">
+                                <label class="govuk-label"
+                                       for="fundingFilter">Funding decision</label>
+                                <select name="fundingFilter"
+                                        id="fundingFilter"
+                                        class="govuk-select"
+                                        th:field="*{fundingFilter}">
                                     <option value="">Show all</option>
                                     <option value="UNDECIDED">Blank</option>
                                     <option value="FUNDED">Successful</option>

@@ -77,7 +77,7 @@
             <legend class="govuk-visually-hidden">Question score</legend>
             <div class="govuk-form-group">
             <label class="govuk-label govuk-label" for="assessor-question-score">Question score</label>
-            <select class="form-control width-medium" name="assessor-question-score" id="assessor-question-score">
+            <select class="govuk-select width-medium" name="assessor-question-score" id="assessor-question-score">
                 <option value="" th:text="${(score != null ? score  : 'Set score')}"></option>
                 <option value="0">Set score</option>
                 <option value="1">1</option>
@@ -1025,7 +1025,7 @@
                 <div class="govuk-form-group">
 
                     <label for="reject-reason" class="govuk-label">Please select a reason for rejecting the application</label>
-                    <select name="decisionReason" id="reject-reason" required="required" class="form-control">
+                    <select name="decisionReason" id="reject-reason" required="required" class="govuk-select">
                         <option value="none">Select a reason</option>
                         <option value="conflict-of-interest">Conflict of interest</option>
                         <option value="not-my-area-of-interest">Not my area of expertise</option>
@@ -1034,7 +1034,7 @@
                 </div>
                 <div class="govuk-form-group">
                     <label for="rejection-observations" class="govuk-label">Use this space to provide more information</label>
-                    <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
+                    <textarea id="rejection-observations" name="observations" class="govuk-textarea"></textarea>
                 </div>
                 <input type="hidden" name="status" value="reject" />
                 <button class="govuk-button button-warning" name="reject" value="rejected" type="submit">Reject</button>
@@ -1056,7 +1056,7 @@
                 <div class="govuk-form-group">
 
                     <label for="reject-reason" class="govuk-label">Please select the reason why you are unable to assess this competition</label>
-                    <select name="decisionReason" id="reject-reason" required="required" class="form-control">
+                    <select name="decisionReason" id="reject-reason" required="required" class="govuk-select">
                         <option value="none">Please select one reason</option>
                         <option value="not-available">Not available</option>
                         <option value="conflict-of-interest">Conflict of interest</option>
@@ -1067,7 +1067,7 @@
                 </div>
                 <div class="govuk-form-group">
                     <label for="rejection-observations" class="govuk-label">Use this space to provide more information</label>
-                    <textarea id="rejection-observations" name="observations" class="form-control"></textarea>
+                    <textarea id="rejection-observations" name="observations" class="govuk-textarea"></textarea>
                 </div>
                 <button class="govuk-button button-warning" name="reject" value="rejected" type="submit">Reject</button>
                 <a th:href="${#httpServletRequest.requestURI}" class="govuk-button-link-style">Cancel</a>

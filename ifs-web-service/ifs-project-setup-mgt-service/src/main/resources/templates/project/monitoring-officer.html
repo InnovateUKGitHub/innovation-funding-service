@@ -54,10 +54,10 @@
                                pattern="\D{2,}"
                                minlength="2"
                                maxlength="70"
-                               th:errorclass="form-control-error"
+                               th:errorclass="govuk-input--error"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.standard.firstname.required},data-pattern-errormessage=#{validation.standard.firstname.invalid},data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)}"
-                               class="form-control width-full"
+                               class="govuk-input width-full"
                                th:readonly="${readonly}"
                                th:field="*{firstName}" />
                     </div>
@@ -74,10 +74,10 @@
                                pattern="\D{2,}"
                                minlength="2"
                                maxlength="70"
-                               th:errorclass="form-control-error"
+                               th:errorclass="govuk-input--error"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.standard.lastname.required},data-pattern-errormessage=#{validation.standard.lastname.invalid},data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)}"
-                               class="form-control width-full"
+                               class="govuk-input width-full"
                                th:readonly="${readonly}"
                                th:field="*{lastName}" />
                     </div>
@@ -91,10 +91,10 @@
                         </th:block>
                         <input id="emailAddress"
                                type="email"
-                               th:errorclass="form-control-error"
+                               th:errorclass="govuk-input--error"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.invite.email.required}"
-                               class="form-control width-full"
+                               class="govuk-input width-full"
                                th:readonly="${readonly}"
                                th:field="*{emailAddress}" />
                     </div>
@@ -107,8 +107,8 @@
                             <span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                         </th:block>
                         <input type="tel"
-                               th:errorclass="form-control-error"
-                               class="form-control"
+                               th:errorclass="govuk-input--error"
+                               class="govuk-input"
                                th:readonly="${readonly}"
                                th:field="*{phoneNumber}"
                                required="required"

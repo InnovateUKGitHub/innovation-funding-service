@@ -24,14 +24,14 @@ IFS.competitionManagement.repeatableRows = (function () {
       var newRow = jQuery('<tr class="form-group-row-validated">' +
         '<td class="width-40-percent govuk-form-group">' +
         '<label></label>' +
-        '<input aria-labelledby="invite-label-assessor-name" class="form-control width-full" type="text" ' +
+        '<input aria-labelledby="invite-label-assessor-name" class="govuk-input width-full" type="text" ' +
         'id="invites' + uniqueRowId + '.name" ' +
         'name="invites[' + uniqueRowId + '].name" value="" ' +
         'data-required-errormessage="Please enter a name." required="required" />' +
         '</td>' +
         '<td class="width-40-percent govuk-form-group">' +
         '<label></label>' +
-        '<input aria-labelledby="invite-label-assessor-email" class="form-control width-full" type="email" ' +
+        '<input aria-labelledby="invite-label-assessor-email" class="govuk-input width-full" type="email" ' +
         'id="invites' + uniqueRowId + '.email" ' +
         'name="invites[' + uniqueRowId + '].email" value="" ' +
         'data-required-errormessage="Please enter an email address." required="required" />' +

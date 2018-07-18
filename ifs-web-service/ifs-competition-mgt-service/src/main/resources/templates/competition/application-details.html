@@ -38,11 +38,11 @@
                     <th:block th:if="${#fields.hasErrors('minProjectDuration')}">
                         <span class="error-message" th:each="err : ${#fields.errors('minProjectDuration')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="form-control width-small"
+                    <input class="govuk-input width-small"
                            id="minProjectDuration"
                            name="minimum"
                            th:field="*{minProjectDuration}"
-                           th:errorclass="form-control-error"
+                           th:errorclass="govuk-input--error"
                            th:attr="data-lowerthan-errormessage=#{competition.setup.applicationdetails.min.projectduration.exceedsmax}"
                            type="number"
                            required="required"
@@ -57,11 +57,11 @@
                     <th:block th:if="${#fields.hasErrors('maxProjectDuration')}">
                         <span class="error-message" th:each="err : ${#fields.errors('maxProjectDuration')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="form-control width-small"
+                    <input class="govuk-input width-small"
                            id="maxProjectDuration"
                            name="maximum"
                            th:field="*{maxProjectDuration}"
-                           th:errorclass="form-control-error"
+                           th:errorclass="govuk-input--error"
                            th:attr="data-higherthan-errormessage=#{competition.setup.applicationdetails.max.projectduration.beneathmin}"
                            type="number"
                            required="required"

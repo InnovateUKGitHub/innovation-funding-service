@@ -94,12 +94,12 @@
                                     <span class="error-message" th:each="err : ${#fields.errors('selectedInnovationArea')}" th:text="${err}"></span>
                                 </th:block>
                                 <select th:field="*{selectedInnovationArea}"
-                                        class="form-control width-full"
+                                        class="govuk-select width-full"
                                         data-progressive-group-select="Innovation sector"
                                         data-progressive-group-select-instruction="Please select an innovation sector"
                                         data-progressive-group-select-id="selectedInnovationArea"
                                         required="required"
-                                        th:errorclass="form-control-error"
+                                        th:errorclass="govuk-select--error"
                                         th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required},
                                                  data-progressive-group-select-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
                                         aria-labelledby="innovation-area"
@@ -134,12 +134,12 @@
                                             </label>
                                             <input type="text"
                                                    aria-labelledby="invite-label-assessor-name"
-                                                   class="form-control width-full"
+                                                   class="govuk-input width-full"
                                                    required="required"
                                                    minlength="2"
                                                    maxlength="70"
                                                    pattern="\D{2,}"
-                                                   th:errorclass="form-control-error"
+                                                   th:errorclass="govuk-input--error"
                                                    th:attr="data-required-errormessage=#{validation.standard.name.required},
                                                             data-minlength-errormessage=#{validation.standard.name.length.min(null,null,2)},
                                                             data-maxlength-errormessage=#{validation.standard.name.length.max(null,null,70)},
@@ -157,12 +157,12 @@
                                             </label>
                                             <input type="email"
                                                    aria-labelledby="invite-label-assessor-email"
-                                                   class="form-control width-full"
+                                                   class="govuk-input width-full"
                                                    required="required"
                                                    th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
                                                             data-email-errormessage=#{validation.standard.email.format},
                                                             data-required-errormessage=#{validation.inviteNewAssessorsForm.invites.email.required}"
-                                                   th:errorclass="form-control-error"
+                                                   th:errorclass="govuk-input--error"
                                                    th:name="invites[__${iterStat.index}__].email"
                                                    th:id="invites[__${iterStat.index}__].email"
                                                    th:field="*{invites[__${iterStat.index}__].email}"

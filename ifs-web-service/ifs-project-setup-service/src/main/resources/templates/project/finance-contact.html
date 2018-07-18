@@ -102,12 +102,28 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <label for="name-finance-contact" class="govuk-visually-hidden">name</label>
-                                                <input type="text" class="form-control width-full" th:value="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'form-control-error'" name="name" id="name-finance-contact" th:attr="data-required-errormessage=#{validation.project.invite.name.required}" required="required"/>
+                                                <label for="name-finance-contact"
+                                                       class="govuk-visually-hidden">name</label>
+                                                <input type="text"
+                                                       class="govuk-input width-full"
+                                                       th:value="*{name}"
+                                                       th:classappend="${#fields.hasErrors('name')} ? 'govuk-input--error'"
+                                                       name="name"
+                                                       id="name-finance-contact"
+                                                       th:attr="data-required-errormessage=#{validation.project.invite.name.required}"
+                                                       required="required"/>
                                             </td>
                                             <td>
-                                                <label for="email-finance-contact" class="govuk-visually-hidden">email</label>
-                                                <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail')} ? 'form-control-error'" name="inviteEmail" id="email-finance-contact" th:attr="data-required-errormessage=#{validation.project.invite.email.required}" required="required"/>
+                                                <label for="email-finance-contact"
+                                                       class="govuk-visually-hidden">email</label>
+                                                <input type="email"
+                                                       class="govuk-input width-full"
+                                                       th:value="*{inviteEmail}"
+                                                       th:classappend="${#fields.hasErrors('inviteEmail')} ? 'govuk-input--error'"
+                                                       name="inviteEmail"
+                                                       id="email-finance-contact"
+                                                       th:attr="data-required-errormessage=#{validation.project.invite.email.required}"
+                                                       required="required"/>
                                             </td>
                                             <td class="alignright">
                                                 <button class="button-clear govuk-!-margin-bottom-0" name="invite-fc" id="invite-finance-contact">Invite to project</button>

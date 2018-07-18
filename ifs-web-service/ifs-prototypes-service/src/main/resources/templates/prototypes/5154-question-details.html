@@ -85,7 +85,7 @@
 					<label class="govuk-label" for="guidance">
 						<span class="govuk-label">Guidance</span>
 					</label>
-					<textarea class="form-control width-full" id="guidance" rows="5" name="guidance">You should describe:
+					<textarea class="govuk-textarea width-full" id="guidance" rows="5" name="guidance">You should describe:
 - the business opportunity you have identified and how you plan to take advantage of it
 - the customer needs you have identified and how your project will meet them
 - the challenges you expect to face and how you will overcome them
@@ -95,7 +95,7 @@
 					<label class="govuk-label" for="word-count">
 						<span class="govuk-label">Max word count</span>
 					</label>
-					<input class="form-control width-medium" id="word-count" name="word-count" value="400" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
+					<input class="govuk-input width-medium" id="word-count" name="word-count" value="400" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
 				<div class="govuk-form-group">
 					<fieldset class=govuk-fieldset "inline">
@@ -163,7 +163,7 @@
 					<label class="govuk-label" for="out-of">
 						<span class="govuk-label">Max word count</span>
 					</label>
-					<input class="form-control width-medium" id="out-of" name="out-of" value="10" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
+					<input class="govuk-input width-medium" id="out-of" name="out-of" value="10" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
 				<div class="govuk-form-group">
 					<fieldset class="govuk-fieldset inline">
@@ -212,7 +212,7 @@
 					<label class="govuk-label" for="max-word-count">
 						<span class="govuk-label-bold">Max word count</span>
 					</label>
-					<input class="form-control width-medium" id="max-word-count" name="max-word-count" value="400" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
+					<input class="govuk-input width-medium" id="max-word-count" name="max-word-count" value="400" type="number" th:readonly="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
 				</div>
 			</th:block>
 		</fieldset>

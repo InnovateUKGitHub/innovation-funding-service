@@ -44,12 +44,17 @@
                 <th:block th:if="${#fields.hasErrors('assessorPay')}">
                     <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
                 </th:block>
-                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" max="99999999"
-                        th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
+                <input class="govuk-input width-medium"
+                       id="assessorPay"
+                       name="assessorPay"
+                       type="number"
+                       min="0"
+                       max="99999999"
+                       th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
                        data-th-attr="data-max-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
                                      data-min-errormessage=#{validation.assessorsform.assessorPay.min},
                                      data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
-                       th:errorclass="form-control-error"
+                       th:errorclass="govuk-input--error"
                        th:readonly="${model.general.state.setupAndLive}"/>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('hasAssessmentPanel')} ? 'govuk-form-group--error'">

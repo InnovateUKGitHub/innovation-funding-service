@@ -33,17 +33,17 @@
                     <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('organisationName')} ? 'govuk-form-group--error'">
-                        <label class="form-label-bold" for="organisationName">
-                            <span>Organisation name</span>
-                            <th:block th:if="${#fields.hasErrors('organisationName')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}"></span>
-                            </th:block>
+                        <label class="govuk-label" for="organisationName">
+                            Organisation name
                         </label>
+                        <th:block th:if="${#fields.hasErrors('organisationName')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}"></span>
+                        </th:block>
                         <input type="text"
-                               class="form-control width-full"
+                               class="govuk-input width-full"
                                th:field="*{organisationName}"
                                required="required"
-                               th:errorclass="form-control-error"
+                               th:errorclass="govuk-input--error"
                                th:attr="data-required-errormessage=#{validation.standard.organisationname.required}" />
                     </div>
 
@@ -69,8 +69,8 @@
                                     <input type="text"
                                            th:id="applicants[__${applicantStat.index}__].name"
                                            th:field="*{applicants[__${applicantStat.index}__].name}"
-                                           class="form-control width-full"
-                                           th:errorclass="form-control-error"
+                                           class="govuk-input width-full"
+                                           th:errorclass="govuk-input--error"
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                                 </td>
@@ -86,8 +86,8 @@
                                     <input type="email"
                                            th:id="applicants[__${applicantStat.index}__].email"
                                            th:field="*{applicants[__${applicantStat.index}__].email}"
-                                           class="form-control width-full"
-                                           th:errorclass="form-control-error"
+                                           class="govuk-input width-full"
+                                           th:errorclass="govuk-input--error"
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.invite.email.required},
                                                     data-email-errormessage=#{validation.standard.email.format}" />

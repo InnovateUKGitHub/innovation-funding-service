@@ -43,10 +43,10 @@
                        id="postcode"
                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                        type="text"
-                       class="form-control width-medium"
+                       class="govuk-input width-medium"
                        required="required"
                        th:value="${form.getPostcode() != null ? form.getPostcode() : NULL}"
-                       th:errorclass="form-control-error"
+                       th:errorclass="govuk-input--error"
                        th:field="*{postcode}" />
             </div>
 

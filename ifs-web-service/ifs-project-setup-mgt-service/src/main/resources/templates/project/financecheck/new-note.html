@@ -32,9 +32,9 @@
                         <input name="noteTitle"
                                id="noteTitle"
                                type="text"
-                               class="form-control width-full"
+                               class="govuk-input width-full"
                                required="required"
-                               th:errorclass="form-control-error"
+                               th:errorclass="govuk-input--error"
                                th:field="*{noteTitle}"
                                th:attr="maxlength=${model.maxTitleCharacters},
                                         data-required-errormessage=#{validation.field.must.not.be.blank},
@@ -51,8 +51,8 @@
                             <textarea data-editor="md"
                                       required = "required"
                                       th:field="*{note}"
-                                      class="form-control"
-                                      th:errorclass="form-control-error"
+                                      class="govuk-textarea"
+                                      th:errorclass="govuk-textarea--error"
                                       id="note"
                                       name="note"
                                       th:attr="maxlength=${model.maxNoteCharacters},

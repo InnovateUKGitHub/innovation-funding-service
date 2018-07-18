@@ -80,7 +80,8 @@
                         <div class="govuk-grid-column-two-thirds">
                             <label class="govuk-label" for="filterInnovationArea">Innovation area</label>
                             <select name="innovationArea"
-                                    id="filterInnovationArea" class="form-control"
+                                    id="filterInnovationArea"
+                                    class="govuk-select"
                                     th:field="*{innovationArea}">
                                 <option value="">Any</option>
                                 <optgroup th:each="innovationSector : ${model.innovationSectorOptions}"

@@ -79,8 +79,12 @@
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-one-third">
                                     <div class="govuk-form-group">
-                                        <label class="govuk-label" for="filterInnovationArea">Innovation area</label>
-                                        <select name="innovationArea" id="filterInnovationArea" class="form-control" th:field="*{innovationArea}">
+                                        <label class="govuk-label"
+                                               for="filterInnovationArea">Innovation area</label>
+                                        <select name="innovationArea"
+                                                id="filterInnovationArea"
+                                                class="govuk-select"
+                                                th:field="*{innovationArea}">
                                             <option value="">Any</option>
                                             <option th:each="innovationArea : ${model.innovationAreaOptions}"
                                                     th:value="${innovationArea.id}"
@@ -91,7 +95,10 @@
                                 <div class="govuk-grid-column-one-third">
                                      <div class="govuk-form-group">
                                          <label class="govuk-label" for="filterStatus">Status</label>
-                                         <select name="status" id="filterStatus" class="form-control" th:field="*{status}">
+                                         <select name="status"
+                                                 id="filterStatus"
+                                                 class="govuk-select"
+                                                 th:field="*{status}">
                                              <option value="">All</option>
                                              <option value="PENDING">Invite sent</option>
                                              <option value="REJECTED">Invite declined</option>
@@ -100,8 +107,12 @@
                                 </div>
                                 <div class="govuk-grid-column-one-third">
                                      <div class="govuk-form-group">
-                                         <label class="govuk-label" for="filterContract">Contract and DOI</label>
-                                         <select name="compliant" id="filterContract" class="form-control" th:field="*{compliant}">
+                                         <label class="govuk-label"
+                                                for="filterContract">Contract and DOI</label>
+                                         <select name="compliant"
+                                                 id="filterContract"
+                                                 class="govuk-select"
+                                                 th:field="*{compliant}">
                                              <option value="">Show all</option>
                                              <option value="1">Yes</option>
                                              <option value="0">No</option>

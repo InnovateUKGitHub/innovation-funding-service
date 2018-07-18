@@ -51,8 +51,13 @@
                     </legend>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-two-thirds">
-                            <label class="govuk-label" for="filterSearch">Search by application number</label>
-                            <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
+                            <label class="govuk-label"
+                                   for="filterSearch">Search by application number</label>
+                            <input type="text"
+                                   class="govuk-input"
+                                   id="filterSearch"
+                                   name="filterSearch"
+                                   th:value="${model.filter}"/>
                         </div>
                         <div class="govuk-grid-column-one-third">
                             <button class="govuk-button" type="submit">Filter</button>
@@ -71,7 +76,9 @@
                 </div>
                 <div class="govuk-grid-column-one-third alignright">
                     <label for="sort-by">Sort by</label>
-                    <select id="sort-by" name="sort" class="js-auto-submit form-control">
+                    <select id="sort-by"
+                            name="sort"
+                            class="js-auto-submit govuk-select">
                         <option value="id" th:selected="${(model.sorting == 'id')}">Application number</option>
                         <option value="title" th:selected="${(model.sorting == 'title')}">Title</option>
                         <option value="innovationArea" th:selected="${(model.sorting == 'innovationArea')}">Innovation area</option>

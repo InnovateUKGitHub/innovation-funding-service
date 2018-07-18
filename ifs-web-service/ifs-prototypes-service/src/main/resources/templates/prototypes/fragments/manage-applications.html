@@ -12,7 +12,7 @@
                     <div class="govuk-grid-column-one-half">
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="filterInnovationArea">Innovation area</label>
-                            <select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
+                            <select class="govuk-select" id="filterInnovationArea" name="filterInnovationArea">
 
                                 <option selected="selected">---</option>
                                 <th:block th:insert="prototypes/fragments/comp-admin :: prototype-innovation-area-options" />
@@ -21,7 +21,7 @@
                         </div>
                         <div th:if="${filterType}" class="govuk-form-group">
                             <label class="govuk-label" for="filterType">Type</label>
-                            <select class="form-control" id="filterType" name="filterType">
+                            <select class="govuk-select" id="filterType" name="filterType">
                                 <option selected="selected">---</option>
                                 <option value="Industry">Industry</option>
                                 <option value="Academic">Academic</option>
@@ -33,7 +33,7 @@
                     <div class="govuk-grid-column-one-half">
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="filterSearch">Skill areas</label>
-                            <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
+                            <input type="text" class="govuk-input" id="filterSearch" name="filterSearch" />
                         </div>
                         <div class="govuk-grid-column-one-half extra-margin">
                             <a href="#">Clear all filters</a>
@@ -58,14 +58,14 @@
         <div class="govuk-grid-column-one-third alignright">
             <div class="govuk-form-group">
                 <label for="sort-by">Sort by</label>
-                <select th:if="${sortByType==1}" name="sort-by" id="sort-by" class="form-control">
+                <select th:if="${sortByType==1}" name="sort-by" id="sort-by" class="govuk-select">
                     <option value="Application no.">Application number</option>
                     <option value="Title">Title</option>
                     <option value="Innovation area">Innovation area</option>
                     <option value="Lead organisation">Lead organisation</option>
                     <option value="Assigned assessors">Assigned assessors</option>
                 </select>
-                <select th:if="${sortByType==2}" name="sort-by" id="sort-by" class="form-control">
+                <select th:if="${sortByType==2}" name="sort-by" id="sort-by" class="govuk-select">
                     <option value="Title">Assessor name</option>
                     <option value="Employer">Employer</option>
                     <option value="Type">Type</option>
@@ -73,7 +73,7 @@
                     <option value="Total applications">Total applications</option>
                     <option value="Applications this competition">Applications this competition</option>
                 </select>
-                <select th:if="${sortByType==3}" name="sort-by" id="sort-by" class="form-control">
+                <select th:if="${sortByType==3}" name="sort-by" id="sort-by" class="govuk-select">
                     <option value="Application no.">Application number</option>
                     <option value="Title">Title</option>
                     <option value="Lead organisation">Lead organisation</option>
@@ -82,7 +82,7 @@
                     <option value="Started assessors">Started assessors</option>
                     <option value="Completed assessors">Completed assessors</option>
                 </select>
-                <select th:if="${sortByType==4}" name="sort-by" id="sort-by" class="form-control">
+                <select th:if="${sortByType==4}" name="sort-by" id="sort-by" class="govuk-select">
                     <option value="Title">Assessor Name</option>
                     <option value="Employer">Employer</option>
                     <option value="Type">Type</option>
@@ -93,7 +93,7 @@
                     <option value="Started applications">Started applications</option>
                     <option value="Completed applications">Completed applications</option>
                 </select>
-                <select th:if="${sortByType==5}" name="sort-by" id="sort-by" class="form-control">
+                <select th:if="${sortByType==5}" name="sort-by" id="sort-by" class="govuk-select">
                     <option value="Title">Assessor Name</option>
                     <option value="Type">Type</option>
                     <option value="Innovation Area">Innovation area</option>
@@ -103,14 +103,14 @@
                     <option value="Started applications">Started applications</option>
                     <option value="Completed applications">Completed applications</option>
                 </select>
-                <select th:if="${sortByType==6}" name="sort-by" id="sort-by" class="form-control">
+                <select th:if="${sortByType==6}" name="sort-by" id="sort-by" class="govuk-select">
                     <option value="Application no.">Application number</option>
                     <option value="Title">Title</option>
                     <option value="Lead organisation">Lead organisation</option>
                     <option value="Assigned applications">Assigned applications</option>
                     <option value="Completed applications">Completed applications</option>
                 </select>
-                <select th:if="${sortByType==7}" name="sort-by" id="sort-by" class="form-control">
+                <select th:if="${sortByType==7}" name="sort-by" id="sort-by" class="govuk-select">
                     <option value="Application no.">Application number</option>
                     <option value="Title">Title</option>
                     <option value="Lead organisation">Lead organisation</option>

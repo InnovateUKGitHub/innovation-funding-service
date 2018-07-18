@@ -121,8 +121,8 @@
                         <span class="error-message" th:each="err : ${#fields.errors('question.shortTitle')}"
                               th:text="${err}"></span>
                 </th:block>
-                <input class="form-control width-x-large"
-                       th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'form-control-error'"
+                <input class="govuk-input width-x-large"
+                       th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-input--error'"
                        type="text"
                        required="required"
                        id="question.shortTitle"
@@ -138,8 +138,8 @@
                         <span class="error-message" th:each="err : ${#fields.errors('question.title')}"
                               th:text="${err}"></span>
                 </th:block>
-                <input th:classappend="${#fields.hasErrors('question.title')} ? 'form-control-error'"
-                       class="form-control width-x-large"
+                <input th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-input--error'"
+                       class="govuk-input width-x-large"
                        type="text"
                        required="required"
                        id="question.title"
@@ -155,8 +155,8 @@
                         <span class="error-message" th:each="err : ${#fields.errors('question.subTitle')}"
                               th:text="${err}"></span>
                 </th:block>
-                <input th:classappend="${#fields.hasErrors('question.subTitle')} ? 'form-control-error'"
-                       class="form-control width-x-large"
+                <input th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-input--error'"
+                       class="govuk-input width-x-large"
                        type="text"
                        id="question.subTitle"
                        th:name="question.subTitle"
@@ -172,8 +172,8 @@
                         <span class="error-message" th:each="err : ${#fields.errors('question.guidanceTitle')}"
                               th:text="${err}"></span>
                 </th:block>
-                <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'form-control-error'"
-                       class="form-control width-x-large"
+                <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-input--error'"
+                       class="govuk-input width-x-large"
                        type="text"
                        id="question.guidanceTitle"
                        required="required"
@@ -193,7 +193,8 @@
                         <textarea data-max_words="500"
                                   data-editor="html"
                                   id="question.guidance"
-                                  th:classappend="${#fields.hasErrors('question.guidance')} ? 'form-control-error'"
+                                  class="govuk-textarea"
+                                  th:classappend="${#fields.hasErrors('question.guidance')} ? 'govuk-textarea--error'"
                                   th:name="question.guidance"
                                   required="required"
                                   ifs:utext="${question.guidance}">
@@ -211,8 +212,8 @@
                         <span class="error-message" th:each="err : ${#fields.errors('question.maxWords')}"
                               th:text="${err}"></span>
                 </th:block>
-                <input class="form-control width-medium"
-                       th:classappend="${#fields.hasErrors('question.maxWords')} ? 'form-control-error'"
+                <input class="govuk-input width-medium"
+                       th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-input--error'"
                        type="number"
                        id="question.maxWords"
                        min="1"
@@ -292,7 +293,8 @@
                     </div>
                     <div class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" for="question.appendixGuidance">
+                        <label class="govuk-label"
+                               for="question.appendixGuidance">
                             Appendix guidance
                         </label>
                         <th:block th:if="${#fields.hasErrors('question.appendixGuidance')}">
@@ -302,8 +304,9 @@
                         <div class="textarea-wrapped">
                         <textarea data-max_words="500"
                                   data-editor="html"
+                                  class="govuk-textarea"
                                   id="question.appendixGuidance"
-                                  th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'form-control-error'"
+                                  th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'govuk-textarea--error'"
                                   th:name="question.appendixGuidance"
                                   required="required"
                                   ifs:utext="${question.appendixGuidance}">
@@ -416,8 +419,8 @@
                                 <span class="error-message" th:each="err : ${#fields.errors('question.scoreTotal')}"
                                       th:text="${err}"></span>
                         </th:block>
-                        <input class="form-control width-medium"
-                               th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'form-control-error'"
+                        <input class="govuk-input width-medium"
+                               th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'govuk-input--error'"
                                type="number"
                                id="question.scoreTotal"
                                min="1"
@@ -512,8 +515,8 @@
                                           th:each="err : ${#fields.errors('question.assessmentGuidanceTitle')}"
                                           th:text="${err}"></span>
                             </th:block>
-                            <input class="form-control width-x-large"
-                                   th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'form-control-error'"
+                            <input class="govuk-input width-x-large"
+                                   th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'govuk-input--error'"
                                    type="text"
                                    id="question.assessmentGuidanceTitle"
                                    th:name="question.assessmentGuidanceTitle"
@@ -531,8 +534,8 @@
                                           th:each="err : ${#fields.errors('question.assessmentGuidance')}"
                                           th:text="${err}"></span>
                             </th:block>
-                            <input class="form-control width-x-large"
-                                   th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'form-control-error'"
+                            <input class="govuk-input width-x-large"
+                                   th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'govuk-input--error'"
                                    type="text"
                                    id="question.assessmentGuidance"
                                    th:name="question.assessmentGuidance"
@@ -576,8 +579,8 @@
                                             <input required="required"
                                                    type="number"
                                                    min="0"
-                                                   class="form-control width-small"
-                                                   th:errorclass="form-control-error"
+                                                   class="govuk-input width-small"
+                                                   th:errorclass="govuk-input--error"
                                                    th:id="guidanceRows[__${iteration.index}__].scoreFrom"
                                                    th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreFrom}"
                                                    th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
@@ -596,8 +599,8 @@
                                                           th:text="${err}"></span>
                                             </th:block>
                                             <input required="required" type="number" min="0"
-                                                   class="form-control width-small"
-                                                   th:errorclass="form-control-error"
+                                                   class="govuk-input width-small"
+                                                   th:errorclass="govuk-input--error"
                                                    th:id="guidanceRows[__${iteration.index}__].scoreTo"
                                                    th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreTo}"
                                                    value=""
@@ -617,8 +620,8 @@
                                                           th:text="${err}"></span>
                                             </th:block>
                                             <textarea required="required"
-                                                      class="form-control width-full"
-                                                      th:errorclass="form-control-error"
+                                                      class="govuk-textarea width-full"
+                                                      th:errorclass="govuk-textarea--error"
                                                       th:id="guidanceRows[__${iteration.index}__].justification"
                                                       th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
                                                       maxlength="5000"
@@ -665,8 +668,8 @@
                                                           th:text="${err}"></span>
                                             </th:block>
                                             <input required="required"
-                                                   class="form-control width-small"
-                                                   th:errorclass="form-control-error"
+                                                   class="govuk-input width-small"
+                                                   th:errorclass="govuk-input--error"
                                                    th:id="${'guidanceRow-'+iteration.index+'-subject'}"
                                                    th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].subject}"
                                                    maxlength="255"
@@ -686,9 +689,9 @@
                                                           th:text="${err}"></span>
                                             </th:block>
                                             <textarea required="required"
-                                                      class="form-control width-full"
+                                                      class="govuk-textarea width-full"
                                                       rows="3"
-                                                      th:errorclass="form-control-error"
+                                                      th:errorclass="govuk-textarea--error"
                                                       th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                       th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].justification}"
                                                       maxlength="5000"
@@ -721,8 +724,8 @@
                                               th:each="err : ${#fields.errors('question.assessmentMaxWords')}"
                                               th:text="${err}"></span>
                                 </th:block>
-                                <input class="form-control width-medium"
-                                       th:classappend="${#fields.hasErrors('question.assessmentMaxWords')} ? 'form-control-error'"
+                                <input class="govuk-input width-medium"
+                                       th:classappend="${#fields.hasErrors('question.assessmentMaxWords')} ? 'govuk-input--error'"
                                        type="number"
                                        id="question.assessmentMaxWords"
                                        min="0"

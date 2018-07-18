@@ -28,9 +28,9 @@
                 <th:block th:if="${#fields.hasErrors('firstName')}">
                     <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                 </th:block>
-                <input class="form-control"
+                <input class="govuk-input"
                        type="text"
-                       th:errorclass="form-control-error"
+                       th:errorclass="fgovuk-input--error"
                        th:field="*{firstName}"
                        required="required"
                        minlength="2"
@@ -48,9 +48,9 @@
                 <th:block th:if="${#fields.hasErrors('lastName')}">
                     <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
                 </th:block>
-                <input class="form-control"
+                <input class="govuk-input"
                        type="text"
-                       th:errorclass="form-control-error"
+                       th:errorclass="govuk-input--error"
                        th:field="*{lastName}"
                        required="required"
                        minlength="2"
@@ -93,13 +93,13 @@
                            data-required-showmessage="visuallyhidden"
                            data-duplicate-required-minlength="true"
                            aria-describedby="password-hint"
-                           class="form-control"
+                           class="govuk-input"
                            type="password"
                            required="required"
                            minlength="8"
                            id="password"
                            name="password"
-                           th:errorclass="form-control-error"
+                           th:errorclass="govuk-input--error"
                            th:field="*{password}"
                            th:attr="data-required-errormessage=#{validation.standard.password.required},
                                     data-minlength-errormessage=#{validation.standard.password.length.min(null,null,'8')}"/>

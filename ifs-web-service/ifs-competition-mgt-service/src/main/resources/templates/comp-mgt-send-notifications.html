@@ -84,7 +84,7 @@
                     <label class="govuk-label" for="subject">
                         Subject
                     </label>
-                    <input class="form-control width-full"
+                    <input class="govuk-input width-full"
                            id="subject"
                            type="text"
                            readonly="readonly"
@@ -111,9 +111,9 @@
                     <div class="textarea-wrapped">
                             <textarea id="body-text"
                                       th:field="${form.message}"
-                                      th:errorclass="form-control-error"
+                                      th:errorclass="govuk-textarea--error"
                                       ifs:utext="${form.message}"
-                                      class="form-control width-full"
+                                      class="govuk-textarea width-full"
                                       data-editor="html"
                                       maxlength="5000"
                                       rows="4"

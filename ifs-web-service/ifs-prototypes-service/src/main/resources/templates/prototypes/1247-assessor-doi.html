@@ -52,7 +52,7 @@
 
 			<div class="govuk-form-group">
 				<label for="doi-affiliations" class="form-label-bold">Professional affiliations</label>
-				<textarea name="doi-affiliations" id="doi-affiliations" cols="30" rows="3" class="form-control width-full"><div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">None declared</div></textarea>
+				<textarea name="doi-affiliations" id="doi-affiliations" cols="30" rows="3" class="govuk-textarea width-full"><div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">None declared</div></textarea>
 			</div>
 		</fieldset>
 
@@ -168,7 +168,7 @@
 
 				<div id="add-pecuniary" class="govuk-visually-hidden govuk-!-margin-bottom-6">
 					<label for="doi-pecuniary" class="form-label-bold">Please describe these interests?</label>
-					<textarea name="doi-pecuniary" id="doi-pecuniary" cols="30" rows="3" class="form-control width-full" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus rerum velit, alias fugit aliquam rem eveniet, deleniti praesentium non, quos vel dicta animi. Est dolores, quibusdam cum saepe suscipit! Itaque.' : '')}">
+					<textarea name="doi-pecuniary" id="doi-pecuniary" cols="30" rows="3" class="govuk-textarea width-full" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus rerum velit, alias fugit aliquam rem eveniet, deleniti praesentium non, quos vel dicta animi. Est dolores, quibusdam cum saepe suscipit! Itaque.' : '')}">
 					</textarea>
 				</div>
 
@@ -281,7 +281,7 @@
 
 			<div class="govuk-form-group govuk-visually-hidden govuk-!-margin-bottom-6" id="add-family-pecuniary">
 				<label for="doi-close-pecuniary" class="form-label-bold">Please describe these interests</label>
-				<textarea name="doi-close-pecuniary" id="doi-close-pecuniary" cols="30" rows="3" class="form-control width-full"><div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">N/A</div></textarea>
+				<textarea name="doi-close-pecuniary" id="doi-close-pecuniary" cols="30" rows="3" class="govuk-textarea width-full"><div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">N/A</div></textarea>
 			</div>
 
 		</fieldset>

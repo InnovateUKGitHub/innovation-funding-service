@@ -105,13 +105,13 @@
                         <th:block th:if="${#fields.hasErrors('ineligibleReason')}">
                             <span class="error-message" th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}"></span>
                         </th:block>
-                        <textarea class="form-control width-full"
+                        <textarea class="govuk-textarea width-full"
                                   maxlength="5000"
                                   data-max_words="400"
                                   data-maxwordslength="400"
                                   required="required"
                                   th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5,000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}, data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                  th:errorclass="form-control-error"
+                                  th:errorclass="govuk-textarea--error"
                                   rows="10"
                                   th:field="*{ineligibleReason}"></textarea>
                         <div class="textarea-footer" th:with="content=*{ineligibleReason}" aria-live="polite" aria-atomic="true" role="status">

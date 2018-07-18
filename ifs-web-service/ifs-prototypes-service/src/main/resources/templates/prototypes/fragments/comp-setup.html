@@ -540,7 +540,7 @@
                 <label class="govuk-label" for="compType">
                     <span class="govuk-label">Competition type</span>
                 </label>
-                <select class="form-control width-x-large" id="compType" name="compType" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
+                <select class="govuk-select width-x-large" id="compType" name="compType" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="Programme">Programme</option>
                     <option value="Managed services">Managed services</option>
@@ -562,7 +562,7 @@
                 <label class="govuk-label" for="compInnovationSector">
                     <span class="govuk-label">Innovation sector</span>
                 </label>
-                <select class="form-control width-x-large" id="compInnovationSector" name="compInnovationSector" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
+                <select class="govuk-select width-x-large" id="compInnovationSector" name="compInnovationSector" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="health">Health and life sciences</option>
                     <option value="materials">Materials and manufacturing</option>
@@ -576,7 +576,7 @@
                 <label class="govuk-label" for="compInnovationArea">
                     <span class="govuk-label">Innovation area</span>
                 </label>
-                <select class="form-control width-x-large" id="compInnovationArea" name="compInnovationArea" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
+                <select class="govuk-select width-x-large" id="compInnovationArea" name="compInnovationArea" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="Health and care" class="health">Health and care</option>
                     <option value="Agriculture and food" class="health">Agriculture and food</option>
@@ -603,7 +603,7 @@
                 <label class="govuk-label" for="compInnovationArea2">
                     <span class="govuk-label govuk-visually-hidden">Innovation area</span>
                 </label>
-                <select class="form-control width-x-large" id="compInnovationArea2" name="compInnovationArea2" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
+                <select class="govuk-select width-x-large" id="compInnovationArea2" name="compInnovationArea2" th:disabled="${(param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready')}">
                     <option value="">Please select &hellip;</option>
                     <option value="Health and care" class="health">Health and care</option>
                     <option value="Agriculture and food" class="health">Agriculture and food</option>
@@ -640,21 +640,21 @@
                         <label class="govuk-label" for="startDay">
                                 <div>Day</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="DD" id="startDay" name="startDay" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startDay != null ? param.startDay[0] : '01')}"/>
+                            <input class="govuk-input width-extra-small" type="number" placeholder="DD" id="startDay" name="startDay" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startDay != null ? param.startDay[0] : '01')}"/>
                     </div>
 
                     <div class="month">
                         <label class="govuk-label" for="startMonth">
                                 <div>Month</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="MM" id="startMonth" name="startMonth" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startMonth != null ? param.startMonth[0] : '')}"/>
+                            <input class="govuk-input width-extra-small" type="number" placeholder="MM" id="startMonth" name="startMonth" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startMonth != null ? param.startMonth[0] : '')}"/>
                     </div>
 
                     <div class="year">
                         <label class="govuk-label" for="startYear">
                                 <div>Year</div>
                             </label>
-                            <input class="form-control width-extra-small" type="number" placeholder="YYYY" id="startYear" name="startYear" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startYear != null ? param.startYear[0] : '')}"/>
+                            <input class="govuk-input width-extra-small" type="number" placeholder="YYYY" id="startYear" name="startYear" th:readonly="${param.status != null and param.status[0] == 'done' or param.compStatus != null and param.compStatus[0] == 'ready'}" th:value="${(param.startYear != null ? param.startYear[0] : '')}"/>
                     </div>
                 </div>
             </fieldset>
@@ -663,7 +663,7 @@
                 <label class="govuk-label" for="compLeadTechnologist">
                     <span class="govuk-label">Innovation lead</span>
                 </label>
-                <select class="form-control width-x-large" id="compLeadTechnologist" name="compLeadTechnologist" th:disabled="${param.status != null and param.status[0] == 'done'}">
+                <select class="govuk-select width-x-large" id="compLeadTechnologist" name="compLeadTechnologist" th:disabled="${param.status != null and param.status[0] == 'done'}">
                     <option value="">Please select &hellip;</option>
                     <option value="">Innovation Lead 1</option>
                     <option value="">Innovation Lead 2</option>
@@ -675,7 +675,7 @@
                 <label class="govuk-label" for="compExecutive">
                     <span class="govuk-label">Competition executive</span>
                 </label>
-                <select class="form-control width-x-large" id="compExecutive" name="compExecutive" th:disabled="${param.status != null and param.status[0] == 'done'}">
+                <select class="govuk-select width-x-large" id="compExecutive" name="compExecutive" th:disabled="${param.status != null and param.status[0] == 'done'}">
                     <option th:text="${(param.compExecutive != null ? param.compExecutive[0] : 'Please select &hellip;')}">Please select &hellip;</option>
                     <option value="Name 1">Name 1</option>
                     <option value="Name 2">Name 2</option>
@@ -1074,7 +1074,7 @@
             <span class="govuk-label">Research participation</span>
             <span class="govuk-hint">This indicates the maximum level of research participation allowed</span>
         </label>
-        <select class="form-control width-large" th:id="${'stream-'+streamNo+'-comp-participation'}" th:name="${'stream-'+streamNo+'-comp-participation'}">
+        <select class="govuk-select width-large" th:id="${'stream-'+streamNo+'-comp-participation'}" th:name="${'stream-'+streamNo+'-comp-participation'}">
             <option value="">30%</option>
             <option value="">50%</option>
             <option value="">100%</option>
@@ -1216,16 +1216,16 @@
         <th scope="row" th:text="${rowNo + '. ' + milestoneTitle}" th:id="${'row-'+rowNo}">ROW TITLE</th>
 
         <th:block th:unless="${type=='readOnly'}">
-            <td th:unless="${time=='-'}"><input type="text" class="form-control width-small" th:value="${time}" th:id="${'row-'+rowNo + '-hour'}"/></td>
-            <td th:unless="${time=='-'}"><input type="text" class="form-control width-small" value="00" th:id="${'row-'+rowNo + '-min'}"/></td>
-            <td th:unless="${time=='-'}"><input type="text" class="form-control width-small" value="pm" th:id="${'row-'+rowNo + '-am-pm'}"/></td>
+            <td th:unless="${time=='-'}"><input type="text" class="govuk-input width-small" th:value="${time}" th:id="${'row-'+rowNo + '-hour'}"/></td>
+            <td th:unless="${time=='-'}"><input type="text" class="govuk-input width-small" value="00" th:id="${'row-'+rowNo + '-min'}"/></td>
+            <td th:unless="${time=='-'}"><input type="text" class="govuk-input width-small" value="pm" th:id="${'row-'+rowNo + '-am-pm'}"/></td>
             <td th:if="${time=='-'}">-</td>
             <td th:if="${time=='-'}">-</td>
             <td th:if="${time=='-'}">-</td>
             <td th:id="${'row-'+rowNo + '-weekday'}">-</td>
-            <td><input type="text" class="form-control width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
-            <td><input type="text" class="form-control width-small" placeholder="MM" th:id="${'row-'+rowNo + '-month'}"/></td>
-            <td><input type="text" class="form-control width-small" placeholder="YYYY" th:id="${'row-'+rowNo + '-year'}"/></td>
+            <td><input type="text" class="govuk-input width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
+            <td><input type="text" class="govuk-input width-small" placeholder="MM" th:id="${'row-'+rowNo + '-month'}"/></td>
+            <td><input type="text" class="govuk-input width-small" placeholder="YYYY" th:id="${'row-'+rowNo + '-year'}"/></td>
         </th:block>
 
         <th:block th:if="${type=='readOnly'}">
@@ -1589,15 +1589,15 @@
     <tr>
         <td>
             <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-score-from'}">Score from</label>
-            <input class="form-control width-small" th:id="${'group' + rowNo + '-score-from'}" th:name="${'group' + rowNo + '-score-from'}" th:value="${scoreFrom}" type="number" />
+            <input class="govuk-input width-small" th:id="${'group' + rowNo + '-score-from'}" th:name="${'group' + rowNo + '-score-from'}" th:value="${scoreFrom}" type="number" />
         </td>
         <td>
             <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-score-to'}">Score to</label>
-            <input class="form-control width-small" th:id="${'group' + rowNo + '-score-to'}" th:name="${'group' + rowNo + '-score-to'}" th:value="${scoreTo}" type="number" />
+            <input class="govuk-input width-small" th:id="${'group' + rowNo + '-score-to'}" th:name="${'group' + rowNo + '-score-to'}" th:value="${scoreTo}" type="number" />
         </td>
         <td>
             <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
-            <input class="form-control width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
+            <input class="govuk-input width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
         </td>
         <td>
             <a href="#" title="Remove this group of scoring guidance">Remove</a>
@@ -1776,7 +1776,7 @@
                     <!--<label class="govuk-label" for="funding-type">-->
                         <!--Funding type-->
                     <!--</label>-->
-                    <!--<select class="form-control width-medium" id="funding-type" name="funding-type">-->
+                    <!--<select class="govuk-select width-medium" id="funding-type" name="funding-type">-->
                         <!--<option value="">Sector competition</option>-->
                     <!--</select>-->
                 <!--</div>-->
@@ -2338,17 +2338,17 @@
                     <div class="date-group">
                         <div class="day">
                             <label class="govuk-label" for="date-one-day">Day</label>
-                            <input class="form-control width-extra-small" placeholder="DD" id="date-one-day" name="date-one-day" value="" type="number" />
+                            <input class="govuk-input width-extra-small" placeholder="DD" id="date-one-day" name="date-one-day" value="" type="number" />
                             <!--<input class="form-control width-extra-small" placeholder="DD" id="date-one-day" name="date-one-day" value="14" type="number" />-->
                         </div>
                         <div class="month">
                             <label class="govuk-label" for="date-one-month">Month</label>
-                            <input class="form-control width-extra-small" placeholder="MM" id="date-one-month" name="date-one-month" value="" type="number" />
+                            <input class="govuk-input width-extra-small" placeholder="MM" id="date-one-month" name="date-one-month" value="" type="number" />
                             <!--<input class="form-control width-extra-small" placeholder="MM" id="date-one-month" name="date-one-month" value="10" type="number" />-->
                         </div>
                         <div class="year">
                             <label class="govuk-label" for="date-one-year">Year</label>
-                            <input class="form-control width-extra-small" placeholder="YYYY" id="date-one-year" name="date-one-year" value="" type="number" />
+                            <input class="govuk-input width-extra-small" placeholder="YYYY" id="date-one-year" name="date-one-year" value="" type="number" />
                             <!--<input class="form-control width-extra-small" placeholder="YYYY" id="date-one-year" name="date-one-year" value="2016" type="number" />-->
                         </div>
                     </div>

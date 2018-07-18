@@ -35,9 +35,9 @@
                 <th:block th:if="${#fields.hasErrors('firstName')}">
                     <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                 </th:block>
-                <input class="form-control"
+                <input class="govuk-input"
                        id="firstName"
-                       th:errorclass="form-control-error"
+                       th:errorclass="govuk-input--error"
                        type="text"
                        th:field="*{firstName}"
                        required="required"
@@ -57,8 +57,8 @@
                 <th:block th:if="${#fields.hasErrors('lastName')}">
                     <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
                 </th:block>
-                <input class="form-control"
-                       th:errorclass="form-control-error"
+                <input class="govuk-input"
+                       th:errorclass="govuk-input--error"
                        id="lastName"
                        type="text"
                        th:field="*{lastName}"
@@ -79,9 +79,9 @@
                 <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                     <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                 </th:block>
-                <input class="form-control"
+                <input class="govuk-input"
                        id="phoneNumber"
-                       th:errorclass="form-control-error"
+                       th:errorclass="govuk-input--error"
                        type="tel"
                        th:field="*{phoneNumber}"
                        required="required"
@@ -105,9 +105,9 @@
                     </th:block>
                 </th:block>
                 <th:block th:unless="${invitee}">
-                    <input class="form-control"
+                    <input class="govuk-input"
                            id="email"
-                           th:errorclass="form-control-error"
+                           th:errorclass="govuk-input--error"
                            type="email"
                            th:field="*{email}"
                            maxlength="256"

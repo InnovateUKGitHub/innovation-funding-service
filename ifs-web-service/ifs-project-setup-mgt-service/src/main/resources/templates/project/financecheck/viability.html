@@ -111,8 +111,12 @@
 
               </div>
               <div class="govuk-form-group" id="add-rag-rating">
-                <label for="rag-rating" class="govuk-label">Please enter the RAG rating for this viability review</label>
-                <select th:field="*{ragStatus}" id="rag-rating" class="form-control" data-switches-button-status="#confirm-button">
+                <label for="rag-rating"
+                       class="govuk-label">Please enter the RAG rating for this viability review</label>
+                <select th:field="*{ragStatus}"
+                        id="rag-rating"
+                        class="govuk-select"
+                        data-switches-button-status="#confirm-button">
                   <option value="UNSET" th:selected="${form.ragStatus == null}">--</option>
                   <option value="GREEN">Green</option>
                   <option value="AMBER">Amber</option>

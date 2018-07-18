@@ -28,7 +28,9 @@ div {
   &.readonly {
     @extend %read-only;
 
-    &.form-control-error {
+    &.govuk-input--error,
+    &.govuk-select--error,
+    &.govuk-textarea--error {
       @include box-shadow(none);
       border: 4px solid $govuk-error-colour;
     }
@@ -93,7 +95,9 @@ tr {
   }
 }
 
-.form-control-error {
+.govuk-input--error,
+.govuk-select--error,
+.govuk-textara--error{
   @include box-shadow(none);
   border: 4px solid $govuk-error-colour;
 }
@@ -174,31 +178,31 @@ table {
 }
 
 select {
-  &.form-control {
+  &.govuk-select {
     &.width-x-large {
       width:60%;
     }
   }
 }
 
-input,
-select {
-  &.form-control {
+
+.govuk-input,
+.govuk-select{
+  + button {
+    &.govuk-button {
+      @include govuk-media-query(mobile) {
+        margin-top:15px;
+      }
+
+      line-height:1.15;
+    }
+  }
+
+  &.govuk-input--error,
+  &.govuk-select--error{
     + button {
       &.govuk-button {
-        @include govuk-media-query(mobile) {
-          margin-top:15px;
-        }
-
-        line-height:1.15;
-      }
-    }
-
-    &.form-control-error {
-      + button {
-        &.govuk-button {
-          line-height:1.35;
-        }
+        line-height:1.35;
       }
     }
   }

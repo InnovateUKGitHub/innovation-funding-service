@@ -148,8 +148,8 @@
                                         </th>
                                         <td th:each="cost, status : ${row.value}">
                                             <input
-                                                th:classappend="${#fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__][__${status.index}__]')} ? 'form-control-error'"
-                                                th:class="${#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+' form-control'}"
+                                                th:classappend="${#fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__][__${status.index}__]')} ? 'govuk-input--error'"
+                                                th:class="${#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+' govuk-input'}"
                                                 th:attr="aria-labelledby=|row-${row.key} month-${status.index}|,
                                                          data-required-errormessage=#{validation.spend.profile.cost.should.not.be.null},
                                                          data-number-errormessage=#{validation.spend.profile.cost.should.not.be.fractional},
@@ -215,7 +215,7 @@
                                                           class="error-message">Your total costs are higher than your eligible costs</span>
                                                 </th>
                                                 <td th:each="cost, status : ${row.value}">
-                                                    <input class="form-control"
+                                                    <input class="govuk-input"
                                                            th:classappend="${#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))}"
                                                            th:attr="aria-labelledby=|row-${row.key} month-${status.index}|"
                                                            th:name="${'table.monthlyCostsPerCategoryMap['+row.key+']['+status.index+']'}"

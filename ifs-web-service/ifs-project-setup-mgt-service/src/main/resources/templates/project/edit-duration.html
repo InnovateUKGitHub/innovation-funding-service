@@ -49,12 +49,12 @@
                  id="durationInMonths"
                  th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},data-pattern-errormessage=#{validation.field.non.decimal.format}"
                  type="text"
-                 class="form-control width-small"
+                 class="govuk-input width-small"
                  required="required"
                  pattern="^[0-9]*$"
                  maxlength="2"
                  data-prevent-input-regex="[^0-9]"
-                 th:errorclass="form-control-error"
+                 th:errorclass="govuk-input--error"
                  th:field="*{durationInMonths}" />
           <span>months</span>
         </div>

@@ -32,9 +32,9 @@
                     <th:block th:if="${#fields.hasErrors('firstName')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="form-control"
+                    <input class="govuk-input"
                            id="firstName"
-                           th:errorclass="form-control-error"
+                           th:errorclass="fgovuk-input--error"
                            type="text"
                            th:field="*{firstName}"
                            required="required"
@@ -53,9 +53,9 @@
                     <th:block th:if="${#fields.hasErrors('lastName')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="form-control"
+                    <input class="govuk-input"
                            id="lastName"
-                           th:errorclass="form-control-error"
+                           th:errorclass="govuk-input--error"
                            type="text"
                            th:field="*{lastName}"
                            required="required"
@@ -75,10 +75,10 @@
                     <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="form-control"
+                    <input class="govuk-input"
                            id="phoneNumber"
                            type="tel"
-                           th:errorclass="form-control-error"
+                           th:errorclass="govuk-input--error"
                            th:field="*{phoneNumber}"
                            required="required"
                            th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />

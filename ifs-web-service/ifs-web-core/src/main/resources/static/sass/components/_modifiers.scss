@@ -88,7 +88,7 @@ table {
 .table-stacked-mobile {
 
   td{
-    .form-label {
+    .govuk-label {
       display: none;
     }
   }
@@ -134,7 +134,7 @@ table {
         border: none;
 
         label {
-          .form-label {
+          .govuk-label {
             display: block;
             font-weight: 800;
           }

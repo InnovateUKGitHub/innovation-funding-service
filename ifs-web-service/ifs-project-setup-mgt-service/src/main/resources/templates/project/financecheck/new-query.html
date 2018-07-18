@@ -46,9 +46,9 @@
                     <input name="queryTitle"
                            id="queryTitle"
                            type="text"
-                           class="form-control width-full"
+                           class="govuk-input width-full"
                            required="required"
-                           th:errorclass="form-control-error"
+                           th:errorclass="govuk-input--error"
                            th:field="*{queryTitle}"
                            th:attr="maxlength=${model.maxTitleCharacters},
                                     data-required-errormessage=#{validation.field.must.not.be.blank},
@@ -61,7 +61,9 @@
                     <th:block th:if="${#fields.hasErrors('section')}">
                         <span class="error-message" th:each="err : ${#fields.errors('section')}" th:text="${err}"></span>
                     </th:block>
-                    <select name="section" id="section" class="form-control">
+                    <select name="section"
+                            id="section"
+                            class="govuk-select">
                         <th:block th:each="section_type : ${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).values()}">
                             <th:block th:if="*{section}">
                                 <option th:value="${section_type.name()}"
@@ -92,11 +94,11 @@
                     <div class="textarea-wrapped word-count">
                         <textarea data-editor="md"
                                   required = "required"
-                                  class="form-control"
+                                  class="govuk-textarea"
                                   id="query"
                                   name="query"
                                   th:field="*{query}"
-                                  th:errorclass="field-group-error"
+                                  th:errorclass="govuk-textarea--error"
                                   th:attr="maxlength=${model.maxQueryCharacters},
                           data-max_words=${model.maxQueryWords},
                           data-maxwordslength=${model.maxQueryWords},

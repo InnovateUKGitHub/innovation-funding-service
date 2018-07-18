@@ -50,8 +50,8 @@
                                 <span class="error-message"  th:each="err : ${#fields.errors('principalEmployer')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <input class="form-control width-full" type="text" th:field="*{principalEmployer}"
-                               th:errorclass="form-control-error" required="required"
+                        <input class="govuk-input width-full" type="text" th:field="*{principalEmployer}"
+                               th:errorclass="fgovuk-input--error" required="required"
                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.principalEmployer.required}" />
                     </div>
 
@@ -62,8 +62,8 @@
                                 <span class="error-message"  th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <input class="form-control width-full" type="text" th:field="*{role}"
-                               th:errorclass="form-control-error" required="required"
+                        <input class="govuk-input width-full" type="text" th:field="*{role}"
+                               th:errorclass="govuk-input--error" required="required"
                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.role.required}" />
                     </div>
 
@@ -76,7 +76,7 @@
                         </label>
                         <div class="textarea-wrapped word-count">
                             <textarea
-                                class="form-control width-full"
+                                class="govuk-textarea width-full"
                                 cols="30"
                                 rows="3"
                                 maxlength="5000"
@@ -84,7 +84,7 @@
                                 data-maxwordslength="100"
                                 data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                                 th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
-                                th:errorclass="field-error"
+                                th:errorclass="govuk-textarea--error"
                                 th:field="*{professionalAffiliations}"></textarea>
                             <div class="textarea-footer" th:with="professionalAffiliations=*{professionalAffiliations}" aria-live="polite" aria-atomic="true" role="status">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, professionalAffiliations)})" />
@@ -148,8 +148,8 @@
                                                       th:text="${err}"></span>
                                             </th:block>
                                         </label>
-                                        <input aria-labelledby="aria-position-org" class="form-control width-full appointment-field" type="text"
-                                               th:errorclass="form-control-error"
+                                        <input aria-labelledby="aria-position-org" class="govuk-input width-full appointment-field" type="text"
+                                               th:errorclass="govuk-input--error"
                                                th:id="appointments[__${appointmentStat.index}__].organisation"
                                                th:name="appointments[__${appointmentStat.index}__].organisation"
                                                th:field="*{appointments[__${appointmentStat.index}__].organisation}"
@@ -165,8 +165,8 @@
                                                           th:text="${err}"></span>
                                                 </th:block>
                                         </label>
-                                        <input aria-labelledby="aria-position-pos" class="form-control width-full appointment-field" type="text"
-                                               th:errorclass="form-control-error"
+                                        <input aria-labelledby="aria-position-pos" class="govuk-input width-full appointment-field" type="text"
+                                               th:errorclass="fgovuk-input--error"
                                                th:id="appointments[__${appointmentStat.index}__].position"
                                                th:name="appointments[__${appointmentStat.index}__].position"
                                                th:field="*{appointments[__${appointmentStat.index}__].position}"
@@ -232,14 +232,14 @@
 
                             <div class="textarea-wrapped word-count">
                                 <textarea
-                                    class="form-control width-full"
+                                    class="govuk-textarea width-full"
                                     cols="30"
                                     rows="3"
                                     data-max_words="100"
                                     data-maxwordslength="100"
                                     data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                                     th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)},data-required-errormessage=#{validation.assessorprofiledeclarationform.financialInterests.required}"
-                                    th:errorclass="form-control-error"
+                                    th:errorclass="govuk-textarea--error"
                                     th:field="*{financialInterests}"
                                     th:required="*{hasFinancialInterests}"></textarea>
                                 <div class="textarea-footer" th:with="financialInterests=*{financialInterests}" aria-live="polite" aria-atomic="true" role="status">
@@ -309,8 +309,8 @@
                                                   th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}"
                                                   th:text="${err}"></span>
                                         </th:block>
-                                        <input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field"
-                                               th:errorclass="form-control-error" type="text"
+                                        <input aria-labelledby="aria-family-rel" class="govuk-input width-full family-affiliation-field"
+                                               th:errorclass="govuk-input--error" type="text"
                                                th:id="familyAffiliations[__${familyAffiliationStat.index}__].relation"
                                                th:name="familyAffiliations[__${familyAffiliationStat.index}__].relation"
                                                th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}"
@@ -324,8 +324,8 @@
                                                   th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}"
                                                   th:text="${err}"></span>
                                         </th:block>
-                                        <input aria-labelledby="aria-family-org" class="form-control width-full family-affiliation-field"
-                                               th:errorclass="form-control-error" type="text"
+                                        <input aria-labelledby="aria-family-org" class="govuk-input width-full family-affiliation-field"
+                                               th:errorclass="govuk-input--error" type="text"
                                                th:id="familyAffiliations[__${familyAffiliationStat.index}__].organisation"
                                                th:name="familyAffiliations[__${familyAffiliationStat.index}__].organisation"
                                                th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}"
@@ -339,8 +339,8 @@
                                                   th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}"
                                                   th:text="${err}"></span>
                                         </th:block>
-                                        <input aria-labelledby="aria-family-pos" class="form-control width-full family-affiliation-field"
-                                               th:errorclass="form-control-error" type="text"
+                                        <input aria-labelledby="aria-family-pos" class="govuk-input width-full family-affiliation-field"
+                                               th:errorclass="govuk-input--error" type="text"
                                                th:id="familyAffiliations[__${familyAffiliationStat.index}__].position"
                                                th:name="familyAffiliations[__${familyAffiliationStat.index}__].position"
                                                th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}"
@@ -401,14 +401,14 @@
                             </label>
                             <div class="textarea-wrapped word-count">
                                 <textarea
-                                    class="form-control width-full"
+                                    class="govuk-textarea width-full"
                                     cols="30"
                                     rows="3"
                                     data-max_words="100"
                                     data-maxwordslength="100"
                                     data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
                                     th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.familyFinancialInterests.required},data-maxlength-errormessage=#{validation.field.too.many.characters(null, 100)}"
-                                    th:errorclass="form-control-error"
+                                    th:errorclass="govuk-textarea--error"
                                     th:field="*{familyFinancialInterests}"
                                     th:required="*{hasFamilyFinancialInterests}"></textarea>
                                 <div class="textarea-footer" th:with="familyFinancialInterests=*{familyFinancialInterests}" aria-live="polite" aria-atomic="true" role="status">

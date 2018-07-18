@@ -26,13 +26,13 @@
             <span class="govuk-hint">This number is found at the top of your Je-S form</span>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + academicFinance.tsbReference?.id + '-item'})" />
             <input type="text"
-                   class="form-control"
+                   class="govuk-input"
                    th:name="${'cost-' + academicFinance.tsbReference?.id + '-tsb_reference'}"
                    th:id="|formInput[cost-${academicFinance.tsbReference?.id}-item]|"
                    th:value="${academicFinance.tsbReference?.value}"
                    th:readonly="${readonly}"
                    required="required"
-                   th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +'item]}')} ? 'form-control-error'" />
+                   th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +'item]}')} ? 'govuk-input--error'" />
         </div>
     </fieldset>
 
@@ -74,7 +74,7 @@
                 </label>
                 <div class="govuk-grid-column-two-thirds">
                     <input type="text"
-                           class="form-control width-full"
+                           class="govuk-input width-full"
                            th:id="formInput[cost- + ${academicFinance.incurredStaff?.id} + -cost]"
                            th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
                            ifs:nonZeroValue="${academicFinance.incurredStaff?.numberValue}"
@@ -82,7 +82,7 @@
                            th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredStaff?.id +'-cost]}')}? 'form-control-error'" />
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredStaff?.id +'-cost]}')}? 'govuk-input--error'" />
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+ academicFinance.incurredTravelAndSubsistence?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="form-control width-full"
+                    <input class="govuk-input width-full"
                            th:id="formInput[cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -cost]"
                            th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence"
                            type="text"
@@ -103,7 +103,7 @@
                            th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')}? 'form-control-error'"/>
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')}? 'govuk-input--error'"/>
                 </div>
             </div>
         </div>
@@ -114,7 +114,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.incurredOtherCosts?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="form-control width-full"
+                    <input class="govuk-input width-full"
                            th:id="formInput[cost- + ${academicFinance.incurredOtherCosts?.id} + -cost]"
                            th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs"
                            type="text"
@@ -123,7 +123,7 @@
                            th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')}? 'form-control-error'" />
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')}? 'govuk-input--error'" />
                 </div>
             </div>
         </div>
@@ -133,11 +133,14 @@
                     Subtotal
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="form-control width-full" id="subtotal-resources"
+                    <input class="govuk-input width-full"
+                           id="subtotal-resources"
                            th:attr="data-calculation-fields=|[id='formInput[cost-${academicFinance.incurredOtherCosts?.id}-cost]'],
                            [id='formInput[cost-${academicFinance.incurredTravelAndSubsistence?.id}-cost]'],
                            [id='formInput[cost-${academicFinance.incurredStaff?.id}-cost]']|"
-                           data-calculation-operations="+" type="text" readonly="readonly"
+                           data-calculation-operations="+"
+                           type="text"
+                           readonly="readonly"
                            th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalIncurred(),0, 'DEFAULT')}"/>
                 </div>
             </div>
@@ -158,7 +161,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedInvestigators?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="form-control width-full"
+                    <input class="govuk-input width-full"
                            th:id="formInput[cost- + ${academicFinance.allocatedInvestigators?.id} + -cost]"
                            th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="text"
                            ifs:nonZeroValue="${academicFinance.allocatedInvestigators?.numberValue}"
@@ -166,7 +169,7 @@
                            th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')}? 'form-control-error'"/>
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')}? 'govuk-input--error'"/>
                 </div>
             </div>
         </div>
@@ -177,7 +180,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedEstatesCosts?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="form-control width-full"
+                    <input class="govuk-input width-full"
                            th:id="formInput[cost- + ${academicFinance.allocatedEstatesCosts?.id} + -cost]"
                            th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="text"
                            ifs:nonZeroValue="${academicFinance.allocatedEstatesCosts?.numberValue}"
@@ -185,7 +188,7 @@
                            th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')}? 'form-control-error'"/>
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')}? 'govuk-input--error'"/>
                 </div>
             </div>
         </div>
@@ -196,7 +199,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedOtherCosts?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="form-control width-full"
+                    <input class="govuk-input width-full"
                            th:id="formInput[cost- + ${academicFinance.allocatedOtherCosts?.id} + -cost]"
                            th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="text"
                            ifs:nonZeroValue="${academicFinance.allocatedOtherCosts?.numberValue}"
@@ -204,7 +207,7 @@
                            th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'form-control-error'"/>
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'govuk-input--error'"/>
                 </div>
             </div>
         </div>
@@ -214,7 +217,7 @@
                     Subtotal
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="form-control width-full"
+                    <input class="govuk-input width-full"
                            th:attr="data-calculation-fields=|[id='formInput[cost-${academicFinance.allocatedInvestigators?.id}-cost]'],
                            [id='formInput[cost-${academicFinance.allocatedEstatesCosts?.id}-cost]'],
                            [id='formInput[cost-${academicFinance.allocatedOtherCosts?.id}-cost']|"
@@ -236,7 +239,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.indirectCosts?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="form-control width-full"
+                    <input class="govuk-input width-full"
                            th:id="formInput[cost- + ${academicFinance.indirectCosts?.id} + -cost]"
                            th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs"
                            type="text"
@@ -245,7 +248,7 @@
                            th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')}? 'form-control-error'" />
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')}? 'govuk-input--error'" />
                 </div>
             </div>
         </div>
@@ -263,7 +266,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.exceptionsStaff?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="form-control width-full"
+                    <input class="govuk-input width-full"
                            th:id="formInput[cost- + ${academicFinance.exceptionsStaff?.id} + -cost]"
                            th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="text"
                            ifs:nonZeroValue="${academicFinance.exceptionsStaff?.numberValue}"
@@ -271,7 +274,7 @@
                            th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')}? 'form-control-error'" />
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')}? 'govuk-input--error'" />
                 </div>
             </div>
         </div>
@@ -282,7 +285,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.exceptionsOtherCosts?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="form-control width-full"
+                    <input class="govuk-input width-full"
                            th:id="formInput[cost- + ${academicFinance.exceptionsOtherCosts?.id} + -cost]"
                            th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs"
                            type="text"
@@ -291,7 +294,7 @@
                            th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')}? 'form-control-error'" />
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')}? 'govuk-input--error'" />
                 </div>
             </div>
         </div>
@@ -301,10 +304,12 @@
                     <span>Subtotal</span>
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input id="subtotal-exceptions" class="form-control width-full"
+                    <input id="subtotal-exceptions"
+                           class="govuk-input width-full"
                            th:attr="data-calculation-fields=|[id='formInput[cost-${academicFinance.exceptionsStaff?.id}-cost]'],
-                           [id='formInput[cost-${academicFinance.exceptionsOtherCosts?.id}-cost]']|"
-                           data-calculation-operations="+" readonly="readonly"
+                                    [id='formInput[cost-${academicFinance.exceptionsOtherCosts?.id}-cost]']|"
+                           data-calculation-operations="+"
+                           readonly="readonly"
                            th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalExceptions(),0, 'DEFAULT')}"/>
                 </div>
             </div>
@@ -315,9 +320,11 @@
                     <span>Total</span>
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="form-control width-full"
+                    <input class="govuk-input width-full"
                            data-calculation-fields="#subtotal-resources,#indirect,#subtotal-directly-allocated,#subtotal-exceptions"
-                           data-calculation-operations="+" id="total" readonly="readonly"
+                           data-calculation-operations="+"
+                           id="total"
+                           readonly="readonly"
                            th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotal(),0, 'DEFAULT')}"/>
                 </div>
             </div>
