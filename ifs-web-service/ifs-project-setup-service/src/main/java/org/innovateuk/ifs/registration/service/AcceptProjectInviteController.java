@@ -139,7 +139,6 @@ public class AcceptProjectInviteController {
                     // Accept the invite - adding the user to the project
                     return projectInviteRestService.acceptInvite(hash, userExists.getId()).andOnSuccessReturn(() ->
                             "redirect:" + RedirectUtils.buildRedirect(request, "applicant/dashboard"));
-
                 }
         ).getSuccess();
     }

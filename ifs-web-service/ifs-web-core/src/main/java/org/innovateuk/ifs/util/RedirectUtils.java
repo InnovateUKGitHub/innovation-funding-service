@@ -11,7 +11,5 @@ public class RedirectUtils {
                 request.getServerName(),
                 request.getServerPort(),
                 url);
-
-
     }
 }

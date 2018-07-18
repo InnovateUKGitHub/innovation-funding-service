@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.finance.OrganisationSizeViewModel;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,6 @@ public class OrganisationSizePopulator extends AbstractFormInputPopulator<Organi
     private SectionService sectionService;
 
     @Autowired
-    private OrganisationDetailsRestService organisationDetailsRestService;
-    @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
 
@@ -40,10 +37,9 @@ public class OrganisationSizePopulator extends AbstractFormInputPopulator<Organi
             List<Long> completedSectionIds = sectionService.getCompleted(resource.getApplication().getId(), resource.getCurrentApplicant().getOrganisation().getId());
             viewModel.setOrganisationSizeAlert(completedSectionIds.contains(fundingSection.getId()));
         });
-        viewModel.setOrganisationSizes(organisationDetailsRestService.getOrganisationSizes().getSuccess());
+
         ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getFinanceDetails(resource.getApplication().getId(), resource.getCurrentApplicant().getOrganisation().getId()).getSuccess();
         viewModel.setOrganisationFinanceSize(applicationFinanceResource.getOrganisationSize());
-
     }
 
     @Override
