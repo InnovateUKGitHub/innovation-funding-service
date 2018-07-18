@@ -321,7 +321,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals("Please enter a first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
         assertEquals("Please enter a last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
         assertEquals("Please enter a phone number.", bindingResult.getFieldError("phoneNumber").getDefaultMessage());
-        assertEquals("The address cannot be blank.", bindingResult.getFieldError("addressForm.addressLine1").getDefaultMessage());
+        assertEquals("The first line of the address cannot be blank.", bindingResult.getFieldError("addressForm.addressLine1").getDefaultMessage());
         assertEquals("The town cannot be blank.", bindingResult.getFieldError("addressForm.town").getDefaultMessage());
         assertEquals("The postcode cannot be blank.", bindingResult.getFieldError("addressForm.postcode").getDefaultMessage());
     }
