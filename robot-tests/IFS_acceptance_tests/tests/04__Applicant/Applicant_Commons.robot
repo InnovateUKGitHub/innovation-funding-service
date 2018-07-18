@@ -371,13 +371,33 @@ logged in user applies to competition research
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user enters text to a text field       id = organisationSearchName    Bath
-    the user clicks the button/link       id=org-search
+    the user clicks the button/link            id=org-search
     the user clicks the button/link            link=Bath Spa University
     the user clicks the button/link            jQuery=button:contains("Enter address manually")
     the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
     the user clicks the button/link            jQuery = .button:contains("Find UK address")
     the user clicks the button/link            css=#select-address-block > button
     the user clicks the button/link            jQuery=.button:contains("Save organisation and continue")
+    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user clicks the button/link            id=application-question-save
+
+logged in user applies to competition public
+    [Arguments]  ${competition}  ${applicationType}  #This was 1   #${applicant}   #Why is this here?
+    the user navigates to the page      ${frontDoor}
+    navigate to next page if not found  ${competition}
+    the user clicks the button/link     link=${competition}
+    the user clicks the button/link     jQuery = a:contains("Start new application")
+    the user selects the radio button   organisationTypeId  ${applicationType}
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user enters text to a text field       id = organisationSearchName    Innovate
+    the user clicks the button/link            id=org-search
+    the user clicks the button/link            link=INNOVATE LTD
+    the user clicks the button/link            jQuery=button:contains("Enter address manually")
+    the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    the user clicks the button/link            css=#select-address-block > button
+    #the user clicks the button/link            jQuery=.button:contains("Save organisation and continue")
+    the user clicks the button/link            jQuery=.button:contains("Save and continue")
     the user clicks the button/link            jQuery=.button:contains("Save and continue")
     the user clicks the button/link            id=application-question-save
 

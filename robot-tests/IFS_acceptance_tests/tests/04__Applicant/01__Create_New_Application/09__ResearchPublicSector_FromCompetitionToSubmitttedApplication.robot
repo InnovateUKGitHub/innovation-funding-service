@@ -66,13 +66,14 @@ Applicant Applies to Research leading Competition
     Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                   link=Application overview
     And collaborating is required to submit the application if Research participation is not 100pc   ${openCompetitionResearch_name}  ${researchLeadApp}  antonio.jenkins@jabbertype.example.com
+#Here?? at this point the comp is available
 
 Applicant Applies to Public content leading Competition
     [Documentation]  IFS-1012
     [Tags]  Applicant  HappyPath  CompAdmin
     [Setup]  log in as a different user                   becky.mason@gmail.com  ${short_password}
     # This application is for competition Photonics for Public, which is Web test data.
-    Given logged in user applies to competition research           ${openCompetitionPublicSector_name}  2
+    Given logged in user applies to competition public           ${openCompetitionPublicSector_name}  4
     When the user clicks the button/link                  link=Application details
     Then the user fills in the Application details        ${publicLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${publicLeadApp}  Experimental development
@@ -134,6 +135,7 @@ Collaborating is required to submit the application if Research participation is
     the user logs out if they are logged in
     the collaborator accepts and fills in his part in the application  ${competition}  ${application}
     the lead is able to submit the application  ${lead}  ${application}
+#here?? - Does this work?
 
 the collaborator accepts and fills in his part in the application
     [Arguments]  ${competition}  ${application}
