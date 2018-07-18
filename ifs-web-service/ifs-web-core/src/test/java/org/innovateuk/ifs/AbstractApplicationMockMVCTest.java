@@ -358,10 +358,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(sectionService.filterParentSections(anyList())).thenReturn(sectionResources);
         competitionResources = singletonList(competitionResource);
         when(questionService.findByCompetition(competitionResource.getId())).thenReturn(questionList);
-        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess
-                (competitionResource));
         when(competitionRestService.getAll()).thenReturn(restSuccess(competitionResources));
-        when(competitionRestService.getCompetitionById(any(Long.class))).thenReturn(restSuccess(competitionResource));
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
 
         when(formInputRestService.getByCompetitionIdAndScope(competitionResource.getId(), APPLICATION)).thenReturn
                 (restSuccess(new ArrayList<>()));

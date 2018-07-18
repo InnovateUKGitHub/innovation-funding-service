@@ -3,9 +3,9 @@ package org.innovateuk.ifs.management.funding.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.form.FundingNotificationFilterForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManageFundingApplicationViewModel;
 import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
@@ -28,7 +28,7 @@ public class ManageFundingApplicationsModelPopulator {
     private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
@@ -42,7 +42,7 @@ public class ManageFundingApplicationsModelPopulator {
                 DEFAULT_PAGE_SIZE, Optional.of(queryForm.getStringFilter()),
                 queryForm.getSendFilter(), queryForm.getFundingFilter()).getSuccess();
 
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionInFlightStatsViewModel keyStatistics = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
         boolean selectAllDisabled = totalSubmittableApplications > CompetitionManagementCookieController.SELECTION_LIMIT;
         Pagination pagination = new Pagination(results, queryString);

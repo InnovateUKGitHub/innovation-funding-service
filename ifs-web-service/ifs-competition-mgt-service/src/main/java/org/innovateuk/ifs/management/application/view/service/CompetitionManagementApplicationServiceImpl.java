@@ -8,10 +8,10 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -45,7 +45,7 @@ import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 public class CompetitionManagementApplicationServiceImpl implements CompetitionManagementApplicationService {
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -77,7 +77,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         form.setAdminMode(true);
 
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         boolean readOnly = user.hasRole(SUPPORT);
         boolean canReinstate = !(user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD));
