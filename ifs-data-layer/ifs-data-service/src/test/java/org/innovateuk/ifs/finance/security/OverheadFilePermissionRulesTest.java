@@ -58,7 +58,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
             final Long organisationId = 2L;
             final Application application = newApplication().with(id(applicationId)).build();
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
-            final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisationSize(organisation).build();
+            final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
             overheads = newApplicationFinanceRow().withOwningFinance(applicationFinance).build();
 
             leadApplicant = newUserResource().build();

@@ -49,7 +49,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceRowBuilder.newProjectFinanceRow;
-import static org.innovateuk.ifs.finance.domain.builder.OrganisationSizeBuilder.newOrganisationSize;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
@@ -130,7 +130,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         project = newProject().withId(projectId).withApplication(application).build();
 
-        newFinance = new ProjectFinance(organisation, newOrganisationSize().build(), project);
+        newFinance = new ProjectFinance(organisation, SMALL, project);
         newFinance.setId(projectFinanceId);
 
         question = newQuestion().withId(questionId).withCompetition(competition).build();
@@ -227,7 +227,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     @Test
     public void testDeleteCostFailsWhenNotMatchingOrg(){
-        ProjectFinance otherProjectFinance = new ProjectFinance(organisation, newOrganisationSize().build(), project);
+        ProjectFinance otherProjectFinance = new ProjectFinance(organisation, SMALL, project);
         ProjectFinanceRow costFromOtherProjectFinance = newProjectFinanceRow().withQuestion(costTypeQuestion.get(FinanceRowType.MATERIALS)).withTarget(otherProjectFinance).build();
         ServiceResult<Void> result = service.deleteCost(project.getId(), organisation.getId(), costFromOtherProjectFinance.getId());
         assertTrue(result.isFailure());

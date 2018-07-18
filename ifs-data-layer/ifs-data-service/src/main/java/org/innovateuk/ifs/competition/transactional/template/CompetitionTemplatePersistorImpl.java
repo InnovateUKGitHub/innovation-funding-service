@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.transactional.template;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.question.transactional.template.SectionTemplatePersistorImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +14,15 @@ import javax.persistence.PersistenceContext;
  */
 @Component
 public class CompetitionTemplatePersistorImpl implements BaseTemplatePersistor<Competition> {
-    @Autowired
-    private SectionTemplatePersistorImpl sectionTemplateService;
 
-    @Autowired
+    private SectionTemplatePersistorImpl sectionTemplateService;
     private CompetitionRepository competitionRepository;
+
+    public CompetitionTemplatePersistorImpl(SectionTemplatePersistorImpl sectionTemplateService,
+                                            CompetitionRepository competitionRepository) {
+        this.sectionTemplateService = sectionTemplateService;
+        this.competitionRepository = competitionRepository;
+    }
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -32,13 +35,13 @@ public class CompetitionTemplatePersistorImpl implements BaseTemplatePersistor<C
 
     @Override
     @Transactional
-    public Competition persistByEntity(Competition template) {
-        entityManager.detach(template);
+    public Competition persistByEntity(Competition competition) {
+        entityManager.detach(competition);
 
-        Competition competition = competitionRepository.save(template);
-        template.setId(competition.getId());
-        sectionTemplateService.persistByParentEntity(template);
+        Competition saved = competitionRepository.save(competition);
+        competition.setId(saved.getId());
+        sectionTemplateService.persistByParentEntity(competition);
 
-        return competition;
+        return saved;
     }
 }

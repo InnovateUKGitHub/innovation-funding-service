@@ -70,6 +70,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     private Competition copyTemplatePropertiesToCompetition(Competition template, Competition competition) {
         competition.setSections(new ArrayList<>(template.getSections()));
+        competition.setGrantClaimMaximums(new ArrayList<>(template.getGrantClaimMaximums()));
         competition.setFullApplicationFinance(template.isFullApplicationFinance());
         competition.setTermsAndConditions(template.getTermsAndConditions());
         competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());

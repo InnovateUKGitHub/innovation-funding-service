@@ -25,7 +25,6 @@ import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -165,7 +164,6 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(applicationService.getById(456L)).thenReturn(app);
-        when(organisationDetailsRestService.getOrganisationSizes()).thenReturn(restSuccess(new ArrayList<>()));
 
         when(organisationDetailsRestService.getHeadCount(456L, 1L)).thenReturn(restSuccess(1L));
         when(organisationDetailsRestService.getTurnover(456L, 1L)).thenReturn(restSuccess(2L));
@@ -214,7 +212,6 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
         when(projectFinanceService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(viability);
         when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(true);
-        when(organisationDetailsRestService.getOrganisationSizes()).thenReturn(restSuccess(new ArrayList<>()));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(organisationDetailsRestService.getHeadCount(456L, 2L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));
         when(organisationDetailsRestService.getTurnover(456L, 2L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));

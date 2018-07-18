@@ -67,7 +67,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("minProjectDuration").description("The minimum amount of weeks that projects under this competition should last").optional(),
             fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that projects under this competition projects should last").optional(),
             fieldWithPath("stateAid").description("Indicates if the competition has state aid eligibility").optional(),
-            fieldWithPath("useNewApplicantMenu").description("This is temporary until all competitions with the old menu view are complete").optional()
+            fieldWithPath("useNewApplicantMenu").description("This is temporary until all competitions with the old menu view are complete").optional(),
+            fieldWithPath("grantClaimMaximums").description("List of grant claim maximums belonging to the competition").optional()
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

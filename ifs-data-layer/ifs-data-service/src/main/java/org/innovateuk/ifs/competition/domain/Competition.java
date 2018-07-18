@@ -5,6 +5,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
@@ -119,6 +120,12 @@ public class Competition implements ProcessActivity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
     private GrantTermsAndConditions termsAndConditions;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "grant_claim_maximum_competition",
+            joinColumns = {@JoinColumn(name = "competition_id", referencedColumnName = "id"),},
+            inverseJoinColumns = {@JoinColumn(name = "grant_claim_maximum_id", referencedColumnName = "id")})
+    private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
 
     private boolean locationPerPartner = true;
 
@@ -683,6 +690,14 @@ public class Competition implements ProcessActivity {
         this.assessorFinanceView = assessorFinanceView;
     }
 
+    public List<GrantClaimMaximum> getGrantClaimMaximums() {
+        return grantClaimMaximums;
+    }
+
+    public void setGrantClaimMaximums(List<GrantClaimMaximum> grantClaimMaximums) {
+        this.grantClaimMaximums = grantClaimMaximums;
+    }
+
     public GrantTermsAndConditions getTermsAndConditions() {
         return termsAndConditions;
     }
@@ -719,7 +734,7 @@ public class Competition implements ProcessActivity {
         return stateAid;
     }
 
-    public void setStateAid(final Boolean stateAid) {
+    public void setStateAid(Boolean stateAid) {
         this.stateAid = stateAid;
     }
 

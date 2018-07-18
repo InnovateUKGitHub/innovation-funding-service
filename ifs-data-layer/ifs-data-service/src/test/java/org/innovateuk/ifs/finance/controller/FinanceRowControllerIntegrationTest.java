@@ -9,9 +9,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
-import org.innovateuk.ifs.finance.domain.OrganisationSize;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
-import org.innovateuk.ifs.finance.repository.OrganisationSizeRepository;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -32,6 +30,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.swapOutForUser;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.*;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.*;
 
@@ -58,17 +57,12 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
     @Autowired
     private ApplicationFinanceRowRepository applicationFinanceRowRepository;
-    @Autowired
-    private OrganisationSizeRepository organisationSizeRepository;
+
     private FinanceRow grandClaimCost;
     private ApplicationFinance applicationFinance;
     private long leadApplicantId;
     private long leadApplicantProcessRole;
     public static final long APPLICATION_ID = 1L;
-
-    private OrganisationSize small;
-    private OrganisationSize medium;
-    private OrganisationSize large;
 
     @Autowired
     private UserMapper userMapper;
@@ -117,9 +111,6 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         proccessRoles.get(0).setUser(user);
         swapOutForUser(userMapper.mapToResource(user));
 
-        small = organisationSizeRepository.findById(1L).get();
-        medium = organisationSizeRepository.findById(2L).get();
-        large = organisationSizeRepository.findById(3L).get();
     }
 
     /* Labour Section Tests */
@@ -580,7 +571,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Test
     public void testValidationGrantClaimUpdateSmallOrganisationSize(){
 
-        assertEquals(small.getId(), applicationFinance.getOrganisationSize().getId());
+        assertEquals(SMALL, applicationFinance.getOrganisationSize());
         grantClaim.setGrantClaimPercentage(55);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
@@ -592,7 +583,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Test
     public void testValidationGrantClaimUpdateSmallOrganisationSizeHigherValue(){
 
-        assertEquals(small.getId(), applicationFinance.getOrganisationSize().getId());
+        assertEquals(SMALL, applicationFinance.getOrganisationSize());
         grantClaim.setGrantClaimPercentage(71);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
@@ -611,8 +602,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Test
     public void testValidationGrantClaimUpdateSmallOrganisationSizeNegativeValue() {
 
-        assertEquals(small.getId(), applicationFinance.getOrganisationSize().getId());
-
+        assertEquals(SMALL, applicationFinance.getOrganisationSize());
         grantClaim.setGrantClaimPercentage(-1);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
@@ -633,10 +623,8 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Test
     public void testValidationGrantClaimUpdateMediumOrganisationSize(){
 
-        applicationFinance.setOrganisationSize(medium);
-
-        assertEquals(medium.getId(), applicationFinance.getOrganisationSize().getId());
-        grantClaim.setGrantClaimPercentage(45);
+        applicationFinance.setOrganisationSize(MEDIUM);
+        assertEquals(MEDIUM, applicationFinance.getOrganisationSize());
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         assertTrue(validationMessages.isSuccess());
@@ -647,9 +635,8 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Test
     public void testValidationGrantClaimUpdateMediumOrganisationSizeHigherValue(){
 
-        applicationFinance.setOrganisationSize(medium);
-
-        assertEquals(medium.getId(), applicationFinance.getOrganisationSize().getId());
+        applicationFinance.setOrganisationSize(MEDIUM);
+        assertEquals(MEDIUM, applicationFinance.getOrganisationSize());
         grantClaim.setGrantClaimPercentage(61);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
@@ -668,9 +655,8 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Test
     public void testValidationGrantClaimUpdateMediumOrganisationSizeNegativeValue() {
 
-        applicationFinance.setOrganisationSize(medium);
-
-        assertEquals(medium.getId(), applicationFinance.getOrganisationSize().getId());
+        applicationFinance.setOrganisationSize(MEDIUM);
+        assertEquals(MEDIUM, applicationFinance.getOrganisationSize());
         grantClaim.setGrantClaimPercentage(-1);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
@@ -691,9 +677,8 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Test
     public void testValidationGrantClaimUpdateLargeOrganisationSize(){
 
-        applicationFinance.setOrganisationSize(large);
-
-        assertEquals(large.getId(), applicationFinance.getOrganisationSize().getId());
+        applicationFinance.setOrganisationSize(LARGE);
+        assertEquals(LARGE, applicationFinance.getOrganisationSize());
         grantClaim.setGrantClaimPercentage(45);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
@@ -705,9 +690,8 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Test
     public void testValidationGrantClaimUpdateLargeOrganisationSizeHigherValue() {
 
-        applicationFinance.setOrganisationSize(large);
-
-        assertEquals(large.getId(), applicationFinance.getOrganisationSize().getId());
+        applicationFinance.setOrganisationSize(LARGE);
+        assertEquals(LARGE, applicationFinance.getOrganisationSize());
         grantClaim.setGrantClaimPercentage(51);
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         ValidationMessages messages = validationMessages.getSuccess();
@@ -725,9 +709,8 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     @Test
     public void testValidationGrantClaimUpdateLargeOrganisationSizeNegativeValue() {
 
-        applicationFinance.setOrganisationSize(large);
-
-        assertEquals(large.getId(), applicationFinance.getOrganisationSize().getId());
+        applicationFinance.setOrganisationSize(LARGE);
+        assertEquals(LARGE, applicationFinance.getOrganisationSize());
         grantClaim.setGrantClaimPercentage(-1);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);

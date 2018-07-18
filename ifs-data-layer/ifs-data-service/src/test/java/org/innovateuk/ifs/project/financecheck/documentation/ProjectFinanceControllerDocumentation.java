@@ -33,6 +33,7 @@ import static org.innovateuk.ifs.finance.builder.OtherCostBuilder.newOtherCost;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -274,7 +275,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                 withProject(project.getId()).
                 withOrganisation(academicOrganisation.getId(), industrialOrganisation.getId()).
                 withFinanceOrganisationDetails(academicOrganisationFinances, industrialOrganisationFinances).
-                withOrganisationSize(1L).
+                withOrganisationSize(SMALL).
                 build(2);
 
         when(financeCheckServiceMock.getProjectFinances(projectId)).thenReturn(serviceSuccess(expectedFinances));

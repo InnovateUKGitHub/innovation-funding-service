@@ -63,9 +63,6 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     @Autowired
     private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandler;
 
-    @Autowired
-    private OrganisationSizeRepository organisationSizeRepository;
-
     @Override
     public ServiceResult<List<? extends FinanceRow>> getCosts(Long projectFinanceId, String costTypeName, Long questionId) {
         throw new NotImplementedException("This method enforced by interface is not required for Project finance");
@@ -163,9 +160,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     public ServiceResult<ProjectFinanceResource> updateCost(Long projectFinanceId, ProjectFinanceResource projectFinance) {
         return getProject(projectFinance.getProject()).andOnSuccess(project ->
                 find(projectFinance(projectFinanceId)).andOnSuccess(dbFinance -> {
-                    if (projectFinance.getOrganisationSize() != null) {
-                        dbFinance.setOrganisationSize(organisationSizeRepository.findById(projectFinance.getOrganisationSize()).orElse(null));
-                    }
+                    dbFinance.setOrganisationSize(projectFinance.getOrganisationSize());
                     dbFinance = projectFinanceRepository.save(dbFinance);
                     return serviceSuccess(projectFinanceMapper.mapToResource(dbFinance));
                 })

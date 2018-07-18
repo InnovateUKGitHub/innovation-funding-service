@@ -210,6 +210,7 @@ ShibCompatValidUser On
   ProxyPass /Logout !
 
   ProxyPass  /assessment/ http://assessment-svc:8080/assessment/ timeout=30 connectiontimeout=30 retry=2
+  ProxyPass  /survey/ http://survey-svc:8080/survey/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /management/ http://competition-mgt-svc:8080/management/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /project-setup-management/ http://project-setup-mgt-svc:8080/project-setup-management/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /project-setup/ http://project-setup-svc:8080/project-setup/ timeout=30 connectiontimeout=30 retry=2
