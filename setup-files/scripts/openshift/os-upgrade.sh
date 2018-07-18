@@ -26,10 +26,15 @@ function upgradeServices {
 
     # data-service
     oc apply -f $(getBuildLocation)/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    # survey-data-service
+    oc apply -f $(getBuildLocation)/survey-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+
     rolloutStatus "data-service"
+    rolloutStatus "survey-data-service"
 
     # services
     oc apply -f $(getBuildLocation)/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/survey-service.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
@@ -65,7 +70,11 @@ function forceReload {
     oc rollout latest dc/data-service ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus data-service
 
+    oc rollout latest dc/survey-data-service ${SVC_ACCOUNT_CLAUSE}
+    rolloutStatus survey-data-service
+
     oc rollout latest dc/application-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/survey-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/front-door-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE}
@@ -90,6 +99,7 @@ function forceReload {
 
 function watchStatus {
     rolloutStatus application-svc
+    rolloutStatus survey-svc
     rolloutStatus front-door-svc
     rolloutStatus assessment-svc
     rolloutStatus competition-mgt-svc
@@ -148,4 +158,5 @@ then
     # We only scale up data-serviced once started up and performed the Flyway migrations on one thread
     scaleDataService
     scaleFinanceDataService
+    scaleSurveyDataService
 fi

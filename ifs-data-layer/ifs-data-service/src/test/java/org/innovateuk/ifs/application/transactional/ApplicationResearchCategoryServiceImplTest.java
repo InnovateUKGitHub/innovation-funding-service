@@ -70,7 +70,7 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
         Application expectedApplication = newApplication().withId(applicationId).withResearchCategory(researchCategory).build();
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
-        when(researchCategoryRepositoryMock.findById(researchCategoryId)).thenReturn(researchCategory);
+        when(researchCategoryRepositoryMock.findOne(researchCategoryId)).thenReturn(researchCategory);
 
         ServiceResult<ApplicationResource> result = service.setResearchCategory(applicationId, researchCategoryId);
 
@@ -96,7 +96,7 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
         Application expectedApplication = newApplication().withId(applicationId).withResearchCategory(researchCategory).build();
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
-        when(researchCategoryRepositoryMock.findById(researchCategoryId)).thenReturn(researchCategory);
+        when(researchCategoryRepositoryMock.findOne(researchCategoryId)).thenReturn(researchCategory);
         when(questionServiceMock.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(financeQuestion));
         when(usersRolesServiceMock.getAssignableProcessRolesByApplicationId(applicationId)).thenReturn(ServiceResult.serviceSuccess(Collections.EMPTY_LIST));
         when(financeServiceMock.financeDetails(applicationId)).thenReturn(ServiceResult.serviceSuccess(Collections.EMPTY_LIST));

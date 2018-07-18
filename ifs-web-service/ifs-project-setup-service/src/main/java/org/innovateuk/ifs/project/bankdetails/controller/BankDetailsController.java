@@ -90,6 +90,8 @@ public class BankDetailsController extends AddressLookupBaseController {
                                     @P("projectId")@PathVariable("projectId") final Long projectId,
                                     UserResource loggedInUser) {
 
+        form.getAddressForm().setTriedToSave(true);
+
         final Supplier<String> failureView = () -> bankDetails(model, projectId, loggedInUser, form);
 
         return validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains("addressForm"), failureView,
