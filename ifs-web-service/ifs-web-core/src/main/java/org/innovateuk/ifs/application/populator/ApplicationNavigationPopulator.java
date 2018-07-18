@@ -23,6 +23,9 @@ public class ApplicationNavigationPopulator {
     private static final String SECTION_URL = "/section/";
     private static final String QUESTION_URL = "/question/";
     private static final String APPLICATION_BASE_URL = "/application/";
+    private static final String FORM_URL = "/form";
+    private static final String BACK_TITLE = "backTitle";
+    private static final String BACK_URL = "backURL";
 
     @Autowired
     private QuestionService questionService;
@@ -80,10 +83,10 @@ public class ApplicationNavigationPopulator {
             } else {
 
                 if (previousSection.isQuestionGroup()) {
-                    previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + previousSection.getId();
+                    previousUrl = APPLICATION_BASE_URL + applicationId + FORM_URL + SECTION_URL + previousSection.getId();
                     previousText = previousSection.getName();
                 } else {
-                    previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + previousQuestion.getId();
+                    previousUrl = APPLICATION_BASE_URL + applicationId + FORM_URL + QUESTION_URL + previousQuestion.getId();
                     previousText = previousQuestion.getShortName();
                 }
 
@@ -109,10 +112,10 @@ public class ApplicationNavigationPopulator {
             } else {
 
                 if (nextSection.isQuestionGroup()) {
-                    nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + nextSection.getId();
+                    nextUrl = APPLICATION_BASE_URL + applicationId + FORM_URL + SECTION_URL + nextSection.getId();
                     nextText = nextSection.getName();
                 } else {
-                    nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + nextQuestion.getId();
+                    nextUrl = APPLICATION_BASE_URL + applicationId + FORM_URL + QUESTION_URL + nextQuestion.getId();
                     nextText = nextQuestion.getShortName();
                 }
 
@@ -129,29 +132,29 @@ public class ApplicationNavigationPopulator {
      */
     public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section, Optional<Long> applicantOrganisationId) {
         if (section != null && SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
-            model.addAttribute("backTitle", "Your finances");
+            model.addAttribute(BACK_TITLE, "Your finances");
             if (applicantOrganisationId.isPresent()) {
-                model.addAttribute("backURL", "/application/" + applicationId + "/form/section/" + section.getParentSection() + "/" + applicantOrganisationId.get());
+                model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/section/" + section.getParentSection() + "/" + applicantOrganisationId.get());
             } else {
-                model.addAttribute("backURL", "/application/" + applicationId + "/form/" + SectionType.FINANCE.name());
+                model.addAttribute(BACK_URL, APPLICATION_BASE_URL + applicationId + "/form/" + SectionType.FINANCE.name());
             }
         } else {
             ApplicationResource application = applicationService.getById(applicationId);
-            String backURL = "/application/" + applicationId;
+            String backURL = APPLICATION_BASE_URL + applicationId;
 
             if (applicantOrganisationId.isPresent() && section != null) {
-                model.addAttribute("backTitle", "Application overview");
+                model.addAttribute(BACK_TITLE, "Application overview");
                 backURL = ("/management/competition/" + section.getCompetition() + backURL);
             } else {
                 if (eitherApplicationOrCompetitionAreNotOpen(application)) {
-                    model.addAttribute("backTitle", "Application summary");
+                    model.addAttribute(BACK_TITLE, "Application summary");
                     backURL += "/summary";
                 } else {
-                    model.addAttribute("backTitle", "Application overview");
+                    model.addAttribute(BACK_TITLE, "Application overview");
                 }
             }
 
-            model.addAttribute("backURL", backURL);
+            model.addAttribute(BACK_URL, backURL);
         }
     }
 
