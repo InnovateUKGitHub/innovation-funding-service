@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/new-account-organisation-type")
+@RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/contributor-organisation-type")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationContributorTypeController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationContributorTypeController extends AbstractOrganisationCreationController {
@@ -71,7 +71,7 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
         registrationCookieService.deleteOrganisationCreationCookie(response);
         if (bindingResult.hasErrors()) {
             LOG.debug("redirect because validation errors");
-            return "redirect:/organisation/create/new-account-organisation-type?invalid";
+            return "redirect:/organisation/create/contributor-organisation-type?invalid";
         } else {
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             LOG.debug("redirect for organisation creation");

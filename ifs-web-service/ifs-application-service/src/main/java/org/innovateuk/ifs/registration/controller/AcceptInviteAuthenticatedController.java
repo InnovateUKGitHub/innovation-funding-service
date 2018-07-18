@@ -111,7 +111,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         return validateView;
                     }
 
-                    return "redirect:/organisation/create/new-account-organisation-type";
+                    return "redirect:/organisation/select";
                 }
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
         return view.getSuccess();

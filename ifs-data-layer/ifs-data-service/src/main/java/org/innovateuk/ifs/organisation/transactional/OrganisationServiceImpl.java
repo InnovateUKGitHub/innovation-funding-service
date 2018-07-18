@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_COMPANY_NAME_TOO_LONG;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -72,7 +73,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationResource> getPrimaryForUser(final Long userId) {
-        List<Organisation> organisations = organisationRepository.findByUsersId(userId);
+        List<Organisation> organisations = organisationRepository.findDistinctByUsersId(userId);
         if (organisations.isEmpty()) {
             return serviceFailure(CommonErrors.notFoundError(Organisation.class));
         }
@@ -93,6 +94,13 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         return find(org, notFoundError(Organisation.class, userId, projectId)).andOnSuccessReturn(o ->
                 organisationMapper.mapToResource(o)
         );
+    }
+
+    @Override
+    public ServiceResult<List<OrganisationResource>> getAllUsersOrganisations(Long userId) {
+        return serviceSuccess(organisationRepository.findDistinctByUsersId(userId).stream()
+                .map(organisationMapper::mapToResource)
+                .collect(toList()));
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -50,6 +51,11 @@ public class OrganisationController {
     public RestResult<OrganisationResource> getByUserAndProjectId(@PathVariable("userId") final Long userId,
                                                                       @PathVariable("projectId") final Long projectId) {
         return organisationService.getByUserAndProjectId(userId, projectId).toGetResponse();
+    }
+
+    @GetMapping("/all-by-user-id/{userId}")
+    public RestResult<List<OrganisationResource>> getAllUsersOrganisations(@PathVariable("userId") final Long userId) {
+        return organisationService.getAllUsersOrganisations(userId).toGetResponse();
     }
 
     @PostMapping("/createOrMatch")

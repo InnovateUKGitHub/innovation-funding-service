@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Start new application',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+</head>
+<body class="create-application-eligibility">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Select organisation',subTitle='Start new application',size='heading-xlarge'" />
+
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+    </div>
+
+    <p>These are the organisations you have previously applied with</p>
+
+    <p th:if="${model.newApplication}">Please select one to lead this application.</p>
+    <p th:unless="${model.newApplication}">Please select one to collaborate on this application.</p>
+
+    <div class="message-alert">
+        <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+    </div>
+
+    <h2 class="heading-medium">Your organisation</h2>
+    <form th:object="${form}" th:action="@{/organisation/select}" method="POST">
+        <div class="form-group">
+            <div class="multiple-choice" th:each="choice : ${model.choices}">
+                <input th:field="*{selectedOrganisationId}" th:value="${choice.id}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />
+                <label th:for="${#ids.prev('selectedOrganisationId')}">
+                    <p>
+                        <strong th:text="${choice.name}"></strong><br/>
+                        <th:block th:text="${choice.type}"/><br/>
+                        <span class="form-hint" th:if="${model.newApplication}" th:text="${choice.eligibleToLead ? 'Eligible to lead' : ''}">Lead</span>
+                    </p>
+                </label>
+            </div>
+        </div>
+        <p>If you wish to apply with one not listed, you can <a th:href="${model.newOrganisationUrl}">add a new organisation</a>.</p>
+
+        <button type="submit" class="button extra-margin">Save and continue</button>
+    </form>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

@@ -138,7 +138,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testSaveFinanceContactInviteSuccess() throws Exception {
         Organisation organisation = newOrganisation().build();
-        when(organisationRepositoryMock.findByUsers(any(User.class))).thenReturn(singletonList(organisation));
+        when(organisationRepositoryMock.findDistinctByUsers(any(User.class))).thenReturn(singletonList(organisation));
 
         Project project = newProject().withName("project name").build();
         User user = newUser().

@@ -66,7 +66,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
     @Test
     public void testChooseOrganisationType() throws Exception {
         mockMvc.perform(
-                get("/organisation/create/new-account-organisation-type")
+                get("/organisation/create/contributor-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
         )
                 .andExpect(status().is2xxSuccessful())
@@ -80,7 +80,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
     @Test
     public void chooseOrganisationTypePostBusiness() throws Exception {
         MvcResult result = mockMvc.perform(
-                post("/organisation/create/new-account-organisation-type")
+                post("/organisation/create/contributor-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
                         .param("organisationType", "1")
 
@@ -99,7 +99,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
     @Test
     public void chooseOrganisationTypePostResearch() throws Exception {
         MvcResult result = mockMvc.perform(
-                post("/organisation/create/new-account-organisation-type")
+                post("/organisation/create/contributor-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
                         .param("organisationType", "2")
 

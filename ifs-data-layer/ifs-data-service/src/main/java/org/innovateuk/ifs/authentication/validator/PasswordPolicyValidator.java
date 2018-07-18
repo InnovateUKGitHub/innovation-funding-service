@@ -133,7 +133,7 @@ public class PasswordPolicyValidator {
     }
 
     private List<String> getOrganisationNamesForUser(UserResource user) {
-        return organisationRepository.findByUsersId(user.getId()).stream()
+        return organisationRepository.findDistinctByUsersId(user.getId()).stream()
                 .filter(organisation -> organisation.getName() != null)
                 .map(Organisation::getName).collect(Collectors.toList());
     }

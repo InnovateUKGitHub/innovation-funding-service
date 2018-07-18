@@ -80,7 +80,7 @@ public class ApplicationCreationAuthenticatedController {
     private String redirectToOrganisationCreation(long competitionId, HttpServletResponse response) {
         registrationCookieService.deleteAllRegistrationJourneyCookies(response);
         registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
-        return "redirect:/organisation/create/initialize";
+        return "redirect:/organisation/select";
     }
 
 }

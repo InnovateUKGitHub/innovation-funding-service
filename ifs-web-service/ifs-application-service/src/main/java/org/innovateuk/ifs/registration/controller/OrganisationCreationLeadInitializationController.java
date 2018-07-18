@@ -15,9 +15,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/initialize")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationInitializationController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationLeadInitializationController.class)
 @PreAuthorize("permitAll")
-public class OrganisationCreationInitializationController extends AbstractOrganisationCreationController {
+public class OrganisationCreationLeadInitializationController extends AbstractOrganisationCreationController {
     @GetMapping
     public String initializeLeadRegistrationJourney(HttpServletRequest request, HttpServletResponse response) {
         //This is the first endpoint when creating a new account as lead applicant.

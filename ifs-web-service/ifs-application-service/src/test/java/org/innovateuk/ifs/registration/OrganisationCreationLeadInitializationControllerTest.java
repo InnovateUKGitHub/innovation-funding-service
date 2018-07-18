@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.registration;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.registration.controller.OrganisationCreationInitializationController;
+import org.innovateuk.ifs.registration.controller.OrganisationCreationLeadInitializationController;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
@@ -18,9 +18,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class OrganisationCreationInitializationControllerTest extends BaseControllerMockMVCTest<OrganisationCreationInitializationController> {
-    protected OrganisationCreationInitializationController supplyControllerUnderTest() {
-        return new OrganisationCreationInitializationController();
+public class OrganisationCreationLeadInitializationControllerTest extends BaseControllerMockMVCTest<OrganisationCreationLeadInitializationController> {
+    protected OrganisationCreationLeadInitializationController supplyControllerUnderTest() {
+        return new OrganisationCreationLeadInitializationController();
     }
 
     @Mock
