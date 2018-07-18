@@ -30,7 +30,7 @@
                             </legend>
                             <span class="govuk-hint">Please select the address where the majority of work will be carried out.</span>
                             <th:block th:if="${#fields.hasErrors('*{addressType}')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
                             </th:block>
                             <div class="govuk-radios">
                                 <th:block th:if="${model.registeredAddress}">

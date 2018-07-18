@@ -37,7 +37,7 @@
                 </label>
                 <span class="govuk-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>
                 <th:block th:if="${#fields.hasErrors('postcode')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('postcode')}" th:text="${err}" />
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('postcode')}" th:text="${err}" />
                 </th:block>
                 <input name="postcode"
                        id="postcode"

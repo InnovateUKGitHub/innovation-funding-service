@@ -33,7 +33,7 @@
                                 <h2 class="govuk-fieldset__heading">Please choose the role you are signing in as today</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('selectedRole')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('selectedRole')}" th:text="${err}"/>
                             </th:block>
                             <div class="govuk-radios govuk-radios--inline">
                                 <div class="govuk-radios__item" th:each="role : ${model.ACCEPTED_ROLES}">

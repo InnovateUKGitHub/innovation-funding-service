@@ -22,7 +22,7 @@
                     Competition title
                 </label>
                 <th:block th:if="${#fields.hasErrors('title')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
                 </th:block>
                 <input id="title"
                        class="govuk-input width-x-large"
@@ -39,7 +39,7 @@
                     Competition type
                 </label>
                 <th:block th:if="${#fields.hasErrors('competitionTypeId')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}"></span>
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('competitionTypeId')}" th:text="${err}"></span>
                 </th:block>
                 <select class="govuk-select width-x-large"
                         th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit) or model.general.competition.setupAndLive}"
@@ -64,7 +64,7 @@
                     Innovation sector
                 </label>
                 <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
                 </th:block>
                 <select th:disabled="${model.general.state.setupAndLive}"
                         th:readonly="${model.general.state.setupAndLive}"
@@ -91,7 +91,7 @@
                         Innovation area
                     </label>
                     <th:block th:if="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
                     </th:block>
                     <select th:disabled="${model.general.state.setupAndLive}"
                             class="govuk-select width-x-large"
@@ -114,7 +114,7 @@
                         Innovation area
                     </label>
                     <th:block th:if="${#fields.hasErrors('innovationAreaCategoryIds')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryIds')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryIds')}" th:text="${err}"></span>
                     </th:block>
                     <select th:disabled="${model.general.state.setupAndLive}"
                             class="govuk-select width-x-large"
@@ -140,7 +140,7 @@
                       <h2 class="govuk-fieldset__heading">Opening date</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('openingDate*')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}"></span>
                     </th:block>
                     <p class="govuk-hint">You are able to edit this date if needed in the milestones section.</p>
                     <div class="date-group" data-future-date="">
@@ -206,7 +206,7 @@
                     Competition Innovation Lead
                 </label>
                 <th:block th:if="${#fields.hasErrors('innovationLeadUserId')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('innovationLeadUserId')}" th:text="${err}"></span>
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationLeadUserId')}" th:text="${err}"></span>
                 </th:block>
                 <select class="govuk-select width-x-large"
                         name="innovationLeadUserId"
@@ -223,7 +223,7 @@
                     Portfolio Manager
                 </label>
                 <th:block th:if="${#fields.hasErrors('executiveUserId')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}"></span>
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}"></span>
                 </th:block>
                 <select class="govuk-select width-x-large"
                         name="executiveUserId"
@@ -241,7 +241,7 @@
                         <h2 class="govuk-fieldset__heading">State aid</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('stateAid')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('stateAid')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('stateAid')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios govuk-radios--inline">
                         <div class="govuk-radios__item" th:each="value : ${ {true, false} }">

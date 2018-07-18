@@ -275,7 +275,7 @@ Funding level server side
     Then the user should see an error    This field should be 60% or lower.
     Then the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]  59
     And the user moves focus to the element      css=[data-target="other-funding-table"] label
-    And the user should not see the element      css=.error-message
+    And the user should not see the element      css=.govuk-error-message
 
 *** Keywords ***
 Custom Suite Setup

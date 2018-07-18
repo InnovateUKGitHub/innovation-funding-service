@@ -27,7 +27,7 @@
                         <h2 class="govuk-fieldset__heading">Choose your organisation type</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('*{organisationType}')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('organisationType')}" th:text="${err}"></span>
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationType')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" th:each="type : ${model.types}">

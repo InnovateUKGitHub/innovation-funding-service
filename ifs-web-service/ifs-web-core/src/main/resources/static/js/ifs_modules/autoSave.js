@@ -231,7 +231,7 @@ IFS.core.autoSave = (function () {
                 return true
               } else {
                 var errorMessage = IFS.core.autoSave.getErrorMessage(data)
-                autoSaveInfo.html('<span class="error-message">' + errorMessage + '</span>')
+                autoSaveInfo.html('<span class="govuk-error-message">' + errorMessage + '</span>')
               }
             }
           }).always(function () {

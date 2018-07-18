@@ -45,7 +45,7 @@
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'govuk-form-group--error'">
                         <label class="govuk-label" th:for="skillAreas">Skill areas</label>
                         <th:block th:if="${#fields.hasErrors('skillAreas')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}"></span>
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}"></span>
                         </th:block>
                         <p class="govuk-hint">
                             Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.<br />
@@ -75,7 +75,7 @@
                             </legend>
                             <span class="govuk-hint">Please select your current area of work. If you are working in both areas please select the most dominant.</span>
                             <th:block th:if="${#fields.hasErrors('assessorType')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
                             </th:block>
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item" th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">

@@ -30,7 +30,7 @@
                   Competition title
               </label>
               <th:block th:if="${#fields.hasErrors('title')}">
-                  <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
+                  <span class="govuk-error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
               </th:block>
               <input id="title"
                      class="govuk-input width-xlarge"
@@ -45,7 +45,7 @@
                   Innovation sector
               </label>
               <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
-                  <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
+                  <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
               </th:block>
               <select class="govuk-select width-x-large"
                       id="innovationSectorCategoryId"
@@ -62,7 +62,7 @@
                   Innovation area
               </label>
               <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">
-                  <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
+                  <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
               </th:block>
               <select class="govuk-select width-x-large"
                       th:field="${form.innovationAreaCategoryId}"
@@ -304,7 +304,7 @@
                 </label>
                 <span class="govuk-hint">This is the non-IFS page that the public will go to when they 'apply'</span>
                 <th:block th:if="${#fields.hasErrors('url')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('url')}" th:text="${err}"></span>
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('url')}" th:text="${err}"></span>
                 </th:block>
                 <input id="url"
                        class="govuk-input width-x-large"

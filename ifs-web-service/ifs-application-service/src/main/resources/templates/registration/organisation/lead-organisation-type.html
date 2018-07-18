@@ -48,7 +48,7 @@
                         <span class="govuk-fieldset__heading">Please select your organisation type</span>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('*{organisationTypeId}')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" th:attr="data-target=${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}" th:each="type : ${model.types}">

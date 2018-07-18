@@ -244,7 +244,7 @@ tr {
       border:none;
       background-position: 4px 50%;
 
-      .error-message {
+      .govuk-error-message {
         @include govuk-visually-hidden
       }
 

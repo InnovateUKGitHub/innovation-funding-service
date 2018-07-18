@@ -30,7 +30,7 @@
                 </legend>
                 <span class="govuk-hint">This is the address your organisation works from</span>
                 <th:block th:if="${#fields.hasErrors('*{useSearchResultAddress}')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('*{useSearchResultAddress}')}" th:text="${err}"></span>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('*{useSearchResultAddress}')}" th:text="${err}"></span>
                 </th:block>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'govuk-form-group--error'">
                     <div class="govuk-checkboxes">

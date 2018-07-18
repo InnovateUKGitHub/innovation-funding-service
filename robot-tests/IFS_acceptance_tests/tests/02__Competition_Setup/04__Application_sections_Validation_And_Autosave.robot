@@ -111,7 +111,7 @@ the validation error above the question should be visible
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
     focus    css=button[type="submit"]
-    Wait Until Element Is Not Visible Without Screenshots    css=error-message
+    Wait Until Element Is Not Visible Without Screenshots    css=.govuk-error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
 the user moves focus and waits for autosave

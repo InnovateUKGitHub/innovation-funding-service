@@ -70,7 +70,7 @@
                                  th:class="${isError ? 'govuk-form-group--error' : ''}">
                                 <th:block th:if="${isError}">
                                     <th:block th:if="${isError}">
-                                        <span class="error-message" th:each="err : ${#fields.errors(fieldName)}" th:text="${err}" />
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors(fieldName)}" th:text="${err}" />
                                     </th:block>
                                     <p class="uploaded-file">No file currently uploaded</p>
                                 </th:block>
@@ -113,7 +113,7 @@
                     Email subject
                 </label>
                 <th:block th:if="${#fields.hasErrors('subject')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
                 </th:block>
                 <input class="govuk-input width-full"
                        id="subject"

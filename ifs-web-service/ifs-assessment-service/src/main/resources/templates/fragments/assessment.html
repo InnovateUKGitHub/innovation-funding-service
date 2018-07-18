@@ -136,7 +136,7 @@
                 Please select a reason for rejecting the application
             </label>
             <th:block th:if="${#fields.hasErrors('rejectReason')}">
-                <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}"></span>
+                <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}"></span>
             </th:block>
             <select class="govuk-select"
                     th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
@@ -154,7 +154,7 @@
                 Use this space to provide more information
             </label>
             <th:block th:if="${#fields.hasErrors('rejectComment')}">
-                <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}"></span>
+                <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}"></span>
             </th:block>
             <textarea
                 class="govuk-textarea width-full"

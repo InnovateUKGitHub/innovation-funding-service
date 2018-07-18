@@ -144,7 +144,7 @@
                 <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
             </legend>
             <th:block th:if="${#fields.hasErrors('termsAgreed')}">
-                <span class="error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
+                <span class="govuk-error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
             </th:block>
             <div class="govuk-checkboxes">
                 <div class="govuk-checkboxes__item">
@@ -170,7 +170,7 @@
 <th:block th:fragment="application-agree-to-state-aid">
     <div  th:class="${#fields.hasErrors('stateAidAgreed')}? 'form-block govuk-form-group--error':'form-block'">
         <th:block th:if="${#fields.hasErrors('stateAidAgreed')}">
-            <span class="error-message"  th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}" />
+            <span class="govuk-error-message"  th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}" />
         </th:block>
         <div class="govuk-checkboxes">
             <div class="govuk-checkboxes__item">

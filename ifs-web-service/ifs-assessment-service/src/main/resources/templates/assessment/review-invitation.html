@@ -55,7 +55,7 @@
                         <h2 class="govuk-fieldset__heading">Choose your option</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('reviewAccept')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('reviewAccept')}" th:text="${err}" />
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('reviewAccept')}" th:text="${err}" />
                     </th:block>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" data-target="accept-application">
@@ -90,7 +90,7 @@
                                 Use this space to tell us why.
                             </label>
                             <th:block th:if="${#fields.hasErrors('rejectComment')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
                             </th:block>
                             <textarea class="govuk-textarea width-full"
                                       maxlength="5000"

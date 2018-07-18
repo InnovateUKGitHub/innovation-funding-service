@@ -27,7 +27,7 @@
                             </legend>
                             <span class="govuk-hint">Who will be the Project Manager for your project?</span>
                             <th:block th:if="${#fields.hasErrors('*')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}"></span>
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}"></span>
                             </th:block>
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item" th:each="user : ${model.organisationUsers}" >

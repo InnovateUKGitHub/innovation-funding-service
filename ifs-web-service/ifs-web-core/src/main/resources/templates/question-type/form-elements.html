@@ -18,13 +18,13 @@
 <!-- =========================== Form validation messages =========================== -->
 <th:block th:fragment="form-validation-messages (id)">
     <th:block th:if="${(form != null) and #fields.hasErrors('${form.formInput[__${id}__]}')}">
-        <span class="error-message" th:each="err : ${#fields.errors('${form.formInput[__${id}__]}')}" th:text="${err}" />
+        <span class="govuk-error-message" th:each="err : ${#fields.errors('${form.formInput[__${id}__]}')}" th:text="${err}" />
     </th:block>
 </th:block>
 
 <th:block th:fragment="form-validation-custom-messages (errorId)">
     <th:block th:if="${(form != null) and #fields.hasErrors('{__${errorId}__}')}">
-        <p class="error-message govuk-!-margin-0" th:each="err : ${#fields.errors('{__${errorId}__}')}" th:text="${err}" />
+        <span class="govuk-error-message" th:each="err : ${#fields.errors('{__${errorId}__}')}" th:text="${err}" />
     </th:block>
 </th:block>
 <!-- ===========================Form hint =========================== -->

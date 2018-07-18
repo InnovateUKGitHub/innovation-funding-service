@@ -117,7 +117,7 @@
                                         <th scope="row">
                                             <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                             <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
-                                                  class="error-message">Your total costs are higher than your eligible costs</span>
+                                                  class="govuk-error-message">Your total costs are higher than your eligible costs</span>
                                         </th>
                                         <td th:each="cost : ${row.value}"
                                             th:text="${#numbers.formatInteger(cost,1,'DEFAULT')}"></td>
@@ -138,9 +138,9 @@
                                             <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                             <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
                                                   th:attr="data-errorfield=|row-total-${row.key}|"
-                                                  class="error-message">Your <th:block th:text="${#strings.toLowerCase(model.table.costCategoryResourceMap.get(row.key).getName())}" /> costs are higher than your eligible costs.</span>
+                                                  class="govuk-error-message">Your <th:block th:text="${#strings.toLowerCase(model.table.costCategoryResourceMap.get(row.key).getName())}" /> costs are higher than your eligible costs.</span>
                                             <th:block th:if="${#fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*')}">
-                                                <span class="error-message"
+                                                <span class="govuk-error-message"
                                                       th:each="error : ${#fields.detailedErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*')}"
                                                       th:attr="data-errorfield=${error.fieldName}"
                                                       th:text="${error.message}"></span>
@@ -191,7 +191,7 @@
                                                 <th scope="row">
                                                     <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                                     <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
-                                                          class="error-message">Your total costs are higher than your eligible costs</span>
+                                                          class="govuk-error-message">Your total costs are higher than your eligible costs</span>
                                                 </th>
                                                 <td th:each="cost : ${row.value}"
                                                     th:text="${#numbers.formatInteger(cost,1,'DEFAULT')}"></td>
@@ -212,7 +212,7 @@
                                                     th:id="|row-${row.key}|">
                                                     <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                                     <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
-                                                          class="error-message">Your total costs are higher than your eligible costs</span>
+                                                          class="govuk-error-message">Your total costs are higher than your eligible costs</span>
                                                 </th>
                                                 <td th:each="cost, status : ${row.value}">
                                                     <input class="govuk-input"

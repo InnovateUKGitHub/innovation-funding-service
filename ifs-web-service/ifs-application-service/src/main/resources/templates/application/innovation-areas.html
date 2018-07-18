@@ -23,7 +23,7 @@
                                 </span>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('innovationAreaChoice')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaChoice')}" th:text="${err}" />
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationAreaChoice')}" th:text="${err}" />
                             </th:block>
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item" th:each="innovationArea : ${model.availableInnovationAreas}">

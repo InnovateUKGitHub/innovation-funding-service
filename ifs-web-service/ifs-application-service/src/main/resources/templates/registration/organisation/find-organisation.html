@@ -43,7 +43,7 @@
                 </label>
                 <span class="govuk-hint" th:text="${searchHint}">Enter your organisation name</span>
                 <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
                 </th:block>
                 <input class="govuk-input"
                        th:field="*{organisationSearchName}"

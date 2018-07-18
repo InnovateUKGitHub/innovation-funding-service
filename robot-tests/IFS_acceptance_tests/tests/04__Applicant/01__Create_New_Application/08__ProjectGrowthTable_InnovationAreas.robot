@@ -162,7 +162,7 @@ Organisation client side validation when no
     When the user enters text to a text field           jQuery=label:contains("Turnover") + input  150
     And the user enters text to a text field            jQuery=label:contains("employees") + input  0
     And the user moves focus to the element             jQuery=button:contains("Mark as complete")
-    Then the user should not see the element            css=.error-message
+    Then the user should not see the element            css=.govuk-error-message
 
 Mark Organisation as complete when no
     [Documentation]    INFUND-6393
@@ -199,9 +199,9 @@ Organisation server side validation when yes
     Given the user clicks the button/link  link=Your organisation
     When the user clicks the button/link   jQuery=button:contains("Mark as complete")
     And the user should see the element    jQuery=.govuk-error-summary__list li:contains("This field cannot be left blank.")
-    And the user should see the element    jQuery=.error-message:contains("This field cannot be left blank.")
+    And the user should see the element    jQuery=.govuk-error-message:contains("This field cannot be left blank.")
     And the user should see the element    jQuery=.govuk-error-summary__list li:contains("Please enter a valid date.")
-    And the user should see the element    jQuery=.error-message:contains("Please enter a valid date.")
+    And the user should see the element    jQuery=.govuk-error-message:contains("Please enter a valid date.")
     And The user should see a field error  This field cannot be left blank.
     And The user should see a field error  Please enter a valid date.
     #And The user should see a field error    Enter your organisation size
@@ -228,7 +228,7 @@ Organisation client side validation when yes
     When the user enters text to a text field                 jQuery=label:contains("employees") + input    22.4
     Then the user should see a field and summary error        This field can only accept whole numbers.
     When the user enters text to a text field                 jQuery=label:contains("employees") + input    1
-    Then the user should not see the element                  jQuery=span:contains("employees") + .error-message
+    Then the user should not see the element                  jQuery=span:contains("employees") + .govuk-error-message
 
 Mark Organisation as complete when yes
     [Documentation]    INFUND-6393

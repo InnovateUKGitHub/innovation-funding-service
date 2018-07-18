@@ -776,10 +776,10 @@ IFS.core.formValidation = (function () {
       if (formGroup.length) {
         if (s.html5validationMode) { field[0].setCustomValidity(message) }
         if (visuallyhidden === false) { formGroup.addClass('govuk-form-group--error') }
-        var errorEl = formGroup.find('.error-message:contains("' + message + '")')
+        var errorEl = formGroup.find('.govuk-error-message:contains("' + message + '")')
         if (errorEl.length === 0) {
           if (visuallyhidden === false) { field.addClass('govuk-input--error') }
-          formGroup.find('legend,label').first().after('<span class="error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
+          formGroup.find('legend,label').first().after('<span class="govuk-error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
         }
       }
 
@@ -794,7 +794,7 @@ IFS.core.formValidation = (function () {
         var linkedErrorEl = formGroupRow.find('[data-errorfield="' + name + '"]:contains("' + message + '")')
         if (linkedErrorEl.length === 0) {
           if (visuallyhidden === false) { field.addClass('govuk-input--error') }
-          formGroupRow.find('legend,label,[scope="row"]').first().after('<span data-errorfield="' + name + '" class="error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
+          formGroupRow.find('legend,label,[scope="row"]').first().after('<span data-errorfield="' + name + '" class="govuk-error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
         }
       }
 
@@ -830,13 +830,13 @@ IFS.core.formValidation = (function () {
       //      <label class="govuk-label" for="field1">
       //          FieldLabel
       //      </label>
-      //      <span class="error-message">This field cannot be empty</span>
+      //      <span class="govuk-error-message">This field cannot be empty</span>
       //      <input class="govuk-input govuk-input--error" name="field1" id="field1" required />
       // </div>
       if (formGroup.length) {
-        formGroup.find('.error-message:contains("' + message + '")').remove()
+        formGroup.find('.govuk-error-message:contains("' + message + '")').remove()
         // if this was the last error we remove the error styling
-        if (formGroup.find('.error-message').length === 0) {
+        if (formGroup.find('.govuk-error-message').length === 0) {
           formGroup.removeClass('govuk-form-group--error')
           field.removeClass('govuk-input--error')
           // set corresponding radios/checkboxes valid
@@ -855,8 +855,8 @@ IFS.core.formValidation = (function () {
       // <tr class="form-group-row govuk-form-group--error">
       //     <th scope="row" id="rowlabel">
       //          <span>The label of this row</span>
-      //          <span class="error-message" data-errorfield="field1">This field cannot be empty</span>
-      //          <span class="error-message" data-errorfield="field2">This field cannot be empty</span>
+      //          <span class="govuk-error-message" data-errorfield="field1">This field cannot be empty</span>
+      //          <span class="govuk-error-message" data-errorfield="field2">This field cannot be empty</span>
       //    </th>
       //     <td><input aria-labelledby="rowlabel" type="text" name="field1" class="govuk-input govuk-input--error" required /></td>
       //     <td><input aria-labelledby="rowlabel" type="text" name="field2" class="govuk-input govuk-input--error" required /></td>
@@ -895,7 +895,7 @@ IFS.core.formValidation = (function () {
       var inputs = section.find('.govuk-input--error')
 
       //  remove error messages from section + error summary
-      section.find('.error-message').each(function () {
+      section.find('.govuk-error-message').each(function () {
         var errorMessage = jQuery(this)
         var content = errorMessage.text()
         jQuery('.govuk-error-summary__list li:contains(' + content + ')').first().remove()

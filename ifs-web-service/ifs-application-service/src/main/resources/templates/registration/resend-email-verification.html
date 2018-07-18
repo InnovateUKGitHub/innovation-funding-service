@@ -24,7 +24,7 @@
                         Enter Email Address
                     </label>
                     <th:block th:if="${#fields.hasErrors('email')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
                     </th:block>
                     <input class="govuk-input form-control-3-4"
                            th:errorclass="govuk-input--error"

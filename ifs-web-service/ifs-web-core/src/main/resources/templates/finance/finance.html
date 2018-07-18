@@ -54,7 +54,7 @@
                     </legend>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
                     <th:block th:if="${#fields.hasErrors('organisationSize')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}"></span>
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item"

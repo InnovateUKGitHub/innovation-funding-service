@@ -76,7 +76,7 @@ IFS.competitionManagement.repeater = (function () {
       var newRow = rows.first().clone()
       // clear error messages
       newRow.removeClass('error')
-      newRow.find('.error-message').remove()
+      newRow.find('.govuk-error-message').remove()
       // new row attribute
       newRow.prop('id', 'innovation-row-' + idCount)
       // fix label link

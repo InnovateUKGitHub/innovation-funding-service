@@ -36,7 +36,7 @@
                         <h2 class="govuk-fieldset__heading">Finances form</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('applicationFinanceType')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('applicationFinanceType')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('applicationFinanceType')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
@@ -78,7 +78,7 @@
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includeGrowthTable">
                         <h2 class="govuk-fieldset__heading">Include project growth table</h2>
                         <th:block th:if="${#fields.hasErrors('includeGrowthTable')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}"></span>
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
                     <div class="govuk-radios govuk-radios--inline">
@@ -115,7 +115,7 @@
                   Funding rules for this competition
                 </label>
                 <th:block th:if="${#fields.hasErrors('fundingRules')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('fundingRules')}" th:text="${err}"></span>
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('fundingRules')}" th:text="${err}"></span>
                 </th:block>
                 <div class="textarea-wrapped ">
                     <textarea data-editor="html"

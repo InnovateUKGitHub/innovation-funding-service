@@ -37,7 +37,7 @@
                             Organisation name
                         </label>
                         <th:block th:if="${#fields.hasErrors('organisationName')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}"></span>
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}"></span>
                         </th:block>
                         <input type="text"
                                class="govuk-input width-full"
@@ -60,12 +60,12 @@
                                 <td class="govuk-form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}? 'govuk-form-group--error'">
                                     <label th:for="applicants[__${applicantStat.index}__].name">
                                         <span class="govuk-visually-hidden">Applicant name</span>
-                                        <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
-                                            <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].name')}"
-                                                  th:text="${err}"
-                                                  class="error-message">Please enter a name.</span>
-                                        </th:block>
                                     </label>
+                                    <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
+                                        <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].name')}"
+                                              th:text="${err}"
+                                              class="error-message">Please enter a name.</span>
+                                    </th:block>
                                     <input type="text"
                                            th:id="applicants[__${applicantStat.index}__].name"
                                            th:field="*{applicants[__${applicantStat.index}__].name}"
@@ -77,12 +77,12 @@
                                 <td class="govuk-form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}? 'govuk-form-group--error'">
                                     <label th:for="applicants[__${applicantStat.index}__].email">
                                         <span class="govuk-visually-hidden">Applicant email</span>
-                                        <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
+                                    </label>
+                                    <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
                                             <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}"
                                                   th:text="${err}"
                                                   class="error-message"> Please enter an email address.</span>
-                                        </th:block>
-                                    </label>
+                                    </th:block>
                                     <input type="email"
                                            th:id="applicants[__${applicantStat.index}__].email"
                                            th:field="*{applicants[__${applicantStat.index}__].email}"

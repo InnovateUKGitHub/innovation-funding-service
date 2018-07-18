@@ -103,7 +103,7 @@
                             Please enter the reason for removing this application from assessment
                         </label>
                         <th:block th:if="${#fields.hasErrors('ineligibleReason')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}"></span>
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}"></span>
                         </th:block>
                         <textarea class="govuk-textarea width-full"
                                   maxlength="5000"

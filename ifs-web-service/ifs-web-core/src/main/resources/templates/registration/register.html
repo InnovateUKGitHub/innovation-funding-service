@@ -33,7 +33,7 @@
                     First name
                 </label>
                 <th:block th:if="${#fields.hasErrors('firstName')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                 </th:block>
                 <input class="govuk-input"
                        id="firstName"
@@ -55,7 +55,7 @@
                     Last name
                 </label>
                 <th:block th:if="${#fields.hasErrors('lastName')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
                 </th:block>
                 <input class="govuk-input"
                        th:errorclass="govuk-input--error"
@@ -77,7 +77,7 @@
                 </label>
                 <span class="govuk-hint">We may use this to contact you about the application.</span>
                 <th:block th:if="${#fields.hasErrors('phoneNumber')}">
-                    <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                 </th:block>
                 <input class="govuk-input"
                        id="phoneNumber"
@@ -101,7 +101,7 @@
                 <th:block th:unless="${invitee}">
                     <span class="govuk-hint">You will need this to sign into your account.</span>
                     <th:block th:if="${#fields.hasErrors('email')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
                     </th:block>
                 </th:block>
                 <th:block th:unless="${invitee}">
@@ -124,7 +124,7 @@
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
                         <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
                     </legend>
-                    <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
+                    <span class="govuk-error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
                             <input id="termsAndConditions"

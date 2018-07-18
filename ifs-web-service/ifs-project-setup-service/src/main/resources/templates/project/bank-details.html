@@ -54,7 +54,7 @@
             </label>
             <span class="govuk-hint">For example: 15481965</span>
             <th:block th:if="${#fields.hasErrors('accountNumber')}">
-                <span class="error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
             </th:block>
             <input type="text"
                    th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},
@@ -76,7 +76,7 @@
               <span class="govuk-label">Sort code</span>
               <span class="govuk-hint">For example: 311212</span>
               <th:block th:if="${#fields.hasErrors('sortCode')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}"></span>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}"></span>
               </th:block>
             </label>
             <input type="text"
@@ -101,7 +101,7 @@
                 </legend>
                 <span class="govuk-hint">This is the billing address connected to this bank account. This is not the address of the bank.</span>
                 <th:block th:if="${#fields.hasErrors('*{addressType}')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>
                 </th:block>
                 <div class="govuk-radios">
                     <th:block th:if="${model.registeredAddress}">

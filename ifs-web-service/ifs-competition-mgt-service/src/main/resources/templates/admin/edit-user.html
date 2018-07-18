@@ -26,7 +26,7 @@
                   First name
               </label>
               <th:block th:if="${#fields.hasErrors('firstName')}">
-                  <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                  <span class="govuk-error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
               </th:block>
               <input class="govuk-input"
                      type="text"
@@ -46,7 +46,7 @@
                   Last name
               </label>
               <th:block th:if="${#fields.hasErrors('lastName')}">
-                  <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                  <span class="govuk-error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
               </th:block>
               <input class="govuk-input"
                      type="text"
@@ -71,7 +71,7 @@
                     Role
                 </label>
                 <th:block th:if="${#fields.hasErrors('role')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
                 </th:block>
                 <select name="role"
                         class="govuk-select"

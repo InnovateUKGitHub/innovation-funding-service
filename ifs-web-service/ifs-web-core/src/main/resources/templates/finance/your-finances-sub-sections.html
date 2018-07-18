@@ -261,7 +261,7 @@
                         Postcode
                     </label>
                     <th:block th:if="${#fields.hasErrors('projectLocation')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
                     </th:block>
                     <input class="govuk-input width-large"
                            id="projectLocation"

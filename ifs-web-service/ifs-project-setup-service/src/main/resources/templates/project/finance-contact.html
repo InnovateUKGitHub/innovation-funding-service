@@ -34,7 +34,7 @@
                             </legend>
                             <span class="govuk-hint">Please select the person responsible for finances in your organisation</span>
                             <th:block th:if="${#fields.hasErrors('*')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('*')}" th:text="${err}" />
                             </th:block>
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item" th:each="user : ${model.organisationUsers}">

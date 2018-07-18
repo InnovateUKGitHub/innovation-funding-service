@@ -36,7 +36,7 @@
                         Minimum
                     </label>
                     <th:block th:if="${#fields.hasErrors('minProjectDuration')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('minProjectDuration')}" th:text="${err}"></span>
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('minProjectDuration')}" th:text="${err}"></span>
                     </th:block>
                     <input class="govuk-input width-small"
                            id="minProjectDuration"
@@ -55,7 +55,7 @@
                         Maximum
                     </label>
                     <th:block th:if="${#fields.hasErrors('maxProjectDuration')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('maxProjectDuration')}" th:text="${err}"></span>
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('maxProjectDuration')}" th:text="${err}"></span>
                     </th:block>
                     <input class="govuk-input width-small"
                            id="maxProjectDuration"
@@ -77,7 +77,7 @@
                         <h2 class="govuk-fieldset__heading">Include the resubmission question?</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('useResubmissionQuestion')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('useResubmissionQuestion')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('useResubmissionQuestion')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios govuk-radios--inline">
                         <div class="govuk-radios__item">

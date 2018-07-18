@@ -41,7 +41,7 @@
                         Title
                     </label>
                     <th:block th:if="${#fields.hasErrors('queryTitle')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('queryTitle')}" th:text="${err}"></span>
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('queryTitle')}" th:text="${err}"></span>
                     </th:block>
                     <input name="queryTitle"
                            id="queryTitle"
@@ -59,7 +59,7 @@
                         Section
                     </label>
                     <th:block th:if="${#fields.hasErrors('section')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('section')}" th:text="${err}"></span>
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('section')}" th:text="${err}"></span>
                     </th:block>
                     <select name="section"
                             id="section"
@@ -89,7 +89,7 @@
                         Query
                     </label>
                     <th:block th:if="${#fields.hasErrors('query')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('query')}" th:text="${err}"></span>
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('query')}" th:text="${err}"></span>
                     </th:block>
                     <div class="textarea-wrapped word-count">
                         <textarea data-editor="md"
@@ -123,7 +123,7 @@
                     <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Upload supporting documentation in PDF format.</h3>
                     <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error': ''">
                         <th:block th:if="${#fields.hasErrors('attachment')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}"></span>
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}"></span>
                         </th:block>
                         <input type="file" id="attachment" class="inputfile" name="attachment">
                         <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>

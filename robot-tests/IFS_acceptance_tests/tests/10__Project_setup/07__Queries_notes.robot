@@ -101,8 +101,8 @@ Post new query server side validations
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link     jQuery=.govuk-button:contains("Post query")
-    Then the user should see the element     jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
-    And the user should see the element      jQuery=label[for="query"] .error-message:contains(This field cannot be left blank.)
+    Then the user should see the element     jQuery=label[for="queryTitle"] .govuk-error-message:contains(This field cannot be left blank.)
+    And the user should see the element      jQuery=label[for="query"] .govuk-error-message:contains(This field cannot be left blank.)
     And the user should see a summary error  This field cannot be left blank.
 
 Post new query client side validations
@@ -110,9 +110,9 @@ Post new query client side validations
     [Tags]
     When the user moves focus to the element    link=Sign out
     And the user enters text to a text field    id=queryTitle    an eligibility query's title
-    Then the user should not see the element    jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="queryTitle"] .govuk-error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some query text
-    Then the user should not see the element    jQuery=label[for="query] .error-message:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="query] .govuk-error-message:contains(This field cannot be left blank.)
 
 Word count validations
     [Documentation]    INFUND-4840
@@ -120,7 +120,7 @@ Word count validations
     When the user enters text to a text field  css=.editor  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
     Then the user should see a field error     Maximum word count exceeded. Please reduce your word count to 400.
     When the user enters text to a text field  css=.editor  this is some query text
-    Then the user should not see the element   jQuery=.error-message:contains("Maximum word count exceeded.")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("Maximum word count exceeded.")
 
 New query can be cancelled
     [Documentation]    INFUND-4840
@@ -396,17 +396,17 @@ Create new note server side validations
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    jQuery=.govuk-button:contains("Save note")
-    Then the user should see the element   jQuery=label[for="noteTitle"] .error-message:contains(This field cannot be left blank.)
-    And the user should see the element    jQuery=label[for="note"] .error-message:contains(This field cannot be left blank.)
+    Then the user should see the element   jQuery=label[for="noteTitle"] .govuk-error-message:contains(This field cannot be left blank.)
+    And the user should see the element    jQuery=label[for="note"] .govuk-error-message:contains(This field cannot be left blank.)
 
 Create new note client side validations
     [Documentation]    INFUND-4845
     [Tags]
     When the user moves focus to the element    link=Sign out
     And the user enters text to a text field    id=noteTitle    an eligibility query's title
-    Then the user should not see the element    jQuery=label[for="noteTitle"] .error-message:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="noteTitle"] .govuk-error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field   css=.editor    this is some note text
-    Then the user should not see the element    jQuery=label[for="note"] .error-message:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="note"] .govuk-error-message:contains(This field cannot be left blank.)
 
 Word count validations for notes
     [Documentation]    INFUND-4845
@@ -414,7 +414,7 @@ Word count validations for notes
     When the user enters text to a text field  css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
     Then the user should see a field error     Maximum word count exceeded. Please reduce your word count to 400.
     When the user enters text to a text field  css=.editor    this is some note text
-    Then the user should not see the element   jQuery=.error-message:contains("Maximum word count exceeded.")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("Maximum word count exceeded.")
 
 New note can be cancelled
     [Documentation]    INFUND-4845
@@ -509,14 +509,14 @@ Note comments server side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=.govuk-button:contains("Save comment")
-    Then the user should see the element    jQuery=label[for="comment"] .error-message:contains("This field cannot be left blank.")
+    Then the user should see the element    jQuery=label[for="comment"] .govuk-error-message:contains("This field cannot be left blank.")
 
 Note comments client side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user enters text to a text field    css=.editor  this is some comment text
     And the user moves focus to the element    jQuery=.govuk-button:contains("Save comment")
-    Then the user should not see the element    jQuery=label[for="comment"] .error-message:contains("This field cannot be left blank.")
+    Then the user should not see the element    jQuery=label[for="comment"] .govuk-error-message:contains("This field cannot be left blank.")
 
 Word count validations for note comments
     [Documentation]    INFUND-7756
@@ -525,7 +525,7 @@ Word count validations for note comments
     Then the user should see a field error     Maximum word count exceeded. Please reduce your word count to 400.
     And the user should see a field error      This field cannot contain more than 4,000 characters.
     When the user enters text to a text field  css=.editor  this is some comment text
-    Then the user should not see the element   jQuery=.error-message:contains("4,000")
+    Then the user should not see the element   jQuery=.govuk-error-message:contains("4,000")
 
 Note comment can be posted
     [Documentation]    INFUND-7756

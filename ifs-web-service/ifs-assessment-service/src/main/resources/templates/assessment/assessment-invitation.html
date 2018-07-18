@@ -64,7 +64,7 @@
                                 <h2 class="govuk-fieldset__heading">Select your ability to assess this application</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('assessmentAccept')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('assessmentAccept')}" th:text="${err}" />
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('assessmentAccept')}" th:text="${err}" />
                             </th:block>
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item" data-target="accept-application">
@@ -99,7 +99,7 @@
                                         Please select a reason for rejecting the competition
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
+                                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
                                     </th:block>
                                     <select class="govuk-select"
                                             id="rejectReasonValid"
@@ -120,7 +120,7 @@
                                         Use this space to provide more information
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('rejectComment')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
                                     </th:block>
                                     <textarea class="govuk-textarea width-full"
                                               maxlength="5000"

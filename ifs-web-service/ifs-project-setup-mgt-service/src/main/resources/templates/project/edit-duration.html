@@ -43,7 +43,7 @@
             Duration
           </label>
           <th:block th:if="${#fields.hasErrors('durationInMonths')}">
-              <span class="error-message" th:each="err : ${#fields.errors('durationInMonths')}" th:text="${err}"></span>
+              <span class="govuk-error-message" th:each="err : ${#fields.errors('durationInMonths')}" th:text="${err}"></span>
           </th:block>
           <input name="durationInMonths"
                  id="durationInMonths"

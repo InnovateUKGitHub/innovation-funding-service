@@ -73,7 +73,7 @@
                         <p class="govuk-body" th:text="${organisation.type}">Research and technology organisations (RTOs)</p>
 
                         <th:block th:if="${#fields.hasErrors(organisationErrorKey)}">
-                                <span class="error-message"
+                                <span class="govuk-error-message"
                                       th:each="err : ${#fields.errors(organisationErrorKey)}"
                                       th:text="${err}"></span>
                         </th:block>

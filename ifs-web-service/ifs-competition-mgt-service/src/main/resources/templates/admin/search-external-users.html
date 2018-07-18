@@ -24,7 +24,7 @@
                                     Look for
                                 </label>
                                 <th:block th:if="${#fields.hasErrors('searchString')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('searchString')}" th:text="${err}"></span>
+                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('searchString')}" th:text="${err}"></span>
                                 </th:block>
                                 <input class="govuk-input"
                                        type="text"

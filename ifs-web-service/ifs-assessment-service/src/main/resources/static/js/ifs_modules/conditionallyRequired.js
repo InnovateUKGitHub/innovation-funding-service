@@ -29,7 +29,7 @@ IFS.assessment.conditionallyRequired = (function () {
 
         // remove any existing error messages and classes
         parentGroup.removeClass('govuk-form-group--error')
-        parentGroup.find('.error-message').remove()
+        parentGroup.find('.govuk-error-message').remove()
       })
     }
   }

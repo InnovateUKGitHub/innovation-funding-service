@@ -38,7 +38,7 @@
                         <h2 class="govuk-fieldset__heading">Are you able to attend the interview panel?</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
                     </th:block>
                     <p class="govuk-body">You should reject this invitation if you are unavailable.</p>
                     <div class="govuk-radios">

@@ -124,7 +124,7 @@ the applicant should not see the validation error any more
     Run Keyword And Ignore Error Without Screenshots    Mouse Out    css=input
     Run Keyword And Ignore Error Without Screenshots    Focus  id=application-question-complete
     wait for autosave
-    the user should not see the element    css=.error-message
+    the user should not see the element    css=.govuk-error-message
 
 the applicant inserts a valid date
     Clear Element Text    id=application_details-startdate_day

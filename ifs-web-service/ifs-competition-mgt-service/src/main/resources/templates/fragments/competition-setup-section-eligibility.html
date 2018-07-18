@@ -21,7 +21,7 @@
                         <h2 class="govuk-fieldset__heading">Please choose the project type.</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('singleOrCollaborative')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item" th:each="collaborationLevel : ${model.collaborationLevels}">
@@ -49,7 +49,7 @@
                         <h2 class="govuk-fieldset__heading">Please choose the research categories.</h2>
                     </legend>
                     <th:block th:if="${#fields.hasErrors('researchCategoryId')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item" th:each="researchCategory : ${model.researchCategories}" >

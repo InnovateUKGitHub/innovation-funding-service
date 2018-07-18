@@ -264,7 +264,7 @@ the user fills the empty question fields
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
     focus    jQuery=.govuk-button[value="Save and close"]
-    Wait Until Element Is Not Visible Without Screenshots    css=error-message
+    Wait Until Element Is Not Visible Without Screenshots    css=.govuk-error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
 the user fills the milestones with invalid data
@@ -446,4 +446,4 @@ the user should not see the error any more
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=button:contains("Done")
     Wait for autosave
-    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
+    Wait Until Element Does Not Contain Without Screenshots    css=.govuk-error-message    ${ERROR_TEXT}

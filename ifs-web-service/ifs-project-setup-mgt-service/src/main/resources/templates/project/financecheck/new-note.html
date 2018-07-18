@@ -27,7 +27,7 @@
                             Title
                         </label>
                         <th:block th:if="${#fields.hasErrors('noteTitle')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('noteTitle')}" th:text="${err}" />
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('noteTitle')}" th:text="${err}" />
                         </th:block>
                         <input name="noteTitle"
                                id="noteTitle"
@@ -45,7 +45,7 @@
                             Note
                         </label>
                         <th:block th:if="${#fields.hasErrors('note')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('note')}" th:text="${err}" />
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('note')}" th:text="${err}" />
                         </th:block>
                         <div class="textarea-wrapped word-count">
                             <textarea data-editor="md"
@@ -79,7 +79,7 @@
                         <h2 class="govuk-heading-s">Upload supporting documentation in pdf format</h2>
                         <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                             <th:block th:if="${#fields.hasErrors('attachment')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                             </th:block>
                             <input type="file" id="attachment" class="inputfile" name="attachment">
                             <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>

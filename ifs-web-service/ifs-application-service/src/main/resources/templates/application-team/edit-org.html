@@ -77,7 +77,7 @@
                                         <th:block th:if="${#fields.hasErrors('stagedInvite.name')}">
                                             <span th:each="err : ${#fields.errors('stagedInvite.name')}"
                                                   th:text="${err}"
-                                                  class="error-message">Please enter a name</span>
+                                                  class="govuk-error-message">Please enter a name</span>
                                         </th:block>
                                     </label>
                                     <input type="text"
@@ -93,7 +93,7 @@
                                         <th:block th:if="${#fields.hasErrors('stagedInvite.email')}">
                                             <span th:each="err : ${#fields.errors('stagedInvite.email')}"
                                                   th:text="${err}"
-                                                  class="error-message">Please enter an email</span>
+                                                  class="govuk-error-message">Please enter an email</span>
                                         </th:block>
                                     </label>
                                     <input type="email"

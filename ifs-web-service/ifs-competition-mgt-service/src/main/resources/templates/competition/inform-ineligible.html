@@ -38,7 +38,7 @@
                     Subject
                 </label>
                 <th:block th:if="${#fields.hasErrors('subject')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
                 </th:block>
                 <input class="govuk-input width-full"
                        id="subject"
@@ -63,7 +63,7 @@
                     Body text
                 </label>
                 <th:block th:if="${#fields.hasErrors('message')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
                 </th:block>
                 <div class="textarea-wrapped">
                     <textarea id="message"

@@ -7,12 +7,12 @@ The user should see an error
     Run Keyword And Ignore Error Without Screenshots    Mouse Out    css=input
     Run Keyword And Ignore Error Without Screenshots    Focus    jQuery=Button:contains("Mark as complete")
     Run Keyword And Ignore Error Without Screenshots    Focus    link=Contact us
-    Wait Until Page Contains Element Without Screenshots    jQuery=.error-message
+    Wait Until Page Contains Element Without Screenshots    jQuery=.govuk-error-message
     Wait Until Page Contains Without Screenshots    ${ERROR_TEXT}
 
 The user should see a field error
     [Arguments]    ${ERROR_TEXT}
-    Wait Until Page Contains Element Without Screenshots    jQuery=.error-message:contains("${ERROR_TEXT}")    5s
+    Wait Until Page Contains Element Without Screenshots    jQuery=.govuk-error-message:contains("${ERROR_TEXT}")    5s
 
 The user should get an error page
     [Arguments]    ${ERROR_TEXT}
@@ -24,7 +24,7 @@ browser validations have been disabled
 
 the user cannot see a validation error in the page
     Element Should Not Be Visible    css=.error
-    element should not be visible    css=.error-message
+    element should not be visible    css=.govuk-error-message
     element should not be visible    css=.govuk-error-summary
 
 The user should see a summary error

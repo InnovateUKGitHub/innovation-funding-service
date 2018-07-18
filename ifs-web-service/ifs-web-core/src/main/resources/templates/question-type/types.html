@@ -132,7 +132,7 @@
             <div th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'govuk-form-group--error')">
                 <th:block th:if="${!#strings.isEmpty(validationField)}">
                     <th:block th:if="${#fields.hasErrors('__${validationField}__')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
                     </th:block>
                 </th:block>
                 <th:block th:if="${#strings.isEmpty(filename)}">

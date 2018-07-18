@@ -32,7 +32,7 @@
                             First name
                         </label>
                         <th:block th:if="${#fields.hasErrors('firstName')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                         </th:block>
                         <input class="govuk-input"
                                th:errorclass="govuk-input--error"
@@ -53,7 +53,7 @@
                             Last name
                         </label>
                         <th:block th:if="${#fields.hasErrors('lastName')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
                         </th:block>
                         <input class="govuk-input"
                                th:errorclass="govuk-input--error"
@@ -79,7 +79,7 @@
                         </label>
                         <span class="govuk-hint">We may use this to contact you about the application.</span>
                         <th:block th:if="${#fields.hasErrors('phoneNumber')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
+                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                         </th:block>
                         <input class="govuk-input"
                                th:errorclass="govuk-input--error"

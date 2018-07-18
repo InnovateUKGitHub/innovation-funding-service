@@ -46,7 +46,7 @@
                                     <h2 class="govuk-fieldset__heading">Do you believe that this application is suitable for funding?</h2>
                                 </legend>
                                 <th:block th:if="${#fields.hasErrors('fundingConfirmation')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}"></span>
+                                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}"></span>
                                 </th:block>
                                 <div class="govuk-radios govuk-radios--inline">
                                     <div class="govuk-radios__item">
@@ -90,7 +90,7 @@
                                 </label>
                                 <span class="govuk-hint">Please explain your decision with a few sentences. This feedback will be sent to the applicant.</span>
                                 <th:block th:if="${#fields.hasErrors('feedback')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('feedback')}" th:text="${err}"></span>
+                                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('feedback')}" th:text="${err}"></span>
                                 </th:block>
                                 <div class="textarea-wrapped word-count">
                                     <textarea
@@ -116,7 +116,7 @@
                                     Do you have any other comments about this application? Your comments here will only be shared with Innovate UK. (Optional)
                                 </label>
                                 <th:block th:if="${#fields.hasErrors('comment')}">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
+                                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
                                 </th:block>
                                 <div class="textarea-wrapped word-count">
                                     <textarea

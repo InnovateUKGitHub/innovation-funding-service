@@ -69,7 +69,7 @@
                                         Comment
                                     </label>
                                     <th:block th:if="${#fields.hasErrors('comment')}">
-                                        <span class="error-message" th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
+                                        <span class="govuk-error-message" th:each="err : ${#fields.errors('comment')}" th:text="${err}"></span>
                                     </th:block>
                                     <div class="textarea-wrapped word-count">
                                         <textarea data-editor="md"
@@ -103,7 +103,7 @@
                                     <h3 class="govuk-heading-s govuk-!-margin-0">Upload supporting documentation in pdf format</h3>
                                     <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                         <th:block th:if="${#fields.hasErrors('attachment')}">
-                                            <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                         </th:block>
                                         <input type="file" id="attachment" class="inputfile" name="attachment">
                                         <label for="attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>

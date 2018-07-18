@@ -118,7 +118,7 @@
                     Question heading
                 </label>
                 <th:block th:if="${#fields.hasErrors('question.shortTitle')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.shortTitle')}"
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.shortTitle')}"
                               th:text="${err}"></span>
                 </th:block>
                 <input class="govuk-input width-x-large"
@@ -135,7 +135,7 @@
                     Question title
                 </label>
                 <th:block th:if="${#fields.hasErrors('question.title')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.title')}"
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.title')}"
                               th:text="${err}"></span>
                 </th:block>
                 <input th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-input--error'"
@@ -152,7 +152,7 @@
                     Question subtitle
                 </label>
                 <th:block th:if="${#fields.hasErrors('question.subTitle')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.subTitle')}"
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.subTitle')}"
                               th:text="${err}"></span>
                 </th:block>
                 <input th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-input--error'"
@@ -169,7 +169,7 @@
                     Question guidance title
                 </label>
                 <th:block th:if="${#fields.hasErrors('question.guidanceTitle')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.guidanceTitle')}"
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.guidanceTitle')}"
                               th:text="${err}"></span>
                 </th:block>
                 <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-input--error'"
@@ -186,7 +186,7 @@
                     Question guidance
                 </label>
                 <th:block th:if="${#fields.hasErrors('question.guidance')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.guidance')}"
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.guidance')}"
                               th:text="${err}"></span>
                 </th:block>
                 <div class="textarea-wrapped">
@@ -209,7 +209,7 @@
                     Max word count
                 </label>
                 <th:block th:if="${#fields.hasErrors('question.maxWords')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.maxWords')}"
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.maxWords')}"
                               th:text="${err}"></span>
                 </th:block>
                 <input class="govuk-input width-medium"
@@ -231,7 +231,7 @@
                             <h2 class="govuk-fieldset__heading">Appendix</h2>
                         </legend>
                         <th:block th:if="${#fields.hasErrors('question.appendix')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('question.appendix')}"
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.appendix')}"
                               th:text="${err}"></span>
                         </th:block>
                         <div class="govuk-radios govuk-radios--inline">
@@ -270,7 +270,7 @@
                                 <h2 class="govuk-fieldset__heading">Accepted appendix file types</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
-                                <span class="error-message"
+                                <span class="govuk-error-message"
                                       th:each="err : ${#fields.errors('question.allowedFileTypes')}"
                                       th:text="${err}"></span>
                             </th:block>
@@ -298,7 +298,7 @@
                             Appendix guidance
                         </label>
                         <th:block th:if="${#fields.hasErrors('question.appendixGuidance')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('question.appendixGuidance')}"
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.appendixGuidance')}"
                                   th:text="${err}"></span>
                         </th:block>
                         <div class="textarea-wrapped">
@@ -335,7 +335,7 @@
                                 <h2 class="govuk-fieldset__heading">Research category question</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('question.researchCategoryQuestion')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('question.researchCategoryQuestion')}"
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('question.researchCategoryQuestion')}"
                                 th:text="${err}"></span>
                             </th:block>
                             <div class="govuk-radios govuk-radios--inline">
@@ -376,7 +376,7 @@
                                 <h2 class="govuk-fieldset__heading">Scored</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('question.scored')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('question.scored')}"
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.scored')}"
                                   th:text="${err}"></span>
                             </th:block>
                             <div class="govuk-radios govuk-radios--inline">
@@ -416,7 +416,7 @@
                             Out of
                         </label>
                         <th:block th:if="${#fields.hasErrors('question.scoreTotal')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('question.scoreTotal')}"
+                                <span class="govuk-error-message" th:each="err : ${#fields.errors('question.scoreTotal')}"
                                       th:text="${err}"></span>
                         </th:block>
                         <input class="govuk-input width-medium"
@@ -473,7 +473,7 @@
                                 <h2 class="">Written feedback</h2>
                             </legend>
                             <th:block th:if="${#fields.hasErrors('question.writtenFeedback')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('question.writtenFeedback')}"
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.writtenFeedback')}"
                                   th:text="${err}"></span>
                             </th:block>
                             <div class="govuk-radios govuk-radios--inline">
@@ -511,7 +511,7 @@
                                 Guidance title
                             </label>
                             <th:block th:if="${#fields.hasErrors('question.assessmentGuidanceTitle')}">
-                                    <span class="error-message"
+                                    <span class="govuk-error-message"
                                           th:each="err : ${#fields.errors('question.assessmentGuidanceTitle')}"
                                           th:text="${err}"></span>
                             </th:block>
@@ -530,7 +530,7 @@
                                 Guidance
                             </label>
                             <th:block th:if="${#fields.hasErrors('question.assessmentGuidance')}">
-                                    <span class="error-message"
+                                    <span class="govuk-error-message"
                                           th:each="err : ${#fields.errors('question.assessmentGuidance')}"
                                           th:text="${err}"></span>
                             </th:block>
@@ -572,7 +572,7 @@
                                             </label>
                                             <th:block
                                                 th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}">
-                                                    <span class="error-message"
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].scoreFrom')}"
                                                           th:text="${err}"></span>
                                             </th:block>
@@ -594,7 +594,7 @@
                                             </label>
                                             <th:block
                                                 th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}">
-                                                    <span class="error-message"
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].scoreTo')}"
                                                           th:text="${err}"></span>
                                             </th:block>
@@ -615,7 +615,7 @@
                                             </label>
                                             <th:block
                                                 th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}">
-                                                    <span class="error-message"
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].justification')}"
                                                           th:text="${err}"></span>
                                             </th:block>
@@ -663,7 +663,7 @@
                                             </label>
                                             <th:block
                                                 th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}">
-                                                    <span class="error-message"
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('question.guidanceRows[__${iteration.index}__].subject')}"
                                                           th:text="${err}"></span>
                                             </th:block>
@@ -684,7 +684,7 @@
                                             </label>
                                             <th:block
                                                 th:if="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')}">
-                                                    <span class="error-message"
+                                                    <span class="govuk-error-message"
                                                           th:each="err : ${#fields.errors('question.guidanceRows[__${iteration.index}__].justification')}"
                                                           th:text="${err}"></span>
                                             </th:block>
@@ -720,7 +720,7 @@
                                     Max word count
                                 </label>
                                 <th:block th:if="${#fields.hasErrors('question.assessmentMaxWords')}">
-                                        <span class="error-message"
+                                        <span class="govuk-error-message"
                                               th:each="err : ${#fields.errors('question.assessmentMaxWords')}"
                                               th:text="${err}"></span>
                                 </th:block>

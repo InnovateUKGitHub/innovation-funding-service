@@ -91,7 +91,7 @@
                                 </label>
                                 <p class="govuk-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
                                 <th:block th:if="${#fields.hasErrors('selectedInnovationArea')}">
-                                    <span class="error-message" th:each="err : ${#fields.errors('selectedInnovationArea')}" th:text="${err}"></span>
+                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('selectedInnovationArea')}" th:text="${err}"></span>
                                 </th:block>
                                 <select th:field="*{selectedInnovationArea}"
                                         class="govuk-select width-full"
@@ -129,7 +129,7 @@
                                         <td class="width-40-percent govuk-form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? 'govuk-form-group--error'">
                                             <label>
                                                  <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].name')}">
-                                                     <span class="error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].name')}" th:text="${err}"></span>
+                                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].name')}" th:text="${err}"></span>
                                                  </th:block>
                                             </label>
                                             <input type="text"
@@ -152,7 +152,7 @@
                                         <td class="width-40-percent govuk-form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].email')} ? 'govuk-form-group--error'">
                                             <label>
                                                  <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].email')}">
-                                                     <span class="error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].email')}" th:text="${err}"></span>
+                                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].email')}" th:text="${err}"></span>
                                                  </th:block>
                                             </label>
                                             <input type="email"
