@@ -74,7 +74,7 @@
                 </label>
                 <div class="govuk-grid-column-two-thirds">
                     <input type="text"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            th:id="formInput[cost- + ${academicFinance.incurredStaff?.id} + -cost]"
                            th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
                            ifs:nonZeroValue="${academicFinance.incurredStaff?.numberValue}"
@@ -94,7 +94,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+ academicFinance.incurredTravelAndSubsistence?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="govuk-input width-full"
+                    <input class="govuk-input"
                            th:id="formInput[cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -cost]"
                            th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence"
                            type="text"
@@ -114,7 +114,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.incurredOtherCosts?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="govuk-input width-full"
+                    <input class="govuk-input"
                            th:id="formInput[cost- + ${academicFinance.incurredOtherCosts?.id} + -cost]"
                            th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs"
                            type="text"
@@ -133,7 +133,7 @@
                     Subtotal
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="govuk-input width-full"
+                    <input class="govuk-input"
                            id="subtotal-resources"
                            th:attr="data-calculation-fields=|[id='formInput[cost-${academicFinance.incurredOtherCosts?.id}-cost]'],
                            [id='formInput[cost-${academicFinance.incurredTravelAndSubsistence?.id}-cost]'],
@@ -161,7 +161,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedInvestigators?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="govuk-input width-full"
+                    <input class="govuk-input"
                            th:id="formInput[cost- + ${academicFinance.allocatedInvestigators?.id} + -cost]"
                            th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="text"
                            ifs:nonZeroValue="${academicFinance.allocatedInvestigators?.numberValue}"
@@ -180,7 +180,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedEstatesCosts?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="govuk-input width-full"
+                    <input class="govuk-input"
                            th:id="formInput[cost- + ${academicFinance.allocatedEstatesCosts?.id} + -cost]"
                            th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="text"
                            ifs:nonZeroValue="${academicFinance.allocatedEstatesCosts?.numberValue}"
@@ -199,7 +199,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.allocatedOtherCosts?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="govuk-input width-full"
+                    <input class="govuk-input"
                            th:id="formInput[cost- + ${academicFinance.allocatedOtherCosts?.id} + -cost]"
                            th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="text"
                            ifs:nonZeroValue="${academicFinance.allocatedOtherCosts?.numberValue}"
@@ -217,7 +217,7 @@
                     Subtotal
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="govuk-input width-full"
+                    <input class="govuk-input"
                            th:attr="data-calculation-fields=|[id='formInput[cost-${academicFinance.allocatedInvestigators?.id}-cost]'],
                            [id='formInput[cost-${academicFinance.allocatedEstatesCosts?.id}-cost]'],
                            [id='formInput[cost-${academicFinance.allocatedOtherCosts?.id}-cost']|"
@@ -239,7 +239,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.indirectCosts?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="govuk-input width-full"
+                    <input class="govuk-input"
                            th:id="formInput[cost- + ${academicFinance.indirectCosts?.id} + -cost]"
                            th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs"
                            type="text"
@@ -266,7 +266,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.exceptionsStaff?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="govuk-input width-full"
+                    <input class="govuk-input"
                            th:id="formInput[cost- + ${academicFinance.exceptionsStaff?.id} + -cost]"
                            th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="text"
                            ifs:nonZeroValue="${academicFinance.exceptionsStaff?.numberValue}"
@@ -285,7 +285,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.exceptionsOtherCosts?.id+'-cost'})" />
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="govuk-input width-full"
+                    <input class="govuk-input"
                            th:id="formInput[cost- + ${academicFinance.exceptionsOtherCosts?.id} + -cost]"
                            th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs"
                            type="text"
@@ -305,7 +305,7 @@
                 </label>
                 <div class="govuk-grid-column-two-thirds">
                     <input id="subtotal-exceptions"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            th:attr="data-calculation-fields=|[id='formInput[cost-${academicFinance.exceptionsStaff?.id}-cost]'],
                                     [id='formInput[cost-${academicFinance.exceptionsOtherCosts?.id}-cost]']|"
                            data-calculation-operations="+"
@@ -320,7 +320,7 @@
                     <span>Total</span>
                 </label>
                 <div class="govuk-grid-column-two-thirds">
-                    <input class="govuk-input width-full"
+                    <input class="govuk-input"
                            data-calculation-fields="#subtotal-resources,#indirect,#subtotal-directly-allocated,#subtotal-exceptions"
                            data-calculation-operations="+"
                            id="total"

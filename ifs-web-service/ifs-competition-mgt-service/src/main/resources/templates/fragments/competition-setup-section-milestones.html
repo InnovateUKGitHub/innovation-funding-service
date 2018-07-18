@@ -51,7 +51,7 @@
 
                           <select th:if="${milestoneEntry.value.timeOption}"
                                   th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                  class="govuk-select width-large"
+                                  class="govuk-select govuk-!-width-one-quarter"
                                   required="required"
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   th:readonly="${!milestoneEntry.value.readonly}">
@@ -79,7 +79,7 @@
                                  data-prevent-input-regex="[^0-9]"
                                  maxlength="2"
                                  minlength="1"
-                                 class="govuk-input width-small"
+                                 class="govuk-input govuk-input--width-4"
                                  th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},
                                            data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                  th:value="${milestoneEntry.value.day}"
@@ -96,7 +96,7 @@
                                 data-prevent-input-regex="[^0-9]"
                                 maxlength="2"
                                 minlength="1"
-                                class="govuk-input width-small"
+                                class="govuk-input govuk-input--width-4"
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'"
@@ -113,7 +113,7 @@
                                  data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year},
                                  min=${#dates.format(#dates.createNow(), 'yyyy')}"
                                  required="required"
-                                 class="govuk-input width-small"
+                                 class="govuk-input govuk-input--width-4"
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
                                  th:readonly="${milestoneEntry.value.readonly}" />

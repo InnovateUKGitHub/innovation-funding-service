@@ -129,7 +129,7 @@
                     <input type="text"
                            id="total-cost"
                            readonly="readonly"
-                           class="govuk-heading-m width-full alignright"
+                           class="govuk-heading-m alignright"
                            data-calculation-fields="[id*=section-total]"
                            data-calculation-operations="+"
                            th:value="'£' + ${#numbers.formatInteger(model.finance.organisationFinanceTotal, 0, 'DEFAULT')}"/>

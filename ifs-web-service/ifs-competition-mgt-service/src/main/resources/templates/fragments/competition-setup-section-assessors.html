@@ -44,7 +44,7 @@
                 <th:block th:if="${#fields.hasErrors('assessorPay')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input width-medium"
+                <input class="govuk-input govuk-input--width-10"
                        id="assessorPay"
                        name="assessorPay"
                        type="number"

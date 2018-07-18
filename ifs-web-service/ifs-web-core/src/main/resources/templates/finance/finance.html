@@ -16,7 +16,7 @@
                 <input type="number"
                        min="0"
                        required="required"
-                       class="govuk-input width-small"
+                       class="govuk-input govuk-input--width-4"
                        th:max="${model.maximumGrantClaimPercentage}"
                        th:readonly="${model.readonly}"
                        th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'govuk-input--error'"
@@ -100,7 +100,7 @@
                 </label>
                 <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
                 <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
-                <input class="govuk-input width-medium"
+                <input class="govuk-input govuk-input--width-10"
                        th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'govuk-input--error'"
                        th:id="|formInput[${formInput.id}]|"
                        th:name="'formInput['+${formInput.id}+']'"
@@ -133,7 +133,7 @@
                 </label>
                 <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
                 <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
-                <input class="govuk-input width-medium"
+                <input class="govuk-input govuk-input--width-10"
                        th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'govuk-input--error'"
                        type="number"
                        th:id="|formInput[${formInput.id}]|"
@@ -173,7 +173,7 @@
                     <label class="govuk-label" th:for="${formInput.id}+'.MMYYYY.month'">
                         Month
                     </label>
-                    <input class="govuk-input width-extra-small"
+                    <input class="govuk-input govuk-input--width-3"
                            th:disabled="${model.readonly}"
                            th:id="${formInput.id}+'.MMYYYY.month'"
                            th:name="'formInput['+${formInput.id}+'].MMYYYY.month'"
@@ -189,7 +189,7 @@
                     <label class="govuk-label" th:for="${formInput.id}+'.MMYYYY.year'">
                         Year
                     </label>
-                    <input class="govuk-input width-extra-small"
+                    <input class="govuk-input govuk-input--width-3"
                            th:disabled="${model.readonly}"
                            th:id="${formInput.id}+'.MMYYYY.year'"
                            th:name="'formInput['+${formInput.id}+'].MMYYYY.year'"
@@ -219,7 +219,7 @@
             </label>
             <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
-            <input class="govuk-input width-medium"
+            <input class="govuk-input govuk-input--width-10"
                    th:disabled="${model.readonly or model.complete}"
                    type="number"
                    th:id="|formInput[${formInput.id}]|"
@@ -270,7 +270,7 @@
                 <input type="text"
                        id="total-cost"
                        readonly="readonly"
-                       class="govuk-heading-m width-full alignright"
+                       class="govuk-heading-m alignright"
                        data-calculation-fields="[id*=section-total]"
                        data-calculation-operations="+"
                        th:value="'£' + ${#numbers.formatInteger(organisationFinanceTotal, 0, 'DEFAULT')}"/>
@@ -304,7 +304,7 @@
                 <input type="text"
                        id="total-cost"
                        readonly="readonly"
-                       class="govuk-heading-m width-full alignright"
+                       class="govuk-heading-m alignright"
                        data-calculation-fields="[id*=section-total]"
                        data-calculation-operations="+"
                        th:value="'£' + ${#numbers.formatInteger(organisationFinanceTotal, 0, 'DEFAULT')}"/>
@@ -368,7 +368,7 @@
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id +'-labourDays'})" />
                     </label>
                     <input type="number"
-                           class="govuk-input width-small"
+                           class="govuk-input govuk-input--width-4"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'govuk-input--error'"
                            th:id="|formInput[cost-${costCategory.workingDaysPerYearCostItem?.id}-labourDays]|"
                            th:name="${'labour-labourDaysYearly-' + question.id + '-' + costCategory.workingDaysPerYearCostItem?.id}"
@@ -385,11 +385,11 @@
                         <thead>
                         <tr>
                             <th id="labour-role" scope="col">Role within project</th>
-                            <th id="labour-salary" scope="col" class="numeric width-small-medium">Gross employee cost</th>
-                            <th id="labour-rate" scope="col" class="numeric width-small">Rate (&pound;/day)</th>
-                            <th id="labour-days" scope="col" class="numeric width-small-medium">Days to be spent by all staff at this grade</th>
-                            <th scope="col" class="numeric width-medium">Total costs</th>
-                            <th scope="col" class="width-small">
+                            <th id="labour-salary" scope="col" class="numeric width-100">Gross employee cost</th>
+                            <th id="labour-rate" scope="col" class="numeric width-80">Rate (&pound;/day)</th>
+                            <th id="labour-days" scope="col" class="numeric width-100">Days to be spent by all staff at this grade</th>
+                            <th scope="col" class="numeric width-150">Total costs</th>
+                            <th scope="col" class="width-80">
                                 <span class="govuk-visually-hidden">Actions</span>
                             </th>
                         </tr>
@@ -432,7 +432,7 @@
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" />
                     </label>
                     <input type="text"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'fgovuk-input--error'"
                            th:name="${'labour-role-' + question.id + '-' + costIdentifier}"
                            th:id="|formInput[cost-${costIdentifier}-role]|"
@@ -446,7 +446,7 @@
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-grossEmployeeCost'})" />
                     </label>
                     <input type="number"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-grossEmployeeCost]}')} ? 'govuk-input--error'"
                            th:name="${'labour-grossEmployeeCost-' + question.id + '-' + costIdentifier}"
                            th:id="|formInput[cost-${costIdentifier}-grossEmployeeCost]|"
@@ -472,7 +472,7 @@
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-labourDays'})" />
                     </label>
                     <input type="number"
-                           class="govuk-input width-small"
+                           class="govuk-input govuk-input--width-4"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-labourDays]}')} ? 'govuk-input--error'"
                            th:id="|formInput[cost-${costIdentifier}-labourDays]|"
                            th:name="${'labour-labourDays-' + question.id + '-' + costIdentifier}"
@@ -864,9 +864,9 @@
                             <thead>
                             <tr>
                                 <th id="materials-item" scope="col">Item</th>
-                                <th id="materials-quantity" scope="col" class="numeric width-medium">Quantity</th>
-                                <th id="materials-cost" scope="col" class="numeric width-medium">Cost per item (&pound;)</th>
-                                <th id="materials-total" scope="col" class="numeric width-medium">Total</th>
+                                <th id="materials-quantity" scope="col" class="numeric width-150">Quantity</th>
+                                <th id="materials-cost" scope="col" class="numeric width-150">Cost per item (&pound;)</th>
+                                <th id="materials-total" scope="col" class="numeric width-150">Total</th>
                                 <th scope="col">
                                     <span class="govuk-visually-hidden">Actions</span>
                                 </th>
@@ -910,7 +910,7 @@
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-item'})" />
                     </label>
                     <input type="text"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            th:name="${'materials-item-' + question.id + '-' + costIdentifier}"
                            th:id="|formInput[cost-${costIdentifier}-item]|"
                            th:value="${cost.item}"
@@ -924,7 +924,7 @@
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-quantity'})" />
                     </label>
                     <input type="number"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            th:name="${'materials-quantity-' + question.id + '-' + costIdentifier}"
                            th:id="|formInput[cost-${costIdentifier}-quantity]|"
                            placeholder="0"
@@ -942,7 +942,7 @@
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
                     </label>
                     <input type="number"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            th:name="${'materials-cost-' + question.id + '-' + costIdentifier}"
                            th:id="|formInput[cost-${costIdentifier}-cost]|"
                            ifs:nonZeroValue="${cost.cost}"
@@ -959,7 +959,7 @@
                         <span class="govuk-visually-hidden">Total</span>
                     </label>
                     <input type="text"
-                           class="alignright govuk-input width-full"
+                           class="alignright govuk-input"
                            th:name="${'materials-total-' + question.id + '-' + costIdentifier}"
                            th:attr="data-calculation-fields=|[id='formInput[cost-${costIdentifier}-quantity]'],[id='formInput[cost-${costIdentifier}-cost]']|,data-calculation-rawvalue=${cost.total}"
                            th:id="${'cost-materials-'+costIdentifier+'-materialTotal'}"
@@ -1109,7 +1109,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-deprecation'})" />
                     <input  type="number"
                             th:id="|formInput[cost-${costIdentifier}-deprecation]|"
-                            class="govuk-input width-small form-finances-capital-usage-depreciation"
+                            class="govuk-input govuk-input--width-4 form-finances-capital-usage-depreciation"
                             th:name="${'capital_usage-deprecation-' + question.id + '-' + costIdentifier}"
                             ifs:nonZeroValue="${cost.deprecation}"
                             placeholder="0"
@@ -1129,7 +1129,7 @@
                     <input
                         type="number"
                         th:id="|formInput[cost-${costIdentifier}-npv]|"
-                        class="govuk-input width-large form-finances-capital-usage-npv"
+                        class="govuk-input govuk-input--width-10 form-finances-capital-usage-npv"
                         th:name="${'capital_usage-npv-' + question.id + '-' + costIdentifier}"
                         ifs:nonZeroValue="${cost.npv}"
                         placeholder="0"
@@ -1149,7 +1149,7 @@
                     <input
                         type="number"
                         th:id="|formInput[cost-${costIdentifier}-residualValue]|"
-                        class="govuk-input width-large form-finances-capital-usage-residual-value"
+                        class="govuk-input govuk-input--width-10 form-finances-capital-usage-residual-value"
                         th:name="${'capital_usage-residualValue-' + question.id + '-' + costIdentifier}"
                         ifs:nonZeroValue="${cost.residualValue}"
                         placeholder="0"
@@ -1169,7 +1169,7 @@
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-utilisation'})" />
                     <input type="number"
                            th:id="|formInput[cost-${costIdentifier}-utilisation]|"
-                           class="govuk-input width-small form-finances-capital-usage-utilisation"
+                           class="govuk-input govuk-input--width-4 form-finances-capital-usage-utilisation"
                            th:name="${'capital_usage-utilisation-' + question.id + '-' + costIdentifier}"
                            ifs:nonZeroValue="${cost.utilisation}"
                            placeholder="0"
@@ -1321,7 +1321,7 @@
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
                     <input type="number"
-                           class="govuk-input width-large"
+                           class="govuk-input govuk-input--width-10"
                            th:name="${'subcontracting-subcontractingCost-' + question.id + '-' + costIdentifier}"
                            th:id="|formInput[cost-${costIdentifier}-cost]|"
                            ifs:nonZeroValue="${cost.cost}"
@@ -1439,7 +1439,7 @@
                     </label>
                     <input type="text"
                            th:name="${'travel-item-' + question.id + '-' + costIdentifier}"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            th:id="|formInput[cost-${costIdentifier}-item]|"
                            th:value="${cost.item}"
                            required="required"
@@ -1453,7 +1453,7 @@
                     </label>
                     <input type="number"
                            th:name="${'travel-quantity-' + question.id + '-' + costIdentifier}"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            th:id="|formInput[cost-${costIdentifier}-quantity]|"
                            ifs:nonZeroValue="${cost.quantity}"
                            placeholder="0"
@@ -1471,7 +1471,7 @@
                     </label>
                     <input type="number"
                            th:name="${'travel-cost-' + question.id + '-' + costIdentifier}"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            th:id="|formInput[cost-${costIdentifier}-cost]|"
                            ifs:nonZeroValue="${cost.cost}"
                            placeholder="0"
@@ -1488,7 +1488,7 @@
                     </label>
                     <input type="text"
                            th:name="${'travel-travelCostTotal-' + question.id + '-' + costIdentifier}"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            readonly="readonly"
                            th:id="${'cost-travel-'+costIdentifier+'-travelCostTotal'}"
                            th:attr="data-calculation-fields=|[id='formInput[cost-${costIdentifier}-cost]'],
@@ -1639,8 +1639,8 @@
                         <thead>
                         <tr>
                             <th id="other-funding-source">Source of funding</th>
-                            <th id="other-funding-date" class="width-medium">Date secured</th>
-                            <th id="other-funding-amount" class="width-medium">Funding amount</th>
+                            <th id="other-funding-date" class="width-150">Date secured</th>
+                            <th id="other-funding-amount" class="width-150">Funding amount</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -1709,8 +1709,8 @@
                                     <thead>
                                     <tr>
                                         <th scope="col" id="other-funding-source">Source of funding</th>
-                                        <th scope="col" id="other-funding-date" class="width-medium">Date secured</th>
-                                        <th scope="col" id="other-funding-amount" class="width-medium">Funding amount (&pound;)</th>
+                                        <th scope="col" id="other-funding-date" class="width-150">Date secured</th>
+                                        <th scope="col" id="other-funding-amount" class="width-150">Funding amount (&pound;)</th>
                                         <th scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                                     </tr>
                                     </thead>
@@ -1752,7 +1752,7 @@
                     </label>
                     <input type="text"
                            th:name="${'other_funding-fundingSource-' + question.id + '-' + costIdentifier}"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            th:id="|formInput[cost-${costIdentifier}-fundingSource]|"
                            th:value="${cost.fundingSource}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-input--error'"
@@ -1767,7 +1767,7 @@
                     </label>
                     <input type="text"
                            th:name="${'other_funding-securedDate-' + question.id + '-' + costIdentifier}"
-                           class="govuk-input width-medium"
+                           class="govuk-input govuk-input--width-10"
                            th:id="|formInput[cost-${costIdentifier}-securedDate]|"
                            placeholder="MM-YYYY"
                            pattern="(0[1-9]|1[012])-[0-9]{4}"
@@ -1783,7 +1783,7 @@
                         <span class="govuk-visually-hidden">Funding amount (&pound;)</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
                     </label>
-                    <input class="govuk-input width-medium"
+                    <input class="govuk-input govuk-input--width-10"
                            type="number"
                            th:name="${'other_funding-fundingAmount-' + question.id + '-' + costIdentifier}"
                            th:id="|formInput[cost-${costIdentifier}-fundingAmount]|"

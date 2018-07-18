@@ -144,48 +144,6 @@ table {
   }
 }
 
-.width-extra-small {
-  width: 65px;
-}
-
-.width-small {
-  width: 80px;
-}
-
-.width-small-medium {
-  width: 100px;
-}
-
-.width-medium {
-  width: 150px;
-}
-
-.width-large {
-  width: 200px;
-}
-
-.width-full {
-  width: 100%;
-
-  .app-form & {
-    min-width: 100px;
-  }
-
-}
-
-.width-x-large{
-  width:60%;
-}
-
-select {
-  &.govuk-select {
-    &.width-x-large {
-      width:60%;
-    }
-  }
-}
-
-
 .govuk-input,
 .govuk-select{
   + button {

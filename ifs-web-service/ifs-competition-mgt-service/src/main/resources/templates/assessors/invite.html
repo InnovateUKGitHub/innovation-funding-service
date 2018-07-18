@@ -94,7 +94,7 @@
                                     <span class="govuk-error-message" th:each="err : ${#fields.errors('selectedInnovationArea')}" th:text="${err}"></span>
                                 </th:block>
                                 <select th:field="*{selectedInnovationArea}"
-                                        class="govuk-select width-full"
+                                        class="govuk-select"
                                         data-progressive-group-select="Innovation sector"
                                         data-progressive-group-select-instruction="Please select an innovation sector"
                                         data-progressive-group-select-id="selectedInnovationArea"
@@ -134,7 +134,7 @@
                                             </label>
                                             <input type="text"
                                                    aria-labelledby="invite-label-assessor-name"
-                                                   class="govuk-input width-full"
+                                                   class="govuk-input"
                                                    required="required"
                                                    minlength="2"
                                                    maxlength="70"
@@ -157,7 +157,7 @@
                                             </label>
                                             <input type="email"
                                                    aria-labelledby="invite-label-assessor-email"
-                                                   class="govuk-input width-full"
+                                                   class="govuk-input"
                                                    required="required"
                                                    th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
                                                             data-email-errormessage=#{validation.standard.email.format},

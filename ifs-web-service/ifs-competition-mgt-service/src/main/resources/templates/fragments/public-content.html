@@ -25,7 +25,7 @@
             <th:block th:if="${#fields.hasErrors('shortDescription')}">
                 <span class="govuk-error-message" th:each="err : ${#fields.errors('shortDescription')}" th:text="${err}" />
             </th:block>
-            <input class="govuk-input width-full"
+            <input class="govuk-input"
                    id="shortDescription"
                    type="text"
                    th:errorclass="govuk-input--error"
@@ -77,7 +77,7 @@
             <th:block th:if="${#fields.hasErrors('keywords')}">
                 <span class="govuk-error-message" th:each="err : ${#fields.errors('keywords')}" th:text="${err}" />
             </th:block>
-            <input class="govuk-input width-full"
+            <input class="govuk-input"
                    id="keywords"
                    type="text"
                    th:field="${form.keywords}"
@@ -179,7 +179,7 @@
                     </th:block>
                     <div class="textarea-wrapped">
                             <textarea id="description"
-                                class="govuk-textarea width-full"
+                                class="govuk-textarea"
                                 data-editor="html"
                                 maxlength="5000"
                                 th:errorclass="govuk-textarea--error"
@@ -299,7 +299,7 @@
                         <div class="date-group">
                             <div class="day">
                                 <label class="govuk-label" th:for="dates[__${index}__].day">Day</label>
-                                <input class="fgovuk-input width-extra-small"
+                                <input class="fgovuk-input govuk-input--width-3"
                                        placeholder="DD"
                                        th:errorclass="govuk-input--error"
                                        type="number"
@@ -312,7 +312,7 @@
                             </div>
                             <div class="month">
                                 <label class="govuk-label" th:for="dates[__${index}__].month">Month</label>
-                                <input class="govuk-input width-extra-small"
+                                <input class="govuk-input govuk-input--width-3"
                                        placeholder="MM"
                                        type="number"
                                        th:errorclass="govuk-input--error"
@@ -325,7 +325,7 @@
                             </div>
                             <div class="year">
                                 <label class="govuk-label" th:for="dates[__${index}__].year">Year</label>
-                                <input class="govuk-input width-extra-small"
+                                <input class="govuk-input govuk-input--width-3"
                                        placeholder="YYYY"
                                        type="number"
                                        th:errorclass="govuk-input--error"
@@ -354,7 +354,7 @@
                     <textarea cols="30" rows="5"
                               data-editor="html"
                               th:id="dates[__${index}__].content"
-                              class="govuk-textarea width-full"
+                              class="govuk-textarea"
                               th:errorclass="govuk-textarea--error"
                               th:field="${form.dates[__${iteration.index}__].content}"
                               required="required"
@@ -435,7 +435,7 @@
                 <textarea th:errorclass="govuk-textarea--error"
                           cols="30"
                           rows="10"
-                          class="width-full govuk-textarea"
+                          class="width-full"
                           data-editor="html"
                           th:id="contentGroups[__${index}__].content"
                           th:field="*{contentGroups[__${index}__].content}"

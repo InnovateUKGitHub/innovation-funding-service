@@ -798,11 +798,11 @@ the weekdays should be correct
 
 the pre-field date should be correct
     Element Should Contain    css=#milestone-OPEN_DATE~ .js-addWeekDay    Thu
-    ${YEAR} =    Get Value    css=.date-group:nth-child(1) .year .width-small
+    ${YEAR} =    Get Value    css=.date-group:nth-child(1) .year .govuk-input--width-4
     Should Be Equal As Strings    ${YEAR}  ${nextyear}
-    ${MONTH} =    Get Value    css=.date-group:nth-child(1) .month .width-small
+    ${MONTH} =    Get Value    css=.date-group:nth-child(1) .month .govuk-input--width-4
     Should Be Equal As Strings    ${MONTH}    1
-    ${DAY} =    Get Value    css=.date-group:nth-child(1) .day .width-small
+    ${DAY} =    Get Value    css=.date-group:nth-child(1) .day .govuk-input--width-4
     Should Be Equal As Strings    ${DAY}    10
 
 the resubmission should not have a default selection

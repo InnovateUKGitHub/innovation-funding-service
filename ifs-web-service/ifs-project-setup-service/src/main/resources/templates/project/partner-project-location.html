@@ -43,7 +43,7 @@
                        id="postcode"
                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                        type="text"
-                       class="govuk-input width-medium"
+                       class="govuk-input govuk-input--width-10"
                        required="required"
                        th:value="${form.getPostcode() != null ? form.getPostcode() : NULL}"
                        th:errorclass="govuk-input--error"

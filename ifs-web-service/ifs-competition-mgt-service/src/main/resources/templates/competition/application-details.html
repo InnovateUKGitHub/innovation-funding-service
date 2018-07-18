@@ -38,7 +38,7 @@
                     <th:block th:if="${#fields.hasErrors('minProjectDuration')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('minProjectDuration')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input width-small"
+                    <input class="govuk-input govuk-input--width-4"
                            id="minProjectDuration"
                            name="minimum"
                            th:field="*{minProjectDuration}"
@@ -57,7 +57,7 @@
                     <th:block th:if="${#fields.hasErrors('maxProjectDuration')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('maxProjectDuration')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input width-small"
+                    <input class="govuk-input govuk-input--width-4"
                            id="maxProjectDuration"
                            name="maximum"
                            th:field="*{maxProjectDuration}"

@@ -105,7 +105,7 @@
                                                 <label for="name-finance-contact"
                                                        class="govuk-visually-hidden">name</label>
                                                 <input type="text"
-                                                       class="govuk-input width-full"
+                                                       class="govuk-input"
                                                        th:value="*{name}"
                                                        th:classappend="${#fields.hasErrors('name')} ? 'govuk-input--error'"
                                                        name="name"
@@ -117,7 +117,7 @@
                                                 <label for="email-finance-contact"
                                                        class="govuk-visually-hidden">email</label>
                                                 <input type="email"
-                                                       class="govuk-input width-full"
+                                                       class="govuk-input"
                                                        th:value="*{inviteEmail}"
                                                        th:classappend="${#fields.hasErrors('inviteEmail')} ? 'govuk-input--error'"
                                                        name="inviteEmail"

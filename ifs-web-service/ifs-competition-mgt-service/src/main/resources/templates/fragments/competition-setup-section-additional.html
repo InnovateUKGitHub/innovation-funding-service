@@ -39,7 +39,7 @@
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funder')}" th:text="${err}"></span>
                         </th:block>
                         <input required="required"
-                               class="govuk-input width-x-large"
+                               class="govuk-input govuk-input--width-30"
                                th:errorclass="govuk-input--error"
                                th:id="funders[__${iteration.index}__].funder"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
@@ -56,7 +56,7 @@
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('funders[__${iteration.index}__].funderBudget')}" th:text="${err}"></span>
                         </th:block>
                         <input required="required" type="number" min="0"
-                               class="govuk-input width-x-large"
+                               class="govuk-input govuk-input--width-30"
                                th:errorclass="govuk-input--error"
                                th:id="funders[__${iteration.index}__].funderBudget"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}"
@@ -102,7 +102,7 @@
                     <th:block th:if="${#fields.hasErrors('pafNumber')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('pafNumber')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input width-large"
+                    <input class="govuk-input govuk-input--width-10"
                            th:errorclass="govuk-input--error"
                            type="text"
                            id="pafNumber"
@@ -116,7 +116,7 @@
                     <th:block th:if="${#fields.hasErrors('budgetCode')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('budgetCode')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input width-large"
+                    <input class="govuk-input govuk-input--width-10"
                            id="budgetCode"
                            th:errorclass="govuk-input--error"
                            type="text"
@@ -131,7 +131,7 @@
                     <th:block th:if="${#fields.hasErrors('activityCode')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input width-large"
+                    <input class="govuk-input govuk-input--width-10"
                            th:errorclass="govuk-input--error"
                            type="text"
                            id="activityCode"
@@ -149,7 +149,7 @@
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('competitionCode')}" th:text="${err}"></span>
                     </th:block>
                     <input readonly="readonly"
-                           class="govuk-input width-large readonly-boxed"
+                           class="govuk-input govuk-input--width-10 readonly-boxed"
                            th:classappend="${#fields.hasErrors('competitionCode')} ? 'govuk-input--error'"
                            type="text"
                            id="competitionCode"

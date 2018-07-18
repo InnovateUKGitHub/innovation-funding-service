@@ -10,7 +10,7 @@
             <th:block th:insert="question-type/form-elements :: form-hint (hint='Enter the full title of your proposed project.')" />
             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')" />
             <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-            <input class="govuk-input width-full"
+            <input class="govuk-input"
                    type="text"
                    id="application.name"
                    th:field="*{__application.name__}"
@@ -34,7 +34,7 @@
                 Duration in months
             </label>
             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
-            <input class="govuk-input width-extra-small"
+            <input class="govuk-input govuk-input--width-3"
                    id="application.durationInMonths"
                    th:field="*{__application.durationInMonths__}"
                    th:errorclass="govuk-input--error"
@@ -131,7 +131,7 @@
                     Previous application number
                 </label>
                 <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')"  />
-                <input class="govuk-input width-full"
+                <input class="govuk-input"
                        type="text"
                        id="application.previousApplicationNumber"
                        th:field="*{__application.previousApplicationNumber__}"
@@ -144,7 +144,7 @@
                     Previous application title
                 </label>
                 <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" />
-                <input class="govuk-input width-full"
+                <input class="govuk-input"
                        type="text"
                        id="application.previousApplicationTitle"
                        th:field="*{__application.previousApplicationTitle__}"

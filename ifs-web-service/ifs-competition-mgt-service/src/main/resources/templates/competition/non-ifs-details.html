@@ -47,7 +47,7 @@
               <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
                   <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
               </th:block>
-              <select class="govuk-select width-x-large"
+              <select class="govuk-select govuk-!-width-one-third"
                       id="innovationSectorCategoryId"
                       th:field="${form.innovationSectorCategoryId}"
                       required="required"
@@ -64,7 +64,7 @@
               <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">
                   <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
               </th:block>
-              <select class="govuk-select width-x-large"
+              <select class="govuk-select govuk-!-width-one-third"
                       th:field="${form.innovationAreaCategoryId}"
                       id="innovationAreaCategoryId"
                       required="required"
@@ -101,7 +101,7 @@
                             <td class="day">
                                 <input id="openDate-day"
                                        th:errorclass="govuk-input--error"
-                                       class="govuk-input width-small"
+                                       class="govuk-input govuk-input--width-4"
                                        type="number"
                                        placeholder="DD"
                                        required="required"
@@ -114,7 +114,7 @@
                             <td class="month">
                                 <input id="openDate-month"
                                        th:errorclass="govuk-input--error"
-                                       class="govuk-input width-small"
+                                       class="govuk-input govuk-input--width-4"
                                        type="number"
                                        placeholder="MM"
                                        required="required"
@@ -126,7 +126,7 @@
                             </td>
                             <td class="year">
                                 <input id="openDate-year"
-                                       class="govuk-input width-small"
+                                       class="govuk-input govuk-input--width-4"
                                        th:errorclass="govuk-input--error"
                                        type="number"
                                        placeholder="YYYY"
@@ -158,7 +158,7 @@
                             <td class="day">
                                 <input id="registrationCloseDate-day"
                                        th:errorclass="govuk-input--error"
-                                       class="govuk-input width-small"
+                                       class="govuk-input govuk-input--width-4"
                                        type="number"
                                        placeholder="DD"
                                        required="required"
@@ -171,7 +171,7 @@
                             <td class="month">
                                 <input id="registrationCloseDate-month"
                                        th:errorclass="govuk-input--error"
-                                       class="govuk-input width-small"
+                                       class="govuk-input govuk-input--width-4"
                                        type="number"
                                        placeholder="MM"
                                        required="required"
@@ -183,7 +183,7 @@
                             </td>
                             <td class="year">
                                 <input id="registrationCloseDate-year"
-                                       class="govuk-input width-small"
+                                       class="govuk-input govuk-input--width-4"
                                        th:errorclass="govuk-input--error"
                                        type="number"
                                        placeholder="YYYY"
@@ -215,7 +215,7 @@
                             <td class="day">
                                 <input id="closeDate-day"
                                        th:errorclass="govuk-input--error"
-                                       class="govuk-input width-small"
+                                       class="govuk-input govuk-input--width-4"
                                        type="number"
                                        placeholder="DD"
                                        required="required"
@@ -227,7 +227,7 @@
                             </td>
                             <td class="month">
                                 <input id="closeDate-month"
-                                       class="govuk-input width-small"
+                                       class="govuk-input govuk-input--width-4"
                                        th:errorclass="govuk-input--error"
                                        type="number"
                                        placeholder="MM"
@@ -240,7 +240,7 @@
                             </td>
                             <td class="year">
                                 <input id="closeDate-year"
-                                       class="govuk-input width-small"
+                                       class="govuk-input govuk-input--width-4"
                                        th:errorclass="govuk-input--error"
                                        type="number"
                                        placeholder="YYYY"
@@ -262,7 +262,7 @@
                             <td class="js-addWeekDay">-</td>
                             <td class="day">
                                 <input id="applicantNotifiedDate-day"
-                                       class="govuk-input width-small"
+                                       class="govuk-input govuk-input--width-4"
                                        th:errorclass="govuk-input--error"
                                        type="number"
                                        placeholder="DD"
@@ -274,7 +274,7 @@
                             <td class="month">
                                 <input id="applicantNotifiedDate-month"
                                        th:errorclass="govuk-input--error"
-                                       class="govuk-input width-small"
+                                       class="govuk-input govuk-input--width-4"
                                        type="number"
                                        placeholder="MM"
                                        min="1"
@@ -285,7 +285,7 @@
                             <td class="year">
                                 <input id="applicantNotifiedDate-year"
                                        th:errorclass="govuk-input--error"
-                                       class="govuk-input width-small"
+                                       class="govuk-input govuk-input--width-4"
                                        type="number"
                                        placeholder="YYYY"
                                        min="2000"
@@ -307,7 +307,7 @@
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('url')}" th:text="${err}"></span>
                 </th:block>
                 <input id="url"
-                       class="govuk-input width-x-large"
+                       class="govuk-input govuk-input--width-30"
                        th:errorclass="govuk-input--error"
                        type="text"
                        th:field="${form.url}"

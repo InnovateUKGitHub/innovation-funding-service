@@ -104,7 +104,7 @@
                                 <th:block th:if="${#fields.hasErrors('rejectComment')}">
                                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
                                 </th:block>
-                                <textarea class="govuk-textarea width-full"
+                                <textarea class="govuk-textarea"
                                           maxlength="5000"
                                           data-max_words="100"
                                           data-maxwordslength="100"

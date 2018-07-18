@@ -40,7 +40,7 @@
                             th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)}"
                             scope="col"
                             class="numeric"
-                            th:classappend="${iteration.count} > 3 ? ' width-small'">
+                            th:classappend="${iteration.count} > 3 ? ' width-80'">
                             <th:block th:text="${financeSubSection.name}" /> (&pound;)
                         </th>
                     </tr>
@@ -118,10 +118,10 @@
                 <tr>
                     <th />
                     <th scope="col" class="numeric">Total costs</th>
-                    <th scope="col" class="numeric width-small">% Grant</th>
-                    <th scope="col" class="numeric width-small-medium">Funding sought (&pound;)</th>
-                    <th scope="col" class="numeric width-medium">Other public sector funding (&pound;)</th>
-                    <th scope="col" class="numeric width-small-medium">Contribution to project (&pound;)</th>
+                    <th scope="col" class="numeric width-80">% Grant</th>
+                    <th scope="col" class="numeric width-100">Funding sought (&pound;)</th>
+                    <th scope="col" class="numeric width-150">Other public sector funding (&pound;)</th>
+                    <th scope="col" class="numeric width-100">Contribution to project (&pound;)</th>
                 </tr>
                 </thead>
                 <tbody>

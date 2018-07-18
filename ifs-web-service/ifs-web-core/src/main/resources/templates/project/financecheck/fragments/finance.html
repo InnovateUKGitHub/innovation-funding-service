@@ -111,8 +111,8 @@
                             <thead>
                             <tr>
                                 <th id="other-funding-source">Source of funding</th>
-                                <th id="other-funding-date" class="width-medium">Date secured</th>
-                                <th id="other-funding-amount" class="width-medium">Funding amount (£)</th>
+                                <th id="other-funding-date" class="width-150">Date secured</th>
+                                <th id="other-funding-amount" class="width-150">Funding amount (£)</th>
                                 <th th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"><span class="govuk-visually-hidden">Actions</span></th>
                             </tr>
                             </thead>
@@ -155,7 +155,7 @@
                     <input type="text"
                            th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${'other_funding-fundingSource-' + question.id + '-' + costIdentifier}"
-                           class="govuk-input width-full"
+                           class="govuk-input"
                            th:id="${'cost-other_funding-'+costIdentifier+'-source'}"
                            th:value="${rejectedValue != null ? rejectedValue : cost.fundingSource}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-input--error'"
@@ -171,7 +171,7 @@
                     <input type="text"
                            th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${'other_funding-securedDate-' + question.id + '-' + costIdentifier}"
-                           class="govuk-input width-medium"
+                           class="govuk-input govuk-input--width-10"
                            th:id="${'cost-other_funding-'+costIdentifier+'-date'}"
                            placeholder="MM-YYYY"
                            pattern="(0[1-9]|1[012])-[0-9]{4}"
@@ -187,7 +187,7 @@
                     <span class="govuk-visually-hidden">Funding amount (&pound;)</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
                   </label>
-                    <input class="govuk-input width-medium"
+                    <input class="govuk-input govuk-input--width-10"
                            type="number"
                            th:readonly="${(question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${'other_funding-fundingAmount-' + question.id + '-' + costIdentifier}"
@@ -279,17 +279,17 @@
                 <thead>
                     <tr>
                         <th scope="col">Partner</th>
-                        <th scope="col" class="numeric width-small">Total costs</th>
-                        <th scope="col" class="numeric width-small">
+                        <th scope="col" class="numeric width-80">Total costs</th>
+                        <th scope="col" class="numeric width-80">
                             % Grant
                         </th>
-                        <th scope="col" class="numeric width-small-medium">
+                        <th scope="col" class="numeric width-100">
                             Funding sought (&pound;)
                         </th>
-                        <th scope="col" class="numeric width-medium">
+                        <th scope="col" class="numeric width-150">
                             Other public sector funding (&pound;)
                         </th>
-                        <th scope="col" class="numeric width-small-medium">
+                        <th scope="col" class="numeric width-100">
                             Contribution to project (&pound;)
                         </th>
                     </tr>
@@ -330,14 +330,14 @@
                 <thead>
                     <tr>
                         <th scope="col">Partner</th>
-                        <th scope="col" class="numeric width-small">Total</th>
-                        <th scope="col" class="numeric width-small">Labour (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Overheads (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Materials (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Capital usage (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Subcontract cost (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Travel and subs (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Other costs (&pound;)</th>
+                        <th scope="col" class="numeric width-80">Total</th>
+                        <th scope="col" class="numeric width-80">Labour (&pound;)</th>
+                        <th scope="col" class="numeric width-80">Overheads (&pound;)</th>
+                        <th scope="col" class="numeric width-80">Materials (&pound;)</th>
+                        <th scope="col" class="numeric width-80">Capital usage (&pound;)</th>
+                        <th scope="col" class="numeric width-80">Subcontract cost (&pound;)</th>
+                        <th scope="col" class="numeric width-80">Travel and subs (&pound;)</th>
+                        <th scope="col" class="numeric width-80">Other costs (&pound;)</th>
                     </tr>
                 </thead>
                 <tfoot>

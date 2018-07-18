@@ -105,7 +105,7 @@
                         <th:block th:if="${#fields.hasErrors('ineligibleReason')}">
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('ineligibleReason')}" th:text="${err}"></span>
                         </th:block>
-                        <textarea class="govuk-textarea width-full"
+                        <textarea class="govuk-textarea"
                                   maxlength="5000"
                                   data-max_words="400"
                                   data-maxwordslength="400"

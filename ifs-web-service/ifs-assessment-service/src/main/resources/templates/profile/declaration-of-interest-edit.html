@@ -50,7 +50,7 @@
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('principalEmployer')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <input class="govuk-input width-full" type="text" th:field="*{principalEmployer}"
+                        <input class="govuk-input" type="text" th:field="*{principalEmployer}"
                                th:errorclass="fgovuk-input--error" required="required"
                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.principalEmployer.required}" />
                     </div>
@@ -62,7 +62,7 @@
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
                             </th:block>
                         </label>
-                        <input class="govuk-input width-full" type="text" th:field="*{role}"
+                        <input class="govuk-input" type="text" th:field="*{role}"
                                th:errorclass="govuk-input--error" required="required"
                                th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.role.required}" />
                     </div>
@@ -76,7 +76,7 @@
                         </label>
                         <div class="textarea-wrapped word-count">
                             <textarea
-                                class="govuk-textarea width-full"
+                                class="govuk-textarea"
                                 cols="30"
                                 rows="3"
                                 maxlength="5000"
@@ -148,7 +148,7 @@
                                                       th:text="${err}"></span>
                                             </th:block>
                                         </label>
-                                        <input aria-labelledby="aria-position-org" class="govuk-input width-full appointment-field" type="text"
+                                        <input aria-labelledby="aria-position-org" class="govuk-input appointment-field" type="text"
                                                th:errorclass="govuk-input--error"
                                                th:id="appointments[__${appointmentStat.index}__].organisation"
                                                th:name="appointments[__${appointmentStat.index}__].organisation"
@@ -165,7 +165,7 @@
                                                           th:text="${err}"></span>
                                                 </th:block>
                                         </label>
-                                        <input aria-labelledby="aria-position-pos" class="govuk-input width-full appointment-field" type="text"
+                                        <input aria-labelledby="aria-position-pos" class="govuk-input appointment-field" type="text"
                                                th:errorclass="fgovuk-input--error"
                                                th:id="appointments[__${appointmentStat.index}__].position"
                                                th:name="appointments[__${appointmentStat.index}__].position"
@@ -232,7 +232,7 @@
 
                             <div class="textarea-wrapped word-count">
                                 <textarea
-                                    class="govuk-textarea width-full"
+                                    class="govuk-textarea"
                                     cols="30"
                                     rows="3"
                                     data-max_words="100"
@@ -309,7 +309,7 @@
                                                   th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}"
                                                   th:text="${err}"></span>
                                         </th:block>
-                                        <input aria-labelledby="aria-family-rel" class="govuk-input width-full family-affiliation-field"
+                                        <input aria-labelledby="aria-family-rel" class="govuk-input family-affiliation-field"
                                                th:errorclass="govuk-input--error" type="text"
                                                th:id="familyAffiliations[__${familyAffiliationStat.index}__].relation"
                                                th:name="familyAffiliations[__${familyAffiliationStat.index}__].relation"
@@ -324,7 +324,7 @@
                                                   th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}"
                                                   th:text="${err}"></span>
                                         </th:block>
-                                        <input aria-labelledby="aria-family-org" class="govuk-input width-full family-affiliation-field"
+                                        <input aria-labelledby="aria-family-org" class="govuk-input family-affiliation-field"
                                                th:errorclass="govuk-input--error" type="text"
                                                th:id="familyAffiliations[__${familyAffiliationStat.index}__].organisation"
                                                th:name="familyAffiliations[__${familyAffiliationStat.index}__].organisation"
@@ -339,7 +339,7 @@
                                                   th:each="err : ${#fields.errors('familyAffiliations[__${familyAffiliationStat.index}__].position')}"
                                                   th:text="${err}"></span>
                                         </th:block>
-                                        <input aria-labelledby="aria-family-pos" class="govuk-input width-full family-affiliation-field"
+                                        <input aria-labelledby="aria-family-pos" class="govuk-input family-affiliation-field"
                                                th:errorclass="govuk-input--error" type="text"
                                                th:id="familyAffiliations[__${familyAffiliationStat.index}__].position"
                                                th:name="familyAffiliations[__${familyAffiliationStat.index}__].position"
@@ -401,7 +401,7 @@
                             </label>
                             <div class="textarea-wrapped word-count">
                                 <textarea
-                                    class="govuk-textarea width-full"
+                                    class="govuk-textarea"
                                     cols="30"
                                     rows="3"
                                     data-max_words="100"

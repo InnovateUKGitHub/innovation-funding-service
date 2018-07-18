@@ -57,7 +57,7 @@
                                th:errorclass="govuk-input--error"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.standard.firstname.required},data-pattern-errormessage=#{validation.standard.firstname.invalid},data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)}"
-                               class="govuk-input width-full"
+                               class="govuk-input"
                                th:readonly="${readonly}"
                                th:field="*{firstName}" />
                     </div>
@@ -77,7 +77,7 @@
                                th:errorclass="govuk-input--error"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.standard.lastname.required},data-pattern-errormessage=#{validation.standard.lastname.invalid},data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)}"
-                               class="govuk-input width-full"
+                               class="govuk-input"
                                th:readonly="${readonly}"
                                th:field="*{lastName}" />
                     </div>
@@ -94,7 +94,7 @@
                                th:errorclass="govuk-input--error"
                                required="required"
                                th:attr="data-required-errormessage=#{validation.invite.email.required}"
-                               class="govuk-input width-full"
+                               class="govuk-input"
                                th:readonly="${readonly}"
                                th:field="*{emailAddress}" />
                     </div>

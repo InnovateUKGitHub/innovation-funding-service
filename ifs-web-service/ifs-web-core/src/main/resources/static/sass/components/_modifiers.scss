@@ -19,16 +19,32 @@ table {
     box-sizing: border-box;
     padding-right: 1em;
     width: 40%;
-
-    .width-full {
-      width: 100%;
-    }
   }
 
   .width-50-percent {
     box-sizing: border-box;
     padding-right: 1em;
     width: 50%;
+  }
+
+  .width-65 {
+    width: 65px;
+  }
+
+  .width-80 {
+    width: 80px;
+  }
+
+  .width-100 {
+    width: 100px;
+  }
+
+  .width-150 {
+    width: 150px;
+  }
+
+  .width-200 {
+    width: 200px;
   }
 
   .selection-button-checkbox {

@@ -104,7 +104,7 @@
     however with the possibility to make 1 field readonly (i.e. day) we need to add the class
     worst case all three of them are readonly and there is a class that does nothing.
       */-->
-    <input class="govuk-input width-extra-small"
+    <input class="govuk-input govuk-input--width-3"
            th:classAppend="${inputCssClass}+' '+${readonly == true ? 'js-visited':''}"
            th:readonly="${readonly}"
            type="number"
@@ -121,7 +121,7 @@
 <!-- ========================= empty input field type number =========================== -->
 
 <th:block th:fragment="form-number-extra-small-empty (id, field)">
-    <input class="govuk-input width-extra-small"
+    <input class="govuk-input govuk-input--width-3"
            th:classAppend="${inputCssClass}+' '+${readonly == true ? 'js-visited':''}"
            th:readonly="${readonly}"
            type="number"

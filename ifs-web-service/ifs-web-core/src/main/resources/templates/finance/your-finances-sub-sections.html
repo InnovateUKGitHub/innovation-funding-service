@@ -69,7 +69,7 @@
                                 </label>
                             </td>
                             <td class="numeric">
-                                <input class="govuk-input width-large"
+                                <input class="govuk-input govuk-input--width-10"
                                        th:disabled="${formInputViewModel.readonly}"
                                        th:id="${'input-'+formInput.id}"
                                        th:name="'formInput['+${formInput.id}+']'"
@@ -188,11 +188,11 @@
             <table>
                 <thead>
                     <tr>
-                        <th scope="col" class="numeric width-small">Total project costs</th>
-                        <th scope="col" class="numeric width-small">% Grant</th>
-                        <th scope="col" class="numeric width-small">Funding sought (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Other public sector funding (&pound;)</th>
-                        <th scope="col" class="numeric width-small">Contribution to project (&pound;)</th>
+                        <th scope="col" class="numeric width-80">Total project costs</th>
+                        <th scope="col" class="numeric width-80">% Grant</th>
+                        <th scope="col" class="numeric width-80">Funding sought (&pound;)</th>
+                        <th scope="col" class="numeric width-80">Other public sector funding (&pound;)</th>
+                        <th scope="col" class="numeric width-80">Contribution to project (&pound;)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -263,7 +263,7 @@
                     <th:block th:if="${#fields.hasErrors('projectLocation')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('projectLocation')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input width-large"
+                    <input class="govuk-input govuk-input--width-10"
                            id="projectLocation"
                            th:attr="data-required-errormessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}"
                            type="text"
