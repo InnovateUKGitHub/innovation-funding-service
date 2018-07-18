@@ -17,7 +17,7 @@ public class DocumentsModelPopulator implements CompetitionSetupSectionModelPopu
 
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
-        return CompetitionSetupSection.ELIGIBILITY;
+        return CompetitionSetupSection.DOCUMENTS;
     }
 
     @Override
