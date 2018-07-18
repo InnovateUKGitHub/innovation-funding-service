@@ -129,7 +129,7 @@ public class ProjectDetailsController {
                                 )
                         );
 
-        return "redirect:" + buildRedirect(request,
+        return buildRedirect(request,
                 "management/competition/" + competitionId + "/applications/previous");
     }
 
