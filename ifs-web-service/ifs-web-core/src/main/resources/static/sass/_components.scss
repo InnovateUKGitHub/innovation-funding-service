@@ -8,7 +8,6 @@ $wide-page-width: 1380px;
 @import "mixins";
 
 @import 'compass/css3/transition';
-//@import 'layout/gdsUpgrade';
 @import 'layout/layout';
 @import 'layout/grid';
 @import 'layout/small';
@@ -33,7 +32,6 @@ $wide-page-width: 1380px;
 //Custom components
 @import 'components/collapsible-sections';
 @import 'components/highlight-panel';
-@import 'components/submitted-panel';
 @import 'components/progress-indicator';
 @import 'components/event-alert';
 @import 'components/message-alerts';
@@ -48,3 +46,4 @@ $wide-page-width: 1380px;
 @import 'components/invites';
 @import "components/flextable";
 @import "components/buttons";
+@import "components/panel";

@@ -168,3 +168,10 @@ hr,
 .clear-floats{
   clear: both;
 }
+
+.govuk-panel--confirmation {
+  .govuk-link {
+    color: govuk-colour("white");
+
+  }
+}

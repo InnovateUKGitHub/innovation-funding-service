@@ -15,24 +15,24 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
          <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application status',subTitle=|${currentApplication.id} : ${currentApplication.name}|,size='govuk-heading-xl'" />
 
-        <div class="submitted-panel">
-            <h2 class="govuk-heading-xl govuk-!-margin-0">Application submitted</h2>
-            <ul>
-                <li>Application number: <span th:text="${currentApplication.id}" /></li>
-                <li>
-                    Your application for the competition '<span th:text="${currentCompetition.name}" />' was submitted
-                    <th:block th:if="${currentApplication.submittedDate}">
-                        on
-                        <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
-                        at
-                        <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'h:mma'))}" />.
-                    </th:block>
-                </li>
-            </ul>
-            <ul class="panel-links">
-                <li><a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}" class="govuk-link">View application</a></li>
-                <li><a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}" class="govuk-link">Print application</a></li>
-            </ul>
+        <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
+            <h2 class="govuk-panel__title">Application submitted</h2>
+            <div class="govuk-panel__body">
+                Application number: <span th:text="${currentApplication.id}" /><br/>
+                Your application for the competition '<span th:text="${currentCompetition.name}" />' was submitted
+                <th:block th:if="${currentApplication.submittedDate}">
+                    on
+                    <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
+                    at
+                    <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'h:mma'))}" />.
+                </th:block><br/>
+                <div class="govuk-!-margin-top-6">
+                    <a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}"
+                       class="govuk-link govuk-!-margin-right-6">View application</a>
+                    <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}"
+                       class="govuk-link">Print application</a>
+                </div>
+            </div>
         </div>
 
         <h2 class="govuk-heading-l">What happens next?</h2>
