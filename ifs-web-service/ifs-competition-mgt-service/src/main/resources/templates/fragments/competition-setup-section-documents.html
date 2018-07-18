@@ -1,0 +1,20 @@
+
+<!-- =================Section: Terms and Conditions (3) =========================== -->
+<th:block th:fragment="section-content">
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to prev part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='initial')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Initial details</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='additional')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Funding information</span>
+            </a>
+        </li>
+    </ul>
+</th:block>

@@ -19,6 +19,8 @@ public class MenuViewModel extends CompetitionSetupViewModel {
         this.publishDate = publishDate;
         this.isPublicContentPublished = isPublicContentPublished;
         this.statuses = statuses;
+        // TODO: add status to database
+        this.statuses.put(CompetitionSetupSection.DOCUMENTS, Optional.of(Boolean.FALSE));
     }
 
     public ZonedDateTime getPublishDate() {

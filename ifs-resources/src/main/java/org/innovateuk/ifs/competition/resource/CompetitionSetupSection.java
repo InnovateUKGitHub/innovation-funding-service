@@ -21,6 +21,7 @@ public enum CompetitionSetupSection {
 	MILESTONES(5L, "milestones", "Milestones", emptyList(), true),
 	APPLICATION_FORM(6L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS), false),
 	ASSESSORS(7L, "assessors", "Assessors", emptyList(), true),
+	DOCUMENTS(10L, "documents", "Documents", emptyList(), true),
 	CONTENT(8L, "content", "Public content", emptyList(), true);
 	
 	private Long id;
