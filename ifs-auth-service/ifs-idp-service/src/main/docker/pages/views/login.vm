@@ -48,6 +48,14 @@
         <link href="$resourcesDomain/css/ie8.css" rel="stylesheet"  media="all" />
         <![endif]-->
 
+        <!--[if gte IE 9]><!-->
+        <script type="text/javascript">
+            <!--//--><![CDATA[//><!--
+            !function(){"use strict";function e(e,t,c){e.addEventListener?e.addEventListener(t,c,!1):e.attachEvent&&e.attachEvent("on"+t,c)}function t(e){return window.localStorage&&localStorage.font_css_cache&&localStorage.font_css_cache_file===e}function c(){if(window.localStorage&&window.XMLHttpRequest)if(t(o))n(localStorage.font_css_cache);else{var e=new XMLHttpRequest;e.open("GET",o,!0),e.onreadystatechange=function(){4===e.readyState&&(n(e.responseText),localStorage.font_css_cache=e.responseText,localStorage.font_css_cache_file=o)},e.send()}else{var c=document.createElement("link");c.href=o,c.rel="stylesheet",c.type="text/css",document.getElementsByTagName("head")[0].appendChild(c),document.cookie="font_css_cache"}}function n(e){var t=document.createElement("style");t.setAttribute("type","text/css"),t.styleSheet?t.styleSheet.cssText=e:t.innerHTML=e,document.getElementsByTagName("head")[0].appendChild(t)}var o="$resourcesDomain/css/fonts.css";window.localStorage&&localStorage.font_css_cache||document.cookie.indexOf("font_css_cache")>-1?c():e(window,"load",c)}();
+            //--><!]]>
+        </script>
+        <!--<![endif]-->
+
         <!--[if lt IE 9]>
         <script src="$resourcesDomain/js/vendor/html5shiv/html5shiv.js"></script>
         <![endif]-->
@@ -249,7 +257,7 @@
 
 
 
-            <p class="govuk-body govuk-!-margin-top-9 govuk-!-font-weight-bold user-feedback"><span>Need help with this service?</span> <a href="$resourcesDomain/info/contact">Contact us</a></p>
+            <p class="govuk-body govuk-!-margin-top-9 govuk-!-font-weight-bold user-feedback"><span>Need help with this service?</span> <a href="$resourcesDomain/info/contact" class="govuk-link">Contact us</a></p>
          </main>
       </div>
       <footer class="govuk-footer" role="contentinfo">
