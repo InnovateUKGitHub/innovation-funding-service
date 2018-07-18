@@ -32,11 +32,13 @@
         <span th:if="${field.guidanceTitle == 'Guidance for assessing scope'}" class="govuk-hint">Please justify your answer by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
         <span th:unless="${field.guidanceTitle == 'Guidance for assessing scope'}" class="govuk-hint">Please justify your score by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
-        <details th:unless="${#strings.isEmpty(field.guidanceTitle)}">
-            <summary>
-                <span class="summary" th:text="${field.guidanceTitle}" />
+        <details th:unless="${#strings.isEmpty(field.guidanceTitle)}"
+                 class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text"
+                      th:text="${field.guidanceTitle}" />
             </summary>
-            <div class="panel wysiwyg-styles">
+            <div class="govuk-details__text wysiwyg-styles">
                 <p class="govuk-body" th:if="${field.guidanceAnswer}" th:text="${field.guidanceAnswer}" />
                 <table th:unless="${#lists.isEmpty(field.guidanceRows)}">
                     <tr th:each="guidance : ${field.guidanceRows}">

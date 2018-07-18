@@ -85,9 +85,12 @@
                 <h2 class="govuk-heading-m">Not on Companies House?</h2>
                 <p class="govuk-body">Enter your organisation details manually. You may need to supply additional details at a later point.</p>
                 <th:block th:with="isOpen=${#strings.isEmpty('*{organisationSearchName}') or !#strings.isEmpty(organisationForm.organisationName) or !#strings.isEmpty(organisationForm.addressForm.postcodeInput) or organisationForm.addressForm.manualAddress or organisationForm.addressForm.triedToSearch}">
-                    <details th:attr="open=${isOpen} ? 'open' : null ">
-                        <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"><span class="summary">Enter details manually</span></summary>
-                        <div class="panel" th:attr="aria-hidden=${isOpen} ? 'false' : null">
+                    <details class="govuk-details" th:attr="open=${isOpen} ? 'open' : null ">
+                        <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"
+                                 class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">Enter details manually</span>
+                        </summary>
+                        <div class="govuk-details__text" th:attr="aria-hidden=${isOpen} ? 'false' : null">
                             <h2 class="govuk-heading-m">Enter your organisation details</h2>
                             <th:block th:insert="fragments/addresses :: organisation-name"  th:with="form=${organisationForm},addressType=${'organisation address'}"/>
                             <th:block th:insert="fragments/addresses :: company-address-details"  th:with="form=${organisationForm}, addressType=${'organisation address'}"/>

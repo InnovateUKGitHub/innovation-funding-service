@@ -56,27 +56,29 @@
                 </ul>
 
                 <h2 class="govuk-heading-s">Recipients</h2>
-                <details>
-                    <summary><span class="summary">Review list of recipients</span></summary>
-                    <div class="panel table-overflow">
-                    <table id="application-list">
-                        <thead>
-                        <tr>
-                            <th scope="col">Application number</th>
-                            <th scope="col">Project title</th>
-                            <th scope="col">Lead</th>
-                            <th scope="col">Funding decision</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="applicationSummary, stat : ${model.applications}">
-                            <td th:text="${applicationSummary.id}">Application number</td>
-                            <td th:text="${applicationSummary.name}">Project title</td>
-                            <td th:text="${applicationSummary.lead}">Lead</td>
-                            <td th:text="${applicationSummary.fundingDecision?.name}">-</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <details class="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">Review list of recipients</span>
+                    </summary>
+                    <div class="govuk-details__text table-overflow">
+                        <table id="application-list">
+                            <thead>
+                            <tr>
+                                <th scope="col">Application number</th>
+                                <th scope="col">Project title</th>
+                                <th scope="col">Lead</th>
+                                <th scope="col">Funding decision</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="applicationSummary, stat : ${model.applications}">
+                                <td th:text="${applicationSummary.id}">Application number</td>
+                                <td th:text="${applicationSummary.name}">Project title</td>
+                                <td th:text="${applicationSummary.lead}">Lead</td>
+                                <td th:text="${applicationSummary.fundingDecision?.name}">-</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </details>
 

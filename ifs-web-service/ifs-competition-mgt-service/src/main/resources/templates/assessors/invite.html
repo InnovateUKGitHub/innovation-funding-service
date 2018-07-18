@@ -74,10 +74,12 @@
                     </div>
                 </div>
 
-                <details class="govuk-!-margin-bottom-6" th:open="${form.visible}">
-                    <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
+                <details class="govuk-details govuk-!-margin-bottom-6" th:open="${form.visible}">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">Add a non-registered assessor to your list</span>
+                    </summary>
 
-                    <div class="panel">
+                    <div class="govuk-details__text">
                         <form th:action="@{/competition/{competitionId}/assessors/invite?addNew(competitionId=${model.competitionId})}"
                               method="POST"
                               th:object="${form}"

@@ -35,22 +35,25 @@
 <!-- ========================= Form Guidance =========================== -->
 
 <th:block th:fragment="form-guidance (guidable)">
-    <details th:if="${guidable?.getGuidanceTitle()}">
-        <summary>
-            <span class="summary" th:text="${guidable.getGuidanceTitle()}"/>
+    <details th:if="${guidable?.getGuidanceTitle()}"
+             class="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text"
+                  th:text="${guidable.getGuidanceTitle()}"/>
         </summary>
-        <div class="panel wysiwyg-styles" ifs:utext="${guidable.getGuidanceAnswer()}"/>
+        <div class="govuk-details__text wysiwyg-styles" ifs:utext="${guidable.getGuidanceAnswer()}"/>
     </details>
 </th:block>
 
 <!-- ========================= Form Guidance (Appendix) ===================== -->
 
 <th:block th:fragment="form-guidance-appendix (formInput)">
-    <details th:if="${formInput?.guidanceTitle}">
-        <summary>
-            <span class="summary" th:text="${formInput.guidanceTitle}"/>
+    <details th:if="${formInput?.guidanceTitle}"
+             class="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text" th:text="${formInput.guidanceTitle}"/>
         </summary>
-        <div class="panel wysiwyg-styles">
+        <div class="govuk-details__text wysiwyg-styles">
             <th:block ifs:utext="${formInput.guidanceAnswer}">
             </th:block>
 

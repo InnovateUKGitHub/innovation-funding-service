@@ -61,11 +61,13 @@
                               method="post" enctype="multipart/form-data" th:object="${interviewResponseForm}" novalidate="novalidate">
                             <h2 class="govuk-heading-m">Your response</h2>
                             <div class="upload-section">
-                                <details th:unless="${model.interviewFeedbackViewModel.feedbackReleased}" role="group">
-                                    <summary role="button" aria-controls="details-content-0" aria-expanded="false">
-                                        <span class="summary">What should I include in the response?</span>
+                                    <details th:unless="${model.interviewFeedbackViewModel.feedbackReleased}"
+                                             class="govuk-details"
+                                             role="group">
+                                    <summary class="govuk-details__summary">
+                                        <span class="govuk-details__summary-text">What should I include in the response?</span>
                                     </summary>
-                                    <div class="panel" id="details-content-0" aria-hidden="true">
+                                    <div class="govuk-details__text">
                                         <p class="govuk-body">You may submit a written response to this feedback. You can upload up to 3 A4 pages in a single PDF
                                             document, including charts and diagrams. The maximum file upload size is 2MB.</p>
                                     </div>
