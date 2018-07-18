@@ -28,7 +28,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.currentApplication.isOpen()} ? 'Application summary' : 'Application overview',subTitle=${model.currentApplication.name},size='heading-xlarge'" />
             </th:block>
 
-            <th:block th:insert="fragments/elements :: competition-status-message (app=${model.currentApplication}, competition=${model.currentCompetition}, projectWithdrawn=${model.projectWithdrawn})" />
+            <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.currentApplication.applicationState}, competition=${model.currentCompetition}, projectWithdrawn=${model.projectWithdrawn})" />
 
             <p class="subtitle extra-margin" th:if="${model.currentApplication.isOpen() and model.currentCompetition.isOpen()}">
                 Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
