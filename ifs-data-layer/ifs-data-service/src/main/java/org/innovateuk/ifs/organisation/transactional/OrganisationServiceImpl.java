@@ -17,6 +17,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -55,11 +56,29 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<Set<OrganisationResource>> findByApplicationId(final Long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
+
+        Long leadOrganisationId = roles.stream()
+                .filter(role -> role.getRole().equals(Role.LEADAPPLICANT))
+                .map(role -> role.getOrganisationId())
+                .findAny().orElse(null);
+
+        final Comparator<OrganisationResource> comparator;
+
+        if (leadOrganisationId != null) {
+            comparator = Comparator.comparing(organisationResource -> isLeadOrganisation(organisationResource.getId(), leadOrganisationId), Comparator.reverseOrder());
+        } else {
+            comparator = Comparator.comparingLong(OrganisationResource::getId);
+        }
+
         Set<ProcessRole> applicantRoles = new HashSet<>(simpleFilter(roles, ProcessRole::isLeadApplicantOrCollaborator));
         List<Organisation> organisations = simpleMap(applicantRoles, role -> organisationRepository.findOne(role.getOrganisationId()));
         List<OrganisationResource> organisationResources = new ArrayList<>(simpleMap(organisations, organisationMapper::mapToResource));
-        organisationResources.sort(Comparator.comparing(OrganisationResource::getId));
+        organisationResources.sort(comparator);
         return serviceSuccess(new LinkedHashSet<>(organisationResources));
+    }
+
+    private boolean isLeadOrganisation(long organisationId, long leadOrganisationId) {
+        return leadOrganisationId == organisationId;
     }
 
     @Override
