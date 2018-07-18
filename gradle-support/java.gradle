@@ -50,14 +50,6 @@ compileJava {
     options.compilerArgs += '-parameters'
 }
 
-ext.springCloudVersion = 'Edgware.SR3'
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-
 dependencies {
     compile "commons-logging:commons-logging:1.2"
 

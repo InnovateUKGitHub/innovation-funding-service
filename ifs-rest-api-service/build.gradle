@@ -32,7 +32,7 @@ artifacts {
 }
 
 dependencies {
-    compile('org.springframework.cloud:spring-cloud-starter-hystrix')
+    compile('org.springframework.cloud:spring-cloud-starter-hystrix:1.4.4.RELEASE')
     compile "org.apache.httpcomponents:httpclient:4.5.1"
     compile project(':ifs-resources')
     compile project(':ifs-rest-util')

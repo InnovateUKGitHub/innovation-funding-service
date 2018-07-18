@@ -37,3 +37,11 @@ bootRepackage {
     //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
 
 }
+
+ext.springCloudVersion = 'Edgware.SR3'
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
