@@ -66,7 +66,6 @@ Applicant Applies to Research leading Competition
     Then user is not able to submit his application as he exceeds research participation
     And the user clicks the button/link                   link=Application overview
     And collaborating is required to submit the application if Research participation is not 100pc   ${openCompetitionResearch_name}  ${researchLeadApp}  antonio.jenkins@jabbertype.example.com
-#Here?? at this point the comp is available
 
 Applicant Applies to Public content leading Competition
     [Documentation]  IFS-1012
@@ -135,7 +134,6 @@ Collaborating is required to submit the application if Research participation is
     the user logs out if they are logged in
     the collaborator accepts and fills in his part in the application  ${competition}  ${application}
     the lead is able to submit the application  ${lead}  ${application}
-#here?? - Does this work?
 
 the collaborator accepts and fills in his part in the application
     [Arguments]  ${competition}  ${application}
