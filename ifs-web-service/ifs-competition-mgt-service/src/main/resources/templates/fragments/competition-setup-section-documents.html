@@ -1,6 +1,13 @@
 
 <!-- =================Section:Documents (10) =========================== -->
 <th:block th:fragment="section-content">
+
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents in project setup',size='heading-xlarge'" />
+
+    <h2 class="heading-small">Required documents</h2>
+    <p class="form-hint">The project manager will have to upload these in project setup.</p>
+
+
     <ul class="pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to prev part"
