@@ -9,7 +9,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.competitionId})}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage innovation leads',subTitle=${model.competitionName}, size='govuk-heading-xl'" />

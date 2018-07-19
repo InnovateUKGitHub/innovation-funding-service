@@ -12,8 +12,8 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:if="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks(projectId=${summaryModel.projectId})},currentCompetition=null" />
-    <th:block th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
+    <th:block th:if="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-checks(projectId=${summaryModel.projectId})},currentCompetition=null" />
+    <th:block th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${summaryModel.organisationName},subTitle=${summaryModel.projectName},size='govuk-heading-xl',smallText=${summaryModel.leadPartnerOrganisation} ? '(Lead Partner)'" />

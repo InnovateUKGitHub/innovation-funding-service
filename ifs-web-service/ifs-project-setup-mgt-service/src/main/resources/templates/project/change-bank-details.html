@@ -11,7 +11,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Review bank details',linkClass='link-back',linkUrl=@{/project/{projectId}/organisation/{organisationId}/review-bank-details(projectId=${model.projectId},organisationId=${model.organisationId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Review bank details',linkUrl=@{/project/{projectId}/organisation/{organisationId}/review-bank-details(projectId=${model.projectId},organisationId=${model.organisationId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">

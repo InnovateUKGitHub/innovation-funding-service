@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Feedback overview',linkClass='link-back',linkUrl=@{/application/{applicationId}/feedback(applicationId=${model.application.id})}"  />
+    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Feedback overview',linkUrl=@{/application/{applicationId}/feedback(applicationId=${model.application.id})}"  />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Dashboard',size='govuk-heading-l'" />

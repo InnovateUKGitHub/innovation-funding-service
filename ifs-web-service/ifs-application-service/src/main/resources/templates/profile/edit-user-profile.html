@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Profile',linkClass='link-back',linkUrl=@{/profile/view}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Profile',linkUrl=@{/profile/view}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${userDetailsForm.*}')}"

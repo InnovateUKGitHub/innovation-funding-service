@@ -10,7 +10,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub (linkTitle=${model.backLinkTitle},linkClass='link-back',linkUrl=@{${model.backUrl}})" />
+            <th:block th:insert="fragments/layout :: header-sub (linkTitle=${model.backLinkTitle},linkUrl=@{${model.backUrl}})" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.competition})" />

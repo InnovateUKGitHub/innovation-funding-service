@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkClass='link-back',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"  />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post" enctype="multipart/form-data">

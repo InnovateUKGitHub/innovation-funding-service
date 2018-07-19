@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle=|Back to ${model.organisationName}|, linkClass='link-back', linkUrl=${model.inviteOrganisationId} ?
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle=|Back to ${model.organisationName}|,linkUrl=${model.inviteOrganisationId} ?
     @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, inviteOrganisation=${model.inviteOrganisationId})} :
     @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, organisation=${model.organisationId})}"/>
     <main class="govuk-main-wrapper" id="main-content" role="main">

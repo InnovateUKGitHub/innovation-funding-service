@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage interview panel',linkUrl=@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title"

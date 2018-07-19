@@ -9,8 +9,8 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:if="${model.internal}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}" />
-    <th:block th:unless="${model.internal}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"  />
+    <th:block th:if="${model.internal}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Eligibility',linkUrl=@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}" />
+    <th:block th:unless="${model.internal}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Eligibility',linkUrl=@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"  />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Changes to finances',subTitle=${model.projectName},size='govuk-heading-xl'" />

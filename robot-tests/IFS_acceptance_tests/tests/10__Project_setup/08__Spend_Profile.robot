@@ -207,8 +207,8 @@ Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971, INFUND-6148
     [Tags]
     Given the user navigates to the page  ${external_spendprofile_summary}/review
-    When the user should see the element  jQuery=.grid-container th:contains("Financial year") + th:contains("Project spend")
-    Then the user should see the element  jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£55,875")
+    When the user should see the element  jQuery=.govuk-main-wrapper th:contains("Financial year") + th:contains("Project spend")
+    Then the user should see the element  jQuery=.govuk-main-wrapper table tr:nth-child(1) td:nth-child(2):contains("£55,875")
 
 Lead partner can edit his spend profile with invalid values and see the error messages
     [Documentation]  INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148 INFUND-6146
@@ -221,7 +221,7 @@ Lead partner can edit his spend profile with invalid values and see the error me
     And the user should see the element        jQuery=.govuk-form-group--error th:contains("Labour")
     And the user should see the element        jQuery=th:contains("Labour") ~ .fix-right.cell-error input[data-calculation-rawvalue="3495"]
     # Project costs for financial year are instantly reflecting the financial values INFUND-3971, INFUND-6148
-    And the user should see the element        jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£56,289")
+    And the user should see the element        jQuery=.govuk-main-wrapper table tr:nth-child(1) td:nth-child(2):contains("£56,289")
     When the user clicks the button/link       jQuery=.govuk-button:contains("Save and return to spend profile overview")
     Then the user should see the element       jQuery=.govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
     When the user clicks the button/link       jQuery=.govuk-button:contains("Edit spend profile")

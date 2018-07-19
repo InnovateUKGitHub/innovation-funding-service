@@ -39,7 +39,7 @@ User can navigate back to Become an Assessor page
     [Tags]
     When the user clicks the button/link           jQuery=.govuk-button:contains("Create account")
     Then the user should see the element           jQuery=.govuk-heading-s:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
-    And the user clicks the button/link            jQuery=.link-back:contains("Back")
+    And the user clicks the button/link            jQuery=.govuk-back-link:contains("Back")
     And the user should see the element            jQuery=h1:contains("Become an assessor for Innovate UK")
 
 Create assessor account: server-side validations

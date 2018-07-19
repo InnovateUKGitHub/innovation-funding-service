@@ -11,30 +11,28 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main" th:with="project=${model.project}">
-        <div class="grid-container">
 
-            <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-                <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to send spend profiles.</h2>
-                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-            </div>
-
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${project.name},size='govuk-heading-xl'" />
-            <form th:object="${form}" th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST" >
-
-                <th:block th:insert="fragments/modals :: modal-overlay" />
-                <th:block th:insert="fragments/modals :: modal-confirm-spend-profile-totals (projectId=${model.project.id})" />
-            </form>
-            <div class="centralise">
-                <dl class="standard-definition-list">
-                    <dt>Project start date</dt>
-                    <dd th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></dd>
-                    <dt>Duration</dt>
-                    <dd th:text="${project.durationInMonths + ' months'}"></dd>
-                </dl>
-            </div>
-            <h2 class="govuk-heading-m">Project - Spend profile</h2>
-            <p class="govuk-body">This is the spend profile for your project.</p>
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to send spend profiles.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${project.name},size='govuk-heading-xl'" />
+        <form th:object="${form}" th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST" >
+
+            <th:block th:insert="fragments/modals :: modal-overlay" />
+            <th:block th:insert="fragments/modals :: modal-confirm-spend-profile-totals (projectId=${model.project.id})" />
+        </form>
+        <div class="centralise">
+            <dl class="standard-definition-list">
+                <dt>Project start date</dt>
+                <dd th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></dd>
+                <dt>Duration</dt>
+                <dd th:text="${project.durationInMonths + ' months'}"></dd>
+            </dl>
+        </div>
+        <h2 class="govuk-heading-m">Project - Spend profile</h2>
+        <p class="govuk-body">This is the spend profile for your project.</p>
 
         <div class="spend-profile-table">
             <div class="flex-table-before"></div>
@@ -89,39 +87,37 @@
             </div>
             <div class="flex-table-after"></div>
         </div>
-        <div class="grid-container">
-            <h2 class="govuk-heading-m">Project costs for financial year</h2>
-            <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
-            <table class="govuk-table govuk-!-margin-bottom-6" style="width: 50%;">
-                <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header width-50-percent">Financial year (April to March)</th>
-                    <th scope="col" class="govuk-table__header width-50-percent">Project spend</th>
-                </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                <tr class="govuk-table__row" th:each="item : ${model.summary.years}">
-                    <td class="govuk-table__cell" th:text="${item.year + ' - ' + (item.year + 1)}"></td>
-                    <td class="govuk-table__cell" th:attr="data-calculation-fields=${'.apr-'+item.year+',
-                                                              .may-'+item.year+',
-                                                              .jun-'+item.year+',
-                                                              .jul-'+item.year+',
-                                                              .aug-'+item.year+',
-                                                              .sep-'+item.year+',
-                                                              .oct-'+item.year+',
-                                                              .nov-'+item.year+',
-                                                              .dec-'+item.year+',
-                                                              .jan-'+(item.year+1)+',
-                                                              .feb-'+(item.year+1)+',
-                                                              .mar-'+(item.year+1)}">
-                        &pound;<th:block th:text="${#numbers.formatInteger(item.amount,1,'DEFAULT')}" />
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <a th:href="@{/project/{id}/spend-profile/total/confirmation(id=${project.getId()})}"
-               class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-spend-profile-totals">Send project spend profile</a>
-        </div>
+        <h2 class="govuk-heading-m">Project costs for financial year</h2>
+        <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
+        <table class="govuk-table govuk-!-margin-bottom-6" style="width: 50%;">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header width-50-percent">Financial year (April to March)</th>
+                <th scope="col" class="govuk-table__header width-50-percent">Project spend</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="item : ${model.summary.years}">
+                <td class="govuk-table__cell" th:text="${item.year + ' - ' + (item.year + 1)}"></td>
+                <td class="govuk-table__cell" th:attr="data-calculation-fields=${'.apr-'+item.year+',
+                                                          .may-'+item.year+',
+                                                          .jun-'+item.year+',
+                                                          .jul-'+item.year+',
+                                                          .aug-'+item.year+',
+                                                          .sep-'+item.year+',
+                                                          .oct-'+item.year+',
+                                                          .nov-'+item.year+',
+                                                          .dec-'+item.year+',
+                                                          .jan-'+(item.year+1)+',
+                                                          .feb-'+(item.year+1)+',
+                                                          .mar-'+(item.year+1)}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(item.amount,1,'DEFAULT')}" />
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/project/{id}/spend-profile/total/confirmation(id=${project.getId()})}"
+           class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-spend-profile-totals">Send project spend profile</a>
     </main>
 </div>
 

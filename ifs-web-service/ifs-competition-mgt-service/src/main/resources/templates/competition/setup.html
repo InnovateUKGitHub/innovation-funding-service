@@ -17,9 +17,9 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions', linkClass='link-back', linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()} and ${model.general.getState().getCompetitionStatus() == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition', linkClass='link-back', linkUrl=@{/competition/{competitionId}/(competitionId=${model.general.competition.id})}" th:if="${model.general.currentSectionIsHome()} and ${model.general.getState().getCompetitionStatus() != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions', linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()} and ${model.general.getState().getCompetitionStatus() == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition', linkUrl=@{/competition/{competitionId}/(competitionId=${model.general.competition.id})}" th:if="${model.general.currentSectionIsHome()} and ${model.general.getState().getCompetitionStatus() != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:if="${currentSectionIsHome}">

@@ -82,7 +82,7 @@ Checking release feedback button state is correct
     Given the user clicks the button/link                                   link=Input and review funding decision
     And the user selects the checkbox                                       app-row-3
     And the user clicks the button/link                                     jQuery=button:contains("On hold")
-    When the user clicks the button/link                                    jQuery=.link-back:contains("Competition")
+    When the user clicks the button/link                                    jQuery=.govuk-back-link:contains("Competition")
     Then the user should see that the element is disabled                   jQuery=button:contains("Release feedback")
     [Teardown]    User sends the notification to enable release feedback
 
@@ -147,7 +147,7 @@ User can see feedback to individual questions
     Given the user clicks the button/link            jQuery=a:contains("6. Innovation")
     Then the user should see the element             jQuery=h3:contains("Your answer") ~ div[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
     And the user should see the element              jQuery=h4:contains("Assessor 1") ~ div[data-md-to-html] p:contains("This is the innovation feedback")
-    [Teardown]    the user clicks the button/link    jQuery=.link-back:contains("Feedback overview")
+    [Teardown]    the user clicks the button/link    jQuery=.govuk-back-link:contains("Feedback overview")
 
 The finance details are shown
     [Documentation]    INFUND-8168
@@ -159,7 +159,7 @@ The finance details are shown
 Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
     [Tags]
-    Given the user clicks the button/link    jQuery=.link-back:contains("Dashboard")
+    Given the user clicks the button/link    jQuery=.govuk-back-link:contains("Dashboard")
     Then the user should see the element     jQuery=h1:contains("Dashboard")
 
 *** Keywords ***
@@ -187,12 +187,12 @@ User sends the notification to enable release feedback
     the user clicks the button/link                                          link=Input and review funding decision
     the user selects the checkbox                                            app-row-3
     the user clicks the button/link                                          jQuery=button:contains("Unsuccessful")
-    the user clicks the button/link                                          jQuery=.link-back:contains("Competition")
+    the user clicks the button/link                                          jQuery=.govuk-back-link:contains("Competition")
     the user clicks the button/link                                          jQuery=a:contains("Manage funding notifications")
     the user selects the checkbox                                            app-row-${application_ids['Electric Drive']}
     the user clicks the button/link                                          jQuery=button:contains("Write and send email")
     the internal sends the descision notification email to all applicants    EmailTextBody
-    the user clicks the button/link                                          jQuery=.link-back:contains("Competition")
+    the user clicks the button/link                                          jQuery=.govuk-back-link:contains("Competition")
 
 The user checks the Project summary functionality
     the user clicks the button/link    jQuery=a:contains("Project summary")

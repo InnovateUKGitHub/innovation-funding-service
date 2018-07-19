@@ -45,12 +45,6 @@
   }
 }
 
-.grid-container {
-  &.phase-banner{
-    border-top: 10px solid $govuk-link-colour;
-  }
-}
-
 .sub-header {
   @include govuk-font(16);
   clear: both;

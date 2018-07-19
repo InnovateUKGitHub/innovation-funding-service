@@ -10,11 +10,11 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:unless="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
+    <th:block th:unless="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkUrl=@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post">
-            <th:block th:if="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to Non-IFS competition details',linkClass='link-back',linkUrl=@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
+            <th:block th:if="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to Non-IFS competition details',linkUrl=@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
                 <h2 class="govuk-error-summary__title" id="error-summary-title">There was a problem publishing the public content.</h2>

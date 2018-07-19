@@ -13,7 +13,6 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Allocate assessors',
-                linkClass='link-back',
                 linkUrl=@{/assessment/competition/{competitionId}/assessors(competitionId=${model.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">

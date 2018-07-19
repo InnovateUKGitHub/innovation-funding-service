@@ -10,7 +10,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle=${model.backTitle},linkClass='link-back',linkUrl=@{${model.backURL}}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle=${model.backTitle},linkUrl=@{${model.backURL}}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='All applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />

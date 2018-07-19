@@ -10,7 +10,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
+            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">

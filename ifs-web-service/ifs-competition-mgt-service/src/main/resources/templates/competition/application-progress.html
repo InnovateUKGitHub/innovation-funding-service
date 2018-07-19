@@ -12,7 +12,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkUrl=@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Application progress' : 'Assign to application',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />

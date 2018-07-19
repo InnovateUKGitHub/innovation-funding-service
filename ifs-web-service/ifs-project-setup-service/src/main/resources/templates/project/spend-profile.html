@@ -18,68 +18,66 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
-    <th:block th:if="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Spend profile overview',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
+    <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Set up your project',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
+    <th:block th:if="${model.projectManager}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Spend profile overview',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div class="grid-container">
-            <th:block th:if="${form != null}">
-                <div th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-                    <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to submit spend profile.</h2>
-                    <th:block th:insert="fragments/elements :: error-summary-list(form)" />
-                </div>
-            </th:block>
+        <th:block th:if="${form != null}">
+            <div th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to submit spend profile.</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
+        </th:block>
 
-            <th:block th:if="${form == null}">
-              <div class="govuk-error-summary" th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-                  <h2 class="govuk-error-summary__title" id="error-summary-title">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
-                  <div class="govuk-error-summary__body">
-                      <ul class="govuk-list govuk-error-summary__list">
-                          <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.arguments[0]}"></li>
-                      </ul>
-                  </div>
+        <th:block th:if="${form == null}">
+          <div class="govuk-error-summary" th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+              <h2 class="govuk-error-summary__title" id="error-summary-title">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
+              <div class="govuk-error-summary__body">
+                  <ul class="govuk-list govuk-error-summary__list">
+                      <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.arguments[0]}"></li>
+                  </ul>
               </div>
-            </th:block>
+          </div>
+        </th:block>
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-            <th:block
-                th:if="${model.markedAsComplete and !model.submitted and !model.leadPartner and form==null}">
-                <div class="success-alert govuk-!-margin-bottom-6">
-                    <p class="govuk-body">Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.
-                    </p>
-                </div>
-            </th:block>
-            <th:block
-                th:if="${model.markedAsComplete and !model.submitted and model.leadPartner and form == null and model.userPartOfThisOrganisation}">
-                <div class="success-alert govuk-!-margin-bottom-6">
-                    <p class="govuk-body">Your spend profile is marked as complete. You can still edit this page. When all partners have completed their spend profiles you can send them to us.</p>
-                </div>
-            </th:block>
-            <th:block
-                th:if="${model.markedAsComplete and model.submitted and !model.approved and model.userPartOfThisOrganisation}">
-                <div class="success-alert govuk-!-margin-bottom-6">
-                    <p class="govuk-body">Your spend profile has been completed.</p>
-                </div>
-            </th:block>
-            <th:block th:if="${model.approved and model.userPartOfThisOrganisation}">
-                <div class="success-alert govuk-!-margin-bottom-6">
-                    <p class="govuk-body">Your spend profile has now been accepted by Innovate UK.</p>
-                </div>
-            </th:block>
-            <p class="govuk-body">We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
-            <dl class="standard-definition-list">
-                <dt>Project start date</dt>
-                <dd>
-                    <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'd MMMM yyyy')}" />
-                </dd>
-                <dt>Duration</dt>
-                <dd><th:block th:text="${model.durationInMonths}" /> months</dd>
-            </dl>
+        <th:block
+            th:if="${model.markedAsComplete and !model.submitted and !model.leadPartner and form==null}">
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.
+                </p>
+            </div>
+        </th:block>
+        <th:block
+            th:if="${model.markedAsComplete and !model.submitted and model.leadPartner and form == null and model.userPartOfThisOrganisation}">
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">Your spend profile is marked as complete. You can still edit this page. When all partners have completed their spend profiles you can send them to us.</p>
+            </div>
+        </th:block>
+        <th:block
+            th:if="${model.markedAsComplete and model.submitted and !model.approved and model.userPartOfThisOrganisation}">
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">Your spend profile has been completed.</p>
+            </div>
+        </th:block>
+        <th:block th:if="${model.approved and model.userPartOfThisOrganisation}">
+            <div class="success-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">Your spend profile has now been accepted by Innovate UK.</p>
+            </div>
+        </th:block>
+        <p class="govuk-body">We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
+        <dl class="standard-definition-list">
+            <dt>Project start date</dt>
+            <dd>
+                <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'd MMMM yyyy')}" />
+            </dd>
+            <dt>Duration</dt>
+            <dd><th:block th:text="${model.durationInMonths}" /> months</dd>
+        </dl>
 
-            <h2 class="govuk-heading-m"><th:block th:text="${model.organisationName}" /> - Spend profile</h2>
-            <p class="govuk-body">We have reviewed and approved your project costs. Each organisation should now edit their spend profile costs to reflect your proposed project costs.</p>
-        </div>
+        <h2 class="govuk-heading-m"><th:block th:text="${model.organisationName}" /> - Spend profile</h2>
+        <p class="govuk-body">We have reviewed and approved your project costs. Each organisation should now edit their spend profile costs to reflect your proposed project costs.</p>
 
         <th:block th:with="readonly=${form == null ? true : false}">
             <form method="post" autocomplete="off" novalidate="novalidate"
@@ -283,44 +281,42 @@
                     <div class="flex-table-after"></div>
                 </div>
 
-                <div class="grid-container">
-                    <h2 class="govuk-heading-m">Project costs for financial year</h2>
-                    <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
-                    <table class="govuk-table govuk-!-margin-bottom-6" style="width: 50%;">
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col" style="width: 50%">Financial year (April to March)</th>
-                            <th class="govuk-table__header" scope="col" style="width: 50%">Project spend</th>
-                        </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-                        <tr class="govuk-table__row" th:each="item : ${model.summary.years}">
-                            <td class="govuk-table__cell" th:text="${item.year + ' to ' + (item.year + 1)}"></td>
-                            <td class="govuk-table__cell"
-                                data-calculation-operations="+"
-                                th:attr="data-calculation-fields=${'.apr-'+item.year+',
-                                                              .may-'+item.year+',
-                                                              .jun-'+item.year+',
-                                                              .jul-'+item.year+',
-                                                              .aug-'+item.year+',
-                                                              .sep-'+item.year+',
-                                                              .oct-'+item.year+',
-                                                              .nov-'+item.year+',
-                                                              .dec-'+item.year+',
-                                                              .jan-'+(item.year+1)+',
-                                                              .feb-'+(item.year+1)+',
-                                                              .mar-'+(item.year+1)}">
-                                &pound;<th:block th:text="${#numbers.formatInteger(item.amount,1,'DEFAULT')}" />
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <button th:unless="${readonly}" class="button-secondary govuk-!-margin-top-6">Save and return to spend profile overview</button>
-                </div>
+                <h2 class="govuk-heading-m">Project costs for financial year</h2>
+                <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
+                <table class="govuk-table govuk-!-margin-bottom-6" style="width: 50%;">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col" style="width: 50%">Financial year (April to March)</th>
+                        <th class="govuk-table__header" scope="col" style="width: 50%">Project spend</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="item : ${model.summary.years}">
+                        <td class="govuk-table__cell" th:text="${item.year + ' to ' + (item.year + 1)}"></td>
+                        <td class="govuk-table__cell"
+                            data-calculation-operations="+"
+                            th:attr="data-calculation-fields=${'.apr-'+item.year+',
+                                                          .may-'+item.year+',
+                                                          .jun-'+item.year+',
+                                                          .jul-'+item.year+',
+                                                          .aug-'+item.year+',
+                                                          .sep-'+item.year+',
+                                                          .oct-'+item.year+',
+                                                          .nov-'+item.year+',
+                                                          .dec-'+item.year+',
+                                                          .jan-'+(item.year+1)+',
+                                                          .feb-'+(item.year+1)+',
+                                                          .mar-'+(item.year+1)}">
+                            &pound;<th:block th:text="${#numbers.formatInteger(item.amount,1,'DEFAULT')}" />
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button th:unless="${readonly}" class="button-secondary govuk-!-margin-top-6">Save and return to spend profile overview</button>
             </form>
 
 
-            <div class="grid-container" th:if="${readonly and !model.submitted}">
+            <th:block th:if="${readonly and !model.submitted}">
 
                 <th:block th:if="${!model.markedAsComplete and !model.leadPartner and model.userPartOfThisOrganisation}">
                     <a class="button-secondary govuk-!-margin-top-6"
@@ -357,7 +353,7 @@
                 </th:block>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
-            </div>
+            </th:block>
 
         </th:block>
     </main>

@@ -41,7 +41,7 @@ A non submitted application cannot be marked as ineligible
     Then the user should see the element           jQuery=td:contains("Rainfall") ~ td:contains("Started")
     When the user clicks the button/link           link=${application_ids["Rainfall"]}
     Then the user should not see the element       jQuery=h2 button:contains("Mark application as ineligible")
-    [Teardown]    the user clicks the button/link  jQuery=.link-back:contains("Back")
+    [Teardown]    the user clicks the button/link  jQuery=.govuk-back-link:contains("Back")
 
 Ineligigle button is shown on submitted applications
     [Documentation]    INFUND-7370

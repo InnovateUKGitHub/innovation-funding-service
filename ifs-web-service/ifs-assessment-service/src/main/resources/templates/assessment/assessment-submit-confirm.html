@@ -9,7 +9,7 @@
 
     <div class="govuk-width-container">
         <th:block th:insert="fragments/layout :: phase-banner" />
-        <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{id}(id=${competitionId})})" />
+        <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkUrl=@{/assessor/dashboard/competition/{id}(id=${competitionId})})" />
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit assessments',size='govuk-heading-xl'" />

@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${model.general.competition.id})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${model.general.competition.id})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">

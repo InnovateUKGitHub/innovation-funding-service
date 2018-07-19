@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId},origin='INELIGIBLE_APPLICATIONS')}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId},origin='INELIGIBLE_APPLICATIONS')}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Reinstate application',subTitle=${model.applicationName},size='govuk-heading-xl'" />

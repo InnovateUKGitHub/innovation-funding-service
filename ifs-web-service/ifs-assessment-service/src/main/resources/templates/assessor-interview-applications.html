@@ -11,7 +11,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})" />
+    <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessor dashboard',linkUrl=@{/assessor/dashboard})" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Interviews you have agreed to attend',subTitle=|${model.competitionTitle}|,size='govuk-heading-xl'" />

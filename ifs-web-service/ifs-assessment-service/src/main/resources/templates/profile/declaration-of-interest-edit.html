@@ -10,7 +10,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Declaration of interest',linkUrl=@{/profile/declaration}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <div th:if="${#fields.hasErrors('${form.*}')}" aria-labelledby="error-summary-title" role="alert" data-ignore-errors="true" aria-labelledby="error-summary-title" tabindex="-1">

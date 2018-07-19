@@ -9,7 +9,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/details/finance-contact?organisation={orgId}(projectId=${model.projectId},orgId=${model.organisationId})}"/>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{/project/{projectId}/details/finance-contact?organisation={orgId}(projectId=${model.projectId},orgId=${model.organisationId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <form th:action="@{/project/{projectId}/details/finance-contact(projectId=${model.projectId})}" method="POST" >

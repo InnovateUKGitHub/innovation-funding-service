@@ -11,7 +11,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkClass='link-back',linkUrl=@{/admin/users/active}"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkUrl=@{/admin/users/active}"  />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='View internal user details',size='govuk-heading-xl'" />

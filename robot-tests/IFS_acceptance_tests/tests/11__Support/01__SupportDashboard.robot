@@ -31,7 +31,7 @@ Competition links go directly to all applications page
 
 Back navigation is to dashboard
     [Documentation]    IFS-188
-    Given the user clicks the button/link  jQuery=.link-back:contains("Dashboard")
+    Given the user clicks the button/link  jQuery=.govuk-back-link:contains("Dashboard")
     Then the user should see the element   jQuery=h1:contains("All competitions")
     And the user should see the element    jQuery=a:contains("Live")
     And the user should see the element    jQuery=a:contains("Project setup")

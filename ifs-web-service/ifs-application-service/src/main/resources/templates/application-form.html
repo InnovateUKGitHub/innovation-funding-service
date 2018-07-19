@@ -13,7 +13,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="currentApplication=${model.application},linkTitle=${backTitle},linkClass='link-back',linkUrl=${backURL}"/>
+              th:with="currentApplication=${model.application},linkTitle=${backTitle},linkUrl=${backURL}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"

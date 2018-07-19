@@ -10,7 +10,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage assessment panel',linkClass='link-back',linkUrl=@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage assessment panel',linkUrl=@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors to panel',subTitle=${model.competitionName},size='govuk-heading-xl'" />
