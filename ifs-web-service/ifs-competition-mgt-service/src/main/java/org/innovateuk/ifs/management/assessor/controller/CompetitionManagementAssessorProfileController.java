@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.assessor.controller;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.assessor.populator.AssessorProfileDeclarationModelPopulator;
 import org.innovateuk.ifs.management.assessor.populator.AssessorProfileSkillsModelPopulator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +29,10 @@ public class CompetitionManagementAssessorProfileController {
     private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
     private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
 
+    public CompetitionManagementAssessorProfileController() {
+    }
+
+    @Autowired
     public CompetitionManagementAssessorProfileController(AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator,
                                                           AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator) {
         this.assessorProfileSkillsModelPopulator = assessorProfileSkillsModelPopulator;
@@ -79,13 +84,13 @@ public class CompetitionManagementAssessorProfileController {
         return "assessors/profile-skills";
     }
 
-    @GetMapping("/profile/{assessorId}/DOI")
-    public String profileDOI(Model model,
-                             @PathVariable("competitionId") long competitionId,
-                             @PathVariable("assessorId") long assessorId,
-                             @RequestParam(value = "origin", defaultValue = "APPLICATION_PROGRESS") String origin,
-                             @RequestParam(value = "applicationId", required = false) Long applicationId,
-                             @RequestParam MultiValueMap<String, String> queryParams) {
+    @GetMapping("/profile/{assessorId}/declaration")
+    public String profileDeclaration(Model model,
+                                     @PathVariable("competitionId") long competitionId,
+                                     @PathVariable("assessorId") long assessorId,
+                                     @RequestParam(value = "origin", defaultValue = "APPLICATION_PROGRESS") String origin,
+                                     @RequestParam(value = "applicationId", required = false) Long applicationId,
+                                     @RequestParam MultiValueMap<String, String> queryParams) {
 
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.valueOf(origin), queryParams);
 
