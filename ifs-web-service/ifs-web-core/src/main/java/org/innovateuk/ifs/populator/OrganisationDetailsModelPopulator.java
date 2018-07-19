@@ -1,21 +1,16 @@
 package org.innovateuk.ifs.populator;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,11 +24,14 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Component
 public class OrganisationDetailsModelPopulator {
 
-    @Autowired
-    protected InviteRestService inviteRestService;
-
-    @Autowired
+    protected InviteService inviteService;
     protected OrganisationRestService organisationRestService;
+
+    public OrganisationDetailsModelPopulator(InviteService inviteService,
+                                             OrganisationRestService organisationRestService) {
+        this.inviteService = inviteService;
+        this.organisationRestService = organisationRestService;
+    }
 
     public void populateModel(final Model model, final Long applicationId, final List<ProcessRoleResource> userApplicationRoles) {
         final List<OrganisationResource> organisations = getApplicationOrganisations(applicationId);
@@ -46,7 +44,7 @@ public class OrganisationDetailsModelPopulator {
 
         final List<String> activeApplicationOrganisationNames = simpleMap(organisations, OrganisationResource::getName);
 
-        final List<String> pendingOrganisationNames = pendingInvitations(applicationId).stream()
+        final List<String> pendingOrganisationNames = inviteService.getPendingInvitationsByApplicationId(applicationId).stream()
                 .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
                 .distinct()
                 .filter(orgName -> StringUtils.hasText(orgName)
@@ -74,15 +72,5 @@ public class OrganisationDetailsModelPopulator {
                 simpleFindFirst(userApplicationRoles, uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()));
 
         return leadApplicantRole.flatMap(role -> simpleFindFirst(organisations, org -> org.getId().equals(role.getOrganisationId())));
-    }
-
-    private List<ApplicationInviteResource> pendingInvitations(final Long applicationId) {
-        final RestResult<List<InviteOrganisationResource>> pendingAssignableUsersResult = inviteRestService.getInvitesByApplication(applicationId);
-
-        return pendingAssignableUsersResult.handleSuccessOrFailure(
-                failure -> new ArrayList<>(0),
-                success -> success.stream().flatMap(item -> item.getInviteResources().stream())
-                        .filter(item -> !InviteStatus.OPENED.equals(item.getStatus()))
-                        .collect(Collectors.toList()));
     }
 }

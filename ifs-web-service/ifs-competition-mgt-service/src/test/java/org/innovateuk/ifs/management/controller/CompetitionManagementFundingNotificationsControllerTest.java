@@ -19,7 +19,7 @@ import org.innovateuk.ifs.competition.form.FundingNotificationSelectionForm;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
-import org.innovateuk.ifs.management.application.viewmodel.ManageFundingApplicationViewModel;
+import org.innovateuk.ifs.management.application.view.viewmodel.ManageFundingApplicationViewModel;
 import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;

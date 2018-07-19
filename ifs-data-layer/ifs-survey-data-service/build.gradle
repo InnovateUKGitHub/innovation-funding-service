@@ -1,13 +1,5 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
-if(targetBuild == 'docker') {
-    apply from: "docker-build.gradle"
-} else {
-    apply from: "automated-build.gradle"
-    //TODO IFS-3746 currently this service is not deployed to any environments
-    //This workaround can be removed once this work is done
-    //currently fails bamboo as - for example it is looking for sysint-build.gradle which doesn't exist.
-}
-
+apply from: targetBuild + "-build.gradle"
 
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
@@ -39,6 +31,7 @@ if (enabled) {
 createContainer.networkAliases=["ifs-survey-data-service"]
 
 ext.dockerDir = "$project.parent.projectDir/docker/"
+ext.ifsWebSystemUserId = "c0d02979-e66e-11e7-ac43-0242ac120002"
 
 ext {
     snippetsDir = file('build/generated-snippets')
