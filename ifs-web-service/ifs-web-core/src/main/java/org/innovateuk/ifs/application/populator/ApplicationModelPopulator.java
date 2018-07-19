@@ -58,9 +58,6 @@ public class ApplicationModelPopulator {
     protected FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Autowired
-    protected ApplicationModelPopulator applicationModelPopulator;
-
-    @Autowired
     protected OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
@@ -193,7 +190,7 @@ public class ApplicationModelPopulator {
 
         if(hasFinanceSection) {
             Optional<Long> optionalOrganisationId = Optional.ofNullable(organisationId);
-            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId, optionalOrganisationId);
+            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
 
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
             // NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.
@@ -245,7 +242,7 @@ public class ApplicationModelPopulator {
                                                                  List<ProcessRoleResource> userApplicationRoles,
                                                                  final Optional<Boolean> markAsCompleteEnabled) {
         organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
-        applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
+        addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
     }
 }
 

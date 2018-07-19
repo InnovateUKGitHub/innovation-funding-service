@@ -3,7 +3,7 @@ package org.innovateuk.ifs.question.transactional.template;
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.innovateuk.ifs.application.validator.WordCountValidator;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
@@ -38,13 +38,14 @@ public class DefaultApplicationQuestionCreator {
         FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
 
         FormInput maxWordCountInput = buildApplicantTextInput(competition, notEmptyValidator, wordCountValidator);
-        FormInput questionScoreInput = buildQuestionScoreInput(competition, notEmptyValidator);
-        FormInput feedbackInput = buildFeedbackInput(competition, notEmptyValidator, wordCountValidator);
         FormInput appendixInput = buildAppendixInput(competition);
+
+        FormInput feedbackInput = buildFeedbackInput(competition, notEmptyValidator, wordCountValidator);
+        FormInput questionScoreInput = buildQuestionScoreInput(competition, notEmptyValidator);
 
         Question question = new Question();
         question.setCompetition(competition);
-        question.setQuestionSetupType(CompetitionSetupQuestionType.ASSESSED_QUESTION);
+        question.setQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION);
         question.setMarkAsCompletedEnabled(true);
         question.setAssessorMaximumScore(DEFAULT_MAXIMUM_SCORE);
         question.setFormInputs(Arrays.asList(maxWordCountInput, questionScoreInput, feedbackInput, appendixInput));
@@ -72,7 +73,7 @@ public class DefaultApplicationQuestionCreator {
         input.setType(FormInputType.ASSESSOR_SCORE);
         input.setCompetition(competition);
         input.setIncludedInApplicationSummary(false);
-        input.setPriority(0);
+        input.setPriority(1);
         input.setDescription("Feedback");
         input.setScope(FormInputScope.ASSESSMENT);
         input.setActive(true);

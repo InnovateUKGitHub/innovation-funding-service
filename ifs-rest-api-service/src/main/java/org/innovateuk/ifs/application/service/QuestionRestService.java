@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
@@ -35,8 +35,8 @@ public interface QuestionRestService {
 
     RestResult<List<QuestionResource>> getQuestionsByAssessment(long assessmentId);
 
-    RestResult<QuestionResource> getQuestionByCompetitionIdAndCompetitionSetupQuestionType(long competitionId,
-                                                                                           CompetitionSetupQuestionType competitionSetupQuestionType);
+    RestResult<QuestionResource> getQuestionByCompetitionIdAndQuestionSetupType(long competitionId,
+                                                                                QuestionSetupType questionSetupType);
 
 
 }

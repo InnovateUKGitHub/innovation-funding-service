@@ -44,7 +44,7 @@ public class SetupStatusController {
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.SET_UP_YOUR_PROJECT , queryParams);
 
         model.addAttribute("model", setupStatusViewModelPopulator.populateViewModel(projectId, loggedInUser, originQuery));
-        model.addAttribute("url", RedirectUtils.redirectToApplicationService(request, "applicant/dashboard"));
+        model.addAttribute("url", RedirectUtils.buildRedirect(request, "applicant/dashboard"));
 
         return "project/setup-status";
     }

@@ -1,27 +1,20 @@
-var gulp = require( 'gulp' )
-var chug = require( 'gulp-chug' )
-var gulpfiles = './**/src/main/resources/static/gulpfile.js'
+var gulp = require('gulp')
 
-gulp.task( 'js', function () {
-    // Find and run all gulpfiles under all subdirectories
-    return gulp.src(gulpfiles)
-        .pipe(chug({
-        tasks:  [ 'js' ],
-        }))
+var subProjects = [
+  'ifs-application-service',
+  'ifs-assessment-service',
+  'ifs-competition-mgt-service',
+  'ifs-project-setup-service',
+  'ifs-web-core']
+
+subProjects.forEach(function(subProject) {
+  require('./' + subProject + '/src/main/resources/static/gulpfile.js')
 })
 
-gulp.task( 'css', function () {
-    // Find and run all gulpfiles under all subdirectories
-    return gulp.src(gulpfiles)
-        .pipe(chug({
-        tasks:  [ 'css' ],
-        }))
-})
-gulp.task( 'css:watch', function () {
-    // Find and run all gulpfiles under all subdirectories
-    return gulp.src(gulpfiles)
-        .pipe(chug({
-        tasks:  [ 'css:watch' ],
-        }))
-})
+gulp.task('js', gulp.parallel('application:js','assessment:js','competition-mgt:js','project-setup:js','web-core:js'))
+
+gulp.task('css', gulp.parallel('application:css','assessment:css','competition-mgt:css','project-setup:css','web-core:css'))
+
+gulp.task('css:watch', gulp.parallel('application:css:watch','assessment:css:watch','competition-mgt:css:watch','project-setup:css:watch','web-core:css:watch'))
+
 gulp.task('default', gulp.parallel('js','css'))

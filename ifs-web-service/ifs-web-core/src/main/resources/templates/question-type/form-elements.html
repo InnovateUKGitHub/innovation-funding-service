@@ -230,7 +230,7 @@
                     <th:block th:if="${model.assignButtonsViewModel.currentUserIsLead}">
                         <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
                         <th:block
-                            th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model},${model.question})" />
+                            th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model})" />
                     </th:block>
 
                     <!--/* if  readonly we show the edit form button */-->
@@ -438,12 +438,12 @@
 
 <!-- ========================= Mark as complete buttons =========================== -->
 
-<th:block th:fragment="form-mark-as-complete-buttons (model, question)">
+<th:block th:fragment="form-mark-as-complete-buttons (model)">
     <th:block th:unless="${model.closed}">
         <button th:if="${model.complete and !model.summary}"
                 type="submit"
                 name="mark_as_incomplete"
-                th:value="${question.id}"
+                th:value="${model.questionId}"
                 class="buttonlink">Edit
         </button>
         <button th:if="${!model.complete and model.canMarkAsComplete}"
@@ -451,7 +451,7 @@
             type="submit"
             name="mark_as_complete"
             class="buttonlink"
-            th:value="${question.id}">Mark as complete
+            th:value="${model.questionId}">Mark as complete
         </button>
     </th:block>
 </th:block>

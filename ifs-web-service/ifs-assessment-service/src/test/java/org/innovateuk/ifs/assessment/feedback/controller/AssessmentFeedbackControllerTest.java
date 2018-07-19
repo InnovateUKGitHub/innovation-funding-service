@@ -27,6 +27,7 @@ import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -136,6 +137,9 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
     @Mock
     private ProcessRoleService processRoleService;
+
+    @Mock
+    private InviteService inviteService;
 
     @Override
     protected AssessmentFeedbackController supplyControllerUnderTest() {
@@ -320,7 +324,10 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .withSection(financeSectionResource.getId())
                 .build();
 
+        // The next question should be skipped since it's within the Finance section
         setupQuestionNavigation(questionResource.getId(), of(previousQuestionResource), of(nextQuestionResource));
+        // There is also no navigation from the question following that
+        when(questionService.getNextQuestion(nextQuestionResource.getId())).thenReturn(empty());
 
         List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA);
         setupApplicantResponses(applicationId, applicationFormInputs);

@@ -8,8 +8,8 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.OrganisationSizeRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -37,6 +37,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.LARGE;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.MEDIUM;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -44,10 +47,10 @@ import static org.junit.Assert.assertEquals;
 
 public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
-    private static final Optional<Long> SMALL_SIZE = Optional.of(1L);
-    private static final Optional<Long> MEDIUM_SIZE = Optional.of(2L);
-    private static final Optional<Long> LARGE_SIZE = Optional.of(3L);
-    private static final Optional<Long> NO_SIZE = Optional.empty();
+    private static final Optional<OrganisationSize> SMALL_SIZE = Optional.of(SMALL);
+    private static final Optional<OrganisationSize> MEDIUM_SIZE = Optional.of(MEDIUM);
+    private static final Optional<OrganisationSize> LARGE_SIZE = Optional.of(LARGE);
+    private static final Optional<OrganisationSize> NO_SIZE = Optional.empty();
 
     @Autowired
     private GenericApplicationContext applicationContext;
@@ -63,9 +66,6 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private ResearchCategoryRepository researchCategoryRepository;
-
-    @Autowired
-    private OrganisationSizeRepository organisationSizeRepository;
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
@@ -122,7 +122,8 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         assertApcMaximumGrant(researchApplicationData, "Experimental development", NO_SIZE, 100);
     }
 
-    private void assertApcMaximumGrant(ApplicationData applicationData, String researchCategoryName, Optional<Long> organisationSize, int expectedMaximumGrant) {
+    private void assertApcMaximumGrant(ApplicationData applicationData, String researchCategoryName,
+                                       Optional<OrganisationSize> organisationSize, int expectedMaximumGrant) {
 
         UserResource leadApplicant = applicationData.getLeadApplicant();
         Organisation leadOrganisation = organisationRepository.findOneByName(applicationData.getApplication().getLeadOrganisationName());
@@ -134,12 +135,10 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         Application application = applicationRepository.findOne(applicationId);
         application.setResearchCategory(researchCategory);
 
-        organisationSize.ifPresent(sizeId -> {
-            OrganisationSize size = organisationSizeRepository.findOne(sizeId);
+        organisationSize.ifPresent(size -> {
             ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, leadOrganisationId);
             applicationFinance.setOrganisationSize(size);
             applicationFinanceRepository.save(applicationFinance);
-
         });
 
         ApplicationFinanceResource financeDetails = getFinanceDetails(leadApplicant, applicationId, leadOrganisationId);
@@ -147,7 +146,8 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         assertEquals(Integer.valueOf(expectedMaximumGrant), financeDetails.getMaximumFundingLevel());
     }
 
-    private ApplicationData createApplication(CompetitionData competitionData, String applicantEmailAddress, String organisationName, Optional<Long> organisationSize, boolean academic) {
+    private ApplicationData createApplication(CompetitionData competitionData, String applicantEmailAddress, String
+            organisationName, Optional<OrganisationSize> organisationSize, boolean academic) {
 
         UserResource applicant = getUser(applicantEmailAddress);
         Organisation applicantOrganisation = organisationRepository.findOneByName(organisationName);
@@ -162,7 +162,9 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         return financeService.financeDetails(applicationId, organisationId).getSuccess();
     }
 
-    private ApplicationData createApcApplication(CompetitionData competitionData, UserResource applicant, Optional<Long> organisationSize, Organisation applicantOrganisation, boolean academic) {
+    private ApplicationData createApcApplication(CompetitionData competitionData, UserResource applicant,
+                                                 Optional<OrganisationSize> organisationSize,
+                                                 Organisation applicantOrganisation, boolean academic) {
 
         return applicationDataBuilder.
                 withCompetition(competitionData.getCompetition()).
