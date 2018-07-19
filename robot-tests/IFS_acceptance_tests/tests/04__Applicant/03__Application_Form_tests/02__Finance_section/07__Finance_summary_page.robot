@@ -156,42 +156,40 @@ Alert should not show If research participation is below the maximum level
     And the user clicks the button/link            jquery=button:contains("Finances summary")
     Then the user should not see the element       jQuery=.warning-alert:contains("The participation levels of this project are not within the required range")
 
-#TODO Re-enable these when 3913 is ready to merge as that ticket will be adding the view finance links back in for support users.
-#Support User can see the read only finance summary
+Support User can see the read only finance summary
+    [Documentation]  IFS-401
+    [Tags]  Support
+    [Setup]  log in as a different user       &{support_user_credentials}
+    Given the user navigates to the finances of the application
+    When the user should see the element      jQuery = .finance-summary tbody tr:nth-of-type(1) th:contains("View finances")
+    And The user clicks the button/link       link = View finances
+    Then The finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
-#    [Documentation]  IFS-401
-#    [Tags]  Support
-#    [Setup]  log in as a different user       &{support_user_credentials}
-#    Given the user navigates to the finances of the application
-#    When the user should see the element      jQuery = .finance-summary tbody tr:nth-of-type(1) th:contains("View finances")
-#    And The user clicks the button/link       link = View finances
-#    Then The finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
+Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
+    [Documentation]  IFS-401
+    [Tags]  Support  HappyPath
+    Given the user clicks the button/link  link = Your project costs
+    When the user verifies labour, overhead costs and materials
+    Then the user verifies captial usage, subcontracting, travel and other costs
 
-#Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
-#    [Documentation]  IFS-401
-#    [Tags]  Support  HappyPath
-#    Given the user clicks the button/link  link=Your project costs
-#    When the user verifies labour, overhead costs and materials
-#    Then the user verifies captial usage, subcontracting, travel and other costs
-#
-#Support User can see the read only view of Your organisation
-#    [Documentation]  IFS-401
-#    [Tags]  Support
-#    When the user clicks the button/link           jQuery=a:contains("Your finances")
-#    Then the user should see the element           css = .your-finances > p  # Please complete your project finances.
-#    When the user clicks the button/link           link=Your organisation
-#    Then the user should see the element           jQuery=dt:contains("Size") + dd:contains("Micro")
-#    And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("0")
+Support User can see the read only view of Your organisation
+    [Documentation]  IFS-401
+    [Tags]  Support
+    When the user clicks the button/link           jQuery = a:contains("Your finances")
+    Then the user should see the element           css = .your-finances > p  # Please complete your project finances.
+    When the user clicks the button/link           link = Your organisation
+    Then the user should see the element           jQuery = dt:contains("Size") + dd:contains("Micro")
+    And the user should see the element            jQuery = dt:contains("Turnover") + dd:contains("0")
 
-#Support User can see the read only view of Your funding
-#    [Documentation]  IFS-401
-#    [Tags]  Support
-#    Given the user navigates to the page  ${server}/management/competition/${openCompetitionRTO}/application/${application_ids["Water balance creates a threshold in soil pH at the global scale"]}
-#    And the user expands the section      Finances summary
-#    Then the user clicks the button/link  link=View finances
-#    When the user clicks the button/link  jQuery=a:contains("Your funding")
-#    Then the user should see the element  jQuery=dt:contains("Funding level") + dd:contains("30%")
-#    And the user should see the element   jQuery=th:contains("Lottery") ~ td:contains("£2,468")
+Support User can see the read only view of Your funding
+    [Documentation]  IFS-401
+    [Tags]  Support
+    Given the user navigates to the page  ${server}/management/competition/${openCompetitionRTO}/application/${application_ids["Water balance creates a threshold in soil pH at the global scale"]}
+    And the user expands the section      Finances summary
+    Then the user clicks the button/link  link = View finances
+    When the user clicks the button/link  jQuery = a:contains("Your funding")
+    Then the user should see the element  jQuery = dt:contains("Funding level") + dd:contains("30%")
+    And the user should see the element   jQuery = th:contains("Lottery") ~ td:contains("£2,468")
 
 Innovation lead can see read only summary link for each partner
     [Documentation]  IFS-802
