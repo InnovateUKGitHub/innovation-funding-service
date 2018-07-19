@@ -131,6 +131,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
         if (!userOrganisation.isPresent())  {
             ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application.getId());
             applicantId = leadApplicantProcessRole.getUser();
+            userOrganisation = organisationService.getOrganisationForUser(applicantId, userApplicationRoles);
         } else {
             applicantId = user.getId();
         }
