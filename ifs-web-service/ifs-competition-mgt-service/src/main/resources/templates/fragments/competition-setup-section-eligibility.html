@@ -1,4 +1,3 @@
-
 <!-- =================== Comp setup section - Eligibility (3) ============================== -->
 <th:block th:fragment="section-content">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
@@ -84,6 +83,54 @@
                      </div>
                 </fieldset>
             </div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('overrideFundingRules')} ? 'form-group-error'">
+                <fieldset class="inline">
+                    <legend id="overrideFundingRules">
+                        <span class="form-label-bold">Override funding rules</span>
+                        <span class="hint">Do you want to override the standard funding rules and manually set the percentage that business can apply for?</span>
+                        <th:block th:if="${#fields.hasErrors('overrideFundingRules')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('overrideFundingRules')}" th:text="${err}"></span>
+                        </th:block>
+                    </legend>
+                    <div class="multiple-choice" th:each="value : ${ {true, false} }">
+                        <input
+                            type="radio"
+                            th:field="*{overrideFundingRules}"
+                            th:value="${value}"
+                            required="required"
+                            th:attr="data-required-errormessage=#{validation.eligibilityform.overrideFundingRules.required}"/>
+                        <label th:for="${#ids.prev('overrideFundingRules')}" th:text="${value} ? 'Yes' : 'No'"></label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!--<div class="form-group"-->
+                 <!--th:classappend="${#fields.hasErrors('fundingLevelAmount')} ? 'form-group-error'"-->
+                 <!--th:if="${overrideFundingRules}">-->
+                <!--<label>test</label>-->
+                <!--<fieldset class="inline">-->
+                    <!--<legend id="fundingLevelId">-->
+                        <!--<span class="form-label-bold">Set funding level</span>-->
+                        <!--<th:block th:if="${#fields.hasErrors('fundingLevelAmount')}">-->
+                            <!--<span class="error-message" th:each="err : ${#fields.errors('fundingLevelAmount')}" th:text="${err}"></span>-->
+                        <!--</th:block>-->
+                    <!--</legend>-->
+                    <!--<select class="form-control width-large"-->
+                            <!--name="fundingLevelId"-->
+                            <!--id="fundingLevel"-->
+                            <!--required="required">-->
+                        <!--<option th:each="fundingLevelAmount : ${model.fundingLevels}"-->
+                                <!--th:text="${fundingLevelAmount.name}"-->
+                                <!--th:value="${fundingLevelAmount.id}"-->
+                                <!--th:selected="${competitionSetupForm.fundingLevelAmountId == fundingLevelAmount.id}">-->
+                            <!--Research participation-->
+                        <!--</option>-->
+                    <!--</select>-->
+                <!--</fieldset>-->
+            <!--</div>-->
+
+
 
             <div class="form-group"
                  th:classappend="${#fields.hasErrors('researchParticipationAmountId')} ? 'form-group-error'"

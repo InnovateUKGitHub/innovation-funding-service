@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.web.client.RestClientResponseException;
 
 import java.util.List;
 
@@ -41,4 +42,6 @@ public interface CompetitionRestService {
     RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long id);
 
     RestResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
+
+    RestResult<CompetitionResource> findTemplateCompetitionForCompetitionType(long competitionId);
 }

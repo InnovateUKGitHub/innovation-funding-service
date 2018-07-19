@@ -95,4 +95,10 @@ public class CompetitionController {
                                                                    @PathVariable("tcId") final long termsAndConditionsId) {
         return competitionService.updateTermsAndConditionsForCompetition(competitionId, termsAndConditionsId).toPutResponse();
     }
+
+    @GetMapping("/findTemplateCompetitionForCompetitionType/{competitionTypeId}")
+    public RestResult<CompetitionResource> findTemplateCompetitionForCompetitionType(
+            @PathVariable("competitionTypeId") long competitionTypeId) {
+        return competitionService.findTemplateCompetitionForCompetitionType(competitionTypeId).toGetResponse();
+    }
 }

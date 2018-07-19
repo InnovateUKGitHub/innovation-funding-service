@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +26,8 @@ public class EligibilityForm extends CompetitionSetupForm {
     private String singleOrCollaborative;
     @NotEmpty(message = "{validation.eligibilityform.leadApplicantTypes.required}")
     private List<Long> leadApplicantTypes;
+    @NotNull(message = "{validation.eligibilityform.overrideFundingRules.required}")
+    private Boolean overrideFundingRules;
     @NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
     private int researchParticipationAmountId = ResearchParticipationAmount.NONE.getId();
     @NotBlank(message = "{validation.eligibilityform.resubmission.required}")
@@ -76,6 +79,14 @@ public class EligibilityForm extends CompetitionSetupForm {
 
     public void setLeadApplicantTypes(List<Long> leadApplicantTypes) {
         this.leadApplicantTypes = leadApplicantTypes;
+    }
+
+    public Boolean getOverrideFundingRules() {
+        return overrideFundingRules;
+    }
+
+    public void setOverrideFundingRules(Boolean overrideFundingRules) {
+        this.overrideFundingRules = overrideFundingRules;
     }
 
     public int getResearchParticipationAmountId() {

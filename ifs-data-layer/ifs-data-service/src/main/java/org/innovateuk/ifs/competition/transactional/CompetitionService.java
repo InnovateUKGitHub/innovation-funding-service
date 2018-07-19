@@ -45,6 +45,9 @@ public interface CompetitionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
 
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<CompetitionResource> findTemplateCompetitionForCompetitionType(long competitionTypeId);
+
     @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);

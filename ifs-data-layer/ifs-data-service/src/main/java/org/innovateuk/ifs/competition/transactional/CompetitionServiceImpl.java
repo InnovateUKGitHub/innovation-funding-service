@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.*;
@@ -93,6 +94,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private MilestoneService milestoneService;
+
+    @Autowired
+    private CompetitionTypeRepository competitionTypeRepository;
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
@@ -184,6 +188,13 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
         List<Competition> competitions = competitionRepository.findFeedbackReleased();
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition).stream().sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate())).collect(Collectors.toList()));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<CompetitionResource> findTemplateCompetitionForCompetitionType(long competitionTypeId) {
+        return find(competitionTypeRepository.findOne(competitionTypeId), notFoundError(CompetitionTypeResource.class, competitionTypeId))
+                .andOnSuccess(competitionType -> serviceSuccess(competitionMapper.mapToResource(competitionType.getTemplate())));
     }
 
     @Override
