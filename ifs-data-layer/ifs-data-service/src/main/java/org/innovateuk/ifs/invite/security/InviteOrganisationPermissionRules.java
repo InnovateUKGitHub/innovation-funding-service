@@ -66,9 +66,14 @@ public class InviteOrganisationPermissionRules {
         return state.isInState(ApplicationState.CREATED) || state.isInState(ApplicationState.OPEN);
     }
 
-    @PermissionRule(value = "READ", description = "a support user, consortium member and the lead applicant can view the invites of all organisations")
+    @PermissionRule(value = "READ", description = "a consortium member and the lead applicant can view the invites of all organisations")
     public boolean consortiumCanViewAnyInviteOrganisation(InviteOrganisationResource inviteOrganisation, UserResource user) {
-        return isApplicationCollaboratorOrIsLeadApplicant(inviteOrganisation, user) || user.hasRole(SUPPORT);
+        return isApplicationCollaboratorOrIsLeadApplicant(inviteOrganisation, user);
+    }
+
+    @PermissionRule(value = "READ", description = "a support user can view the invites of all organisations")
+    public boolean supportCanViewAnyInviteOrganisation(InviteOrganisationResource inviteOrganisation, UserResource user) {
+        return user.hasRole(SUPPORT);
     }
 
     @PermissionRule(value = "READ_FOR_UPDATE", description = "a consortium member can view the invites of their own organisation or if lead applicant")

@@ -78,12 +78,15 @@ public class ApplicationSummaryController {
             return redirectToFeedback(applicationId, queryParams);
         }
 
+        UserResource userForModel;
         if (isSupport) {
             ProcessRoleResource leadProcessRoleResource = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-            user = userService.findById(leadProcessRoleResource.getUser());
+            userForModel = userService.findById(leadProcessRoleResource.getUser());
+        } else {
+            userForModel = user;
         }
 
-        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(applicationId, user, form, isSupport));
+        model.addAttribute("model", applicationSummaryViewModelPopulator.populate(applicationId, userForModel, form, isSupport));
         return "application-summary";
     }
 
