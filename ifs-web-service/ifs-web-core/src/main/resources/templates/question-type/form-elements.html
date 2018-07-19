@@ -330,58 +330,58 @@
 <th:block th:fragment="assign-button-body (model)" th:with="question=${model.question}">
     <th:block th:if="${model.assigned}">
         <span class="secondary-notification" th:if="${model.assignedToCurrentUser}">
-          <!--<th:block th:if="${model.assignedByLead}"-->
-                    <!--th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you </th:block>-->
-          <!--<th:block th:unless="${model.assignedByLead}"-->
-                    <!--th:text="${fullButtonText} ? 'Reassigned to you.' : 'Reassigned to'">Reassigned to you </th:block>-->
+          <th:block th:if="${model.assignedByLead}"
+                    th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you </th:block>
+          <th:block th:unless="${model.assignedByLead}"
+                    th:text="${fullButtonText} ? 'Reassigned to you.' : 'Reassigned to'">Reassigned to you </th:block>
         </span>
-        <!--<span class="secondary-notification"-->
-              <!--th:unless="${model.assignedToCurrentUser}"-->
-              <!--th:text="${fullButtonText} ? |Assigned to ${name}. | : 'Assigned to'"-->
-              <!--th:with="name=${model.assignee.name}">-->
-            <!--<span class="assign-name" th:text="${name}">NAME</span>-->
-        <!--</span>-->
+        <span class="secondary-notification"
+              th:unless="${model.assignedToCurrentUser}"
+              th:text="${fullButtonText} ? |Assigned to ${name}. | : 'Assigned to'"
+              th:with="name=${model.assignee.name}">
+            <span class="assign-name" th:text="${name}">NAME</span>
+        </span>
     </th:block>
 
-    <!--<th:block th:if="${model.notAssigned}">-->
-        <!--<span class="secondary-notification" th:if="${model.currentUserIsLead}">-->
-            <!--<th:block th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you</th:block>-->
-        <!--</span>-->
-        <!--<span class="secondary-notification" th:unless="${model.currentUserIsLead}">-->
-            <!--Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>-->
-        <!--</span>-->
-    <!--</th:block>-->
+    <th:block th:if="${model.notAssigned}">
+        <span class="secondary-notification" th:if="${model.currentUserIsLead}">
+            <th:block th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you</th:block>
+        </span>
+        <span class="secondary-notification" th:unless="${model.currentUserIsLead}">
+            Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
+        </span>
+    </th:block>
 
-    <!--<div class="assign-button-container">-->
-<!---->
-        <!--<div class="assign-button">-->
-            <!--<th:block th:insert="question-type/form-elements :: assigned-to (${model})"/>-->
-        <!--</div>-->
-<!---->
-        <!--<div class="assign-team">-->
-            /* Reassign question */
-            <!--<label th:for="'assign'+${question.id}">Assign question to</label>-->
-            <!--<select name="assign_question" th:id="'assign'+${question.id}" class="prog-menu">-->
-                <!--<th:block th:each="assignableApplicant : ${model.assignableApplicants}">-->
-                    <!--<option th:value="${question.id}+'_'+${assignableApplicant.processRole.id}"-->
-                            <!--th:unless="${model.isAssignedTo(assignableApplicant)}"-->
-                            <!--th:text="${assignableApplicant.name}"-->
-                    <!--/>-->
-                    <!--<option th:if="${model.isAssignedTo(assignableApplicant)}"-->
-                            <!--th:text="${assignableApplicant.name}"-->
-                            <!--selected="selected"-->
-                            <!--disabled="disabled"/>-->
-                <!--</th:block>-->
-                <!--<th:block th:each="pendingAssignableUser : ${model.pendingAssignableUsers}">-->
-                    <!--<option th:text="${pendingAssignableUser.name + ' (pending)'}"  disabled="disabled"/>-->
-                <!--</th:block>-->
-            <!--</select>-->
-            <!--<button type="submit">Reassign</button>-->
-        <!--</div>-->
-        <!--<th:block th:unless="${hideAssignedTo}"-->
-                  <!--th:include="question-type/form-elements :: current-assignee (${model})" />-->
-<!---->
-    <!--</div>-->
+    <div class="assign-button-container">
+
+        <div class="assign-button">
+            <th:block th:insert="question-type/form-elements :: assigned-to (${model})"/>
+        </div>
+
+        <div class="assign-team">
+            <!--/* Reassign question */-->
+            <label th:for="'assign'+${question.id}">Assign question to</label>
+            <select name="assign_question" th:id="'assign'+${question.id}" class="prog-menu">
+                <th:block th:each="assignableApplicant : ${model.assignableApplicants}">
+                    <option th:value="${question.id}+'_'+${assignableApplicant.processRole.id}"
+                            th:unless="${model.isAssignedTo(assignableApplicant)}"
+                            th:text="${assignableApplicant.name}"
+                    />
+                    <option th:if="${model.isAssignedTo(assignableApplicant)}"
+                            th:text="${assignableApplicant.name}"
+                            selected="selected"
+                            disabled="disabled"/>
+                </th:block>
+                <th:block th:each="pendingAssignableUser : ${model.pendingAssignableUsers}">
+                    <option th:text="${pendingAssignableUser.name + ' (pending)'}"  disabled="disabled"/>
+                </th:block>
+            </select>
+            <button type="submit">Reassign</button>
+        </div>
+        <th:block th:unless="${hideAssignedTo}"
+                  th:include="question-type/form-elements :: current-assignee (${model})" />
+
+    </div>
 
 </th:block>
 
