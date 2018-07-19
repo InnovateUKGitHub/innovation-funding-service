@@ -69,14 +69,14 @@
                             <div class="status">
                                 <th:block th:unless="${inProgressView.submitted}">
                                     <div class="status-msg msg-deadline" th:unless="${inProgressView.within24Hours}">
-                                        <strong class="bold-medium days-remaining" th:text="${inProgressView.daysLeft}">DAYS LEFT</strong> <br />
+                                        <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold days-remaining" th:text="${inProgressView.daysLeft}">DAYS LEFT</strong> <br />
                                         days left <br />
                                         Deadline
                                         <span class="day" th:text="${#temporals.day(inProgressView.endDate)}">END DAY</span>
                                         <span class="month" th:text="${#temporals.monthName(inProgressView.endDate)}">END MONTH</span>
                                     </div>
                                     <div class="status-msg msg-deadline-today" th:if="${inProgressView.within24Hours}">
-                                        <strong class="bold-medium" th:text="${inProgressView.hoursLeftBeforeSubmit}"></strong><br/>
+                                        <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold" th:text="${inProgressView.hoursLeftBeforeSubmit}"></strong><br/>
                                         hours left<br/>
                                         Deadline <th:block th:text="${#temporals.format(inProgressView.endDate, 'hh:mm a')}"/>
                                         <th:block th:text="${inProgressView.closingToday ? 'today' : 'tomorrow'}"/>

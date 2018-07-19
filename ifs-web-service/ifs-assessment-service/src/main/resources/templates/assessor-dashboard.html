@@ -104,7 +104,7 @@
                                 </div>
                                 <div class="status">
                                     <div class="status-msg msg-deadline" th:attr="data-competition-id=${activeCompetition.competitionId}">
-                                        <strong class="bold-medium days-remaining" th:text="${activeCompetition.daysLeft}"></strong>
+                                        <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold days-remaining" th:text="${activeCompetition.daysLeft}"></strong>
                                         <br />
                                         days left <br />
                                         Deadline
@@ -172,7 +172,7 @@
                                 </div>
                                 <div class="status">
                                     <div class="status-msg msg-deadline" th:attr="data-competition-id=${assessmentPanelAccept.competitionId}">
-                                        <strong class="bold-medium days-remaining" th:text="${assessmentPanelAccept.daysLeft}"></strong>
+                                        <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold days-remaining" th:text="${assessmentPanelAccept.daysLeft}"></strong>
                                         <br />days left <br />
                                         Deadline
                                         <span class="day" th:text="${#temporals.day(assessmentPanelAccept.panelDateDeadline)}">END DAY</span>

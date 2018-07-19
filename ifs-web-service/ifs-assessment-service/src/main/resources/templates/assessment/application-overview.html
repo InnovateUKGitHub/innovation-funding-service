@@ -30,7 +30,7 @@
                 </div>
 
                 <section th:each="section,iterStat : ${model.sections}">
-                    <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'bold-medium': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
+                    <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'govuk-!-font-size-24 govuk-!-font-weight-bold': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
                     <p class="govuk-hint" th:text="${section.guidance}" />
                     <ul class="task-list">
                         <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'" th:unless="${section.finance}">

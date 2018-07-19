@@ -123,7 +123,7 @@
                                     <th:block th:if="${app.readyToSubmit}">
                                         <div class="status" th:classappend="${app.recommended} ? 'positive' : 'negative'">
                                             <div class="status-msg score">
-                                                <strong class="bold-large" th:text="|${app.overallScore} %|">PERCENTAGE</strong><br />
+                                                <strong class="govuk-!-font-size-36 govuk-!-font-weight-bold" th:text="|${app.overallScore} %|">PERCENTAGE</strong><br />
                                                 <span>Overall score</span><br />
                                                 <strong th:text="${app.recommended} ? 'Recommended' : 'Not recommended'">VERDICT</strong>
                                             </div>
@@ -160,7 +160,7 @@
                             </div>
                             <div class="status" th:classappend="${app.recommended} ? 'positive' : 'negative'">
                                 <div class="status-msg score">
-                                    <strong class="bold-large" th:text="|${app.overallScore} %|">PERCENTAGE</strong><br />
+                                    <strong class="govuk-!-font-size-36 govuk-!-font-weight-bold" th:text="|${app.overallScore} %|">PERCENTAGE</strong><br />
                                     <span>Overall score</span>
                                 </div>
                                 <div class="status-msg msg-progress">
