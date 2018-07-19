@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.resource.ApplicationState.submittedAndFinishedStates;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,7 +42,7 @@ public class AllFinanceTotalsSenderImplTest {
                 .build(2)
                 .stream();
 
-        when(applicationRepository.findByApplicationProcessActivityStateIn(any()))
+        when(applicationRepository.findByApplicationProcessActivityStateIn(submittedAndFinishedStates))
                 .thenReturn(applicationsStream);
         ServiceResult<Void> serviceResult = allFinanceTotalsSender.sendAllFinanceTotals();
 
