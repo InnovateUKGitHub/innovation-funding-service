@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Holder of model attributes for the Declaration of Interest view.
  */
-public class AssessorsProfileDOIViewModel {
+public class AssessorProfileDeclarationViewModel {
 
     private CompetitionResource competition;
     private long assessorId;
@@ -29,7 +29,7 @@ public class AssessorsProfileDOIViewModel {
     private List<AffiliationResource> familyAffiliations = new ArrayList<>();
     private String familyFinancialInterests;
 
-    public AssessorsProfileDOIViewModel(
+    public AssessorProfileDeclarationViewModel(
             CompetitionResource competition,
             long assessorId,
             String name,
@@ -134,42 +134,4 @@ public class AssessorsProfileDOIViewModel {
     public String getOriginQuery() {
         return originQuery;
     }
-
-    //    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//
-//        if (o == null || getClass() != o.getClass()) return false;
-//
-//        AssessorsProfileDOIViewModel viewModel = (AssessorsProfileDOIViewModel) o;
-//
-//        return new EqualsBuilder()
-//                .append(competition, viewModel.competition)
-//                .append(assessorId, viewModel.assessorId)
-//                .append(completed, viewModel.completed)
-//                .append(principalEmployer, viewModel.principalEmployer)
-//                .append(role, viewModel.role)
-//                .append(professionalAffiliations, viewModel.professionalAffiliations)
-//                .append(appointments, viewModel.appointments)
-//                .append(financialInterests, viewModel.financialInterests)
-//                .append(familyAffiliations, viewModel.familyAffiliations)
-//                .append(familyFinancialInterests, viewModel.familyFinancialInterests)
-//                .isEquals();
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return new HashCodeBuilder(17, 37)
-//                .append(competition)
-//                .append(assessorId)
-//                .append(completed)
-//                .append(principalEmployer)
-//                .append(role)
-//                .append(professionalAffiliations)
-//                .append(appointments)
-//                .append(financialInterests)
-//                .append(familyAffiliations)
-//                .append(familyFinancialInterests)
-//                .toHashCode();
-//    }
 }

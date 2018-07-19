@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.assessor.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.management.assessor.populator.AssessorProfileDOIModelPopulator;
+import org.innovateuk.ifs.management.assessor.populator.AssessorProfileDeclarationModelPopulator;
 import org.innovateuk.ifs.management.assessor.populator.AssessorProfileSkillsModelPopulator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -26,12 +26,12 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 public class CompetitionManagementAssessorProfileController {
 
     private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
-    private AssessorProfileDOIModelPopulator assessorProfileDOIModelPopulator;
+    private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
 
     public CompetitionManagementAssessorProfileController(AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator,
-                                                          AssessorProfileDOIModelPopulator assessorProfileDOIModelPopulator) {
+                                                          AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator) {
         this.assessorProfileSkillsModelPopulator = assessorProfileSkillsModelPopulator;
-        this.assessorProfileDOIModelPopulator = assessorProfileDOIModelPopulator;
+        this.assessorProfileDeclarationModelPopulator = assessorProfileDeclarationModelPopulator;
     }
 
     public enum AssessorProfileOrigin {
@@ -89,10 +89,10 @@ public class CompetitionManagementAssessorProfileController {
 
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.valueOf(origin), queryParams);
 
-        model.addAttribute("model", assessorProfileDOIModelPopulator.populateModel(assessorId, competitionId, originQuery));
+        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(assessorId, competitionId, originQuery));
         model.addAttribute("backUrl", buildBackUrl(origin, competitionId, applicationId, assessorId, queryParams));
 
-        return "assessors/profile-DOI";
+        return "assessors/profile-declaration";
     }
 
     private String buildBackUrl(String origin, Long competitionId, Long applicationId, Long assessorId, MultiValueMap<String, String> queryParams) {

@@ -55,18 +55,22 @@
         </li>
     </ul>
 
-    <table th:each="innovationSector : ${model.innovationSectors}" class="extra-margin">
-        <thead>
-        <tr>
-            <th scope="col" th:text="${innovationSector.name}">materials and manufacturing</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="innovationArea : ${innovationSector.children}">
-            <td th:text="${innovationArea.name}">digital sciences</td>
-        </tr>
-        </tbody>
-    </table>
+    <h3 class="heading-medium">Innovation areas</h3>
+
+    <div class="extra-margin">
+        <table th:each="innovationSector : ${model.innovationSectors}" >
+            <thead>
+            <tr>
+                <th scope="col" th:text="${innovationSector.name}">materials and manufacturing</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="innovationArea : ${innovationSector.children}">
+                <td th:text="${innovationArea.name}">digital sciences</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

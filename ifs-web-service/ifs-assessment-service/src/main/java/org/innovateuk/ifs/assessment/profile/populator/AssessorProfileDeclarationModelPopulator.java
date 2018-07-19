@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.profile.populator;
 
 import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileDeclarationViewModel;
+import org.innovateuk.ifs.profile.populator.AssessorProfileDeclarationBasePopulator;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.UserResource;

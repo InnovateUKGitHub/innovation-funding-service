@@ -6,7 +6,7 @@ import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.assessor.viewmodel.AssessorsProfileSkillsViewModel;
+import org.innovateuk.ifs.management.assessor.viewmodel.AssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -33,14 +33,14 @@ public class AssessorProfileSkillsModelPopulator {
         this.assessorRestService = assessorRestService;
     }
 
-    public AssessorsProfileSkillsViewModel populateModel(long assessorId, long competitionId, String originQuery) {
+    public AssessorProfileSkillsViewModel populateModel(long assessorId, long competitionId, String originQuery) {
         CompetitionResource competition = competitionService.getById(competitionId);
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccess();
 
         UserResource user = assessorProfile.getUser();
         ProfileResource profile = assessorProfile.getProfile();
 
-        return new AssessorsProfileSkillsViewModel(
+        return new AssessorProfileSkillsViewModel(
                 competition,
                 user.getId(),
                 user.getFirstName() + " " + user.getLastName(),
