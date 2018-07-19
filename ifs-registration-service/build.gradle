@@ -62,7 +62,6 @@ osStageLocal.tag = registrationServiceVersion
 createContainer.hostName="registration-svc"
 createContainer.containerName="registration-svc"
 createContainer.containerId="registration-svc"
-createContainer.portBindings = ['9007:8000']
 
 
 def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
