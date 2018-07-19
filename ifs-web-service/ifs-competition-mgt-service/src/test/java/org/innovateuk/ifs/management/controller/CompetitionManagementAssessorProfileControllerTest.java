@@ -8,8 +8,8 @@ import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController;
-import org.innovateuk.ifs.management.assessor.populator.AssessorProfileModelPopulator;
-import org.innovateuk.ifs.management.assessor.viewmodel.AssessorsProfileViewModel;
+import org.innovateuk.ifs.management.assessor.populator.AssessorProfileSkillsModelPopulator;
+import org.innovateuk.ifs.management.assessor.viewmodel.AssessorsProfileSkillsViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
     @Spy
     @InjectMocks
-    private AssessorProfileModelPopulator assessorProfileModelPopulator;
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
 
     @Mock
     private AssessorRestService assessorRestService;
@@ -90,7 +90,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                 .andExpect(model().attributeExists("model"))
                 .andReturn();
 
-        AssessorsProfileViewModel model = (AssessorsProfileViewModel) result.getModelAndView().getModel().get("model");
+        AssessorsProfileSkillsViewModel model = (AssessorsProfileSkillsViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals("Test Tester", model.getName());
         assertEquals("012345", model.getPhone());

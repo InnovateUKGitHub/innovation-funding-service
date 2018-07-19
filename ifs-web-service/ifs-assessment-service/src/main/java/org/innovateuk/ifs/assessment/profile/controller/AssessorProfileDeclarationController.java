@@ -60,6 +60,7 @@ public class AssessorProfileDeclarationController {
     @GetMapping
     public String getDeclaration(Model model,
                                  UserResource loggedInUser) {
+//
         model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(loggedInUser));
         return "profile/declaration-of-interest";
     }

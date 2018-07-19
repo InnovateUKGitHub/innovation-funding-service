@@ -134,7 +134,7 @@
                         </div>
                     </td>
                     <td>
-                        <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
+                        <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}/skills(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
                            th:text="${assessor.name}">John Barnes
                         </a>
                     </td>

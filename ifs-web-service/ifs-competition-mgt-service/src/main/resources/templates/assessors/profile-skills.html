@@ -43,27 +43,30 @@
     <h3 class="heading-small">Email address</h3>
     <p><a th:href="|mailto:${model.email}|" th:text="${model.email}">j.s@assessor.com</a></p>
 
+    <h3 class="heading-small" th:if="${model.businessType}">Assessor type</h3>
+    <p th:if="${model.businessType}" th:text="${model.businessType}">business</p>
 
-    <h2 class="heading-medium">Skills</h2>
-
-    <h3 class="heading-small">Innovation areas</h3>
-
-    <ul class="list list-bullet">
-        <li th:each="innovationSector : ${model.innovationSectors}">
-            <th:block th:text="${innovationSector.name}">materials and manufacturing</th:block>
-            <ul class="list list-bullet">
-                <li th:each="innovationArea : ${innovationSector.children}">
-                    <th:block th:text="${innovationArea.name}">digital sciences</th:block>
-                </li>
-            </ul>
+    <ul class="inline-nav">
+        <li class="selected">
+            <a th:href="@{/competition/{cid}/assessors/profile/{assessorId}/skills(cid=${model.competition.id},assessorId=${model.assessorId})} + ${model.originQuery}">Skills</a>
+        </li>
+        <li class="not-selected">
+            <a th:href="@{/competition/{cid}/assessors/profile/{assessorId}/DOI(cid=${model.competition.id},assessorId=${model.assessorId})} + ${model.originQuery}">DOI</a>
         </li>
     </ul>
 
-    <h3 class="heading-small" th:if="${model.skills}">Skill areas</h3>
-    <p th:if="${model.skills}" th:text="${model.skills}">Human computer interaction, Wearables, IoT</p>
-
-    <h3 class="heading-small" th:if="${model.businessType}">Assessor type</h3>
-    <p th:if="${model.businessType}" th:text="${model.businessType}">business</p>
+    <table th:each="innovationSector : ${model.innovationSectors}" class="extra-margin">
+        <thead>
+        <tr>
+            <th scope="col" th:text="${innovationSector.name}">materials and manufacturing</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="innovationArea : ${innovationSector.children}">
+            <td th:text="${innovationArea.name}">digital sciences</td>
+        </tr>
+        </tbody>
+    </table>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

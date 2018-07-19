@@ -6,11 +6,10 @@ import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.assessor.viewmodel.AssessorsProfileViewModel;
+import org.innovateuk.ifs.management.assessor.viewmodel.AssessorsProfileSkillsViewModel;
 import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -23,30 +22,35 @@ import static java.util.stream.Collectors.groupingBy;
  * Build the model for Assessors' Profile view.
  */
 @Component
-public class AssessorProfileModelPopulator {
+public class AssessorProfileSkillsModelPopulator {
 
-    @Autowired
     private CompetitionService competitionService;
-
-    @Autowired
     private AssessorRestService assessorRestService;
 
-    public AssessorsProfileViewModel populateModel(long assessorId, long competitionId) {
+    public AssessorProfileSkillsModelPopulator(CompetitionService competitionService,
+                                               AssessorRestService assessorRestService) {
+        this.competitionService = competitionService;
+        this.assessorRestService = assessorRestService;
+    }
+
+    public AssessorsProfileSkillsViewModel populateModel(long assessorId, long competitionId, String originQuery) {
         CompetitionResource competition = competitionService.getById(competitionId);
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccess();
 
         UserResource user = assessorProfile.getUser();
         ProfileResource profile = assessorProfile.getProfile();
 
-        return new AssessorsProfileViewModel(
+        return new AssessorsProfileSkillsViewModel(
                 competition,
+                user.getId(),
                 user.getFirstName() + " " + user.getLastName(),
                 user.getEmail(),
                 user.getPhoneNumber(),
                 profile.getAddress(),
                 innovationSectorViewModel(profile.getInnovationAreas()),
                 Optional.ofNullable(profile.getBusinessType()).map(BusinessType::getDisplayName).orElse(null),
-                profile.getSkillsAreas()
+                profile.getSkillsAreas(),
+                originQuery
         );
     }
 

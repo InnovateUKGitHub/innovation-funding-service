@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.management.assessor.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.management.assessor.populator.AssessorProfileModelPopulator;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.innovateuk.ifs.management.assessor.populator.AssessorProfileDOIModelPopulator;
+import org.innovateuk.ifs.management.assessor.populator.AssessorProfileSkillsModelPopulator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
@@ -24,8 +25,14 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
 public class CompetitionManagementAssessorProfileController {
 
-    @Autowired
-    private AssessorProfileModelPopulator assessorProfileModelPopulator;
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
+    private AssessorProfileDOIModelPopulator assessorProfileDOIModelPopulator;
+
+    public CompetitionManagementAssessorProfileController(AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator,
+                                                          AssessorProfileDOIModelPopulator assessorProfileDOIModelPopulator) {
+        this.assessorProfileSkillsModelPopulator = assessorProfileSkillsModelPopulator;
+        this.assessorProfileDOIModelPopulator = assessorProfileDOIModelPopulator;
+    }
 
     public enum AssessorProfileOrigin {
         APPLICATION_PROGRESS("/assessment/competition/{competitionId}/application/{applicationId}/assessors"),
@@ -56,18 +63,36 @@ public class CompetitionManagementAssessorProfileController {
         }
     }
 
-    @GetMapping("/profile/{assessorId}")
-    public String profile(Model model,
-                          @PathVariable("competitionId") long competitionId,
-                          @PathVariable("assessorId") long assessorId,
-                          @RequestParam(value = "origin", defaultValue = "APPLICATION_PROGRESS") String origin,
-                          @RequestParam(value = "applicationId", required = false) Long applicationId,
-                          @RequestParam MultiValueMap<String, String> queryParams) {
+    @GetMapping("/profile/{assessorId}/skills")
+    public String profileSkills(Model model,
+                                @PathVariable("competitionId") long competitionId,
+                                @PathVariable("assessorId") long assessorId,
+                                @RequestParam(value = "origin", defaultValue = "APPLICATION_PROGRESS") String origin,
+                                @RequestParam(value = "applicationId", required = false) Long applicationId,
+                                @RequestParam MultiValueMap<String, String> queryParams) {
 
-        model.addAttribute("model", assessorProfileModelPopulator.populateModel(assessorId, competitionId));
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.valueOf(origin), queryParams);
+
+        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(assessorId, competitionId, originQuery));
         model.addAttribute("backUrl", buildBackUrl(origin, competitionId, applicationId, assessorId, queryParams));
 
-        return "assessors/profile";
+        return "assessors/profile-skills";
+    }
+
+    @GetMapping("/profile/{assessorId}/DOI")
+    public String profileDOI(Model model,
+                             @PathVariable("competitionId") long competitionId,
+                             @PathVariable("assessorId") long assessorId,
+                             @RequestParam(value = "origin", defaultValue = "APPLICATION_PROGRESS") String origin,
+                             @RequestParam(value = "applicationId", required = false) Long applicationId,
+                             @RequestParam MultiValueMap<String, String> queryParams) {
+
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.valueOf(origin), queryParams);
+
+        model.addAttribute("model", assessorProfileDOIModelPopulator.populateModel(assessorId, competitionId, originQuery));
+        model.addAttribute("backUrl", buildBackUrl(origin, competitionId, applicationId, assessorId, queryParams));
+
+        return "assessors/profile-DOI";
     }
 
     private String buildBackUrl(String origin, Long competitionId, Long applicationId, Long assessorId, MultiValueMap<String, String> queryParams) {

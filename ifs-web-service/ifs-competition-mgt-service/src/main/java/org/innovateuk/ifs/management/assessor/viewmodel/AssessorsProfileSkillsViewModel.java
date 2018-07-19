@@ -9,9 +9,10 @@ import java.util.List;
 /**
  * View model for the Assessor Profile view.
  */
-public class AssessorsProfileViewModel {
+public class AssessorsProfileSkillsViewModel {
 
     private CompetitionResource competition;
+    private long assessorId;
     private String name;
     private String email;
     private String phone;
@@ -19,17 +20,21 @@ public class AssessorsProfileViewModel {
     private List<InnovationSectorViewModel> innovationSectors;
     private String businessType;
     private String skills;
+    private String originQuery;
 
-    public AssessorsProfileViewModel(
+    public AssessorsProfileSkillsViewModel(
             CompetitionResource competition,
+            long assessorId,
             String name,
             String email,
             String phone,
             AddressResource addressResource,
             List<InnovationSectorViewModel> innovationSectors,
             String businessType,
-            String skills) {
+            String skills,
+            String originQuery) {
         this.competition = competition;
+        this.assessorId = assessorId;
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -37,10 +42,15 @@ public class AssessorsProfileViewModel {
         this.innovationSectors = innovationSectors;
         this.businessType = businessType;
         this.skills = skills;
+        this.originQuery = originQuery;
     }
 
     public CompetitionResource getCompetition() {
         return competition;
+    }
+
+    public long getAssessorId() {
+        return assessorId;
     }
 
     public String getName() {
@@ -67,5 +77,9 @@ public class AssessorsProfileViewModel {
 
     public String getSkills() {
         return skills;
+    }
+
+    public String getOriginQuery() {
+        return originQuery;
     }
 }

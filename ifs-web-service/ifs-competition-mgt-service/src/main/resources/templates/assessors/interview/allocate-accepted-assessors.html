@@ -33,7 +33,7 @@
             </thead>
             <tbody>
             <tr th:each="assessor : ${model.assessors}">
-                <td><a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}"/></td>
+                <td><a th:href="@{/competition/{cid}/assessors/profile/{aid}/skills(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}"/></td>
                 <td th:text="${assessor.skillAreas}">skill areas</td>
                 <td th:text="${assessor.numberOfAllocatedApplications}" class="numeric"></td>
                 <td class="alignright">

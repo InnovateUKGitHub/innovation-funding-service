@@ -6,8 +6,8 @@ import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.assessor.populator.AssessorProfileModelPopulator;
-import org.innovateuk.ifs.management.assessor.viewmodel.AssessorsProfileViewModel;
+import org.innovateuk.ifs.management.assessor.populator.AssessorProfileSkillsModelPopulator;
+import org.innovateuk.ifs.management.assessor.viewmodel.AssessorsProfileSkillsViewModel;
 import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Before;
@@ -33,10 +33,10 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AssessorProfileModelPopulatorTest {
+public class AssessorProfileSkillsModelPopulatorTest {
 
     @InjectMocks
-    private AssessorProfileModelPopulator assessorProfileModelPopulator;
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
 
     @Mock
     private CompetitionService competitionService;
@@ -89,8 +89,8 @@ public class AssessorProfileModelPopulatorTest {
         when(competitionService.getById(competitionId)).thenReturn(expectedCompetition);
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(assessorProfileResource));
 
-        AssessorsProfileViewModel viewModel =
-                assessorProfileModelPopulator.populateModel(assessorId, competitionId);
+        AssessorsProfileSkillsViewModel viewModel =
+                assessorProfileSkillsModelPopulator.populateModel(assessorId, competitionId, null);
 
         InOrder inOrder = inOrder(competitionService, assessorRestService);
         inOrder.verify(competitionService).getById(competitionId);
