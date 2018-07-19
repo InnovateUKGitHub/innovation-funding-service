@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.summary.populator;
 
-import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategorySummaryModelPopulator;
 import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
@@ -23,7 +23,7 @@ public class ApplicationSummaryViewModelPopulator {
     private ApplicationService applicationService;
     private CompetitionService competitionService;
     private UserService userService;
-    private SummaryViewModelPopulator summaryViewModelPopulator;
+    private SummaryViewModelFragmentPopulator summaryViewModelPopulator;
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
     private ApplicationResearchCategorySummaryModelPopulator researchCategorySummaryModelPopulator;
     private ProjectService projectService;
@@ -31,10 +31,9 @@ public class ApplicationSummaryViewModelPopulator {
     public ApplicationSummaryViewModelPopulator(ApplicationService applicationService,
                                                 CompetitionService competitionService,
                                                 UserService userService,
-                                                SummaryViewModelPopulator summaryViewModelPopulator,
+                                                SummaryViewModelFragmentPopulator summaryViewModelPopulator,
                                                 ApplicationTeamModelPopulator applicationTeamModelPopulator,
-                                                ApplicationResearchCategorySummaryModelPopulator
-                                                        researchCategorySummaryModelPopulator,
+                                                ApplicationResearchCategorySummaryModelPopulator researchCategorySummaryModelPopulator,
                                                 ProjectService projectService) {
         this.applicationService = applicationService;
         this.competitionService = competitionService;

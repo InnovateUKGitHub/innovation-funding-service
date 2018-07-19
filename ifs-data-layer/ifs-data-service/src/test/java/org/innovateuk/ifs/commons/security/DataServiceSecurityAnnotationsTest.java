@@ -1,17 +1,17 @@
 package org.innovateuk.ifs.commons.security;
 
 import org.innovateuk.ifs.security.AbstractDataServiceSecurityAnnotationsTest;
+import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
 
 import java.util.List;
 
-import static org.assertj.core.util.Lists.emptyList;
+import static java.util.Arrays.asList;
 
 public class DataServiceSecurityAnnotationsTest extends AbstractDataServiceSecurityAnnotationsTest {
 
     @Override
     protected List<Class<?>> additionalExcludedClasses() {
-        return emptyList();
+        return asList(StatelessAuthenticationFilter.class);
     }
-
 
 }
