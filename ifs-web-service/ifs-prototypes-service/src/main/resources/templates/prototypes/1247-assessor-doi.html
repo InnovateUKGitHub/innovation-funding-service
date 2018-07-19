@@ -78,22 +78,22 @@
 			<div class="govuk-visually-hidden govuk-!-margin-bottom-6" id="add-appointments">
 
 				<!-- <div class="table-overflow">
-					<table>
-						<thead>
-							<tr>
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
 								<th scope="col" id="doi-label-appointments-organisation">Organisation</th>
 								<th scope="col" id="doi-label-appointments-position" colspan="2">Position</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">
 									<input type="text" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Aptrans Ltd' : '')}" id="doi-appointments-organisation" name="doi-appointments-organisation" aria-labelledby="doi-label-appointments-organisation" class="form-control width-full" />
 								</td>
-								<td>
+								<td class="govuk-table__cell">
 									<input type="text" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Executive consultant' : '')}" id="doi-appointments-position" name="doi-appointments-position" aria-labelledby="doi-label-appointments-position" class="form-control width-full" />
 								</td>
-								<td>
+								<td class="govuk-table__cell">
 									<a href="#">Add another position</a>
 								</td>
 							</tr>
@@ -197,26 +197,26 @@
 
 			<!-- <div id="add-family" class="govuk-!-margin-bottom-6 govuk-visually-hidden">
 
-				<table>
-					<thead>
-						<tr>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
 							<th scope="col" id="family-label-relation">Relation</th>
 							<th scope="col" id="family-label-organisation">Organisation</th>
 							<th scope="col" id="family-label-position" colspan="2">Position</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">
 								<input type="text" id="family-relation" name="family-relation" class="form-control width-full" aria-labelledby="family-label-relation" value="" />
 							</td>
-							<td>
+							<td class="govuk-table__cell">
 								<input type="text" id="family-organisation" name="family-organisation" class="form-control width-full" aria-labelledby="family-label-organisation" value="" />
 							</td>
-							<td>
+							<td class="govuk-table__cell">
 								<input type="text" id="family-position" name="family-position" class="form-control width-full" aria-labelledby="family-label-position" value="" />
 							</td>
-							<td>
+							<td class="govuk-table__cell">
 								<a href="#">Add another family member</a>
 							</td>
 						</tr>

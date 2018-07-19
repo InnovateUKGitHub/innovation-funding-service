@@ -43,23 +43,23 @@
 		</div>
 
 	    <h2 class="govuk-heading-m">Overall scores</h2>
-		<table>
-			<tbody>
-			<tr>
-				<th>Question</th>
-				<td><strong>Q1</strong></td>
-				<td><strong>Q2</strong></td>
-				<td><strong>Q3</strong></td>
-				<td><strong>Q4</strong></td>
-				<td><strong>Q5</strong></td>
-				<td><strong>Q6</strong></td>
-				<td><strong>Q7</strong></td>
-				<td><strong>Q8</strong></td>
-				<td><strong>Q9</strong></td>
-				<td><strong>Q10</strong></td>
+		<table class="govuk-table">
+			<tbody class="govuk-table__body">
+			<tr class="govuk-table__row">
+				<th class="govuk-table__header" scope="col">Question</th>
+				<td class="govuk-table__cell"><strong>Q1</strong></td>
+				<td class="govuk-table__cell"><strong>Q2</strong></td>
+				<td class="govuk-table__cell"><strong>Q3</strong></td>
+				<td class="govuk-table__cell"><strong>Q4</strong></td>
+				<td class="govuk-table__cell"><strong>Q5</strong></td>
+				<td class="govuk-table__cell"><strong>Q6</strong></td>
+				<td class="govuk-table__cell"><strong>Q7</strong></td>
+				<td class="govuk-table__cell"><strong>Q8</strong></td>
+				<td class="govuk-table__cell"><strong>Q9</strong></td>
+				<td class="govuk-table__cell"><strong>Q10</strong></td>
 			</tr>
-			<tr>
-				<th>Score</th>
+			<tr class="govuk-table__row">
+				<th class="govuk-table__header" scope="col">Score</th>
 				<td th:text="${score}">7</td>
 				<td th:text="${score}">7</td>
 				<td th:text="${score}">7</td>
@@ -81,137 +81,137 @@
 
 	<h2 class="govuk-heading-m">Average scores</h2>
 
-		<table>
-			<thead>
-				<th scope="col">Assessor</th>
-				<th scope="col">Scope</th>
-				<th scope="col">Recc'd</th>
-				<th scope="col">Q1</th>
-				<th scope="col">Q2</th>
-				<th scope="col">Q3</th>
-				<th scope="col">Q4</th>
-				<th scope="col">Q5</th>
-				<th scope="col">Q6</th>
-				<th scope="col">Q7</th>
-				<th scope="col">Q8</th>
-				<th scope="col">Q9</th>
-				<th scope="col">Q10</th>
-				<th scope="col">Total</th>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<th class="govuk-table__header" scope="col">Assessor</th>
+				<th class="govuk-table__header" scope="col">Scope</th>
+				<th class="govuk-table__header" scope="col">Recc'd</th>
+				<th class="govuk-table__header" scope="col">Q1</th>
+				<th class="govuk-table__header" scope="col">Q2</th>
+				<th class="govuk-table__header" scope="col">Q3</th>
+				<th class="govuk-table__header" scope="col">Q4</th>
+				<th class="govuk-table__header" scope="col">Q5</th>
+				<th class="govuk-table__header" scope="col">Q6</th>
+				<th class="govuk-table__header" scope="col">Q7</th>
+				<th class="govuk-table__header" scope="col">Q8</th>
+				<th class="govuk-table__header" scope="col">Q9</th>
+				<th class="govuk-table__header" scope="col">Q10</th>
+				<th class="govuk-table__header" scope="col">Total</th>
 			</thead>
 			<tfoot>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Average</th>
-					<td>Yes</td>
-					<td>Yes</td>
-					<td>9</td>
-					<td>9</td>
-					<td>8</td>
-					<td>8</td>
-					<td>8</td>
-					<td>8</td>
-					<td>9</td>
-					<td>8</td>
-					<td>8</td>
-					<td>9</td>
-					<td><strong>80</strong></td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell"><strong>80</strong></td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Spread</th>
-					<td></td>
-					<td></td>
-					<td>1</td>
-					<td>2</td>
-					<td>0</td>
-					<td>1</td>
-					<td>2</td>
-					<td>3</td>
-					<td>2</td>
-					<td>0</td>
-					<td>1</td>
-					<td>2</td>
-					<td><strong>12</strong></td>
+					<td class="govuk-table__cell"></td>
+					<td class="govuk-table__cell"></td>
+					<td class="govuk-table__cell">1</td>
+					<td class="govuk-table__cell">2</td>
+					<td class="govuk-table__cell">0</td>
+					<td class="govuk-table__cell">1</td>
+					<td class="govuk-table__cell">2</td>
+					<td class="govuk-table__cell">3</td>
+					<td class="govuk-table__cell">2</td>
+					<td class="govuk-table__cell">0</td>
+					<td class="govuk-table__cell">1</td>
+					<td class="govuk-table__cell">2</td>
+					<td class="govuk-table__cell"><strong>12</strong></td>
 				</tr>
 			</tfoot>
-			<tbody>
-				<tr>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
 					<th scope="row">Ray Browne</th>
-					<td>Yes</td>
-					<td>Yes</td>
-					<td>9</td>
-					<td>9</td>
-					<td>8</td>
-					<td>8</td>
-					<td>8</td>
-					<td>8</td>
-					<td>9</td>
-					<td>8</td>
-					<td>8</td>
-					<td>9</td>
-					<td><strong>84</strong></td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell"><strong>84</strong></td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Julio Fario</th>
-					<td>Yes</td>
-					<td>Yes</td>
-					<td>9</td>
-					<td>9</td>
-					<td>8</td>
-					<td>8</td>
-					<td>8</td>
-					<td>8</td>
-					<td>9</td>
-					<td>8</td>
-					<td>8</td>
-					<td>9</td>
-					<td><strong>84</strong></td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell"><strong>84</strong></td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Brain Law</th>
-					<td>Yes</td>
-					<td>Yes</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td><strong>-</strong></td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell"><strong>-</strong></td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">Colin Seabrook</th>
-					<td>Yes</td>
-					<td>Yes</td>
-					<td>6</td>
-					<td>8</td>
-					<td>9</td>
-					<td>7</td>
-					<td>8</td>
-					<td>4</td>
-					<td>8</td>
-					<td>7</td>
-					<td>8</td>
-					<td>9</td>
-					<td><strong>72</strong></td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">6</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell">7</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">4</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">7</td>
+					<td class="govuk-table__cell">8</td>
+					<td class="govuk-table__cell">9</td>
+					<td class="govuk-table__cell"><strong>72</strong></td>
 				</tr>
-				<tr>
+				<tr class="govuk-table__row">
 					<th scope="row">David Standingford</th>
-					<td>Yes</td>
-					<td>Yes</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td><strong>-</strong></td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">Yes</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell">-</td>
+					<td class="govuk-table__cell"><strong>-</strong></td>
 				</tr>
 			</tbody>
 		</table>

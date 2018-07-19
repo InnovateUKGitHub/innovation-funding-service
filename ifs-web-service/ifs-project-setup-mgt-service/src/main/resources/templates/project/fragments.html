@@ -10,7 +10,7 @@
 
 <th:block th:fragment="project-status-table(status, columnType)">
     <th:block th:switch="${status.name()}">
-        <td th:case="'COMPLETE'" class="status ok">
+        <td th:case="'COMPLETE'" class="govuk-table__cell status ok">
           <th:block th:if="${url}">
               <a th:href="${url}" class="govuk-link">
                   <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
@@ -20,7 +20,7 @@
             <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
           </th:block>
         </td>
-        <td th:case="'ACTION_REQUIRED'" class="status action">
+        <td th:case="'ACTION_REQUIRED'" class="govuk-table__cell status action">
             <th:block th:if="${url}">
                 <a th:href="${url}" class="govuk-link">
                   <th:block th:if="${columnType == 'project-details'}">Incomplete</th:block>
@@ -34,13 +34,13 @@
               <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
             </th:block>
         </td>
-        <td th:case="'NOT_STARTED'" class="status">
+        <td th:case="'NOT_STARTED'" class="govuk-table__cell status">
             <span class="govuk-visually-hidden">Stage is not yet available</span>
         </td>
-        <td th:case="'NOT_REQUIRED'" class="status na">
+        <td th:case="'NOT_REQUIRED'" class="govuk-table__cell status na">
             <span class="govuk-visually-hidden">Not required for this partner</span>
         </td>
-        <td th:case="'PENDING'" class="status waiting">
+        <td th:case="'PENDING'" class="govuk-table__cell status waiting">
           <th:block th:if="${url}">
               <a th:href="${url}" class="govuk-link">
                 <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
@@ -50,13 +50,13 @@
               <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
           </th:block>
         </td>
-        <td th:case="'REJECTED'" class="status rejected">
+        <td th:case="'REJECTED'" class="govuk-table__cell status rejected">
             <th:block th:if="${url}">
                 <a th:href="${url}" class="govuk-link">Rejected</a>
             </th:block>
             <th:block th:unless="${url}">Rejected</th:block>
         </td>
-        <td th:case="*"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
+        <td th:case="*" class="govuk-table__cell"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
     </th:block>
 </th:block>
 

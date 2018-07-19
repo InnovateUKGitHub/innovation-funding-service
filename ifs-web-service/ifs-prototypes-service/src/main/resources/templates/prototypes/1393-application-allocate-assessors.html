@@ -98,38 +98,38 @@
 
         <div class="table-overflow">
             <table id="assessor-previously-assigned-list">
-                <thead>
-                    <tr>
-                        <th scope="col">Assessor</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Innovation area</th>
-                        <th scope="col">Skills</th>
-                        <th scope="col">Applications</th>
-                        <th scope="col">Reason</th>
-                        <th scope="col">Further details</th>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Assessor</th>
+                        <th class="govuk-table__header" scope="col">Type</th>
+                        <th class="govuk-table__header" scope="col">Innovation area</th>
+                        <th class="govuk-table__header" scope="col">Skills</th>
+                        <th class="govuk-table__header" scope="col">Applications</th>
+                        <th class="govuk-table__header" scope="col">Reason</th>
+                        <th class="govuk-table__header" scope="col">Further details</th>
                         <th class="alignright" scope="col">Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
                         <th scope="row">Bill Knightly</th>
-                        <td>Academic</td>
+                        <td class="govuk-table__cell">Academic</td>
                         <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                         <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                        <td>3</td>
-                        <td>Rejected</td>
-                       	<td>Assessor had ot started the application by the start date.</td>
-                        <td class="alignright"><a href="#" class="remove-assessor">Reinvite</a></td>
+                        <td class="govuk-table__cell">3</td>
+                        <td class="govuk-table__cell">Rejected</td>
+                       	<td class="govuk-table__cell">Assessor had ot started the application by the start date.</td>
+                        <td class="govuk-table__cell alignright"><a href="#" class="remove-assessor">Reinvite</a></td>
                     </tr>
-                    <tr>
+                    <tr class="govuk-table__row">
                         <th scope="row">Oliver Romero</th>
-                        <td>Academic</td>
+                        <td class="govuk-table__cell">Academic</td>
                         <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                         <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                        <td>3</td>
-                        <td>Rejected</td>
-                        <td>Conflict of interest <br /> I am currently opening another project that is similar to this has left me compromised</td>
-                        <td class="alignright"><a href="#" class="reinvite-assessor">Reinvite</a></td>
+                        <td class="govuk-table__cell">3</td>
+                        <td class="govuk-table__cell">Rejected</td>
+                        <td class="govuk-table__cell">Conflict of interest <br /> I am currently opening another project that is similar to this has left me compromised</td>
+                        <td class="govuk-table__cell alignright"><a href="#" class="reinvite-assessor">Reinvite</a></td>
                     </tr>
                 </tbody>
             </table>

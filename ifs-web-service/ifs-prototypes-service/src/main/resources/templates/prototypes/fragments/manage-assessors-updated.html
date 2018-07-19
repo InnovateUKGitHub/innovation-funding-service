@@ -384,64 +384,64 @@
             <th:block th:insert="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=false,sortByType=2" />
 
             <div class="table-overflow">
-                <table>
-                    <thead>
-                        <tr>
-                            <th scope="col">Assessor name</th>
-                            <th scope="col">Type</th>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Assessor name</th>
+                            <th class="govuk-table__header" scope="col">Type</th>
                             <th scope="col" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}"></th>
-                            <th scope="col">Contract and DOI</th>
-                            <th scope="col"><span class="govuk-visually-hidden">Add</span></th>
+                            <th class="govuk-table__header" scope="col">Contract and DOI</th>
+                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Add</span></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=John%20Barnes&amp;comp=assessment">John Barnes</a></td>
-                            <td>Industry</td>
-                            <td>Electronics, sensors &amp; photonics, Materials</td>
-                            <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=John%20Barnes&amp;comp=assessment">John Barnes</a></td>
+                            <td class="govuk-table__cell">Industry</td>
+                            <td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>
+                            <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#" class="button-secondary govuk-!-margin-0">Add</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Oliver%20Romero&amp;comp=assessment">Oliver Romero</a></td>
-                            <td>Academic</td>
-                            <td>Healthcare, Regenerative medicine, Stratified medicine</td>
-                            <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Oliver%20Romero&amp;comp=assessment">Oliver Romero</a></td>
+                            <td class="govuk-table__cell">Academic</td>
+                            <td class="govuk-table__cell">Healthcare, Regenerative medicine, Stratified medicine</td>
+                            <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#" class="button-secondary govuk-!-margin-0">Add</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Jeffrey%20Carlson&amp;comp=assessment">Jeffrey Carlson</a></td>
-                            <td>Academic</td>
-                            <td>Healthcare, Analytical science</td>
-                            <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Jeffrey%20Carlson&amp;comp=assessment">Jeffrey Carlson</a></td>
+                            <td class="govuk-table__cell">Academic</td>
+                            <td class="govuk-table__cell">Healthcare, Analytical science</td>
+                            <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#" class="button-secondary govuk-!-margin-0">Add</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Bill%20Limp&amp;comp=assessment">Bill Limp</a></td>
-                            <td>Industry</td>
-                            <td>Architectures and operating systems</td>
-                            <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Bill%20Limp&amp;comp=assessment">Bill Limp</a></td>
+                            <td class="govuk-table__cell">Industry</td>
+                            <td class="govuk-table__cell">Architectures and operating systems</td>
+                            <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#" class="button-secondary govuk-!-margin-0">Add</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
-                            <td>Industry</td>
-                            <td>Electronics, sensors &#38; photonics, Materials</td>
-                            <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
+                            <td class="govuk-table__cell">Industry</td>
+                            <td class="govuk-table__cell">Electronics, sensors &#38; photonics, Materials</td>
+                            <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#" class="button-secondary govuk-!-margin-0">Add</a>
                             </td>
                         </tr>
@@ -511,33 +511,33 @@
 
                             <div class="table-display-stacked">
                                 <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-                                    <thead>
-                                        <tr>
+                                    <thead class="govuk-table__head">
+                                        <tr class="govuk-table__row">
                                             <th id="invite-label-assessor-name" scope="col" class="width-40-percent">Name</th>
                                             <th id="invite-label-assessor-email" scope="col" class="width-40-percent">Email</th>
-                                            <th scope="col"><span class="govuk-visually-hidden">Remove</span></th>
+                                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Remove</span></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
+                                    <tbody class="govuk-table__body">
+                                        <tr class="govuk-table__row">
+                                            <td class="govuk-table__cell">
                                                 <input type="text" id="assessor-name-one" name="assessor-name-one" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
                                             </td>
-                                            <td>
+                                            <td class="govuk-table__cell">
                                                 <input type="text" id="assessor-email-one" name="assessor-email-one" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
                                             </td>
-                                            <td>
+                                            <td class="govuk-table__cell">
 
                                             </td>
                                         </tr>
                                         <tr id="prototype-assessor-row-two">
-                                            <td>
+                                            <td class="govuk-table__cell">
                                                 <input type="text" id="assessor-name-two" name="assessor-name-two" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
                                             </td>
-                                            <td>
+                                            <td class="govuk-table__cell">
                                                 <input type="text" id="assessor-email-two" name="assessor-email-two" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
                                             </td>
-                                            <td class="numeric">
+                                            <td class="govuk-table__cell govuk-table__cell--numeric">
                                                 <a href="#" id="prototype-remove-two">Remove</a>
                                             </td>
                                         </tr>
@@ -631,64 +631,64 @@
             </div>
 
             <div class="table-overflow">
-                <table>
-                    <thead>
-                        <tr>
-                            <th scope="col">Assessor name</th>
-                            <th scope="col">Email address</th>
-                            <th scope="col">Innovation area</th>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Assessor name</th>
+                            <th class="govuk-table__header" scope="col">Email address</th>
+                            <th class="govuk-table__header" scope="col">Innovation area</th>
                             <th scope="col" class="aligncentre">Contract and DOI</th>
                             <th scope="col" class="alignright">Remove assessor</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
-                            <td>dave@email.com</td>
-                            <td>Earth Observation</td>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
+                            <td class="govuk-table__cell">dave@email.com</td>
+                            <td class="govuk-table__cell">Earth Observation</td>
                             <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#">Remove from list</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Christopher%20Soames&amp;comp=assessment">Christopher Soames</a></td>
-                            <td>chris@email.com</td>
-                            <td>Internet of things</td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Christopher%20Soames&amp;comp=assessment">Christopher Soames</a></td>
+                            <td class="govuk-table__cell">chris@email.com</td>
+                            <td class="govuk-table__cell">Internet of things</td>
                             <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#">Remove from list</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Martin%20Trollope&amp;comp=assessment">Martin Trollope</a></td>
-                            <td>martin@email.com</td>
-                            <td>Internet of things</td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Martin%20Trollope&amp;comp=assessment">Martin Trollope</a></td>
+                            <td class="govuk-table__cell">martin@email.com</td>
+                            <td class="govuk-table__cell">Internet of things</td>
                             <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#">Remove from list</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Chantel%20Secrete&amp;comp=assessment">Chantel Secrete</a></td>
-                            <td>chantel@email.com</td>
-                            <td>Internet of things</td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Chantel%20Secrete&amp;comp=assessment">Chantel Secrete</a></td>
+                            <td class="govuk-table__cell">chantel@email.com</td>
+                            <td class="govuk-table__cell">Internet of things</td>
                             <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#">Remove from list</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile?name=Richard%20Turner&amp;comp=assessment">Richard Turner</a></td>
-                            <td>richard@email.com</td>
-                            <td>Internet of thingss</td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Richard%20Turner&amp;comp=assessment">Richard Turner</a></td>
+                            <td class="govuk-table__cell">richard@email.com</td>
+                            <td class="govuk-table__cell">Internet of thingss</td>
                             <td class="aligncentre"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                             </td>
-                            <td class="alignright">
+                            <td class="govuk-table__cell alignright">
                                 <a href="#">Remove from list</a>
                             </td>
                         </tr>
@@ -864,44 +864,44 @@
     <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Chantel Secrete'},busType=${'Business'},area=${'Information and commincations technology (ICT)'},contract=yes,status=${'Awaiting response'},details=${'Invite sent: 22 June 2016'}" />-->
 
     <div class="table-overflow">
-        <table>
-            <thead>
-                <tr>
-                    <th scope="col">Assessor name</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Innovation area</th>
-                    <th scope="col">Contract and DOI</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Details</th>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor name</th>
+                    <th class="govuk-table__header" scope="col">Type</th>
+                    <th class="govuk-table__header" scope="col">Innovation area</th>
+                    <th class="govuk-table__header" scope="col">Contract and DOI</th>
+                    <th class="govuk-table__header" scope="col">Status</th>
+                    <th class="govuk-table__header" scope="col">Details</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
-                    <td>Business</td>
-                    <td>Information and commincations technology (ICT)</td>
-                    <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Dave%20Smith&amp;comp=assessment">Dave Smith</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Information and commincations technology (ICT)</td>
+                    <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                     </td>
-                    <td>Invite accepted</td>
-                    <td></td>
+                    <td class="govuk-table__cell">Invite accepted</td>
+                    <td class="govuk-table__cell"></td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile?name=Christopher%20Soames&amp;comp=assessment">Christopher Soames</a></td>
-                    <td>Academic</td>
-                    <td>Information and commincations technology (ICT)</td>
-                    <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="no">No</span></span>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Christopher%20Soames&amp;comp=assessment">Christopher Soames</a></td>
+                    <td class="govuk-table__cell">Academic</td>
+                    <td class="govuk-table__cell">Information and commincations technology (ICT)</td>
+                    <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="no">No</span></span>
                     </td>
-                    <td>Invite declined</td>
-                    <td>Invite declined as person is too busy</td>
+                    <td class="govuk-table__cell">Invite declined</td>
+                    <td class="govuk-table__cell">Invite declined as person is too busy</td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile?name=Chantel%20Secrete&amp;comp=assessment">Chantel Secrete</a></td>
-                    <td>Business</td>
-                    <td>Information and commincations technology (ICT)</td>
-                    <td><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile?name=Chantel%20Secrete&amp;comp=assessment">Chantel Secrete</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Information and commincations technology (ICT)</td>
+                    <td class="govuk-table__cell"><strong class="show-mobile">Contract and DOI:</strong> <span><span class="yes">Yes</span></span>
                     </td>
-                    <td>Awaiting response</td>
-                    <td>Invite sent: 22 June 2016</td>
+                    <td class="govuk-table__cell">Awaiting response</td>
+                    <td class="govuk-table__cell">Invite sent: 22 June 2016</td>
                 </tr>
             </tbody>
         </table>

@@ -119,23 +119,23 @@
                 </div>
             </div>
             <div class="table-overflow">
-                <table>
-                    <thead>
-                    <tr>
-                        <th scope="col" id="fund-project-label">Select applications</th>
-                        <th scope="col">Application number</th>
-                        <th scope="col">Project title</th>
-                        <th scope="col">Lead</th>
-                        <th scope="col">Number of partners</th>
-                        <th scope="col">Grant requested (£)</th>
-                        <th scope="col">Total project cost (£)</th>
-                        <th scope="col">Duration (months)</th>
-                        <th scope="col" id="fund-project-label">Funding decision</th>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col" id="fund-project-label">Select applications</th>
+                        <th class="govuk-table__header" scope="col">Application number</th>
+                        <th class="govuk-table__header" scope="col">Project title</th>
+                        <th class="govuk-table__header" scope="col">Lead</th>
+                        <th class="govuk-table__header" scope="col">Number of partners</th>
+                        <th class="govuk-table__header" scope="col">Grant requested (£)</th>
+                        <th class="govuk-table__header" scope="col">Total project cost (£)</th>
+                        <th class="govuk-table__header" scope="col">Duration (months)</th>
+                        <th class="govuk-table__header" scope="col" id="fund-project-label">Funding decision</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="result, index : ${results.content}">
-                        <td>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="result, index : ${results.content}">
+                        <td class="govuk-table__cell">
                             <div class="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item" th:if="${result.applicationFundingDecisionIsChangeable()}">
                                     <input type="checkbox"
@@ -155,33 +155,33 @@
                                 <span class="empty-table-cell-select">-</span>
                             </th:block>
                         </td>
-                        <td><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}" class="govuk-link" /></td>
-                        <td th:text="${result.name}"></td>
-                        <td th:text="${result.lead}"></td>
-                        <td th:text="${result.numberOfPartners}"></td>
-                        <td th:text="${result.grantRequested}"></td>
-                        <td th:text="${result.totalProjectCost}"></td>
-                        <td th:text="${result.duration}"></td>
-                        <td scope="col" th:text="${result.fundingDecision?.name}"/>
+                        <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}" class="govuk-link" /></td>
+                        <td class="govuk-table__cell" th:text="${result.name}"></td>
+                        <td class="govuk-table__cell" th:text="${result.lead}"></td>
+                        <td class="govuk-table__cell" th:text="${result.numberOfPartners}"></td>
+                        <td class="govuk-table__cell" th:text="${result.grantRequested}"></td>
+                        <td class="govuk-table__cell" th:text="${result.totalProjectCost}"></td>
+                        <td class="govuk-table__cell" th:text="${result.duration}"></td>
+                        <td class="govuk-table__cell" th:text="${result.fundingDecision?.name}"/>
                     </tr>
                     </tbody>
                 </table>
 
-                <table th:if="${activeTab == 'notSubmitted'}">
-                    <thead>
-                    <tr>
-                        <th scope="col">Application number</th>
-                        <th scope="col">Project title</th>
-                        <th scope="col">Lead</th>
-                        <th scope="col">Percentage complete</th>
+                <table class="govuk-table" th:if="${activeTab == 'notSubmitted'}">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Application number</th>
+                        <th class="govuk-table__header" scope="col">Project title</th>
+                        <th class="govuk-table__header" scope="col">Lead</th>
+                        <th class="govuk-table__header" scope="col">Percentage complete</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="result : ${results.content}">
-                        <td><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}" class="govuk-link" /></td>
-                        <td th:text="${result.name}"></td>
-                        <td th:text="${result.lead}"></td>
-                        <td th:text="${result.completedPercentage}"></td>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="result : ${results.content}">
+                        <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}" class="govuk-link" /></td>
+                        <td class="govuk-table__cell" th:text="${result.name}"></td>
+                        <td class="govuk-table__cell" th:text="${result.lead}"></td>
+                        <td class="govuk-table__cell" th:text="${result.completedPercentage}"></td>
                     </tr>
                     </tbody>
                 </table>

@@ -77,33 +77,33 @@
                     </div>
                 </form>
                 <div class="table-overflow">
-                    <table id="application-list">
-                        <thead>
-                            <tr>
-                                <th scope="col">Application number</th>
-                                <th scope="col">Project title</th>
-                                <th scope="col">Lead</th>
-                                <th scope="col">Innovation area</th>
-                                <th scope="col">Number of partners</th>
-                                <th scope="col">Grant requested (&pound;)</th>
-                                <th scope="col">Total project cost (&pound;)</th>
-                                <th scope="col" class="alignright" style="width: 10%">Duration (months)</th>
+                    <table class="govuk-table" id="application-list">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Application number</th>
+                                <th class="govuk-table__header" scope="col">Project title</th>
+                                <th class="govuk-table__header" scope="col">Lead</th>
+                                <th class="govuk-table__header" scope="col">Innovation area</th>
+                                <th class="govuk-table__header" scope="col">Number of partners</th>
+                                <th class="govuk-table__header" scope="col">Grant requested (&pound;)</th>
+                                <th class="govuk-table__header" scope="col">Total project cost (&pound;)</th>
+                                <th scope="col" class="govuk-table__header alignright" style="width: 10%">Duration (months)</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class="filtered-result" th:each="row, iterStat : ${model.applications}">
-                                <td>
+                        <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row filtered-result" th:each="row, iterStat : ${model.applications}">
+                                <td class="govuk-table__cell">
                                     <a
                                     th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
                                     th:text="${row.id}">194731</a>
                                 </td>
-                                <td th:text="${row.projectTitle}">Machine learning in robots</td>
-                                <td th:text="${row.lead}">PWC</td>
-                                <td th:text="${row.innovationArea} ?: 'Not listed'">HVM</td>
-                                <td th:text="${row.numberOfPartners}">5</td>
-                                <td th:text="${#numbers.formatInteger(row.grantRequested, 1, 'DEFAULT')}">£203,000</td>
-                                <td th:text="${#numbers.formatInteger(row.totalProjectCost, 1, 'DEFAULT')}">£324,000</td>
-                                <td class="alignright" th:text="${row.durationInMonths}">12</td>
+                                <td class="govuk-table__cell" th:text="${row.projectTitle}">Machine learning in robots</td>
+                                <td class="govuk-table__cell" th:text="${row.lead}">PWC</td>
+                                <td class="govuk-table__cell" th:text="${row.innovationArea} ?: 'Not listed'">HVM</td>
+                                <td class="govuk-table__cell" th:text="${row.numberOfPartners}">5</td>
+                                <td class="govuk-table__cell" th:text="${#numbers.formatInteger(row.grantRequested, 1, 'DEFAULT')}">£203,000</td>
+                                <td class="govuk-table__cell" th:text="${#numbers.formatInteger(row.totalProjectCost, 1, 'DEFAULT')}">£324,000</td>
+                                <td class="govuk-table__cell alignright" th:text="${row.durationInMonths}">12</td>
                             </tr>
                         </tbody>
                     </table>

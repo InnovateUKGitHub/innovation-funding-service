@@ -65,21 +65,21 @@
 
         <div class="table-overflow">
             <th:block th:if="${param.status == null or param.status[0] != 'resendInvites'}">
-                <table>
-                    <thead>
-                    <tr>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
                         <th class="width-small">Application number</th>
-                        <th>Project title</th>
-                        <th>Lead organisation</th>
-                        <th>Additional feedback</th>
+                        <th class="govuk-table__header" scope="col">Project title</th>
+                        <th class="govuk-table__header" scope="col">Lead organisation</th>
+                        <th class="govuk-table__header" scope="col">Additional feedback</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td><a href="#">114</a></td>
-                        <td>Electronics, sensors &#38; photonics, Materials</td>
-                        <td>Ooba</td>
-                        <td>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell"><a href="#">114</a></td>
+                        <td class="govuk-table__cell">Electronics, sensors &#38; photonics, Materials</td>
+                        <td class="govuk-table__cell">Ooba</td>
+                        <td class="govuk-table__cell">
                             <div class="upload-section">
                                 <input type="file" id="file-upload-1" class="inputfile">
                                 <label for="file-upload-1" class="button-secondary">
@@ -90,11 +90,11 @@
                             </div>
                         </td>
                     </tr>
-                    <tr>
-                        <td><a href="#">269</a></td>
-                        <td>Healthcare, Regentative medicine, Stratified medicine</td>
-                        <td>Empire Ltd</td>
-                        <td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell"><a href="#">269</a></td>
+                        <td class="govuk-table__cell">Healthcare, Regentative medicine, Stratified medicine</td>
+                        <td class="govuk-table__cell">Empire Ltd</td>
+                        <td class="govuk-table__cell">
                             <div class="upload-section">
                                 <div th:class="${param.status != null and param.status[0] == 'error'} ? 'govuk-form-group--error'">
                                     <th:block th:if="${param.status != null and param.status[0] == 'error'}">
@@ -108,11 +108,11 @@
                             </div>
                         </td>
                     </tr>
-                    <tr>
-                        <td><a href="#">171</a></td>
-                        <td>Healthcare, Analytical science</td>
-                        <td>Ideas</td>
-                        <td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell"><a href="#">171</a></td>
+                        <td class="govuk-table__cell">Healthcare, Analytical science</td>
+                        <td class="govuk-table__cell">Ideas</td>
+                        <td class="govuk-table__cell">
                             <div class="upload-section">
                                 <input type="file" id="file-upload-3" class="inputfile">
                                 <label for="file-upload-3" class="button-secondary">
@@ -123,11 +123,11 @@
                             </div>
                         </td>
                     </tr>
-                    <tr>
-                        <td><a href="#">265</a></td>
-                        <td>Architectures and operating systems</td>
-                        <td>Wordpedia</td>
-                        <td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell"><a href="#">265</a></td>
+                        <td class="govuk-table__cell">Architectures and operating systems</td>
+                        <td class="govuk-table__cell">Wordpedia</td>
+                        <td class="govuk-table__cell">
                             <div class="upload-section">
                                 <div class="govuk-grid-row">
                                     <div class="column-two-thirds">
@@ -148,22 +148,22 @@
 
             <th:block th:if="${param.status != null and param.status[0] == 'resendInvites'}">
                 <table class="extra-margin">
-                    <thead>
-                    <tr>
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
                         <th class="width-small">Application number</th>
-                        <th>Project title</th>
-                        <th>Lead organisation</th>
-                        <th>Date assigned</th>
-                        <th>Additional feedback</th>
+                        <th class="govuk-table__header" scope="col">Project title</th>
+                        <th class="govuk-table__header" scope="col">Lead organisation</th>
+                        <th class="govuk-table__header" scope="col">Date assigned</th>
+                        <th class="govuk-table__header" scope="col">Additional feedback</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td><a href="#">114</a></td>
-                        <td>Electronics, sensors &#38; photonics, Materials</td>
-                        <td>Ooba</td>
-                        <td>01/09/2017</td>
-                        <td>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell"><a href="#">114</a></td>
+                        <td class="govuk-table__cell">Electronics, sensors &#38; photonics, Materials</td>
+                        <td class="govuk-table__cell">Ooba</td>
+                        <td class="govuk-table__cell">01/09/2017</td>
+                        <td class="govuk-table__cell">
                             <div class="upload-section">
                                 <div class="govuk-grid-row">
                                     <div class="column-two-thirds">

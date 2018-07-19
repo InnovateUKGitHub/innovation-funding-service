@@ -68,26 +68,26 @@
             <h2 class="govuk-heading-m">Empire Ltd, Lead organisation</h2>
 
             <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-              <thead>
-                <tr>
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                   <th class="width-30-percent">Applicant</th>
                   <th class="width-40-percent">Email</th>
                   <th class="width-15-percent">Status</th>
                   <th class="width-15-percent alignright">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>Steve Smith</td>
-                    <td>steve.smith@empire.com</td>
-                    <td>Lead</td>
-                    <td class="alignright"></td>
+                <tbody class="govuk-table__body">
+                  <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Steve Smith</td>
+                    <td class="govuk-table__cell">steve.smith@empire.com</td>
+                    <td class="govuk-table__cell">Lead</td>
+                    <td class="govuk-table__cell alignright"></td>
                   </tr>
                   <tr th:unless="${param.status != null and param.status[0] == 'firstLoad'}">
-                    <td>Paul Davidson</td>
-                    <td>paul.davidsonh@empire.com</td>
-                    <td></td>
-                    <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]}}">Remove</a></td>
+                    <td class="govuk-table__cell">Paul Davidson</td>
+                    <td class="govuk-table__cell">paul.davidsonh@empire.com</td>
+                    <td class="govuk-table__cell"></td>
+                    <td class="govuk-table__cell alignright"><a th:href="@{'?company=' + ${param.company[0]}}">Remove</a></td>
                   </tr>
                 </tbody>
               </table>
@@ -100,26 +100,26 @@
             <h2 class="govuk-heading-m">Ludlow</h2>
 
             <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-              <thead>
-                <tr>
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                   <th class="width-30-percent">Applicant</th>
                   <th class="width-40-percent">Email</th>
                   <th class="width-15-percent">Status</th>
                   <th class="width-15-percent alignright" th:text="${(param.user != null and param.user[0] == 'nonLead') ? '' : 'Actions'}">ACTION HEADER</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>Jessica Doe</td>
-                  <td>jessica.dow@ludlow.com</td>
-                  <td></td>
-                  <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]}}" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Remove</a></td>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell">Jessica Doe</td>
+                  <td class="govuk-table__cell">jessica.dow@ludlow.com</td>
+                  <td class="govuk-table__cell"></td>
+                  <td class="govuk-table__cell alignright"><a th:href="@{'?company=' + ${param.company[0]}}" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Remove</a></td>
                 </tr>
-                <tr>
-                  <td>Ryan Dell</td>
-                  <td>ryan.dell@ludlow.com</td>
-                  <td>Invite pending</td>
-                  <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]}}" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Remove</a></td>
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell">Ryan Dell</td>
+                  <td class="govuk-table__cell">ryan.dell@ludlow.com</td>
+                  <td class="govuk-table__cell">Invite pending</td>
+                  <td class="govuk-table__cell alignright"><a th:href="@{'?company=' + ${param.company[0]}}" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Remove</a></td>
                 </tr>
               </tbody>
             </table>
@@ -132,20 +132,20 @@
             <h2 class="govuk-heading-m">EGGS</h2>
 
             <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-              <thead>
-                <tr>
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                   <th class="width-30-percent">Applicant</th>
                   <th class="width-40-percent">Email</th>
                   <th class="width-15-percent">Status</th>
                   <th class="width-15-percent alignright" th:text="${(param.user != null and param.user[0] == 'nonLead') ? '' : 'Actions'}">ACTION HEADER</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>Paul Tom</td>
-                  <td>paul.tom@eggs.com</td>
-                  <td></td>
-                  <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]}}" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Remove</a></td>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell">Paul Tom</td>
+                  <td class="govuk-table__cell">paul.tom@eggs.com</td>
+                  <td class="govuk-table__cell"></td>
+                  <td class="govuk-table__cell alignright"><a th:href="@{'?company=' + ${param.company[0]}}" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Remove</a></td>
                 </tr>
               </tbody>
             </table>
@@ -175,22 +175,22 @@
           <fieldset class="table-display-stacked extra-margin-top">
             <legend class="govuk-heading-m">New applicant</legend>
             <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-              <thead>
-                <tr>
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                   <th class="width-30-percent" id="new-applicant-name">Applicant name</th>
                   <th class="width-55-percent" id="new-applicant-email">Email</th>
                   <th class="width-15-percent alignright"></th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell">
                     <input type="text" id="applicant-name-1" name="applicant-name-1" aria-labelledby="new-applicant-name" required="required" class="form-control width-full">
                   </td>
-                  <td>
+                  <td class="govuk-table__cell">
                     <input type="text" id="applicant-email-1" name="applicant-emaile-1" aria-labelledby="new-applicant-email" required="required" class="form-control width-full">
                   </td>
-                  <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]} + ${(param.user != null and param.user[0] == 'nonLead' ? '&#38;user=' + param.user[0] : '' )}}">Remove</a></td>
+                  <td class="govuk-table__cell alignright"><a th:href="@{'?company=' + ${param.company[0]} + ${(param.user != null and param.user[0] == 'nonLead' ? '&#38;user=' + param.user[0] : '' )}}">Remove</a></td>
                 </tr>
               </tbody>
             </table>

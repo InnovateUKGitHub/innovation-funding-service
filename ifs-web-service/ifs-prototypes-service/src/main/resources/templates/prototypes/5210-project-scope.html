@@ -192,15 +192,15 @@ Your assessment of the project scope should be based upon the competition brief.
 				</div>
 				<div class="govuk-form-group">
 					<h3 class="govuk-heading-s">Guidance table</h3>
-					<table>
-						<thead>
-						<tr>
-							<th>Score</th>
-							<th>Justification</th>
-							<th><span class="govuk-visually-hidden">Action</span></th>
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th class="govuk-table__header" scope="col">Score</th>
+							<th class="govuk-table__header" scope="col">Justification</th>
+							<th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
 						</tr>
 						</thead>
-						<tbody>
+						<tbody class="govuk-table__body">
 							<th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-assessment-guidance-row" th:with="rowNo=1,score=${'YES'},justification=${'The application contains the following:  Is the consortia business led? Are there two or more partners to the collaboration? Does it meet the scope of the competition as defined in the competition brief?The application contains the following:  Is the consortia business led? Are there two or more partners to the collaboration? Does it meet the scope of the competition as defined in the competition brief?'}" />
 							<th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-assessment-guidance-row" th:with="rowNo=2,score=${'NO'},justification=${'One or more of the above requirements have not been satisfied.'}" />
 						</tbody>

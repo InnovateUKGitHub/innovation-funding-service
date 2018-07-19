@@ -101,18 +101,18 @@
             </div>
 
             <div class="table-overflow">
-                <table>
-                    <thead>
-                    <tr>
-                        <th scope="col">Select</th>
-                        <th scope="col" class="width-80">Application number</th>
-                        <th scope="col">Project title</th>
-                        <th scope="col">Lead organisation</th>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Select</th>
+                        <th scope="col" class="govuk-table__header width-80">Application number</th>
+                        <th class="govuk-table__header" scope="col">Project title</th>
+                        <th class="govuk-table__header" scope="col">Lead organisation</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="app, index : ${model.applications}">
-                        <td>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="app, index : ${model.applications}">
+                        <td class="govuk-table__cell">
                             <div class="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item">
                                     <input type="checkbox"
@@ -128,20 +128,20 @@
                             </div>
 
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.id})} + ${originQuery}"
                                th:text="${app.id}">123
                             </a>
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             <span th:text="${app.name}">project name</span>
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             <span th:text="${app.leadOrganisation}">Lead organisation</span>
                         </td>
                     </tr>
-                    <tr th:if="${#lists.isEmpty(model.applications)}">
-                        <td colspan="5">No available applications found.</td>
+                    <tr class="govuk-table__row"  th:if="${#lists.isEmpty(model.applications)}">
+                        <td class="govuk-table__cell" colspan="5">No available applications found.</td>
                     </tr>
                     </tbody>
                 </table>

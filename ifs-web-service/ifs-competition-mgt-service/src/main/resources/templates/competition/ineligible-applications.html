@@ -78,27 +78,27 @@
                     </div>
                 </form>
                 <div class="table-overflow">
-                    <table id="application-list">
-                        <thead>
-                            <tr>
-                                <th scope="col">Application number</th>
-                                <th scope="col">Project title</th>
-                                <th scope="col">Lead organisation</th>
-                                <th scope="col">Lead applicant</th>
-                                <th scope="col" th:unless="${model.readOnly}"><span class="hidden">Informed</span></th>
+                    <table class="govuk-table" id="application-list">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Application number</th>
+                                <th class="govuk-table__header" scope="col">Project title</th>
+                                <th class="govuk-table__header" scope="col">Lead organisation</th>
+                                <th class="govuk-table__header" scope="col">Lead applicant</th>
+                                <th class="govuk-table__header" scope="col" th:unless="${model.readOnly}"><span class="hidden">Informed</span></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class="filtered-result" th:each="row, iterStat : ${model.applications}">
-                                <td>
+                        <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row filtered-result" th:each="row, iterStat : ${model.applications}">
+                                <td class="govuk-table__cell">
                                     <a
                                     th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
                                     th:text="${row.id}">194731</a>
                                 </td>
-                                <td th:text="${row.projectTitle}">Machine learning in robots</td>
-                                <td th:text="${row.lead}">PWC</td>
-                                <td th:text="${row.leadApplicant}">HVM</td>
-                                <td th:unless="${model.readOnly}">
+                                <td class="govuk-table__cell" th:text="${row.projectTitle}">Machine learning in robots</td>
+                                <td class="govuk-table__cell" th:text="${row.lead}">PWC</td>
+                                <td class="govuk-table__cell" th:text="${row.leadApplicant}">HVM</td>
+                                <td class="govuk-table__cell" th:unless="${model.readOnly}">
                                     <span th:if="${row.informed}">Informed</span>
                                     <a class="govuk-button govuk-!-margin-right-0" th:href="@{/competition/application/{applicationId}/ineligible(applicationId=${row.id})}" th:if="${!row.informed}">Inform applicant</a>
                                 </td>

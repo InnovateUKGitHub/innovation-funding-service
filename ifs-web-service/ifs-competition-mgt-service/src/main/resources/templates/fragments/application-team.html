@@ -25,19 +25,19 @@
     </div>
 
     <div class="table-overflow govuk-!-margin-top-6">
-        <table th:id="${'applicationTeamOrganisationUser' + orgId}">
-            <thead>
-            <tr>
-                <th class="width-30-percent" scope="col">Full name</th>
-                <th class="width-30-percent" scope="col">Email</th>
-                <th class="width-30-percent" scope="col">Telephone</th>
+        <table class="govuk-table" th:id="${'applicationTeamOrganisationUser' + orgId}">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header width-30-percent" scope="col">Full name</th>
+                <th class="govuk-table__header width-30-percent" scope="col">Email</th>
+                <th class="govuk-table__header width-30-percent" scope="col">Telephone</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="user : ${organisation.users}">
-                <td th:text="${user.lead} ? ${user.name} + ' (Lead)' :  ${user.name}">Steve Smith</td>
-                <td th:text="${user.email}">steve.smith@empire.com</td>
-                <td th:text="${user.phoneNumber}">0800</td>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="user : ${organisation.users}">
+                <td class="govuk-table__cell" th:text="${user.lead} ? ${user.name} + ' (Lead)' :  ${user.name}">Steve Smith</td>
+                <td class="govuk-table__cell" th:text="${user.email}">steve.smith@empire.com</td>
+                <td class="govuk-table__cell" th:text="${user.phoneNumber}">0800</td>
             </tr>
             </tbody>
         </table>

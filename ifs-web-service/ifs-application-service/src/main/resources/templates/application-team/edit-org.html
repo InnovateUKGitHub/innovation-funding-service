@@ -40,23 +40,24 @@
                       @{/application/{applicationId}/team/update/existing/{organisationId}(applicationId=${model.applicationId},organisationId=${model.organisationId})} :
                         @{/application/{applicationId}/team/update/invited/{organisationId}(applicationId=${model.applicationId},organisationId=${model.inviteOrganisationId})}">
 
-                    <table id="applicant-table" class="table-overflow">
-                        <thead>
-                            <tr>
-                                <th class="width-30-percent" scope="col">Applicant</th>
-                                <th class="width-40-percent" scope="col">Email</th>
-                                <th class="width-15-percent" scope="col"><span class="govuk-visually-hidden">Additional details</span></th>
-                                <th class="width-15-percent alignright" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
+                    <table id="applicant-table" class="govuk-table table-overflow">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header width-30-percent" scope="col">Applicant</th>
+                                <th class="govuk-table__header width-40-percent" scope="col">Email</th>
+                                <th class="govuk-table__header width-15-percent" scope="col"><span class="govuk-visually-hidden">Additional details</span></th>
+                                <th class="govuk-table__header width-15-percent alignright" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr th:each="applicant, applicantStat : ${model.applicants}">
-                                <td th:text="${applicant.name}">Steve Smith</td>
-                                <td th:text="${applicant.email}">steve.smith@empire.com</td>
-                                <td th:if="${applicant.lead}">Lead</td>
-                                <td th:unless="${applicant.lead}" th:text="${applicant.pending} ? |Invite pending for ${applicant.daysPending} days| : ''">
+                        <tbody class="govuk-table__body">
+                            <tr th:each="applicant, applicantStat : ${model.applicants}"
+                                class="govuk-table__row">
+                                <td class="govuk-table__cell" th:text="${applicant.name}">Steve Smith</td>
+                                <td class="govuk-table__cell" th:text="${applicant.email}">steve.smith@empire.com</td>
+                                <td class="govuk-table__cell" th:if="${applicant.lead}">Lead</td>
+                                <td class="govuk-table__cell" th:unless="${applicant.lead}" th:text="${applicant.pending} ? |Invite pending for ${applicant.daysPending} days| : ''">
                                 </td>
-                                <td class="alignright">
+                                <td class="govuk-table__cell alignright">
                                     <button th:id="|remove-contributor-${applicantStat.index}|"
                                             th:if="${applicant.removable and applicantStat.size > 1}"
                                             th:value="${applicant.applicationInviteId}"
@@ -69,9 +70,9 @@
                             </tr>
 
                             <tr th:if="*{stagedInvite}"
-                                class="repeatable-row form-group-row-validated"
+                                class="govuk-table__row repeatable-row form-group-row-validated"
                                 th:classappend="((${#fields.hasErrors('stagedInvite.name')}) or (${#fields.hasErrors('stagedInvite.email')})) ? 'govuk-form-group--error'">
-                                <td class="govuk-form-group" th:classappend="${#fields.hasErrors('stagedInvite.name')} ? 'govuk-form-group--error'">
+                                <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('stagedInvite.name')} ? 'govuk-form-group--error'">
                                     <label for="stagedInvite.name">
                                         <span class="govuk-visually-hidden">Applicant name</span>
                                         <th:block th:if="${#fields.hasErrors('stagedInvite.name')}">
@@ -87,7 +88,7 @@
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                                 </td>
-                                <td class="govuk-form-group" th:classappend="${#fields.hasErrors('stagedInvite.email')} ? 'govuk-form-group--error'">
+                                <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('stagedInvite.email')} ? 'govuk-form-group--error'">
                                     <label for="stagedInvite.email">
                                         <span class="govuk-visually-hidden">Applicant email</span>
                                         <th:block th:if="${#fields.hasErrors('stagedInvite.email')}">
@@ -105,10 +106,10 @@
                                                     data-email-errormessage=#{validation.standard.email.format},
                                                     data-email-duplication-errormessage=#{email.already.in.invite}" />
                                 </td>
-                                <td>
+                                <td class="govuk-table__cell">
                                    <button class="govuk-button govuk-!-margin-0" name="executeStagedInvite" value="true" type="submit">Invite</button>
                                 </td>
-                                <td class="alignright">
+                                <td class="govuk-table__cell alignright">
                                     <button class="remove-another-row button-clear"
                                             name="removeStagedInvite"
                                             value="true"

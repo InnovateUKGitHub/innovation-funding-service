@@ -326,31 +326,31 @@
             </dl>
             <h3>Number of staff and roles within the project</h3>
             <div class="table-overflow">
-                <table class="labour-costs-table">
-                    <thead>
-                    <tr>
-                        <th scope="col">Role within project</th>
-                        <th scope="col" class="numeric">Gross employee cost (&pound;)</th>
-                        <th scope="col" class="numeric">Rate (&pound;/day)</th>
-                        <th scope="col" class="numeric">Days to be spent by all staff at this grade</th>
-                        <th scope="col" class="numeric">Total costs</th>
+                <table class="govuk-table labour-costs-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Role within project</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Gross employee cost (&pound;)</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Rate (&pound;/day)</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Days to be spent by all staff at this grade</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="govuk-table__body">
                     <th:block th:each="cost, iteration : ${costCategory.costs}">
-                        <tr>
-                            <td th:text="${cost.role}"></td>
-                            <td class="numeric" th:text="${cost.grossEmployeeCost != null ? #numbers.formatInteger(cost.grossEmployeeCost,0,'DEFAULT') : '0'}"></td>
-                            <td class="numeric" th:text="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? #numbers.formatInteger(cost.getRate(costCategory.workingDaysPerYear),0,'DEFAULT') : '0'}"></td>
-                            <td class="numeric" th:text="${cost.labourDays}"></td>
-                            <td class="numeric">&pound;<th:block th:text="${cost.getTotal(costCategory.workingDaysPerYear) != null ? #numbers.formatInteger(cost.getTotal(costCategory.workingDaysPerYear), 0, 'DEFAULT') : '0'}" /> </td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" th:text="${cost.role}"></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.grossEmployeeCost != null ? #numbers.formatInteger(cost.grossEmployeeCost,0,'DEFAULT') : '0'}"></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? #numbers.formatInteger(cost.getRate(costCategory.workingDaysPerYear),0,'DEFAULT') : '0'}"></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.labourDays}"></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${cost.getTotal(costCategory.workingDaysPerYear) != null ? #numbers.formatInteger(cost.getTotal(costCategory.workingDaysPerYear), 0, 'DEFAULT') : '0'}" /> </td>
                         </tr>
                     </th:block>
                     </tbody>
-                    <tfoot>
-                    <tr>
-                        <th colspan="4" scope="row">Total labour costs</th>
-                        <td class="numeric labour-total" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}">
+                    <tfoot class="govuk-table__foot">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" colspan="4" scope="row">Total labour costs</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric labour-total" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}">
                             &pound;<th:block th:text="${costCategory.total != null ? #numbers.formatInteger(costCategory.total, 0, 'DEFAULT') : '0'}" />
                         </td>
                     </tr>
@@ -381,20 +381,20 @@
                 </div>
                 <h3>Number of staff and roles within the project</h3>
                 <div class="govuk-form-group table-overflow">
-                    <table class="labour-costs-table">
-                        <thead>
-                        <tr>
-                            <th id="labour-role" scope="col">Role within project</th>
-                            <th id="labour-salary" scope="col" class="numeric width-100">Gross employee cost</th>
-                            <th id="labour-rate" scope="col" class="numeric width-80">Rate (&pound;/day)</th>
-                            <th id="labour-days" scope="col" class="numeric width-100">Days to be spent by all staff at this grade</th>
-                            <th scope="col" class="numeric width-150">Total costs</th>
-                            <th scope="col" class="width-80">
+                    <table class="govuk-table labour-costs-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" id="labour-role" scope="col">Role within project</th>
+                            <th id="labour-salary" scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Gross employee cost</th>
+                            <th id="labour-rate" scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Rate (&pound;/day)</th>
+                            <th id="labour-days" scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Days to be spent by all staff at this grade</th>
+                            <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Total costs</th>
+                            <th scope="col" class="govuk-table__header width-80">
                                 <span class="govuk-visually-hidden">Actions</span>
                             </th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="govuk-table__body">
                         <th:block th:each="cost, iteration : ${costCategory.costs}">
                             <th:block th:insert="finance/finance :: labour_row" th:with="iterationIndex=${iteration.count}" />
                         </th:block>
@@ -424,9 +424,9 @@
     <th:block th:fragment="labour_row">
         <th:block  th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
-                class="form-group-row-validated"
+                class="govuk-table__row form-group-row-validated"
                 th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-grossEmployeeCost]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-labourDays]}')})) ? 'govuk-form-group--error'">
-                <td class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'govuk-form-group--error'">
+                <td class="govuk-table__cell govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-role]|">
                         <span class="govuk-visually-hidden">Role within project</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" />
@@ -440,7 +440,7 @@
                            required="required"
                            maxlength="255"  />
                 </td>
-                <td class="numeric govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-grossEmployeeCost]}')} ? 'govuk-form-group--error'">
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-grossEmployeeCost]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-grossEmployeeCost]|">
                         <span class="govuk-visually-hidden">Gross employee cost</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-grossEmployeeCost'})" />
@@ -459,14 +459,14 @@
                            th:attr="data-field-errormessage=#{validation.field.non.decimal.format}"
                     />
                 </td>
-                <td class="numeric"
+                <td class="govuk-table__cell govuk-table__cell--numeric"
                     th:attr="data-calculation-fields=|[id='formInput[cost-${costIdentifier}-grossEmployeeCost]'],[id='formInput[cost-${costCategory.workingDaysPerYearCostItem?.id}-labourDays]']|,
                             data-calculation-rawValue=${costCategory?.workingDaysPerYear != null ? cost.getRate(costCategory.workingDaysPerYear) : 0}"
                     th:id="${'cost-labour-'+costIdentifier+'-labourRate'}"
                     data-calculation-operations="/">
                         &pound;<th:block th:text="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? #numbers.formatInteger(cost.getRate(costCategory.workingDaysPerYear),0,'DEFAULT') : '0'}" />
                 </td>
-                <td class="numeric govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-labourDays]}')} ? 'govuk-form-group--error'">
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-labourDays]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-labourDays]|">
                         <span class="govuk-visually-hidden">Days to be spent by all staff at this grade</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-labourDays'})" />
@@ -485,13 +485,13 @@
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
                     />
                 </td>
-                <td class="numeric"
+                <td class="govuk-table__cell govuk-table__cell--numeric"
                     data-calculation-operations="/,*"
                     th:id="${'cost-labour-'+costIdentifier+'-labourTotalCost'}"
                     th:attr="data-calculation-fields=|[id='formInput[cost-${costIdentifier}-grossEmployeeCost]'],[id='formInput[cost-${costCategory.workingDaysPerYearCostItem?.id}-labourDays]'],[id='formInput[cost-${costIdentifier}-labourDays]']|,data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}">
                         &pound;<th:block th:text="${#numbers.formatInteger(cost.getTotal(costCategory.workingDaysPerYear), 0, 'DEFAULT')}">0</th:block>
                 </td>
-                <td class="buttoncolumn alignright">
+                <td class="govuk-table__cell buttoncolumn alignright">
                     <button th:unless="${cost.id == null}"
                             type="submit"
                             name="remove_cost"
@@ -519,19 +519,19 @@
                 </th:block>
                 <th:block th:case="'DEFAULT_PERCENTAGE'">
                     <div class="table-overflow">
-                        <table>
-                            <tbody>
-                            <tr>
-                                <th scope="col">20% of labour costs</th>
-                                <th scope="col" class="alignright">
+                        <table class="govuk-table">
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">20% of labour costs</th>
+                                <th scope="col" class="govuk-table__header alignright">
                                     <span class="govuk-visually-hidden">total overhead costs</span>
                                 </th>
                             </tr>
                             </tbody>
-                            <tfoot>
-                            <tr>
-                                <th scope="row">Total overhead costs</th>
-                                <td class="alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}"  th:id="${'section-total-'+subSection.id}">
+                            <tfoot class="govuk-table__foot">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="row">Total overhead costs</th>
+                                <td class="govuk-table__cell alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}"  th:id="${'section-total-'+subSection.id}">
                                     &pound;<th:block th:text="${#numbers.formatInteger(costCategory?.total,0, 'DEFAULT')}">1,000</th:block>
                                 </td>
                             </tr>
@@ -541,19 +541,19 @@
                 </th:block>
                 <th:block th:case="'CUSTOM_RATE'">
                     <div class="table-overflow">
-                        <table>
-                            <tbody>
-                            <tr>
-                                <th scope="row">Custom administration support costs</th>
-                                <td class="alignright">
+                        <table class="govuk-table">
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="row">Custom administration support costs</th>
+                                <td class="govuk-table__cell alignright">
                                     Rate calculated: <th:block th:text="${overheadCosts?.rate+'&percnt;'}">28&percnt;</th:block>
                                 </td>
                             </tr>
                             </tbody>
-                            <tfoot>
-                            <tr>
-                                <th scope="col">Total administration support cost</th>
-                                <td class="alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" th:id="${'section-total-'+subSection.id}">
+                            <tfoot class="govuk-table__foot">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Total administration support cost</th>
+                                <td class="govuk-table__cell alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" th:id="${'section-total-'+subSection.id}">
                                     &pound;<th:block th:text="${costCategory?.total != null ? #numbers.formatInteger(costCategory?.total,0, 'DEFAULT') : '0'}">100,500</th:block>
                                 </td>
                             </tr>
@@ -563,14 +563,14 @@
                 </th:block>
                 <th:block th:case="'TOTAL'">
                     <div class="table-overflow">
-                        <table>
-                            <tbody>
-                            <tr>
-                                <th scope="col">Calculated overheads</th>
-                                <th scope="col"><span class="govuk-visually-hidden">Total calculated overheads</span></th>
+                        <table class="govuk-table">
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Calculated overheads</th>
+                                <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Total calculated overheads</span></th>
                             </tr>
-                            <tr>
-                                <td class="govuk-form-group download">
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell govuk-form-group download">
                                     <h3 class="govuk-heading-s govuk-!-margin-0">Download the overhead calculation spreadsheet</h3>
                                     <ul>
                                         <li>Download as an Excel document <a href="/files/overheads.xlsx" class="govuk-link">overhead calculation spreadsheet.xlsx (16KB)</a></li>
@@ -580,10 +580,10 @@
                                 </td>
                             </tr>
                             </tbody>
-                            <tfoot>
-                            <tr>
-                                <th scope="row">Total cost of overheads as calculated in the spreadsheet</th>
-                                <td class="alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}"  th:id="${'section-total-'+subSection.id}">
+                            <tfoot class="govuk-table__foot">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="row">Total cost of overheads as calculated in the spreadsheet</th>
+                                <td class="govuk-table__cell alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}"  th:id="${'section-total-'+subSection.id}">
                                     &pound;<th:block th:text="${#numbers.formatInteger(costCategory?.total,0, 'DEFAULT')}">0</th:block>
                                 </td>
                             </tr>
@@ -828,27 +828,27 @@
     <th:block th:fragment="materials_finances">
             <th:block th:if="${(viewmode == 'readonly')}">
                 <div class="table-overflow">
-                    <table id="material-costs-table">
-                        <thead>
-                        <tr>
-                            <th id="materials-item" scope="col">Item</th>
-                            <th id="materials-quantity" scope="col" class="numeric">Quantity</th>
-                            <th id="materials-cost" scope="col" class="numeric">Cost per item (&pound;)</th>
-                            <th id="materials-total" scope="col" class="numeric">Total</th>
+                    <table class="govuk-table" id="material-costs-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th id="materials-item" scope="col" class="govuk-table__header">Item</th>
+                            <th id="materials-quantity" scope="col" class="govuk-table__header govuk-table__header--numeric">Quantity</th>
+                            <th id="materials-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">Cost per item (&pound;)</th>
+                            <th id="materials-total" scope="col" class="govuk-table__header govuk-table__header--numeric">Total</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="cost, iteration : ${costCategory.costs}">
-                            <td th:text="${cost.item}"></td>
-                            <td class="numeric" th:text="${cost.quantity != null ? cost.quantity : 0}"></td>
-                            <td class="numeric" th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}"></td>
-                            <td class="numeric">&pound;<th:block th:text="${cost.total != null ? #numbers.formatInteger(cost.total,0,'DEFAULT') : '0'}" /></td>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="cost, iteration : ${costCategory.costs}">
+                            <td class="govuk-table__cell" th:text="${cost.item}"></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.quantity != null ? cost.quantity : 0}"></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}"></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${cost.total != null ? #numbers.formatInteger(cost.total,0,'DEFAULT') : '0'}" /></td>
                         </tr>
                         </tbody>
-                        <tfoot>
-                        <tr>
-                            <th scope="row" colspan="3">Total materials costs</th>
-                            <td th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}"  class="numeric">
+                        <tfoot class="govuk-table__foot">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row" colspan="3">Total materials costs</th>
+                            <td th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}"  class="govuk-table__cell govuk-table__cell--numeric">
                                 &pound;<th:block th:text="${costCategory.total != null ? #numbers.formatInteger(costCategory.total, 0,'DEFAULT') : '0'}" />
                             </td>
                         </tr>
@@ -860,19 +860,19 @@
             <th:block th:if="${viewmode == 'edit'}">
                 <div th:attr="data-repeatable-container=${question.id}">
                     <div class="govuk-form-group table-overflow">
-                        <table id="material-costs-table">
-                            <thead>
-                            <tr>
-                                <th id="materials-item" scope="col">Item</th>
-                                <th id="materials-quantity" scope="col" class="numeric width-150">Quantity</th>
-                                <th id="materials-cost" scope="col" class="numeric width-150">Cost per item (&pound;)</th>
-                                <th id="materials-total" scope="col" class="numeric width-150">Total</th>
-                                <th scope="col">
+                        <table class="govuk-table" id="material-costs-table">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th id="materials-item" scope="col" class="govuk-table__header">Item</th>
+                                <th id="materials-quantity" scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Quantity</th>
+                                <th id="materials-cost" scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Cost per item (&pound;)</th>
+                                <th id="materials-total" scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Total</th>
+                                <th class="govuk-table__header" scope="col">
                                     <span class="govuk-visually-hidden">Actions</span>
                                 </th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="govuk-table__body">
                             <th:block th:each="cost, iteration : ${costCategory.costs}">
                                 <th:block th:insert="finance/finance :: materials_row" th:with="iterationIndex=${iteration.count}" />
                             </th:block>
@@ -902,9 +902,9 @@
     <th:block th:fragment="materials_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
-                class="form-group-row-validated"
+                class="govuk-table__row form-group-row-validated"
                 th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')})) ? 'govuk-form-group--error'">
-                <td class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'govuk-form-group--error'">
+                <td class="govuk-table__cell govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-item]|">
                         <span class="govuk-visually-hidden">Item</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-item'})" />
@@ -918,7 +918,7 @@
                            required="required"
                            maxlength="255" />
                 </td>
-                <td class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'govuk-form-group--error'">
+                <td class="govuk-table__cell govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-quantity]|">
                         <span class="govuk-visually-hidden">Quantity</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-quantity'})" />
@@ -936,7 +936,7 @@
                            required="required"
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}" />
                 </td>
-                <td class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-form-group--error'">
+                <td class="govuk-table__cell govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-cost]|">
                         <span class="govuk-visually-hidden">Cost per item</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
@@ -954,7 +954,7 @@
                            required="required"
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}" />
                 </td>
-                <td>
+                <td class="govuk-table__cell">
                     <label th:for="${'cost-materials-'+costIdentifier+'-materialTotal'}">
                         <span class="govuk-visually-hidden">Total</span>
                     </label>
@@ -967,7 +967,7 @@
                            readonly="readonly"
                            th:value="'£'+${#numbers.formatInteger(cost.total, 0,'DEFAULT')}" />
                 </td>
-                <td class="alignright buttoncolumn remove">
+                <td class="govuk-table__cell alignright buttoncolumn remove">
                     <button th:unless="${cost.id == null}"
                             type="submit"
                             name="remove_cost"
@@ -991,35 +991,35 @@
     <th:block th:fragment="capital_usage_finances">
         <th:block th:if="${viewmode == 'readonly'}">
             <div class="table-overflow">
-                <table id="capital-usage-table">
-                    <thead>
-                    <tr>
-                        <th scope="col" id="cap-usage-description">Item description</th>
-                        <th scope="col" id="cap-usage-new-existing">New or Existing</th>
-                        <th scope="col" id="cap-usage-depreciation-period">Depreciation period  (months)</th>
-                        <th scope="col" class="numeric" id="cap-usage-net-present-value">Net present value (&pound;)</th>
-                        <th scope="col" class="numeric" id="cap-usage-residual-value">Residual value (&pound;)</th>
-                        <th scope="col" class="numeric" id="cap-usage-utilisation">Utilisation (&percnt;)</th>
-                        <th scope="col" class="numeric" id="cap-usage-cost">Net cost</th>
+                <table class="govuk-table" id="capital-usage-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" id="cap-usage-description" class="govuk-table__header">Item description</th>
+                        <th scope="col" id="cap-usage-new-existing" class="govuk-table__header">New or Existing</th>
+                        <th scope="col" id="cap-usage-depreciation-period" class="govuk-table__header">Depreciation period  (months)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="cap-usage-net-present-value">Net present value (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="cap-usage-residual-value">Residual value (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="cap-usage-utilisation">Utilisation (&percnt;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="cap-usage-cost">Net cost</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="cost : ${costCategory.costs}">
-                        <td th:text="${cost.description}"></td>
-                        <td th:text="${cost.existing}"></td>
-                        <td th:text="${cost.deprecation}"></td>
-                        <td class="numeric" th:text="${#numbers.formatInteger(cost.npv, 0, 'DEFAULT')}"></td>
-                        <td class="numeric" th:text="${#numbers.formatInteger(cost.residualValue, 0, 'DEFAULT')}"></td>
-                        <td class="numeric" th:text="${cost.utilisation}"></td>
-                        <td class="numeric">
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="cost : ${costCategory.costs}">
+                        <td class="govuk-table__cell" th:text="${cost.description}"></td>
+                        <td class="govuk-table__cell" th:text="${cost.existing}"></td>
+                        <td class="govuk-table__cell" th:text="${cost.deprecation}"></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(cost.npv, 0, 'DEFAULT')}"></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(cost.residualValue, 0, 'DEFAULT')}"></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.utilisation}"></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
                             &pound;<th:block th:text="${cost.total &lt; 0 ? 0 : #numbers.formatInteger(cost.total, 0, 'DEFAULT')}" />
                         </td>
                     </tr>
                     </tbody>
                     <tfoot>
-                    <tr>
-                        <th colspan="6">Total capital usage</th>
-                        <td class="numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" colspan="6">Total capital usage</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}">
                             &pound;<th:block th:text="${costCategory.total &lt; 0 ? 0 : #numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}" />
                         </td>
                     </tr>
@@ -1219,29 +1219,29 @@
     <th:block th:fragment="subcontracting_finances">
         <th:block th:if="${viewmode == 'readonly'}">
             <div class="table-overflow">
-                <table id="subcontracting-table">
-                    <thead>
-                    <tr>
-                        <th scope="col" id="subcontracting-name">Subcontractor name</th>
-                        <th scope="col" id="subcontracting-country">Country</th>
-                        <th scope="col" id="subcontracting-role">Role</th>
-                        <th scope="col" class="numeric" id="subcontracting-cost">Cost</th>
+                <table class="govuk-table" id="subcontracting-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header" id="subcontracting-name">Subcontractor name</th>
+                        <th scope="col" class="govuk-table__header" id="subcontracting-country">Country</th>
+                        <th scope="col" class="govuk-table__header" id="subcontracting-role">Role</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="subcontracting-cost">Cost</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="cost : ${costCategory.costs}">
-                        <td th:text="${cost.name}">Mr Francis Bois</td>
-                        <td th:text="${cost.country}">France</td>
-                        <td th:text="${cost.role}">Specialist consultant</td>
-                        <td class="numeric">
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="cost : ${costCategory.costs}">
+                        <td class="govuk-table__cell" th:text="${cost.name}">Mr Francis Bois</td>
+                        <td class="govuk-table__cell" th:text="${cost.country}">France</td>
+                        <td class="govuk-table__cell" th:text="${cost.role}">Specialist consultant</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
                             &pound;<th:block th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}">150,000</th:block>
                         </td>
                     </tr>
                     </tbody>
-                    <tfoot>
-                    <tr>
-                        <th colspan="3" scope="row">Total subcontracting costs</th>
-                        <td class="numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" >
+                    <tfoot class="govuk-table__foot">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" colspan="3" scope="row">Total subcontracting costs</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" >
                             &pound;<th:block th:text="${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}">150,000</th:block>
                         </td>
                     </tr>
@@ -1355,29 +1355,29 @@
     <th:block th:fragment="travel_finances">
         <th:block th:if="${viewmode == 'readonly'}">
             <div class="table-overflow">
-                <table id="travel-costs-table">
-                    <thead>
-                    <tr>
-                        <th id="travel-purpose">Purpose of journey or description of subsistence cost</th>
-                        <th id="travel-times" class="numeric">Number of times</th>
-                        <th id="travel-cost" class="numeric">Cost each (&pound;)</th>
-                        <th id="travel-total" class="numeric">Total</th>
+                <table class="govuk-table" id="travel-costs-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th id="travel-purpose" class="govuk-table__header" scope="col">Purpose of journey or description of subsistence cost</th>
+                        <th id="travel-times" class="govuk-table__header govuk-table__header--numeric" scope="col">Number of times</th>
+                        <th id="travel-cost" class="govuk-table__header govuk-table__header--numeric" scope="col">Cost each (&pound;)</th>
+                        <th id="travel-total" class="govuk-table__header govuk-table__header--numeric" scope="col">Total</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="cost, iteration : ${costCategory.costs}">
-                        <td th:text="${cost.item}"></td>
-                        <td class="numeric" th:text="${cost.quantity}"></td>
-                        <td class="numeric" th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}"></td>
-                        <td class="numeric">
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="cost, iteration : ${costCategory.costs}">
+                        <td class="govuk-table__cell" th:text="${cost.item}"></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.quantity}"></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}"></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
                             &pound;<th:block th:text="${#numbers.formatInteger(cost.total, 0, 'DEFAULT')}">1220</th:block>
                         </td>
                     </tr>
                     </tbody>
                     <tfoot>
-                    <tr>
-                        <th scope="row" colspan="3">Total travel and subsistence</th>
-                        <td class="numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" >
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row" colspan="3">Total travel and subsistence</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" >
                             &pound;<th:block th:text="${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}">1220</th:block>
                         </td>
                     </tr>
@@ -1388,17 +1388,17 @@
         <th:block th:if="${viewmode == 'edit'}">
             <div th:attr="data-repeatable-container=${question.id}">
                 <div class="govuk-form-group table-overflow">
-                    <table id="travel-costs-table">
-                        <thead>
-                        <tr>
-                            <th id="travel-purpose">Purpose of journey or description of subsistence cost</th>
-                            <th id="travel-times" class="numeric">Number of times</th>
-                            <th id="travel-cost" class="numeric">Cost each (&pound;)</th>
-                            <th id="travel-total" class="numeric">Total</th>
-                            <th><span class="govuk-visually-hidden">Actions</span></th>
+                    <table class="govuk-table" id="travel-costs-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th id="travel-purpose" class="govuk-table__header" scope="col">Purpose of journey or description of subsistence cost</th>
+                            <th id="travel-times" class="govuk-table__header govuk-table__header--numeric" scope="col">Number of times</th>
+                            <th id="travel-cost" class="govuk-table__header govuk-table__header--numeric" scope="col">Cost each (&pound;)</th>
+                            <th id="travel-total" class="govuk-table__header govuk-table__header--numeric" scope="col">Total</th>
+                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="govuk-table__body">
                         <th:block th:each="cost, iteration : ${costCategory.costs}">
                             <th:block th:insert="finance/finance :: travel_row" th:with="iterationIndex=${iteration.count}" />
                         </th:block>
@@ -1430,9 +1430,9 @@
     <th:block th:fragment="travel_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
-                class="form-group-row-validated"
+                class="govuk-table__row form-group-row-validated"
                 th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')})) ? 'govuk-form-group--error'">
-                <td class="govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'govuk-form-group--error'">
+                <td class="govuk-table__cell govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-item]|">
                         <span class="govuk-visually-hidden">Purpose of journey or description of subsistence cost</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-item'})" />
@@ -1446,7 +1446,7 @@
                            maxlength="255"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'govuk-input--error'"/>
                 </td>
-                <td class="numeric govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'govuk-form-group--error'">
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-quantity]|">
                         <span class="govuk-visually-hidden">Number of times</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-quantity'})"  />
@@ -1464,7 +1464,7 @@
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'govuk-input--error'"  />
                 </td>
-                <td class="numeric govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-form-group--error'">
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-form-group--error'">
                     <label th:for="|formInput[cost-${costIdentifier}-cost]|">
                         <span class="govuk-visually-hidden">Cost each (&pound;)</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
@@ -1482,7 +1482,7 @@
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-input--error'" />
                 </td>
-                <td class="numeric">
+                <td class="govuk-table__cell govuk-table__cell--numeric">
                     <label th:for="${'cost-travel-'+costIdentifier+'-travelCostTotal'}">
                         <span class="govuk-visually-hidden">Total</span>
                     </label>
@@ -1497,7 +1497,7 @@
                            data-calculation-operations="*"
                            th:value="'£' + ${#numbers.formatInteger(cost.total, 0, 'DEFAULT')}" />
                 </td>
-                <td>
+                <td class="govuk-table__cell">
                     <button th:unless="${cost.id == null}"
                             type="submit"
                             name="remove_cost"
@@ -1520,25 +1520,25 @@
     <th:block th:fragment="other_costs_finances">
         <th:block th:if="${viewmode == 'readonly'}">
             <div class="table-overflow">
-                <table id="other-costs-table">
-                    <thead>
-                    <tr>
-                        <th id="other_costs-description" scope="col" >Description and justification of the cost</th>
-                        <th id="other_costs-cost" scope="col" class="numeric">Estimated cost (&pound;)</th>
+                <table class="govuk-table" id="other-costs-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th id="other_costs-description" class="govuk-table__header" scope="col" >Description and justification of the cost</th>
+                        <th id="other_costs-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">Estimated cost (&pound;)</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="cost : ${costCategory.costs}">
-                        <td th:text="${cost.description}"></td>
-                        <td class="numeric">
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="cost : ${costCategory.costs}">
+                        <td class="govuk-table__cell" th:text="${cost.description}"></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
                             <th:block th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}">1500</th:block>
                         </td>
                     </tr>
                     </tbody>
-                    <tfoot>
-                    <tr>
-                        <th scope="row">Total other costs</th>
-                        <td class="numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" >
+                    <tfoot class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Total other costs</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:id="${'section-total-'+subSection.id}" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" >
                             &pound;<th:block th:text="${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}">1500</th:block>
                         </td>
                     </tr>
@@ -1549,15 +1549,15 @@
         <th:block th:if="${viewmode == 'edit'}">
             <div th:attr="data-repeatable-container=${question.id}">
                 <div class="govuk-form-group table-overflow">
-                    <table id="other-costs-table">
-                        <thead>
-                        <tr>
-                            <th id="other_costs-description" scope="col" >Description and justification of the cost</th>
-                            <th id="other_costs-cost" scope="col" class="numeric">Estimated cost (&pound;)</th>
-                            <th scope="col"><span class="govuk-visually-hidden">Actions</span></th>
+                    <table class="govuk-table" id="other-costs-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" id="other_costs-description" scope="col">Description and justification of the cost</th>
+                            <th id="other_costs-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">Estimated cost (&pound;)</th>
+                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="govuk-table__body">
                         <th:block th:each="cost : ${costCategory.costs}">
                             <th:block th:insert="finance/finance :: other_costs_row" />
                         </th:block>
@@ -1612,7 +1612,7 @@
                        th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-input--error'"  />
             </td>
-            <td class="alignright">
+            <td class="govuk-table__cell alignright">
                 <button th:unless="${cost.id == null}"
                         type="submit"
                         class="button-clear js-remove-row"
@@ -1635,25 +1635,25 @@
             </th:block>
             <th:block th:if="${costCategory.otherPublicFunding?.equals('Yes')}">
                 <div class="table-overflow">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th id="other-funding-source">Source of funding</th>
-                            <th id="other-funding-date" class="width-150">Date secured</th>
-                            <th id="other-funding-amount" class="width-150">Funding amount</th>
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th id="other-funding-source" class="govuk-table__header" scope="col">Source of funding</th>
+                            <th id="other-funding-date" class="width-150 govuk-table__header" scope="col">Date secured</th>
+                            <th id="other-funding-amount" class="width-150 govuk-table__header" scope="col">Funding amount</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="cost : ${costCategory.costs}" th:unless="${cost.fundingAmount == null}">
-                            <th scope="row" th:text="${cost.fundingSource}">National rail</th>
-                            <td th:text="${cost.securedDate}">17 April 2016</td>
-                            <td class="numeric" th:text="'£' + ${cost.fundingAmount != null ? #numbers.formatInteger(cost.fundingAmount,0,'DEFAULT') : '0'}"></td>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="cost : ${costCategory.costs}" th:unless="${cost.fundingAmount == null}">
+                            <th class="govuk-table__header" scope="row" th:text="${cost.fundingSource}">National rail</th>
+                            <td class="govuk-table__cell" th:text="${cost.securedDate}">17 April 2016</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="'£' + ${cost.fundingAmount != null ? #numbers.formatInteger(cost.fundingAmount,0,'DEFAULT') : '0'}"></td>
                         </tr>
                         </tbody>
                         <tfoot>
-                        <tr>
-                            <th scope="row" colspan="2">Total other funding</th>
-                            <td class="numeric" th:text="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></td>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row" colspan="2">Total other funding</th>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"></td>
                         </tr>
                         </tfoot>
                     </table>
@@ -1705,16 +1705,16 @@
                     <div id="other-funding-table">
                         <div class="govuk-form-group" th:attr="data-repeatable-container=${question.id}">
                             <div class="table-overflow">
-                                <table>
-                                    <thead>
-                                    <tr>
-                                        <th scope="col" id="other-funding-source">Source of funding</th>
-                                        <th scope="col" id="other-funding-date" class="width-150">Date secured</th>
-                                        <th scope="col" id="other-funding-amount" class="width-150">Funding amount (&pound;)</th>
-                                        <th scope="col"><span class="govuk-visually-hidden">Actions</span></th>
+                                <table class="govuk-table">
+                                    <thead class="govuk-table__head">
+                                    <tr class="govuk-table__row">
+                                        <th class="govuk-table__header"scope="col" id="other-funding-source">Source of funding</th>
+                                        <th scope="col" id="other-funding-date" class="govuk-table__header width-150">Date secured</th>
+                                        <th scope="col" id="other-funding-amount" class="govuk-table__header width-150">Funding amount (&pound;)</th>
+                                        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody class="govuk-table__body">
                                     <th:block th:each="cost : ${costCategory.costs}">
                                         <th:block th:insert="finance/finance :: other_funding_row" />
                                     </th:block>
@@ -1796,7 +1796,7 @@
                            step="1"
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}" />
                 </td>
-                <td>
+                <td class="govuk-table__cell">
                     <button th:unless="${cost.id == null}"
                             type="submit"
                             name="remove_cost"

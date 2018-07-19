@@ -804,13 +804,13 @@
 <div th:fragment="prototype-application-list-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Application number</th>
-                    <th scope="col">Project title</th>
-                    <th scope="col">Lead</th>
-                    <th scope="col">Assessment category (innovation area)</th>
-                    <th scope="col">Assessors</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Project title</th>
+                    <th class="govuk-table__header" scope="col">Lead</th>
+                    <th class="govuk-table__header" scope="col">Assessment category (innovation area)</th>
+                    <th class="govuk-table__header" scope="col">Assessors</th>
                     <th scope="col" class="hide-allocate-assessor">Details</th>
                     <th scope="col" class="full-view">Accepted</th>
                     <th scope="col" class="full-view">Started</th>
@@ -822,13 +822,13 @@
                     <th scope="col" id="action" th:text="${(applicationAssign != null ? 'Allocate applications' : 'Allocate assessors')}">ALLOCATE TITLE</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 <tr class="filtered-result">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5431</a></th>
-                    <td>Machine learning in robots</td>
-                    <td>PWC</td>
-                    <td>Digital services</td>
-                    <td>5</td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5431</a></th>
+                    <td class="govuk-table__cell">Machine learning in robots</td>
+                    <td class="govuk-table__cell">PWC</td>
+                    <td class="govuk-table__cell">Digital services</td>
+                    <td class="govuk-table__cell">5</td>
                     <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">5</td>
                     <td class="full-view">0</td>
@@ -837,7 +837,7 @@
                     <td class="full-view hide-assigned">5</td>
                     <td class="full-view">3</td>
                     <td class="full-view">2</td>
-                    <td>
+                    <td class="govuk-table__cell">
                         <div th:if="${applicationAssign == null}" th:remove="tag">
                              <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Machine learning in robots' : '/prototypes/1382-application-allocate-assessors?title=Machine learning in robots')}">Allocate</a>
                         </div>
@@ -848,11 +848,11 @@
                 </tr>
 
                 <tr class="filtered-result">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5432</a></th>
-                    <td>Robots that learn</td>
-                    <td>MaxDigital</td>
-                    <td>Digital services</td>
-                    <td>5</td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5432</a></th>
+                    <td class="govuk-table__cell">Robots that learn</td>
+                    <td class="govuk-table__cell">MaxDigital</td>
+                    <td class="govuk-table__cell">Digital services</td>
+                    <td class="govuk-table__cell">5</td>
                     <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">3</td>
                     <td class="full-view">1</td>
@@ -861,7 +861,7 @@
                     <td class="full-view hide-assigned">0</td>
                     <td class="full-view">1</td>
                     <td class="full-view">1</td>
-                    <td>
+                    <td class="govuk-table__cell">
                         <div th:if="${applicationAssign == null}" th:remove="tag">
                             <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Robots that learn' : '/prototypes/1382-application-allocate-assessors?title=Robots that learn')}">Allocate</a>
                         </div>
@@ -872,11 +872,11 @@
                 </tr>
 
                 <tr class="filtered-result">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5433</a></th>
-                    <td>Ai in learning</td>
-                    <td>BBC</td>
-                    <td>Digital services</td>
-                    <td>5</td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5433</a></th>
+                    <td class="govuk-table__cell">Ai in learning</td>
+                    <td class="govuk-table__cell">BBC</td>
+                    <td class="govuk-table__cell">Digital services</td>
+                    <td class="govuk-table__cell">5</td>
                     <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -885,7 +885,7 @@
                     <td class="full-view hide-assigned">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td>
+                    <td class="govuk-table__cell">
                         <div th:if="${applicationAssign == null}" th:remove="tag">
                             <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Ai in learning' : '/prototypes/1382-application-allocate-assessors?title=Ai in learning')}">Allocate</a>
                         </div>
@@ -896,11 +896,11 @@
                 </tr>
 
                 <tr class="filtered-result">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5434</a></th>
-                    <td>Progressive machines</td>
-                    <td>Kingfisher</td>
-                    <td>Digital services</td>
-                    <td>5</td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5434</a></th>
+                    <td class="govuk-table__cell">Progressive machines</td>
+                    <td class="govuk-table__cell">Kingfisher</td>
+                    <td class="govuk-table__cell">Digital services</td>
+                    <td class="govuk-table__cell">5</td>
                     <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -909,7 +909,7 @@
                     <td class="full-view hide-assigned">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td>
+                    <td class="govuk-table__cell">
                         <div th:if="${applicationAssign == null}" th:remove="tag">
                             <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Progressive machines' : '/prototypes/1382-application-allocate-assessors?title=Progressive machines')}">Allocate</a>
                         </div>
@@ -920,11 +920,11 @@
                 </tr>
 
                 <tr class="filtered-result">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
-                    <td>Example application</td>
-                    <td>Example lead</td>
-                    <td>Example area</td>
-                    <td>5</td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
+                    <td class="govuk-table__cell">Example application</td>
+                    <td class="govuk-table__cell">Example lead</td>
+                    <td class="govuk-table__cell">Example area</td>
+                    <td class="govuk-table__cell">5</td>
                     <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -933,7 +933,7 @@
                     <td class="full-view hide-assigned">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td>
+                    <td class="govuk-table__cell">
                         <div th:if="${applicationAssign == null}" th:remove="tag">
                             <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate</a>
                         </div>
@@ -944,11 +944,11 @@
                 </tr>
 
                 <tr class="filtered-result">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
-                    <td>Example application</td>
-                    <td>Example lead</td>
-                    <td>Example area</td>
-                    <td>5</td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
+                    <td class="govuk-table__cell">Example application</td>
+                    <td class="govuk-table__cell">Example lead</td>
+                    <td class="govuk-table__cell">Example area</td>
+                    <td class="govuk-table__cell">5</td>
                     <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -957,7 +957,7 @@
                     <td class="full-view hide-assigned">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td>
+                    <td class="govuk-table__cell">
                         <div th:if="${applicationAssign == null}" th:remove="tag">
                             <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate</a>
                         </div>
@@ -968,11 +968,11 @@
                 </tr>
 
                <tr class="filtered-result">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
-                    <td>Example application</td>
-                    <td>Example lead</td>
-                    <td>Example area</td>
-                    <td>5</td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
+                    <td class="govuk-table__cell">Example application</td>
+                    <td class="govuk-table__cell">Example lead</td>
+                    <td class="govuk-table__cell">Example area</td>
+                    <td class="govuk-table__cell">5</td>
                     <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -981,7 +981,7 @@
                     <td class="full-view hide-assigned">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td>
+                    <td class="govuk-table__cell">
                         <div th:if="${applicationAssign == null}" th:remove="tag">
                             <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate</a>
                         </div>
@@ -992,11 +992,11 @@
                 </tr>
 
                 <tr class="filtered-result">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
-                    <td>Example application</td>
-                    <td>Example lead</td>
-                    <td>Example area</td>
-                    <td>5</td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
+                    <td class="govuk-table__cell">Example application</td>
+                    <td class="govuk-table__cell">Example lead</td>
+                    <td class="govuk-table__cell">Example area</td>
+                    <td class="govuk-table__cell">5</td>
                     <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -1005,7 +1005,7 @@
                     <td class="full-view hide-assigned">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td>
+                    <td class="govuk-table__cell">
                         <div th:if="${applicationAssign == null}" th:remove="tag">
                             <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate</a>
                         </div>
@@ -1016,11 +1016,11 @@
                 </tr>
 
                 <tr class="filtered-result">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
-                    <td>Example application</td>
-                    <td>Example lead</td>
-                    <td>Example area</td>
-                    <td>5</td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
+                    <td class="govuk-table__cell">Example application</td>
+                    <td class="govuk-table__cell">Example lead</td>
+                    <td class="govuk-table__cell">Example area</td>
+                    <td class="govuk-table__cell">5</td>
                     <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -1029,7 +1029,7 @@
                     <td class="full-view hide-assigned">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td>
+                    <td class="govuk-table__cell">
                         <div th:if="${applicationAssign == null}" th:remove="tag">
                             <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate</a>
                         </div>
@@ -1040,11 +1040,11 @@
                 </tr>
 
                 <tr class="filtered-result">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
-                    <td>Example application</td>
-                    <td>Example lead</td>
-                    <td>Example area</td>
-                    <td>5</td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5435</a></th>
+                    <td class="govuk-table__cell">Example application</td>
+                    <td class="govuk-table__cell">Example lead</td>
+                    <td class="govuk-table__cell">Example area</td>
+                    <td class="govuk-table__cell">5</td>
                     <td class="hide-allocate-assessor"><a href="#" class="view-application">View</a></td>
                     <td class="full-view">0</td>
                     <td class="full-view">0</td>
@@ -1053,7 +1053,7 @@
                     <td class="full-view hide-assigned">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td>
+                    <td class="govuk-table__cell">
                         <div th:if="${applicationAssign == null}" th:remove="tag">
                             <a th:href="${(adminTask == 'manage' ? '/prototypes/1393-application-allocate-assessors?title=Example application' : '/prototypes/1382-application-allocate-assessors?title=Example application')}">Allocate</a>
                         </div>
@@ -1093,68 +1093,68 @@
 <div th:fragment="prototype-assessor-assigned-table">
     <div class="table-overflow">
         <table id="assessor-assigned">
-            <thead>
-                <tr>
-                    <th scope="col">Assessor</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Innovation area</th>
-                    <th scope="col">Skills</th>
-                    <th scope="col">Applications</th>
-                    <th scope="col">Details</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor</th>
+                    <th class="govuk-table__header" scope="col">Type</th>
+                    <th class="govuk-table__header" scope="col">Innovation area</th>
+                    <th class="govuk-table__header" scope="col">Skills</th>
+                    <th class="govuk-table__header" scope="col">Applications</th>
+                    <th class="govuk-table__header" scope="col">Details</th>
                     <th class="full-view">Accepted</th>
                     <th class="full-view">Started</th>
                     <th class="full-view">Completed</th>
                     <th class="alignright" scope="col">Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 <tr class="filtered-result full-view">
                     <th scope="row">Ray Reardon</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="/prototypes/1521-application-allocate-applications" class="view-assessor-assigned">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="/prototypes/1521-application-allocate-applications" class="view-assessor-assigned">View</a></td>
                     <td class="full-view"><span class="yes">yes</span></td>
                     <td class="full-view"><span class="yes">yes</span></td>
                     <td class="full-view"><span class="yes">yes</span></td>
-                    <td class="alignright"><a href="#" class="assign-remove">Remove</a></td>
+                    <td class="govuk-table__cell alignright"><a href="#" class="assign-remove">Remove</a></td>
                 </tr>
                 <tr class="filtered-result full-view">
                     <th scope="row">Tony Drago</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor-assigned">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor-assigned">View</a></td>
                     <td class="full-view"></td>
                     <td class="full-view"></td>
                     <td class="full-view"></td>
-                    <td class="alignright"><a href="#" class="assign-remove">Remove</a></td>
+                    <td class="govuk-table__cell alignright"><a href="#" class="assign-remove">Remove</a></td>
                 </tr>
                 <tr class="filtered-result full-view">
                     <th scope="row">Mark Williams</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor-assigned">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor-assigned">View</a></td>
                     <td class="full-view"><span class="yes">yes</span></td>
                     <td class="full-view"><span class="yes">yes</span></td>
                     <td class="full-view"></td>
-                    <td class="alignright"><a href="#" class="assign-remove">Remove</a></td>
+                    <td class="govuk-table__cell alignright"><a href="#" class="assign-remove">Remove</a></td>
                 </tr>
                 <tr class="filtered-result full-view">
                     <th scope="row">Ken Doherty</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor-assigned">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor-assigned">View</a></td>
                     <td class="full-view"><span class="yes">yes</span></td>
                     <td class="full-view"></td>
                     <td class="full-view"></td>
-                    <td class="alignright"><a href="#" class="assign-remove">Remove</a></td>
+                    <td class="govuk-table__cell alignright"><a href="#" class="assign-remove">Remove</a></td>
                 </tr>
             </tbody>
         </table>
@@ -1165,13 +1165,13 @@
 <div th:fragment="prototype-application-assigned-table">
     <div class="table-overflow">
         <table id="assessor-assigned">
-            <thead>
-                <th scope="col">Application number</th>
-                <th scope="col">Project title</th>
-                <th scope="col">Lead</th>
-                <th scope="col">Assessment category (innovation area)</th>
-                <th scope="col">Assessors</th>
-                <th scope="col">Details</th>
+            <thead class="govuk-table__head">
+                <th class="govuk-table__header" scope="col">Application number</th>
+                <th class="govuk-table__header" scope="col">Project title</th>
+                <th class="govuk-table__header" scope="col">Lead</th>
+                <th class="govuk-table__header" scope="col">Assessment category (innovation area)</th>
+                <th class="govuk-table__header" scope="col">Assessors</th>
+                <th class="govuk-table__header" scope="col">Details</th>
                 <th scope="col" class="full-view hide-assigned" id="action">Action</th>
                 <th scope="col" class="full-view">Accepted</th>
                 <th scope="col" class="full-view">Started</th>
@@ -1182,14 +1182,14 @@
                 <th scope="col" class="full-view">Recommended</th>
                 <th scope="col" class="alignright">Actions</th>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 <tr class="full-view">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5470</a></th>
-                    <td>Example application 1</td>
-                    <td>Example lead</td>
-                    <td>Example area</td>
-                    <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5470</a></th>
+                    <td class="govuk-table__cell">Example application 1</td>
+                    <td class="govuk-table__cell">Example lead</td>
+                    <td class="govuk-table__cell">Example area</td>
+                    <td class="govuk-table__cell">5</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-application">View</a></td>
                     <td class="full-view hide-assigned"></td>
                     <td class="full-view"><span class="yes">yes</span></td>
                     <td class="full-view"><span class="yes">yes</span></td>
@@ -1198,15 +1198,15 @@
                     <td class="full-view hide-assigned">-</td>
                     <td class="full-view"><span class="yes">yes</span></td>
                     <td class="full-view"><span class="yes">yes</span></td>
-                    <td class="alignright"><a href="#">Remove</a></td>
+                    <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
                 </tr>
                 <tr class="full-view">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5471</a></th>
-                    <td>Example application 2</td>
-                    <td>Example lead</td>
-                    <td>Example area</td>
-                    <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5471</a></th>
+                    <td class="govuk-table__cell">Example application 2</td>
+                    <td class="govuk-table__cell">Example lead</td>
+                    <td class="govuk-table__cell">Example area</td>
+                    <td class="govuk-table__cell">5</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-application">View</a></td>
                     <td class="full-view hide-assigned"></td>
                     <td class="full-view"></td>
                     <td class="full-view"></td>
@@ -1215,15 +1215,15 @@
                     <td class="full-view hide-assigned">-</td>
                     <td class="full-view"></td>
                     <td class="full-view"></td>
-                    <td class="alignright"><a href="#">Remove</a></td>
+                    <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
                 </tr>
                 <tr class="full-view">
-                    <th scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5472</a></th>
-                    <td>Example application 3</td>
-                    <td>Example lead</td>
-                    <td>Example area</td>
-                    <td>5</td>
-                    <td><a href="#" class="view-application">View</a></td>
+                    <th class="govuk-table__header" scope="col"><a href="/prototypes/1196-readonly-application-view">1234-5472</a></th>
+                    <td class="govuk-table__cell">Example application 3</td>
+                    <td class="govuk-table__cell">Example lead</td>
+                    <td class="govuk-table__cell">Example area</td>
+                    <td class="govuk-table__cell">5</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-application">View</a></td>
                     <td class="full-view hide-assigned"></td>
                     <td class="full-view"><span class="yes">yes</span></td>
                     <td class="full-view"><span class="yes">yes</span></td>
@@ -1232,7 +1232,7 @@
                     <td class="full-view hide-assigned">-</td>
                     <td class="full-view"></td>
                     <td class="full-view"></td>
-                    <td class="alignright"><a href="#">Remove</a></td>
+                    <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
                 </tr>
             </tbody>
         </table>
@@ -1244,32 +1244,32 @@
 <div th:fragment="prototype-assessor-list-table">
     <div class="table-overflow">
         <table id="assessor-list">
-            <thead>
-                <tr>
-                    <th scope="col">Assessor</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Innovation area</th>
-                    <th scope="col">Skills</th>
-                    <th scope="col">Applications</th>
-                    <th scope="col">Details</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor</th>
+                    <th class="govuk-table__header" scope="col">Type</th>
+                    <th class="govuk-table__header" scope="col">Innovation area</th>
+                    <th class="govuk-table__header" scope="col">Skills</th>
+                    <th class="govuk-table__header" scope="col">Applications</th>
+                    <th class="govuk-table__header" scope="col">Details</th>
                     <th class="full-view">Accepted</th>
                     <th class="full-view">Started</th>
                     <th class="full-view">Completed</th>
                     <th class="alignright" scope="col">Allocate Assessors</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 <tr class="filtered-result">
                     <th scope="row">Bill Knightly</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1280,17 +1280,17 @@
                     </td>
                 </tr>
 
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Oliver Romero</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1300,17 +1300,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Jeffrey Carlson</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1322,15 +1322,15 @@
                 </tr>
                 <tr class="filtered-result">
                     <th scope="row">Bill Limp</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1340,17 +1340,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Sonja Barton</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1360,17 +1360,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Juanita Luna</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1380,17 +1380,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Irving Wolfe</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1400,17 +1400,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Verna Richards</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1422,15 +1422,15 @@
                 </tr>
                 <tr class="filtered-result">
                     <th scope="row">Phil Bill</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1440,17 +1440,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Blake Kelley</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1460,17 +1460,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Gloria Kelly</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1480,17 +1480,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Lori Underwood</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1500,17 +1500,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Melanie Daniels</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1520,17 +1520,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Bill Hale</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1540,17 +1540,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Christina Swanson</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1562,15 +1562,15 @@
                 </tr>
                 <tr class="filtered-result">
                     <th scope="row">Ryan Bill</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1582,15 +1582,15 @@
                 </tr>
                 <tr class="filtered-result">
                     <th scope="row">Stuart Bill</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1600,17 +1600,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Malcolm Stewart</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1620,17 +1620,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Elmer Nelson</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1640,17 +1640,17 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Calvin Manning</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td>-</td>
-                    <td><a href="#" class="view-assessor">View</a></td>
+                    <td class="govuk-table__cell">-</td>
+                    <td class="govuk-table__cell"><a href="#" class="view-assessor">View</a></td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
                     <td class="full-view">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <div th:if="${adminTask == null}" th:remove="tag">
                             <a href="#" class="assign-assessor">Assign</a>
                         </div>
@@ -1671,114 +1671,114 @@
 <div th:fragment="prototype-assessor-panel-table">
     <div class="table-overflow">
         <table id="assessor-list">
-            <thead>
-                <tr>
-                    <th scope="col">Assessor</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Innovation area</th>
-                    <th scope="col">Skills</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor</th>
+                    <th class="govuk-table__header" scope="col">Type</th>
+                    <th class="govuk-table__header" scope="col">Innovation area</th>
+                    <th class="govuk-table__header" scope="col">Skills</th>
                     <th scope="col" class="alignright">Assessments completed</th>
                     <th scope="col" class="alignright" id="attend-panel">Attend assessor panel</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 <tr class="filtered-result">
                     <th scope="row">Bill Knightly</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td class="alignright">10</td>
-                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                    <td class="govuk-table__cell alignright">10</td>
+                    <td class="govuk-table__cell alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
                 </tr>
 
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Dave Redford</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td class="alignright">10</td>
-                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                    <td class="govuk-table__cell alignright">10</td>
+                    <td class="govuk-table__cell alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
                 </tr>
 
                 <tr class="filtered-result">
                     <th scope="row">Phil Newman</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td class="alignright">10</td>
-                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                    <td class="govuk-table__cell alignright">10</td>
+                    <td class="govuk-table__cell alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
                 </tr>
 
                 <tr class="filtered-result">
                     <th scope="row">Pete Brown</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-3"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td class="alignright">11</td>
-                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                    <td class="govuk-table__cell alignright">11</td>
+                    <td class="govuk-table__cell alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
                 </tr>
 
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Tim Townsend</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td class="alignright">9</td>
-                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                    <td class="govuk-table__cell alignright">9</td>
+                    <td class="govuk-table__cell alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
                 </tr>
 
                 <tr class="filtered-result">
                     <th scope="row">Jamie Wilson</th>
-                    <td>Academic</td>
+                    <td class="govuk-table__cell">Academic</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td class="alignright">7</td>
-                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                    <td class="govuk-table__cell alignright">7</td>
+                    <td class="govuk-table__cell alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
                 </tr>
 
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Fred Smith</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td class="alignright">6</td>
-                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                    <td class="govuk-table__cell alignright">6</td>
+                    <td class="govuk-table__cell alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
                 </tr>
 
                 <tr class="filtered-result">
                     <th scope="row">Charlie Brown</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-4"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td class="alignright">5</td>
-                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                    <td class="govuk-table__cell alignright">5</td>
+                    <td class="govuk-table__cell alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
                 </tr>
 
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Samantha Greene</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td class="alignright">4</td>
-                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                    <td class="govuk-table__cell alignright">4</td>
+                    <td class="govuk-table__cell alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
                 </tr>
 
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Bash Malik</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-1"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td class="alignright">3</td>
-                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                    <td class="govuk-table__cell alignright">3</td>
+                    <td class="govuk-table__cell alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
                 </tr>
 
-                <tr>
+                <tr class="govuk-table__row">
                     <th scope="row">Bryan Griffiths</th>
-                    <td>Industry</td>
+                    <td class="govuk-table__cell">Industry</td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-text-2"></td>
                     <td th:include="prototypes/fragments/comp-admin :: prototype-skills-text-1"></td>
-                    <td class="alignright">-</td>
-                    <td class="alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
+                    <td class="govuk-table__cell alignright">-</td>
+                    <td class="govuk-table__cell alignright"><input aria-labelledby="attend-panel" type="checkbox" class="attend-panel" /></td>
                 </tr>
 
 
@@ -1811,10 +1811,10 @@
 
         <div class="column-three-quarters">
             <div class="table-overflow">
-                <table>
-                    <thead>
-                        <tr>
-                            <th scope="col">Assessor</th>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Assessor</th>
                             <th scope="col" class="numeric" id="business-score">Business score (10)</th>
                             <th scope="col" class="numeric" id="project-score">Project score (10)</th>
                             <th scope="col" class="numeric" id="finance-score">Finance score (5)</th>
@@ -1824,7 +1824,7 @@
                         </tr>
                     </thead>
                     <tfoot>
-                        <tr>
+                        <tr class="govuk-table__row">
                             <th scope="row">Overall</th>
                             <th class="numeric">6</th>
                             <th class="numeric">5</th>
@@ -1834,15 +1834,15 @@
                             <th class="numeric">Yes</th>
                         </tr>
                     </tfoot>
-                    <tbody>
-                        <tr>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
                             <th scope="row">Bill Newman</th>
-                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
-                            <td class="numeric">20</td>
-                            <td class="numeric">80</td>
-                            <td class="numeric">
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">20</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">80</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <select name="" aria-labelledby="funding-approved" class="govuk-select">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -1850,14 +1850,14 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr class="govuk-table__row">
                             <th scope="row">Ted Mosby</th>
-                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
-                            <td class="numeric">20</td>
-                            <td class="numeric">80</td>
-                            <td class="numeric">
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">20</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">80</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <select name="" aria-labelledby="funding-approved" class="govuk-select">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -1865,14 +1865,14 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr class="govuk-table__row">
                             <th scope="row">Barney Stinson</th>
-                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
-                            <td class="numeric">20</td>
-                            <td class="numeric">80</td>
-                            <td class="numeric">
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">20</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">80</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <select name="" aria-labelledby="funding-approved" class="govuk-select">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -1880,14 +1880,14 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr class="govuk-table__row">
                             <th scope="row">Ted Rodgers</th>
-                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
-                            <td class="numeric">20</td>
-                            <td class="numeric">80</td>
-                            <td class="numeric">
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">20</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">80</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <select name="" aria-labelledby="funding-approved" class="govuk-select">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -1895,14 +1895,14 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr class="govuk-table__row">
                             <th scope="row">Sam Davies</th>
-                            <td class="numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
-                            <td class="numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
-                            <td class="numeric">20</td>
-                            <td class="numeric">80</td>
-                            <td class="numeric">
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="business-score" class="govuk-input width-small" value="8" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="project-score" class="govuk-input width-small" value="6" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><input type="text" aria-labelledby="finance-score" class="govuk-input width-small" value="5" /></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">20</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">80</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <select name="" aria-labelledby="funding-approved" class="govuk-select">
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>

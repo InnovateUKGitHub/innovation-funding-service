@@ -72,13 +72,13 @@
 
 			<div class="table-overflow">
 				<table id="table-project-status">
-					<thead>
-						<tr>
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
 							<th scope="col" rowspan="2">Project no.</th>
 							<th scope="col" rowspan="2">Partner</th>
 							<th scope="col" colspan="8" class="aligncentre">Project setup stage</th>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th class="status" scope="col">Project details</th>
 							<th class="status" scope="col">MO</th>
 							<th class="status" scope="col">Bank details</th>
@@ -89,10 +89,10 @@
 							<th class="status" scope="col">Complete</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
 							<th rowspan="5" scope="row"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194731</a></th>
-							<td><a href="#">Company A</a></td>
+							<td class="govuk-table__cell"><a href="#">Company A</a></td>
 							<td class="status ok"><a href="/prototypes/2850-internal-project-details"><span class="govuk-visually-hidden">OK</span></a></td>
 
 							<div th:if="${param.stage == null or param.stage != null and param.stage[0]  &lt; '1'}" th:remove="tag">
@@ -133,8 +133,8 @@
 							<td class="status with-partner">-</td>
 							<td class="status with-partner">-</td>
 						</tr>
-						<tr>
-							<td><a href="#">Company B</a></td>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell"><a href="#">Company B</a></td>
 							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
@@ -144,8 +144,8 @@
 							<td class="status">-</td>
 							<td class="status">-</td>
 						</tr>
-						<tr>
-							<td><a href="#">Company C</a></td>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell"><a href="#">Company C</a></td>
 							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
@@ -155,8 +155,8 @@
 							<td class="status">-</td>
 							<td class="status">-</td>
 						</tr>
-						<tr>
-							<td><a href="#">Company D</a></td>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell"><a href="#">Company D</a></td>
 							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
@@ -167,7 +167,7 @@
 							<td class="status">-</td>
 						</tr>
 						<tr class="project-divide">
-							<td><a href="#">Company E</a></td>
+							<td class="govuk-table__cell"><a href="#">Company E</a></td>
 							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status">-</td>
@@ -177,9 +177,9 @@
 							<td class="status">-</td>
 							<td class="status">-</td>
 						</tr>
-						<tr>
+						<tr class="govuk-table__row">
 							<th rowspan="2" scope="row"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194732</a></th>
-							<td><a href="#">Company 1</a></td>
+							<td class="govuk-table__cell"><a href="#">Company 1</a></td>
 							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
@@ -189,8 +189,8 @@
 							<td class="status">-</td>
 							<td class="status">-</td>
 						</tr>
-						<tr>
-							<td><a href="#">Company 2</a></td>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell"><a href="#">Company 2</a></td>
 							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>
 							<td class="status na">&nbsp;</td>
 							<td class="status ok"><span class="govuk-visually-hidden">OK</span></td>

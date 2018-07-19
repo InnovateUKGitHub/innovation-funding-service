@@ -135,19 +135,19 @@
 
   			<div class="table-overflow">
   				<table id="application-list">
-  					<thead>
-  						<tr>
+  					<thead class="govuk-table__head">
+  						<tr class="govuk-table__row">
                 <th scope="col" id="select-applications-label">Select applications</th>
-  							<th scope="col">Application number</th>
-  							<th scope="col">Project title</th>
-  							<th scope="col">Lead</th>
-                <th scope="col">Funding decision</th>
-                <th scope="col">Email status</th>
+  							<th class="govuk-table__header" scope="col">Application number</th>
+  							<th class="govuk-table__header" scope="col">Project title</th>
+  							<th class="govuk-table__header" scope="col">Lead</th>
+                <th class="govuk-table__header" scope="col">Funding decision</th>
+                <th class="govuk-table__header" scope="col">Email status</th>
                 <th scope="col" class="alignright">Date sent</th>
   						</tr>
   					</thead>
-  					<tbody>
-  						<tr>
+  					<tbody class="govuk-table__body">
+  						<tr class="govuk-table__row">
                 <td class="form-group-cell">
 
                   <label class="block-label selection-button-checkbox" for="app-row-1">
@@ -157,14 +157,14 @@
 
                 </td>
 
-                <td>194731</td>
-  							<td>Machine learning in robots</td>
-  							<td>PWC</td>
-                <td>Successful</td>
+                <td class="govuk-table__cell">194731</td>
+  							<td class="govuk-table__cell">Machine learning in robots</td>
+  							<td class="govuk-table__cell">PWC</td>
+                <td class="govuk-table__cell">Successful</td>
                 <td th:text="${(param.action != null and param.action[0] == 'emails-sent' ? 'Sent' : '-')}">-</td>
                 <td class="alignright" th:text="${(param.action != null and param.action[0] == 'emails-sent' ? '9 January 2017' : '-')}">-</td>
   						</tr>
-  						<tr>
+  						<tr class="govuk-table__row">
                 <td class="form-group-cell">
 
                   <label class="block-label selection-button-checkbox" for="app-row-2">
@@ -173,14 +173,14 @@
                   </label>
 
                 </td>
-  							<td>194732</td>
-  							<td>Robots that learn</td>
-  							<td>Max Digital</td>
-  							<td>Unsuccessful</td>
-                <td>Sent</td>
-                <td class="alignright">30 December 2016</td>
+  							<td class="govuk-table__cell">194732</td>
+  							<td class="govuk-table__cell">Robots that learn</td>
+  							<td class="govuk-table__cell">Max Digital</td>
+  							<td class="govuk-table__cell">Unsuccessful</td>
+                <td class="govuk-table__cell">Sent</td>
+                <td class="govuk-table__cell alignright">30 December 2016</td>
   						</tr>
-  						<tr>
+  						<tr class="govuk-table__row">
                 <td class="form-group-cell">
 
                   <label class="block-label selection-button-checkbox" for="app-row-3">
@@ -189,14 +189,14 @@
                   </label>
 
                 </td>
-  							<td>194733</td>
-  							<td>AI in learning</td>
-  							<td>BBC</td>
-  							<td>On hold</td>
-                <td>-</td>
-                <td class="alignright">-</td>
+  							<td class="govuk-table__cell">194733</td>
+  							<td class="govuk-table__cell">AI in learning</td>
+  							<td class="govuk-table__cell">BBC</td>
+  							<td class="govuk-table__cell">On hold</td>
+                <td class="govuk-table__cell">-</td>
+                <td class="govuk-table__cell alignright">-</td>
   						</tr>
-  						<tr>
+  						<tr class="govuk-table__row">
                 <td class="form-group-cell">
 
                   <label class="block-label selection-button-checkbox" for="app-row-4">
@@ -205,15 +205,15 @@
                   </label>
 
                 </td>
-  							<td>194734</td>
-  							<td>Progressive machines</td>
-  							<td>Kingfisher</td>
-  							<td>Successful</td>
-                <td>Sent</td>
-                <td class="alignright">30 December 2016</td>
+  							<td class="govuk-table__cell">194734</td>
+  							<td class="govuk-table__cell">Progressive machines</td>
+  							<td class="govuk-table__cell">Kingfisher</td>
+  							<td class="govuk-table__cell">Successful</td>
+                <td class="govuk-table__cell">Sent</td>
+                <td class="govuk-table__cell alignright">30 December 2016</td>
   						</tr>
 
-              <tr>
+              <tr class="govuk-table__row">
 
                 <td class="form-group-cell">
 
@@ -224,14 +224,14 @@
 
                 </td>
 
-  							<td>194735</td>
-  							<td>Machine learning in robots</td>
-  							<td>PWC</td>
-                <td>Successful</td>
-                <td>-</td>
-                <td class="alignright">-</td>
+  							<td class="govuk-table__cell">194735</td>
+  							<td class="govuk-table__cell">Machine learning in robots</td>
+  							<td class="govuk-table__cell">PWC</td>
+                <td class="govuk-table__cell">Successful</td>
+                <td class="govuk-table__cell">-</td>
+                <td class="govuk-table__cell alignright">-</td>
   						</tr>
-  						<tr>
+  						<tr class="govuk-table__row">
 
                 <td class="form-group-cell">
 
@@ -242,14 +242,14 @@
 
                 </td>
 
-  							<td>194736</td>
-  							<td>Robots that learn</td>
-  							<td>Max Digital</td>
-  							<td>Unsuccessful</td>
-                <td>Sent</td>
-                <td class="alignright">30 December 2016</td>
+  							<td class="govuk-table__cell">194736</td>
+  							<td class="govuk-table__cell">Robots that learn</td>
+  							<td class="govuk-table__cell">Max Digital</td>
+  							<td class="govuk-table__cell">Unsuccessful</td>
+                <td class="govuk-table__cell">Sent</td>
+                <td class="govuk-table__cell alignright">30 December 2016</td>
   						</tr>
-  						<tr>
+  						<tr class="govuk-table__row">
                 <td class="form-group-cell">
 
                   <label class="block-label selection-button-checkbox" for="app-row-7">
@@ -258,14 +258,14 @@
                   </label>
 
                 </td>
-  							<td>194737</td>
-  							<td>AI in learning</td>
-  							<td>BBC</td>
-  							<td>On hold</td>
-                <td>-</td>
-                <td class="alignright">-</td>
+  							<td class="govuk-table__cell">194737</td>
+  							<td class="govuk-table__cell">AI in learning</td>
+  							<td class="govuk-table__cell">BBC</td>
+  							<td class="govuk-table__cell">On hold</td>
+                <td class="govuk-table__cell">-</td>
+                <td class="govuk-table__cell alignright">-</td>
   						</tr>
-  						<tr>
+  						<tr class="govuk-table__row">
 
                 <td class="form-group-cell">
 
@@ -276,12 +276,12 @@
 
                 </td>
 
-  							<td>194738</td>
-  							<td>Progressive machines</td>
-  							<td>Kingfisher</td>
-  							<td>Successful</td>
-                <td>Sent</td>
-                <td class="alignright">30 December 2016</td>
+  							<td class="govuk-table__cell">194738</td>
+  							<td class="govuk-table__cell">Progressive machines</td>
+  							<td class="govuk-table__cell">Kingfisher</td>
+  							<td class="govuk-table__cell">Successful</td>
+                <td class="govuk-table__cell">Sent</td>
+                <td class="govuk-table__cell alignright">30 December 2016</td>
   						</tr>
   					</tbody>
   				</table>

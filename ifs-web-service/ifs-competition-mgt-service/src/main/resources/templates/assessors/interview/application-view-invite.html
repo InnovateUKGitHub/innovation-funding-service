@@ -17,27 +17,27 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Review invite email',subTitle=${model.competitionId + ': ' + model.competitionName},size='govuk-heading-xl'" />
 
             <div class="table-overflow">
-                <table>
-                    <thead>
-                    <tr>
-                        <th class="width-80">Application number</th>
-                        <th>Project title</th>
-                        <th>Lead organisation</th>
-                        <th>Date assigned</th>
-                        <th>Additional feedback</th>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header width-80" scope="col">Application number</th>
+                        <th class="govuk-table__header width-80" scope="col">Project title</th>
+                        <th class="govuk-table__header width-80" scope="col">Lead organisation</th>
+                        <th class="govuk-table__header width-80" scope="col">Date assigned</th>
+                        <th class="govuk-table__header width-80" scope="col">Additional feedback</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
                             <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${model.applicationId})} + ${model.originQuery}"
                                 th:text="${model.applicationId}">114
                             </a>
                         </td>
-                        <td th:text="${model.title}">Electronics, sensors &amp; photonics, Materials</td>
-                        <td th:text="${model.leadOrganisation}">Ooba</td>
-                        <td th:text="${#temporals.format(model.dateAssigned, 'dd/MM/yyyy')}">01/09/2017</td>
-                        <td>
+                        <td class="govuk-table__cell" th:text="${model.title}">Electronics, sensors &amp; photonics, Materials</td>
+                        <td class="govuk-table__cell" th:text="${model.leadOrganisation}">Ooba</td>
+                        <td class="govuk-table__cell" th:text="${#temporals.format(model.dateAssigned, 'dd/MM/yyyy')}">01/09/2017</td>
+                        <td class="govuk-table__cell">
                             <div th:if="${model.hasAttachment()}" class="upload-section">
                                 <a th:text="${model.feedbackFilename}"
                                    th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}"

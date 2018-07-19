@@ -66,15 +66,15 @@
 
 	    <p class="govuk-body">Please enter final project costs below</p>
 
-	    <table>
-	    	<thead>
-	    		<tr>
+	    <table class="govuk-table">
+	    	<thead class="govuk-table__head">
+	    		<tr class="govuk-table__row">
 	    			<th scope="col" class="govuk-heading-s">Section</th>
 	    			<th scope="col" class="govuk-heading-s alignright" id="project-cost">Project costs</th>
 	    		</tr>
 	    	</thead>
 	    	<tfoot>
-	    		<tr>
+	    		<tr class="govuk-table__row">
 	    			<th scope="col" class="govuk-heading-s">
 	    				Total project costs
 	    			</th>
@@ -86,38 +86,38 @@
 	    			</td>
 	    		</tr>
 	    	</tfoot>
-	    	<tbody>
-	    		<tr>
+	    	<tbody class="govuk-table__body">
+	    		<tr class="govuk-table__row">
 	    			<th scope="col" id="labour">Labour</th>
 	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="govuk-input alignright" value="&pound;20,000" aria-labelledby="project-cost labour"/></td>
 	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;8,000</td>
 	    		</tr>
-	    		<tr>
+	    		<tr class="govuk-table__row">
 	    			<th scope="col" id="admin-support-costs">Administration support costs</th>
 	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="govuk-input alignright" aria-labelledby="project-cost admin-support-costs" /></td>
 	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;2,000</td>
 	    		</tr>
-	    		<tr>
+	    		<tr class="govuk-table__row">
 	    			<th scope="col" id="materials">Materials</th>
 	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="govuk-input alignright" aria-labelledby="project-cost materials" /></td>
 	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
 	    		</tr>
-	    		<tr>
+	    		<tr class="govuk-table__row">
 	    			<th scope="col" id="capital-usage">Capital usage</th>
 	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="govuk-input alignright" aria-labelledby="project-cost capital-usage" /></td>
 	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
 	    		</tr>
-	    		<tr>
+	    		<tr class="govuk-table__row">
 	    			<th scope="col" id="subcontracting-costs">Subcontracting costs</th>
 	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="govuk-input alignright" aria-labelledby="project-cost subcontracting-costs" /></td>
 	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
 	    		</tr>
-	    		<tr>
+	    		<tr class="govuk-table__row">
 	    			<th scope="col" id="travel-subsistence">Travel and subsistence</th>
 	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="govuk-input alignright" aria-labelledby="project-cost travel-subsistence" /></td>
 	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>
 	    		</tr>
-	    		<tr>
+	    		<tr class="govuk-table__row">
 	    			<th scope="col" id="other-costs">Other costs</th>
 	    			<td class="alignright" th:unless="${param.status != null and param.status[0] == 'approved'}"><input type="text" class="govuk-input alignright" aria-labelledby="project-cost other-costs" /></td>
 	    			<td class="alignright" th:unless="${param.status == null or param.status[0] != 'approved'}">&pound;10,000</td>

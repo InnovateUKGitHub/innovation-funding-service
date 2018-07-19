@@ -39,7 +39,7 @@
         <div class="spend-profile-table">
             <div class="flex-table-before"></div>
             <div class="flex-table-wrap">
-                <table>
+                <table class="govuk-table">
                     <colgroup >
                         <col />
                         <th:block th:each="month : ${model.table.getMonths()}">
@@ -48,39 +48,39 @@
                         <col class="total" />
                         <col class="total"/>
                     </colgroup>
-                    <thead>
-                    <tr>
-                        <th scope="row" class="fix-left" id="month">Month</th>
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header fix-left" id="month">Month</th>
                         <th:block th:each="month,stats : ${model.table.getMonths()}">
                             <th scope="col" th:utext="${'Month<br/>' + (stats.index+1)}" th:id="${'month'+stats.index}" />
                         </th:block>
-                        <th scope="col" class="fix-right">Total</th>
-                        <th scope="col" class="fix-right">Eligible project cost</th>
+                        <th scope="col" class="govuk-table__header fix-right">Total</th>
+                        <th scope="col" class="govuk-table__header fix-right">Eligible project cost</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="row : ${model.table.getMonthlyCostsPerOrganisationMap()}" class="form-group-row">
-                        <th scope="row" class="fix-left" th:with="organisationName=${model.table.getOrganisationNameMap().get(row.key)}">
+                    <tbody class="govuk-table__body">
+                    <tr th:each="row : ${model.table.getMonthlyCostsPerOrganisationMap()}" class="govuk-table__row form-group-row">
+                        <th scope="row" class="govuk-table__header fix-left" th:with="organisationName=${model.table.getOrganisationNameMap().get(row.key)}">
                             <span th:text="${organisationName}" />
                             <span th:if="${organisationName.equals(model.table.leadOrganisation.name)}"> (Lead)</span>
                         </th>
-                        <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'DEFAULT')}"/>
-                        <td class="fix-right" th:text="${'&pound;'+#numbers.formatInteger(model.table.organisationToActualTotal.get(row.key),1,'DEFAULT')}" />
-                        <td class="fix-right" th:text="${'&pound;'+#numbers.formatInteger(model.table.eligibleCostPerOrganisationMap.get(row.key),1,'DEFAULT')}" />
+                        <td class="govuk-table__cell" th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'DEFAULT')}"/>
+                        <td class="govuk-table__cell fix-right" th:text="${'&pound;'+#numbers.formatInteger(model.table.organisationToActualTotal.get(row.key),1,'DEFAULT')}" />
+                        <td class="govuk-table__cell fix-right" th:text="${'&pound;'+#numbers.formatInteger(model.table.eligibleCostPerOrganisationMap.get(row.key),1,'DEFAULT')}" />
                     </tr>
                     </tbody>
                     <tfoot>
-                    <tr class="form-group-row">
-                        <th scope="row" class="fix-left">Total</th>
+                    <tr class="govuk-table__row form-group-row">
+                        <th scope="row" class="govuk-table__header fix-left">Total</th>
                         <th:block th:each="monthTotal,status : ${model.table.totalForEachMonth}">
-                            <td th:text="${'&pound;'+#numbers.formatInteger(monthTotal,1,'DEFAULT')}" />
+                            <td class="govuk-table__cell" th:text="${'&pound;'+#numbers.formatInteger(monthTotal,1,'DEFAULT')}" />
                         </th:block>
-                        <td class="fix-right">
+                        <td class="govuk-table__cell fix-right">
                             <input th:value="${'&pound;'+#numbers.formatInteger(model.table.totalOfAllActualTotals,1,'DEFAULT')}"
                                    readonly="readonly"
                                    id="spend-profile-total-total" />
                         </td>
-                        <td class="fix-right">
+                        <td class="govuk-table__cell fix-right">
                             <input readonly="readonly" th:value="${'&pound;'+#numbers.formatInteger(model.table.totalOfAllEligibleTotals,1,'DEFAULT')}" />
                         </td>
                     </tr>
@@ -92,17 +92,17 @@
         <div class="grid-container">
             <h2 class="govuk-heading-m">Project costs for financial year</h2>
             <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
-            <table class="govuk-!-margin-bottom-6" style="width: 50%;">
-                <thead>
-                <tr>
-                    <th scope="col" style="width: 50%">Financial year (April to March)</th>
-                    <th scope="col" style="width: 50%">Project spend</th>
+            <table class="govuk-table govuk-!-margin-bottom-6" style="width: 50%;">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header width-50-percent">Financial year (April to March)</th>
+                    <th scope="col" class="govuk-table__header width-50-percent">Project spend</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="item : ${model.summary.years}">
-                    <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
-                    <td th:attr="data-calculation-fields=${'.apr-'+item.year+',
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="item : ${model.summary.years}">
+                    <td class="govuk-table__cell" th:text="${item.year + ' - ' + (item.year + 1)}"></td>
+                    <td class="govuk-table__cell" th:attr="data-calculation-fields=${'.apr-'+item.year+',
                                                               .may-'+item.year+',
                                                               .jun-'+item.year+',
                                                               .jul-'+item.year+',

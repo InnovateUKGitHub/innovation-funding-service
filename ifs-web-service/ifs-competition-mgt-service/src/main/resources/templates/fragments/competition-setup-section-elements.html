@@ -548,23 +548,23 @@
 
                             <input type="hidden" name="removeGuidanceRow"/>
                             <h3 class="govuk-heading-s">Guidance table</h3>
-                            <table id="guidance-table" class="assessed-guidance"
+                            <table id="guidance-table" class="govuk-table assessed-guidance"
                                    th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Score <span class="govuk-visually-hidden"> from</span></th>
-                                    <th scope="col"><span class="govuk-visually-hidden">Score to</span></th>
-                                    <th scope="col">Justification</th>
-                                    <th scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="col">Score <span class="govuk-visually-hidden"> from</span></th>
+                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Score to</span></th>
+                                    <th class="govuk-table__header" scope="col">Justification</th>
+                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="govuk-table__body">
                                     <th:block th:each="(score, iteration : ${competitionSetupForm.guidanceRows})">
 
                                     <tr th:id="${'guidance-'+iteration.index}"
-                                        class="form-group-row-validated"
+                                        class="govuk-table__row form-group-row-validated"
                                         th:classappend="((${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}) or (${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')})) ? 'govuk-form-group--error'">
-                                        <td class="govuk-form-group"
+                                        <td class="govuk-table__cell govuk-form-group"
                                             th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')} ? 'govuk-form-group--error'">
                                             <label class="govuk-label govuk-visually-hidden"
                                                    th:for="guidanceRows[__${iteration.index}__].scoreFrom">
@@ -586,7 +586,7 @@
                                                    th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-min-errormessage=#{validation.applicationquestionform.scorefrom.min}"/>
                                         </td>
-                                        <td class="govuk-form-group"
+                                        <td class="govuk-table__cell govuk-form-group"
                                             th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')} ? 'govuk-form-group--error'">
                                             <label class="govuk-label govuk-visually-hidden"
                                                    th:for="guidanceRows[__${iteration.index}__].scoreTo">
@@ -607,7 +607,7 @@
                                                    th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-min-errormessage=#{validation.applicationquestionform.scoreto.min}"/>
                                         </td>
-                                        <td class="govuk-form-group"
+                                        <td class="govuk-table__cell govuk-form-group"
                                             th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')} ? 'govuk-form-group--error'">
                                             <label class="govuk-label govuk-visually-hidden"
                                                    th:for="guidanceRows[__${iteration.index}__].justification">
@@ -629,7 +629,7 @@
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.justification.maxlength}"
                                                       rows="3"/>
                                         </td>
-                                        <td>
+                                        <td class="govuk-table__cell">
                                             <button class="button-clear alignright" data-remove-row="guidance"
                                                     type="button" name="remove-guidance-row"
                                                     th:value="${iteration.index}"
@@ -641,21 +641,21 @@
                                 </tbody>
                             </table>
 
-                            <table id="guidance-table"
+                            <table class="govuk-table" id="guidance-table"
                                    th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Subject</th>
-                                    <th scope="col">Justification</th>
-                                    <th scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="col">Subject</th>
+                                    <th class="govuk-table__header" scope="col">Justification</th>
+                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="govuk-table__body">
                                 <th:block th:each="(score, iteration : ${competitionSetupForm.question.guidanceRows})">
                                     <tr th:id="${'guidance-'+iteration.index}"
-                                        class="form-group-row-validated"
+                                        class="govuk-table__row form-group-row-validated"
                                         th:classappend="((${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')}) or (${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')})) ? 'govuk-form-group--error'">
-                                        <td class="govuk-form-group"
+                                        <td class="govuk-table__cell govuk-form-group"
                                             th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].subject')} ? 'govuk-form-group--error'">
                                             <label class="govuk-label govuk-visually-hidden"
                                                    th:for="${'guidanceRow-'+iteration.index+'-subject'}">
@@ -676,7 +676,7 @@
                                                    th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.subject.maxlength}"/>
                                         </td>
-                                        <td class="govuk-form-group"
+                                        <td class="govuk-table__cell govuk-form-group"
                                             th:classappend="${#fields.hasErrors('question.guidanceRows[__${iteration.index}__].justification')} ? 'govuk-form-group--error'">
                                             <label class="govuk-label govuk-visually-hidden"
                                                    th:for="${'guidanceRow-'+iteration.index+'-justification'}">
@@ -698,7 +698,7 @@
                                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.justification.maxlength}"/>
                                         </td>
-                                        <td>
+                                        <td class="govuk-table__cell govuk-table__cell">
                                             <button class="button-clear alignright" data-remove-row="guidance"
                                                     type="button" name="remove-guidance-row"
                                                     th:value="${iteration.index}"

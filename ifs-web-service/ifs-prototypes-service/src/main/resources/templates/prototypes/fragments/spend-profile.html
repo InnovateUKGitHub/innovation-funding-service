@@ -71,40 +71,40 @@
             <p class="govuk-hint">These are the project costs for your partners on the project</p>
 
             <table id="partner-totals">
-                <thead>
-                    <tr>
-                        <th scope="col">Partner</th>
-                        <th scope="col">Project costs</th>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Partner</th>
+                        <th class="govuk-table__header" scope="col">Project costs</th>
                     </tr>
                 </thead>
                 <tfoot>
-                    <tr>
+                    <tr class="govuk-table__row">
                         <th scope="row">Total</th>
-                        <td>&pound;525,000</td>
+                        <td class="govuk-table__cell">&pound;525,000</td>
                     </tr>
                 </tfoot>
-                <tbody>
-                    <tr>
-                        <td>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
                             <p class="govuk-body govuk-!-margin-0">Aptrans Ltd <br />Lead organisation</p>
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             &pound;175,000
                         </td>
                     </tr>
-                    <tr>
-                        <td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
                             <p class="govuk-body govuk-!-margin-0">Biotech Corp <br />Partner</p>
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             &pound;175,000
                         </td>
                     </tr>
-                    <tr>
-                        <td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
                             <p class="govuk-body govuk-!-margin-0">University of Cardiff <br />Partner</p>
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             &pound;175,000
                         </td>
                     </tr>
@@ -154,8 +154,8 @@
             <div class="flex-left"></div>
             <div class="flex-middle">
                 <table id="table-forecast">
-                    <thead>
-                        <tr>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
                             <th class="alignleft fix-left" scope="row" id="month">Month</th>
                             <th scope="col" id="month1" aria-label="June 2016">Jun 2016</th>
                             <th scope="col" id="month2" aria-label="July 2016">Jul 2016</th>
@@ -204,52 +204,52 @@
                     <tfoot>
                         <tr th:class="${(param.spend != null and param.spend[0] == 'high' ? 'error-in-row totals' : 'totals')}">
                             <th scope="row" id="total" class="fix-left" >Total</th>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
                             <td class="separate-cell year">26,000</td>
 
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
                             <td class="separate-cell year">26,000</td>
 
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
                             <td class="separate-cell year">26,000</td>
 
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
 
                             <td class="total fix-right2">936,000</td>
                             <td class="total eligible fix-right">936,000</td>
                         </tr>
                     </tfoot>
                     <th:block th:unless="${param.task != null and param.task[0] == 'reviewProject'}">
-                        <tbody>
+                        <tbody class="govuk-table__body">
                             <th:block th:if="${param.status == null or param.status[0] != 'edit'}">
                                 <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Labour '}, value=${'12,500'}, total=${'450,000'}" />
                                 <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Admin support costs  (20%)'}, value=${'2,500'}, total=${'90,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" />
@@ -273,7 +273,7 @@
                     </th:block>
 
                     <th:block th:if="${param.task != null and param.task[0] == 'reviewProject'}">
-                        <tbody>
+                        <tbody class="govuk-table__body">
                             <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Aptrans Ltd'}, type=${'Lead Partner'}, value=${'12,500'}, total=${'450,000'}" />
                             <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Biotech Corp'}, type=${'Partner'}, value=${'2,500'}, total=${'90,000'}" />
                             <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'University of Cardiff'}, type=${'Partner'}, value=${'3,000'}, total=${'108,000'}" />
@@ -296,8 +296,8 @@
             <div class="flex-left"></div>
             <div class="flex-middle">
                 <table id="table-forecast">
-                    <thead>
-                        <tr>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
                             <th class="alignleft fix-left" scope="row" id="jes-cat" colspan="2">Je-S category</th>
                             <th scope="col" id="month1" aria-label="June 2016">Jun 2016</th>
                             <th scope="col" id="month2" aria-label="July 2016">Jul 2016</th>
@@ -346,51 +346,51 @@
                     <tfoot>
                         <tr th:class="${(param.spend != null and param.spend[0] == 'high' ? 'error-in-row totals' : 'totals')}">
                             <th scope="row" id="total" class="fix-left" colspan="2">Total</th>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
                             <td class="separate-cell year">26,000</td>
 
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
                             <td class="separate-cell year">26,000</td>
 
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
                             <td class="separate-cell year">26,000</td>
 
-                            <td>26,000</td>
-                            <td>26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
+                            <td class="govuk-table__cell">26,000</td>
 
                             <td class="total fix-right2">936,000</td>
                             <td class="total eligible fix-right">936,000</td>
                         </tr>
                     </tfoot>
-                    <tbody>
+                    <tbody class="govuk-table__body">
                         <th:block th:if="${param.status == null or param.status[0] != 'edit'}">
                             <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Staff '}, value=${'12,500'}, total=${'450,000'}, section=${'Directly incurred'}" />
                             <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Travel and subsistence '}, value=${'2,500'}, total=${'90,000'}" />

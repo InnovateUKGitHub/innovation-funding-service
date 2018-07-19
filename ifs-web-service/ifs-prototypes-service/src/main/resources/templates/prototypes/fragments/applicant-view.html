@@ -271,10 +271,10 @@
 
     <div class="govuk-form-group">
         <div style="overflow: auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">Partner</th>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Partner</th>
                         <!-- <th scope="col" class="aligncentre width-medium">Progress</th> -->
                         <th scope="col" class="numeric width-small">Total costs</th>
                         <th scope="col" class="numeric width-small">
@@ -292,79 +292,79 @@
                 </tr>
                 </thead>
                 <tfoot>
-                    <tr>
-                        <th>Total</th>
-                        <!-- <td class="numeric">&nbsp;</td> -->
-                        <td class="numeric"><strong>&pound;280,000</strong></td>
-                        <td class="numeric"><strong>&pound;280,000</strong></td>
-                        <td class="numeric"><strong>&pound;280,000</strong></td>
-                        <td class="numeric"><strong>&pound;280,000</strong></td>
-                        <td class="numeric"><strong>&pound;280,000</strong></td>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Total</th>
+                        <!-- <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td> -->
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;280,000</strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;280,000</strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;280,000</strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;280,000</strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;280,000</strong></td>
                     </tr>
                 </tfoot>
-                <tbody>
+                <tbody class="govuk-table__body">
 
-                    <tr>
-                        <th scope="col">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">
                             Aptrans Ltd<br />
                             <small>Lead partner</small>
                         </th>
 
                         <th:block th:if="${status == null}">
                             <!-- <td class="aligncentre"><img src="../images/field/tick-icon.png" width="20" height="17" alt="complete"/></td> -->
-                            <td class="numeric"><strong>&pound;100,000</strong></td>
-                            <td class="numeric">70%</td>
-                            <td class="numeric">&pound;60,000</td>
-                            <td class="numeric">&pound;10,000</td>
-                            <td class="numeric">&pound;30,000</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;100,000</strong></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">70%</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;60,000</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;30,000</td>
                         </th:block>
 
                         <th:block th:if="${status == 'partnerView'}">
                             <!-- <td class="aligncentre">-</td> -->
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
                         </th:block>
                     </tr>
 
-                    <tr>
-                        <th scope="col">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">
                             Biotech corp<br />
                             <small>Partner</small>
                         </th>
 
                         <th:block th:if="${status == null}">
                             <!-- <td class="aligncentre"><img src="../images/field/tick-icon.png" width="20" height="17" alt="complete"/></td> -->
-                            <td class="numeric"><strong>&pound;150,000</strong></td>
-                            <td class="numeric">50%</td>
-                            <td class="numeric">&pound;60,000</td>
-                            <td class="numeric">&pound;15,000</td>
-                            <td class="numeric">&pound;75,000</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;150,000</strong></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">50%</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;60,000</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;15,000</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;75,000</td>
                         </th:block>
 
                         <th:block th:if="${status == 'partnerView'}">
                             <!-- <td class="aligncentre">Under review</td> -->
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
                         </th:block>
 
                     </tr>
-                    <tr>
-                        <th scope="col">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">
                             University of Cardiff<br />
                             <small>Partner</small>
                         </th>
                         <!-- <td class="aligncentre"><img src="../images/field/tick-icon.png" width="20" height="17" alt="complete"/></td> -->
-                        <td class="numeric"><strong>&pound;30,000</strong></td>
-                        <td class="numeric">100%</td>
-                        <td class="numeric">&pound;30,000</td>
-                        <td class="numeric">N/A</td>
-                        <td class="numeric">N/A</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;30,000</strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">100%</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&pound;30,000</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">N/A</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">N/A</td>
                     </tr>
                 </tbody>
             </table>
@@ -379,9 +379,9 @@
 
     <div class="govuk-form-group">
         <div style="overflow: auto;">
-            <table>
-                <thead>
-                    <tr>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
                         <th scope="col" class="width-large">Partner</th>
                         <!-- <th scope="col" class="aligncentre width-small">Progress</th> -->
                         <th scope="col" class="numeric width-small">Total</th>
@@ -401,22 +401,22 @@
                     </tr>
                 </thead>
                 <tfoot>
-                    <tr>
-                        <th>Total</th>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Total</th>
                         <!-- <td class="aligncentre">&nbsp;</td> -->
-                        <td class="numeric"><strong>£450,983</strong></td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
-                        <td class="numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>£450,983</strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&nbsp;</td>
                     </tr>
                 </tfoot>
-                <tbody>
-                    <tr>
-                        <th scope="col">
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">
                             Aptrans Ltd<br />
                             <small class="width-large">Lead partner<br />
                               <th:block th:if="${user == 'admin' or action == 'feedback'}">
@@ -426,30 +426,30 @@
                         </th>
                         <th:block th:if="${status == null}">
                             <!-- <td class="aligncentre">&nbsp;</td> -->
-                            <td class="numeric"><strong>£257,033</strong></td>
-                            <td class="numeric">£126,207</td>
-                            <td class="numeric">£86,167</td>
-                            <td class="numeric">£44,659</td>
-                            <td class="numeric">£257,033</td>
-                            <td class="numeric">£126,207</td>
-                            <td class="numeric">£86,167</td>
-                            <td class="numeric">£44,659</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><strong>£257,033</strong></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£126,207</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£86,167</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£44,659</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£257,033</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£126,207</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£86,167</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£44,659</td>
                         </th:block>
 
                         <th:block th:if="${status == 'partnerView'}">
                             <!-- <td class="aligncentre">-</td> -->
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
                         </th:block>
 
                     </tr>
-                    <tr>
+                    <tr class="govuk-table__row">
                         <th scope="row">
                             Biotech corp<br />
                             <small>Partner<br />
@@ -461,30 +461,30 @@
 
                         <th:block th:if="${status == null}">
                             <!-- <td class="aligncentre">&nbsp;</td> -->
-                            <td class="numeric"><strong>£0</strong></td>
-                            <td class="numeric">£0</td>
-                            <td class="numeric">£0</td>
-                            <td class="numeric">£0</td>
-                            <td class="numeric">£0</td>
-                            <td class="numeric">£0</td>
-                            <td class="numeric">£0</td>
-                            <td class="numeric">£0</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"><strong>£0</strong></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£0</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£0</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£0</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£0</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£0</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£0</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">£0</td>
                         </th:block>
 
                         <th:block th:if="${status == 'partnerView'}">
                             <!-- <td class="aligncentre">Under review</td> -->
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
-                            <td class="numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">-</td>
                         </th:block>
 
                     </tr>
-                    <tr>
+                    <tr class="govuk-table__row">
                         <th scope="row">
                             University of Cardiff<br />
                             <small>Partner<br />
@@ -494,14 +494,14 @@
                             </small>
                         </th>
                         <!-- <td class="aligncentre"><img src="../images/field/tick-icon.png" width="20" height="17" alt="complete"/></td> -->
-                        <td class="numeric"><strong>£38,950</strong></td>
-                        <td class="numeric">£8,600</td>
-                        <td class="numeric">£19,350</td>
-                        <td class="numeric">£11,000</td>
-                        <td class="numeric">£38,950</td>
-                        <td class="numeric">£8,600</td>
-                        <td class="numeric">£19,350</td>
-                        <td class="numeric">£11,000</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"><strong>£38,950</strong></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">£8,600</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">£19,350</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">£11,000</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">£38,950</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">£8,600</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">£19,350</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">£11,000</td>
                     </tr>
                 </tbody>
             </table>
@@ -1347,28 +1347,28 @@
 </p>
 
     <table class="govuk-!-margin-bottom-6" style="width: 50%;">
-        <thead>
-            <tr>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
                 <th scope="col" style="width: 50%">Financial year <br /> (April to March)</th>
                 <th scope="col" style="width: 50%">Project spend</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td>2016 to 2017</td>
-                <td>&pound;260,000</td>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">2016 to 2017</td>
+                <td class="govuk-table__cell">&pound;260,000</td>
             </tr>
-            <tr>
-                <td>2017 to 2018</td>
-                <td>&pound;312,000</td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">2017 to 2018</td>
+                <td class="govuk-table__cell">&pound;312,000</td>
             </tr>
-            <tr>
-                <td>2018 to 2019</td>
-                <td>&pound;312,000</td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">2018 to 2019</td>
+                <td class="govuk-table__cell">&pound;312,000</td>
             </tr>
-            <tr>
-                <td>2019 to 2020</td>
-                <td>&pound;52,000</td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">2019 to 2020</td>
+                <td class="govuk-table__cell">&pound;52,000</td>
             </tr>
         </tbody>
     </table>

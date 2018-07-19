@@ -32,28 +32,28 @@
 
         <h2 class="govuk-heading-m">Finances overview</h2>
         <div class="table-overflow">
-            <table class="table-overview">
-                <thead>
-                <tr>
-                    <th scope="col">Project duration</th>
-                    <th scope="col" class="numeric">Total costs</th>
-                    <th scope="col" class="numeric">&percnt; Grant</th>
-                    <th scope="col" class="numeric">Funding sought (&pound;)</th>
+            <table class="govuk-table table-overview">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Project duration</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">&percnt; Grant</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought (&pound;)</th>
                     <th:block th:unless="${summaryModel.usingJesFinances}">
-                        <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
-                        <th scope="col" class="numeric">Contribution to project (&pound;)</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project (&pound;)</th>
                     </th:block>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td th:text="${summaryModel.eligibilityOverview.durationInMonths+' months'}">15 months</td>
-                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.totalCost,1,'DEFAULT')}">200,123</th:block></td>
-                    <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.percentageGrant,1,'NONE')+'%'}">20%</td>
-                    <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.fundingSought,1,'DEFAULT')}">60,271</td>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" th:text="${summaryModel.eligibilityOverview.durationInMonths+' months'}">15 months</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.totalCost,1,'DEFAULT')}">200,123</th:block></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.percentageGrant,1,'NONE')+'%'}">20&percnt;</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.fundingSought,1,'DEFAULT')}">60,271</td>
                     <th:block th:unless="${summaryModel.usingJesFinances}">
-                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
-                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.contributionToProject,1,'DEFAULT')}">138,164</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.contributionToProject,1,'DEFAULT')}">138,164</td>
                     </th:block>
                 </tr>
                 </tbody>

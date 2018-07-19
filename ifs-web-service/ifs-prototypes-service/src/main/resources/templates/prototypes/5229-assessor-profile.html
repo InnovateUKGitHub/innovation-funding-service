@@ -69,17 +69,17 @@
 	<div id="prototype-innovation-areas-edit" class="edit-panel extra-margin">
 		<h3 class="govuk-heading-s govuk-!-margin-0">Edit innovation area(s)</h3>
 		<form action="#" method="GET">
-			<table>
-				<thead>
-					<tr>
+			<table class="govuk-table">
+				<thead class="govuk-table__head">
+					<tr class="govuk-table__row">
 						<th scope="col" id="innovation-sector">Innovation sector</th>
 						<th scope="col" id="innovation-area">Innovation area</th>
-						<th scope="col"><span class="govuk-visually-hidden">Remove</span></th>
+						<th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Remove</span></th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr>
-						<td>
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">
 							<div class="govuk-form-group">
 								<select class="govuk-select" id="innovationSector" name="innovationSector" aria-labelledby="innovation-sector">
 									<option selected="selected">Please select an innovation sector</option>
@@ -90,7 +90,7 @@
 								</select>
 							</div>
 						</td>
-						<td>
+						<td class="govuk-table__cell">
 							<div class="govuk-form-group">
 								<select class="govuk-select" id="innovationArea" name="innovationArea" aria-labelledby="innovation-area">
 									<option selected="selected">Please select an innovation area</option>
@@ -103,22 +103,22 @@
 								</select>
 							</div>
 						</td>
-						<td class="alignright"><button class="button-secondary govuk-!-margin-0" id="prototype-add-row">Add</button></td>
+						<td class="govuk-table__cell alignright"><button class="button-secondary govuk-!-margin-0" id="prototype-add-row">Add</button></td>
 					</tr>
-					<tr>
-						<td>Materials and manufacturing</td>
-						<td>Digital sciences</td>
-						<td class="alignright"><a href="#" class="button-secondary prototype-remove-row">Remove</a></td>
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">Materials and manufacturing</td>
+						<td class="govuk-table__cell">Digital sciences</td>
+						<td class="govuk-table__cell alignright"><a href="#" class="button-secondary prototype-remove-row">Remove</a></td>
 					</tr>
-					<tr>
-						<td>Health and life sciences</td>
-						<td>Information &amp; communications technology (ICT)</td>
-						<td class="alignright"><a href="#" class="button-secondary prototype-remove-row">Remove</a></td>
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">Health and life sciences</td>
+						<td class="govuk-table__cell">Information &amp; communications technology (ICT)</td>
+						<td class="govuk-table__cell alignright"><a href="#" class="button-secondary prototype-remove-row">Remove</a></td>
 					</tr>
 					<tr id="prototype-extra-row">
-						<td>Materials and manufacturing</td>
-						<td>Earth observation</td>
-						<td class="alignright"><a href="#" class="button-secondary prototype-remove-row">Remove</a></td>
+						<td class="govuk-table__cell">Materials and manufacturing</td>
+						<td class="govuk-table__cell">Earth observation</td>
+						<td class="govuk-table__cell alignright"><a href="#" class="button-secondary prototype-remove-row">Remove</a></td>
 					</tr>
 				</tbody>
 			</table>
@@ -217,33 +217,33 @@
 
 	<h2 class="govuk-heading-m">Assessment history</h2>
 
-	<table>
-		<thead>
-			<tr>
-				<th scope="col">Competition title</th>
-				<th scope="col">No. assessed</th>
-				<th scope="col">Innovation area</th>
-				<th scope="col">Assessment complete</th>
+	<table class="govuk-table">
+		<thead class="govuk-table__head">
+			<tr class="govuk-table__row">
+				<th class="govuk-table__header" scope="col">Competition title</th>
+				<th class="govuk-table__header" scope="col">No. assessed</th>
+				<th class="govuk-table__header" scope="col">Innovation area</th>
+				<th class="govuk-table__header" scope="col">Assessment complete</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr>
-				<td>Technology inspired</td>
-				<td>4</td>
-				<td>Digital services</td>
-				<td>23 January 2016</td>
+		<tbody class="govuk-table__body">
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">Technology inspired</td>
+				<td class="govuk-table__cell">4</td>
+				<td class="govuk-table__cell">Digital services</td>
+				<td class="govuk-table__cell">23 January 2016</td>
 			</tr>
-			<tr>
-				<td>Future robotics</td>
-				<td>6</td>
-				<td>Digital services</td>
-				<td>3 December 2015</td>
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">Future robotics</td>
+				<td class="govuk-table__cell">6</td>
+				<td class="govuk-table__cell">Digital services</td>
+				<td class="govuk-table__cell">3 December 2015</td>
 			</tr>
-			<tr>
-				<td>Digital services</td>
-				<td>10</td>
-				<td>Digital services</td>
-				<td>4 November 2014</td>
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">Digital services</td>
+				<td class="govuk-table__cell">10</td>
+				<td class="govuk-table__cell">Digital services</td>
+				<td class="govuk-table__cell">4 November 2014</td>
 			</tr>
 		</tbody>
 	</table>

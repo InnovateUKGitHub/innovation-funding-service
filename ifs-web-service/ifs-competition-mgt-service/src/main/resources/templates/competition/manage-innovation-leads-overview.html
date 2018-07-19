@@ -48,39 +48,39 @@
                         </li>
                     </ul>
 
-                        <!-- list -->
-                        <div class="govuk-grid-column-one-quarter sorting">
-                            <div class="govuk-grid-column-one-half">
-                                <p class="govuk-body">
-                                    <span class="govuk-heading-xl total-count" th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}"></span>
-                                    <span class="govuk-heading-s">Innovation leads</span>
-                                </p>
-                            </div>
+                    <!-- list -->
+                    <div class="govuk-grid-column-one-quarter sorting">
+                        <div class="govuk-grid-column-one-half">
+                            <p class="govuk-body">
+                                <span class="govuk-heading-xl total-count" th:text="${#lists.size(model.innovationLeadsAssignedToCompetition)}"></span>
+                                <span class="govuk-heading-s">Innovation leads</span>
+                            </p>
                         </div>
+                    </div>
 
-                        <div class="table-overflow">
-                            <table class="stakeholder-table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Innovation lead name</th>
-                                    <th scope="col" class="alignright"><span class="govuk-visually-hidden">Action</span></th>
+                    <div class="table-overflow">
+                        <table class="govuk-table stakeholder-table">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Innovation lead name</th>
+                                <th scope="col" class="govuk-table__header alignright"><span class="govuk-visually-hidden">Action</span></th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                                <tr class="govuk-table__row" th:each="innovationLeadUsers : ${model.innovationLeadsAssignedToCompetition}">
+                                    <td class="govuk-table__cell" th:text="${innovationLeadUsers.name}">Alexis Kinney</td>
+                                    <td class="govuk-table__cell alignright">
+                                        <form method="post" th:action="@{/competition/setup/{competitionId}/remove-innovation-lead/{userId}(competitionId=${model.competitionId},userId=${innovationLeadUsers.id})}">
+                                            <button class="button-secondary govuk-!-margin-0">Remove <span class="govuk-visually-hidden"><th:block th:text="${innovationLeadUsers.name}" /> as Innovation Lead</span></button>
+                                        </form>
+                                    </td>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="innovationLeadUsers : ${model.innovationLeadsAssignedToCompetition}">
-                                        <td th:text="${innovationLeadUsers.name}">Alexis Kinney</td>
-                                        <td class="alignright">
-                                            <form method="post" th:action="@{/competition/setup/{competitionId}/remove-innovation-lead/{userId}(competitionId=${model.competitionId},userId=${innovationLeadUsers.id})}">
-                                                <button class="button-secondary govuk-!-margin-0">Remove <span class="govuk-visually-hidden"><th:block th:text="${innovationLeadUsers.name}" /> as Innovation Lead</span></button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    <tr th:if="${#lists.size(model.innovationLeadsAssignedToCompetition) == 0} ">
-                                        <td colspan="3">There are no innovation leads added to this competition.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                <tr class="govuk-table__row" th:if="${#lists.size(model.innovationLeadsAssignedToCompetition) == 0} ">
+                                    <td class="govuk-table__cell" colspan="3">There are no innovation leads added to this competition.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />

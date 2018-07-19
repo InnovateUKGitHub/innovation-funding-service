@@ -44,48 +44,48 @@
 
 	<p class="govuk-body" th:unless="${param.user == null}">The lead must provide these details on behalf of the overall project.</p>
 
-	<table>
-		<thead>
-			<tr>
+	<table class="govuk-table">
+		<thead class="govuk-table__head">
+			<tr class="govuk-table__row">
 				<th scope="col" style="width: 45%">Question</th>
 				<th scope="col" style="width: 45%">Answer</th>
 				<th scope="col" style="width: 10%">Submitted</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr>
-				<td>
+		<tbody class="govuk-table__body">
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">
 					<a href="/prototypes/IFS-1984-start-date" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Target start date</a>
 					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Target start date</span>
 				</td>
 				<td id="start-date">
 					-
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					<span id="start-date-status" class="no">No</span>
 				</td>
 			</tr>
-			<tr>
-				<td>
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">
 					<a href="/prototypes/IFS-1984-project-address" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Project address</a>
 					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Project address</span>
 				</td>
 				<td id="project-address">
 					-
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					<span id="project-address-status" class="no">No</span>
 				</td>
 			</tr>
-			<tr>
-				<td>
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">
 					<a href="/prototypes/IFS-1984-project-manager" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Project manager</a>
 					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Project manager</span>
 				</td>
 				<td id="project-manager">
 					-
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					<span id="project-manager-status" class="no">No</span>
 				</td>
 			</tr>
@@ -97,9 +97,9 @@
 
 	<p class="govuk-body">Each partner must provide a finance contact. We will contact them with any queries around partner finances.</p>
 
-	<table>
-		<thead>
-			<tr>
+	<table class="govuk-table">
+		<thead class="govuk-table__head">
+			<tr class="govuk-table__row">
 				<th scope="col" style="width: 45%">Partner</th>
 				<th scope="col" style="width: 45%">Finance contact</th>
 				<!-- <th scope="col" style="width: 15%">Turnover</th>
@@ -107,40 +107,40 @@
 				<th scope="col" style="width: 10%">Submitted</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr>
-				<td>
+		<tbody class="govuk-table__body">
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">
 					<a href="/prototypes/IFS-1984-project-finance-contact" th:unless="${param.user != null and param.user[0] == 'nonLead'}" >Aptrans Ltd</a>
 					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Aptrans Ltd</span>
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					<span id="finance-contact">John Smith</span>
 				</td>
-				<!-- <td>
+				<!-- <td class="govuk-table__cell">
 					<span id="finance-turnover">-</span>
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					<span id="finance-headcount">-</span>
 				</td> -->
-				<td>
+				<td class="govuk-table__cell">
 					<span id="finance-contact-status" class="yes">Yes</span>
 				</td>
 			</tr>
-			<tr>
-				<td>
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">
 					<span th:unless="${param.user != null and param.user[0] == 'nonLead'}">Biotech Corp</span>
 					<a href="/prototypes/IFS-1984-project-finance-contact?user=nonLead" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Biotech Corp</a>
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					<span id="finance-partner-contact">-</span>
 				</td>
-				<!-- <td>
+				<!-- <td class="govuk-table__cell">
 					<span id="finance-partner-turnover">-</span>
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					<span id="finance-partner-headcount">-</span>
 				</td> -->
-				<td>
+				<td class="govuk-table__cell">
 					<span id="finance-partner-contact-status" class="no">No</span>
 				</td>
 			</tr>

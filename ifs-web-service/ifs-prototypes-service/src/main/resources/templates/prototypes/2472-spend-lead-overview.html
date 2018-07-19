@@ -40,15 +40,15 @@
 
 
 	<div class="table-overflow">
-		<table>
-			<thead>
-				<tr>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
 					<th scope="col" style="width: 50%">Partner</th>
 					<th scope="col" style="width: 50%">Progress</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
 					<td th:unless="${param.status != null and param.status[0] == 'MarkedComplete'}">
 						<a th:href="${param.status != null and param.status[0] == 'Submitted' ? '/prototypes/3100-spend?status=Submitted':'/prototypes/3100-spend'}">Aptrans Ltd (Lead)</a>
 					</td>
@@ -59,21 +59,21 @@
 						In progress
 					</td>
 					<div th:if="${param.status != null and param.status[0] == 'Submitted' or param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
-						<td>
+						<td class="govuk-table__cell">
 							<span class="yes">Complete</span>
 						</td>
 					</div>
 				</tr>
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						<a href="/prototypes/3100-spend?status=Submitted&#38;user=nonLead&#38;task=reviewPartner">Biotech Corp</a>
 					</td>
-					<td>
+					<td class="govuk-table__cell">
 						<span class="yes">Complete</span>
 					</td>
 				</tr>
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						University of Cardiff
 					</td>
 					<td th:unless="${param.status != null and param.status[0] == 'Submitted'}">

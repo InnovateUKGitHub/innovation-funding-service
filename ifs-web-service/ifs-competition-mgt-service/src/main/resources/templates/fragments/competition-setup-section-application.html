@@ -55,7 +55,7 @@
                         </h4>
                     </div>
                     <div class="task-status">
-                        <th>
+                        <th class="govuk-table__header width-80" scope="col">
                             <button type="submit" th:value="${question.id}" name="deleteQuestion" class="button-clear govuk-!-margin-0">Remove</button>
                         </th>
                     </div>
@@ -87,7 +87,7 @@
                         </h4>
                     </div>
                     <div th:if="${model.multipleAssessedQuestionsLeft()}" class="task-status">
-                        <th>
+                        <th class="govuk-table__header width-80" scope="col">
                             <button type="submit" th:value="${question.id}" name="deleteQuestion" class="button-clear govuk-!-margin-0">Remove</button>
                         </th>
                     </div>

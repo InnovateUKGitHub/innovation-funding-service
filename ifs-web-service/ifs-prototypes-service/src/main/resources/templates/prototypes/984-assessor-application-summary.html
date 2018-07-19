@@ -18,30 +18,30 @@
 
         <h2 class="govuk-heading-m">Overall scores</h2>
         <div class="table-overflow">
-            <table>
-                <tbody>
-                    <tr>
-                        <th>Question</th>
-                        <td><a href="/prototypes/984-assessor-question1">Q1</a></td>
-                        <td><a href="/prototypes/984-assessor-question2">Q2</a></td>
-                        <td><a href="/prototypes/984-assessor-question3">Q3</a></td>
-                        <td><a href="/prototypes/984-assessor-question4">Q4</a></td>
-                        <td><a href="/prototypes/984-assessor-question5">Q5</a></td>
-                        <td><a href="/prototypes/984-assessor-question6">Q6</a></td>
-                        <td><a href="/prototypes/984-assessor-question7">Q7</a></td>
-                        <td><a href="/prototypes/984-assessor-question8">Q8</a></td>
-                        <td><a href="/prototypes/984-assessor-question9">Q9</a></td>
-                        <td><a href="/prototypes/984-assessor-question10">Q10</a></td>
+            <table class="govuk-table">
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Question</th>
+                        <td class="govuk-table__cell"><a href="/prototypes/984-assessor-question1">Q1</a></td>
+                        <td class="govuk-table__cell"><a href="/prototypes/984-assessor-question2">Q2</a></td>
+                        <td class="govuk-table__cell"><a href="/prototypes/984-assessor-question3">Q3</a></td>
+                        <td class="govuk-table__cell"><a href="/prototypes/984-assessor-question4">Q4</a></td>
+                        <td class="govuk-table__cell"><a href="/prototypes/984-assessor-question5">Q5</a></td>
+                        <td class="govuk-table__cell"><a href="/prototypes/984-assessor-question6">Q6</a></td>
+                        <td class="govuk-table__cell"><a href="/prototypes/984-assessor-question7">Q7</a></td>
+                        <td class="govuk-table__cell"><a href="/prototypes/984-assessor-question8">Q8</a></td>
+                        <td class="govuk-table__cell"><a href="/prototypes/984-assessor-question9">Q9</a></td>
+                        <td class="govuk-table__cell"><a href="/prototypes/984-assessor-question10">Q10</a></td>
                     </tr>
-                    <tr>
-                        <th>Score</th>
-                        <td>3</td>
-                        <td>7</td>
-                        <td>3</td>
-                        <td>3</td>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Score</th>
+                        <td class="govuk-table__cell">3</td>
+                        <td class="govuk-table__cell">7</td>
+                        <td class="govuk-table__cell">3</td>
+                        <td class="govuk-table__cell">3</td>
                         <td th:text="${param.status != null and param.status[0] == 'complete' ? '6' : ''}"></td>
                         <td th:text="${param.status != null and param.status[0] == 'complete' ? '6' : ''}"></td>
-                        <td>5</td>
+                        <td class="govuk-table__cell">5</td>
                         <td th:text="${param.status != null and param.status[0] == 'complete' ? '6' : ''}"></td>
                         <td th:text="${param.status != null and param.status[0] == 'complete' ? '6' : ''}"></td>
                         <td th:text="${param.status != null and param.status[0] == 'complete' ? '6' : ''}"></td>

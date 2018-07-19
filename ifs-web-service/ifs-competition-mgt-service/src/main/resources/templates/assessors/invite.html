@@ -116,19 +116,19 @@
                                 </select>
                             </div>
                             <div class="govuk-form-group">
-                                <table id="invite-table">
-                                    <thead>
-                                    <tr>
-                                        <th id="invite-label-assessor-name" scope="col">Name</th>
-                                        <th id="invite-label-assessor-email" scope="col">Email</th>
-                                        <th scope="col"><span class="govuk-visually-hidden">Actions</span></th>
+                                <table class="govuk-table" id="invite-table">
+                                    <thead class="govuk-table__head">
+                                    <tr class="govuk-table__row">
+                                        <th id="invite-label-assessor-name" class="govuk-table__header" scope="col">Name</th>
+                                        <th id="invite-label-assessor-email" class="govuk-table__header" scope="col">Email</th>
+                                        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    <tr th:each="row, iterStat : *{invites}"
-                                        class="form-group-row-validated"
+                                    <tbody class="govuk-table__body">
+                                    <tr class="govuk-table__row" th:each="row, iterStat : *{invites}"
+                                        class="govuk-table__row form-group-row-validated"
                                         th:classappend="((${#fields.hasErrors('invites[__${iterStat.index}__].name')}) or (${#fields.hasErrors('invites[__${iterStat.index}__].email')})) ? 'govuk-form-group--error'">
-                                        <td class="width-40-percent govuk-form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? 'govuk-form-group--error'">
+                                        <td class="govuk-table__cell width-40-percent govuk-form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? 'govuk-form-group--error'">
                                             <label>
                                                  <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].name')}">
                                                      <span class="govuk-error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].name')}" th:text="${err}"></span>
@@ -151,7 +151,7 @@
                                                    th:field="*{invites[__${iterStat.index}__].name}"
                                             />
                                         </td>
-                                        <td class="width-40-percent govuk-form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].email')} ? 'govuk-form-group--error'">
+                                        <td class="govuk-table__cell width-40-percent govuk-form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].email')} ? 'govuk-form-group--error'">
                                             <label>
                                                  <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].email')}">
                                                      <span class="govuk-error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].email')}" th:text="${err}"></span>
@@ -170,7 +170,7 @@
                                                    th:field="*{invites[__${iterStat.index}__].email}"
                                             />
                                         </td>
-                                        <td class="alignright width-20-percent">
+                                        <td class="govuk-table__cell alignright width-20-percent">
                                             <button class="button-clear remove-another-row"
                                                     name="removeNewUser"
                                                     th:value="${iterStat.index}"
@@ -207,14 +207,14 @@
                     </div>
 
                     <div class="table-overflow">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th scope="col">Assessor name</th>
-                                <th scope="col">Email address</th>
-                                <th scope="col">Innovation area</th>
-                                <th scope="col">Contract and DOI</th>
-                                <td scope="col" class="alignright">
+                        <table class="govuk-table">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Assessor name</th>
+                                <th class="govuk-table__header" scope="col">Email address</th>
+                                <th class="govuk-table__header" scope="col">Innovation area</th>
+                                <th class="govuk-table__header" scope="col">Contract and DOI</th>
+                                <td scope="col" class="govuk-table__header alignright">
                                     <button name="removeAll" class="button-clear alignright"
                                             th:if="${!#lists.isEmpty(model.assessors)}">
                                         Remove all
@@ -222,9 +222,9 @@
                                 </td>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr th:each="assessor : ${model.assessors}">
-                                <td>
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="assessor : ${model.assessors}">
+                                <td class="govuk-table__cell">
                                     <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}"
                                        th:if="${assessor.id}"
                                        th:text="${assessor.name}"
@@ -232,20 +232,20 @@
                                     </a>
                                     <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
                                 </td>
-                                <td th:text="${assessor.email}">dave@email.com</td>
-                                <td th:text="${assessor.innovationAreas}">Earth Observation</td>
-                                <td>
+                                <td class="govuk-table__cell" th:text="${assessor.email}">dave@email.com</td>
+                                <td class="govuk-table__cell" th:text="${assessor.innovationAreas}">Earth Observation</td>
+                                <td class="govuk-table__cell">
                                     <span class="yes" th:if="${assessor.compliant}">Yes</span>
                                     <span class="no" th:unless="${assessor.compliant}">No</span>
                                 </td>
-                                <td class="alignright">
+                                <td class="govuk-table__cell alignright">
                                     <button class="button-clear alignright" name="remove" th:value="${assessor.email}">
                                         <span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove
                                     </button>
                                 </td>
                             </tr>
-                            <tr th:if="${#lists.isEmpty(model.assessors)}">
-                                <td colspan="5">There are no assessors to be invited to this competition.</td>
+                            <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.assessors)}">
+                                <td class="govuk-table__cell" colspan="5">There are no assessors to be invited to this competition.</td>
                             </tr>
                             </tbody>
                         </table>

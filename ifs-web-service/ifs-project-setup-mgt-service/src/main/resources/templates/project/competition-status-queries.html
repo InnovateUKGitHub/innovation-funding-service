@@ -18,19 +18,19 @@
 
         <th:block th:if="${model.openQueries.size() > 0}">
             <div>
-                <table id="table-project-organisation-query-status" class="table-overview govuk-!-margin-bottom-6">
-                    <thead>
-                        <tr>
-                            <th scope="col">Application number</th>
-                            <th scope="col">Project title</th>
-                            <th scope="col">Response</th>
+                <table id="table-project-organisation-query-status" class="govuk-table table-overview govuk-!-margin-bottom-6">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Application number</th>
+                            <th class="govuk-table__header" scope="col">Project title</th>
+                            <th class="govuk-table__header" scope="col">Response</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr th:each="query : ${model.openQueries}">
-                            <td th:text="${query.applicationId}" />
-                            <td th:text="${query.projectName}"/>
-                            <td><a th:text="${query.organisationName}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${query.projectId},organisationId=${query.organisationId})}" class="govuk-link" /></td>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="query : ${model.openQueries}">
+                            <td class="govuk-table__cell" th:text="${query.applicationId}" />
+                            <td class="govuk-table__cell" th:text="${query.projectName}"/>
+                            <td class="govuk-table__cell"><a th:text="${query.organisationName}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${query.projectId},organisationId=${query.organisationId})}" class="govuk-link" /></td>
                         </tr>
                     </tbody>
                 </table>

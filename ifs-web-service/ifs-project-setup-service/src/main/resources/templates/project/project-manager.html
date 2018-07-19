@@ -80,20 +80,20 @@
                                 </div>
                             </div>
 
-                            <table id="project-manager-table">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th scope="col" id="project-manager-name">Name</th>
-                                        <th scope="col" colspan="2" id="project-manager-email">E-mail</th>
+                            <table class="govuk-table" id="project-manager-table">
+                                <thead class="govuk-table__head">
+                                    <tr class="govuk-table__row">
+                                        <th class="govuk-table__header width-80" scope="col"></th>
+                                        <th class="govuk-table__header" scope="col" id="project-manager-name">Name</th>
+                                        <th class="govuk-table__header" scope="col" colspan="2" id="project-manager-email">E-mail</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">
+                                <tbody class="govuk-table__body">
+                                    <tr class="govuk-table__row">
+                                        <th class="govuk-table__header" scope="row">
                                             <span class="govuk-visually-hidden">invitee</span>
                                         </th>
-                                        <td>
+                                        <td class="govuk-table__cell">
                                             <label for="name-project-manager">
                                               <span class="govuk-visually-hidden">name</span>
                                             </label>
@@ -106,7 +106,7 @@
                                                    required="required"
                                                    th:attr="data-required-errormessage=#{validation.project.invite.name.required}"/>
                                         </td>
-                                        <td>
+                                        <td class="govuk-table__cell">
                                             <label for="email-project-manager" class="govuk-visually-hidden">email</label>
                                             <input type="email"
                                                    class="govuk-input"
@@ -117,7 +117,7 @@
                                                    required="required"
                                                    th:attr="data-required-errormessage=#{validation.project.invite.email.required}"/>
                                         </td>
-                                        <td class="alignright">
+                                        <td class="govuk-table__cell alignright">
                                             <button class="button-clear govuk-!-margin-bottom-0" id="invite-project-manager" name="invite-pm">Invite to project</button>
                                         </td>
                                     </tr>

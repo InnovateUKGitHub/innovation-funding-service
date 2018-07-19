@@ -816,26 +816,26 @@
         <fieldset id="section-2-done" class="govuk-fieldset">
 
             <table class="section-2-done">
-                <thead>
-                    <tr>
-                        <th scope="col">Funder</th>
-                        <th scope="col" class="numeric">Budget</th>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Funder</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Budget</th>
                     </tr>
                 </thead>
                 <tfoot>
-                    <tr>
+                    <tr class="govuk-table__row">
                         <th scope="row">Total</th>
-                        <td class="numeric">&pound;1,300,000</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&pound;1,300,000</td>
                     </tr>
                 </tfoot>
-                <tbody>
-                    <tr>
-                        <td>Innovate UK</td>
-                        <td class="numeric">&pound;500,000</td>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">Innovate UK</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&pound;500,000</td>
                     </tr>
-                    <tr>
-                        <td>ATI</td>
-                        <td class="numeric">&pound;800,000</td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">ATI</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">&pound;800,000</td>
                     </tr>
                 </tbody>
             </table>
@@ -1120,9 +1120,9 @@
 
         <fieldset id="section-4-edit" class="govuk-fieldset">
 
-            <table>
-                <thead>
-                    <tr>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
                         <th scope="col" class="width-40-percent" id="milestone">Milestone</th>
                         <th scope="col" class="width-8-percent" id="hour">Hour</th>
                         <th scope="col" class="width-8-percent" id="min">Minute</th>
@@ -1133,7 +1133,7 @@
                         <th scope="col" class="width-8-percent" id="year">Year</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="govuk-table__body">
                     <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Open date'}, time='-', rowNo=1, type=readOnly" />
                     <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, time='-', rowNo=2" />
                     <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, time='1', rowNo=3" />
@@ -1154,9 +1154,9 @@
 
         <fieldset id="section-4-done" class="govuk-fieldset">
 
-            <table>
-                <thead>
-                    <tr>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
                         <th scope="col" class="width-40-percent" id="milestone">Milestone</th>
                         <th scope="col" class="width-10-percent" id="time">Time</th>
                         <th scope="col" class="width-10-percent" id="weekday">Weekday</th>
@@ -1165,20 +1165,20 @@
                         <th scope="col" class="width-10-percent" id="year">Year</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr><td>1. Open date</td><td>-</td><td>Weds</td><td>01</td><td>01</td><td>2017</td></tr>
-                    <tr><td>2. Briefing event</td><td>-</td><td>Tue</td><td>15</td><td>01</td><td>2017</td></tr>
-                    <tr><td>3. Submission date</td><td>1:00pm</td><td>Tue</td><td>01</td><td>02</td><td>2017</td></tr>
-                    <tr><td>4. Allocate assessors</td><td>-</td><td>Tue</td><td>01</td><td>03</td><td>2017</td></tr>
-                    <tr><td>5. Assessor briefing</td><td>-</td><td>Tue</td><td>01</td><td>04</td><td>2017</td></tr>
-                    <tr><td>6. Assessor accepts</td><td>-</td><td>Tue</td><td>01</td><td>05</td><td>2017</td></tr>
-                    <tr><td>7. Assessor deadline</td><td>-</td><td>Tue</td><td>01</td><td>06</td><td>2017</td></tr>
-                    <tr><td>8. Line draw</td><td>-</td><td>Tue</td><td>01</td><td>07</td><td>2017</td></tr>
-                    <tr><td>9. Assessment panel</td><td>-</td><td>Tue</td><td>01</td><td>08</td><td>2017</td></tr>
-                    <tr><td>10. Panel date</td><td>-</td><td>Tue</td><td>01</td><td>09</td><td>2017</td></tr>
-                    <tr><td>11. Funders panel</td><td>-</td><td>Tue</td><td>01</td><td>10</td><td>2017</td></tr>
-                    <tr><td>12. Notifications</td><td>-</td><td>Tue</td><td>01</td><td>11</td><td>2017</td></tr>
-                    <tr><td>13. Release feedback</td><td>-</td><td>Tue</td><td>01</td><td>12</td><td>2017</td></tr>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">1. Open date</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Weds</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">2. Briefing event</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">15</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">3. Submission date</td><td class="govuk-table__cell">1:00pm</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">02</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">4. Allocate assessors</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">03</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">5. Assessor briefing</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">04</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">6. Assessor accepts</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">05</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">7. Assessor deadline</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">06</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">8. Line draw</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">07</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">9. Assessment panel</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">08</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">10. Panel date</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">09</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">11. Funders panel</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">10</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">12. Notifications</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">11</td><td class="govuk-table__cell">2017</td></tr>
+                    <tr class="govuk-table__row"><td class="govuk-table__cell">13. Release feedback</td><td class="govuk-table__cell">-</td><td class="govuk-table__cell">Tue</td><td class="govuk-table__cell">01</td><td class="govuk-table__cell">12</td><td class="govuk-table__cell">2017</td></tr>
                 </tbody>
             </table>
 
@@ -1212,7 +1212,7 @@
 
 <div th:fragment="prototype-section-milestones-row">
 
-    <tr>
+    <tr class="govuk-table__row">
         <th scope="row" th:text="${rowNo + '. ' + milestoneTitle}" th:id="${'row-'+rowNo}">ROW TITLE</th>
 
         <th:block th:unless="${type=='readOnly'}">
@@ -1223,19 +1223,19 @@
             <td th:if="${time=='-'}">-</td>
             <td th:if="${time=='-'}">-</td>
             <td th:id="${'row-'+rowNo + '-weekday'}">-</td>
-            <td><input type="text" class="govuk-input width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
-            <td><input type="text" class="govuk-input width-small" placeholder="MM" th:id="${'row-'+rowNo + '-month'}"/></td>
-            <td><input type="text" class="govuk-input width-small" placeholder="YYYY" th:id="${'row-'+rowNo + '-year'}"/></td>
+            <td class="govuk-table__cell"><input type="text" class="govuk-input width-small" placeholder="DD" th:id="${'row-'+rowNo + '-day'}"/></td>
+            <td class="govuk-table__cell"><input type="text" class="govuk-input width-small" placeholder="MM" th:id="${'row-'+rowNo + '-month'}"/></td>
+            <td class="govuk-table__cell"><input type="text" class="govuk-input width-small" placeholder="YYYY" th:id="${'row-'+rowNo + '-year'}"/></td>
         </th:block>
 
         <th:block th:if="${type=='readOnly'}">
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>Weds</td>
-            <td>01</td>
-            <td>01</td>
-            <td>2017</td>
+            <td class="govuk-table__cell">-</td>
+            <td class="govuk-table__cell">-</td>
+            <td class="govuk-table__cell">-</td>
+            <td class="govuk-table__cell">Weds</td>
+            <td class="govuk-table__cell">01</td>
+            <td class="govuk-table__cell">01</td>
+            <td class="govuk-table__cell">2017</td>
         </th:block>
 
     </tr>
@@ -1586,20 +1586,20 @@
 
 <div th:fragment="prototype-section-guidance-row">
 
-    <tr>
-        <td>
+    <tr class="govuk-table__row">
+        <td class="govuk-table__cell">
             <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-score-from'}">Score from</label>
             <input class="govuk-input width-small" th:id="${'group' + rowNo + '-score-from'}" th:name="${'group' + rowNo + '-score-from'}" th:value="${scoreFrom}" type="number" />
         </td>
-        <td>
+        <td class="govuk-table__cell">
             <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-score-to'}">Score to</label>
             <input class="govuk-input width-small" th:id="${'group' + rowNo + '-score-to'}" th:name="${'group' + rowNo + '-score-to'}" th:value="${scoreTo}" type="number" />
         </td>
-        <td>
+        <td class="govuk-table__cell">
             <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
             <input class="govuk-input width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
         </td>
-        <td>
+        <td class="govuk-table__cell">
             <a href="#" title="Remove this group of scoring guidance">Remove</a>
         </td>
     </tr>
@@ -1610,16 +1610,16 @@
 
 <div th:fragment="prototype-section-assessment-guidance-row">
 
-    <tr>
-        <td>
+    <tr class="govuk-table__row">
+        <td class="govuk-table__cell">
             <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-score'}">Score</label>
             <input class="form-control width-small" th:id="${'group' + rowNo + '-score'}" th:name="${'group' + rowNo + '-score'}" th:value="${score}" type="text" />
         </td>
-        <td>
+        <td class="govuk-table__cell">
             <label class="govuk-visually-hidden" th:for="${'group' + rowNo + '-justification'}">Justification</label>
             <input class="form-control width-full" th:id="${'group' + rowNo + '-justification'}" th:name="${'group' + rowNo + '-justification'}" th:value="${justification}" type="text" />
         </td>
-        <td>
+        <td class="govuk-table__cell">
             <a href="#" title="Remove this group of scoring guidance">Remove</a>
         </td>
     </tr>

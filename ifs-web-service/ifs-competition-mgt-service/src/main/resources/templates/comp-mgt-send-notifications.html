@@ -61,21 +61,21 @@
                         <span class="govuk-details__summary-text">Review list of recipients</span>
                     </summary>
                     <div class="govuk-details__text table-overflow">
-                        <table id="application-list">
-                            <thead>
-                            <tr>
-                                <th scope="col">Application number</th>
-                                <th scope="col">Project title</th>
-                                <th scope="col">Lead</th>
-                                <th scope="col">Funding decision</th>
+                        <table class="govuk-table" id="application-list">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Application number</th>
+                                <th class="govuk-table__header" scope="col">Project title</th>
+                                <th class="govuk-table__header" scope="col">Lead</th>
+                                <th class="govuk-table__header" scope="col">Funding decision</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr th:each="applicationSummary, stat : ${model.applications}">
-                                <td th:text="${applicationSummary.id}">Application number</td>
-                                <td th:text="${applicationSummary.name}">Project title</td>
-                                <td th:text="${applicationSummary.lead}">Lead</td>
-                                <td th:text="${applicationSummary.fundingDecision?.name}">-</td>
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="applicationSummary, stat : ${model.applications}">
+                                <td class="govuk-table__cell" th:text="${applicationSummary.id}">Application number</td>
+                                <td class="govuk-table__cell" th:text="${applicationSummary.name}">Project title</td>
+                                <td class="govuk-table__cell" th:text="${applicationSummary.lead}">Lead</td>
+                                <td class="govuk-table__cell" th:text="${applicationSummary.fundingDecision?.name}">-</td>
                             </tr>
                             </tbody>
                         </table>

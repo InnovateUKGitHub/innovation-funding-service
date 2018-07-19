@@ -114,21 +114,21 @@
                     </div>
 
                     <div class="table-overflow">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th scope="col">Resend invites</th>
-                                <th scope="col">Assessor name</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Innovation area</th>
-                                <th scope="col">Contract and DOI</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Details</th>
+                        <table class="govuk-table">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Resend invites</th>
+                                <th class="govuk-table__header" scope="col">Assessor name</th>
+                                <th class="govuk-table__header" scope="col">Type</th>
+                                <th class="govuk-table__header" scope="col">Innovation area</th>
+                                <th class="govuk-table__header" scope="col">Contract and DOI</th>
+                                <th class="govuk-table__header" scope="col">Status</th>
+                                <th class="govuk-table__header" scope="col">Details</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr th:each="assessor, index : ${model.assessors}">
-                                <td>
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="assessor, index : ${model.assessors}">
+                                <td class="govuk-table__cell">
                                     <div class="govuk-checkboxes">
                                         <div class="govuk-checkboxes__item">
                                             <input type="checkbox"
@@ -144,7 +144,7 @@
                                     </div>
 
                                 </td>
-                                <td>
+                                <td class="govuk-table__cell">
                                     <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}" th:if="${assessor.id}"
                                        th:text="${assessor.name}">John Barnes
                                     </a>
@@ -152,7 +152,7 @@
                                 </td>
                                 <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
                                 <td th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
-                                <td>
+                                <td class="govuk-table__cell">
                                     <span class="yes" th:if="${assessor.compliant}">Yes</span>
                                     <span class="no" th:unless="${assessor.compliant}">No</span>
                                 </td>

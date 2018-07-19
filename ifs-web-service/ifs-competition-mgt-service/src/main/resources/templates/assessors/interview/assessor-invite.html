@@ -81,13 +81,13 @@
                     </div>
 
                     <div class="table-overflow">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th scope="col">Assessor name</th>
-                                <th scope="col">Email address</th>
-                                <th scope="col">Innovation area</th>
-                                <th scope="col">Contract and DOI</th>
+                        <table class="govuk-table">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="col">Assessor name</th>
+                                <th class="govuk-table__header" scope="col">Email address</th>
+                                <th class="govuk-table__header" scope="col">Innovation area</th>
+                                <th class="govuk-table__header" scope="col">Contract and DOI</th>
                                 <td scope="col" class="alignright">
                                     <button name="removeAll" class="button-clear alignright"
                                             th:if="${!#lists.isEmpty(model.assessors)}">
@@ -96,9 +96,9 @@
                                 </td>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr th:each="assessor : ${model.assessors}">
-                                <td>
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="assessor : ${model.assessors}">
+                                <td class="govuk-table__cell">
                                     <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
                                        th:if="${assessor.id}"
                                        th:text="${assessor.name}">John Barnes
@@ -107,11 +107,11 @@
                                 </td>
                                 <td th:text="${assessor.email}">dave@email.com</td>
                                 <td th:text="${assessor.innovationAreas}">Earth Observation</td>
-                                <td>
+                                <td class="govuk-table__cell">
                                     <span class="yes" th:if="${assessor.compliant}">Yes</span>
                                     <span class="no" th:unless="${assessor.compliant}">No</span>
                                 </td>
-                                <td class="alignright">
+                                <td class="govuk-table__cell alignright">
                                     <button class="button-clear alignright" name="remove" th:value="${assessor.email}">
                                         <span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove
                                     </button>

@@ -19,23 +19,23 @@
         <th:block th:fragment="summary" th:with="summaryModel=${model.financeCheckEligibility}">
             <h2 class="govuk-heading-m">Project finances</h2>
             <div class="table-overflow">
-                <table class="table-overview" id="project-finance-changes-total">
-                    <thead>
-                    <tr>
-                        <th scope="col">Total costs</th>
-                        <th scope="col" class="numeric">% Grant</th>
-                        <th scope="col" class="numeric">Funding sought (&pound;)</th>
-                        <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
-                        <th scope="col" class="numeric">Contribution to project (&pound;)</th>
+                <table class="govuk-table table-overview" id="project-finance-changes-total">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Total costs</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">&percnt; Grant</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding sought (&pound;)</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Contribution to project (&pound;)</th>
                     </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'DEFAULT')}"/></td>
-                            <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}">30%</td>
-                            <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'DEFAULT')}">57,803</td>
-                            <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
-                            <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'DEFAULT')}">140,632</td>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'DEFAULT')}"/></td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}">30&percnt;</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'DEFAULT')}">57,803</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'DEFAULT')}">140,632</td>
                         </tr>
                     </tbody>
                 </table>
@@ -45,20 +45,20 @@
         <th:block th:fragment="section_changes" th:with="sectionDiffs=${model.sectionDifferences}">
             <h2 class="govuk-heading-m">Section changes</h2>
             <div class="table-overflow">
-                <table class="table-overview" id="project-finance-changes-section">
-                    <thead>
-                    <tr>
+                <table class="govuk-table table-overview" id="project-finance-changes-section">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
                         <th:block th:each="rowType : ${sectionDiffs.keySet()}">
-                            <th th:unless="${#strings.isEmpty(rowType.name)}" scope="col" class="numeric">
+                            <th th:unless="${#strings.isEmpty(rowType.name)}" scope="col" class="govuk-table__header govuk-table__header--numeric">
                                 <th:block th:text="${rowType.name}" /> (&pound;)
                             </th>
                         </th:block>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
                         <th:block th:each="rowType : ${sectionDiffs.keySet()}">
-                            <td th:unless="${#strings.isEmpty(rowType.name)}" class="numeric">
+                            <td th:unless="${#strings.isEmpty(rowType.name)}" class="govuk-table__cell govuk-table__cell--numeric">
                                 <th:block th:text="${#numbers.formatInteger(sectionDiffs.get(rowType),1,'DEFAULT')}"/>
                             </td>
                         </th:block>
@@ -71,24 +71,24 @@
         <th:block th:fragment="row_changes">
             <h2 class="govuk-heading-m">Changes from submitted finances</h2>
             <div class="table-overflow">
-                <table class="project-changes" id="project-finance-changes-submitted">
-                    <thead>
-                    <tr>
-                        <th scope="col" style="width: 15%">Action</th>
-                        <th scope="col" style="width: 15%">Section</th>
-                        <th scope="col" style="width: 15%">Detail</th>
-                        <th scope="col" style="width: 20%">Submitted</th>
-                        <th scope="col" style="width: 20%">Updated</th>
-                        <th scope="col" style="width: 15%" class="numeric">Cost</th>
+                <table class="govuk-tableproject-changes" id="project-finance-changes-submitted">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col" style="width: 15%">Action</th>
+                        <th class="govuk-table__header" scope="col" style="width: 15%">Section</th>
+                        <th class="govuk-table__header" scope="col" style="width: 15%">Detail</th>
+                        <th class="govuk-table__header" scope="col" style="width: 20%">Submitted</th>
+                        <th class="govuk-table__header" scope="col" style="width: 20%">Updated</th>
+                        <th class="govuk-table__header" scope="col" style="width: 15%" class="numeric">Cost</th>
                     </tr>
                     </thead>
-                    <tfoot>
-                    <tr>
-                        <th>Overall</th>
-                        <th colspan="5" class="numeric" th:text="${#numbers.formatInteger(model.getDifferenceInTotalCostsAfterChanges(),1,'DEFAULT')}"></th>
+                    <tfoot class="govuk-table__foot">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Overall</th>
+                        <th colspan="5" class="govuk-table__header govuk-table__header--numeric" th:text="${#numbers.formatInteger(model.getDifferenceInTotalCostsAfterChanges(),1,'DEFAULT')}"></th>
                     </tr>
                     </tfoot>
-                    <tbody>
+                    <tbody class="govuk-table__body">
 
                     <th:block th:each="rowType : ${model.changes.keySet()}">
                         <th:block th:each="changePairLst : ${model.changes.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).getByTypeName(rowType.type).get())}">

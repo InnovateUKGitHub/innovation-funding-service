@@ -72,13 +72,13 @@
                     </div>
 
                     <div class="table-overflow">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th scope="col" class="width-80">Application number</th>
-                                <th scope="col">Project title</th>
-                                <th scope="col">Lead organisation</th>
-                                <td scope="col" class="alignright">
+                        <table class="govuk-table">
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header width-80">Application number</th>
+                                <th class="govuk-table__header" scope="col">Project title</th>
+                                <th class="govuk-table__header" scope="col">Lead organisation</th>
+                                <td scope="col" class="govuk-table__header alignright">
                                     <button name="removeAll" class="button-clear alignright"
                                             th:if="${!#lists.isEmpty(model.applications)}">
                                         Remove all
@@ -86,23 +86,23 @@
                                 </td>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr th:each="app : ${model.applications}">
-                                <td>
+                            <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row" th:each="app : ${model.applications}">
+                                <td class="govuk-table__cell">
                                     <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${originQuery}"
                                        th:text="${app.applicationId}">123
                                     </a>
                                 </td>
-                                <td th:text="${app.applicationName}">Application name</td>
-                                <td th:text="${app.leadOrganisation}">Lead organisation</td>
-                                <td class="alignright">
+                                <td class="govuk-table__cell" th:text="${app.applicationName}">Application name</td>
+                                <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Lead organisation</td>
+                                <td class="govuk-table__cell alignright">
                                     <button class="button-clear alignright" name="remove" th:value="${app.applicationId}">
                                         <span class="hidden" th:text="${app.applicationName}">John Barnes </span>Remove
                                     </button>
                                 </td>
                             </tr>
-                            <tr th:if="${#lists.isEmpty(model.applications)}">
-                                <td colspan="5">There are no applications to be invited to this panel.</td>
+                            <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.applications)}">
+                                <td class="govuk-table__cell" colspan="5">There are no applications to be invited to this panel.</td>
                             </tr>
                             </tbody>
                         </table>

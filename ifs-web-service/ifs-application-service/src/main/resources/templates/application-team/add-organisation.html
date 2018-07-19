@@ -47,17 +47,18 @@
                                th:attr="data-required-errormessage=#{validation.standard.organisationname.required}" />
                     </div>
 
-                    <table id="applicant-table" class="table-overflow">
-                        <thead>
-                            <tr>
-                                <th class="width-30-percent" scope="col">Applicant name</th>
-                                <th class="width-55-percent" scope="col">Email</th>
-                                <th class="width-15-percent alignright" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
+                    <table id="applicant-table" class="govuk-table table-overflow">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header width-30-percent" scope="col">Applicant name</th>
+                                <th class="govuk-table__header width-55-percent" scope="col">Email</th>
+                                <th class="govuk-table__header width-15-percent alignright" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr th:each="applicant, applicantStat : *{applicants}" class="repeatable-row">
-                                <td class="govuk-form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}? 'govuk-form-group--error'">
+                        <tbody class="govuk-table__body">
+                            <tr th:each="applicant, applicantStat : *{applicants}"
+                                class="govuk-table__row repeatable-row">
+                                <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}? 'govuk-form-group--error'">
                                     <label th:for="applicants[__${applicantStat.index}__].name">
                                         <span class="govuk-visually-hidden">Applicant name</span>
                                     </label>
@@ -74,7 +75,7 @@
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                                 </td>
-                                <td class="govuk-form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}? 'govuk-form-group--error'">
+                                <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}? 'govuk-form-group--error'">
                                     <label th:for="applicants[__${applicantStat.index}__].email">
                                         <span class="govuk-visually-hidden">Applicant email</span>
                                     </label>
@@ -92,7 +93,7 @@
                                            th:attr="data-required-errormessage=#{validation.invite.email.required},
                                                     data-email-errormessage=#{validation.standard.email.format}" />
                                 </td>
-                                <td class="alignright"><button class="remove-another-row button-clear" th:value="${applicantStat.index}" name="removeApplicant" type="submit">Remove</button></td>
+                                <td class="govuk-table__cell alignright"><button class="remove-another-row button-clear" th:value="${applicantStat.index}" name="removeApplicant" type="submit">Remove</button></td>
                             </tr>
                         </tbody>
                     </table>

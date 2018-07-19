@@ -87,7 +87,7 @@
                 <div class="spend-profile-table" th:classappend="${model.usingJesFinances ? 'academic':''}">
                     <div class="flex-table-before"></div>
                     <div class="flex-table-wrap">
-                        <table>
+                        <table class="govuk-table">
                             <colgroup>
                                 <col/>
                                 <th:block th:each="month : ${model.table.getMonths()}">
@@ -95,45 +95,47 @@
                                 </th:block>
                                 <col class="total" />
                             </colgroup>
-                            <thead>
-                            <tr>
-                                <th scope="row" th:if="${model.usingJesFinances}" id="month" colspan="2">Je-S category</th>
-                                <th scope="row" th:unless="${model.usingJesFinances}" id="month">Month</th>
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="row" th:if="${model.usingJesFinances}" id="month" colspan="2">Je-S category</th>
+                                <th class="govuk-table__header" scope="row" th:unless="${model.usingJesFinances}" id="month">Month</th>
                                 <th:block th:each="month,stats : ${model.table.getMonths()}">
-                                    <th scope="col" th:utext="${'Month<br/>' + (stats.index+1)}" th:id="|month-${stats.index}|" />
+                                    <th class="govuk-table__header" scope="col" th:utext="${'Month<br/>' + (stats.index+1)}" th:id="|month-${stats.index}|" />
                                 </th:block>
-                                <th scope="col" class="fix-right">Total</th>
-                                <th scope="col" class="fix-right">Eligible project cost</th>
+                                <th scope="col" class="govuk-table__header fix-right">Total</th>
+                                <th scope="col" class="govuk-table__header fix-right">Eligible project cost</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="govuk-table__body">
                             <!--/* non-academic */-->
                             <th:block th:unless="${model.usingJesFinances}">
                                 <!--/* readonly */-->
                                 <th:block th:if="${readonly}">
-                                    <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}"
+                                    <tr class="govuk-table__row" th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}"
                                         class="form-group-row"
                                         th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'govuk-form-group--error' : ''}">
-                                        <th scope="row">
+                                        <th class="govuk-table__header" scope="row">
                                             <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                             <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
                                                   class="govuk-error-message">Your total costs are higher than your eligible costs</span>
                                         </th>
-                                        <td th:each="cost : ${row.value}"
+                                        <td class="govuk-table__cell"
+                                            th:each="cost : ${row.value}"
                                             th:text="${#numbers.formatInteger(cost,1,'DEFAULT')}"></td>
-                                        <td class="fix-right" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
+                                        <td class="govuk-table__cell fix-right" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
                                             &pound;<th:block th:text="${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'DEFAULT')}"/>
                                         </td>
-                                        <td class="fix-right">
+                                        <td class="govuk-table__cell fix-right">
                                             &pound;<th:block th:text="${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'DEFAULT')}" />
                                         </td>
                                     </tr>
                                 </th:block>
                                 <!--/* edit */-->
                                 <th:block th:unless="${readonly}" th:object="${form}">
-                                    <tr th:each="row : ${form.table.getMonthlyCostsPerCategoryMap()}" class="form-group-row"
+                                    <tr th:each="row : ${form.table.getMonthlyCostsPerCategoryMap()}" class="govuk-table__row form-group-row"
                                         th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) || #fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__]*') ? 'govuk-form-group--error' : ''}">
-                                        <th scope="row"
+                                        <th class="govuk-table__header"
+                                            scope="row"
                                             th:id="|row-${row.key}|">
                                             <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                             <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
@@ -146,7 +148,8 @@
                                                       th:text="${error.message}"></span>
                                             </th:block>
                                         </th>
-                                        <td th:each="cost, status : ${row.value}">
+                                        <td class="govuk-table__cell"
+                                            th:each="cost, status : ${row.value}">
                                             <input
                                                 th:classappend="${#fields.hasErrors('table.monthlyCostsPerCategoryMap[__${row.key}__][__${status.index}__]')} ? 'govuk-input--error'"
                                                 th:class="${#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+' govuk-input'}"
@@ -161,7 +164,7 @@
                                                 min="0"
                                                 required="required" />
                                         </td>
-                                        <td class="fix-right"
+                                        <td class="govuk-table__cell fix-right"
                                             th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
                                             <input
                                                 th:value="${'&pound;'+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'DEFAULT')}"
@@ -171,7 +174,7 @@
                                                 th:attr="data-calculation-fields=${'[aria-labelledby^=row-'+row.key+']'},
                                                          data-calculation-rawvalue=${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'NONE')}" />
                                         </td>
-                                        <td class="fix-right">
+                                        <td class="govuk-table__cell fix-right">
                                             <input readonly="readonly"
                                                    th:value="${'&pound;'+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'DEFAULT')}"
                                                    th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}" />
@@ -185,36 +188,39 @@
                                     <th:block th:each="rowList,iteration : ${section.value}">
                                         <!--/* readonly */-->
                                         <th:block th:if="${readonly}">
-                                            <tr th:each="row : ${rowList}" class="form-group-row"
+                                            <tr th:each="row : ${rowList}" class="govuk-table__row form-group-row"
                                                 th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'govuk-form-group--error' : ''}">
-                                                <th scope="row" th:text="${iteration.index == 0 ? section.key : ''}"></th>
-                                                <th scope="row">
+                                                <th class="govuk-table__header" scope="row" th:text="${iteration.index == 0 ? section.key : ''}"></th>
+                                                <th class="govuk-table__header" scope="row">
                                                     <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                                     <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
                                                           class="govuk-error-message">Your total costs are higher than your eligible costs</span>
                                                 </th>
-                                                <td th:each="cost : ${row.value}"
+                                                <td class="govuk-table__cell"
+                                                    th:each="cost : ${row.value}"
                                                     th:text="${#numbers.formatInteger(cost,1,'DEFAULT')}"></td>
-                                                <td class="fix-right" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
+                                                <td class="govuk-table__cell fix-right" th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
                                                     &pound;<th:block th:text="${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'DEFAULT')}" />
                                                 </td>
-                                                <td class="total eligible fix-right">
+                                                <td class="govuk-table__cell total eligible fix-right">
                                                     &pound;<th:block th:text="${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'DEFAULT')}" />
                                                 </td>
                                             </tr>
                                         </th:block>
                                         <!--/* edit  */-->
                                         <th:block th:unless="${readonly}">
-                                            <tr th:each="row : ${rowList}" class="form-group-row"
+                                            <tr th:each="row : ${rowList}" class="govuk-table__row form-group-row"
                                                 th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'govuk-form-group--error' : ''}">
-                                                <th scope="row" th:text="${iteration.index == 0 ? section.key : ''}"></th>
-                                                <th scope="row"
+                                                <th class="govuk-table__header" scope="row" th:text="${iteration.index == 0 ? section.key : ''}"></th>
+                                                <th class="govuk-table__header"
+                                                    scope="row"
                                                     th:id="|row-${row.key}|">
                                                     <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
                                                     <span th:if="${model.table.validationMessages.hasFieldErrors(row.key)}"
                                                           class="govuk-error-message">Your total costs are higher than your eligible costs</span>
                                                 </th>
-                                                <td th:each="cost, status : ${row.value}">
+                                                <td class="govuk-table__cell"
+                                                    th:each="cost, status : ${row.value}">
                                                     <input class="govuk-input"
                                                            th:classappend="${#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))}"
                                                            th:attr="aria-labelledby=|row-${row.key} month-${status.index}|"
@@ -225,7 +231,7 @@
                                                            min="0"
                                                            required="required" />
                                                 </td>
-                                                <td class="fix-right"
+                                                <td class="govuk-table__cell fix-right"
                                                     th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
                                                     <input readonly="readonly"
                                                            th:value="${'&pound;'+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'DEFAULT')}"
@@ -233,7 +239,7 @@
                                                            th:id="${'row-total-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}"
                                                            th:attr="data-calculation-fields=${'[aria-labelledby^=row-'+row.key+']'},data-calculation-rawvalue=${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'NONE')}" />
                                                 </td>
-                                                <td class="fix-right">
+                                                <td class="govuk-table__cell fix-right">
                                                     <input readonly="readonly"
                                                            th:value="${'&pound;'+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'DEFAULT')}"
                                                            th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}" />
@@ -245,18 +251,19 @@
                             </th:block>
                             <!--/* end academic */-->
                             </tbody>
-                            <tfoot>
-                            <tr class="form-group-row">
-                                <th scope="row" th:attr="colspan=${model.usingJesFinances ? 2 : 1}">
+                            <tfoot class="govuk-table__foot">
+                            <tr class="govuk-table__row form-group-row">
+                                <th class="govuk-table__header" scope="row" th:attr="colspan=${model.usingJesFinances ? 2 : 1}">
                                     <span>Total</span>
                                 </th>
                                 <th:block th:each="monthTotal,status : ${model.totalForEachMonth}">
-                                    <td th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"
+                                    <td class="govuk-table__cell"
+                                        th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"
                                         data-calculation-operations="+">
                                         &pound;<th:block th:text="${#numbers.formatInteger(monthTotal,1,'DEFAULT')}" />
                                     </td>
                                 </th:block>
-                                <td class="fix-right">
+                                <td class="govuk-table__cell fix-right">
                                     <input
                                         th:value="${'&pound;'+#numbers.formatInteger(model.totalOfAllActualTotals,1,'DEFAULT')}"
                                         readonly="readonly"
@@ -264,7 +271,7 @@
                                         id="spend-profile-total-total"
                                         data-calculation-fields="input[id*=row-total-]" />
                                 </td>
-                                <td class="fix-right">
+                                <td class="govuk-table__cell fix-right">
                                     <input readonly="readonly"
                                            th:value="${'&pound;'+#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'DEFAULT')}"
                                            th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'NONE')}" />
@@ -279,17 +286,18 @@
                 <div class="grid-container">
                     <h2 class="govuk-heading-m">Project costs for financial year</h2>
                     <p class="govuk-body">Your submitted spend profile will be used as the base for your project spend over the following financial years.</p>
-                    <table class="govuk-!-margin-bottom-6" style="width: 50%;">
-                        <thead>
-                        <tr>
-                            <th scope="col" style="width: 50%">Financial year (April to March)</th>
-                            <th scope="col" style="width: 50%">Project spend</th>
+                    <table class="govuk-table govuk-!-margin-bottom-6" style="width: 50%;">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col" style="width: 50%">Financial year (April to March)</th>
+                            <th class="govuk-table__header" scope="col" style="width: 50%">Project spend</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="item : ${model.summary.years}">
-                            <td th:text="${item.year + ' to ' + (item.year + 1)}"></td>
-                            <td data-calculation-operations="+"
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="item : ${model.summary.years}">
+                            <td class="govuk-table__cell" th:text="${item.year + ' to ' + (item.year + 1)}"></td>
+                            <td class="govuk-table__cell"
+                                data-calculation-operations="+"
                                 th:attr="data-calculation-fields=${'.apr-'+item.year+',
                                                               .may-'+item.year+',
                                                               .jun-'+item.year+',

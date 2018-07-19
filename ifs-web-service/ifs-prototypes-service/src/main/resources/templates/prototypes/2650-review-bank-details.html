@@ -53,9 +53,9 @@
 
 	<h2 class="govuk-heading-m">Aptrans Ltd - Account details</h2>
 
-	<table>
-		<thead>
-			<tr>
+	<table class="govuk-table">
+		<thead class="govuk-table__head">
+			<tr class="govuk-table__row">
 				<th scope="col" style="width: 30%">
 					Section
 				</th>
@@ -67,67 +67,67 @@
 				</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr>
-				<td>
+		<tbody class="govuk-table__body">
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">
 					Company
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					Aptrans Ltd
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					<span class="yes" th:unless="${param.status != null and param.status[0] == 'error'}">9 / 9</span>
 					<span class="no" th:unless="${param.status == null or param.status[0] != 'error'}">4 / 9</span>
 				</td>
 			</tr>
 			<tr th:unless="${param.status != null and param.status[0] == 'noCompHouse' or param.type != null and param.type[0] == 'noCompHouse'}">
-				<td>
+				<td class="govuk-table__cell">
 					Company number
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					46587342
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					<span class="yes">Match</span>
 				</td>
 			</tr>
 
 			<th:block th:if="${param.status != null and param.status[0] == 'noCompHouse' or param.type != null and param.type[0] == 'noCompHouse'}">
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						Company number
 					</td>
-					<td>
+					<td class="govuk-table__cell">
 						Not required
 					</td>
-					<td>
+					<td class="govuk-table__cell">
 						&nbsp;
 					</td>
 				</tr>
 			</th:block>
 
-			<tr>
-				<td>
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">
 					Bank account number / Sort code
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					04214477 / 201181
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					<span class="yes">Match</span>
 				</td>
 			</tr>
-			<tr>
-				<td>
+			<tr class="govuk-table__row">
+				<td class="govuk-table__cell">
 					Address
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					Aptrans Ltd, <br />
 					13 Queens Square, <br />
 					Bristol, <br />
 					BS3 1RF
 				</td>
-				<td>
+				<td class="govuk-table__cell">
 					<span class="yes">9 / 9</span>
 				</td>
 			</tr>

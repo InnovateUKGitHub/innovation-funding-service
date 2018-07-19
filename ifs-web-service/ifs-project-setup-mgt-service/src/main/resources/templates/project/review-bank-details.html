@@ -52,38 +52,38 @@
             </p>
 
             <h2 class="govuk-heading-m"><th:block th:text="${model.organisationName}" /> - Account details</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">Section</th>
-                        <th scope="col">Answer</th>
-                        <th scope="col">Experian score</th>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Section</th>
+                        <th class="govuk-table__header" scope="col">Answer</th>
+                        <th class="govuk-table__header" scope="col">Experian score</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>Company</td>
-                        <td th:text="${model.organisationName}" />
-                        <td><span class="yes" th:text="${model.companyNameScore+' / 9'}" th:class="${model.companyNameVerified ? 'yes' : 'no'}"/></td>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">Company</td>
+                        <td class="govuk-table__cell" th:text="${model.organisationName}" />
+                        <td class="govuk-table__cell"><span class="yes" th:text="${model.companyNameScore+' / 9'}" th:class="${model.companyNameVerified ? 'yes' : 'no'}"/></td>
                     </tr>
-                    <tr>
-                        <td>Company Number</td>
-                        <td th:text="${model.registrationNumber}" />
-                        <td><span th:text="${model.registrationNumberMatched ? 'Match' : 'No Match'}" th:class="${model.registrationNumberMatched ? 'yes' : 'no'}" /></td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">Company Number</td>
+                        <td class="govuk-table__cell" th:text="${model.registrationNumber}" />
+                        <td class="govuk-table__cell"><span th:text="${model.registrationNumberMatched ? 'Match' : 'No Match'}" th:class="${model.registrationNumberMatched ? 'yes' : 'no'}" /></td>
                     </tr>
-                    <tr>
-                        <td>Bank account number / Sort code</td>
-                        <td th:text="${model.bankAccountNumber+' / '+model.sortCode}" />
-                        <td><span th:text="${model.registrationNumberMatched ? 'Match' : 'No Match'}" th:class="${model.registrationNumberMatched ? 'yes' : 'no'}" /></td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">Bank account number / Sort code</td>
+                        <td class="govuk-table__cell" th:text="${model.bankAccountNumber+' / '+model.sortCode}" />
+                        <td class="govuk-table__cell"><span th:text="${model.registrationNumberMatched ? 'Match' : 'No Match'}" th:class="${model.registrationNumberMatched ? 'yes' : 'no'}" /></td>
                     </tr>
-                    <tr>
-                        <td>Address</td>
-                        <td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">Address</td>
+                        <td class="govuk-table__cell">
                             <th:block th:each="addressLine : ${model.organisationAddress}">
                                 <th:block th:text="${addressLine}" /><br />
                             </th:block>
                         </td>
-                        <td><span th:text="${model.addressScore+' / 9'}" class="yes" th:class="${model.addressScoreVerified ? 'yes' : 'no'}" /></td>
+                        <td class="govuk-table__cell"><span th:text="${model.addressScore+' / 9'}" class="yes" th:class="${model.addressScoreVerified ? 'yes' : 'no'}" /></td>
                     </tr>
                 </tbody>
             </table>

@@ -30,21 +30,21 @@
 
 <th:block th:fragment="invites-table(invites)" xmlns:th="http://www.w3.org/1999/html">
     <div class="table-overflow">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Role profile</th>
-                <th scope="col">Email address</th>
-                <th scope="col"><span class="govuk-visually-hidden">Invite status</span></th>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Name</th>
+                <th class="govuk-table__header" scope="col">Role profile</th>
+                <th class="govuk-table__header" scope="col">Email address</th>
+                <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Invite status</span></th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="invite : ${invites}">
-                <td><th:block th:text="${invite.name}"/></td>
-                <td th:text="${invite.getRoleDisplayName()}">IFS Admin</td>
-                <td><a th:href="${'mailto:' + invite.email}" th:text="${invite.email}">steve.smith@empire.com</a></td>
-                <td>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="invite : ${invites}">
+                <td class="govuk-table__cell"><th:block th:text="${invite.name}"/></td>
+                <td class="govuk-table__cell" th:text="${invite.getRoleDisplayName()}">IFS Admin</td>
+                <td class="govuk-table__cell"><a th:href="${'mailto:' + invite.email}" th:text="${invite.email}">steve.smith@empire.com</a></td>
+                <td class="govuk-table__cell">
                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
                         <button type="submit"
                                 class="button-secondary"
@@ -60,21 +60,21 @@
 
 <th:block th:fragment="users-table(users)" xmlns:th="http://www.w3.org/1999/html">
     <div class="table-overflow">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Role profile</th>
-                <th scope="col">Email address</th>
-                <th scope="col"><span class="govuk-visually-hidden">Invite status</span></th>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Name</th>
+                <th class="govuk-table__header" scope="col">Role profile</th>
+                <th class="govuk-table__header" scope="col">Email address</th>
+                <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Invite status</span></th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="user : ${users}">
-                <td><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
-                <td th:text="${user.getRolesString()}">IFS Admin</td>
-                <td><a th:href="${'mailto:' + user.email}" th:text="${user.email}">steve.smith@empire.com</a></td>
-                <td><span class="govuk-hint"></span></td>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="user : ${users}">
+                <td class="govuk-table__cell"><a th:href="${'/management/admin/user/' + user.id}" th:text="${user.name}">Steve Smith</a></td>
+                <td class="govuk-table__cell" th:text="${user.getRolesString()}">IFS Admin</td>
+                <td class="govuk-table__cell"><a th:href="${'mailto:' + user.email}" th:text="${user.email}">steve.smith@empire.com</a></td>
+                <td class="govuk-table__cell"><span class="govuk-hint"></span></td>
             </tr>
             </tbody>
         </table>

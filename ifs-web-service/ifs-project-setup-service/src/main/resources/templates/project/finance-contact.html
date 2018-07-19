@@ -92,16 +92,16 @@
                             </div>
 
                             <div id="finance-contact-table" class="panel">
-                                <table>
-                                    <thead>
-                                    <tr>
-                                        <th scope="col" id="finance-contact-name">Name</th>
-                                        <th scope="col" colspan="2" id="finance-contact-email">E-mail</th>
+                                <table class="govuk-table">
+                                    <thead class="govuk-table__head">
+                                    <tr class="govuk-table__row">
+                                        <th class="govuk-table__header" scope="col" id="finance-contact-name">Name</th>
+                                        <th class="govuk-table__header" scope="col" colspan="2" id="finance-contact-email">E-mail</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
+                                    <tbody class="govuk-table__body">
+                                        <tr class="govuk-table__row">
+                                            <td class="govuk-table__cell">
                                                 <label for="name-finance-contact"
                                                        class="govuk-visually-hidden">name</label>
                                                 <input type="text"
@@ -113,7 +113,7 @@
                                                        th:attr="data-required-errormessage=#{validation.project.invite.name.required}"
                                                        required="required"/>
                                             </td>
-                                            <td>
+                                            <td class="govuk-table__cell">
                                                 <label for="email-finance-contact"
                                                        class="govuk-visually-hidden">email</label>
                                                 <input type="email"
@@ -125,7 +125,7 @@
                                                        th:attr="data-required-errormessage=#{validation.project.invite.email.required}"
                                                        required="required"/>
                                             </td>
-                                            <td class="alignright">
+                                            <td class="govuk-table__cell alignright">
                                                 <button class="button-clear govuk-!-margin-bottom-0" name="invite-fc" id="invite-finance-contact">Invite to project</button>
                                             </td>
                                         </tr>

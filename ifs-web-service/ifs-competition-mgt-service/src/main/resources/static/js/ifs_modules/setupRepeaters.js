@@ -216,27 +216,27 @@ IFS.competitionManagement.repeater = (function () {
         // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
         idCount = parseInt(jQuery('tr[id^=guidance-]').last().attr('id').split('guidance-')[1], 10) + 1
       }
-      var html = '<tr id="guidance-' + idCount + '" class="form-group-row-validated">'
+      var html = '<tr id="guidance-' + idCount + '" class="govuk-table__row form-group-row-validated">'
       if (isAssessed) {
-        html += '<td class="govuk-form-group">' +
+        html += '<td class="govuk-table__cell govuk-form-group">' +
                 '<label class="govuk-label" for="guidanceRows[' + idCount + '].scoreFrom"><span class="govuk-visually-hidden">Score from</span></label>' +
                 '<input required="required" type="number" min="0" class="govuk-input govuk-input--width-4" data-required-errormessage="Please enter a from score." data-min-errormessage="Please enter a valid number." id="guidanceRows[' + idCount + '].scoreFrom" name="guidanceRows[' + count + '].scoreFrom" value="">' +
               '</td>' +
-              '<td class="govuk-form-group">' +
+              '<td class="govuk-table__cell govuk-form-group">' +
                 '<label class="govuk-label" for="guidanceRows[' + idCount + '].scoreTo"><span class="govuk-visually-hidden">Score to</span></label>' +
                 '<input required="required" type="number" min="0" class="govuk-input govuk-input--width-4" value="" data-required-errormessage="Please enter a to score." data-min-errormessage="Please enter a valid number." id="guidanceRows[' + idCount + '].scoreTo" name="guidanceRows[' + count + '].scoreTo" value="">' +
               '</td>'
       } else {
-        html += '<td class="govuk-form-group">' +
+        html += '<td class="govuk-table__cell govuk-form-group">' +
                 '<label class="govuk-label" for="guidanceRows[' + idCount + '].subject"><span class="govuk-visually-hidden">Subject</span></label>' +
                 '<input required="required" class="govuk-input govuk-input--width-4" data-maxlength-errormessage="Subject has a maximum length of 255 characters." data-required-errormessage="Please enter a subject." id="guidanceRows[' + idCount + '].subject" name="question.guidanceRows[' + count + '].subject" value="">' +
               '</td>'
       }
-      html += '<td class="govuk-form-group">' +
+      html += '<td class="govuk-table__cell govuk-form-group">' +
               '<label class="govuk-label" for="guidanceRows[' + idCount + '].justification"><span class="govuk-visually-hidden">Justification</span></label>' +
               '<textarea required="required" rows="3" class="govuk-textarea" data-maxlength-errormessage="Justification has a maximum length of 255 characters." data-required-errormessage="Please enter a justification." id="guidanceRows[' + idCount + '].justification" name="' + (isAssessed ? '' : 'question.') + 'guidanceRows[' + count + '].justification"></textarea>' +
             '</td>' +
-            '<td><button class="button-clear alignright remove-guidance-row" name="remove-guidance-row" data-remove-row="guidance" value="' + count + '">Remove</button></td>'
+            '<td class="govuk-table__cell"><button class="button-clear alignright remove-guidance-row" name="remove-guidance-row" data-remove-row="guidance" value="' + count + '">Remove</button></td>'
       html += '</tr>'
       table.find('tbody').append(html)
     },

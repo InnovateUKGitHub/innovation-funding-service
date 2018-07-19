@@ -28,23 +28,23 @@
             </div>
         </th:block>
 
-        <table class="table-overview">
-          <thead>
-            <tr>
-              <th scope="col">Total costs</th>
-              <th scope="col" class="numeric">% Grant</th>
-              <th scope="col" class="numeric">Total project cost</th>
-              <th scope="col" class="numeric">Grant applied for (&pound;)</th>
-              <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
+        <table class="govuk-table table-overview">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th class="govuk-table__header" scope="col">Total costs</th>
+              <th class="govuk-table__header govuk-table__header--numeric" scope="col">% Grant</th>
+              <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total project cost</th>
+              <th class="govuk-table__header govuk-table__header--numeric" scope="col">Grant applied for (&pound;)</th>
+              <th class="govuk-table__header govuk-table__header--numeric" scope="col">Other public sector funding (&pound;)</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>&pound;<th:block th:text="${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}" /></td>
-              <td th:text="${model.percentageGrant+'%'}" class="numeric"></td>
-              <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.contributionToProject,1,'DEFAULT')}" /></td>
-              <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'DEFAULT')}" /></td>
-              <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">&pound;<th:block th:text="${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}" /></td>
+              <td th:text="${model.percentageGrant+'%'}" class="govuk-table__cell govuk-table__cell--numeric"></td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.contributionToProject,1,'DEFAULT')}" /></td>
+              <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'DEFAULT')}" /></td>
+              <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
             </tr>
           </tbody>
         </table>

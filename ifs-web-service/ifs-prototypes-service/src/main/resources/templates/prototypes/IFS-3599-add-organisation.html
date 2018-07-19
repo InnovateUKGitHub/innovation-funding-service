@@ -45,14 +45,14 @@
             </div>
 
             <table id="applicant-table" class="table-overflow">
-                <thead>
-                <tr>
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                     <th class="width-30-percent" scope="col">Applicant name</th>
                     <th class="width-55-percent" scope="col">Email</th>
                     <th class="width-15-percent alignright" scope="col"><span class="visually-hidden">Actions</span></th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="govuk-table__body">
                 <tr class="repeatable-row">
                     <td class="govuk-form-group">
                         <label for="applicants[0].name">
@@ -68,7 +68,7 @@
                         </label>
                         <input type="email" id="applicants[0].email" class="form-control width-full" required="required" data-required-errormessage="Please enter an email address." data-email-errormessage="Please enter a valid email address." name="applicants[0].email" value="">
                     </td>
-                    <td class="alignright"><button class="remove-another-row button-clear" value="0" name="removeApplicant" type="submit">Remove</button></td>
+                    <td class="govuk-table__cell alignright"><button class="remove-another-row button-clear" value="0" name="removeApplicant" type="submit">Remove</button></td>
                 </tr>
                 </tbody>
             </table>

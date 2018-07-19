@@ -57,22 +57,22 @@
             <span class="govuk-hint">Details relating to your organisation over the last financial year.</span><br>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <table class="govuk-!-margin-bottom-6">
-                        <thead>
-                        <tr>
-                            <th scope="col">Section</th>
-                            <th scope="col" class="numeric" id="last-year">Last financial year (&pound;)</th>
+                    <table class="govuk-table govuk-!-margin-bottom-6">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Section</th>
+                            <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="last-year">Last financial year (&pound;)</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="formInputViewModel, status : ${model.financeOverviewRows}" th:with="formInput=${formInputViewModel.formInput}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''" class="govuk-form-group">
-                            <td>
+                        <tbody class="govuk-table__body">
+                        <tr th:each="formInputViewModel, status : ${model.financeOverviewRows}" th:with="formInput=${formInputViewModel.formInput}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''" class="govuk-table__row govuk-form-group">
+                            <td class="govuk-table__cell">
                                 <label th:for="${'input-'+formInput.id}">
                                     <span th:text="${formInput.description}"></span>
                                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
                                 </label>
                             </td>
-                            <td class="numeric">
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <input class="govuk-input govuk-input--width-10"
                                        th:disabled="${formInputViewModel.readonly}"
                                        th:id="${'input-'+formInput.id}"
@@ -189,23 +189,23 @@
 
     <th:block th:fragment="your_finance_summary (model)">
         <div class="govuk-form-group" style="overflow:auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col" class="numeric width-80">Total project costs</th>
-                        <th scope="col" class="numeric width-80">% Grant</th>
-                        <th scope="col" class="numeric width-80">Funding sought (&pound;)</th>
-                        <th scope="col" class="numeric width-80">Other public sector funding (&pound;)</th>
-                        <th scope="col" class="numeric width-80">Contribution to project (&pound;)</th>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Total project costs</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">% Grant</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Funding sought (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Other public sector funding (&pound;)</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">Contribution to project (&pound;)</th>
                     </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(model.organisationFinance.total, 0, 'DEFAULT')}" /></strong></td>
-                    <td class="numeric"><th:block th:text="${model.organisationFinance.grantClaimPercentage}+'%'" /></td>
-                    <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalFundingSought, 0, 'DEFAULT')}" /></td>
-                    <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalOtherFunding, 0, 'DEFAULT')}" /></td>
-                    <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalContribution, 0, 'DEFAULT')}" /></td>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(model.organisationFinance.total, 0, 'DEFAULT')}" /></strong></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${model.organisationFinance.grantClaimPercentage}+'%'" /></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalFundingSought, 0, 'DEFAULT')}" /></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalOtherFunding, 0, 'DEFAULT')}" /></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalContribution, 0, 'DEFAULT')}" /></td>
                 </tr>
                 </tbody>
             </table>

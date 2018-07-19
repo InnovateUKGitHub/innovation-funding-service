@@ -102,12 +102,12 @@
 
 			<div class="table-overflow">
 				<table id="application-list">
-					<thead>
-						<tr>
-							<th scope="col">Application number</th>
-							<th scope="col">Project title</th>
-							<th scope="col">Lead</th>
-							<th scope="col">Area</th>
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th class="govuk-table__header" scope="col">Application number</th>
+							<th class="govuk-table__header" scope="col">Project title</th>
+							<th class="govuk-table__header" scope="col">Lead</th>
+							<th class="govuk-table__header" scope="col">Area</th>
 							<th scope="col" class="alignright">No. of partners</th>
 							<th scope="col" class="alignright">Grant requested (&#163;)</th>
 							<th scope="col" class="alignright">Total project cost (&#163;)</th>
@@ -115,50 +115,50 @@
 							<th scope="col" class="alignright">Funded</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody class="govuk-table__body">
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194731</a></td>
-							<td>Machine learning in robots</td>
-							<td>PWC</td>
-							<td>HVM</td>
-							<td class="alignright">5</td>
-							<td class="alignright">203,000</td>
-							<td class="alignright">324,000</td>
-							<td class="alignright">12</td>
-							<td class="alignright">Yes</td>
+							<td class="govuk-table__cell"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194731</a></td>
+							<td class="govuk-table__cell">Machine learning in robots</td>
+							<td class="govuk-table__cell">PWC</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">5</td>
+							<td class="govuk-table__cell alignright">203,000</td>
+							<td class="govuk-table__cell alignright">324,000</td>
+							<td class="govuk-table__cell alignright">12</td>
+							<td class="govuk-table__cell alignright">Yes</td>
 						</tr>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></td>
-							<td>Robots that learn</td>
-							<td>Max Digital</td>
-							<td>HVM</td>
-							<td class="alignright">5</td>
-							<td class="alignright">203,000</td>
-							<td class="alignright">300,000</td>
-							<td class="alignright">12</td>
-							<td class="alignright">Yes</td>
+							<td class="govuk-table__cell"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194732</a></td>
+							<td class="govuk-table__cell">Robots that learn</td>
+							<td class="govuk-table__cell">Max Digital</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">5</td>
+							<td class="govuk-table__cell alignright">203,000</td>
+							<td class="govuk-table__cell alignright">300,000</td>
+							<td class="govuk-table__cell alignright">12</td>
+							<td class="govuk-table__cell alignright">Yes</td>
 						</tr>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></td>
-							<td>AI in learning</td>
-							<td>BBC</td>
-							<td>HVM</td>
-							<td class="alignright">3</td>
-							<td class="alignright">67,000</td>
-							<td class="alignright">97,500</td>
-							<td class="alignright">13</td>
-							<td class="alignright">Yes</td>
+							<td class="govuk-table__cell"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194733</a></td>
+							<td class="govuk-table__cell">AI in learning</td>
+							<td class="govuk-table__cell">BBC</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">3</td>
+							<td class="govuk-table__cell alignright">67,000</td>
+							<td class="govuk-table__cell alignright">97,500</td>
+							<td class="govuk-table__cell alignright">13</td>
+							<td class="govuk-table__cell alignright">Yes</td>
 						</tr>
 						<tr class="filtered-result">
-							<td><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194734</a></td>
-							<td>Progressive machines</td>
-							<td>Kingfisher</td>
-							<td>HVM</td>
-							<td class="alignright">7</td>
-							<td class="alignright">100,000</td>
-							<td class="alignright">125,000</td>
-							<td class="alignright">14</td>
-							<td class="alignright">No</td>
+							<td class="govuk-table__cell"><a th:href="${(param.status != null ? '/prototypes/1968-admin-readonly-application?closed&#38;status=' + {param.status} : '/prototypes/1968-admin-readonly-application?closed')}">194734</a></td>
+							<td class="govuk-table__cell">Progressive machines</td>
+							<td class="govuk-table__cell">Kingfisher</td>
+							<td class="govuk-table__cell">HVM</td>
+							<td class="govuk-table__cell alignright">7</td>
+							<td class="govuk-table__cell alignright">100,000</td>
+							<td class="govuk-table__cell alignright">125,000</td>
+							<td class="govuk-table__cell alignright">14</td>
+							<td class="govuk-table__cell alignright">No</td>
 						</tr>
 
 

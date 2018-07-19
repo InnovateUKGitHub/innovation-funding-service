@@ -44,23 +44,23 @@
           <h2 class="govuk-heading-m">Empire Ltd, Lead organisation</h2>
 
           <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-            <thead>
-              <tr>
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
                 <th class="width-30-percent">Applicant</th>
                 <th class="width-50-percent">Email</th>
-                <th>Status</th>
+                <th class="govuk-table__header" scope="col">Status</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Steve Smith</td>
-                <td>steve.smith@empire.com</td>
-                <td>Lead</td>
+            <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">Steve Smith</td>
+                <td class="govuk-table__cell">steve.smith@empire.com</td>
+                <td class="govuk-table__cell">Lead</td>
               </tr>
               <tr th:unless="${param.status != null and param.status[0] == 'firstLoad'}">
-                <td>Paul Davidson</td>
-                <td>paul.davidsonh@empire.com</td>
-                <td></td>
+                <td class="govuk-table__cell">Paul Davidson</td>
+                <td class="govuk-table__cell">paul.davidsonh@empire.com</td>
+                <td class="govuk-table__cell"></td>
               </tr>
             </tbody>
           </table>
@@ -78,23 +78,23 @@
           <h2 class="govuk-heading-m">Ludlow</h2>
 
           <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-            <thead>
-              <tr>
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
                 <th class="width-30-percent">Applicant</th>
                 <th class="width-50-percent">Email</th>
-                <th>Status</th>
+                <th class="govuk-table__header" scope="col">Status</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Jessica Doe</td>
-                <td>jessica.dow@ludlow.com</td>
-                <td></td>
+            <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">Jessica Doe</td>
+                <td class="govuk-table__cell">jessica.dow@ludlow.com</td>
+                <td class="govuk-table__cell"></td>
               </tr>
-              <tr>
-                <td>Ryan Dell</td>
-                <td>ryan.dell@ludlow.com</td>
-                <td>Invite pending</td>
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">Ryan Dell</td>
+                <td class="govuk-table__cell">ryan.dell@ludlow.com</td>
+                <td class="govuk-table__cell">Invite pending</td>
               </tr>
             </tbody>
           </table>
@@ -112,18 +112,18 @@
           <h2 class="govuk-heading-m">EGGS</h2>
 
           <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-            <thead>
-              <tr>
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
                 <th class="width-30-percent">Applicant</th>
                 <th class="width-50-percent">Email</th>
-                <th>Status</th>
+                <th class="govuk-table__header" scope="col">Status</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Paul Tom</td>
-                <td>paul.tom@eggs.com</td>
-                <td></td>
+            <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">Paul Tom</td>
+                <td class="govuk-table__cell">paul.tom@eggs.com</td>
+                <td class="govuk-table__cell"></td>
               </tr>
             </tbody>
           </table>

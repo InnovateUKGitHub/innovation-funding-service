@@ -128,19 +128,19 @@
                             <th:block th:if="${#fields.hasErrors('appointments')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('appointments')}" th:text="${err}"></span>
                             </th:block>
-                            <table id="position-table">
-                                <thead>
-                                <tr>
-                                    <th scope="col" id="aria-position-org">Organisation</th>
-                                    <th scope="col" id="aria-position-pos">Position</th>
-                                    <th scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                            <table class="govuk-table" id="position-table">
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="col" id="aria-position-org">Organisation</th>
+                                    <th class="govuk-table__header" scope="col" id="aria-position-pos">Position</th>
+                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="govuk-table__body">
                                 <tr th:each="appointment,appointmentStat: *{appointments}"
-                                    class="form-group-row-validated"
+                                    class="govuk-table__row form-group-row-validated"
                                     th:classappend="((${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}) or (${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')})) ? 'govuk-form-group--error'">
-                                    <td class="govuk-form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')} ? 'govuk-form-group--error'">
+                                    <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')} ? 'govuk-form-group--error'">
                                         <label>
                                             <th:block th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].organisation')}">
                                                 <span class="govuk-error-message"
@@ -157,7 +157,7 @@
                                                th:attr="data-required-errormessage=#{validation.assessorprofileappointmentform.organisation.required}" />
 
                                     </td>
-                                    <td class="govuk-form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')} ? 'govuk-form-group--error'">
+                                    <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')} ? 'govuk-form-group--error'">
                                         <label>
                                                 <th:block th:if="${#fields.hasErrors('appointments[__${appointmentStat.index}__].position')}">
                                                     <span class="govuk-error-message"
@@ -173,7 +173,7 @@
                                                required="required"
                                                th:attr="data-required-errormessage=#{validation.assessorprofileappointmentform.position.required}" />
                                     </td>
-                                    <td>
+                                    <td class="govuk-table__cell">
                                         <button class="remove-another-row button-clear" th:value="${appointmentStat.index}" name="removeAppointment" type="submit">Remove</button>
                                     </td>
                                 </tr>
@@ -289,20 +289,20 @@
                             <th:block th:if="${#fields.hasErrors('familyAffiliations')}">
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('familyAffiliations')}" th:text="${err}"></span>
                             </th:block>
-                            <table id="family-table" class="table-stacked-mobile">
-                                <thead>
-                                <tr>
-                                    <th scope="col" id="aria-family-rel">Relation</th>
-                                    <th scope="col" id="aria-family-org">Organisation</th>
-                                    <th scope="col" id="aria-family-pos">Position</th>
-                                    <th scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                            <table id="family-table" class="govuk-table table-stacked-mobile">
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="col" id="aria-family-rel">Relation</th>
+                                    <th class="govuk-table__header" scope="col" id="aria-family-org">Organisation</th>
+                                    <th class="govuk-table__header" scope="col" id="aria-family-pos">Position</th>
+                                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="govuk-table__body">
                                 <tr th:each="familyAffiliation,familyAffiliationStat: *{familyAffiliations}"
-                                    class="form-group-row-validated"
+                                    class="govuk-table__row form-group-row-validated"
                                     th:classappend="((${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}) or (${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')})) ? 'govuk-form-group--error'">
-                                    <td class="govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')} ? 'govuk-form-group--error'">
+                                    <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')} ? 'govuk-form-group--error'">
                                         <label class="govuk-label">Relation</label>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].relation')}">
                                             <span class="govuk-error-message"
@@ -317,7 +317,7 @@
                                                required="required"
                                                th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.relation.required}" />
                                     </td>
-                                    <td class="govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')} ? 'govuk-form-group--error'">
+                                    <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')} ? 'govuk-form-group--error'">
                                         <label class="govuk-label">Organisation</label>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].organisation')}">
                                             <span class="govuk-error-message"
@@ -332,7 +332,7 @@
                                                required="required"
                                                th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.organisation.required}" />
                                     </td>
-                                    <td class="govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')} ? 'govuk-form-group--error'">
+                                    <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')} ? 'govuk-form-group--error'">
                                         <label class="govuk-label">Position</label>
                                         <th:block th:if="${#fields.hasErrors('familyAffiliations[__${familyAffiliationStat.index}__].position')}">
                                             <span class="govuk-error-message"
@@ -347,7 +347,7 @@
                                                required="required"
                                                th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.position.required}" />
                                     </td>
-                                    <td>
+                                    <td class="govuk-table__cell govuk-table__cell">
                                         <button class="remove-another-row button-clear" th:value="${familyAffiliationStat.index}" name="removeFamilyMemberAffiliation" type="submit">Remove</button>
                                     </td>
                                 </tr>

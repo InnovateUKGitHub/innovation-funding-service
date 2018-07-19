@@ -33,17 +33,17 @@
                 </p>
 
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Appointments, directorships and consultancies</h2>
-                <table class="govuk-!-margin-top-6" th:unless="${#lists.isEmpty(model.appointments)}">
-                    <thead>
-                        <tr>
-                            <th scope="col">Organisation</th>
-                            <th scope="col">Position</th>
+                <table class="govuk-table govuk-!-margin-top-6" th:unless="${#lists.isEmpty(model.appointments)}">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Organisation</th>
+                            <th class="govuk-table__header" scope="col">Position</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr th:each="appointment : ${model.appointments}">
-                            <td th:text="${appointment.organisation}">Aptrans Ltd</td>
-                            <td th:text="${appointment.position}">Executive consultant</td>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="appointment : ${model.appointments}">
+                            <td class="govuk-table__cell" th:text="${appointment.organisation}">Aptrans Ltd</td>
+                            <td class="govuk-table__cell" th:text="${appointment.position}">Executive consultant</td>
                         </tr>
                     </tbody>
                 </table>
@@ -61,19 +61,19 @@
                 </p>
 
                 <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Close family member appointments, directorships and consultancies</h2>
-                <table class="govuk-!-margin-top-6" th:unless="${#lists.isEmpty(model.familyAffiliations)}">
-                    <thead>
-                        <tr>
-                            <th scope="col">Relation</th>
-                            <th scope="col">Organisation</th>
-                            <th scope="col">Position</th>
+                <table class="govuk-table govuk-!-margin-top-6" th:unless="${#lists.isEmpty(model.familyAffiliations)}">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Relation</th>
+                            <th class="govuk-table__header" scope="col">Organisation</th>
+                            <th class="govuk-table__header" scope="col">Position</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr th:each="familyAffiliation : ${model.familyAffiliations}">
-                            <td th:text="${familyAffiliation.relation}">Sister</td>
-                            <td th:text="${familyAffiliation.organisation}">Innovate UK</td>
-                            <td th:text="${familyAffiliation.position}">Executive consultant</td>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="familyAffiliation : ${model.familyAffiliations}">
+                            <td class="govuk-table__cell" th:text="${familyAffiliation.relation}">Sister</td>
+                            <td class="govuk-table__cell" th:text="${familyAffiliation.organisation}">Innovate UK</td>
+                            <td class="govuk-table__cell" th:text="${familyAffiliation.position}">Executive consultant</td>
                         </tr>
                     </tbody>
                 </table>

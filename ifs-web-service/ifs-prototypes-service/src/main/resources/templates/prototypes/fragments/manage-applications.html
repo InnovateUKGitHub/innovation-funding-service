@@ -125,107 +125,107 @@
 <div th:fragment="prototype-application-list-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Application number</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Innovation area</th>
-                    <th scope="col">Lead organisation</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Title</th>
+                    <th class="govuk-table__header" scope="col">Innovation area</th>
+                    <th class="govuk-table__header" scope="col">Lead organisation</th>
 
                     <th:block th:unless="${status == 'removed'}">
                         <th class="aligncentre" scope="col">Assessors</th>
-                        <th scope="col"><span class="govuk-visually-hidden">Assign</span></th>
+                        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Assign</span></th>
                     </th:block>
 
                     <th:block th:if="${status == 'removed'}">
-                        <th scope="col">Removed by</th>
+                        <th class="govuk-table__header" scope="col">Removed by</th>
                     </th:block>
 
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a th:href="${(status == 'removed' ? '/prototypes/1968-admin-readonly-application?status=removed' : '/prototypes/1968-admin-readonly-application?comp=Closed')}">10001000000</a></td>
-                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                    <td>Information &amp; communications technology (ICT)</td>
-                    <td>Wessex University</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a th:href="${(status == 'removed' ? '/prototypes/1968-admin-readonly-application?status=removed' : '/prototypes/1968-admin-readonly-application?comp=Closed')}">10001000000</a></td>
+                    <td class="govuk-table__cell">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td class="govuk-table__cell">Information &amp; communications technology (ICT)</td>
+                    <td class="govuk-table__cell">Wessex University</td>
 
                     <th:block th:unless="${status == 'removed'}">
                         <td class="aligncentre">1</td>
-                        <td class="alignright">
+                        <td class="govuk-table__cell alignright">
                             <a href="/prototypes/5386-assign-application" class="button-secondary govuk-!-margin-0">Assign</a>
                         </td>
                     </th:block>
 
                     <th:block th:if="${status == 'removed'}">
-                        <td>Peter Kault</td>
+                        <td class="govuk-table__cell">Peter Kault</td>
                     </th:block>
 
                 </tr>
-                <tr>
-                    <td><a href="#">10001000001</a></td>
-                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>Information &amp; communications technology (ICT)</td>
-                    <td>Plymouth University</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000001</a></td>
+                    <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td class="govuk-table__cell">Information &amp; communications technology (ICT)</td>
+                    <td class="govuk-table__cell">Plymouth University</td>
 
                     <th:block th:unless="${status == 'removed'}">
                         <td class="aligncentre">1</td>
-                        <td class="alignright">
+                        <td class="govuk-table__cell alignright">
                             <a href="/prototypes/5386-assign-application" class="button-secondary govuk-!-margin-0">Assign</a>
                         </td>
                     </th:block>
 
                     <th:block th:if="${status == 'removed'}">
-                        <td>Paul Newbury</td>
+                        <td class="govuk-table__cell">Paul Newbury</td>
                     </th:block>
 
                 </tr>
-                <tr>
-                    <td><a href="#">10001000002</a></td>
-                    <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
-                    <td>Information &amp; communications technology (ICT)</td>
-                    <td>Horizon Ltd</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000002</a></td>
+                    <td class="govuk-table__cell">Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
+                    <td class="govuk-table__cell">Information &amp; communications technology (ICT)</td>
+                    <td class="govuk-table__cell">Horizon Ltd</td>
                     <th:block th:unless="${status == 'removed'}">
                         <td class="aligncentre">0</td>
-                        <td class="alignright">
+                        <td class="govuk-table__cell alignright">
                             <a href="/prototypes/5386-assign-application" class="button-secondary govuk-!-margin-0">Assign</a>
                         </td>
                     </th:block>
 
                     <th:block th:if="${status == 'removed'}">
-                        <td>Paul Newbury</td>
+                        <td class="govuk-table__cell">Paul Newbury</td>
                     </th:block>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000003</a></td>
-                    <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
-                    <td>Information &amp; communications technology (ICT)</td>
-                    <td>Zodiac Industries Ltd</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                    <td class="govuk-table__cell">Information &amp; communications technology (ICT)</td>
+                    <td class="govuk-table__cell">Zodiac Industries Ltd</td>
                     <th:block th:unless="${status == 'removed'}">
                         <td class="aligncentre">5</td>
-                        <td class="alignright">
+                        <td class="govuk-table__cell alignright">
                             <a href="/prototypes/5386-assign-application" class="button-secondary govuk-!-margin-0">Assign</a>
                         </td>
                     </th:block>
 
                     <th:block th:if="${status == 'removed'}">
-                        <td>Paul Newbury</td>
+                        <td class="govuk-table__cell">Paul Newbury</td>
                     </th:block>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000004</a></td>
-                    <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
-                    <td>Information &amp; communications technology (ICT)</td>
-                    <td>Durham University</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000004</a></td>
+                    <td class="govuk-table__cell">Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                    <td class="govuk-table__cell">Information &amp; communications technology (ICT)</td>
+                    <td class="govuk-table__cell">Durham University</td>
                     <th:block th:unless="${status == 'removed'}">
                         <td class="aligncentre">1</td>
-                        <td class="alignright">
+                        <td class="govuk-table__cell alignright">
                             <a href="/prototypes/5386-assign-application" class="button-secondary govuk-!-margin-0">Assign</a>
                         </td>
                     </th:block>
 
                     <th:block th:if="${status == 'removed'}">
-                        <td>Paul Newbury</td>
+                        <td class="govuk-table__cell">Paul Newbury</td>
                     </th:block>
                 </tr>
             </tbody>
@@ -237,76 +237,76 @@
 <div th:fragment="prototype-application-list2-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Application number</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Lead organisation</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Title</th>
+                    <th class="govuk-table__header" scope="col">Lead organisation</th>
                     <th class="aligncentre" scope="col">Assessors</th>
                     <th class="aligncentre" scope="col">Accepted</th>
                     <!--<th class="aligncentre" scope="col">Started</th>-->
                     <th class="aligncentre" scope="col">Completed</th>
-                    <th scope="col"><span class="govuk-visually-hidden">Assign</span></th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Assign</span></th>
                 </tr>
             </thead>
-            <tbody>
-            <tr>
-                <td><a href="/prototypes/1968-admin-readonly-application">10001000000</a></td>
-                <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
-                <td>Wessex University</td>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">10001000000</a></td>
+                <td class="govuk-table__cell">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                <td class="govuk-table__cell">Wessex University</td>
                 <td class="aligncentre">4</td>
                 <td class="aligncentre">2</td>
                 <!--<td class="aligncentre">1</td>-->
                 <td class="aligncentre">1</td>
-                <td class="alignright">
+                <td class="govuk-table__cell alignright">
                     <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary govuk-!-margin-0">View progress</a>
                 </td>
             </tr>
-            <tr>
-                <td><a href="/prototypes/1968-admin-readonly-application">10001000001</a></td>
-                <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                <td>Plymouth University</td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">10001000001</a></td>
+                <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
+                <td class="govuk-table__cell">Plymouth University</td>
                 <td class="aligncentre">5</td>
                 <td class="aligncentre">4</td>
                 <!--<td class="aligncentre">2</td>-->
                 <td class="aligncentre">1</td>
-                <td class="alignright">
+                <td class="govuk-table__cell alignright">
                     <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary govuk-!-margin-0">View progress</a>
                 </td>
             </tr>
-            <tr>
-                <td><a href="/prototypes/1968-admin-readonly-application">10001000002</a></td>
-                <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
-                <td>Horizon Ltd</td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">10001000002</a></td>
+                <td class="govuk-table__cell">Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
+                <td class="govuk-table__cell">Horizon Ltd</td>
                 <td class="aligncentre">5</td>
                 <td class="aligncentre">4</td>
                 <!--<td class="aligncentre">2</td>-->
                 <td class="aligncentre">1</td>
-                <td class="alignright">
+                <td class="govuk-table__cell alignright">
                     <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary govuk-!-margin-0">View progress</a>
                 </td>
             </tr>
-            <tr>
-                <td><a href="/prototypes/1968-admin-readonly-application">10001000003</a></td>
-                <td>Assessing the potential for next generation batteries to improve healthcare outcome</td>
-                <td>Zodiac Industries Ltd</td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">10001000003</a></td>
+                <td class="govuk-table__cell">Assessing the potential for next generation batteries to improve healthcare outcome</td>
+                <td class="govuk-table__cell">Zodiac Industries Ltd</td>
                 <td class="aligncentre">5</td>
                 <td class="aligncentre">4</td>
                 <!--<td class="aligncentre">2</td>-->
                 <td class="aligncentre">1</td>
-                <td class="alignright">
+                <td class="govuk-table__cell alignright">
                     <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary govuk-!-margin-0">View progress</a>
                 </td>
             </tr>
-            <tr>
-                <td><a href="/prototypes/1968-admin-readonly-application">10001000004</a></td>
-                <td>Assessing the potential for next generation batteries to improve healthcare outcome</td>
-                <td>Durham University</td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="/prototypes/1968-admin-readonly-application">10001000004</a></td>
+                <td class="govuk-table__cell">Assessing the potential for next generation batteries to improve healthcare outcome</td>
+                <td class="govuk-table__cell">Durham University</td>
                 <td class="aligncentre">5</td>
                 <td class="aligncentre">4</td>
                 <!--<td class="aligncentre">2</td>-->
                 <td class="aligncentre">1</td>
-                <td class="alignright">
+                <td class="govuk-table__cell alignright">
                     <a th:href="${'/prototypes/5471-assign-to-application'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '' )}" class="button-secondary govuk-!-margin-0">View progress</a>
                 </td>
             </tr>
@@ -319,82 +319,82 @@
 <div th:fragment="prototype-application-list3-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Application number</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Lead organisation</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Title</th>
+                    <th class="govuk-table__header" scope="col">Lead organisation</th>
                     <th class="aligncentre" scope="col">Assessors</th>
                     <th class="aligncentre" scope="col">Notified</th>
                     <th class="aligncentre" scope="col">Accepted</th>
                     <th class="aligncentre" scope="col">Started</th>
                     <th class="aligncentre" scope="col">Submitted</th>
-                    <th scope="col"><span class="govuk-visually-hidden">Remove</span></th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Remove</span></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="#">10001000000</a></td>
-                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                    <td>Wessex University</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000000</a></td>
+                    <td class="govuk-table__cell">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td class="govuk-table__cell">Wessex University</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Submitted:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/545-application-feedback?internal">Review</a>
                     </td>
                 </tr>
                 <tr id="prototype-assigned-row-one">
-                    <td><a href="#">10001000003</a></td>
-                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>Plymouth University</td>
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td class="govuk-table__cell">Plymouth University</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" id="prototype-assiged-row-one-remove">Remove</a>
                     </td>
                 </tr>
                 <tr id="prototype-assigned-row-two">
-                    <td><a href="#">10001000004</a></td>
-                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>Plymouth University</td>
+                    <td class="govuk-table__cell"><a href="#">10001000004</a></td>
+                    <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td class="govuk-table__cell">Plymouth University</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" data-js-modal="remove-assigned-application">Remove</a>
                     </td>
                 </tr>
                 <tr id="prototype-assigned-row-three">
-                    <td><a href="#">10001000005</a></td>
-                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>Plymouth University</td>
+                    <td class="govuk-table__cell"><a href="#">10001000005</a></td>
+                    <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td class="govuk-table__cell">Plymouth University</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" id="prototype-assiged-row-three-remove">Remove</a>
                     </td>
                 </tr>
                 <tr id="prototype-assigned-row-four">
-                    <td><a href="#">10001000006</a></td>
-                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>Plymouth University</td>
+                    <td class="govuk-table__cell"><a href="#">10001000006</a></td>
+                    <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td class="govuk-table__cell">Plymouth University</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" id="prototype-assiged-row-four-remove">Remove</a>
                     </td>
                 </tr>
@@ -407,22 +407,22 @@
 <div th:fragment="prototype-application-list4-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Application number</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Lead organisation</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Title</th>
+                    <th class="govuk-table__header" scope="col">Lead organisation</th>
                     <th class="aligncentre" scope="col">Assessors</th>
-                    <th scope="col">Reason</th>
+                    <th class="govuk-table__header" scope="col">Reason</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="#">10001000003</a></td>
-                    <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
-                    <td>Zodiac Industries Ltd</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                    <td class="govuk-table__cell">Zodiac Industries Ltd</td>
                     <td class="aligncentre">4</td>
-                    <td>Too many assignments<br />
+                    <td class="govuk-table__cell">Too many assignments<br />
                         You have frequently assign me me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during the summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</td>
                 </tr>
             </tbody>
@@ -435,70 +435,70 @@
 <div th:fragment="prototype-application-list5-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Application number</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Lead organisation</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Title</th>
+                    <th class="govuk-table__header" scope="col">Lead organisation</th>
                     <th class="aligncentre" scope="col">Assessors</th>
                     <th class="aligncentre" scope="col">Accepted</th>
                     <th class="aligncentre" scope="col">Submitted</th>
-                    <th scope="col"><span class="govuk-visually-hidden">Assign</span></th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Assign</span></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="#">10001000000</a></td>
-                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                    <td>Wessex University</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000000</a></td>
+                    <td class="govuk-table__cell">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td class="govuk-table__cell">Wessex University</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000001</a></td>
-                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>Plymouth University</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000001</a></td>
+                    <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td class="govuk-table__cell">Plymouth University</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000002</a></td>
-                    <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
-                    <td>Horizon Ltd</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000002</a></td>
+                    <td class="govuk-table__cell">Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
+                    <td class="govuk-table__cell">Horizon Ltd</td>
                     <td class="aligncentre">0</td>
                     <td class="aligncentre">0</td>
                     <td class="aligncentre">0</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000003</a></td>
-                    <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
-                    <td>Zodiac Industries Ltd</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                    <td class="govuk-table__cell">Zodiac Industries Ltd</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">2</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000004</a></td>
-                    <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
-                    <td>Durham University</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000004</a></td>
+                    <td class="govuk-table__cell">Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                    <td class="govuk-table__cell">Durham University</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
@@ -512,31 +512,31 @@
 <div th:fragment="prototype-application-list6-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Application number</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Lead organisation</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Title</th>
+                    <th class="govuk-table__header" scope="col">Lead organisation</th>
                     <th class="aligncentre" scope="col">Assigned</th>
-                    <th scope="col">Remove</th>
+                    <th class="govuk-table__header" scope="col">Remove</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="#">10001000000</a></td>
-                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                    <td>Wessex University</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000000</a></td>
+                    <td class="govuk-table__cell">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td class="govuk-table__cell">Wessex University</td>
                     <td class="aligncentre">4</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Remove</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000001</a></td>
-                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>Plymouth University</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000001</a></td>
+                    <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td class="govuk-table__cell">Plymouth University</td>
                     <td class="aligncentre">4</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Remove</a>
                     </td>
                 </tr>
@@ -550,58 +550,58 @@
 <div th:fragment="prototype-application-list7-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-            <tr>
-                <th scope="col">Application number</th>
-                <th scope="col">Title</th>
-                <th scope="col">Lead Organisation</th>
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Application number</th>
+                <th class="govuk-table__header" scope="col">Title</th>
+                <th class="govuk-table__header" scope="col">Lead Organisation</th>
                 <th class="aligncentre" scope="col">Assigned</th>
-                <th scope="col"><span class="govuk-visually-hidden">Assign</span></th>
+                <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Assign</span></th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-                <td><a href="#">10001000000</a></td>
-                <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                <td>Wessex University</td>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="#">10001000000</a></td>
+                <td class="govuk-table__cell">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                <td class="govuk-table__cell">Wessex University</td>
                 <td class="aligncentre">1</td>
-                <td class="alignright">
+                <td class="govuk-table__cell alignright">
                     <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                 </td>
             </tr>
-            <tr>
-                <td><a href="#">10001000001</a></td>
-                <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                <td>Plymouth University</td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="#">10001000001</a></td>
+                <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
+                <td class="govuk-table__cell">Plymouth University</td>
                 <td class="aligncentre">1</td>
-                <td class="alignright">
+                <td class="govuk-table__cell alignright">
                     <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                 </td>
             </tr>
-            <tr>
-                <td><a href="#">10001000002</a></td>
-                <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
-                <td>Horizon Ltd</td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="#">10001000002</a></td>
+                <td class="govuk-table__cell">Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
+                <td class="govuk-table__cell">Horizon Ltd</td>
                 <td class="aligncentre">0</td>
-                <td class="alignright">
+                <td class="govuk-table__cell alignright">
                     <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                 </td>
             </tr>
-            <tr>
-                <td><a href="#">10001000003</a></td>
-                <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
-                <td>Zodiac Industries Ltd</td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                <td class="govuk-table__cell">Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                <td class="govuk-table__cell">Zodiac Industries Ltd</td>
                 <td class="aligncentre">5</td>
-                <td class="alignright">
+                <td class="govuk-table__cell alignright">
                     <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                 </td>
             </tr>
-            <tr>
-                <td><a href="#">10001000004</a></td>
-                <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
-                <td>Durham University</td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><a href="#">10001000004</a></td>
+                <td class="govuk-table__cell">Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                <td class="govuk-table__cell">Durham University</td>
                 <td class="aligncentre">1</td>
-                <td class="alignright">
+                <td class="govuk-table__cell alignright">
                     <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                 </td>
             </tr>
@@ -615,57 +615,57 @@
 <div th:fragment="prototype-application-list8-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Application number</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Lead organisation</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Title</th>
+                    <th class="govuk-table__header" scope="col">Lead organisation</th>
                     <th class="aligncentre" scope="col">Assessors</th>
                     <th class="aligncentre" scope="col">Notified</th>
-                    <th scope="col"><span class="govuk-visually-hidden">Re-assign</span></th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Re-assign</span></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 <tr id="prototype-previous-row-zero">
                     <td colspan="5">No assessors were previously assigned to this application.</td>
                 </tr>
                 <tr id="prototype-previous-row-one">
-                    <td><a href="#">10001000003</a></td>
-                    <td>Assessing the potential for next generation batteries to improve healthcare outcome</td>
-                    <td>Zodiac Industries Ltd</td>
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">Assessing the potential for next generation batteries to improve healthcare outcome</td>
+                    <td class="govuk-table__cell">Zodiac Industries Ltd</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" id="prototype-row-one-reassign">Re-assign</a>
                     </td>
                 </tr>
                 <tr id="prototype-previous-row-two">
-                    <td><a href="#">10001000004</a></td>
-                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>Plymouth University</td>
+                    <td class="govuk-table__cell"><a href="#">10001000004</a></td>
+                    <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td class="govuk-table__cell">Plymouth University</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" id="prototype-row-two-reassign">Re-assign</a>
                     </td>
                 </tr>
                 <tr id="prototype-previous-row-three">
-                    <td><a href="#">10001000005</a></td>
-                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>Plymouth University</td>
+                    <td class="govuk-table__cell"><a href="#">10001000005</a></td>
+                    <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td class="govuk-table__cell">Plymouth University</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" id="prototype-row-three-reassign">Re-assign</a>
                     </td>
                 </tr>
                 <tr id="prototype-previous-row-four">
-                    <td><a href="#">10001000006</a></td>
-                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
-                    <td>Plymouth University</td>
+                    <td class="govuk-table__cell"><a href="#">10001000006</a></td>
+                    <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
+                    <td class="govuk-table__cell">Plymouth University</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" id="prototype-row-four-reassign">Re-assign</a>
                     </td>
                 </tr>
@@ -680,54 +680,54 @@
 <div th:fragment="prototype-application-list9-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Application number</th>
-                    <th scope="col">Project title</th>
-                    <th scope="col">Lead</th>
-                    <th scope="col">Area</th>
-                    <th scope="col">Number of partners</th>
-                    <th scope="col">Grant requested(£)</th>
-                    <th scope="col">Total project cost(£)</th>
-                    <th scope="col">Duration</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Project title</th>
+                    <th class="govuk-table__header" scope="col">Lead</th>
+                    <th class="govuk-table__header" scope="col">Area</th>
+                    <th class="govuk-table__header" scope="col">Number of partners</th>
+                    <th class="govuk-table__header" scope="col">Grant requested(£)</th>
+                    <th class="govuk-table__header" scope="col">Total project cost(£)</th>
+                    <th class="govuk-table__header" scope="col">Duration</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="#">10001000003</a></td>
-                    <td>Machine learning in robots</td>
-                    <td>PWC</td>
-                    <td>HVM</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">Machine learning in robots</td>
+                    <td class="govuk-table__cell">PWC</td>
+                    <td class="govuk-table__cell">HVM</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">203,000</td>
                     <td class="aligncentre">324,000</td>
                     <td class="aligncentre">12</td>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000003</a></td>
-                    <td>Machine learning in robots</td>
-                    <td>PWC</td>
-                    <td>HVM</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">Machine learning in robots</td>
+                    <td class="govuk-table__cell">PWC</td>
+                    <td class="govuk-table__cell">HVM</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">203,000</td>
                     <td class="aligncentre">324,000</td>
                     <td class="aligncentre">12</td>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000003</a></td>
-                    <td>Machine learning in robots</td>
-                    <td>PWC</td>
-                    <td>HVM</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">Machine learning in robots</td>
+                    <td class="govuk-table__cell">PWC</td>
+                    <td class="govuk-table__cell">HVM</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">203,000</td>
                     <td class="aligncentre">324,000</td>
                     <td class="aligncentre">12</td>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000003</a></td>
-                    <td>Machine learning in robots</td>
-                    <td>PWC</td>
-                    <td>HVM</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">Machine learning in robots</td>
+                    <td class="govuk-table__cell">PWC</td>
+                    <td class="govuk-table__cell">HVM</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">203,000</td>
                     <td class="aligncentre">324,000</td>
@@ -742,8 +742,8 @@
 <div th:fragment="prototype-application-list10-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                     <th scope="col" class="width-10-percent">Application number</th>
                     <th scope="col" class="width-45-percent">Project title</th>
                     <th scope="col" class="width-10-percent">Lead organisation</th>
@@ -751,45 +751,45 @@
                     <th scope="col" class="width-15-percent"><span class="govuk-visually-hidden">Inform</span></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="#">10001000003</a></td>
-                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                    <td>Wessex University</td>
-                    <td>James Brown</td>
-                    <td class="alignright">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td class="govuk-table__cell">Wessex University</td>
+                    <td class="govuk-table__cell">James Brown</td>
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5698-draft-email" class="govuk-button">Inform applicant</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000003</a></td>
-                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                    <td>Wessex University</td>
-                    <td>James Brown</td>
-                    <td class="alignright"><strong>Informed</strong></td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td class="govuk-table__cell">Wessex University</td>
+                    <td class="govuk-table__cell">James Brown</td>
+                    <td class="govuk-table__cell alignright"><strong>Informed</strong></td>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000003</a></td>
-                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                    <td>Wessex University</td>
-                    <td>James Brown</td>
-                    <td class="alignright">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td class="govuk-table__cell">Wessex University</td>
+                    <td class="govuk-table__cell">James Brown</td>
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5698-draft-email" class="govuk-button">Inform applicant</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000003</a></td>
-                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                    <td>Wessex University</td>
-                    <td>James Brown</td>
-                    <td class="alignright"><strong>Informed</strong></td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td class="govuk-table__cell">Wessex University</td>
+                    <td class="govuk-table__cell">James Brown</td>
+                    <td class="govuk-table__cell alignright"><strong>Informed</strong></td>
                 </tr>
-                <tr>
-                    <td><a href="#">10001000003</a></td>
-                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
-                    <td>Wessex University</td>
-                    <td>James Brown</td>
-                    <td class="alignright">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="#">10001000003</a></td>
+                    <td class="govuk-table__cell">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+                    <td class="govuk-table__cell">Wessex University</td>
+                    <td class="govuk-table__cell">James Brown</td>
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5698-draft-email" class="govuk-button">Inform applicant</a>
                     </td>
                 </tr>
@@ -802,46 +802,46 @@
 <div th:fragment="prototype-application-notify-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Application</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application</th>
                     <th class="aligncentre" scope="col">Assessors</th>
-                    <th scope="col"><span class="govuk-visually-hidden">Assign</span></th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Assign</span></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">The potential for glucose based contact lens monitoring in the management of type 2 diabetes</td>
                     <td class="aligncentre">0</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5386-assign-application" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td>Mobility problems and the potential for internet enabled zimmer frame</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Mobility problems and the potential for internet enabled zimmer frame</td>
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5386-assign-application" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td>Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Modifying internal domestic plumbing systems to enhance fire prevention in the home</td>
                     <td class="aligncentre">2</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5386-assign-application" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td class="aligncentre">3</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5386-assign-application" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td>Assessing the potential for next generation batteries to improve healthcare outcom</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Assessing the potential for next generation batteries to improve healthcare outcom</td>
                     <td class="aligncentre">4</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5386-assign-application" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
@@ -855,14 +855,14 @@
 <div th:fragment="prototype-assessors-list-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Assessor</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Innovation area</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor</th>
+                    <th class="govuk-table__header" scope="col">Type</th>
+                    <th class="govuk-table__header" scope="col">Innovation area</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Applications this competition</th>
-                    <th scope="col"><span class="govuk-visually-hidden">Assign</span></th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Assign</span></th>
                 </tr>
             </thead>
             <tbody th:if="${type == 'assigned'}">
@@ -870,74 +870,74 @@
                     <td colspan="6" class="aligncentre"><span class="govuk-heading-s">There are currently no assessors assigned to the application</span></td>
                 </tr>
                 <tr id="assessor-assigned">
-                    <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                    <td>Business</td>
-                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">2</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" id="remove-assessor" class="button-secondary govuk-!-margin-0">Remove</a>
                     </td>
                 </tr>
             </tbody>
             <tbody th:if="${type == 'available'}">
                 <tr id="assessor-available">
-                    <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                    <td>Business</td>
-                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" id="assign-assessor" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                    <td>Academic</td>
-                    <td>Healthcare, Regenerative medicine</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
+                    <td class="govuk-table__cell">Academic</td>
+                    <td class="govuk-table__cell">Healthcare, Regenerative medicine</td>
                     <td class="aligncentre">9</td>
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
-                    <td>Business</td>
-                    <td>Analytical science</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Analytical science</td>
                     <td class="aligncentre">20</td>
                     <td class="aligncentre">0</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
-                    <td>Academic</td>
-                    <td>Architectures and operating system</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
+                    <td class="govuk-table__cell">Academic</td>
+                    <td class="govuk-table__cell">Architectures and operating system</td>
                     <td class="aligncentre">15</td>
                     <td class="aligncentre">5</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                    <td>Business</td>
-                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">9</td>
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                    <td>Business</td>
-                    <td>Biophysics and soft matter physics</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Biophysics and soft matter physics</td>
                     <td class="aligncentre">10</td>
                     <td class="aligncentre">5</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
@@ -950,101 +950,101 @@
 <div th:fragment="prototype-assessors-list2-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Assessor</th>
-                    <!--<th scope="col">Type</th>-->
-                    <th scope="col">Skill areas</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor</th>
+                    <!--<th class="govuk-table__header" scope="col">Type</th>-->
+                    <th class="govuk-table__header" scope="col">Skill areas</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
                     <!--<th class="aligncentre" scope="col">Accepted</th>-->
                     <!--<th class="aligncentre" scope="col">Started</th>-->
                     <th class="aligncentre" scope="col">Submitted</th>
-                    <th scope="col"><span class="govuk-visually-hidden">Assign</span></th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Assign</span></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                    <!--<td>Business</td>-->
-                    <!--<td>Electronics, sensors &amp; photonics, Materials</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
+                    <!--<td class="govuk-table__cell">Business</td>-->
+                    <!--<td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">2</td>
                     <!--<td class="aligncentre">2</td>-->
                     <!--<td class="aligncentre">1</td>-->
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                    <!--<td>Academic</td>-->
-                    <!--<td>Healthcare, Regenerative medicine</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
+                    <!--<td class="govuk-table__cell">Academic</td>-->
+                    <!--<td class="govuk-table__cell">Healthcare, Regenerative medicine</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">2</td>
                     <!--<td class="aligncentre">2</td>-->
                     <!--<td class="aligncentre">1</td>-->
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
-                    <!--<td>Business</td>-->
-                    <!--<td>Analytical science</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
+                    <!--<td class="govuk-table__cell">Business</td>-->
+                    <!--<td class="govuk-table__cell">Analytical science</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">2</td>
                     <!--<td class="aligncentre">2</td>-->
                     <!--<td class="aligncentre">0</td>-->
                     <td class="aligncentre">0</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
-                    <!--<td>Academic</td>-->
-                    <!--<td>Architectures and operating system</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
+                    <!--<td class="govuk-table__cell">Academic</td>-->
+                    <!--<td class="govuk-table__cell">Architectures and operating system</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">9</td>
                     <td class="aligncentre">5</td>
                     <!--<td class="aligncentre">2</td>-->
                     <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">2</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                    <!--<td>Business</td>-->
-                    <!--<td>Electronics, sensors &amp; photonics, Materials</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                    <!--<td class="govuk-table__cell">Business</td>-->
+                    <!--<td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">1</td>
                     <!--<td class="aligncentre">2</td>-->
                     <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                    <!--<td>Business</td>-->
-                    <!--<td>Biophysics and soft matter physics</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
+                    <!--<td class="govuk-table__cell">Business</td>-->
+                    <!--<td class="govuk-table__cell">Biophysics and soft matter physics</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">9</td>
                     <td class="aligncentre">5</td>
                     <!--<td class="aligncentre">3</td>-->
                     <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">2</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
@@ -1057,74 +1057,74 @@
 <div th:fragment="prototype-assessors-list3-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Assessor</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Innovation area</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor</th>
+                    <th class="govuk-table__header" scope="col">Type</th>
+                    <th class="govuk-table__header" scope="col">Innovation area</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
                     <th class="aligncentre" scope="col">Notified</th>
                     <th class="aligncentre" scope="col">Accepted</th>
                     <th class="aligncentre" scope="col">Started</th>
                     <th class="aligncentre" scope="col">Submitted</th>
-                    <th scope="col"><span class="govuk-visually-hidden">Remove</span></th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Remove</span></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                    <td>Academic</td>
-                    <td>Healthcare, Regenerative medicine</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
+                    <td class="govuk-table__cell">Academic</td>
+                    <td class="govuk-table__cell">Healthcare, Regenerative medicine</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
 
                     </td>
                 </tr>
                 <tr id="prototype-started-removable">
-                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                    <td>Business</td>
-                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Accepted:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre"><strong class="show-mobile">Started:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" data-js-modal="remove-assigned-assessor">Remove</a>
                     </td>
                 </tr>
                 <tr id="prototype-assigned-row-three">
-                    <td><a href="/prototypes/5229-assessor-profile">Bob Smith</a></td>
-                    <td>Business</td>
-                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Bob Smith</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" id="prototype-remove-row-three">Remove</a>
                     </td>
                 </tr>
                 <tr id="prototype-assigned-row-four">
-                    <td><a href="/prototypes/5229-assessor-profile">Brian Smith</a></td>
-                    <td>Business</td>
-                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Brian Smith</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
                     <td class="aligncentre">-</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" id="prototype-remove-row-four">Remove</a>
                     </td>
                 </tr>
@@ -1137,24 +1137,24 @@
 <div th:fragment="prototype-assessors-list4-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Assessor</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Innovation Area</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor</th>
+                    <th class="govuk-table__header" scope="col">Type</th>
+                    <th class="govuk-table__header" scope="col">Innovation Area</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
-                    <th scope="col">Reason</th>
+                    <th class="govuk-table__header" scope="col">Reason</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                    <td>Business</td>
-                    <td>Biophysics and soft matter physics</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Biophysics and soft matter physics</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">4</td>
-                    <td><strong>Too many assignments</strong><br />You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</td>
+                    <td class="govuk-table__cell"><strong>Too many assignments</strong><br />You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</td>
                 </tr>
             </tbody>
         </table>
@@ -1165,88 +1165,88 @@
 <div th:fragment="prototype-assessors-list5-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Assessor</th>
-                    <!--<th scope="col">Type</th>-->
-                    <!--<th scope="col">Innovation Area</th>-->
-                    <th scope="col">Skill areas</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor</th>
+                    <!--<th class="govuk-table__header" scope="col">Type</th>-->
+                    <!--<th class="govuk-table__header" scope="col">Innovation Area</th>-->
+                    <th class="govuk-table__header" scope="col">Skill areas</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
                     <th class="aligncentre" scope="col">Accepted</th>
                     <!--<th class="aligncentre" scope="col">Started</th>-->
                     <th class="aligncentre" scope="col">Submitted</th>
-                    <th scope="col"><span class="govuk-visually-hidden">View progress</span></th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">View progress</span></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                    <!--<td>Academic</td>-->
-                    <!--<td>Healthcare, Regenerative medicine</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
+                    <!--<td class="govuk-table__cell">Academic</td>-->
+                    <!--<td class="govuk-table__cell">Healthcare, Regenerative medicine</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">2</td>
                     <!--<td class="aligncentre">1</td>-->
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5390-assessor-progress" class="button-secondary govuk-!-margin-0">View progress</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
-                    <!--<td>Business</td>-->
-                    <!--<td>Analytical science</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
+                    <!--<td class="govuk-table__cell">Business</td>-->
+                    <!--<td class="govuk-table__cell">Analytical science</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">4</td>
                     <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5390-assessor-progress" class="button-secondary govuk-!-margin-0">View progress</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
-                    <!--<td>Academic</td>-->
-                    <!--<td>Architectures and operating system</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
+                    <!--<td class="govuk-table__cell">Academic</td>-->
+                    <!--<td class="govuk-table__cell">Architectures and operating system</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">4</td>
                     <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5390-assessor-progress" class="button-secondary govuk-!-margin-0">View progress</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                    <!--<td>Business</td>-->
-                    <!--<td>Electronics, sensors &amp; photonics, Materials</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                    <!--<td class="govuk-table__cell">Business</td>-->
+                    <!--<td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">4</td>
                     <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5390-assessor-progress" class="button-secondary govuk-!-margin-0">View progress</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                    <!--<td>Business</td>-->
-                    <!--<td>Biophysics and soft matter physics</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
+                    <!--<td class="govuk-table__cell">Business</td>-->
+                    <!--<td class="govuk-table__cell">Biophysics and soft matter physics</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">4</td>
                     <!--<td class="aligncentre">2</td>-->
                     <td class="aligncentre">1</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5390-assessor-progress" class="button-secondary govuk-!-margin-0">View progress</a>
                     </td>
                 </tr>
@@ -1259,70 +1259,70 @@
 <div th:fragment="prototype-assessors-list6-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Assessor</th>
-                    <!--<th scope="col">Type</th>-->
-                    <!--<th scope="col">Innovation Area</th>-->
-                    <th scope="col">Skill areas</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor</th>
+                    <!--<th class="govuk-table__header" scope="col">Type</th>-->
+                    <!--<th class="govuk-table__header" scope="col">Innovation Area</th>-->
+                    <th class="govuk-table__header" scope="col">Skill areas</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
-                    <th scope="col"><span class="govuk-visually-hidden">Assign</span></th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Assign</span></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><a th:href="${'/prototypes/5229-assessor-profile'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">Oliver Romero</a></td>
-                    <!--<td>Academic</td>-->
-                    <!--<td>Healthcare, Regenerative medicine</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a th:href="${'/prototypes/5229-assessor-profile'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}">Oliver Romero</a></td>
+                    <!--<td class="govuk-table__cell">Academic</td>-->
+                    <!--<td class="govuk-table__cell">Healthcare, Regenerative medicine</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre">4</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a th:href="${'/prototypes/5473-assign-assessors-progress'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')}" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
-                    <!--<td>Business</td>-->
-                    <!--<td>Analytical science</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
+                    <!--<td class="govuk-table__cell">Business</td>-->
+                    <!--<td class="govuk-table__cell">Analytical science</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5473-assign-assessors-progress" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
-                    <!--<td>Academic</td>-->
-                    <!--<td>Architectures and operating system</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
+                    <!--<td class="govuk-table__cell">Academic</td>-->
+                    <!--<td class="govuk-table__cell">Architectures and operating system</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5473-assign-assessors-progress" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                    <!--<td>Business</td>-->
-                    <!--<td>Electronics, sensors &amp;amp; photonics, Materials</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                    <!--<td class="govuk-table__cell">Business</td>-->
+                    <!--<td class="govuk-table__cell">Electronics, sensors &amp;amp; photonics, Materials</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5473-assign-assessors-progress" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
-                <tr>
-                    <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                    <!--<td>Business</td>-->
-                    <!--<td>Biophysics and soft matter physics</td>-->
-                    <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
+                    <!--<td class="govuk-table__cell">Business</td>-->
+                    <!--<td class="govuk-table__cell">Biophysics and soft matter physics</td>-->
+                    <td class="govuk-table__cell">Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
                     <td class="aligncentre">5</td>
                     <td class="aligncentre">5</td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="/prototypes/5473-assign-assessors-progress" class="button-secondary govuk-!-margin-0">Assign</a>
                     </td>
                 </tr>
@@ -1336,51 +1336,51 @@
 <div th:fragment="prototype-assessors-list7-table">
     <div class="table-overflow">
         <table id="application-list">
-            <thead>
-                <tr>
-                    <th scope="col">Assessor</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Innovation area</th>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Assessor</th>
+                    <th class="govuk-table__header" scope="col">Type</th>
+                    <th class="govuk-table__header" scope="col">Innovation area</th>
                     <th class="aligncentre" scope="col">Total applications</th>
                     <th class="aligncentre" scope="col">Assigned</th>
                     <th class="aligncentre" scope="col">Notified</th>
-                    <th scope="col"><span class="govuk-visually-hidden">Re-assign</span></th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Re-assign</span></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 <tr id="prototype-previous-row-zero">
                     <td colspan="6">No assessors were previously assigned to this application.</td>
                 </tr>
                 <tr id="prototype-previous-row-one">
-                    <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                    <td>Business</td>
-                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" id="prototype-row-one-reassign">Re-assign</a>
                     </td>
                 </tr>
                 <tr id="prototype-previous-row-two">
-                    <td><a href="/prototypes/5229-assessor-profile">Bob Smith</a></td>
-                    <td>Business</td>
-                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Bob Smith</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">4</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" id="prototype-row-two-reassign">Re-assign</a>
                     </td>
                 </tr>
                 <tr id="prototype-previous-row-three">
-                    <td><a href="/prototypes/5229-assessor-profile">Brian Smith</a></td>
-                    <td>Business</td>
-                    <td>Electronics, sensors &amp; photonics, Materials</td>
+                    <td class="govuk-table__cell"><a href="/prototypes/5229-assessor-profile">Brian Smith</a></td>
+                    <td class="govuk-table__cell">Business</td>
+                    <td class="govuk-table__cell">Electronics, sensors &amp; photonics, Materials</td>
                     <td class="aligncentre">6</td>
                     <td class="aligncentre">3</td>
                     <td class="aligncentre"><strong class="show-mobile">Notified:</strong>  <span><span class="yes">Yes</span></span></td>
-                    <td class="alignright">
+                    <td class="govuk-table__cell alignright">
                         <a href="#" class="button-secondary govuk-!-margin-0" id="prototype-row-three-reassign">Re-assign</a>
                     </td>
                 </tr>

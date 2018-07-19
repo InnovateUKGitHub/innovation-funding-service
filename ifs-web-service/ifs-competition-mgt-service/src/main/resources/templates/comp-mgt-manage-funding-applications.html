@@ -121,21 +121,21 @@
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('selectionForm.ids')} ? govuk-form-group--error : ''">
                 <div class="table-overflow">
-                    <table id="application-list">
-                        <thead>
-                        <tr>
-                            <th scope="col" id="select-applications-label">Select applications</th>
-                            <th scope="col">Application number</th>
-                            <th scope="col">Project title</th>
-                            <th scope="col">Lead</th>
-                            <th scope="col">Funding decision</th>
-                            <th scope="col">Email status</th>
-                            <th scope="col" class="alignright">Date sent</th>
+                    <table class="govuk-table" id="application-list">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col" id="select-applications-label">Select applications</th>
+                            <th class="govuk-table__header" scope="col">Application number</th>
+                            <th class="govuk-table__header" scope="col">Project title</th>
+                            <th class="govuk-table__header" scope="col">Lead</th>
+                            <th class="govuk-table__header" scope="col">Funding decision</th>
+                            <th class="govuk-table__header" scope="col">Email status</th>
+                            <th scope="col" class="govuk-table__header alignright">Date sent</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="applicationSummary, stat : ${model.content}">
-                            <td class="form-group-cell">
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="applicationSummary, stat : ${model.content}">
+                            <td class="govuk-table__cell form-group-cell">
                                 <div class="govuk-checkboxes">
                                     <div class="govuk-checkboxes__item"
                                          th:if="${applicationSummary.applicationFundingDecisionIsChangeable()}">
@@ -156,9 +156,9 @@
                                     <span class="empty-table-cell-select">-</span>
                                 </th:block>
                             </td>
-                            <td th:text="${applicationSummary.id}">194731</td>
-                            <td th:text="${applicationSummary.name}">Machine learning in robots</td>
-                            <td th:text="${applicationSummary.lead}">PWC</td>
+                            <td class="govuk-table__cell" th:text="${applicationSummary.id}">194731</td>
+                            <td class="govuk-table__cell" th:text="${applicationSummary.name}">Machine learning in robots</td>
+                            <td class="govuk-table__cell" th:text="${applicationSummary.lead}">PWC</td>
                             <th:block th:switch="${applicationSummary.fundingDecision}">
                                 <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).FUNDED}">Successful</td>
                                 <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNFUNDED}">Unsuccessful</td>
@@ -166,11 +166,11 @@
                                 <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).ON_HOLD}">On hold</td>
                                 <td th:case="*">-</td>
                             </th:block>
-                            <td th:text="${applicationSummary.manageFundingEmailDate} ? 'Sent' : '-'">-</td>
-                            <td class="alignright" th:text="${applicationSummary.manageFundingEmailDate} ? ${#temporals.format(applicationSummary.manageFundingEmailDate, 'd MMMM yyyy')} : '-'">9 January 2017</td>
+                            <td class="govuk-table__cell" th:text="${applicationSummary.manageFundingEmailDate} ? 'Sent' : '-'">-</td>
+                            <td class="govuk-table__cell alignright" th:text="${applicationSummary.manageFundingEmailDate} ? ${#temporals.format(applicationSummary.manageFundingEmailDate, 'd MMMM yyyy')} : '-'">9 January 2017</td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(model.content)}">
-                            <td colspan="7">No applications found.</td>
+                        <tr class="govuk-table__row" th:if="${#lists.isEmpty(model.content)}">
+                            <td class="govuk-table__cell" colspan="7">No applications found.</td>
                         </tr>
                         </tbody>
                     </table>

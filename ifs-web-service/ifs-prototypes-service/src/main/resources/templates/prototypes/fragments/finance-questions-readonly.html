@@ -17,14 +17,14 @@
 	<div>
 	<div data-finance-subsection-table-container="28">
 		<div class="govuk-form-group">
-			<table>
-				<tbody>
-					<tr>
+			<table class="govuk-table">
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
 						<th class="width-large">
 
 							<label class="govuk-label" for="working_days">Working Days per Year</label>
 						</th>
-						<td>
+						<td class="govuk-table__cell">
 							<input type="number" class="width-small" id="cost-labour-1-workingDays" name="labour-workingDays-1" readonly="readonly" value="232" />
 						</td>
 					</tr>
@@ -32,27 +32,27 @@
 			</table>
 			<div class="govuk-form-group">
 				<table id="labour-costs-table">
-					<thead>
-						<tr>
-							<th>Role within project</th>
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th class="govuk-table__header" scope="col">Role within project</th>
 							<th class="numeric">Gross Annual Salary</th>
 							<th class="numeric">Rate (&pound;/day)</th>
 							<th class="numeric">Days to be spent by all staff at this grade</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody class="govuk-table__body">
 
 						<tr data-cost-row="2">
-							<td>
+							<td class="govuk-table__cell">
 								<input type="text" name="labour-role-2" id="cost-labour-2-labourRole" readonly="readonly" value="Manager" />
 							</td>
-							<td class="numeric">
+							<td class="govuk-table__cell govuk-table__cell--numeric">
 								<input type="number" name="labour-grossEmployeeCost-2" id="cost-labour-2-labourGrossSalary" class="govuk-input--width-10" readonly="readonly" value="50000" />
 							</td>
-							<td class="numeric">
+							<td class="govuk-table__cell govuk-table__cell--numeric">
 								<input type="text" data-calculation-operations="/" readonly="readonly" data-calculation-fields="#cost-labour-2-labourGrossSalary,#cost-labour-1-workingDays" data-calculation-rawvalue="215.51724" id="cost-labour-2-labourRate" class="govuk-input--width-10" name="labour-labourRate-2" value="£ 216" />
 							</td>
-							<td class="numeric">
+							<td class="govuk-table__cell govuk-table__cell--numeric">
 								<input type="number" class="govuk-input--width-10" id="cost-labour-2-labourDays" name="labour-labourDays-2" readonly="readonly" value="168" />
 							</td>
 						</tr>
@@ -65,16 +65,16 @@
 
 
 						<tr data-cost-row="4">
-							<td>
+							<td class="govuk-table__cell">
 								<input type="text" name="labour-role-4" id="cost-labour-4-labourRole" readonly="readonly" value="Engineer" />
 							</td>
-							<td class="numeric">
+							<td class="govuk-table__cell govuk-table__cell--numeric">
 								<input type="number" name="labour-grossEmployeeCost-4" class="govuk-input--width-10" id="cost-labour-4-labourGrossSalary" readonly="readonly" value="30000" />
 							</td>
-							<td class="numeric">
+							<td class="govuk-table__cell govuk-table__cell--numeric">
 								<input type="text" data-calculation-operations="/" readonly="readonly" data-calculation-fields="#cost-labour-4-labourGrossSalary,#cost-labour-1-workingDays" data-calculation-rawvalue="129.31034" class="govuk-input--width-10" id="cost-labour-4-labourRate" name="labour-labourRate-4" value="£ 129" />
 							</td>
-							<td class="numeric">
+							<td class="govuk-table__cell govuk-table__cell--numeric">
 								<input type="number" class="govuk-input--width-10" id="cost-labour-4-labourDays" name="labour-labourDays-4" readonly="readonly"  value="696" />
 							</td>
 						</tr>
@@ -184,56 +184,56 @@
 			</details>
 		</div>
 		<table id="material-costs-table">
-		    <thead>
-		        <tr>
-		            <th>Item</th>
+		    <thead class="govuk-table__head">
+		        <tr class="govuk-table__row">
+		            <th class="govuk-table__header" scope="col">Item</th>
 		            <th class="numeric">Quantity</th>
 		            <th class="numeric">Cost Per Item</th>
 		            <th class="numeric">Total</th>
 		        </tr>
 		    </thead>
-		    <tbody>
+		    <tbody class="govuk-table__body">
 		        <tr data-cost-row="12">
-		            <td>
+		            <td class="govuk-table__cell">
 		                <input type="text" name="materials-item-12" id="cost-materials-12-item"  readonly="readonly" value="Powder" />
 		            </td>
-		            <td>
+		            <td class="govuk-table__cell">
 		                <input type="number" name="materials-quantity-12" id="cost-materials-12-quantity" readonly="readonly" value="20" />
 		            </td>
-		            <td>
+		            <td class="govuk-table__cell">
 		                <input type="number" name="materials-cost-12" id="cost-materials-12-cost" readonly="readonly" value="100" />
 		            </td>
-		            <td>
+		            <td class="govuk-table__cell">
 		                <input type="text" class="alignright" data-calculation-operations="*" readonly="" data-calculation-fields="#cost-materials-12-quantity,#cost-materials-12-cost" data-calculation-rawvalue="2000" name="materials-total-12" id="cost-materials-12-materialTotal" value="£ 2000" />
 		            </td>
 		        </tr>
 
 		        <tr data-cost-row="19">
-		            <td>
+		            <td class="govuk-table__cell">
 		                <input type="text" name="materials-item-19" id="cost-materials-19-item"  readonly="readonly" value="crucibles" />
 		            </td>
-		            <td>
+		            <td class="govuk-table__cell">
 		                <input type="number" name="materials-quantity-19" id="cost-materials-19-quantity" readonly="readonly" value="6" />
 		            </td>
-		            <td>
+		            <td class="govuk-table__cell">
 		                <input type="number" name="materials-cost-19" id="cost-materials-19-cost" readonly="readonly" value="600" />
 		            </td>
-		            <td>
+		            <td class="govuk-table__cell">
 		                <input type="text" class="alignright" data-calculation-operations="*" readonly="" data-calculation-fields="#cost-materials-19-quantity,#cost-materials-19-cost" data-calculation-rawvalue="3600" name="materials-total-19" id="cost-materials-19-materialTotal" value="£ 3600" />
 		            </td>
 		        </tr>
 
 		        <tr data-cost-row="20">
-		            <td>
+		            <td class="govuk-table__cell">
 		                <input type="text" name="materials-item-20" id="cost-materials-20-item"  readonly="readonly" value="valves" />
 		            </td>
-		            <td>
+		            <td class="govuk-table__cell">
 		                <input type="number" name="materials-quantity-20" id="cost-materials-20-quantity" readonly="readonly" value="12" />
 		            </td>
-		            <td>
+		            <td class="govuk-table__cell">
 		                <input type="number" name="materials-cost-20" id="cost-materials-20-cost" readonly="readonly" value="250" />
 		            </td>
-		            <td>
+		            <td class="govuk-table__cell">
 		                <input type="text" class="alignright" data-calculation-operations="*" readonly="" data-calculation-fields="#cost-materials-20-quantity,#cost-materials-20-cost" data-calculation-rawvalue="3000" name="materials-total-20" id="cost-materials-20-materialTotal" value="£ 3000" />
 		            </td>
 		        </tr>
@@ -341,16 +341,16 @@
 		<div data-finance-subsection-table-container="33">
 		    <div class="govuk-form-group">
 		        <table id="travel-costs-table">
-		            <thead>
-		                <tr>
-		                    <th>Purpose of journey or description of subsistence cost</th>
+		            <thead class="govuk-table__head">
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col">Purpose of journey or description of subsistence cost</th>
 		                    <th class="numeric">Number of times</th>
 		                    <th class="numeric">Cost each (£)</th>
 		                    <th class="numeric">Total (£)</th>
-		                    <th>&nbsp;</th>
+		                    <th class="govuk-table__header" scope="col">&nbsp;</th>
 		                </tr>
 		            </thead>
-		            <tbody>
+		            <tbody class="govuk-table__body">
 
 		            </tbody>
 		        </table>
@@ -390,14 +390,14 @@
 		<div data-finance-subsection-table-container="34">
 		    <div class="govuk-form-group">
 		        <table id="other-costs-table">
-		            <thead>
-		                <tr>
-		                    <th>Description and justification of the cost</th>
+		            <thead class="govuk-table__head">
+		                <tr class="govuk-table__row">
+		                    <th class="govuk-table__header" scope="col">Description and justification of the cost</th>
 		                    <th class="numeric">Estimated cost (£)</th>
-		                    <th>&nbsp;</th>
+		                    <th class="govuk-table__header" scope="col">&nbsp;</th>
 		                </tr>
 		            </thead>
-		            <tbody>
+		            <tbody class="govuk-table__body">
 
 		            </tbody>
 		        </table>

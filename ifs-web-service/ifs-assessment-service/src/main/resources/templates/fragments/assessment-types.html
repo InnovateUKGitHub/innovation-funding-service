@@ -40,10 +40,10 @@
             </summary>
             <div class="govuk-details__text wysiwyg-styles">
                 <p class="govuk-body" th:if="${field.guidanceAnswer}" th:text="${field.guidanceAnswer}" />
-                <table th:unless="${#lists.isEmpty(field.guidanceRows)}">
-                    <tr th:each="guidance : ${field.guidanceRows}">
-                        <th class="cell-nowrap" scope="row" th:text="${guidance.subject}" />
-                        <td th:text="${guidance.justification}" />
+                <table class="govuk-table" th:unless="${#lists.isEmpty(field.guidanceRows)}">
+                    <tr class="govuk-table__row" th:each="guidance : ${field.guidanceRows}">
+                        <th class="govuk-table__header cell-nowrap" scope="row" th:text="${guidance.subject}" />
+                        <td class="govuk-table__cell" th:text="${guidance.justification}" />
                     </tr>
                 </table>
             </div>

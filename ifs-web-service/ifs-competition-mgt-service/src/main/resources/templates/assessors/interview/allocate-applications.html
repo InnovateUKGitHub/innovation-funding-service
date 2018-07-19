@@ -29,27 +29,27 @@
               th:action="@{/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}"
               th:object="${form}">
             <div class="table-overflow">
-                <table>
-                    <thead>
-                    <tr>
-                        <th class="width-80">Application number</th>
-                        <th>Project title</th>
-                        <th>Lead organisation</th>
-                        <th class="numeric">Assessors</th>
-                        <th class="alignright"><span class="govuk-visually-hidden">Remove</span></th>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header width-80">Application number</th>
+                        <th class="govuk-table__header" scope="col">Project title</th>
+                        <th class="govuk-table__header" scope="col">Lead organisation</th>
+                        <th class="govuk-table__header govuk-table__header--numeric">Assessors</th>
+                        <th class="govuk-table__header alignright"><span class="govuk-visually-hidden">Remove</span></th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="applicationInterview : ${model.applications}">
-                        <td>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="applicationInterview : ${model.applications}">
+                        <td class="govuk-table__cell">
                             <a th:text="${applicationInterview.id}"
                                th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${applicationInterview.id})} + ${originQuery}"
                                class="govuk-link">114</a>
                         </td>
-                        <td th:text="${applicationInterview.name}">Electronics, sensors &#38; photonics, Materials</td>
-                        <td th:text="${applicationInterview.leadOrganisation}">Ooba</td>
-                        <td th:text="${applicationInterview.numberOfAssessors}" class="numeric">1</td>
-                        <td class="alignright">
+                        <td class="govuk-table__cell" th:text="${applicationInterview.name}">Electronics, sensors &#38; photonics, Materials</td>
+                        <td class="govuk-table__cell" th:text="${applicationInterview.leadOrganisation}">Ooba</td>
+                        <td th:text="${applicationInterview.numberOfAssessors}" class="govuk-table__cell govuk-table__cell--numeric">1</td>
+                        <td class="govuk-table__cell alignright">
                             <button class="button-clear" name="remove" th:value="${applicationInterview.id}">Remove</button>
                         </td>
                     </tr>

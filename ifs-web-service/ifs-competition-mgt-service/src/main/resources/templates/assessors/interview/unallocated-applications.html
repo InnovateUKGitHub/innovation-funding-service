@@ -108,19 +108,19 @@
             </div>
 
             <div class="table-overflow">
-                <table>
-                    <thead>
-                    <tr>
-                        <th scope="col">Select</th>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Select</th>
                         <th scope="col" class="width-80">Application number</th>
-                        <th scope="col">Project title</th>
-                        <th scope="col">Lead organisation</th>
+                        <th class="govuk-table__header" scope="col">Project title</th>
+                        <th class="govuk-table__header" scope="col">Lead organisation</th>
                         <th class="alignright" scope="col">Assessors</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="row, index : ${model.rows}">
-                        <td>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="row, index : ${model.rows}">
+                        <td class="govuk-table__cell">
                             <div class="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item">
                                     <input type="checkbox"
@@ -136,18 +136,18 @@
                             </div>
 
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${row.id})} + ${model.originQuery}"
                                th:text="${row.id}">123
                             </a>
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             <span th:text="${row.name}">project name</span>
                         </td>
-                        <td>
+                        <td class="govuk-table__cell">
                             <span th:text="${row.leadOrganisation}">Lead organisation</span>
                         </td>
-                        <td class="alignright">
+                        <td class="govuk-table__cell alignright">
                             <span th:text="${row.numberOfAssessors}">1</span>
                         </td>
                     </tr>

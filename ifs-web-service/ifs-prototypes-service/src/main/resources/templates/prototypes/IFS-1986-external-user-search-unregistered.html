@@ -54,23 +54,23 @@
           <span class="govuk-heading-s">invited users awaiting registration</span>
       </p>
       <div class="table-overflow">
-          <table>
-              <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Organisation name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Organisation ID</th>
-                    <th scope="col">Status</th>
+          <table class="govuk-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Name</th>
+                    <th class="govuk-table__header" scope="col">Organisation name</th>
+                    <th class="govuk-table__header" scope="col">Email</th>
+                    <th class="govuk-table__header" scope="col">Organisation ID</th>
+                    <th class="govuk-table__header" scope="col">Status</th>
                 </tr>
               </thead>
-              <tbody>
-                  <tr>
-                      <td>Mark Smith</td>
-                      <td>Company Ltd.</td>
-                      <td>mark.smith@companyltd.com</td>
-                      <td>1233</td>
-                      <td>Sent</td>
+              <tbody class="govuk-table__body">
+                  <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">Mark Smith</td>
+                      <td class="govuk-table__cell">Company Ltd.</td>
+                      <td class="govuk-table__cell">mark.smith@companyltd.com</td>
+                      <td class="govuk-table__cell">1233</td>
+                      <td class="govuk-table__cell">Sent</td>
                   </tr>
               </tbody>
           </table>
@@ -718,12 +718,12 @@ jQuery(document).ready(function(){
       jQuery('.govuk-heading-xl.govuk-!-margin-0').text(filtered.length)
       jQuery.each(filtered, function(index,value){
          var html = `
-         <tr>
-            <td>${value.name}</td>
-            <td>${value.organisation}</td>
-            <td>${value.email}</td>
-            <td>${value.id}</td>
-            <td>${value.applicationId}</td>
+         <tr class="govuk-table__row">
+            <td class="govuk-table__cell">${value.name}</td>
+            <td class="govuk-table__cell">${value.organisation}</td>
+            <td class="govuk-table__cell">${value.email}</td>
+            <td class="govuk-table__cell">${value.id}</td>
+            <td class="govuk-table__cell">${value.applicationId}</td>
          </tr>
          `
          jQuery("tbody").append(html);

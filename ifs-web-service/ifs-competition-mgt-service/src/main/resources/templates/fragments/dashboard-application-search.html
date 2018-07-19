@@ -6,27 +6,29 @@
 
 <th:block th:fragment="search-result-table(applications)" xmlns:th="http://www.w3.org/1999/html">
     <div class="table-overflow">
-        <table>
-            <thead>
-            <tr>
-                <th scope="col">Application number</th>
-                <th scope="col">Project title</th>
-                <th scope="col">Competition</th>
-                <th scope="col">Application status</th>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Application number</th>
+                <th class="govuk-table__header" scope="col">Project title</th>
+                <th class="govuk-table__header" scope="col">Competition</th>
+                <th class="govuk-table__header" scope="col">Application status</th>
 
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="app : ${applications}">
-                <td><a th:href="${'/management/competition/' + app.competition + '/application/' + app.id}" th:text="${app.id}" class="govuk-link"></a></td>
-                <td th:text="${app.name}"></td>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" th:each="app : ${applications}">
+                <td class="govuk-table__cell">
+                    <a th:href="${'/management/competition/' + app.competition + '/application/' + app.id}" th:text="${app.id}" class="govuk-link"></a>
+                </td>
+                <td class="govuk-table__cell" th:text="${app.name}"></td>
                 <th:block th:if="${app.isApproved()}">
-                    <td><a th:href="${'/project-setup-management/competition/' + app.competition + '/status/all'}" th:text="${app.competitionName}" class="govuk-link"></a></td>
+                    <td class="govuk-table__cell"><a th:href="${'/project-setup-management/competition/' + app.competition + '/status/all'}" th:text="${app.competitionName}" class="govuk-link"></a></td>
                 </th:block>
                 <th:block th:unless="${app.isApproved()}">
-                    <td th:text="${app.competitionName}"></td>
+                    <td class="govuk-table__cell" th:text="${app.competitionName}"></td>
                 </th:block>
-                <td th:text="${app.getApplicationStateDisplayName()}"></td>
+                <td class="govuk-table__cell" th:text="${app.getApplicationStateDisplayName()}"></td>
             </tr>
             </tbody>
         </table>

@@ -20,28 +20,28 @@
                 <h2 class="govuk-heading-m">Finances summary</h2>
                 <div class="govuk-form-group finances-summary">
                     <div style="overflow: auto;">
-                        <table>
-                            <thead>
-                                <tr>
+                        <table class="govuk-table">
+                            <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
                                     <td />
-                                    <th scope="col" class="numeric">Total costs</th>
-                                    <th scope="col" class="numeric width-80">
-                                    % Grant
-                                </th>
-                                <th scope="col" class="numeric width-100">
-                                    Funding sought (&pound;)
-                                </th>
-                                <th scope="col" class="numeric width-150">
-                                    Other public sector funding (&pound;)
-                                </th>
-                                <th scope="col" class="numeric width-100">
-                                    Contribution to project (&pound;)
-                                </th>
-                            </tr>
+                                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
+                                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">
+                                        &percnt; Grant
+                                    </th>
+                                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">
+                                        Funding sought (&pound;)
+                                    </th>
+                                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">
+                                        Other public sector funding (&pound;)
+                                    </th>
+                                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">
+                                        Contribution to project (&pound;)
+                                    </th>
+                                </tr>
                             </thead>
-                            <tbody>
-                                <tr th:each="applicationOrganisation : ${applicationOrganisations}">
-                                    <th scope="row">
+                            <tbody class="govuk-table__body">
+                                <tr class="govuk-table__row" th:each="applicationOrganisation : ${applicationOrganisations}">
+                                    <th class="govuk-table__header" scope="row">
                                         <div>
                                             <div th:text="${applicationOrganisation.name}" />
                                             <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}">
@@ -53,34 +53,34 @@
                                         </div>
                                     </th>
                                     <th:block th:with="organisationFinance=${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
-                                        <td class="numeric bold">
+                                        <td class="govuk-table__cell govuk-table__cell--numeric bold">
                                             &pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.total, 0, 'DEFAULT')}" />
                                         </td>
-                                        <td class="numeric" th:text="${organisationFinance.grantClaimPercentage}+'%'"/>
-                                        <td class="numeric">
+                                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${organisationFinance.grantClaimPercentage}+'%'"/>
+                                        <td class="govuk-table__cell govuk-table__cell--numeric">
                                             <th:block th:text="${#numbers.formatInteger(organisationFinance.totalFundingSought, 0, 'DEFAULT')}" />
                                         </td>
-                                        <td class="numeric">
+                                        <td class="govuk-table__cell govuk-table__cell--numeric">
                                             <th:block th:text="${#numbers.formatInteger(organisationFinance.totalOtherFunding, 0, 'DEFAULT')}" />
                                         </td>
-                                        <td class="numeric">
+                                        <td class="govuk-table__cell govuk-table__cell--numeric">
                                             <th:block th:text="${#numbers.formatInteger(organisationFinance.totalContribution, 0, 'DEFAULT')}" />
                                         </td>
                                     </th:block>
                                 </tr>
-                                <tr>
-                                    <th scope="row">Total</th>
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="row">Total</th>
                                     <td class="numeric bold">
                                         &pound;<th:block th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" />
                                     </td>
-                                    <td></td>
-                                    <td class="numeric">
+                                    <td class="govuk-table__cell"></td>
+                                    <td class="govuk-table__cell govuk-table__cell--numeric">
                                         <th:block th:text="${#numbers.formatInteger(totalFundingSought, 0, 'DEFAULT')}" />
                                     </td>
-                                    <td class="numeric">
+                                    <td class="govuk-table__cell govuk-table__cell--numeric">
                                         <th:block th:text="${#numbers.formatInteger(totalOtherFunding, 0, 'DEFAULT')}" />
                                     </td>
-                                    <td class="numeric">
+                                    <td class="govuk-table__cell govuk-table__cell--numeric">
                                         <th:block th:text="${#numbers.formatInteger(totalContribution, 0, 'DEFAULT')}" />
                                     </td>
                                 </tr>

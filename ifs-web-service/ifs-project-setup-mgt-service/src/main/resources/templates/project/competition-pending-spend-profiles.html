@@ -18,17 +18,17 @@
 
         <th:block th:if="${model.pendingSpendProfiles.size() > 0}">
             <div>
-                <table id="table-project-organisation-query-status" class="table-overview govuk-!-margin-bottom-6">
-                    <thead>
-                    <tr>
-                        <th scope="col">Application number</th>
-                        <th scope="col">Project title</th>
+                <table id="table-project-organisation-query-status" class="govuk-table table-overview govuk-!-margin-bottom-6">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Application number</th>
+                        <th class="govuk-table__header" scope="col">Project title</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="pendingSpendProfile : ${model.pendingSpendProfiles}">
-                        <td th:text="${pendingSpendProfile.applicationId}"></td>
-                        <td><a th:text="${pendingSpendProfile.projectName}" th:href="@{/project/{projectId}/finance-check/(projectId=${pendingSpendProfile.projectId})}" class="govuk-link"></a></td>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="pendingSpendProfile : ${model.pendingSpendProfiles}">
+                        <td class="govuk-table__cell" th:text="${pendingSpendProfile.applicationId}"></td>
+                        <td class="govuk-table__cell"><a th:text="${pendingSpendProfile.projectName}" th:href="@{/project/{projectId}/finance-check/(projectId=${pendingSpendProfile.projectId})}" class="govuk-link"></a></td>
                     </tr>
                     </tbody>
                 </table>

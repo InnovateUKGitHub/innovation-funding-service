@@ -45,16 +45,16 @@
 	<h2 class="govuk-heading-m">Partner progress</h2>
 
 	<div class="table-overflow">
-		<table>
-			<thead>
-				<tr>
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
 					<th scope="col" style="width: 50%">Partner</th>
 					<th scope="col" style="width: 50%">Progress</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						<a th:href="${(param.status != null and param.status[0] == 'accepted' ? '/prototypes/2650-review-bank-details?status=accepted' : '/prototypes/2650-review-bank-details?status=error')}">Aptrans Ltd (Lead)</a>
 					</td>
 					<td th:unless="${param.status != null and param.status[0] == 'accepted'}">
@@ -64,16 +64,16 @@
 						<span class="yes">Complete</span>
 					</td>
 				</tr>
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						<a href="#">Biotech Corp</a>
 					</td>
-					<td>
+					<td class="govuk-table__cell">
 						<span class="yes">Complete</span>
 					</td>
 				</tr>
-				<tr>
-					<td>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">
 						University of Cardiff
 					</td>
 					<td th:unless="${param.status != null and param.status[0] == 'accepted'}">

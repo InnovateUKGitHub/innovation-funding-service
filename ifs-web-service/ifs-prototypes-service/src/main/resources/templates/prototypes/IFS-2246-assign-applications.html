@@ -110,27 +110,27 @@
         </th:block>
 
         <div class="table-overflow">
-            <table>
-                <thead>
-                <tr>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
                     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
                         <th class="width-small">Select</th>
                     </th:block>
                     <th class="width-small">Application number</th>
-                    <th>Project title</th>
-                    <th>Lead organisation</th>
+                    <th class="govuk-table__header" scope="col">Project title</th>
+                    <th class="govuk-table__header" scope="col">Lead organisation</th>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <th colspan="2">Status</th>
                     </th:block>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
-                        <td class="alignright"><a th:href="${'?tab=invite&#38;status=removeAll'}">Remove all</a></td>
+                        <td class="govuk-table__cell alignright"><a th:href="${'?tab=invite&#38;status=removeAll'}">Remove all</a></td>
                     </th:block>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
                     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
-                        <td>
+                        <td class="govuk-table__cell">
                             <div class="multiple-choice">
                                 <input type="checkbox" id="assessor-row-1" value="205" name="selectedAssessorIds"><input
                                 type="hidden" name="_selectedAssessorIds" value="on">
@@ -140,21 +140,21 @@
                             </div>
                         </td>
                     </th:block>
-                    <td><a href="#">114</a></td>
-                    <td>Electronics, sensors &#38; photonics, Materials</td>
-                    <td>Ooba</td>
+                    <td class="govuk-table__cell"><a href="#">114</a></td>
+                    <td class="govuk-table__cell">Electronics, sensors &#38; photonics, Materials</td>
+                    <td class="govuk-table__cell">Ooba</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
-                        <td><span class="yes">Responded to feedback</span></td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
+                        <td class="govuk-table__cell"><span class="yes">Responded to feedback</span></td>
+                        <td class="govuk-table__cell"><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
                         </td>
                     </th:block>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
-                        <td class="alignright"><a href="#">Remove</a></td>
+                        <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
                     </th:block>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
-                        <td>
+                        <td class="govuk-table__cell">
                             <div class="multiple-choice">
                                 <input type="checkbox" id="assessor-row-2" value="205" name="selectedAssessorIds"><input
                                 type="hidden" name="_selectedAssessorIds" value="on">
@@ -164,21 +164,21 @@
                             </div>
                         </td>
                     </th:block>
-                    <td><a href="#">269</a></td>
-                    <td>Healthcare, Regnerative medicine, Stratified medicine</td>
-                    <td>Empire Ltd</td>
+                    <td class="govuk-table__cell"><a href="#">269</a></td>
+                    <td class="govuk-table__cell">Healthcare, Regnerative medicine, Stratified medicine</td>
+                    <td class="govuk-table__cell">Empire Ltd</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
-                        <td>Awaiting response</td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
+                        <td class="govuk-table__cell">Awaiting response</td>
+                        <td class="govuk-table__cell"><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
                         </td>
                     </th:block>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
-                        <td class="alignright"><a href="#">Remove</a></td>
+                        <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
                     </th:block>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
-                        <td>
+                        <td class="govuk-table__cell">
                             <div class="multiple-choice">
                                 <input type="checkbox" id="assessor-row-3" value="205" name="selectedAssessorIds"><input
                                 type="hidden" name="_selectedAssessorIds" value="on">
@@ -188,21 +188,21 @@
                             </div>
                         </td>
                     </th:block>
-                    <td><a href="#">171</a></td>
-                    <td>Healthcare, Analytical science</td>
-                    <td>Ideas</td>
+                    <td class="govuk-table__cell"><a href="#">171</a></td>
+                    <td class="govuk-table__cell">Healthcare, Analytical science</td>
+                    <td class="govuk-table__cell">Ideas</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
-                        <td>Awaiting response</td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
+                        <td class="govuk-table__cell">Awaiting response</td>
+                        <td class="govuk-table__cell"><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
                         </td>
                     </th:block>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
-                        <td class="alignright"><a href="#">Remove</a></td>
+                        <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
                     </th:block>
                 </tr>
-                <tr>
+                <tr class="govuk-table__row">
                     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
-                        <td>
+                        <td class="govuk-table__cell">
                             <div class="multiple-choice">
                                 <input type="checkbox" id="assessor-row-4" value="205" name="selectedAssessorIds"><input
                                 type="hidden" name="_selectedAssessorIds" value="on">
@@ -212,21 +212,21 @@
                             </div>
                         </td>
                     </th:block>
-                    <td><a href="#">265</a></td>
-                    <td>Architectures and operating systems</td>
-                    <td>Wordpedia</td>
+                    <td class="govuk-table__cell"><a href="#">265</a></td>
+                    <td class="govuk-table__cell">Architectures and operating systems</td>
+                    <td class="govuk-table__cell">Wordpedia</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
-                        <td><span class="yes">Responded to feedback</span></td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
+                        <td class="govuk-table__cell"><span class="yes">Responded to feedback</span></td>
+                        <td class="govuk-table__cell"><a href="/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
                         </td>
                     </th:block>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
-                        <td class="alignright"><a href="#">Remove</a></td>
+                        <td class="govuk-table__cell alignright"><a href="#">Remove</a></td>
                     </th:block>
                 </tr>
                 <tr th:unless="${param.tab != null and param.tab[0] == 'invite'}">
                     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
-                        <td>
+                        <td class="govuk-table__cell">
                             <div class="multiple-choice">
                                 <input type="checkbox" id="assessor-row-5" value="205" name="selectedAssessorIds"><input
                                 type="hidden" name="_selectedAssessorIds" value="on">
@@ -236,12 +236,12 @@
                             </div>
                         </td>
                     </th:block>
-                    <td><a href="#">266</a></td>
-                    <td>Electronics, sensors &#38; photonics, Materials</td>
-                    <td>Innovation</td>
+                    <td class="govuk-table__cell"><a href="#">266</a></td>
+                    <td class="govuk-table__cell">Electronics, sensors &#38; photonics, Materials</td>
+                    <td class="govuk-table__cell">Innovation</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
-                        <td><span class="yes">Responded to feedback</span></td>
-                        <td><a href="#/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
+                        <td class="govuk-table__cell"><span class="yes">Responded to feedback</span></td>
+                        <td class="govuk-table__cell"><a href="#/prototypes/IFS-2246-view-invite" class="govuk-button button-secondary">View invite</a>
                         </td>
                     </th:block>
                 </tr>

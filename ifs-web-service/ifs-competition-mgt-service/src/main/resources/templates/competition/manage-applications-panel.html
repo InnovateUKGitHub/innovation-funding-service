@@ -18,22 +18,22 @@
         <h2 class="govuk-heading-m">Assigned applications (<span id="application-count" th:text="${#lists.size(model.assignedApplications)}">0</span>)</h2>
 
         <div class="table-overflow" th:id="application-assigned">
-            <table id="application-list">
-                <thead>
-                <tr>
-                    <th scope="col" class="width-80">Application number</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Innovation area</th>
-                    <th scope="col" class="width-150">Lead organisation</th>
-                    <th class="width-80" scope="col"><span class="govuk-visually-hidden">Action</span></th></tr>
+            <table class="govuk-table" id="application-list">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header width-80">Application number</th>
+                    <th class="govuk-table__header" scope="col">Title</th>
+                    <th class="govuk-table__header" scope="col">Innovation area</th>
+                    <th scope="col" class="govuk-table__header width-150">Lead organisation</th>
+                    <th class="govuk-table__header width-80" scope="col"><span class="govuk-visually-hidden">Action</span></th></tr>
                 </thead>
-                <tbody>
-                <tr th:each="app : ${model.assignedApplications}">
-                    <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}">10001</a></td>
-                    <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
-                    <td th:text="${app.innovationArea}">Information and communications technology (ICT)</td>
-                    <td th:text="${app.leadOrganisation}">Wessex University</td>
-                    <td>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="app : ${model.assignedApplications}">
+                    <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}">10001</a></td>
+                    <td class="govuk-table__cell" th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                    <td class="govuk-table__cell" th:text="${app.innovationArea}">Information and communications technology (ICT)</td>
+                    <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Wessex University</td>
+                    <td class="govuk-table__cell">
                         <a class="button-secondary govuk-!-margin-0"
                            th:href="@{/assessment/panel/competition/{cid}/unassign/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}"
                            th:text='Remove' />
@@ -89,24 +89,24 @@
             </div>
         </form>
         <div class="table-overflow">
-            <table>
-                <thead>
-                <tr>
-                    <th class="width-80" scope="col">Application number</th>
-                    <th scope="col">Title</th>
-                    <th class="width-150" scope="col">Innovation area</th>
-                    <th class="width-150" scope="col">Lead organisation</th>
-                    <th class="width-80" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header width-80" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Title</th>
+                    <th class="govuk-table__header width-150" scope="col">Innovation area</th>
+                    <th class="govuk-table__header width-150" scope="col">Lead organisation</th>
+                    <th class="govuk-table__header width-80" scope="col"><span class="govuk-visually-hidden">Action</span></th>
                 </tr>
                 </thead>
 
-                <tbody>
-                <tr th:each="app : ${model.applications}">
-                    <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
-                    <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
-                    <td th:text="${app.innovationArea}">Information and communications technology (ICT)</td>
-                    <td th:text="${app.leadOrganisation}">Wessex University</td>
-                    <td>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="app : ${model.applications}">
+                    <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
+                    <td class="govuk-table__cell" th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                    <td class="govuk-table__cell" th:text="${app.innovationArea}">Information and communications technology (ICT)</td>
+                    <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Wessex University</td>
+                    <td class="govuk-table__cell">
                         <a class="button-secondary govuk-!-margin-0"
                            th:href="@{/assessment/panel/competition/{cid}/assign/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}"
                            th:text='Assign' />

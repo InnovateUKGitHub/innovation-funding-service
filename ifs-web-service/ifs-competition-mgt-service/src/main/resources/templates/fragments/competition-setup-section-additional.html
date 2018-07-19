@@ -166,28 +166,28 @@
         </fieldset>
 
         <fieldset th:if="${!model.general.editable}" id="section-2-" class="govuk-fieldset">
-            <table>
-                <thead>
-                <tr>
-                    <th scope="col">Funder</th>
-                    <th scope="col" class="numeric">Budget</th>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Funder</th>
+                    <th class="govuk-table__header govuk-table__header--numeric" scope="col">Budget</th>
                 </tr>
                 </thead>
-                <tfoot>
-                <tr>
-                    <th>Total</th>
-                    <td class="numeric" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatInteger(competitionSetupForm.totalFunding, 0, 'DEFAULT')}">Total</td>
+                <tfoot class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Total</th>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${competitionSetupForm.totalFunding == 0 ? '' : '&pound;' + #numbers.formatInteger(competitionSetupForm.totalFunding, 0, 'DEFAULT')}">Total</td>
                 </tr>
                 </tfoot>
-                <tbody>
-                <tr  th:each="(funder, iteration : ${competitionSetupForm.funders})">
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="(funder, iteration : ${competitionSetupForm.funders})">
                     <th:block th:if="iteration == 0">
-                        <td th:text="${funder.funder}">Funder Name</td>
-                        <td class="numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatInteger(funder?.funderBudget, 0, 'DEFAULT')}">Funder Budget</td>
+                        <td class="govuk-table__cell" th:text="${funder.funder}">Funder Name</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatInteger(funder?.funderBudget, 0, 'DEFAULT')}">Funder Budget</td>
                     </th:block>
                     <th:block th:unless="iteration == 0">
-                        <td th:text="${funder.funder}">Co-Funder Name</td>
-                        <td class="numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatInteger(funder?.funderBudget, 0, 'DEFAULT')}">Co-Funder Budget</td>
+                        <td class="govuk-table__cell" th:text="${funder.funder}">Co-Funder Name</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${funder?.funderBudget != null} ? ${'&pound;' + #numbers.formatInteger(funder?.funderBudget, 0, 'DEFAULT')}">Co-Funder Budget</td>
                     </th:block>
                 </tr>
                 </tbody>

@@ -105,9 +105,9 @@
   <p class="govuk-body">This is a breakdown of your project costs and sources of funding for this project.</p>
 
   <div class="table-overflow">
-    <table>
-      <thead>
-          <tr>
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
               <th scope="col" class="numeric width-small">Total project costs</th>
               <th scope="col" class="numeric width-small">% Grant</th>
               <th scope="col" class="numeric width-small">Funding sought</th>
@@ -115,24 +115,24 @@
               <th scope="col" class="numeric width-small">Contribution to project</th>
           </tr>
       </thead>
-      <tbody>
+      <tbody class="govuk-table__body">
         <th:block th:if="${param.status != null and param.status[0] == 'initialView'}">
-          <tr>
-            <td class="numeric"><strong>&pound;0</strong></td>
-            <td class="numeric">0%</td>
-            <td class="numeric">&pound;0</td>
-            <td class="numeric">&pound;0</td>
-            <td class="numeric">&pound;0</td>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;0</strong></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">0%</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;0</td>
           </tr>
         </th:block>
 
         <th:block th:if="${param.status == null or param.status[0] != 'initialView'}">
-          <tr>
-            <td class="numeric"><strong>&pound;110,000</strong></td>
-            <td class="numeric">70%</td>
-            <td class="numeric">&pound;60,000</td>
-            <td class="numeric">&pound;10,000</td>
-            <td class="numeric">&pound;30,000</td>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell govuk-table__cell--numeric"><strong>&pound;110,000</strong></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">70%</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;60,000</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;10,000</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">&pound;30,000</td>
           </tr>
         </th:block>
       </tbody>

@@ -72,25 +72,25 @@
 
         <h2 class="govuk-heading-m">Partner finances</h2>
         <div class="table-overflow govuk-!-margin-bottom-6">
-            <table class="table-progress">
-                <thead>
-                    <tr>
-                        <th scope="col">Organisation</th>
-                        <th scope="col" class="aligncentre">Viability</th>
-                        <th scope="col" class="aligncentre cell-border-right">RAG</th>
-                        <th scope="col" class="aligncentre">Eligibility</th>
-                        <th scope="col" class="aligncentre cell-border-right">RAG</th>
-                        <th scope="col" class="aligncentre">Queries raised</th>
-                        <th scope="col" class="aligncentre">Notes</th>
+            <table class="govuk-table table-progress">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Organisation</th>
+                        <th scope="col" class="govuk-table__header aligncentre">Viability</th>
+                        <th scope="col" class="govuk-table__header aligncentre cell-border-right">RAG</th>
+                        <th scope="col" class="govuk-table__header aligncentre">Eligibility</th>
+                        <th scope="col" class="govuk-table__header aligncentre cell-border-right">RAG</th>
+                        <th scope="col" class="govuk-table__header aligncentre">Queries raised</th>
+                        <th scope="col" class="govuk-table__header aligncentre">Notes</th>
                     </tr>
                 </thead>
-                <tbody>
-                <tr th:each="orgDetails, status : ${model.financeCheckSummaryResource.partnerStatusResources}">
-                    <th scope="row">
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="orgDetails, status : ${model.financeCheckSummaryResource.partnerStatusResources}">
+                    <th class="govuk-table__header" scope="row">
                         <th:block th:text="${orgDetails.name}">org name</th:block>
                         <th:block th:if="${orgDetails.isLead()}"> (Lead)</th:block>
                     </th>
-                    <td class="aligncentre">
+                    <td class="govuk-table__cell aligncentre">
                         <a th:if="${!orgDetails.viability.notApplicable}"
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/viability(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
@@ -101,7 +101,7 @@
                               th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                               th:classappend="${'viability-' + status.index}"></span>
                     </td>
-                    <td class="aligncentre cell-border-right">
+                    <td class="govuk-table__cell aligncentre cell-border-right">
                     <span th:if="${orgDetails.viability.notApplicable}"
                           th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
                           th:classappend="${'viability-rag-' + status.index}"></span>
@@ -109,22 +109,22 @@
                               th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.viabilityRagStatus)}"
                               th:classappend="${'viability-rag-' + status.index}">Green</span>
                     </td>
-                    <td class="aligncentre">
+                    <td class="govuk-table__cell aligncentre">
                         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
                            th:classappend="${'eligibility-' + status.index}"
                            class="govuk-link"/>
                     </td>
-                    <td class="aligncentre cell-border-right">
+                    <td class="govuk-table__cell aligncentre cell-border-right">
                     <span th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.eligibilityRagStatus)}"
                           th:classappend="${'eligibility-rag-' + status.index}">Green</span>
                     </td>
-                    <td class="aligncentre">
+                    <td class="govuk-table__cell aligncentre">
                         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            th:text="View"
                            class="govuk-link"/>
                     </td>
-                    <td class="aligncentre">
+                    <td class="govuk-table__cell aligncentre">
                         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                            class="govuk-link">View</a>
                     </td>

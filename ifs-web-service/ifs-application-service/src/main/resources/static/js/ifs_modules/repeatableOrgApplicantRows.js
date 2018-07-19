@@ -25,43 +25,43 @@ IFS.application.repeatableOrgApplicantRows = (function () {
       var rowId = jQuery(target).children('tr').length || 0
 
       if (jQuery(el).data('applicant-table') === 'update-org') {
-        newRow = jQuery('<tr class="repeatable-row form-group-row-validated">' +
-          '<td class="govuk-form-group">' +
+        newRow = jQuery('<tr class="govuk-table__row repeatable-row form-group-row-validated">' +
+          '<td class="govuk-table__cell govuk-form-group">' +
           '<label for="stagedInvite.name"><span class="govuk-visually-hidden">Applicant name</span></label>' +
           '<input class="govuk-input" type="text" ' +
           'id="stagedInvite.name" ' +
           'name="stagedInvite.name" value="" ' +
           'data-required-errormessage="Please enter a name." required="required" />' +
           '</td>' +
-          '<td class="govuk-form-group">' +
+          '<td class="govuk-table__cell govuk-form-group">' +
           '<label for="stagedInvite.email"><span class="govuk-visually-hidden">Applicant email</span></label>' +
           '<input class="govuk-input" type="email" ' +
           'id="stagedInvite.email" ' +
           'name="stagedInvite.email" value="" ' +
           'data-required-errormessage="Please enter an email address." required="required" />' +
           '</td>' +
-          '<td><button id="invite-collaborator-' + rowId + '" class="govuk-button govuk-!-margin-0" name="executeStagedInvite" value="true" type="submit">Invite</button></td>' +
-          '<td class="alignright">' +
+          '<td class="govuk-table__cell"><button id="invite-collaborator-' + rowId + '" class="govuk-button govuk-!-margin-0" name="executeStagedInvite" value="true" type="submit">Invite</button></td>' +
+          '<td class="govuk-table__cell alignright">' +
           '<button id="remove-collaborator-' + rowId + '" class="remove-another-row button-clear" name="removeInvite" type="button" value="0">Remove</button>' +
           '</td>' +
           '</tr>')
       } else {
-        newRow = jQuery('<tr class="repeatable-row form-group-row-validated">' +
-          '<td class="govuk-form-group">' +
+        newRow = jQuery('<tr class="govuk-table__row repeatable-row form-group-row-validated">' +
+          '<td class="govuk-table__cell govuk-form-group">' +
           '<label for="applicants[' + uniqueRowId + '].name"><span class="govuk-visually-hidden">Applicant name</span></label>' +
           '<input class="govuk-input" type="text" ' +
           'id="applicants[' + uniqueRowId + '].name" ' +
           'name="applicants[' + uniqueRowId + '].name" value="" ' +
           'data-required-errormessage="Please enter a name." required="required" />' +
           '</td>' +
-          '<td class="govuk-form-group">' +
+          '<td class="govuk-table__cell govuk-form-group">' +
           '<label for="applicants[' + uniqueRowId + '].email"><span class="govuk-visually-hidden">Applicant email</span></label>' +
           '<input class="govuk-input" type="email" ' +
           'id="applicants[' + uniqueRowId + '].email" ' +
           'name="applicants[' + uniqueRowId + '].email" value="" ' +
           'data-required-errormessage="Please enter an email address." required="required" />' +
           '</td>' +
-          '<td class="alignright">' +
+          '<td class="govuk-table__cell alignright">' +
           '<button class="remove-another-row button-clear" name="removeInvite" type="button" value="0">Remove</button>' +
           '</td>' +
           '</tr>')
@@ -77,14 +77,14 @@ IFS.application.repeatableOrgApplicantRows = (function () {
       // remove  the errors in the errorsummary that were linked to the fields that are now being removed
       rowParent.find('input').each(function () {
         var id = jQuery(this).attr('id')
-        var errors = jQuery('.error-summary-list [href="#' + id + '"]')
+        var errors = jQuery('.govuk-error-summary__list [href="#' + id + '"]')
         if (errors.length) {
           errors.parent().remove()
         }
       })
-      var hasSummaryErrors = jQuery('.error-summary-list li').length > 0
+      var hasSummaryErrors = jQuery('.govuk-error-summary__list li').length > 0
       if (!hasSummaryErrors) {
-        jQuery('.error-summary').attr('aria-hidden', 'true')
+        jQuery('.govuk-error-summary').attr('aria-hidden', 'true')
       }
 
       // must remove row before getting row information to correctly count remaining rows

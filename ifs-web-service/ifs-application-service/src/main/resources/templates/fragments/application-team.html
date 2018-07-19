@@ -20,19 +20,20 @@
             </div>
             <div class="govuk-!-font-size-16" role="heading" aria-level="5"><strong>Organisation type</strong></div>
             <p class="govuk-!-font-size-16" th:text="${organisation.type}">Research and technology organisations (RTOs)</p>
-            <table class="table-overflow">
-                <thead>
-                <tr>
-                    <th class="width-30-percent" scope="col">Applicant</th>
-                    <th class="width-50-percent" scope="col">Email</th>
-                    <th scope="col"><span class="govuk-visually-hidden">Additional details</span></th>
+            <table class="govuk-table table-overflow">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header width-30-percent" scope="col">Applicant</th>
+                    <th class="govuk-table__header width-50-percent" scope="col">Email</th>
+                    <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Additional details</span></th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="applicant : ${organisation.applicants}">
-                    <td th:text="${applicant.name}">Steve Smith</td>
-                    <td th:text="${applicant.email}">steve.smith@empire.com</td>
-                    <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
+                <tbody class="govuk-table__body">
+                <tr th:each="applicant : ${organisation.applicants}"
+                    class="govuk-table__row">
+                    <td class="govuk-table__cell" th:text="${applicant.name}">Steve Smith</td>
+                    <td class="govuk-table__cell" th:text="${applicant.email}">steve.smith@empire.com</td>
+                    <td class="govuk-table__cell" th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
                 </tr>
                 </tbody>
             </table>

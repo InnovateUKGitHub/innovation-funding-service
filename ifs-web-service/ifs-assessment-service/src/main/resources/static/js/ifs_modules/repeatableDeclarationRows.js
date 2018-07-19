@@ -47,7 +47,7 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           'name="appointments[' + uniqueRowId + '].position" value="" ' +
           'data-required-errormessage="Please enter a position." required="required" />' +
           '</td>' +
-          '<td>' +
+          '<td class="govuk-table__cell">' +
           '<button class="remove-another-row button-clear" name="removeAppointment" type="button" value="0">Remove</button>' +
           '</td>' +
           '</tr>')
@@ -74,7 +74,7 @@ IFS.assessment.repeatableDeclarationRows = (function () {
           'name="familyAffiliations[' + uniqueRowId + '].position" value="" ' +
           'data-required-errormessage="Please enter a position." required="required" />' +
           '</td>' +
-          '<td>' +
+          '<td class="govuk-table__cell">' +
           '<button class="remove-another-row button-clear" name="removeFamilyMemberAffiliation" type="button" value="1">Remove</button>' +
           '</td>' +
           '</tr>')

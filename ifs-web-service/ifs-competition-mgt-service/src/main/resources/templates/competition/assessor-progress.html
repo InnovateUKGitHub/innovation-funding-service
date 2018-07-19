@@ -48,42 +48,42 @@
         <h2 class="govuk-heading-m" th:text="| Assigned (${#lists.size(model.assigned)}) |"/>
 
         <div class="table-overflow" th:if="${!#lists.isEmpty(model.assigned)}">
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col" class="width-80">Application number</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Lead organisation</th>
-                        <th scope="col" class="width-80 numeric">Assigned</th>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header width-80">Application number</th>
+                        <th class="govuk-table__header" scope="col">Title</th>
+                        <th class="govuk-table__header" scope="col">Lead organisation</th>
+                        <th scope="col" class="width-80 govuk-table__header govuk-table__header--numeric">Assigned</th>
                         <th scope="col"
-                            class="width-80 aligncentre"
+                            class="govuk-table__header width-80 aligncentre"
                             th:if="${model.competitionInAssessment}">
                             Notified
                         </th>
                         <th scope="col"
-                            class="width-80 aligncentre"
+                            class="govuk-table__header width-80 aligncentre"
                             th:if="${model.competitionInAssessment}">
                             Accepted
                         </th>
                         <th scope="col"
-                            class="width-80 aligncentre"
+                            class="govuk-table__header width-80 aligncentre"
                             th:if="${model.competitionInAssessment}">
                             Started
                         </th>
                         <th scope="col"
-                            class="width-80 aligncentre"
+                            class="govuk-table__header width-80 aligncentre"
                             th:if="${model.competitionInAssessment}">
                             Submitted
                         </th>
                         <th scope="col"
-                            class="width-100 aligncentre">
+                            class="govuk-table__header width-100 aligncentre">
                             Remove
                         </th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr th:each="app : ${model.assigned}">
-                        <td>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="app : ${model.assigned}">
+                        <td class="govuk-table__cell">
                             <a href="#"
                                th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
                                th:text="${app.applicationId}"
@@ -91,30 +91,30 @@
                             1
                             </a>
                         </td>
-                        <td th:text="${app.applicationName}">Application name</td>
-                        <td th:text="${app.leadOrganisation}">Lead organisation</td>
-                        <td th:text="${app.totalAssessors}" class="numeric">3</td>
-                        <td class="aligncentre"
+                        <td class="govuk-table__cell" th:text="${app.applicationName}">Application name</td>
+                        <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Lead organisation</td>
+                        <td class="govuk-table__cell" th:text="${app.totalAssessors}" class="numeric">3</td>
+                        <td class="govuk-table__cell aligncentre"
                             th:if="${model.competitionInAssessment}"
                             th:text="${app.notified} ? 'Yes' : '-'">
                             Yes
                         </td>
-                        <td class="aligncentre"
+                        <td class="govuk-table__cell aligncentre"
                             th:if="${model.competitionInAssessment}"
                             th:text="${app.accepted} ? 'Yes' : '-'">
                             Yes
                         </td>
-                        <td class="aligncentre"
+                        <td class="govuk-table__cell aligncentre"
                             th:if="${model.competitionInAssessment}"
                             th:text="${app.started} ? 'Yes' : '-'">
                             Yes
                         </td>
-                        <td class="aligncentre"
+                        <td class="govuk-table__cell aligncentre"
                             th:if="${model.competitionInAssessment}"
                             th:text="${app.submitted} ? 'Yes' : '-'">
                             Yes
                         </td>
-                        <td class="alignright">
+                        <td class="govuk-table__cell alignright">
                             <a th:if="${app.notified}" class="button-secondary govuk-!-margin-0" data-js-modal="remove-assigned-assessor-modal"
                                th:href="${removeActionNonJs}"
                                th:attr="data-modal-form-action=${removeAction}"
@@ -138,19 +138,19 @@
             <h2 class="govuk-heading-m" th:text="| Rejected (${#lists.size(model.rejected)}) |"/>
 
             <div class="table-overflow" th:if="${!#lists.isEmpty(model.rejected)}">
-                <table>
-                    <thead>
-                    <tr>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
                         <th scope="col" class="width-80">Application number</th>
                         <th scope="col" class="width-200">Title</th>
                         <th scope="col" class="width-150'">Lead organisation</th>
-                        <th scope="col">Reason</th>
+                        <th class="govuk-table__header" scope="col">Reason</th>
                         <th scope="col" class="width-80 numeric">Assessors</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="app : ${model.rejected}">
-                        <td>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="app : ${model.rejected}">
+                        <td class="govuk-table__cell">
                             <a href="#"
                                th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
                                th:text="${app.applicationId}"
@@ -158,7 +158,7 @@
                         </td>
                         <td th:text="${app.applicationName}">Application name</td>
                         <td th:text="${app.leadOrganisation}">Lead organisation</td>
-                        <td><th:block th:text="${app.rejectReason.displayLabel}">Too many assignments</th:block> <br/>
+                        <td class="govuk-table__cell"><th:block th:text="${app.rejectReason.displayLabel}">Too many assignments</th:block> <br/>
                             <th:block th:text="${app.rejectComment}">You have frequently assigned me too may applications</th:block></td>
                         <td th:text="${app.totalAssessors}" class="numeric">3</td>
                     </tr>
@@ -171,28 +171,28 @@
             <h2 class="govuk-heading-m" th:text="| Previously assigned (${#lists.size(model.previouslyAssigned)}) |"/>
 
             <div class="table-overflow" th:if="${!#lists.isEmpty(model.previouslyAssigned)}">
-                <table>
-                    <thead>
-                    <tr>
-                        <th scope="col" class="width-80">Application number</th>
-                        <th scope="col">Title</th>
-                        <th scope="col" class="width-200">Lead organisation</th>
-                        <th scope="col" class="width-80 numeric">Assessors</th>
-                        <th scope="col" class="width-150"><span class="govuk-visually-hidden">Action</span></th>
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header width-80">Application number</th>
+                        <th class="govuk-table__header" scope="col">Title</th>
+                        <th scope="col" class="govuk-table__header width-200">Lead organisation</th>
+                        <th scope="col" class="width-80 govuk-table__header govuk-table__header--numeric">Assessors</th>
+                        <th scope="col" class="govuk-table__header width-150"><span class="govuk-visually-hidden">Action</span></th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="app : ${model.previouslyAssigned}">
-                        <td>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="app : ${model.previouslyAssigned}">
+                        <td class="govuk-table__cell">
                             <a href="#"
                                th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
                                th:text="${app.applicationId}"
                                class="govuk-link">1</a>
                         </td>
-                        <td th:text="${app.applicationName}">Application name</td>
-                        <td th:text="${app.leadOrganisation}">Lead organisation</td>
-                        <td th:text="${app.totalAssessors}" class="numeric">3</td>
-                        <td class="alignright"><form method="post"
+                        <td class="govuk-table__cell" th:text="${app.applicationName}">Application name</td>
+                        <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Lead organisation</td>
+                        <td th:text="${app.totalAssessors}" class="govuk-table__cell govuk-table__cell--numeric">3</td>
+                        <td class="govuk-table__cell alignright"><form method="post"
                                   th:action="@{/assessment/competition/{competitionId}/assessors/{assessorId}/application/{applicationId}/assign(competitionId=${model.competitionId}, assessorId=${model.assessorId}, applicationId=${app.applicationId})}" >
                             <button type="submit" class="button-secondary govuk-!-margin-0">Reassign</button>
                         </form>
@@ -261,27 +261,27 @@
 
 
         <div class="table-overflow">
-            <table class="applications-available">
-                <thead>
-                <tr>
-                    <th scope="col">Application number</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Lead organisation</th>
-                    <th class="aligncentre" scope="col" th:text="${model.applicationsView.inAssessment ? 'Assessors' : 'Assigned'}">Assessors</th>
-                    <th class="aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Accepted</th>
-                    <th class="aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Submitted</th>
-                    <th scope="col"><span class="govuk-visually-hidden">Action</span></th>
+            <table class="govuk-table applications-available">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Application number</th>
+                    <th class="govuk-table__header" scope="col">Title</th>
+                    <th class="govuk-table__header" scope="col">Lead organisation</th>
+                    <th class="govuk-table__header aligncentre" scope="col" th:text="${model.applicationsView.inAssessment ? 'Assessors' : 'Assigned'}">Assessors</th>
+                    <th class="govuk-table__header aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Accepted</th>
+                    <th class="govuk-table__header aligncentre" scope="col" th:if="${model.applicationsView.inAssessment}">Submitted</th>
+                    <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="app : ${model.applicationsView.applications}">
-                    <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}" th:text="${app.applicationId}" class="govuk-link" /></td>
-                    <td th:text="${app.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
-                    <td th:text="${app.leadOrganisation}">Wessex University</td>
-                    <td class="numeric" th:text="${app.assessors}">4</td>
-                    <td class="numeric" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
-                    <td class="numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
-                    <td><form method="post"
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row" th:each="app : ${model.applicationsView.applications}">
+                    <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}" th:text="${app.applicationId}" class="govuk-link" /></td>
+                    <td class="govuk-table__cell" th:text="${app.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                    <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Wessex University</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.assessors}">4</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
+                    <td class="govuk-table__cell"><form method="post"
                            th:action="@{/assessment/competition/{competitionid}/assessors/{assessorid}/application/{applicationid}/assign(competitionid=${model.competitionId}, assessorid=${model.assessorId}, applicationid=${app.applicationId})}" >
                         <button type="submit" class="button-secondary govuk-!-margin-0">Assign</button>
                     </form>

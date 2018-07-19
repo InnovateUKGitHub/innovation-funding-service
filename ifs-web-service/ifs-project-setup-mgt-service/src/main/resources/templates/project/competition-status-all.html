@@ -52,22 +52,22 @@
 
         <th:block th:unless="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
           <div class="table-overflow">
-            <table id="table-project-status" class="icon-table">
-              <thead>
-                <tr>
-                  <th scope="col">Project</th>
-                  <th class="status" scope="col">Project details</th>
-                  <th class="status" scope="col">MO</th>
-                  <th class="status" scope="col">Bank details</th>
-                  <th class="status" scope="col">Finance checks</th>
-                  <th class="status" scope="col">Spend profile</th>
-                  <th class="status" scope="col">Other docs</th>
-                  <th class="status" scope="col">GOL</th>
+            <table id="table-project-status" class="govuk-table icon-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th class="govuk-table__header" scope="col">Project</th>
+                  <th class="govuk-table__header status" scope="col">Project details</th>
+                  <th class="govuk-table__header status" scope="col">MO</th>
+                  <th class="govuk-table__header status" scope="col">Bank details</th>
+                  <th class="govuk-table__header status" scope="col">Finance checks</th>
+                  <th class="govuk-table__header status" scope="col">Spend profile</th>
+                  <th class="govuk-table__header status" scope="col">Other docs</th>
+                  <th class="govuk-table__header status" scope="col">GOL</th>
                 </tr>
               </thead>
-              <tbody class="cell-border-right">
-                <tr th:each="project : ${model.competitionProjectsStatusResource.projectStatusResources}">
-                    <th scope="row">
+              <tbody class="govuk-table__body cell-border-right">
+                <tr class="govuk-table__row" th:each="project : ${model.competitionProjectsStatusResource.projectStatusResources}">
+                    <th class="govuk-table__header" scope="row">
                       <div class="govuk-heading-s govuk-!-margin-0" th:text="${project.projectTitle}" />
                         <!--/*  origin must one of org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin */-->
                       <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" class="govuk-link" />
@@ -111,13 +111,13 @@
 
                 </tr>
               </tbody>
-              <tfoot class="bank-export">
-                <tr th:if="${model.canExportBankDetails}">
-                  <td colspan="3"></td>
-                  <td class="aligncentre">
+              <tfoot class="govuk-table__foot bank-export">
+                <tr class="govuk-table__row" th:if="${model.canExportBankDetails}">
+                  <td class="govuk-table__cell" colspan="3"></td>
+                  <td class="govuk-table__cell aligncentre">
                     <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionProjectsStatusResource.competitionNumber})}" class="govuk-link">Export all bank details</a>
                   </td>
-                  <td colspan="4"></td>
+                  <td class="govuk-table__cell" colspan="4"></td>
                 </tr>
               </tfoot>
             </table>
