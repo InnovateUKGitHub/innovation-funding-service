@@ -428,7 +428,7 @@ public class CompetitionSetupController {
                 failure -> "redirect:/competition/manage-innovation-leads/find",
                 success -> {
                     model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-                    return "redirect:/competition/manage-innovation-leads-find";
+                    return "competition/manage-innovation-leads-find";
                 }
         );
     }
@@ -449,7 +449,7 @@ public class CompetitionSetupController {
                 failure -> "redirect:/competition/manage-innovation-leads/overview",
                 success -> {
                     model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-                    return "redirect:/competition/manage-innovation-leads-overview";
+                    return "competition/manage-innovation-leads-overview";
                 }
         );
     }
