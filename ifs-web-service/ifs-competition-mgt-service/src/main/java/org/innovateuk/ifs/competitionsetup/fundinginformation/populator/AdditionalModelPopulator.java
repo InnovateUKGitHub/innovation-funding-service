@@ -17,19 +17,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdditionalModelPopulator implements CompetitionSetupSectionModelPopulator {
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@Autowired
-	private CategoryRestService categoryRestService;
-	
-	@Override
-	public CompetitionSetupSection sectionToPopulateModel() {
-		return CompetitionSetupSection.ADDITIONAL_INFO;
-	}
+    @Autowired
+    private CategoryRestService categoryRestService;
 
     @Override
-	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
-		return new AdditionalModelViewModel(generalViewModel);
-	}
+    public CompetitionSetupSection sectionToPopulateModel() {
+        return CompetitionSetupSection.ADDITIONAL_INFO;
+    }
+
+    @Override
+    public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
+        return new AdditionalModelViewModel(generalViewModel);
+    }
 }

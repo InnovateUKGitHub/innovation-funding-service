@@ -43,7 +43,8 @@ public class ApplicationFeedbackController {
     private ApplicationService applicationService;
     private CompetitionRestService competitionRestService;
 
-    public ApplicationFeedbackController() {}
+    public ApplicationFeedbackController() {
+    }
 
     @Autowired
     public ApplicationFeedbackController(InterviewAssignmentRestService interviewAssignmentRestService,

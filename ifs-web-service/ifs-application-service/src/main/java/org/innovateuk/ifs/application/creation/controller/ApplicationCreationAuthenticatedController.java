@@ -119,7 +119,7 @@ public class ApplicationCreationAuthenticatedController {
             return questionRestService
                     .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM)
                     .handleSuccessOrFailure(
-                            failure ->  format("redirect:/application/%s/team", application.getId()),
+                            failure -> format("redirect:/application/%s/team", application.getId()),
                             question -> format("redirect:/application/%s/form/question/%s", application.getId(),
                                     question.getId())
                     );

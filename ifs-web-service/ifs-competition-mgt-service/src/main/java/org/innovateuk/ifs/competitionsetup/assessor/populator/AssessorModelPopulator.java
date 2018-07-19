@@ -18,25 +18,25 @@ import java.util.List;
 @Service
 public class AssessorModelPopulator implements CompetitionSetupSectionModelPopulator {
 
-	private AssessorCountOptionsRestService assessorCountOptionsRestService;
+    private AssessorCountOptionsRestService assessorCountOptionsRestService;
 
-	public AssessorModelPopulator(AssessorCountOptionsRestService assessorCountOptionsRestService) {
-		this.assessorCountOptionsRestService = assessorCountOptionsRestService;
-	}
+    public AssessorModelPopulator(AssessorCountOptionsRestService assessorCountOptionsRestService) {
+        this.assessorCountOptionsRestService = assessorCountOptionsRestService;
+    }
 
-	@Override
-	public CompetitionSetupSection sectionToPopulateModel() {
-		return CompetitionSetupSection.ASSESSORS;
-	}
+    @Override
+    public CompetitionSetupSection sectionToPopulateModel() {
+        return CompetitionSetupSection.ASSESSORS;
+    }
 
-	@Override
-	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
-		List<AssessorCountOptionResource> assessorCountOptions =  assessorCountOptionsRestService.
-				findAllByCompetitionType(competitionResource.getCompetitionType()).getSuccess();
+    @Override
+    public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
+        List<AssessorCountOptionResource> assessorCountOptions = assessorCountOptionsRestService.
+                findAllByCompetitionType(competitionResource.getCompetitionType()).getSuccess();
 
-		return new AssessorViewModel(generalViewModel,
-				assessorCountOptions,
+        return new AssessorViewModel(generalViewModel,
+                assessorCountOptions,
                 competitionResource.isAssessmentClosed(),
                 competitionResource.isSetupAndAfterNotifications());
-	}
+    }
 }

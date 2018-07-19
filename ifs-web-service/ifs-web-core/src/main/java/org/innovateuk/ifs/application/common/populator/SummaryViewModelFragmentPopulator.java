@@ -103,7 +103,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
 
         Map<Long, List<QuestionResource>> sectionQuestions = getSectionQuestions(competition.getId());
 
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        List<ProcessRoleResource> userA§= processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
 
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();

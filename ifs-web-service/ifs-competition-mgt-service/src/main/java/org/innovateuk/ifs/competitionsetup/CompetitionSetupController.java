@@ -425,10 +425,10 @@ public class CompetitionSetupController {
         }
 
         return competitionSetupService.addInnovationLead(competitionId, innovationLeadUserId).handleSuccessOrFailure(
-                failure -> "competition/setup/" + competitionId,
+                failure -> "redirect:/competition/manage-innovation-leads/find",
                 success -> {
                     model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-                    return "competition/manage-innovation-leads-find";
+                    return "redirect:/competition/manage-innovation-leads-find";
                 }
         );
     }
@@ -446,10 +446,10 @@ public class CompetitionSetupController {
         }
 
         return competitionSetupService.removeInnovationLead(competitionId, innovationLeadUserId).handleSuccessOrFailure(
-                failure -> "competition/setup/" + competitionId,
+                failure -> "redirect:/competition/manage-innovation-leads/overview",
                 success -> {
                     model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-                    return "competition/manage-innovation-leads-overview";
+                    return "redirect:/competition/manage-innovation-leads-overview";
                 }
         );
     }
