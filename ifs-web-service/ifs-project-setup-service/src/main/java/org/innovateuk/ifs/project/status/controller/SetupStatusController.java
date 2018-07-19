@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.origin.ApplicationSummaryOrigin;
 import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.RedirectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -42,10 +41,7 @@ public class SetupStatusController {
                                          @RequestParam MultiValueMap<String, String> queryParams) {
         queryParams.add("projectId", String.valueOf(projectId));
         String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.SET_UP_YOUR_PROJECT , queryParams);
-
         model.addAttribute("model", setupStatusViewModelPopulator.populateViewModel(projectId, loggedInUser, originQuery));
-        model.addAttribute("url", RedirectUtils.buildRedirect(request, "applicant/dashboard"));
-
         return "project/setup-status";
     }
 }
