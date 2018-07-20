@@ -125,8 +125,7 @@
                                     </tr>
                                     </thead>
                                     <tbody class="govuk-table__body">
-                                    <tr class="govuk-table__row" th:each="row, iterStat : *{invites}"
-                                        class="govuk-table__row form-group-row-validated"
+                                    <tr class="govuk-table__row form-group-row-validated" th:each="row, iterStat : *{invites}"
                                         th:classappend="((${#fields.hasErrors('invites[__${iterStat.index}__].name')}) or (${#fields.hasErrors('invites[__${iterStat.index}__].email')})) ? 'govuk-form-group--error'">
                                         <td class="govuk-table__cell width-40-percent govuk-form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? 'govuk-form-group--error'">
                                             <label>

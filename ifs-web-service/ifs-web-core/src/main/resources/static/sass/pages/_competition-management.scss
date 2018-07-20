@@ -217,14 +217,13 @@
 .select-all {
   padding-top: 12px;
 
-  .form-hint {
+  .govuk-hint {
     @include media-down(mobile) {
       display: block;
       text-align: center;
     }
 
     display:inline-block;
-    margin: 8px 10px 0;
     text-align: left;
   }
 }
