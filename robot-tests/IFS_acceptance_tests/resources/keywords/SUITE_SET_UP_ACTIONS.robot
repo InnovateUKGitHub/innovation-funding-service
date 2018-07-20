@@ -209,7 +209,7 @@ the user verifies email
     The guest user inserts user email and password             ${EMAIL_INVITED}  ${correct_password}
     The guest user clicks the log-in button
 
-the user follows the flow to register their organisation
+the user follows the flow to register their organisation   #This could be used instead of the one I wrote??
     [Arguments]   ${org_type_id}
     the user clicks the button/link         jQuery=a:contains("Start new application")
     the user clicks the button/link         link=Continue without an account

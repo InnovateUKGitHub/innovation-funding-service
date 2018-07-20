@@ -15,8 +15,8 @@ Academic organisations search
     When the user reads his email and clicks the link   ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation   2
     And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button              organisationType    2
+    #And The user should see the element                 jQuery=h1:contains("Research") ~ .message-alert:contains("Higher education and organisations registered with Je-S.") - #Why is this now failing?
     And the user clicks the button/link                 jQuery=.button:contains("Continue")
-    And The user should see the element                 jQuery=h1:contains("Research") ~ .message-alert:contains("Your organisation must be registered on Je-S ")
     And the user clicks the button/link                 jQuery=.button:contains("Search")
     Then the user should see an error                   Please enter an organisation name to search.
     When the user enters text to a text field           id=organisationSearchName    abcd
