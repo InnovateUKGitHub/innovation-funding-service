@@ -16,7 +16,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.funding.controller.CompetitionManagementFundingDecisionController;
-import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.management.funding.populator.CompetitionManagementFundingDecisionModelPopulator;
+import org.innovateuk.ifs.management.funding.viewmodel.ManageFundingApplicationsViewModel;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -24,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -34,10 +36,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -66,6 +65,10 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
     @InjectMocks
     private CompetitionManagementFundingDecisionController controller;
+
+    @Spy
+    @InjectMocks
+    private CompetitionManagementFundingDecisionModelPopulator competitionManagementFundingDecisionModelPopulator;
 
     @Mock
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
@@ -127,17 +130,20 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("id");
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
 
-
         List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
                 .build(3);
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource(50, 3, expectedSummaries, 1, 20);
         when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty())).thenReturn(restSuccess(summary));
 
-        mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID))
+        Map<String, Object> model = mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary));
+                .andReturn().getModelAndView().getModel();
+
+        ManageFundingApplicationsViewModel viewModel = (ManageFundingApplicationsViewModel) model.get("model");
+
+        assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
+        assertEquals(viewModel.getResults(), summary);
 
         verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty());
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
@@ -155,13 +161,15 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty())).thenReturn(restSuccess(summary));
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
 
-
-        mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID))
+        Map<String, Object> model = mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary));
+                .andReturn().getModelAndView().getModel();
 
+        ManageFundingApplicationsViewModel viewModel = (ManageFundingApplicationsViewModel) model.get("model");
+
+        assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
+        assertEquals(viewModel.getResults(), summary);
 
         FundingDecisionSelectionCookie expectedCookie = new FundingDecisionSelectionCookie();
         expectedCookie.setFundingDecisionFilterForm(new FundingDecisionFilterForm());
@@ -183,13 +191,16 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "id", 0, 20, Optional.of(filterString), empty())).thenReturn(restSuccess(summary));
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, Optional.of(filterString), empty())).thenReturn(restSuccess(asList(1L, 2L)));
 
-
-        mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID)
+        Map<String, Object> model = mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID)
                 .param("stringFilter", filterString))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary));
+                .andReturn().getModelAndView().getModel();
+
+        ManageFundingApplicationsViewModel viewModel = (ManageFundingApplicationsViewModel) model.get("model");
+
+        assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
+        assertEquals(viewModel.getResults(), summary);
 
         FundingDecisionSelectionCookie expectedCookie = new FundingDecisionSelectionCookie();
         FundingDecisionFilterForm expectedFilterFrom  = new FundingDecisionFilterForm();
@@ -215,12 +226,15 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         FundingDecisionFilterForm filterForm = cookieWithFilterAndSelectionParameters.getFundingDecisionFilterForm();
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, filterForm.getStringFilter(),filterForm.getFundingFilter())).thenReturn(restSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID)
-        .cookie(createFormCookie(cookieWithFilterAndSelectionParameters)))
+        Map<String, Object> model = mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary));
+                .andReturn().getModelAndView().getModel();
+
+        ManageFundingApplicationsViewModel viewModel = (ManageFundingApplicationsViewModel) model.get("model");
+
+        assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
+        assertEquals(viewModel.getResults(), summary);
 
         verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(cookieWithFilterAndSelectionParameters)));
     }
@@ -236,19 +250,22 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         when(cookieUtil.getCompressedCookieValue(any(),any())).thenReturn(getSerializedObject(cookieWithFilterAndSelectionParameters));
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID)
+        Map<String, Object> model = mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID)
                 .param("filterChanged", "true"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary));
+                .andReturn().getModelAndView().getModel();
+
+        ManageFundingApplicationsViewModel viewModel = (ManageFundingApplicationsViewModel) model.get("model");
+
+        assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
+        assertEquals(viewModel.getResults(), summary);
 
         FundingDecisionSelectionCookie expectedFundingDecisionSelectionCookie = cookieWithFilterAndSelectionParameters;
         expectedFundingDecisionSelectionCookie.setFundingDecisionFilterForm(new FundingDecisionFilterForm());
 
         verify(cookieUtil).saveToCompressedCookie(any(),eq("fundingDecisionSelectionForm_comp_123"), eq(getSerializedObject(expectedFundingDecisionSelectionCookie)));
     }
-
 
     @Test
     public void applications_validSubmitFundingDecisionShouldResultInServiceCall() throws Exception {
@@ -270,11 +287,17 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource(50, 3, expectedSummaries, 1, 20);
         when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty())).thenReturn(restSuccess(summary));
 
-        mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+        Map<String, Object> model = mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("fundingDecision", fundingDecision))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-funders-panel"));
+                .andExpect(view().name("comp-mgt-funders-panel"))
+                .andReturn().getModelAndView().getModel();
+
+        ManageFundingApplicationsViewModel viewModel = (ManageFundingApplicationsViewModel) model.get("model");
+
+        assertEquals(viewModel.getCompetitionSummary(), competitionSummaryResource);
+        assertEquals(viewModel.getResults(), summary);
 
         verify(cookieUtil).getCompressedCookieValue(any(),any());
     }
@@ -398,8 +421,17 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         )
                 .andExpect(status().isOk()).andReturn();
 
-        Pagination pagination = (Pagination) result.getModelAndView().getModel().get("pagination");
-        assertEquals("?origin=FUNDING_APPLICATIONS&page=0", pagination.getPageNames().get(0).getPath());
+        Map<String, Object> model = mockMvc.perform(get("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("fundingDecision", fundingDecisionString)
+                .param("_csrf", "hash"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-funders-panel"))
+                .andReturn().getModelAndView().getModel();
+
+        ManageFundingApplicationsViewModel viewModel = (ManageFundingApplicationsViewModel) model.get("model");
+
+        assertEquals("?origin=FUNDING_APPLICATIONS&page=0", viewModel.getPagination().getPageNames().get(0).getPath());
     }
 
     @Test
