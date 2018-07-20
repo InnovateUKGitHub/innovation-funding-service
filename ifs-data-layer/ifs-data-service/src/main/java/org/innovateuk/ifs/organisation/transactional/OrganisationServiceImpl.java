@@ -65,7 +65,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         final Comparator<OrganisationResource> comparator;
 
         if (leadOrganisationId != null) {
-            comparator = Comparator.comparing(organisationResource -> isLeadOrganisation(organisationResource.getId(), leadOrganisationId), Comparator.reverseOrder());
+            comparator = Comparator.comparing(organisationResource -> leadOrganisationId.equals(organisationResource.getId()), Comparator.reverseOrder());
         } else {
             comparator = Comparator.comparingLong(OrganisationResource::getId);
         }
@@ -75,10 +75,6 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         List<OrganisationResource> organisationResources = new ArrayList<>(simpleMap(organisations, organisationMapper::mapToResource));
         organisationResources.sort(comparator);
         return serviceSuccess(new LinkedHashSet<>(organisationResources));
-    }
-
-    private boolean isLeadOrganisation(long organisationId, Long leadOrganisationId) {
-        return leadOrganisationId.equals(organisationId);
     }
 
     @Override

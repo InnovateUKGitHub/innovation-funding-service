@@ -111,7 +111,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         final Comparator<OrganisationResource> comparator;
 
         if (leadOrganisation != null) {
-            comparator = Comparator.comparing(organisationResource -> isLeadOrganisation(organisationResource.getId(), leadOrganisation), Comparator.reverseOrder());
+            comparator = Comparator.comparing(organisationResource -> leadOrganisation.getId().equals(organisationResource.getId()), Comparator.reverseOrder());
         } else {
             comparator = Comparator.comparingLong(OrganisationResource::getId);
         }
@@ -135,10 +135,6 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         viewModel.setPendingOrganisationNames(pendingOrganisationNames);
 
         viewModel.setLeadOrganisation(leadOrganisation);
-    }
-
-    private boolean isLeadOrganisation(long organisationId, OrganisationResource leadOrganisation) {
-        return leadOrganisation.getId().equals(organisationId);
     }
 
     private void addCompletedDetails(OpenSectionViewModel openSectionViewModel, ApplicantSectionResource applicantSection) {
