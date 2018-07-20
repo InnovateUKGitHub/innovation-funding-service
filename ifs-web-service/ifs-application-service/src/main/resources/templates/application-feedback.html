@@ -15,7 +15,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Feedback overview',subTitle=${model.application.name},size='heading-xlarge'" />
             </th:block>
 
-            <th:block th:insert="fragments/elements :: competition-status-message (app=${model.application}, competition=${model.competition}, projectWithdrawn=${model.projectWithdrawn})" />
+            <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${model.projectWithdrawn})" />
 
             <div class="grid-row">
                 <div class="column-half">

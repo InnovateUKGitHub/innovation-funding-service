@@ -51,7 +51,7 @@ Support user is able to search active external users
     Then the user should see the element           jQuery=td:contains("Dreambit") ~ td:contains("becky.mason@gmail.com") + td:contains("Verified")
     And the user clicks the button/link            link=Clear
     When the user is searching for external users  Empire  ORGANISATION_NAME
-    Then the user should see the element           jQuery=td:contains("${EMPIRE_LTD_NAME}") + td:contains("${EMPIRE_LTD_ID}") + td:contains("${lead_applicant_credentials["email"]}")
+    Then the user should see the element           jQuery=td:contains("${EMPIRE_LTD_NAME}") + td:contains("Business") + td:contains("${EMPIRE_LTD_ID}") + td:contains("${lead_applicant_credentials["email"]}")
     And the user clicks the button/link            link=Clear
 
 Support user is able to search pending external users

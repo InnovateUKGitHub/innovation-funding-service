@@ -1,4 +1,22 @@
 import org.apache.tools.ant.filters.ReplaceTokens
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+
+buildDocker.tag="innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+buildDocker.inputDir=file("${project.buildDir}/docker")
+tagDocker.imageId="innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+
+def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+if (enabled) {
+    buildDocker.outputs.upToDateWhen { false }
+}
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
 
 def String spCertsVolume = 'src/main/docker/certs'
 
@@ -8,6 +26,10 @@ def String spProxyCacertificateFile = "${spCertsVolume}/sp_proxy_cacertificate.p
 
 def String idpSigningCertificateFile = "${spCertsVolume}/idp-signing.crt"
 def String idpEncryptionCertificateFile = "${spCertsVolume}/idp-encryption.crt"
+
+buildscript {
+    repositories { jcenter() }
+}
 
 task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'
