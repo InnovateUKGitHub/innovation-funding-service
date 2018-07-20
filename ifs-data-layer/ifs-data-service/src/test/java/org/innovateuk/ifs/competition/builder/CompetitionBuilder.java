@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -163,6 +164,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withAssessorFinanceView(AssessorFinanceView... assessorFinanceView) {
         return withArraySetFieldByReflection("assessorFinanceView", assessorFinanceView);
+    }
+
+    public CompetitionBuilder withGrantClaimMaximums(List<GrantClaimMaximum>... grantClaimMaximums) {
+        return withArraySetFieldByReflection("grantClaimMaximums", grantClaimMaximums);
     }
 
     public CompetitionBuilder withTermsAndConditions(GrantTermsAndConditions... termsAndConditions) {
