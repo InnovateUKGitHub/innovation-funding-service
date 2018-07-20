@@ -82,7 +82,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         boolean readOnly = user.hasRole(SUPPORT);
         boolean canReinstate = !(user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD));
 
-
         ApplicationOverviewIneligibilityViewModel ineligibility = applicationOverviewIneligibilityModelPopulator.populateModel(application, competition);
 
         String queryParam = buildOriginQueryString(NavigationOrigin.valueOf(origin), queryParams);
