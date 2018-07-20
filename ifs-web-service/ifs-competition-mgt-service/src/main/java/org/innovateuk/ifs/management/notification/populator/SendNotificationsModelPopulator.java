@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.management.notification.populator;
 
-
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class SendNotificationsModelPopulator {
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private ApplicationNotificationTemplateRestService applicationNotificationTemplateRestService;
@@ -44,7 +43,7 @@ public class SendNotificationsModelPopulator {
                 .filter(application -> applicationIds.contains(application.getId()) )
                 .collect(Collectors.toList());
 
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         long successfulCount = getApplicationCountByFundingDecision(filteredApplications, FundingDecision.FUNDED);
         long unsuccessfulCount = getApplicationCountByFundingDecision(filteredApplications, FundingDecision.UNFUNDED);
