@@ -70,6 +70,17 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
     private AffiliationRestService affiliationRestService;
 
     private CompetitionResource competition;
+    private String expectedPrincipalEmployer;
+    private String expectedRole;
+    private String expectedProfessionalAffiliations;
+    private String expectedFinancialInterests;
+    private String expectedFamilyFinancialInterests;
+    private List<AffiliationResource> expectedFamilyAffiliations;
+    private List<AffiliationResource> expectedAppointments;
+    private AffiliationResource principalEmployer;
+    private AffiliationResource professionalAffiliations;
+    private AffiliationResource financialInterests;
+    private AffiliationResource familyFinancialInterests;
 
     @Override
     protected CompetitionManagementAssessorProfileController supplyControllerUnderTest() {
@@ -123,64 +134,13 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
     public void assessorProfileDeclaration() throws Exception {
         long assessorId = 1L;
 
-        String expectedPrincipalEmployer = "Big Name Corporation";
-        String expectedRole = "Financial Accountant";
-        String expectedProfessionalAffiliations = "Professional affiliations...";
-        String expectedFinancialInterests = "Other financial interests...";
-        String expectedFamilyFinancialInterests = "Other family financial interests...";
-
-        List<AffiliationResource> expectedAppointments = newAffiliationResource()
-                .withAffiliationType(PERSONAL)
-                .withOrganisation("Org 1", "Org 2")
-                .withPosition("Pos 1", "Post 2")
-                .withExists(TRUE)
-                .build(2);
-        List<AffiliationResource> expectedFamilyAffiliations = newAffiliationResource()
-                .withAffiliationType(FAMILY)
-                .withRelation("Relation 1", "Relation 2")
-                .withOrganisation("Org 1", "Org 2")
-                .withExists(TRUE)
-                .build(2);
-        AffiliationResource principalEmployer = newAffiliationResource()
-                .withAffiliationType(EMPLOYER)
-                .withExists(TRUE)
-                .withOrganisation(expectedPrincipalEmployer)
-                .withPosition(expectedRole)
-                .build();
-        AffiliationResource professionalAffiliations = newAffiliationResource()
-                .withAffiliationType(PROFESSIONAL)
-                .withExists(TRUE)
-                .withDescription(expectedProfessionalAffiliations)
-                .build();
-        AffiliationResource financialInterests = newAffiliationResource()
-                .withAffiliationType(PERSONAL_FINANCIAL)
-                .withExists(TRUE)
-                .withDescription(expectedFinancialInterests)
-                .build();
-        AffiliationResource familyFinancialInterests = newAffiliationResource()
-                .withAffiliationType(FAMILY_FINANCIAL)
-                .withExists(TRUE)
-                .withDescription(expectedFamilyFinancialInterests)
-                .build();
+        setupAffiliations();
 
         AddressResource expectedAddress = getExpectedAddress();
         List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
         AssessorProfileResource expectedProfile = getAssessorProfile(expectedAddress, expectedInnovationAreas);
 
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
-
-        when(affiliationRestService.getUserAffiliations(anyLong()))
-                .thenReturn(restSuccess(new AffiliationListResource(combineLists(
-                        combineLists(
-                                expectedAppointments,
-                                expectedFamilyAffiliations
-                        ),
-                        principalEmployer,
-                        professionalAffiliations,
-                        financialInterests,
-                        familyFinancialInterests
-                )
-                )));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/declaration", competition.getId(), assessorId))
                 .andExpect(status().isOk())
@@ -200,6 +160,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
         assertEquals(expectedFinancialInterests, model.getFinancialInterests());
         assertEquals(expectedPrincipalEmployer, model.getPrincipalEmployer());
         assertEquals(expectedProfessionalAffiliations, model.getProfessionalAffiliations());
+        assertEquals(expectedRole, model.getRole());
 
         verify(assessorRestService).getAssessorProfile(assessorId);
         verify(affiliationRestService).getUserAffiliations(anyLong());
@@ -305,6 +266,62 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                                 .build()
                 )
                 .build();
+    }
+
+    private void setupAffiliations() {
+
+         expectedPrincipalEmployer = "Big Name Corporation";
+         expectedRole = "Financial Accountant";
+         expectedProfessionalAffiliations = "Professional affiliations...";
+         expectedFinancialInterests = "Other financial interests...";
+         expectedFamilyFinancialInterests = "Other family financial interests...";
+
+        expectedAppointments = newAffiliationResource()
+                .withAffiliationType(PERSONAL)
+                .withOrganisation("Org 1", "Org 2")
+                .withPosition("Pos 1", "Post 2")
+                .withExists(TRUE)
+                .build(2);
+        expectedFamilyAffiliations = newAffiliationResource()
+                .withAffiliationType(FAMILY)
+                .withRelation("Relation 1", "Relation 2")
+                .withOrganisation("Org 1", "Org 2")
+                .withExists(TRUE)
+                .build(2);
+        principalEmployer = newAffiliationResource()
+                .withAffiliationType(EMPLOYER)
+                .withExists(TRUE)
+                .withOrganisation(expectedPrincipalEmployer)
+                .withPosition(expectedRole)
+                .build();
+        professionalAffiliations = newAffiliationResource()
+                .withAffiliationType(PROFESSIONAL)
+                .withExists(TRUE)
+                .withDescription(expectedProfessionalAffiliations)
+                .build();
+        financialInterests = newAffiliationResource()
+                .withAffiliationType(PERSONAL_FINANCIAL)
+                .withExists(TRUE)
+                .withDescription(expectedFinancialInterests)
+                .build();
+        familyFinancialInterests = newAffiliationResource()
+                .withAffiliationType(FAMILY_FINANCIAL)
+                .withExists(TRUE)
+                .withDescription(expectedFamilyFinancialInterests)
+                .build();
+
+        when(affiliationRestService.getUserAffiliations(anyLong()))
+                .thenReturn(restSuccess(new AffiliationListResource(combineLists(
+                        combineLists(
+                                expectedAppointments,
+                                expectedFamilyAffiliations
+                        ),
+                        principalEmployer,
+                        professionalAffiliations,
+                        financialInterests,
+                        familyFinancialInterests
+                )
+                )));
     }
 
 }
