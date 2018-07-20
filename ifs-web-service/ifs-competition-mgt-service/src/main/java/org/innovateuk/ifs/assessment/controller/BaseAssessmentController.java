@@ -17,9 +17,9 @@ public abstract class BaseAssessmentController<T extends AssessmentCountSummaryP
     protected static final int PAGE_SIZE = 20;
 
     @Autowired
-    private CompetitionRestService competitionService;
+    private CompetitionRestService competitionRestService;
 
     protected CompetitionResource getCompetition(long competitionId) {
-        return competitionService.getCompetitionById(competitionId).getSuccess();
+        return competitionRestService.getCompetitionById(competitionId).getSuccess();
     }
 }

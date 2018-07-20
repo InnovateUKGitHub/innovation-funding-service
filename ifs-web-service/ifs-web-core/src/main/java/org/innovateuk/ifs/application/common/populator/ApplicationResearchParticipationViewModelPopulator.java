@@ -3,8 +3,8 @@ package org.innovateuk.ifs.application.common.populator;
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationResearchParticipationViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.springframework.stereotype.Component;
 
@@ -12,21 +12,21 @@ import org.springframework.stereotype.Component;
 public class ApplicationResearchParticipationViewModelPopulator {
 
     private ApplicationService applicationService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     public ApplicationResearchParticipationViewModelPopulator(ApplicationService applicationService,
-                                                              CompetitionService competitionService,
+                                                              CompetitionRestService competitionRestService,
                                                               ApplicationFinanceRestService applicationFinanceRestService) {
         this.applicationService = applicationService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.applicationFinanceRestService = applicationFinanceRestService;
     }
 
     public ApplicationResearchParticipationViewModel populate(long applicationId) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         return new ApplicationResearchParticipationViewModel(
                 applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess() ,
