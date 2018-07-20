@@ -15,40 +15,40 @@ import java.util.Optional;
  */
 public interface CompetitionSetupService {
 
-	CompetitionSetupViewModel populateCompetitionSectionModelAttributes(CompetitionResource competitionResource,
-																		CompetitionSetupSection section);
+    CompetitionSetupViewModel populateCompetitionSectionModelAttributes(CompetitionResource competitionResource,
+                                                                        CompetitionSetupSection section);
 
-	CompetitionSetupSubsectionViewModel populateCompetitionSubsectionModelAttributes(CompetitionResource competitionResource,
-																					 CompetitionSetupSection section, CompetitionSetupSubsection subsection,
-																					 Optional<Long> objectId);
+    CompetitionSetupSubsectionViewModel populateCompetitionSubsectionModelAttributes(CompetitionResource competitionResource,
+                                                                                     CompetitionSetupSection section, CompetitionSetupSubsection subsection,
+                                                                                     Optional<Long> objectId);
 
-	CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
-											CompetitionSetupSection section);
+    CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
+                                            CompetitionSetupSection section);
 
-	CompetitionSetupForm getSubsectionFormData(CompetitionResource competitionResource,
-											CompetitionSetupSection section,
-											CompetitionSetupSubsection subsection,
+    CompetitionSetupForm getSubsectionFormData(CompetitionResource competitionResource,
+                                               CompetitionSetupSection section,
+                                               CompetitionSetupSubsection subsection,
                                                Optional<Long> objectId);
 
-	ServiceResult<Void> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
-                                                String fieldName, String value, Optional<Long> objectId);
+    ServiceResult<Void> autoSaveCompetitionSetupSection(CompetitionResource competitionResource, CompetitionSetupSection section,
+                                                        String fieldName, String value, Optional<Long> objectId);
 
-	ServiceResult<Void> autoSaveCompetitionSetupSubsection(CompetitionResource competitionResource, CompetitionSetupSection section,
-												   CompetitionSetupSubsection subsection, String fieldName, String value, Optional<Long> objectId);
+    ServiceResult<Void> autoSaveCompetitionSetupSubsection(CompetitionResource competitionResource, CompetitionSetupSection section,
+                                                           CompetitionSetupSubsection subsection, String fieldName, String value, Optional<Long> objectId);
 
     ServiceResult<Void> saveCompetitionSetupSection(CompetitionSetupForm competitionSetupForm,
-													CompetitionResource competitionResource, CompetitionSetupSection section);
+                                                    CompetitionResource competitionResource, CompetitionSetupSection section);
 
-	ServiceResult<Void> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
-											   CompetitionResource competitionResource, CompetitionSetupSection section, CompetitionSetupSubsection subsection);
+    ServiceResult<Void> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
+                                                       CompetitionResource competitionResource, CompetitionSetupSection section, CompetitionSetupSubsection subsection);
 
     boolean isInitialDetailsCompleteOrTouched(Long competitionId);
 
-	boolean isCompetitionReadyToOpen(CompetitionResource competitionResource);
+    boolean isCompetitionReadyToOpen(CompetitionResource competitionResource);
 
-	ServiceResult<Void> setCompetitionAsReadyToOpen(Long competitionId);
+    ServiceResult<Void> setCompetitionAsReadyToOpen(Long competitionId);
 
-	ServiceResult<Void> setCompetitionAsCompetitionSetup(Long competitionId);
+    ServiceResult<Void> setCompetitionAsCompetitionSetup(Long competitionId);
 
     ServiceResult<Void> deleteCompetition(long competitionId);
 }

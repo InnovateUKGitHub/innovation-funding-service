@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.eligibility.form;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 
@@ -14,6 +15,7 @@ import java.util.Set;
 /**
  * Form for the eligibility competition setup section.
  */
+@FieldRequiredIf(required = "fundingLevelPercentage", argument = "overrideFundingRules", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class EligibilityForm extends CompetitionSetupForm {
 
     @NotBlank(message = "{validation.eligibilityform.multiplestream.required}")
@@ -28,6 +30,7 @@ public class EligibilityForm extends CompetitionSetupForm {
     private List<Long> leadApplicantTypes;
     @NotNull(message = "{validation.eligibilityform.overrideFundingRules.required}")
     private Boolean overrideFundingRules;
+    private Integer fundingLevelPercentage;
     @NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
     private int researchParticipationAmountId = ResearchParticipationAmount.NONE.getId();
     @NotBlank(message = "{validation.eligibilityform.resubmission.required}")
@@ -87,6 +90,14 @@ public class EligibilityForm extends CompetitionSetupForm {
 
     public void setOverrideFundingRules(Boolean overrideFundingRules) {
         this.overrideFundingRules = overrideFundingRules;
+    }
+
+    public Integer getFundingLevelPercentage() {
+        return fundingLevelPercentage;
+    }
+
+    public void setFundingLevelPercentage(Integer fundingLevelPercentage) {
+        this.fundingLevelPercentage = fundingLevelPercentage;
     }
 
     public int getResearchParticipationAmountId() {

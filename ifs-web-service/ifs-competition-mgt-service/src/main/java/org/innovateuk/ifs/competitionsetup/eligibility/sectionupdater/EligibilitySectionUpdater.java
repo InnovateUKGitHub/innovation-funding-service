@@ -5,12 +5,14 @@ import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmoun
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +28,14 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
     public static final String RESEARCH_CATEGORY_ID = "researchCategoryId";
     public static final String LEAD_APPLICANT_TYPES = "leadApplicantTypes";
 
-    @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
+    private CompetitionRestService competitionRestService;
+
+    public EligibilitySectionUpdater(CompetitionSetupRestService competitionSetupRestService,
+                                     CompetitionRestService competitionRestService) {
+        this.competitionSetupRestService = competitionSetupRestService;
+        this.competitionRestService = competitionRestService;
+    }
 
     @Override
     public CompetitionSetupSection sectionToSave() {
@@ -61,6 +69,17 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
         } else {
             competition.setStreamName(null);
         }
+
+
+        if (eligibilityForm.getOverrideFundingRules()) {
+            competition.getGrantClaimMaximums().forEach(grantClaimMaximumId -> {
+            });
+        } else {
+            CompetitionResource template = competitionRestService.findTemplateCompetitionForCompetitionType(
+                    competition.getCompetitionType()).getSuccess();
+            competition.setGrantClaimMaximums(template.getGrantClaimMaximums());
+        }
+
 
         competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
 
