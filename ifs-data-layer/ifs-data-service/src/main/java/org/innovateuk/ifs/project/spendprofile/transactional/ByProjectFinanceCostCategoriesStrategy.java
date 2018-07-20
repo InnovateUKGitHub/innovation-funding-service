@@ -120,7 +120,12 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
      * @return
      */
     private boolean areEqual(CostCategory cc, CostCategoryGenerator ccg) {
-        if(ccg == null || cc == null) {
+        if(ccg == null
+                || ccg.getLabel() == null
+                || ccg.getName() == null
+                || cc == null
+                || cc.getName() == null
+                || ccg.getLabel() == null) {
             return false;
         }
 
