@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Build the model for Assessors' Profile view.
+ * Build the model for Assessors' Profile declaration view.
  */
 @Component
 public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDeclarationBasePopulator {

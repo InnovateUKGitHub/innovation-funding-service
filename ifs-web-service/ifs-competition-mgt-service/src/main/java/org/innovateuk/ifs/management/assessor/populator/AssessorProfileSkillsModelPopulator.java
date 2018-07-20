@@ -19,7 +19,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.groupingBy;
 
 /**
- * Build the model for Assessors' Profile view.
+ * Build the model for Assessors' Profile skills view.
  */
 @Component
 public class AssessorProfileSkillsModelPopulator {

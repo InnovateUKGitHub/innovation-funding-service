@@ -7,7 +7,7 @@ import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewM
 import java.util.List;
 
 /**
- * View model for the Assessor Profile view.
+ * View model for the Assessors skills view.
  */
 public class AssessorProfileSkillsViewModel {
 
