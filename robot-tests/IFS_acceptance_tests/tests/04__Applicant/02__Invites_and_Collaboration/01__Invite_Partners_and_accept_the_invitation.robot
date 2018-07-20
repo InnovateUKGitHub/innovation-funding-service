@@ -89,8 +89,8 @@ Lead organisation client-side validations
 
 Lead organisation already used email
     [Documentation]  IFS-3361
-    Given the user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(2) input  steve.smith@empire.com
-    And the user clicks the button/link         css=button[name="executeStagedInvite"]
+    Given the user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(2) input  steve.smith@empire.com
+    And the user clicks the button/link         css = button[name="executeStagedInvite"]
     Then The user should see a field and summary error  This email is already in use.
     [Teardown]    The user clicks the button/link  link=Application team
 
