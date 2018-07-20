@@ -6,7 +6,7 @@
 UPDATE question SET priority = priority + 2
     WHERE short_name="Other funding"
     AND competition_id IN (
-        SELECT competition_id FROM (select competition_id, short_name from question) as questions
+        SELECT competition_id FROM (select competition_id, short_name FROM question) AS question_table
             WHERE short_name="Application team"
     )
 ;
