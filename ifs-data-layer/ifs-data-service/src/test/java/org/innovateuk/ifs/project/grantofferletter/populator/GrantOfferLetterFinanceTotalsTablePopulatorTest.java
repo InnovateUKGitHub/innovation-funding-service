@@ -163,29 +163,29 @@ public class GrantOfferLetterFinanceTotalsTablePopulatorTest {
         GrantOfferLetterFinanceTotalsTable table = populator.createTable(finances, projectId);
 
         assertEquals(BigDecimal.valueOf(30), table.getGrantClaim(organisation1.getName()));
-        assertEquals(BigDecimal.valueOf(30), table.getGrantClaim(organisation3.getName()));
+        assertEquals(BigDecimal.valueOf(100), table.getGrantClaim(organisation3.getName()));
         assertEquals( BigDecimal.valueOf(434), table.getTotalEligibleCosts(organisation2.getName()));
         assertEquals(BigDecimal.valueOf(914), table.getTotalEligibleCosts(organisation4.getName()));
         assertEquals( new BigDecimal("32.70"), table.getTotalGrant(organisation1.getName()));
-        assertEquals(new BigDecimal("25.20"), table.getTotalGrant(organisation3.getName()));
+        assertEquals(new BigDecimal("84.00"), table.getTotalGrant(organisation3.getName()));
         assertEquals(new BigDecimal("543"), table.getIndustryTotalEligibleCosts());
         assertEquals(new BigDecimal("998"), table.getAcademicTotalEligibleCosts());
         assertEquals(new BigDecimal("1541"), table.getAllTotalEligibleCosts());
         assertEquals(new BigDecimal("162.90"), table.getIndustryTotalGrant());
-        assertEquals(new BigDecimal("299.40"), table.getAcademicTotalGrant());
-        assertEquals(new BigDecimal("462.30"), table.getAllTotalGrant());
+        assertEquals(new BigDecimal("998.00"), table.getAcademicTotalGrant());
+        assertEquals(new BigDecimal("1160.90"), table.getAllTotalGrant());
         assertEquals(new BigDecimal("30.00"), table.getIndustryTotalGrantClaim());
-        assertEquals(new BigDecimal("30.00"), table.getAcademicTotalGrantClaim());
-        assertEquals(new BigDecimal("30.00"), table.getAllTotalGrantClaim());
+        assertEquals(new BigDecimal("100"), table.getAcademicTotalGrantClaim());
+        assertEquals(new BigDecimal("75.00"), table.getAllTotalGrantClaim());
 
         assertTrue(table.getIndustrialOrgs().contains(organisation1.getName()));
         assertTrue(table.getIndustrialOrgs().contains(organisation2.getName()));
         assertTrue(table.getAcademicOrgs().contains(organisation3.getName()));
         assertTrue(table.getAcademicOrgs().contains(organisation4.getName()));
 
-        // verifying that both mocks are invoked for each organisation
-        verify(projectFinanceRepositoryMock, times(4)).findByProjectIdAndOrganisationId(anyLong(), anyLong());
-        verify(projectFinanceRowRepositoryMock, times(4)).findByTargetId(anyLong());
+        // verifying that both mocks are invoked, but only for the industrial organisations
+        verify(projectFinanceRepositoryMock, times(2)).findByProjectIdAndOrganisationId(anyLong(), anyLong());
+        verify(projectFinanceRowRepositoryMock, times(2)).findByTargetId(anyLong());
     }
 
 }

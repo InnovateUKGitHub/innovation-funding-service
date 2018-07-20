@@ -5,7 +5,6 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.INCLUDE_IN_SPEND_PROFILE;

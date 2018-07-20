@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 
@@ -32,19 +34,33 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<Acade
     private final String name;
     private final String label;
     private final String financeRowName;
+
     AcademicCostCategoryGenerator(String label, String name, String financeRowName){
         this.name = name;
         this.label = label;
         this.financeRowName = financeRowName;
     }
 
-    private static List<AcademicCostCategoryGenerator> excludedFromSpendProfileCategories = asList(DIRECTLY_INCURRED_EQUIPMENT,
-                                                                                                   INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE,
-                                                                                                   INDIRECT_COSTS_EQUIPMENT);
+    public static final ImmutableSet<AcademicCostCategoryGenerator> excludedFromSpendProfileCategories = Sets.immutableEnumSet(
+            DIRECTLY_INCURRED_EQUIPMENT,
+            INDIRECT_COSTS_TRAVEL_AND_SUBSISTENCE,
+            INDIRECT_COSTS_EQUIPMENT);
+
+    public static final ImmutableSet<AcademicCostCategoryGenerator> includedInSpendProfileCategories = Sets.immutableEnumSet(
+            DIRECTLY_INCURRED_STAFF,
+            DIRECTLY_INCURRED_TRAVEL_AND_SUBSISTENCE,
+            DIRECTLY_INCURRED_OTHER_COSTS,
+            DIRECTLY_ALLOCATED_INVESTIGATORS,
+            DIRECTLY_ALLOCATED_ESTATES_COSTS,
+            DIRECTLY_ALLOCATED_OTHER_COSTS,
+            INDIRECT_COSTS,
+            INDIRECT_COSTS_STAFF,
+            INDIRECT_COSTS_OTHER_COSTS);
+
 
     @Override
     public boolean isIncludedInSpendProfile() {
-        return !excludedFromSpendProfileCategories.contains(this);
+        return includedInSpendProfileCategories.contains(this);
     }
 
     @Override

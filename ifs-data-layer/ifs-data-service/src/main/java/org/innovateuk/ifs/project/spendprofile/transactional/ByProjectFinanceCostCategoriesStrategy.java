@@ -69,7 +69,9 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
 
     private CostCategoryType getOrCreateSupportingCostCategoryType(List<? extends CostCategoryGenerator> summaryPerCategory) {
         // Get the generators for the CostCategories we may need to generate
-        List<CostCategoryGenerator> costCategoryGenerators = simpleFilter(summaryPerCategory, (costCategoryGenerator) -> costCategoryGenerator.isIncludedInSpendProfile());
+        List<CostCategoryGenerator> costCategoryGenerators = simpleFilter(summaryPerCategory,
+                                                                          CostCategoryGenerator::isIncludedInSpendProfile
+        );
         // Get all of the CostCategoryTypes so we can find out if there is already a logical grouping of CostCategories that fulfils our needs
         List<CostCategoryType> existingCostCategoryTypes = costCategoryTypeRepository.findAll();
         Optional<CostCategoryType> existingCostCategoryTypeWithMatchingCategories = simpleFindFirst(existingCostCategoryTypes, costCategoryType -> {
@@ -117,8 +119,12 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
      * @param ccg
      * @return
      */
-    boolean areEqual(CostCategory cc, CostCategoryGenerator ccg) {
-        return ccg.getLabel() == cc.getLabel() && ccg.getName() == cc.getName();
+    private boolean areEqual(CostCategory cc, CostCategoryGenerator ccg) {
+        if(ccg == null || cc == null) {
+            return false;
+        }
+
+        return ccg.getLabel().equals(cc.getLabel()) && ccg.getName().equals(cc.getName());
     }
 
 }
