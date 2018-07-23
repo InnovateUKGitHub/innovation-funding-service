@@ -4,11 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.DocumentResource;
-import org.innovateuk.ifs.competitionsetup.application.controller.CompetitionSetupApplicationController;
 import org.innovateuk.ifs.competitionsetup.application.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
@@ -20,15 +17,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import org.innovateuk.ifs.competitionsetup.documents.populator.DocumentEditFormPopulator;
 import org.innovateuk.ifs.competitionsetup.documents.populator.DocumentEditModelPopulator;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.DOCUMENTS;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.FINANCES;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_ID_KEY;
 
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
@@ -59,13 +51,7 @@ public class CompetitionSetupDocumentsController {
     @PostMapping(value = "/landing-page", params = "createDocument")
     public String createDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
         // TODO: create a blank document form
-        //ServiceResult<CompetitionSetupDocumentResource> restResult = competitionSetupDocumentService.createDefaultDocument(competitionId);
-//
-//        Function<CompetitionSetupDocumentResource, String> successViewFunction =
-//                (document) -> String.format("redirect:/competition/setup/%d/section/application/document/%d/edit", competitionId, document.getDocumentId());
-//        Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccess());
-
-        //return successView.get();
+        // At the moment this is just pointing to the first ID, it should create a new record, if successful point to it, if fail return
         return String.format("redirect:/competition/setup/%d/section/documents/document/1/edit", competitionId);
 
     }
@@ -80,7 +66,7 @@ public class CompetitionSetupDocumentsController {
 
         return "redirect:/competition/setup/" + competitionId;   
 
-        // TODO: actually set process as complete
+        // TODO: actually set process as complete, also update included checkboxes
     }
 
 
@@ -88,6 +74,7 @@ public class CompetitionSetupDocumentsController {
     public String documentsLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
+        // TODO: these checks are repeated throughout should they be librarizied?
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
@@ -96,8 +83,8 @@ public class CompetitionSetupDocumentsController {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
+        // TODO: we populate a modelview, this seems to be enough for the langing page, do we need a form as well?
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, DOCUMENTS));
-        //model.addAttribute(COMPETITION_SETUP_FORM_KEY, new LandingPageForm());
         return "competition/setup";
     }
 
@@ -106,6 +93,7 @@ public class CompetitionSetupDocumentsController {
                                           @PathVariable("documentId") Long documentId,
                                           Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
+        // TODO: these checks are repeated throughout should they be librarizied?
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
@@ -122,9 +110,6 @@ public class CompetitionSetupDocumentsController {
     }
 
     public String getDocumentPage(Model model, CompetitionResource competitionResource, long competitionId, Long documentId, Boolean isEditable, CompetitionSetupForm form) {
-        DocumentResource document = new DocumentResource();
-        //TODO get real document from ID
-        document.setId(documentId);
 
         //TODO: can't do this, need to create a new setup system for populators???
         DocumentEditModelPopulator modelPopulator = new DocumentEditModelPopulator();
@@ -139,6 +124,7 @@ public class CompetitionSetupDocumentsController {
         return editView;
     }
 
+    //TODO: handle saving from edit page
 //    @PostMapping("/document/{documentId}/edit")
 //    public String submitDocumentChanges(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) DocumentForm competitionSetupForm,
 //                                         BindingResult bindingResult,
