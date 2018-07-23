@@ -436,14 +436,14 @@ the user applies to competition and enters organisation type
 
 #This was added so may need to be updated elsewhere
 the user applies to competition and enters organisation type link
-   [Arguments]  ${compId}  ${organisationType}
+   [Arguments]  ${compId}  ${organisationType}  #${orgTypeRadio}
     the user navigates to the page     ${server}/competition/${compId}/overview
     #Try the below if not
     #Then logged in user applies to competition                  ${comp_name}  1
     #
     the user clicks the button/link        link=Start new application
     The user clicks the button/link        jQuery = a:contains("Continue without an account")
-    the user selects the radio button      organisationTypeId  1
+    the user selects the radio button      organisationTypeId  ${organisationType}  #${orgTypeRadio}  #Was 1 so needs to be formularised
             the user clicks the button/link            jQuery = button:contains("Save and continue")
             the user clicks the Not on company house link
             the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
