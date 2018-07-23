@@ -29,7 +29,7 @@
                 </thead>
                 <tbody class="govuk-table__body">
                 <tr class="govuk-table__row" th:each="app : ${model.assignedApplications}">
-                    <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}">10001</a></td>
+                    <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" class="govuk-link" th:text="${app.id}">10001</a></td>
                     <td class="govuk-table__cell" th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                     <td class="govuk-table__cell" th:text="${app.innovationArea}">Information and communications technology (ICT)</td>
                     <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Wessex University</td>
@@ -75,7 +75,7 @@
                     </p>
                 </div>
                 <div class="govuk-grid-column-one-third alignright">
-                    <label for="sort-by">Sort by</label>
+                    <label for="sort-by" class="govuk-label">Sort by</label>
                     <select id="sort-by"
                             name="sort"
                             class="js-auto-submit govuk-select">
@@ -102,7 +102,7 @@
 
                 <tbody class="govuk-table__body">
                 <tr class="govuk-table__row" th:each="app : ${model.applications}">
-                    <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
+                    <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" class="govuk-link" th:text="${app.id}"/></td>
                     <td class="govuk-table__cell" th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                     <td class="govuk-table__cell" th:text="${app.innovationArea}">Information and communications technology (ICT)</td>
                     <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Wessex University</td>
