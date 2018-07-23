@@ -108,7 +108,6 @@ Appendix can be opened on the question view
     And The user opens the link in new window    intelligent-water-system-project-team.pdf, 8 KB
     When the user clicks the button/link         jQuery=a:contains("6. Innovation")
     And The user opens the link in new window    intelligent-water-system-innovation.pdf, 8 KB
-    And the user goes back to the previous tab
 
 Scope: Validations
     [Documentation]  IFS-508
