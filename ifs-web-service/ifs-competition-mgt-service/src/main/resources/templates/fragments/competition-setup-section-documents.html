@@ -26,6 +26,7 @@
                                 <input th:id=${checkboxId}
                                     type="checkbox"
                                     value="include"
+                                    th:checked=${document.included}
                                     data-autosave-disabled
                                 />
                                 <label th:for=${checkboxId}>
