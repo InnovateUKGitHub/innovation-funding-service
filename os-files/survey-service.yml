@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: survey-svc
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: survey-svc
+    strategy:
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 2
+        maxUnavailable: 0
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: survey-svc
+      spec:
+        containers:
+        - image: innovateuk/survey-service:${surveyServiceVersion}
+          name: survey-svc
+          livenessProbe:
+            httpGet:
+              path: /survey/monitoring/health
+              port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 31
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /survey/monitoring/health
+              port: 8080
+            initialDelaySeconds: 180
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+          imagePullPolicy: Always
+          env:
+          - name: SPRING_APPLICATION_JSON
+            value: '{"logout":{"url": "https://${SHIB_ADDRESS}/Logout/"}}'
+          - name: JAVA_OPTS
+            value: -Xms400m -Xmx400m -javaagent:/newrelic.jar
+          - name: NEW_RELIC_APP_NAME
+            value: "ifs-survey-service (${openshiftEnv})"
+          - name: NEW_RELIC_LICENSE_KEY
+            value: "${NEW_RELIC_LICENCE_KEY}"
+          - name: NEW_RELIC_LOG
+            value: "STDOUT"
+          ports:
+          - containerPort: 8080
+          resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 100m
+              memory: 400M
+    test: false
+    triggers:
+    - type: ConfigChange
+    status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: survey-svc
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+    - name: 8009-tcp
+      port: 8009
+      targetPort: 8009
+    selector:
+      deploymentconfig: survey-svc
+  status:
+    loadBalancer: {}

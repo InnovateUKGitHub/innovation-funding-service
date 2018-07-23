@@ -48,6 +48,9 @@
         .textright {
             text-align: right;
         }
+        .textleft{
+            text-align: left;
+        }
         .bold,
         em {
             font-weight:bold;
@@ -96,8 +99,12 @@
         th,
         td {
             padding: 0.1cm;
-            text-align: left;
+            text-align: right;
             border: 1px solid #000;
+        }
+        td:first-child,
+        th:first-child{
+            text-align: left;
         }
         th.no-border,
         td.no-border{

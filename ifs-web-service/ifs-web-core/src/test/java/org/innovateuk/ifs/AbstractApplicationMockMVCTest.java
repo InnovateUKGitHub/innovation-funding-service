@@ -54,6 +54,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -78,8 +79,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     @Mock
     protected OrganisationService organisationService;
     @Mock
-    protected CompetitionService competitionService;
-    @Mock
     protected QuestionService questionService;
     @Mock
     protected QuestionRestService questionRestService;
@@ -101,15 +100,14 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     protected DefaultFinanceFormHandler defaultFinanceFormHandler;
     @Mock
     protected UserService userService;
+    @Mock
+    protected CompetitionRestService competitionRestService;
 
     @Mock
     private OrganisationTypeRestService organisationTypeRestService;
 
     @Mock
     private OrganisationRestService organisationRestService;
-
-    @Mock
-    private CompetitionRestService competitionRestService;
 
     @Mock
     private FormInputResponseService formInputResponseService;
@@ -360,10 +358,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(sectionService.filterParentSections(anyList())).thenReturn(sectionResources);
         competitionResources = singletonList(competitionResource);
         when(questionService.findByCompetition(competitionResource.getId())).thenReturn(questionList);
-        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess
-                (competitionResource));
         when(competitionRestService.getAll()).thenReturn(restSuccess(competitionResources));
-        when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
 
         when(formInputRestService.getByCompetitionIdAndScope(competitionResource.getId(), APPLICATION)).thenReturn
                 (restSuccess(new ArrayList<>()));
@@ -575,7 +571,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0)
-                .getId(), 1L, "ABC 123");
+                .getId(), SMALL, "ABC 123");
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
         FinanceRowCostCategory costCategory = new GrantClaimCategory();
         costCategory.addCost(new GrantClaim(1L, 50));

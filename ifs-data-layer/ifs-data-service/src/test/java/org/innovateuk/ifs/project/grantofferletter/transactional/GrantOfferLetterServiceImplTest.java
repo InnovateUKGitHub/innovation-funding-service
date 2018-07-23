@@ -26,13 +26,17 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.model.*;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -55,10 +59,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -88,6 +89,11 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE;
+import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
+import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterAcademicFinanceTableBuilder.newGrantOfferLetterAcademicFinanceTable;
+import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterFinanceTotalsTableBuilder.newGrantOfferLetterFinanceTotalsTable;
+import static org.innovateuk.ifs.project.grantofferletter.builder.GrantOfferLetterIndustrialFinanceTableBuilder.newGrantOfferLetterIndustrialFinanceTable;
+import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -112,6 +118,9 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     private ProjectUser leadPartnerProjectUser;
     private Project project;
     private List<OrganisationResource> organisationResources;
+    private GrantOfferLetterIndustrialFinanceTable industrialFinanceTable;
+    private GrantOfferLetterAcademicFinanceTable academicFinanceTable;
+    private GrantOfferLetterFinanceTotalsTable totalsTable;
 
     private Address address;
 
@@ -161,6 +170,21 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     
     @Mock
     private SystemNotificationSource systemNotificationSource;
+
+    @Mock
+    private SpendProfileRepository spendProfileRepositoryMock;
+
+    @Mock
+    private CostRepository costRepositoryMock;
+
+    @Mock
+    private GrantOfferLetterIndustrialFinanceTablePopulator industrialFinanceTablePopulatorMock;
+
+    @Mock
+    private GrantOfferLetterAcademicFinanceTablePopulator academicFinanceTablePopulatorMock;
+
+    @Mock
+    private GrantOfferLetterFinanceTotalsTablePopulator financeTotalsTablePopulatorMock;
 
     @Before
     public void setUp() {
@@ -217,6 +241,14 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
                 build();
 
+        SpendProfile orgSpendProfile = newSpendProfile()
+                .withSpendProfileFigures(singletonList(newCost().build()))
+                .build();
+
+        industrialFinanceTable = newGrantOfferLetterIndustrialFinanceTable().build();
+        academicFinanceTable = newGrantOfferLetterAcademicFinanceTable().build();
+        totalsTable = newGrantOfferLetterFinanceTotalsTable().build();
+
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(organisationRepositoryMock.findOne(organisations.get(0).getId())).thenReturn(organisations.get(0));
         when(organisationRepositoryMock.findOne(organisations.get(1).getId())).thenReturn(organisations.get(1));
@@ -224,6 +256,11 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         when(organisationMapperMock.mapToResource(organisations.get(0))).thenReturn(organisationResources.get(0));
         when(organisationMapperMock.mapToResource(organisations.get(1))).thenReturn(organisationResources.get(1));
         when(organisationMapperMock.mapToResource(organisations.get(2))).thenReturn(organisationResources.get(2));
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(anyLong(), anyLong())).thenReturn(Optional.of(orgSpendProfile));
+        when(costRepositoryMock.findByCostGroupId(anyLong())).thenReturn(singletonList(newCost().build()));
+        when(industrialFinanceTablePopulatorMock.createTable(anyMap())).thenReturn(industrialFinanceTable);
+        when(academicFinanceTablePopulatorMock.createTable(anyMap())).thenReturn(academicFinanceTable);
+        when(financeTotalsTablePopulatorMock.createTable(anyMap(), anyLong())).thenReturn(totalsTable);
     }
 
     @Test
@@ -368,6 +405,12 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         assertGenerateFile(
                 fileEntryResource ->
                         service.generateGrantOfferLetter(123L, fileEntryResource));
+
+        verify(spendProfileRepositoryMock, times(3)).findOneByProjectIdAndOrganisationId(anyLong(), anyLong());
+        verify(costRepositoryMock, times(3)).findByCostGroupId(anyLong());
+        verify(industrialFinanceTablePopulatorMock).createTable(anyMap());
+        verify(academicFinanceTablePopulatorMock).createTable(anyMap());
+        verify(financeTotalsTablePopulatorMock).createTable(anyMap(), anyLong());
     }
 
     @Test
@@ -513,6 +556,12 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         verify(rendererMock).renderTemplate(templateCaptor.capture(), templateArgsCaptor.capture());
         verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
+
+        verify(spendProfileRepositoryMock, times(3)).findOneByProjectIdAndOrganisationId(anyLong(), anyLong());
+        verify(costRepositoryMock, times(3)).findByCostGroupId(anyLong());
+        verify(industrialFinanceTablePopulatorMock).createTable(anyMap());
+        verify(academicFinanceTablePopulatorMock).createTable(anyMap());
+        verify(financeTotalsTablePopulatorMock).createTable(anyMap(), anyLong());
 
         assertTrue(checkGolTemplate());
         assertTrue(result.isSuccess());

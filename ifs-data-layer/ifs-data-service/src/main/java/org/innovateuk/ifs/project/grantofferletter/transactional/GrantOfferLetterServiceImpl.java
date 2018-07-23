@@ -28,11 +28,17 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
+import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
+import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.model.*;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -112,6 +118,21 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private CostRepository costRepository;
+
+    @Autowired
+    private SpendProfileRepository spendProfileRepository;
+
+    @Autowired
+    private GrantOfferLetterIndustrialFinanceTablePopulator grantOfferLetterIndustrialFinanceTablePopulator;
+
+    @Autowired
+    private GrantOfferLetterAcademicFinanceTablePopulator grantOfferLetterAcademicFinanceTablePopulator;
+
+    @Autowired
+    private GrantOfferLetterFinanceTotalsTablePopulator grantOfferLetterFinanceTotalsTablePopulator;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -234,6 +255,12 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+
+        Map<Organisation, List<Cost>> financesForOrgs = getFinances(project);
+        GrantOfferLetterIndustrialFinanceTable industrialFinanceTable = grantOfferLetterIndustrialFinanceTablePopulator.createTable(financesForOrgs);
+        GrantOfferLetterAcademicFinanceTable academicFinanceTable = grantOfferLetterAcademicFinanceTablePopulator.createTable(financesForOrgs);
+        GrantOfferLetterFinanceTotalsTable totalsFinanceTable = grantOfferLetterFinanceTotalsTablePopulator.createTable(financesForOrgs, project.getId());
+
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
@@ -250,7 +277,28 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)) : "");
         templateReplacements.put("ProjectLength", project.getDurationInMonths());
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
+
+        // add finances tables
+        templateReplacements.put("industrialFinanceTable", industrialFinanceTable);
+        templateReplacements.put("academicFinanceTable", academicFinanceTable);
+        templateReplacements.put("financeTotalsTable", totalsFinanceTable);
+
         return templateReplacements;
+    }
+
+    private Map<Organisation, List<Cost>> getFinances(Project project) {
+        Map<Organisation, List<Cost>> orgFinances = new HashMap<>();
+
+        project.getOrganisations()
+                .forEach(org -> {
+                    SpendProfile orgSpendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), org.getId()).get();
+                    CostGroup orgCostGroup = orgSpendProfile.getSpendProfileFigures();
+                    List<Cost> costs = costRepository.findByCostGroupId(orgCostGroup.getId());
+
+                    orgFinances.put(org, costs);
+                });
+
+        return orgFinances;
     }
 
     private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource) {

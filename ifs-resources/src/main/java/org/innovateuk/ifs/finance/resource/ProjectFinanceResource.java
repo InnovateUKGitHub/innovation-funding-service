@@ -16,10 +16,6 @@ public class ProjectFinanceResource extends BaseFinanceResource {
 
     private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges;
 
-    public ProjectFinanceResource(long id, long organisation, long projectId, long organisationSize, String projectLocation) {
-        super(id, organisation, projectId, organisationSize, projectLocation);
-    }
-
     public ProjectFinanceResource(BaseFinanceResource originalFinance) {
         super(originalFinance);
     }
