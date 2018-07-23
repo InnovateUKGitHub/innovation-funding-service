@@ -21,8 +21,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 public class CompetitionResource {
 
-    public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
-    public static final int CLOSING_SOON_AMOUNT = 3;
+    private static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
+    private static final int CLOSING_SOON_AMOUNT = 3;
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
@@ -653,10 +653,14 @@ public class CompetitionResource {
     }
 
     @Override
-    public boolean equals(finalObject o) {
-        if (this == o){ return true;}
+    public boolean equals(Object o) {
+        if (this == o){
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()){ return false;}
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         final CompetitionResource that = (CompetitionResource) o;
 

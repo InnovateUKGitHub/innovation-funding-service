@@ -19,7 +19,11 @@ public class CompetitionOpenQueryResource {
     private String projectName;
 
     // constructor compatible with SQL types
-    public CompetitionOpenQueryResource(long applicationId, long organisationId, String organisationName, long projectId, String projectName) {
+    public CompetitionOpenQueryResource(long applicationId,
+                                        long organisationId,
+                                        String organisationName,
+                                        long projectId,
+                                        String projectName) {
         this.applicationId = applicationId;
         this.organisationId = organisationId;
         this.organisationName = organisationName;
@@ -72,11 +76,13 @@ public class CompetitionOpenQueryResource {
     @Override
     public boolean equals(Object o) {
 
-        if (this == o)
+        if (this == o) {
             return true;
+        }
 
-        if (o == null || getClass() != o.getClass())
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
 
         CompetitionOpenQueryResource that = (CompetitionOpenQueryResource) o;
 
