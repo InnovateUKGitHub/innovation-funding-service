@@ -17,6 +17,6 @@ public class GrantClaimMaximumRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<Void> update(GrantClaimMaximumResource grantClaimMaximumResource) {
-        return null;
+        return putWithRestResult(grantClaimMaximumRestURL + "/", grantClaimMaximumResource, Void.class);
     }
 }

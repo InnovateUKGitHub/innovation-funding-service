@@ -3,10 +3,7 @@ package org.innovateuk.ifs.finance.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -24,8 +21,12 @@ public class GrantClaimMaximumController {
     }
 
     @GetMapping("/{id}")
-    public RestResult<GrantClaimMaximumResource> getCompetitionById(@PathVariable("id") final long id) {
+    public RestResult<GrantClaimMaximumResource> getGrantClaimMaximumById(@PathVariable("id") final long id) {
         return grantClaimMaximumService.getGrantClaimMaximumById(id).toGetResponse();
     }
 
+    @PutMapping("/")
+    public RestResult<Void> update(@RequestBody final GrantClaimMaximumResource gcm) {
+        return grantClaimMaximumService.update(gcm).toPutResponse();
+    }
 }

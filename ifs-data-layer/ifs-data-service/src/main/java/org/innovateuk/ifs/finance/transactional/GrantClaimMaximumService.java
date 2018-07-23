@@ -8,10 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface GrantClaimMaximumService {
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the GrantClaimMaximums")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<GrantClaimMaximumResource> getGrantClaimMaximumById(final Long id);
 
-    @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update grantClaimMaximums")
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
-    ServiceResult<GrantClaimMaximumResource> save(Long id, GrantClaimMaximumResource grantClaimMaximumResource);
+    @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update GrantClaimMaximums")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    ServiceResult<Void> update(GrantClaimMaximumResource grantClaimMaximumResource);
 }

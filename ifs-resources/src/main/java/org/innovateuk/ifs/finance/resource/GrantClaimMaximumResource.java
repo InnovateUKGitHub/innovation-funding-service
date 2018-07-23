@@ -1,14 +1,22 @@
 package org.innovateuk.ifs.finance.resource;
 
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+
+import java.util.List;
+
 public class GrantClaimMaximumResource {
 
     private Long id;
 
-    private Long researchCategory;
+    private ResearchCategoryResource researchCategory;
 
-    private Long organisationType;
+    private OrganisationTypeResource organisationType;
 
     private OrganisationSize organisationSize;
+
+    private List<CompetitionResource> competitions;
 
     private Integer maximum;
 
@@ -20,19 +28,19 @@ public class GrantClaimMaximumResource {
         this.id = id;
     }
 
-    public Long getResearchCategory() {
+    public ResearchCategoryResource getResearchCategory() {
         return researchCategory;
     }
 
-    public void setResearchCategory(Long researchCategory) {
+    public void setResearchCategory(ResearchCategoryResource researchCategory) {
         this.researchCategory = researchCategory;
     }
 
-    public Long getOrganisationType() {
+    public OrganisationTypeResource getOrganisationType() {
         return organisationType;
     }
 
-    public void setOrganisationType(Long organisationType) {
+    public void setOrganisationType(OrganisationTypeResource organisationType) {
         this.organisationType = organisationType;
     }
 
@@ -50,5 +58,13 @@ public class GrantClaimMaximumResource {
 
     public void setMaximum(Integer maximum) {
         this.maximum = maximum;
+    }
+
+    public List<CompetitionResource> getCompetitions() {
+        return competitions;
+    }
+
+    public void setCompetitions(List<CompetitionResource> competitions) {
+        this.competitions = competitions;
     }
 }

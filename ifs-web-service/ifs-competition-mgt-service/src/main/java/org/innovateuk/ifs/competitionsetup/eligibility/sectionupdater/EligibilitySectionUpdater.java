@@ -12,7 +12,10 @@ import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
+import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +33,14 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
 
     private CompetitionSetupRestService competitionSetupRestService;
     private CompetitionRestService competitionRestService;
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
     public EligibilitySectionUpdater(CompetitionSetupRestService competitionSetupRestService,
-                                     CompetitionRestService competitionRestService) {
+                                     CompetitionRestService competitionRestService,
+                                     GrantClaimMaximumRestService grantClaimMaximumRestService) {
         this.competitionSetupRestService = competitionSetupRestService;
         this.competitionRestService = competitionRestService;
+        this.grantClaimMaximumRestService = grantClaimMaximumRestService;
     }
 
     @Override
@@ -70,11 +76,16 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
             competition.setStreamName(null);
         }
 
-
         if (eligibilityForm.getOverrideFundingRules()) {
-            competition.getGrantClaimMaximums().forEach(grantClaimMaximumId -> {
+            competition.getGrantClaimMaximums().forEach(gcmId -> {
+                GrantClaimMaximumResource gcm = grantClaimMaximumRestService.getGrantClaimMaximumById(gcmId).getSuccess();
+//                if (gcm.getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS)) {
+                    gcm.setMaximum(eligibilityForm.getFundingLevelPercentage());
+                    grantClaimMaximumRestService.update(gcm);
+//                }
             });
         } else {
+            //TODO: only for organisationtype is business
             CompetitionResource template = competitionRestService.findTemplateCompetitionForCompetitionType(
                     competition.getCompetitionType()).getSuccess();
             competition.setGrantClaimMaximums(template.getGrantClaimMaximums());
