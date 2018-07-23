@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.review.model;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.review.viewmodel.ReviewViewModel;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class ReviewModelPopulator {
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
@@ -25,7 +25,7 @@ public class ReviewModelPopulator {
     private ReviewRestService reviewRestService;
 
     public ReviewViewModel populateModel(long competitionId) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ReviewKeyStatisticsResource keyStatistics = competitionKeyApplicationStatisticsRestService
                 .getReviewKeyStatisticsByCompetition(competitionId)
                 .getSuccess();

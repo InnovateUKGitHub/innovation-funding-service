@@ -7,10 +7,10 @@ import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
@@ -63,7 +63,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     private ApplicationService applicationService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     //TODO: make sure this function is not going to be used anymore - IFS-3801
     @Override
@@ -132,7 +132,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 
         Long organisationType = organisationService.getOrganisationType(userId, applicationId);
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         if (!application.isSubmitted() && competition.isOpen()) {
             // add cost for each cost question
