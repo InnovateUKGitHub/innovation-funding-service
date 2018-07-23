@@ -100,9 +100,11 @@ Green check should show when the finances are complete
     Then Green check should be visible
 
 Finance overview shows as incomplete
-    [Documentation]  IFS-3820
+    [Documentation]  IFS-3820  IFS-3821
     Given The user clicks the button/link  link=Application overview
-    Then the user should see the element   jQuery=li:contains("Finances overview") .task-status-incomplete
+    And the user should see the element    jQuery=li:contains("Finances overview") .task-status-incomplete
+    When the user clicks the button/link   link=Finances overview
+    Then the user should see the element   css=.table-total-tick[src*="icon-alert"]
 
 Collaborator marks finances as complete
     [Documentation]    INFUND-8397  IFS-2879
@@ -117,6 +119,11 @@ Finances overview shows as complete once all collaborators have marked as comple
     And log in as a different user        &{lead_applicant_credentials}
     When the user clicks the button/link  link=${OPEN_COMPETITION_APPLICATION_2_NAME}
     Then the user should see the element  jQuery=li:contains("Finances overview") .task-status-complete
+
+Finance summary has total marked as complete
+    [Documentation]  IFS-3821
+    Given the user clicks the button/link  link=Finances overview
+    Then the user should see the element   css=.table-total-tick[src*="icon-tick"]
     [Teardown]  logout as user
 
 Alert shows If the academic research participation is too high
@@ -191,9 +198,9 @@ Innovation lead can see read only summary link for each partner
     When the user navigates to the page     ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link     link=${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user expands the section        Finances summary
-    Then the user should see the element    jQuery=.finance-summary tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
-    And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(2) th:contains("Ludlow"):contains("View finances")
-    And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(3) th:contains("EGGS"):contains("View finances")
+    Then the user should see the element    jQuery=.finance-summary tr:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
+    And the user should see the element     jQuery=.finance-summary tr:contains("Ludlow"):contains("View finances")
+    And the user should see the element     jQuery=.finance-summary tr:contains("EGGS"):contains("View finances")
 
 Innovation lead can see read only summary for lead
     [Documentation]  IFS-802

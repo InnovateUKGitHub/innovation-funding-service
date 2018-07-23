@@ -25,12 +25,11 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
         this.financeFileEntry = financeFileEntry;
     }
 
-    public ApplicationFinanceResource(long id, long organisation, long application, Long organisationSize, String projectLocation, Long financeFileEntry) {
-        super(id, organisation, application, organisationSize, projectLocation);
-        this.financeFileEntry = financeFileEntry;
-    }
-
-    public ApplicationFinanceResource(long id, long organisation, long application, Long organisationSize, String projectLocation) {
+    public ApplicationFinanceResource(long id,
+                                      long organisation,
+                                      long application,
+                                      OrganisationSize organisationSize,
+                                      String projectLocation) {
         super(id, organisation, application, organisationSize, projectLocation);
     }
 

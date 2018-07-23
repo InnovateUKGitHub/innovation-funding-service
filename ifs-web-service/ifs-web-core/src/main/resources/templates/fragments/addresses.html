@@ -130,7 +130,7 @@
 <th:block th:fragment="organisation-details-minimal">
     <fieldset>
         <legend class="visuallyhidden" th:text="${selectedOrganisation.name} + ''">? Organisation</legend>
-        <div class="form-block">
+        <div class="form-group">
             <h3 class="heading-small">Organisation name</h3>
             <p th:text="${selectedOrganisation.name}"></p>
         </div>
@@ -140,7 +140,7 @@
 <th:block th:fragment="organisation-details">
     <fieldset>
         <legend class="visuallyhidden" th:text="${organisationType.name} + ''">? Organisation</legend>
-        <div class="form-block">
+        <div class="form-group">
             <th:block th:if="${showOrgType}">
                 <h3 class="heading-small">Organisation type</h3>
                 <p th:text="${organisationType.name}">Business</p>
@@ -183,7 +183,7 @@
 
 <th:block th:fragment="business-details">
     <fieldset>
-        <div class="form-block">
+        <div class="form-group">
             <h3 class="heading-small">Organisation name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
 

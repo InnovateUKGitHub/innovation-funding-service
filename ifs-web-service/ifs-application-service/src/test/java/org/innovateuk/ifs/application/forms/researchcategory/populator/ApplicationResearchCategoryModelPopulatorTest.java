@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilde
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
@@ -70,7 +71,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 .withCompetitionName(competitionResource.getName())
                 .withResearchCategory(researchCategories.get(0)).build();
         List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication
-                (applicationResource.getId()).withOrganisationSize(1L).build(3);
+                (applicationResource.getId()).withOrganisationSize(SMALL).build(3);
         QuestionResource questionResource = newQuestionResource().build();
         ApplicantResource applicantResource = newApplicantResource()
                 .withOrganisation(newOrganisationResource().build()).build();
