@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.summary.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentDetailsResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
@@ -8,6 +7,7 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.assessment.summary.viewmodel.AssessmentSummaryQuestionViewModel;
 import org.innovateuk.ifs.assessment.summary.viewmodel.AssessmentSummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class AssessmentSummaryModelPopulator {
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     public AssessmentSummaryViewModel populateModel(AssessmentResource assessment) {
         CompetitionResource competition = getCompetition(assessment.getCompetition());
@@ -38,7 +38,7 @@ public class AssessmentSummaryModelPopulator {
     }
 
     private CompetitionResource getCompetition(long competitionId) {
-        return competitionService.getById(competitionId);
+        return competitionRestService.getCompetitionById(competitionId).getSuccess();
     }
 
     private List<AssessmentSummaryQuestionViewModel> getQuestionsViewModel(long assessmentId) {

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
@@ -13,6 +12,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -50,7 +50,7 @@ public class AssessmentOverviewModelPopulator {
     public static final BigDecimal ONE_KB = BigDecimal.valueOf(1024L);
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private QuestionService questionService;
@@ -72,7 +72,7 @@ public class AssessmentOverviewModelPopulator {
 
     public AssessmentOverviewViewModel populateModel(long assessmentId) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
-        CompetitionResource competition = competitionService.getById(assessment.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(assessment.getCompetition()).getSuccess();
 
         List<QuestionResource> questions = questionService.findByCompetition(assessment.getCompetition());
         List<QuestionResource> assessorViewQuestions = questions
