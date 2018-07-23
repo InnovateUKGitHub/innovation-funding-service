@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application.creation.controller;
 
 import org.innovateuk.ifs.application.creation.form.ApplicationCreationAuthenticatedForm;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
@@ -29,14 +27,7 @@ import java.util.function.Supplier;
 @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
 public class ApplicationCreationAuthenticatedController {
     public static final String COMPETITION_ID = "competitionId";
-    public static final String ORGANISATION_ID = "organisationId";
     public static final String FORM_NAME = "form";
-
-    @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
-    private OrganisationService organisationService;
 
     @Autowired
     private UserService userService;
@@ -82,5 +73,4 @@ public class ApplicationCreationAuthenticatedController {
         registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
         return "redirect:/organisation/select";
     }
-
 }

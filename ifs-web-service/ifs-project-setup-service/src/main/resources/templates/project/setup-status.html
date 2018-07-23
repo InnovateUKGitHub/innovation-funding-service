@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{~/applicant/dashboard/}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Set up your project',subTitle=${model.projectName},size='heading-xlarge'" />
 
     <div class="grid-row">

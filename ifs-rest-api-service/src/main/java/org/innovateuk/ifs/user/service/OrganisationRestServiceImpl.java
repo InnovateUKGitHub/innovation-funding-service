@@ -26,17 +26,17 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
 
     @Override
     public RestResult<List<OrganisationResource>> getOrganisationsByApplicationId(Long applicationId) {
-        return getWithRestResult(organisationRestURL + "/findByApplicationId/" + applicationId, organisationResourceListType());
+        return getWithRestResult(organisationRestURL + "/find-by-application-id/" + applicationId, organisationResourceListType());
     }
 
     @Override
     public RestResult<OrganisationResource> getOrganisationById(Long organisationId) {
-        return getWithRestResult(organisationRestURL + "/findById/"+organisationId, OrganisationResource.class);
+        return getWithRestResult(organisationRestURL + "/find-by-id/" + organisationId, OrganisationResource.class);
     }
 
     @Override
     public RestResult<OrganisationResource> getOrganisationByIdForAnonymousUserFlow(Long organisationId) {
-        return getWithRestResultAnonymous(organisationRestURL + "/findById/" + organisationId, OrganisationResource.class);
+        return getWithRestResultAnonymous(organisationRestURL + "/find-by-id/" + organisationId, OrganisationResource.class);
     }
 
     @Override
@@ -61,12 +61,12 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
 
     @Override
     public RestResult<OrganisationResource> createOrMatch(OrganisationResource organisation) {
-        return postWithRestResultAnonymous(organisationRestURL + "/createOrMatch", organisation, OrganisationResource.class);
+        return postWithRestResultAnonymous(organisationRestURL + "/create-or-match", organisation, OrganisationResource.class);
     }
 
     @Override
     public RestResult<OrganisationResource> createAndLinkByInvite(OrganisationResource organisation, String inviteHash) {
-        return postWithRestResultAnonymous(organisationRestURL + "/createAndLinkByInvite?inviteHash=" + inviteHash, organisation, OrganisationResource.class);
+        return postWithRestResultAnonymous(organisationRestURL + "/create-and-link-by-invite?inviteHash=" + inviteHash, organisation, OrganisationResource.class);
     }
 
     @Override
@@ -78,6 +78,6 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
             log.error(e);
             organisationName = organisation.getName();
         }
-        return postWithRestResult(organisationRestURL + "/updateNameAndRegistration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class);
+        return postWithRestResult(organisationRestURL + "/update-name-and-registration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class);
     }
 }

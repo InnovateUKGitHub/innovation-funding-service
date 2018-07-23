@@ -260,14 +260,15 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withEthnicity(2L).
                 build();
 
+        Long organisationId = 123L;
         SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
-        Organisation selectedOrganisation = newOrganisation().withId(123L).build();
+        Organisation selectedOrganisation = newOrganisation().withId(organisationId).build();
         Role applicantRole = Role.APPLICANT;
 
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
         when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
-        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
+        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(selectedOrganisation);
         when(organisationRepositoryMock.findDistinctByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
@@ -332,6 +333,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withTitle(Mr).
                 build();
 
+        Long organisationId = 123L;
+
         SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
         Organisation selectedOrganisation = newOrganisation().build();
 
@@ -350,6 +353,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         UserResource userToCreate = newUserResource().withPassword("thepassword").build();
         Organisation selectedOrganisation = newOrganisation().build();
+        Long organisationId = 123L;
 
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
@@ -610,11 +614,16 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withRolesGlobal(singletonList(roleResource)).
                 build();
 
-        Organisation selectedOrganisation = newOrganisation().withId(123L).build();
+        Long organisationId = 123L;
+        Organisation selectedOrganisation = newOrganisation().withId(organisationId).build();
 
         when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
+<<<<<<< HEAD
 //        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(organisationRepositoryMock.findDistinctByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
+=======
+        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
+>>>>>>> 3c112e4b2abf1c42a791fae50d0a317d26470983
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         Profile expectedProfile = newProfile().withId(7L).build();

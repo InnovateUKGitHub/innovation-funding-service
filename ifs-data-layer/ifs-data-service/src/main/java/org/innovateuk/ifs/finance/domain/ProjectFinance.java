@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 
 /**
  * Entity object similar to ApplicationFinance for storing values in finance_row tables which can be edited by
@@ -69,7 +71,10 @@ public class ProjectFinance extends Finance {
     }
 
     public boolean isPartner(Long userId) {
-        return ofNullable(project.getProjectUsersWithRole(PROJECT_PARTNER).stream().anyMatch(pu -> pu.isUser(userId) && pu.getOrganisation().equals(getOrganisation()))).orElse(false);
+        return simpleAnyMatch(
+                project.getProjectUsersWithRole(PROJECT_PARTNER),
+                pu -> pu.isUser(userId) && pu.getOrganisation().equals(getOrganisation())
+        );
     }
 
     public boolean isFinanceContact(Long userId) {

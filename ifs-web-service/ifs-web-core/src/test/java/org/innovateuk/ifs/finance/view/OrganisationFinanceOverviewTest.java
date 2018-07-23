@@ -14,22 +14,24 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
 import static org.mockito.Mockito.when;
 
 public class OrganisationFinanceOverviewTest {
-    OrganisationFinanceOverview organisationFinanceOverview;
+
+    private OrganisationFinanceOverview organisationFinanceOverview;
 
     @Mock
-    ApplicationFinanceResource applicationFinanceResource1;
+    private ApplicationFinanceResource applicationFinanceResource1;
 
     @Mock
-    ApplicationFinanceResource applicationFinanceResource2;
+    private ApplicationFinanceResource applicationFinanceResource2;
 
 
     @Before
     public void setUp() throws Exception {
-        applicationFinanceResource1 = new ApplicationFinanceResource(1L, 1L, 1L, 1L, "");
-        applicationFinanceResource2 = new ApplicationFinanceResource(2L, 2L, 2L, 1L, "");
+        applicationFinanceResource1 = new ApplicationFinanceResource(1L, 1L, 1L, SMALL, "");
+        applicationFinanceResource2 = new ApplicationFinanceResource(2L, 2L, 2L, SMALL, "");
 
         MockitoAnnotations.initMocks(this);
 

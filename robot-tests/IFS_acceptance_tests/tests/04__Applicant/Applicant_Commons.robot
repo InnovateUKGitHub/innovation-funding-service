@@ -212,7 +212,7 @@ the academic fills in the project costs
     The user enters text to a text field  css=[name$="exceptions_staff"]  123
     The user enters text to a text field  css=[name$="exceptions_other_costs"]  7890
     The user enters text to a text field  css=input[name$="tsb_reference"]  L33t
-    Textfield Value Should Be             id=total  £23,784
+    Textfield Value Should Be             id=total  £23,789
     the user uploads the file             css=.inputfile  ${valid_pdf}
     the user should see the element       link=testing.pdf (opens in a new window)
     the user selects the checkbox         termsAgreed
@@ -371,13 +371,33 @@ logged in user applies to competition research
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user enters text to a text field       id = organisationSearchName    Bath
-    the user clicks the button/link       id=org-search
+    the user clicks the button/link            id=org-search
     the user clicks the button/link            link=Bath Spa University
     the user clicks the button/link            jQuery=button:contains("Enter address manually")
     the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
     the user clicks the button/link            jQuery = .button:contains("Find UK address")
     the user clicks the button/link            css=#select-address-block > button
     the user clicks the button/link            jQuery=.button:contains("Save organisation and continue")
+    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user clicks the button/link            id=application-question-save
+
+logged in user applies to competition public
+    [Arguments]  ${competition}  ${applicationType}  #This was 1   #${applicant}   #Why is this here?
+    the user navigates to the page      ${frontDoor}
+    navigate to next page if not found  ${competition}
+    the user clicks the button/link     link=${competition}
+    the user clicks the button/link     jQuery = a:contains("Start new application")
+    the user selects the radio button   organisationTypeId  ${applicationType}
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user enters text to a text field       id = organisationSearchName    Innovate
+    the user clicks the button/link            id=org-search
+    the user clicks the button/link            link=INNOVATE LTD
+    the user clicks the button/link            jQuery=button:contains("Enter address manually")
+    the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    the user clicks the button/link            css=#select-address-block > button
+    #the user clicks the button/link            jQuery=.button:contains("Save organisation and continue")
+    the user clicks the button/link            jQuery=.button:contains("Save and continue")
     the user clicks the button/link            jQuery=.button:contains("Save and continue")
     the user clicks the button/link            id=application-question-save
 
@@ -396,10 +416,48 @@ the applicant submits the application
 the user applies to competition and enters organisation type
     [Arguments]  ${compId}  ${organisationType}
     the user navigates to the page     ${server}/competition/${compId}/overview
-    the user clicks the button/link    link=Start new application
+    #the user clicks the button/link    a:contains("Continue without an account")
+    #Here to be another keyword?
+      The user clicks the button/link       jQuery = a:contains("Continue without an account")   #link=Continue without an acount    #This may cause issues for other tests but should be needed.
+        the user selects the radio button   organisationTypeId  ${organisationType}
+        the user clicks the button/link     jQuery = button:contains("Save and continue")
+        the user clicks the Not on company house link
+        the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
+        the user clicks the button/link            jQuery = .button:contains("Find UK address")
+        the user clicks the button/link            jQuery = .button:contains("Find UK address")
+        the user clicks the button/link            css=#select-address-block > button
+        the user clicks the button/link            jQuery=.button:contains("Continue")
+        the user clicks the button/link            jQuery=.button:contains("Save and continue")
+        the user clicks the button/link            id=application-question-save
+    #to here?
     the user clicks the button/link    link=Create account
     the user selects the radio button  organisationTypeId  ${organisationType}
     the user clicks the button/link    css=button[type="submit"]
+
+#This was added so may need to be updated elsewhere
+the user applies to competition and enters organisation type link
+   [Arguments]  ${compId}  ${organisationType}
+    the user navigates to the page     ${server}/competition/${compId}/overview
+    #Try the below if not
+    #Then logged in user applies to competition                  ${comp_name}  1
+    #
+    the user clicks the button/link        link=Start new application
+    The user clicks the button/link        jQuery = a:contains("Continue without an account")
+    the user selects the radio button      organisationTypeId  1
+            the user clicks the button/link            jQuery = button:contains("Save and continue")
+            the user clicks the Not on company house link
+            the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
+            the user clicks the button/link            jQuery = .button:contains("Find UK address")
+            the user clicks the button/link            jQuery = .button:contains("Find UK address")
+            the user clicks the button/link            css=#select-address-block > button
+            the user clicks the button/link            jQuery=.button:contains("Continue")
+            the user clicks the button/link            jQuery=.button:contains("Save and continue")
+            #the user clicks the button/link            id=application-question-save
+    #
+    #
+    #the user clicks the button/link    link=Create account
+    #the user selects the radio button  organisationTypeId  ${organisationType}
+    #the user clicks the button/link    css=button[type="submit"]
 
 the user selects his organisation in Companies House
     [Arguments]  ${search}  ${link}

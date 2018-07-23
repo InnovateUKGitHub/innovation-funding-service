@@ -72,7 +72,7 @@ Applicant Applies to Public content leading Competition
     [Tags]  Applicant  HappyPath  CompAdmin
     [Setup]  log in as a different user                   becky.mason@gmail.com  ${short_password}
     # This application is for competition Photonics for Public, which is Web test data.
-    Given logged in user applies to competition research           ${openCompetitionPublicSector_name}  2
+    Given logged in user applies to competition public           ${openCompetitionPublicSector_name}  4
     When the user clicks the button/link                  link=Application details
     Then the user fills in the Application details        ${publicLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${publicLeadApp}  Experimental development

@@ -11,6 +11,10 @@ createContainer.containerName = "mail"
 createContainer.containerId = "mail"
 createContainer.portBindings = ['8765:8080', "9876:8143"]
 
+buildscript {
+    repositories { jcenter() }
+}
+
 def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
