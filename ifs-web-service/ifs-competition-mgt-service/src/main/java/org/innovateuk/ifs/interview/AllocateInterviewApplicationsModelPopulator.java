@@ -16,21 +16,21 @@ import java.util.List;
 @Component
 public class AllocateInterviewApplicationsModelPopulator {
 
-    private CompetitionRestService competitionService;
+    private CompetitionRestService competitionRestService;
     private UserRestService userRestService;
     private InterviewAllocationRestService interviewAllocationRestService;
 
     @Autowired
-    public AllocateInterviewApplicationsModelPopulator(CompetitionRestService competitionService,
+    public AllocateInterviewApplicationsModelPopulator(CompetitionRestService competitionRestService,
                                                        UserRestService userRestService,
                                                        InterviewAllocationRestService interviewAllocationRestService) {
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.userRestService = userRestService;
         this.interviewAllocationRestService = interviewAllocationRestService;
     }
 
     public InterviewAllocateApplicationsViewModel populateModel(long competitionId, long userId, List<Long> applicationIds) {
-        CompetitionResource competitionResource = competitionService.getCompetitionById(competitionId).getSuccess();
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
         UserResource user = userRestService.retrieveUserById(userId).getSuccess();
         List<InterviewApplicationResource> interviewApplications = interviewAllocationRestService.getUnallocatedApplicationsById(competitionId, applicationIds).getSuccess();
         AssessorInvitesToSendResource invitesToSendResource = interviewAllocationRestService.getInviteToSend(competitionId, userId).getSuccess();
