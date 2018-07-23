@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.controller.RegistrationController;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -84,10 +82,8 @@ public class OrganisationJourneyEnd {
 
     private String acceptInvite(HttpServletRequest request, HttpServletResponse response, UserResource user, long organisationId) {
         String inviteHash = registrationCookieService.getInviteHashCookieValue(request).get();
-        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
-        organisationService.createAndLinkByInvite(organisationResource, inviteHash);
         ApplicationInviteResource invite = inviteRestService.getInviteByHash(inviteHash).getSuccess();
-        inviteRestService.acceptInvite(inviteHash, user.getId()).getSuccess();
+        inviteRestService.acceptInvite(inviteHash, user.getId(), organisationId).getSuccess();
         registrationCookieService.deleteInviteHashCookie(response);
         return redirectToApplicationOverview(invite.getApplication());
     }

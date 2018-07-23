@@ -66,8 +66,14 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     }
 
     @Override
-    public RestResult<Void> acceptInvite(String inviteHash, Long userId) {
+    public RestResult<Void> acceptInvite(String inviteHash, long userId) {
         String url = inviteRestUrl + String.format("/acceptInvite/%s/%s", inviteHash, userId);
+        return putWithRestResultAnonymous(url, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptInvite(String inviteHash, long userId, long organisationId) {
+        String url = inviteRestUrl + String.format("/acceptInvite/%s/%s/%s", inviteHash, userId, organisationId);
         return putWithRestResultAnonymous(url, Void.class);
     }
 

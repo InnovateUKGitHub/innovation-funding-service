@@ -61,7 +61,12 @@ public class ApplicationInviteController {
 
     @PutMapping("/acceptInvite/{hash}/{userId}")
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
-        return acceptApplicationInviteService.acceptInvite(hash, userId).toPutResponse();
+        return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.empty()).toPutResponse();
+    }
+
+    @PutMapping("/acceptInvite/{hash}/{userId}/{organisationId}")
+    public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") long userId, @PathVariable("organisationId") long organisationId) {
+        return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId)).toPutResponse();
     }
 
     @DeleteMapping("/removeInvite/{inviteId}")

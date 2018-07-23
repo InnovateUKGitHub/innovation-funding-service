@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -19,7 +18,6 @@ import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
@@ -29,7 +27,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -130,23 +127,19 @@ public class OrganisationJourneyEndTest extends BaseServiceUnitTest<Organisation
         long organisationId = 1L;
         long applicationId = 2L;
         String inviteHash = "inviteHash";
-        OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
         ApplicationInviteResource invite = newApplicationInviteResource().withApplication(applicationId).build();
 
         when(registrationCookieService.isCollaboratorJourney(request)).thenReturn(true);
         when(registrationCookieService.isLeadJourney(request)).thenReturn(false);
         when(registrationCookieService.getInviteHashCookieValue(request)).thenReturn(Optional.of(inviteHash));
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
-        when(organisationService.createAndLinkByInvite(organisation, inviteHash)).thenReturn(organisation);
         when(inviteRestService.getInviteByHash(inviteHash)).thenReturn(restSuccess(invite));
-        when(inviteRestService.acceptInvite(inviteHash, user.getId())).thenReturn(restSuccess());
+        when(inviteRestService.acceptInvite(inviteHash, user.getId(), organisationId)).thenReturn(restSuccess());
 
         String result = service.completeProcess(request, response, user, organisationId);
 
         assertEquals(result, String.format("redirect:/application/%s", applicationId));
-        verify(organisationService).createAndLinkByInvite(organisation, inviteHash);
         verify(registrationCookieService).deleteInviteHashCookie(response);
-        verify(inviteRestService).acceptInvite(inviteHash, user.getId());
+        verify(inviteRestService).acceptInvite(inviteHash, user.getId(), organisationId);
     }
 
     @Test

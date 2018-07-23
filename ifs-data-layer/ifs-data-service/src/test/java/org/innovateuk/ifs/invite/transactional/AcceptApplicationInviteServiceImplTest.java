@@ -66,7 +66,7 @@ public class AcceptApplicationInviteServiceImplTest {
         when(applicationInviteRepositoryMock.getByHash(testInviteHash)).thenReturn(invite);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
-        ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
+        ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.empty());
 
         assertThat(result.isFailure()).isTrue();
     }
@@ -89,7 +89,7 @@ public class AcceptApplicationInviteServiceImplTest {
         ))
                 .thenReturn(Optional.of(collaboratorInviteOrganisation));
 
-        ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
+        ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
         InOrder inOrder = inOrder(inviteOrganisationRepositoryMock, applicationInviteRepositoryMock);
         inOrder.verify(inviteOrganisationRepositoryMock).saveAndFlush(inviteOrganisationToBeReplaced);
@@ -120,7 +120,7 @@ public class AcceptApplicationInviteServiceImplTest {
         ))
                 .thenReturn(Optional.of(collaboratorInviteOrganisation));
 
-        ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
+        ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
         verify(inviteOrganisationRepositoryMock, never()).delete(inviteOrganisationToBeReplaced);
 
@@ -139,7 +139,7 @@ public class AcceptApplicationInviteServiceImplTest {
         ))
                 .thenReturn(Optional.empty());
 
-        ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
+        ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
         assertThat(result.isSuccess()).isTrue();
         assertThat(invite.getInviteOrganisation().getOrganisation())
@@ -169,7 +169,7 @@ public class AcceptApplicationInviteServiceImplTest {
         when(applicationProgressService.updateApplicationProgress(invite.getTarget().getId()))
                 .thenReturn(serviceSuccess(BigDecimal.ONE));
 
-        ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
+        ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
         verify(processRoleRepositoryMock).save(expectedProcessRole);
         verify(applicationProgressService).updateApplicationProgress(invite.getTarget().getId());
@@ -205,9 +205,7 @@ public class AcceptApplicationInviteServiceImplTest {
         Organisation usersOrganisation = newOrganisation()
                 .withUser(singletonList(user))
                 .build();
-
-        when(organisationRepositoryMock.findFirstByUsers(user)).thenReturn(Optional.of(usersOrganisation));
-
+        when(organisationRepositoryMock.findOne(usersOrganisation.getId())).thenReturn(usersOrganisation);
         return usersOrganisation;
     }
 }

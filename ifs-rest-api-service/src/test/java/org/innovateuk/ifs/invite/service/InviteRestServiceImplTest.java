@@ -91,7 +91,6 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         assertEquals(21, response.getSuccess().getInvitesSendSuccess());
     }
 
-
     @Test
     public void test_acceptInvite() throws Exception {
         final Long userId = 124214L;
@@ -99,6 +98,17 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         setupPutWithRestResultAnonymousExpectations(inviteRestURL +  String.format("/acceptInvite/%s/%s", inviteHash, userId), null, OK);
 
         RestResult<Void> response = service.acceptInvite(inviteHash, userId);
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void test_acceptInvite_OrganisationId() throws Exception {
+        final Long userId = 124214L;
+        final long organisationId = 23L;
+
+        setupPutWithRestResultAnonymousExpectations(inviteRestURL +  String.format("/acceptInvite/%s/%s/%s", inviteHash, userId, organisationId), null, OK);
+
+        RestResult<Void> response = service.acceptInvite(inviteHash, userId, organisationId);
         assertTrue(response.isSuccess());
     }
 

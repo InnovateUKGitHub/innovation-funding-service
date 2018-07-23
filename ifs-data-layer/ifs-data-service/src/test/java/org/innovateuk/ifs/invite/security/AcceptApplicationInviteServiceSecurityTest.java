@@ -6,6 +6,8 @@ import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteServiceImp
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 
+import java.util.Optional;
+
 public class AcceptApplicationInviteServiceSecurityTest extends
         BaseServiceSecurityTest<AcceptApplicationInviteService> {
 
@@ -17,7 +19,7 @@ public class AcceptApplicationInviteServiceSecurityTest extends
     @Test
     public void acceptInvite() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.acceptInvite("abcdef", 1L),
+                () -> classUnderTest.acceptInvite("abcdef", 1L, Optional.empty()),
                 Role.SYSTEM_REGISTRATION_USER
         );
     }

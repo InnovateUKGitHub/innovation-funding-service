@@ -474,7 +474,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 eq(1L),
                 anyBoolean())).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(Optional.empty());
-        when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong())).thenReturn(restSuccess());
+        when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong(), anyLong())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
