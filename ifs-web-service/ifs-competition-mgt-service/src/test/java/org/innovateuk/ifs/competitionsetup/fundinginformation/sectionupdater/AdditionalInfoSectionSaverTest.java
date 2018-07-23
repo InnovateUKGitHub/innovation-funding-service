@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competitionsetup.fundinginformation.sectionupdater;
 
 import com.google.common.collect.Lists;
 import org.hamcrest.CoreMatchers;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
@@ -36,9 +35,6 @@ public class AdditionalInfoSectionSaverTest {
 	@InjectMocks
 	private AdditionalInfoSectionUpdater service;
 	
-	@Mock
-	private CompetitionService competitionService;
-
 	@Mock
 	private CompetitionSetupRestService competitionSetupRestService;
 	

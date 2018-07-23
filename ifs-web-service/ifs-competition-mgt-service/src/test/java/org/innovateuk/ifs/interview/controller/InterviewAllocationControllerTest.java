@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
@@ -74,9 +73,6 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
     private InterviewAcceptedAssessorsModelPopulator interviewAcceptedAssessorsModelPopulator;
 
     @Mock
-    private CompetitionService competitionService;
-
-    @Mock
     private InterviewAllocationRestService interviewAllocationRestService;
 
     @Mock
@@ -123,7 +119,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
                 .withName("Competition x")
                 .build();
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
 
         InterviewAcceptedAssessorsResource interviewAcceptedAssessorsResource = newInterviewAcceptedAssessorsResource()
                 .build();
@@ -145,8 +141,8 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
 
         InterviewAcceptedAssessorsViewModel model = (InterviewAcceptedAssessorsViewModel) result.getModelAndView().getModel().get("model");
 
-        InOrder inOrder = inOrder(competitionService, interviewAllocationRestService);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, interviewAllocationRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAllocationRestService).getInterviewAcceptedAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
 
@@ -340,8 +336,7 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         when(interviewAllocationRestService.getUnallocatedApplicationsById(competition.getId(), selectedApplicationIds))
                 .thenReturn(restSuccess(interviewApplicationResources));
         when(interviewAllocationRestService.getInviteToSend(competition.getId(), user.getId())).thenReturn(restSuccess(assessorInvitesToSendResource));
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
-
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
 
         MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/allocate-applications/{userId}", competition.getId(), user.getId())
                 .cookie(cookie))
@@ -369,11 +364,11 @@ public class InterviewAllocationControllerTest extends BaseControllerMockMVCTest
         String originQuery = (String) result.getModelAndView().getModel().get("originQuery");
         assertEquals(format("?origin=INTERVIEW_PANEL_ALLOCATE&assessorId=%d", user.getId()), originQuery);
 
-        InOrder inOrder = inOrder(userRestServiceMock, competitionRestService, interviewAllocationRestService, competitionService);
+        InOrder inOrder = inOrder(userRestServiceMock, competitionRestService, interviewAllocationRestService, competitionRestService);
         inOrder.verify(userRestServiceMock).retrieveUserById(user.getId());
         inOrder.verify(interviewAllocationRestService).getUnallocatedApplicationsById(competition.getId(), selectedApplicationIds);
         inOrder.verify(interviewAllocationRestService).getInviteToSend(competition.getId(), user.getId());
-        inOrder.verify(competitionService).getById(competition.getId());
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
