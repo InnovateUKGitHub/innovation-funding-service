@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * Form for the documents competition setup section.
  */
+// TODO: currently not used, can this and documentsformpopulator just be removed?
 public class DocumentsForm extends CompetitionSetupForm {
     @Valid
     private List<CompetitionSetupForm> allDocuments;

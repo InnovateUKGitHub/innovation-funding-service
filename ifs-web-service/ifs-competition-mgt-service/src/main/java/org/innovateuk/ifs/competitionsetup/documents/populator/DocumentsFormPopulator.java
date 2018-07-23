@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 /**
  * Form populator for the documents competition setup section.
  */
+// TODO: currently not used, can this and documentsform just be removed?
 @Service
 public class DocumentsFormPopulator implements CompetitionSetupFormPopulator {
 
