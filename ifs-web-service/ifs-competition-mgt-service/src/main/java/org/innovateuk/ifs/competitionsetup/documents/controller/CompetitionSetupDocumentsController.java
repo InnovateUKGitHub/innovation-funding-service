@@ -4,20 +4,31 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competition.resource.DocumentResource;
 import org.innovateuk.ifs.competitionsetup.application.controller.CompetitionSetupApplicationController;
 import org.innovateuk.ifs.competitionsetup.application.form.LandingPageForm;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import org.innovateuk.ifs.competitionsetup.documents.populator.DocumentEditFormPopulator;
+import org.innovateuk.ifs.competitionsetup.documents.populator.DocumentEditModelPopulator;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.DOCUMENTS;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.FINANCES;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_ID_KEY;
 
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
@@ -36,12 +47,42 @@ public class CompetitionSetupDocumentsController {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupDocumentsController.class);
     public static final String DOCUMENTS_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/documents/landing-page";
     private static final String MODEL = "model";
+    private static final String editView = "competition/setup/document";
 
     @Autowired
     private CompetitionService competitionService;
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
+
+
+    @PostMapping(value = "/landing-page", params = "createDocument")
+    public String createDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
+        // TODO: create a blank document form
+        //ServiceResult<CompetitionSetupDocumentResource> restResult = competitionSetupDocumentService.createDefaultDocument(competitionId);
+//
+//        Function<CompetitionSetupDocumentResource, String> successViewFunction =
+//                (document) -> String.format("redirect:/competition/setup/%d/section/application/document/%d/edit", competitionId, document.getDocumentId());
+//        Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccess());
+
+        //return successView.get();
+        return String.format("redirect:/competition/setup/%d/section/documents/document/1/edit", competitionId);
+
+    }
+
+    @PostMapping("/landing-page")
+    public String setDocumentProcessAsComplete(Model model,
+                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                  @ModelAttribute(COMPETITION_SETUP_FORM_KEY) LandingPageForm form,
+                                                  BindingResult bindingResult,
+                                                  ValidationHandler validationHandler) {
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+
+        return "redirect:/competition/setup/" + competitionId;   
+
+        // TODO: actually set process as complete
+    }
+
 
     @GetMapping("/landing-page")
     public String documentsLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
@@ -59,4 +100,52 @@ public class CompetitionSetupDocumentsController {
         //model.addAttribute(COMPETITION_SETUP_FORM_KEY, new LandingPageForm());
         return "competition/setup";
     }
+
+    @GetMapping("/document/{documentId}/edit")
+    public String editDocumentInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                          @PathVariable("documentId") Long documentId,
+                                          Model model) {
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        if(competitionResource.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
+        return getDocumentPage(model, competitionResource, competitionId, documentId, true, null);
+    }
+
+    @PostMapping("/document/{documentId}/edit")
+    public String saveDocumentInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                          @PathVariable("documentId") Long documentId,
+                                          Model model) {
+
+        // TODO: actually save!
+        return String.format("redirect:/competition/setup/%d/section/documents/landing-page", competitionId);
+    }
+
+    public String getDocumentPage(Model model, CompetitionResource competitionResource, long competitionId, Long documentId, Boolean isEditable, CompetitionSetupForm form) {
+        DocumentResource document = new DocumentResource();
+        //TODO get real document from ID
+        document.setId(documentId);
+
+        //TODO: can't do this, need to create a new setup system for populators???
+        DocumentEditModelPopulator modelPopulator = new DocumentEditModelPopulator();
+        DocumentEditFormPopulator formPopulator = new DocumentEditFormPopulator();
+
+        //basically seems to be a big wrapper for the document...
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, formPopulator.populateForm(documentId));
+
+        //TODO: what do we get from this? edittable? need to fix.
+        model.addAttribute(MODEL, modelPopulator.populateModel(competitionResource));
+        model.addAttribute(COMPETITION_ID_KEY, competitionId);
+        return editView;
+    }
+
+//    @PostMapping("/document/{documentId}/edit")
+//    public String submitDocumentChanges(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) DocumentForm competitionSetupForm,
+//                                         BindingResult bindingResult,
+//                                         ValidationHandler validationHandler,
+//                                         @PathVariable(COMPETITION_ID_KEY) long competitionId,
+//                                         Model model) {
+//
+//        // save and redirect
+//    }
 }

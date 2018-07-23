@@ -8,6 +8,64 @@
     <p class="form-hint">The project manager will have to upload these in project setup.</p>
 
 
+    <form th:action="@{(${model.general.editable} ? '' : 'documents/edit')}"
+          th:object="${competitionSetupForm}"
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
+          data-section="documents"
+          method="post" novalidate="novalidate">
+        
+
+        <div th:if="${model.general.editable}" id="section-3-edit">
+
+            <div class="form-group">
+                <!-- for each document in documents, add name, add edit link -->
+                <ul>
+                    <li th:each="document : ${model.allDocuments}" class="multiple-choice">
+                        <th:block th:with="checkboxId=${'included[' + document.id + ']'}">
+                            <div>
+                                <input th:id=${checkboxId}
+                                    type="checkbox"
+                                    value="include"
+                                    data-autosave-disabled
+                                />
+                                <label th:for=${checkboxId}>
+                                    <span th:text=${document.title}>document_title</span>
+                                    <span class="end-label-link">
+                                        <th>
+                                            <!-- <button type="submit" th:value="${document.id}" name="editDocument" class="buttonlink no-margin">Edit</button> -->
+                                             <a th:href="@{/competition/setup/{competitionId}/section/documents/document/{documentId}/edit(competitionId=${model.general.competition.id}, documentId=${document.id})}">
+                                                Edit
+                                            </a>
+                                        </th>
+                                    </span>
+                                </label>
+                            </div>
+                        </th:block>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- new link -->
+            <th:form th:unless="${model.general.state.preventEdit}">
+                <p>
+                    <button type="submit" name="createDocument" class="buttonlink">Add document type</button>
+                </p>
+            </th:form>
+
+             <!-- post button -->
+            <button class="button">Done</button>
+        </div>
+
+    </form>
+
+
+   
+<!--     <p><a th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='documents')}">
+        Add new link</a>
+    </p> -->
+
+   
+
     <ul class="pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to prev part"
