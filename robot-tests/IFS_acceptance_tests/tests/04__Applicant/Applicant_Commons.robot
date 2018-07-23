@@ -341,12 +341,7 @@ logged in user applies to competition
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the Not on company house link
-    the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
-    the user clicks the button/link            css=#select-address-block > button
-    the user clicks the button/link            jQuery=.button:contains("Continue")
-    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user fills in the address details
     the user clicks the button/link            id=application-question-save
 
 navigate to next page if not found
@@ -374,11 +369,7 @@ logged in user applies to competition research
     the user clicks the button/link            id=org-search
     the user clicks the button/link            link=Bath Spa University
     the user clicks the button/link            jQuery=button:contains("Enter address manually")
-    the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
-    the user clicks the button/link            css=#select-address-block > button
-    the user clicks the button/link            jQuery=.button:contains("Save organisation and continue")
-    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user fills in the address details
     the user clicks the button/link            id=application-question-save
 
 logged in user applies to competition public
@@ -393,11 +384,7 @@ logged in user applies to competition public
     the user clicks the button/link            id=org-search
     the user clicks the button/link            link=INNOVATE LTD
     the user clicks the button/link            jQuery=button:contains("Enter address manually")
-    the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
-    the user clicks the button/link            css=#select-address-block > button
-    the user clicks the button/link            jQuery=.button:contains("Save and continue")
-    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user fills in the address details
     the user clicks the button/link            id=application-question-save
 
 the user navigates to the eligibility of the competition
@@ -430,12 +417,8 @@ the user applies to competition and enters organisation type link
     the user selects the radio button      organisationTypeId  ${organisationType}  #${orgTypeRadio}  #Was 1 so needs to be formularised
             the user clicks the button/link            jQuery = button:contains("Save and continue")
             the user clicks the Not on company house link
-            the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-            the user clicks the button/link            jQuery = .button:contains("Find UK address")
-            the user clicks the button/link            jQuery = .button:contains("Find UK address")
-            the user clicks the button/link            css=#select-address-block > button
-            the user clicks the button/link            jQuery=.button:contains("Continue")
-            the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user fills in the address details
+    the user clicks the button/link            id=application-question-save
 
 the user selects his organisation in Companies House
     [Arguments]  ${search}  ${link}
@@ -462,10 +445,18 @@ the user fills in the address info
     the user selects the radio button          organisationTypeId  ${organisationType}
     the user clicks the button/link            jQuery = button:contains("Save and continue")
     the user clicks the Not on company house link
+    the user fills in the address details
+    the user clicks the button/link            id=application-question-save
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user enters text to a text field       id = organisationSearchName    Innovate
+    the user clicks the button/link            id=org-search
+    the user clicks the button/link            link=INNOVATE LTD
+    the user clicks the button/link            jQuery=button:contains("Enter address manually")
+    the user clicks the button/link            id=application-question-save
+
+the user fills in the address details
     the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
     the user clicks the button/link            jQuery = .button:contains("Find UK address")
-    the user clicks the button/link            jQuery = .button:contains("Find UK address")
     the user clicks the button/link            css=#select-address-block > button
-    the user clicks the button/link            jQuery=.button:contains("Continue")
     the user clicks the button/link            jQuery=.button:contains("Save and continue")
-    the user clicks the button/link            id=application-question-save
+    the user clicks the button/link            jQuery=.button:contains("Save and continue")
