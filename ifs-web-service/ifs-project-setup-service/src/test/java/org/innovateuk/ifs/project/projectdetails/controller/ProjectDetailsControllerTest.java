@@ -6,9 +6,9 @@ import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -95,7 +95,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     private ApplicationService applicationService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private ProjectService projectService;
@@ -161,7 +161,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build();
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
@@ -222,7 +222,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build();
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
@@ -279,6 +279,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
         when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(invitedUsers));
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         List<ProjectUserInviteModel> users = new ArrayList<>();
 
@@ -287,7 +288,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
             .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId))
             .collect(toList());
 
-        SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(users, invites, project, 1L, applicationResource, null, false);
+        SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(users, invites, project, 1L, applicationResource, competitionResource, false);
 
         mockMvc.perform(get("/project/{id}/details/project-manager", projectId))
                 .andExpect(status().isOk())
@@ -316,7 +317,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
-        when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(projectDetailsService.updateProjectManager(projectId, projectManagerUserId)).thenReturn(serviceSuccess());
 
         ProcessRoleResource processRoleResource = new ProcessRoleResource();
@@ -358,7 +359,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build();
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
@@ -481,7 +482,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
         when(applicationService.getById(applicationId)).thenReturn(applicationResource);
-        when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(userService.getOrganisationProcessRoles(applicationResource, organisationId)).thenReturn(emptyList());
         when(projectDetailsService.saveProjectInvite(inviteProjectResource)).thenReturn(serviceSuccess());
         when(projectDetailsService.inviteFinanceContact(projectId, inviteProjectResource)).thenReturn(serviceSuccess());
@@ -633,13 +634,14 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         String invitedUserEmail = "Steve.Smith@empire.com";
 
         ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
+        CompetitionResource competitionResource = newCompetitionResource().build();
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
         List<ProjectUserResource> availableUsers = newProjectUserResource().
                 withUser(loggedInUser.getId(), loggedInUserId).
                 withOrganisation(organisationId).
                 withRole(PARTNER).
                 build(2);
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionResource.getId()).build();
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
                 .withProject(projectId).withName("exist test", invitedUserName)
@@ -652,6 +654,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
         when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(post("/project/{id}/details/finance-contact", projectId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -683,7 +686,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
         UserResource financeContactUserResource = newUserResource().withId(invitedUserId).withFirstName("First").withLastName("Last").withEmail("test@test.com").build();
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
 
         List<ProjectUserResource> availableUsers = newProjectUserResource().
                 withUser(loggedInUser.getId(), loggedInUserId).
@@ -719,7 +722,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectDetailsService.inviteFinanceContact(projectId, existingInvites.get(1))).thenReturn(serviceSuccess());
         when(organisationService.getOrganisationById(organisationId)).thenReturn(leadOrganisation);
         when(projectDetailsService.saveProjectInvite(any())).thenReturn(serviceSuccess());
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
         when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
 
@@ -915,6 +918,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
 
@@ -965,6 +969,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
         when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/finance-contact", projectId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -1059,7 +1064,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build();
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectManagerProjectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);

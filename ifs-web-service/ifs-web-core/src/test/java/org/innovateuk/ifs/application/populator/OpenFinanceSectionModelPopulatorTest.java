@@ -19,6 +19,7 @@ import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
@@ -101,7 +102,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
     private FormInputResponseRestService formInputResponseRestService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private InviteRestService inviteRestService;
@@ -224,7 +225,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
     }
 
     private void setupServices(CompetitionResource competitionResource, ApplicationResource applicationResource, UserResource userResource, List<FormInputResource> formInputs) {
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(applicationResource.getCompetition())).thenReturn(restSuccess(competitionResource));
 
         InviteOrganisationResource inviteOrg1 = new InviteOrganisationResource();
         inviteOrg1.setId(234L);

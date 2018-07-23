@@ -5,13 +5,13 @@ import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentP
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewApplicationSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewApplicationSummaryViewModel;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -50,7 +50,7 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
     private SummaryViewModelFragmentPopulator summaryViewModelPopulator;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private ProcessRoleService processRoleService;
@@ -98,7 +98,7 @@ public class AssessmentReviewApplicationSummaryModelPopulatorTest extends BaseUn
 
         SummaryViewModel summary = mock(SummaryViewModel.class);
 
-        when(competitionService.getById(applicationResource.getCompetition())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(applicationResource.getCompetition())).thenReturn(restSuccess(competitionResource));
         when(processRoleService.findProcessRolesByApplicationId(applicationResource.getId())).thenReturn(userApplicationRoles);
         when(assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(applicationResource.getId())).thenReturn(restSuccess(assessorFormInputResponseResources));
         when(formInputRestService.getById(nullable(Long.class))).thenReturn(restSuccess(formInputResources.get(0)));

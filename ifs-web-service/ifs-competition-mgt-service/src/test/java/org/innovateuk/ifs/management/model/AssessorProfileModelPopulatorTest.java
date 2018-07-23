@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessor.populator.AssessorProfileModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.AssessorsProfileViewModel;
 import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
@@ -39,7 +39,7 @@ public class AssessorProfileModelPopulatorTest {
     private AssessorProfileModelPopulator assessorProfileModelPopulator;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private AssessorRestService assessorRestService;
@@ -86,14 +86,14 @@ public class AssessorProfileModelPopulatorTest {
                 )
                 .build();
 
-        when(competitionService.getById(competitionId)).thenReturn(expectedCompetition);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(expectedCompetition));
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(assessorProfileResource));
 
         AssessorsProfileViewModel viewModel =
                 assessorProfileModelPopulator.populateModel(assessorId, competitionId);
 
-        InOrder inOrder = inOrder(competitionService, assessorRestService);
-        inOrder.verify(competitionService).getById(competitionId);
+        InOrder inOrder = inOrder(competitionRestService, assessorRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competitionId);
         inOrder.verify(assessorRestService).getAssessorProfile(assessorId);
         inOrder.verifyNoMoreInteractions();
 

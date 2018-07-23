@@ -4,9 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatusViewModel;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
@@ -51,7 +52,7 @@ public class TeamStatusControllerTest extends BaseControllerMockMVCTest<TeamStat
     private ApplicationService applicationService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Override
     protected TeamStatusController supplyControllerUnderTest() {
@@ -211,7 +212,7 @@ public class TeamStatusControllerTest extends BaseControllerMockMVCTest<TeamStat
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
         when(projectService.getById(projectId)).thenReturn(project);
         when(applicationService.getById(applicationId)).thenReturn(application);
-        when(competitionService.getById(competitionId)).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
     }
 
     private void assertionsViewProjectTeamStatus(ProjectConsortiumStatusViewModel model,

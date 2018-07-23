@@ -9,11 +9,11 @@ import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionMod
 import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -82,7 +82,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     private FormInputResponseRestService formInputResponseRestService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private InviteRestService inviteRestService;
@@ -146,7 +146,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
                 .withApplicants(asList(applicant))
                 .withSection(section).withCurrentUser(user).build();
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(userService.retrieveUserById(user.getId())).thenReturn(user);
 
         InviteOrganisationResource inviteOrg1 = new InviteOrganisationResource();

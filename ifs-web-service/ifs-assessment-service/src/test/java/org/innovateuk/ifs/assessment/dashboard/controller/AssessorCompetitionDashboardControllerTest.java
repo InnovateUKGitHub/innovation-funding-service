@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.dashboard.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.dashboard.form.AssessorCompetitionDashboardAssessmentForm;
@@ -14,6 +13,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -41,6 +41,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOut
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentTotalScoreResourceBuilder.newAssessmentTotalScoreResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -65,7 +66,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     private AssessmentService assessmentService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private ProcessRoleService processRoleService;
@@ -113,7 +114,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId(), organisations.get(3).getId())
                 .build(4);
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
 
@@ -134,8 +135,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, assessmentService, applicationService, processRoleService, organisationService);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, assessmentService, applicationService, processRoleService, organisationService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
 
         assessments.forEach(assessment -> {
@@ -204,7 +205,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId(), organisations.get(3).getId())
                 .build(4);
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
@@ -223,8 +224,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, assessmentService, applicationService, processRoleService, organisationService);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, assessmentService, applicationService, processRoleService, organisationService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
 
         assessments.forEach(assessment -> {
@@ -267,7 +268,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
 
         CompetitionResource competition = buildTestCompetition();
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(emptyList());
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}", competition.getId()))
@@ -276,8 +277,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, assessmentService);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, assessmentService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
@@ -301,7 +302,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         List<Long> assessmentIds = asList(1L, 2L);
         CompetitionResource competition = buildTestCompetition();
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessmentService.submitAssessments(assessmentIds)).thenReturn(serviceSuccess());
 
         MvcResult result = mockMvc.perform(post("/assessor/dashboard/competition/{competitionId}", competition.getId())
@@ -325,7 +326,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     public void submitAssessments_invalid() throws Exception {
         CompetitionResource competition = buildTestCompetition();
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessmentService.submitAssessments(emptyList())).thenReturn(serviceFailure(new Error("TEST", null)));
 
         MvcResult result = mockMvc.perform(post("/assessor/dashboard/competition/{competitionId}", competition.getId())
@@ -352,7 +353,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         List<Long> assessmentIds = asList(1L, 2L);
         CompetitionResource competition = buildTestCompetition();
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessmentService.submitAssessments(assessmentIds)).thenReturn(serviceFailure(new Error("Test Error", null)));
 
         MvcResult result = mockMvc.perform(post("/assessor/dashboard/competition/{competitionId}", competition.getId())

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.controller;
 
 import org.hamcrest.core.IsInstanceOf;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.CompetitionInAssessmentKeyAssessmentStatisticsResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -15,6 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.controller.CompetitionManagementCompetitionController;
 import org.innovateuk.ifs.management.competition.populator.CompetitionInFlightModelPopulator;
@@ -67,7 +67,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private CompetitionKeyAssessmentStatisticsRestService competitionKeyAssessmentStatisticsRestService;
@@ -97,7 +97,8 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withAssessorFinanceView(DETAILED)
                 .build();
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         competitionResource.setMilestones(singletonList(10L));
 
         MilestoneResource milestone = newMilestoneResource()
@@ -127,8 +128,8 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .andExpect(MockMvcResultMatchers.view().name("competition/competition-in-flight"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, milestoneRestService, competitionKeyAssessmentStatisticsRestService, assessmentRestService);
-        inOrder.verify(competitionService).getById(competitionId);
+        InOrder inOrder = inOrder(competitionRestService, milestoneRestService, competitionKeyAssessmentStatisticsRestService, assessmentRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competitionId);
         inOrder.verify(milestoneRestService).getAllMilestonesByCompetitionId(competitionResource.getId());
         inOrder.verify(competitionKeyAssessmentStatisticsRestService).getInAssessmentKeyStatisticsByCompetition(competitionResource.getId());
         inOrder.verify(assessmentRestService).countByStateAndCompetition(AssessmentState.CREATED, competitionResource.getId());
@@ -159,14 +160,14 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withCompetitionStatus(competitionStatus)
                 .build();
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}", competitionId))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError())
                 .andExpect(model().attribute("exception", new IsInstanceOf(ObjectNotFoundException.class)));
 
-        InOrder inOrder = inOrder(competitionService);
-        inOrder.verify(competitionService).getById(competitionId);
+        InOrder inOrder = inOrder(competitionRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competitionId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -181,7 +182,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withCompetitionStatus(competitionStatus)
                 .build();
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/competition/{competitionId}", competitionId))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError())
@@ -191,8 +192,8 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         IncorrectStateForPageException exception = (IncorrectStateForPageException) result.getModelAndView().getModel().get("exception");
         assertEquals(format("Unexpected competition state for competition: %s", competitionId), exception.getMessage());
 
-        InOrder inOrder = inOrder(competitionService);
-        inOrder.verify(competitionService).getById(competitionId);
+        InOrder inOrder = inOrder(competitionRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competitionId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -207,7 +208,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .andExpect(redirectedUrl(format("/competition/%s", competitionId)));
 
         verify(competitionPostSubmissionRestService).closeAssessment(competitionId);
-        verifyNoMoreInteractions(competitionService);
+        verifyNoMoreInteractions(competitionRestService);
     }
 
     @Test
@@ -221,7 +222,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .andExpect(redirectedUrl(format("/competition/%s", competitionId)));
 
         verify(assessorRestService).notifyAssessors(competitionId);
-        verifyNoMoreInteractions(competitionService);
+        verifyNoMoreInteractions(competitionRestService);
     }
 
     @Test
@@ -233,15 +234,15 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .build();
 
         when(competitionPostSubmissionRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
-        when(competitionService.getById(competitionId)).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         mockMvc.perform(post("/competition/{competitionId}/release-feedback", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard/project-setup"));
 
-        InOrder inOrder = inOrder(competitionPostSubmissionRestService, competitionService);
+        InOrder inOrder = inOrder(competitionPostSubmissionRestService, competitionRestService);
         inOrder.verify(competitionPostSubmissionRestService).releaseFeedback(competitionId);
-        inOrder.verify(competitionService).getById(competitionId);
+        inOrder.verify(competitionRestService).getCompetitionById(competitionId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -254,15 +255,15 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .build();
 
         when(competitionPostSubmissionRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
-        when(competitionService.getById(competitionId)).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         mockMvc.perform(post("/competition/{competitionId}/release-feedback", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard/previous"));
 
-        InOrder inOrder = inOrder(competitionPostSubmissionRestService, competitionService);
+        InOrder inOrder = inOrder(competitionPostSubmissionRestService, competitionRestService);
         inOrder.verify(competitionPostSubmissionRestService).releaseFeedback(competitionId);
-        inOrder.verify(competitionService).getById(competitionId);
+        inOrder.verify(competitionRestService).getCompetitionById(competitionId);
         inOrder.verifyNoMoreInteractions();
     }
 }

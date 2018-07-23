@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.competitionsetup.initialdetail.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.InitialDetailsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -40,7 +40,7 @@ public class InitialDetailsModelPopulatorTest {
 	private CategoryRestService categoryRestService;
 	
 	@Mock
-	private CompetitionService competitionService;
+	private CompetitionRestService competitionRestService;
 
 	@Mock
 	private UserService userService;
@@ -68,7 +68,7 @@ public class InitialDetailsModelPopulatorTest {
 		List<InnovationAreaResource> innovationAreas = newInnovationAreaResource().build(2);
 		when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(innovationAreas));
 		List<CompetitionTypeResource> competitionTypes = new ArrayList<>();
-		when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypes);
+		when(competitionRestService.getCompetitionTypes()).thenReturn(restSuccess(competitionTypes));
 		List<UserResource> leadTechs = new ArrayList<>();
 		when(userService.findUserByType(INNOVATION_LEAD)).thenReturn(leadTechs);
 
