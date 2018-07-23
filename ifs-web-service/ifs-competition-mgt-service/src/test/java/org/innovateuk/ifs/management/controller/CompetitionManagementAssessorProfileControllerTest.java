@@ -2,11 +2,11 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController;
 import org.innovateuk.ifs.management.assessor.populator.AssessorProfileModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.AssessorsProfileViewModel;
@@ -51,7 +51,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
     private AssessorRestService assessorRestService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     private CompetitionResource competition;
 
@@ -72,7 +72,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                 .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
                 .build();
 
-        when(competitionService.getById(any())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competition));
     }
 
     @Test

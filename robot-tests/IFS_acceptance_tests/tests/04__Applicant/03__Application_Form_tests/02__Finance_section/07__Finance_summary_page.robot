@@ -198,9 +198,9 @@ Innovation lead can see read only summary link for each partner
     When the user navigates to the page     ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/applications/submitted
     And the user clicks the button/link     link=${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     And the user expands the section        Finances summary
-    Then the user should see the element    jQuery=.finance-summary tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
-    And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(2) th:contains("Ludlow"):contains("View finances")
-    And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(3) th:contains("EGGS"):contains("View finances")
+    Then the user should see the element    jQuery=.finance-summary tr:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
+    And the user should see the element     jQuery=.finance-summary tr:contains("Ludlow"):contains("View finances")
+    And the user should see the element     jQuery=.finance-summary tr:contains("EGGS"):contains("View finances")
 
 Innovation lead can see read only summary for lead
     [Documentation]  IFS-802
