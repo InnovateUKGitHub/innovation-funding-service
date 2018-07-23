@@ -27,8 +27,8 @@
                 <div class="multiple-choice" th:each="choice : ${model.choices}">
                     <input th:field="*{selectedOrganisationId}" th:value="${choice.id}" type="radio" required="required" th:attr="data-required-errormessage=#{validation.standard.role.required}" />
                     <label th:for="${#ids.prev('selectedOrganisationId')}">
-                        <strong th:text="${choice.name}"></strong><br/>
-                        <th:block th:text="${choice.type}"/><br/>
+                        <span class="form-label-bold" th:text="${choice.name}" />
+                        <span class="form-hint" th:text="${choice.type}" />
                     </label>
                 </div>
             </div>
