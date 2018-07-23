@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.registration.populator;
 
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationSelectionChoiceViewModel;
@@ -20,9 +19,6 @@ public class OrganisationSelectionViewModelPopulator {
 
     @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private CompetitionRestService competitionRestService;
 
     @Autowired
     private RegistrationCookieService registrationCookieService;

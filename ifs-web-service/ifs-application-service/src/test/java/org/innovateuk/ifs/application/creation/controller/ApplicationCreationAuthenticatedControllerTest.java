@@ -46,7 +46,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
         when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(false);
         mockMvc.perform(get("/application/create-authenticated/{competitionId}", 1L))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/organisation/create/initialize"));
+                .andExpect(redirectedUrl("/organisation/select"));
 
         verify(registrationCookieService).deleteAllRegistrationJourneyCookies(any());
         verify(registrationCookieService).saveToCompetitionIdCookie(eq(1L), any());
@@ -68,7 +68,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
         mockMvc.perform(post("/application/create-authenticated/{competitionId}", competitionId)
                 .param("createNewApplication", "1"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/organisation/create/initialize"));
+                .andExpect(redirectedUrl("/organisation/select"));
 
         verify(registrationCookieService).deleteAllRegistrationJourneyCookies(any());
         verify(registrationCookieService).saveToCompetitionIdCookie(eq(1L), any());
