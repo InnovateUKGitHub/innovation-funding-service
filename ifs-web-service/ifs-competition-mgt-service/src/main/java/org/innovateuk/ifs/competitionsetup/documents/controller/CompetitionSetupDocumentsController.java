@@ -39,6 +39,7 @@ public class CompetitionSetupDocumentsController {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupDocumentsController.class);
     public static final String DOCUMENTS_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/documents/landing-page";
     private static final String MODEL = "model";
+    private static final String NEW_DOCUMENT_TAG = "new_document";
     private static final String editView = "competition/setup/document";
 
     @Autowired
@@ -50,10 +51,8 @@ public class CompetitionSetupDocumentsController {
 
     @PostMapping(value = "/landing-page", params = "createDocument")
     public String createDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        // TODO: create a blank document form
-        // At the moment this is just pointing to the first ID, it should create a new record, if successful point to it, if fail return
-        return String.format("redirect:/competition/setup/%d/section/documents/document/1/edit", competitionId);
-
+        // redirect to new
+        return String.format("redirect:/competition/setup/%d/section/documents/document/add", competitionId);
     }
 
     @PostMapping("/landing-page")
@@ -100,12 +99,33 @@ public class CompetitionSetupDocumentsController {
         return getDocumentPage(model, competitionResource, competitionId, documentId, true, null);
     }
 
+    @GetMapping("/document/add")
+    public String addDocumentInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                          Model model) {
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        // TODO: these checks are repeated throughout should they be librarizied?
+        if(competitionResource.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
+        model.addAttribute(NEW_DOCUMENT_TAG, Boolean.TRUE);
+        return getDocumentPage(model, competitionResource, competitionId, null, true, null);
+    }
+
+    @PostMapping("/document/add")
+    public String saveNewDocumentInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                          Model model) {
+
+        // TODO: create new row
+        return String.format("redirect:/competition/setup/%d/section/documents/landing-page", competitionId);
+    }
+
     @PostMapping("/document/{documentId}/edit")
     public String saveDocumentInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                           @PathVariable("documentId") Long documentId,
                                           Model model) {
 
-        // TODO: actually save!
+        // TODO: save over old row
+        model.addAttribute(NEW_DOCUMENT_TAG, Boolean.FALSE);
         return String.format("redirect:/competition/setup/%d/section/documents/landing-page", competitionId);
     }
 

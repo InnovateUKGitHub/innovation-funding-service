@@ -14,7 +14,13 @@ public class DocumentEditFormPopulator {
 
     public CompetitionSetupForm populateForm(Long documentId) {
         DocumentsService service = new DocumentsService();
-        DocumentResource document = service.getDocumentByID(documentId);
+        DocumentResource document;
+        if(documentId == null) {
+            document = new DocumentResource();
+        }
+        else {
+            document = service.getDocumentByID(documentId);
+        }
 
         DocumentEditForm competitionSetupForm = new DocumentEditForm();
         competitionSetupForm.setDocument(document);

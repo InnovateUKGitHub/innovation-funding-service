@@ -16,7 +16,7 @@
 <!-- Open form -->
 	<form method="post"
           th:object="${competitionSetupForm}"
-          th:action="@{'/competition/setup/{competitionId}/section/documents/document/{documentId}/edit'(competitionId=${competitionId}, documentId=${competitionSetupForm.document.id})}"
+           th:action="${new_document} ? @{'/competition/setup/{competitionId}/section/documents/document/add'(competitionId=${competitionId})} : @{'/competition/setup/{competitionId}/section/documents/document/{documentId}/edit'(competitionId=${competitionId}, documentId=${competitionSetupForm.document.id})}"
          >
 
 
