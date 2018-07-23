@@ -1,0 +1,66 @@
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/zipkin-support.gradle")
+
+apply plugin: 'idea'
+
+buildscript {
+
+    ext['thymeleaf.version'] = '3.0.3.RELEASE'
+
+    ext {
+        thymeleafVersion = ext['thymeleaf.version']
+    }
+
+    repositories {
+        jcenter()
+    }
+}
+
+group 'innovateuk'
+version project.version
+
+
+bootRepackage {
+    enabled = false
+}
+
+configurations {
+    testArtifacts
+}
+task testJar (type: Jar) {
+    baseName = "${project.name}-test"
+    from sourceSets.test.output
+}
+artifacts {
+    testArtifacts testJar
+}
+
+dependencies {
+
+    compile project(":ifs-resources")
+    compile project(":ifs-security")
+    compile project(':ifs-rest-api-service')
+    compile project(":ifs-rest-util")
+    compile project(':ifs-web-service:ifs-web-core')
+
+    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+
+    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testCompile "net.sf.opencsv:opencsv:2.3"
+
+}
+
+jar.dependsOn ":ifs-web-service:gulp_default"
+// enabling Spring dev tools has security consequences so only do so for local development
+//ext.ifsEnableDevTools = (project.hasProperty("cloud") && project.cloud == "development")
+//
+//project.properties['idp.rest.key'] ?:"123456789"
+//ext.csrfEncryptionPassword=project.properties['ifs.csrf.encryption.password'] ?: "edd14b4c-6bbd-43df-807d-1d80276bce97"
+//ext.encryptionSalt=project.properties['ifs.csrf.encryption.salt'] ?: "fa7814848e5f2691"
+//
+//ext.ifsWebSystemUserUid=project.properties['ifs.web.system.user.id'] ?: "8394d970-b250-4b15-9621-3534325691b4"
+
+

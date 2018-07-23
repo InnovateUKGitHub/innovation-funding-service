@@ -15,10 +15,10 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+
 /**
  * Populator for creating the {@link BankDetailsReviewViewModel}
  */
-
 @Service
 public class BankDetailsReviewModelPopulator {
 

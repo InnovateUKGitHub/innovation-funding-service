@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.feedback.controller;
 
 import org.innovateuk.ifs.AbstractInviteMockMVCTest;
-import org.innovateuk.ifs.application.form.Form;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationService;

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.applicant.resource.*;
-import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -10,14 +8,16 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionAssignableViewModel;
+import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
  * class with methods that are used on every model for sectionPages
  * these pages are rendered by the ApplicationFormController.applicationFormWithOpenSection method
  */
-abstract class BaseSectionModelPopulator extends BaseModelPopulator {
+public abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     protected static final String MODEL_ATTRIBUTE_FORM = "form";
 
     @Autowired
@@ -61,7 +61,7 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     }
 
     protected void addUserDetails(BaseSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
-        Boolean userIsLeadApplicant = applicantSection.getCurrentApplicant().getProcessRole().getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName());
+        Boolean userIsLeadApplicant = applicantSection.getCurrentApplicant().getProcessRole().getRoleName().equals(Role.LEADAPPLICANT.getName());
         UserResource leadApplicant = applicantSection.getApplicants().stream()
                 .filter(ApplicantResource::isLead)
                 .map(ApplicantResource::getProcessRole)

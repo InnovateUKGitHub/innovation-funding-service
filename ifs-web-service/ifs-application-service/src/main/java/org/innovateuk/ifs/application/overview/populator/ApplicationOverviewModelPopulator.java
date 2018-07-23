@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.overview.populator;
 
-import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewAssignableViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewUserViewModel;
