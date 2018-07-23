@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.registration.model.InviteAndUserOrganisationDifferentModelPopulator;
+import org.innovateuk.ifs.registration.populator.InviteAndUserOrganisationDifferentModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.Role;

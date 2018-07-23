@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
@@ -108,11 +107,11 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     }
 
     private OrganisationResource createOrRetrieveOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
-        Optional<String> cookieHash = registrationCookieService.getInviteHashCookieValue(request);
-        if(cookieHash.isPresent()) {
-            return organisationService.createAndLinkByInvite(organisationResource, cookieHash.get());
+        if (registrationCookieService.isCollaboratorJourney(request)) {
+            return organisationService.createAndLinkByInvite(organisationResource,
+                    registrationCookieService.getInviteHashCookieValue(request).get());
+        } else {
+            return organisationService.createOrMatch(organisationResource);
         }
-
-        return organisationService.createOrMatch(organisationResource);
     }
 }

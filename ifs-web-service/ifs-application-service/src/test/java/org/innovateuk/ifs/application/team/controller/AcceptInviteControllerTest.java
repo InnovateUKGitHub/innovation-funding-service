@@ -4,7 +4,7 @@ import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.registration.controller.AcceptInviteController;
-import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
+import org.innovateuk.ifs.registration.populator.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;

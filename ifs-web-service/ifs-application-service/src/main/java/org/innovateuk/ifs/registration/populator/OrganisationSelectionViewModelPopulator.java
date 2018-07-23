@@ -1,19 +1,17 @@
 package org.innovateuk.ifs.registration.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.registration.model.OrganisationSelectionChoiceViewModel;
-import org.innovateuk.ifs.registration.model.OrganisationSelectionViewModel;
+import org.innovateuk.ifs.registration.service.RegistrationCookieService;
+import org.innovateuk.ifs.registration.viewmodel.OrganisationSelectionChoiceViewModel;
+import org.innovateuk.ifs.registration.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
-import java.util.function.Function;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -24,29 +22,22 @@ public class OrganisationSelectionViewModelPopulator {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
-    public OrganisationSelectionViewModel populate(UserResource userResource, Optional<Long> competitionId, Optional<String> inviteHash, String newOrganisationUrl) {
-        Optional<List<Long>> leadApplicantTypes = competitionId.map(competitionService::getById)
-                .map(CompetitionResource::getLeadApplicantTypes);
+    @Autowired
+    private RegistrationCookieService registrationCookieService;
+
+    public OrganisationSelectionViewModel populate(UserResource userResource, HttpServletRequest request, String newOrganisationUrl) {
         Set<OrganisationSelectionChoiceViewModel> choices = organisationRestService.getAllUsersOrganisations(userResource.getId()).getSuccess()
                 .stream()
-                .map(choice(leadApplicantTypes))
+                .map(this::choice)
                 .collect(toSet());
-        return new OrganisationSelectionViewModel(choices, !inviteHash.isPresent(), newOrganisationUrl);
+        return new OrganisationSelectionViewModel(choices, registrationCookieService.isCollaboratorJourney(request), newOrganisationUrl);
     }
 
-    private Function<OrganisationResource, OrganisationSelectionChoiceViewModel> choice(Optional<List<Long>> leadApplicantTypes) {
-        return (organisation) ->
-            new OrganisationSelectionChoiceViewModel(organisation.getId(),
+    private OrganisationSelectionChoiceViewModel choice(OrganisationResource organisation) {
+        return new OrganisationSelectionChoiceViewModel(organisation.getId(),
                     organisation.getName(),
-                    organisation.getOrganisationTypeName(),
-                    isEligible(organisation, leadApplicantTypes));
+                    organisation.getOrganisationTypeName());
     }
-
-    private boolean isEligible(OrganisationResource organisation, Optional<List<Long>> leadApplicantTypes) {
-        return leadApplicantTypes.isPresent() && leadApplicantTypes.get().contains(organisation.getOrganisationType());
-    }
-
-
 }

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration;
+package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.AbstractInviteMockMVCTest;
 import org.innovateuk.ifs.application.service.OrganisationService;
@@ -10,7 +10,6 @@ import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.registration.controller.RegistrationController;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.builder.EthnicityResourceBuilder;
 import org.innovateuk.ifs.user.resource.Disability;

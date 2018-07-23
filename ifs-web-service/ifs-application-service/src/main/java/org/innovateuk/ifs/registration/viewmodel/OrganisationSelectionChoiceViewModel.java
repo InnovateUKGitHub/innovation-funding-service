@@ -1,17 +1,15 @@
-package org.innovateuk.ifs.registration.model;
+package org.innovateuk.ifs.registration.viewmodel;
 
 public class OrganisationSelectionChoiceViewModel {
 
     private final long id;
     private final String name;
     private final String type;
-    private final boolean eligibleToLead;
 
-    public OrganisationSelectionChoiceViewModel(long id, String name, String type, boolean eligibleToLead) {
+    public OrganisationSelectionChoiceViewModel(long id, String name, String type) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.eligibleToLead = eligibleToLead;
     }
 
     public long getId() {
@@ -26,7 +24,4 @@ public class OrganisationSelectionChoiceViewModel {
         return type;
     }
 
-    public boolean isEligibleToLead() {
-        return eligibleToLead;
-    }
 }

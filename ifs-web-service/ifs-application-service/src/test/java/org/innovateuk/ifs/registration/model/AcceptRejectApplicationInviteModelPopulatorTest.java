@@ -2,6 +2,7 @@ package org.innovateuk.ifs.registration.model;
 
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.registration.populator.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;
 import org.junit.Test;
 

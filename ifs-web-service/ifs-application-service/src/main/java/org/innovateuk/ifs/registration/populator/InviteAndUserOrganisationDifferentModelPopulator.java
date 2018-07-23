@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.model;
+package org.innovateuk.ifs.registration.populator;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;

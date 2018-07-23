@@ -64,14 +64,13 @@ public class OrganisationJourneyEnd {
             cookieUtil.saveToCookie(response, "role", Role.APPLICANT.getName());
         }
 
-        Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
-        Optional<Long> competitionId = registrationCookieService.getCompetitionIdCookieValue(request);
-
-        if (inviteHash.isPresent()) {
+        if (registrationCookieService.isCollaboratorJourney(request)) {
             return acceptInvite(request, response, user, organisationId);
-        } else if (competitionId.isPresent()) {
+        } else if (registrationCookieService.isLeadJourney(request)) {
             return createNewApplication(request, user, organisationId);
         } else {
+            Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
+            Optional<Long> competitionId = registrationCookieService.getCompetitionIdCookieValue(request);
             throw new ObjectNotFoundException("Could not create or find application",
                     Arrays.asList(String.valueOf(competitionId.orElse(null)), inviteHash.orElse(null), String.valueOf(user.getId())));
         }
