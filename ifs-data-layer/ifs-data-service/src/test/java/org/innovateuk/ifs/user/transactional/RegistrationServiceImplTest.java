@@ -618,12 +618,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         Organisation selectedOrganisation = newOrganisation().withId(organisationId).build();
 
         when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
-<<<<<<< HEAD
-//        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(organisationRepositoryMock.findDistinctByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
-=======
-        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
->>>>>>> 3c112e4b2abf1c42a791fae50d0a317d26470983
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         Profile expectedProfile = newProfile().withId(7L).build();
