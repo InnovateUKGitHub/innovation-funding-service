@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.initialdetail.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.ManageInnovationLeadsViewModel;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.assertEquals;
@@ -29,7 +30,7 @@ public class ManageInnovationLeadsModelPopulatorTest {
     private ManageInnovationLeadsModelPopulator populator;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private UserService userService;
@@ -95,7 +96,7 @@ public class ManageInnovationLeadsModelPopulatorTest {
                 .build();
 
         when(userService.findUserByType(INNOVATION_LEAD)).thenReturn(availableInnovationLeads);
-        when(competitionService.findInnovationLeads(competitionId)).thenReturn(innovationLeadsAssignedToCompetition);
+        when(competitionRestService.findInnovationLeads(competitionId)).thenReturn(restSuccess(innovationLeadsAssignedToCompetition));
         when(userService.findById(competitionResource.getLeadTechnologist())).thenReturn(innLead4);
 
         ManageInnovationLeadsViewModel viewModel = populator.populateModel(competitionResource);

@@ -31,7 +31,7 @@ public class AssessmentReviewApplicationSummaryController {
                                   Model model,
                                   UserResource user) {
 
-        assessmentReviewApplicationSummaryModelPopulator.populateModel(model, form, user, applicationId);
+        model.addAttribute("model", assessmentReviewApplicationSummaryModelPopulator.populateModel(form, user, applicationId));
 
         return "assessor-panel-application-overview";
     }
