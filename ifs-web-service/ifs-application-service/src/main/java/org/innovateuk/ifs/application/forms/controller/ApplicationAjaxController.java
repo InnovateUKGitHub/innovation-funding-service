@@ -11,12 +11,12 @@ import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.exception.AutoSaveElementException;
 import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
@@ -85,7 +85,7 @@ public class ApplicationAjaxController {
     private UserService userService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private DefaultFinanceRowRestService financeRowRestService;
@@ -207,7 +207,7 @@ public class ApplicationAjaxController {
             }
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
-            CompetitionResource competition = competitionService.getById(application.getCompetition());
+            CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
             if (durationInMonth < competition.getMinProjectDuration() || durationInMonth > competition.getMaxProjectDuration()) {
                 String message = MessageFormat.format("validation.project.duration.input.invalid",
                         competition.getMinProjectDuration(), competition.getMaxProjectDuration());

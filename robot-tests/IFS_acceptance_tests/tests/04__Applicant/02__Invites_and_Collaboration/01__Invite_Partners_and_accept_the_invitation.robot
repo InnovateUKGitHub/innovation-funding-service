@@ -76,17 +76,23 @@ Lead organisation server-side validations
     When The user clicks the button/link      jQuery=button:contains("Add another contributor")
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(2) input    @test.co.uk
-    And browser validations have been disabled
     And the user clicks the button/link       css=[id^="invite-collaborator"]
-    Then the user should see an error         Please enter a valid email address.
-    And the user should see an error          Please enter a name.
+    Then The user should see a field and summary error  Please enter a valid email address.
+    And The user should see a field and summary error   Please enter a name.
 
 Lead organisation client-side validations
     [Documentation]    INFUND-901  INFUND-7974
     [Tags]    HappyPath
     When The user enters text to a text field      css=tr:nth-of-type(2) td:nth-of-type(1) input    Florian
     And The user enters text to a text field       css=tr:nth-of-type(2) td:nth-of-type(2) input    florian21@florian.com
+    And the user moves focus to the element        css=button[name="executeStagedInvite"]
     Then the user cannot see a validation error in the page
+
+Lead organisation already used email
+    [Documentation]  IFS-3361
+    Given the user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(2) input  steve.smith@empire.com
+    And the user clicks the button/link         css = button[name="executeStagedInvite"]
+    Then The user should see a field and summary error  This email is already in use.
     [Teardown]    The user clicks the button/link  link=Application team
 
 Lead Adds/Removes partner organisation

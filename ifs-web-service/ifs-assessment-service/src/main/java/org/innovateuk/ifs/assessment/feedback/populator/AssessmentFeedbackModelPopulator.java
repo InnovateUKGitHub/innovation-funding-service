@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.feedback.populator;
 
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
@@ -10,6 +9,7 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -42,7 +42,7 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
     private AssessmentService assessmentService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private FormInputRestService formInputRestService;
@@ -90,7 +90,7 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
     }
 
     private CompetitionResource getCompetition(long competitionId) {
-        return competitionService.getById(competitionId);
+        return competitionRestService.getCompetitionById(competitionId).getSuccess();
     }
 
     private FileDetailsViewModel getAppendixDetails(List<FormInputResource> applicationFormInputs,

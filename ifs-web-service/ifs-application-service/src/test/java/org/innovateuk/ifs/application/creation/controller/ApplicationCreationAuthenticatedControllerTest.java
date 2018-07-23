@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application.creation.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -19,7 +19,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     private OrganisationService organisationService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private UserService userService;
