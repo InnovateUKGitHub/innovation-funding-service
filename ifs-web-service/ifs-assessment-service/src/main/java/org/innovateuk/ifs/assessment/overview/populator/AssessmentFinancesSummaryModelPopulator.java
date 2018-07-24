@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.overview.populator;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -12,6 +11,7 @@ import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentFinancesSummar
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAIL
 @Component
 public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceModelPopulator {
 
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private AssessmentService assessmentService;
     private ProcessRoleService processRoleService;
     private FileEntryRestService fileEntryRestService;
@@ -42,7 +42,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
     private OrganisationService organisationService;
     private FinanceService financeService;
 
-    public AssessmentFinancesSummaryModelPopulator(CompetitionService competitionService,
+    public AssessmentFinancesSummaryModelPopulator(CompetitionRestService competitionRestService,
                                                    AssessmentService assessmentService,
                                                    ProcessRoleService processRoleService,
                                                    FileEntryRestService fileEntryRestService,
@@ -55,7 +55,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         super(sectionService, formInputRestService, questionService);
         this.organisationService = organisationService;
         this.sectionService = sectionService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.assessmentService = assessmentService;
         this.processRoleService = processRoleService;
         this.fileEntryRestService = fileEntryRestService;
@@ -65,7 +65,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
 
     public AssessmentFinancesSummaryViewModel populateModel(Long assessmentId, Model model) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
-        CompetitionResource competition = competitionService.getById(assessment.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(assessment.getCompetition()).getSuccess();
 
         addApplicationAndOrganisationDetails(model, assessment.getApplication(), competition.getAssessorFinanceView());
         addFinanceDetails(model, competition.getId(), assessment.getApplication());

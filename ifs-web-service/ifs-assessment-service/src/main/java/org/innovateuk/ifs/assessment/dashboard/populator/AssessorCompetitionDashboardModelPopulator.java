@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.dashboard.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionDashboardApplicationViewModel;
@@ -10,6 +9,7 @@ import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionDash
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -34,18 +34,18 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 @Component
 public class AssessorCompetitionDashboardModelPopulator {
 
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private AssessmentService assessmentService;
     private ApplicationService applicationService;
     private OrganisationService organisationService;
     private ProcessRoleService processRoleService;
 
-    public AssessorCompetitionDashboardModelPopulator(CompetitionService competitionService,
+    public AssessorCompetitionDashboardModelPopulator(CompetitionRestService competitionService,
                                                       AssessmentService assessmentService,
                                                       ApplicationService applicationService,
                                                       OrganisationService organisationService,
                                                       ProcessRoleService processRoleService) {
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionService;
         this.assessmentService = assessmentService;
         this.applicationService = applicationService;
         this.organisationService = organisationService;
@@ -53,7 +53,7 @@ public class AssessorCompetitionDashboardModelPopulator {
     }
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ZonedDateTime acceptDeadline = competition.getAssessorAcceptsDate();
         ZonedDateTime submitDeadline = competition.getAssessorDeadlineDate();
 

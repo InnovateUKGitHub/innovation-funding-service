@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" />
 </head>
@@ -10,10 +10,10 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to panel overview',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{compId}/panel(compId=${currentCompetition.id})})" />
+    <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to panel overview',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{compId}/panel(compId=${model.competition.id})})" />
 
-    <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application summary',subTitle=${applicationName},size='heading-xlarge'" />
+    <th:block th:with="applicationName=${#strings.isEmpty(model.summaryViewModel.currentApplication.name)} ? #{ifs.application.no_title} : ${model.summaryViewModel.currentApplication.name}">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application summary',subTitle=${model.summaryViewModel.currentApplication.name},size='heading-xlarge'" />
     </th:block>
 
     <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
@@ -21,7 +21,9 @@
           th:object="${form}" class="form-serialize-js section-overview">
 
         <h2 class="heading-medium">Details</h2>
-        <th:block th:insert="fragments/application :: application-summary (isApplicant = false, hideDetails = true)" />
+        <th:block ifs:global="${model.feedbackViewModel}">
+            <th:block ifs:global="${model.summaryViewModel}" th:insert="fragments/application :: application-summary (isApplicant = false, hideDetails = true)" />
+        </th:block>
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: survey-data-service
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: survey-data-service
+    strategy:
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 1 #So Flyway runs on one thread at a time
+        maxUnavailable: 0
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: survey-data-service
+      spec:
+        containers:
+        - image: innovateuk/survey-data-service:${surveyDataServiceVersion}
+          name: survey-data-service
+          livenessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            initialDelaySeconds: 100
+            periodSeconds: 31
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            initialDelaySeconds: 100
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+          imagePullPolicy: Always
+          env:
+          - name: JAVA_OPTS
+            value: -Xms800m -Xmx800m -javaagent:/newrelic.jar
+          - name: NEW_RELIC_APP_NAME
+            value: "ifs-survey-data-service (${openshiftEnv})"
+          - name: NEW_RELIC_LICENSE_KEY
+            value: "${NEW_RELIC_LICENCE_KEY}"
+          - name: NEW_RELIC_LOG
+            value: "STDOUT"
+          - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+            value: "100"
+          ports:
+          - containerPort: 8080
+          resources:
+            limits:
+              cpu: 1000m
+            requests:
+              cpu: 300m
+              memory: 800M
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: survey-data-service
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+    selector:
+      deploymentconfig: survey-data-service
+  status:
+    loadBalancer: {}
