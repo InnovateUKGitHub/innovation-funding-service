@@ -50,6 +50,7 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.competitionsetup.application.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
 import static org.innovateuk.ifs.competitionsetup.documents.controller.CompetitionSetupDocumentsController.DOCUMENTS_LANDING_REDIRECT;
+import static org.innovateuk.ifs.competitionsetup.projectdocuments.controller.CompetitionSetupProjectDocumentsController.PROJECT_DOCUMENTS_LANDING_REDIRECT;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
@@ -154,6 +155,8 @@ public class CompetitionSetupController {
             return format(APPLICATION_LANDING_REDIRECT, competitionId);
         } else if (section == CompetitionSetupSection.DOCUMENTS) {
             return format(DOCUMENTS_LANDING_REDIRECT, competitionId);
+        } else if (section == CompetitionSetupSection.PROJECT_DOCUMENTS) {
+            return format(PROJECT_DOCUMENTS_LANDING_REDIRECT, competitionId);
         } else if (section == CompetitionSetupSection.CONTENT) {
             return PUBLIC_CONTENT_LANDING_REDIRECT + competitionId;
         }

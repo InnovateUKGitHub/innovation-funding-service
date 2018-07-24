@@ -5,6 +5,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
@@ -86,6 +87,9 @@ public class Competition implements ProcessActivity {
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CompetitionResearchCategoryLink> researchCategories = new HashSet<>();
+
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ProjectDocument> projectDocuments = new ArrayList<>();
 
     private String activityCode;
 
@@ -513,6 +517,14 @@ public class Competition implements ProcessActivity {
 
         researchCategories.forEach(this::addResearchCategory);
 	}
+
+    public List<ProjectDocument> getProjectDocuments() {
+        return projectDocuments;
+    }
+
+    public void setProjectDocuments(List<ProjectDocument> projectDocuments) {
+        this.projectDocuments = projectDocuments;
+    }
 
     public List<Milestone> getMilestones() {
         return milestones;

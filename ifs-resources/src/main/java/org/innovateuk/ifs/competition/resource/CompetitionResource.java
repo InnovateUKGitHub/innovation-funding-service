@@ -34,6 +34,7 @@ public class CompetitionResource {
     private Long id;
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
+    private List<ProjectDocumentResource> projectDocuments = new ArrayList<>();
     @Size(max = 255, message = "{validation.field.too.many.characters}")
     private String name;
     private ZonedDateTime startDate;
@@ -504,6 +505,14 @@ public class CompetitionResource {
         this.funders = funders;
     }
 
+    public List<ProjectDocumentResource> getProjectDocuments() {
+        return projectDocuments;
+    }
+
+    public void setProjectDocuments(List<ProjectDocumentResource> projectDocuments) {
+        this.projectDocuments = projectDocuments;
+    }
+
     public Boolean getUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
@@ -670,6 +679,7 @@ public class CompetitionResource {
                 .append(id, that.id)
                 .append(milestones, that.milestones)
                 .append(funders, that.funders)
+                .append(projectDocuments, that.projectDocuments)
                 .append(name, that.name)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
@@ -727,6 +737,7 @@ public class CompetitionResource {
                 .append(id)
                 .append(milestones)
                 .append(funders)
+                .append(projectDocuments)
                 .append(name)
                 .append(startDate)
                 .append(endDate)
