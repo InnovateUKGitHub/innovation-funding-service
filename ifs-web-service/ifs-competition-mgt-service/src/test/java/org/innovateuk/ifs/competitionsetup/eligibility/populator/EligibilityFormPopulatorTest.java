@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,11 +22,15 @@ public class EligibilityFormPopulatorTest {
     @Mock
     private CompetitionRestService competitionRestService;
 
+    @Mock
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
+
     private EligibilityFormPopulator service;
 
     @Before
     public void setUp() {
-        service = new EligibilityFormPopulator(competitionRestService);
+        service = new EligibilityFormPopulator(competitionRestService,
+                grantClaimMaximumRestService);
     }
 
     @Test
