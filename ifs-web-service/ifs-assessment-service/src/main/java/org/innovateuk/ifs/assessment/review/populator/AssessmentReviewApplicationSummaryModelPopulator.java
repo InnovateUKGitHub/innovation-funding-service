@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.review.populator;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
 import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewApplicationSummaryViewModel;
