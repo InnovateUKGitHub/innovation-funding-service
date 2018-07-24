@@ -55,13 +55,3 @@ dependencies {
 }
 
 jar.dependsOn ":ifs-web-service:gulp_default"
-// enabling Spring dev tools has security consequences so only do so for local development
-//ext.ifsEnableDevTools = (project.hasProperty("cloud") && project.cloud == "development")
-//
-//project.properties['idp.rest.key'] ?:"123456789"
-//ext.csrfEncryptionPassword=project.properties['ifs.csrf.encryption.password'] ?: "edd14b4c-6bbd-43df-807d-1d80276bce97"
-//ext.encryptionSalt=project.properties['ifs.csrf.encryption.salt'] ?: "fa7814848e5f2691"
-//
-//ext.ifsWebSystemUserUid=project.properties['ifs.web.system.user.id'] ?: "8394d970-b250-4b15-9621-3534325691b4"
-
-
