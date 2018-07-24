@@ -153,6 +153,19 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 );
     }
 
+    private ServiceResult<UserResource> validateUserWithOrganisation(UserResource userResource, Long organisationId) {
+        return passwordPolicyValidator.validatePassword(userResource.getPassword(), userResource, organisationId)
+                .handleSuccessOrFailure(
+                        failure -> serviceFailure(
+                                simpleMap(
+                                        failure.getErrors(),
+                                        error -> fieldError("password", error.getFieldRejectedValue(), error.getErrorKey())
+                                )
+                        ),
+                        success -> serviceSuccess(userResource)
+                );
+    }
+
     @Override
     @Transactional
     public ServiceResult<Void> activateUser(long userId) {

@@ -39,6 +39,7 @@ Resource          ../Applicant_Commons.robot
 ${application_name}    Invite robot test application
 ${newLeadApplicant}  kevin@worth.systems
 ${newCollaborator}   jerry@worth.systems
+#TODO formularise the changes!!
 
 *** Test Cases ***
 Application team page
@@ -51,13 +52,13 @@ Application team page
     When the user clicks the button/link           link=Application team
     Then the user should see the text in the page  Application team
     And the user should see the text in the page   View and manage your contributors or collaborators in the application.
-    And the lead applicant should have the correct status
+    And the lead applicant should have the correct org status
     And the user should see the element            link=Application overview
 
 Lead Adds/Removes rows
     [Documentation]    INFUND-901  INFUND-7974  INFUND-8590
     [Tags]    HappyPath
-    When The user clicks the button/link      jquery=a:contains("Update and add contributors from ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    When The user clicks the button/link      jquery=a:contains("Update and add contributors from org2")   #forularise
     And the user clicks the button/link       jQuery=button:contains("Add another contributor")
     And The user should not see the element   jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should see the element      css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
@@ -75,17 +76,23 @@ Lead organisation server-side validations
     When The user clicks the button/link      jQuery=button:contains("Add another contributor")
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(1) input    ${EMPTY}
     And The user enters text to a text field  css=tr:nth-of-type(2) td:nth-of-type(2) input    @test.co.uk
-    And browser validations have been disabled
     And the user clicks the button/link       css=[id^="invite-collaborator"]
-    Then the user should see an error         Please enter a valid email address.
-    And the user should see an error          Please enter a name.
+    Then The user should see a field and summary error  Please enter a valid email address.
+    And The user should see a field and summary error   Please enter a name.
 
 Lead organisation client-side validations
     [Documentation]    INFUND-901  INFUND-7974
     [Tags]    HappyPath
     When The user enters text to a text field      css=tr:nth-of-type(2) td:nth-of-type(1) input    Florian
     And The user enters text to a text field       css=tr:nth-of-type(2) td:nth-of-type(2) input    florian21@florian.com
+    And the user moves focus to the element        css=button[name="executeStagedInvite"]
     Then the user cannot see a validation error in the page
+
+Lead organisation already used email
+    [Documentation]  IFS-3361
+    Given the user enters text to a text field  css = tr:nth-of-type(2) td:nth-of-type(2) input  steve.smith@empire.com
+    And the user clicks the button/link         css = button[name="executeStagedInvite"]
+    Then The user should see a field and summary error  This email is already in use.
     [Teardown]    The user clicks the button/link  link=Application team
 
 Lead Adds/Removes partner organisation
@@ -232,8 +239,8 @@ Lead applicant invites a non registered user in the same organisation
     Given the user navigates to the page           ${DASHBOARD_URL}
     And the user clicks the button/link            link=Invite robot test application
     When the user clicks the button/link           link=Application team
-    When the user clicks the button/link           jQuery=a:contains("Update and add contributors from ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
-    Then the user should see the text in the page  Update ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    When the user clicks the button/link           jQuery=a:contains("Update and add contributors from org2")
+    Then the user should see the text in the page  Update org2    #forularise
     And the user clicks the button/link            jQuery=button:contains("Add another contributor")
     When The user enters text to a text field      name=stagedInvite.name    Roger Axe
     And The user enters text to a text field       name=stagedInvite.email    ${test_mailbox_one}+inviteorg2@gmail.com
@@ -262,16 +269,19 @@ Lead should not see pending status for accepted invite
     Logging in and Error Checking               &{lead_applicant_credentials}
     When the user clicks the button/link        link=Invite robot test application
     And the user clicks the button/link         link=Application team
-    And the user clicks the button/link         link=Update and add contributors from ${EMPIRE_LTD_NAME}
-    Then the user should see the element         jQuery=.table-overflow td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
+    And the user clicks the button/link         link=Update and add contributors from org2   #formularise?
+    Then the user should see the element        jQuery=.table-overflow td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
     [Teardown]  logout as user
 
 The guest user applies to a competition and creates account
     [Documentation]  IFS-2440
     [Tags]  HappyPath  Email
+    #Login?
     # Business organisation type - Competition:Aerospace technology investment sector
-    Given the user applies to competition and enters organisation type  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  radio-1
+    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  radio-1
     Then the user creates an account and signs in
+    #Then logged in user applies to competition   ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   1
+
 
 New Lead Applicant invites new user as collaborator on his application
     [Documentation]  IFS-2440
@@ -285,6 +295,12 @@ New Lead Applicant invites new user as collaborator on his application
 *** Keywords ***
 The lead applicant should have the correct status
     the user should see the element  jQuery=h2:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
+    the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
+    the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
+
+The lead applicant should have the correct org status
+    the user should see the element  jQuery=h2:contains("org2"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")   #forularise
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
@@ -325,7 +341,7 @@ the applicant's inputs should be visible
     Should Be Equal As Strings     ${input_value}    Collaborator 3
 
 the user creates an account and signs in
-    The user selects his organisation in Companies House       worth it  WORTH IT LTD
+    #The user selects his organisation in Companies House       worth it  WORTH IT LTD  #Removed for 01 suite
     The user enters the details and clicks the create account  Kevin  FamName  ${newLeadApplicant}  ${correct_password}
     The user reads his email and clicks the link               ${newLeadApplicant}  Please verify your email address  You have recently set up an account
     The user should be redirected to the correct page          ${REGISTRATION_VERIFIED}

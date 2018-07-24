@@ -8,17 +8,16 @@ import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
-import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -35,7 +34,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -72,16 +70,13 @@ public class DefaultFinanceModelManagerTest {
     private OrganisationService organisationService;
 
     @Mock
-	private OrganisationDetailsRestService organisationDetailsRestService;
-
-    @Mock
     private FormInputRestService formInputRestService;
 
     @Mock
     private ApplicationService applicationService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 	
     private Model model;
     private Long applicationId;
@@ -115,7 +110,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 		
-		assertEquals(9, model.asMap().size());
+		assertEquals(8, model.asMap().size());
 		verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
 	}
 	
@@ -132,7 +127,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 		
-		assertEquals(9, model.asMap().size());
+		assertEquals(8, model.asMap().size());
 		verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
 	}
 	
@@ -149,7 +144,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 
-		assertEquals(9, model.asMap().size());
+		assertEquals(8, model.asMap().size());
 		verify(financeFormHandler).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
 	}
 
@@ -157,7 +152,7 @@ public class DefaultFinanceModelManagerTest {
 			Long organisationId, ApplicationResource application, CompetitionResource competition,
 			FinanceFormHandler financeFormHandler) {
 		when(applicationService.getById(applicationId)).thenReturn(application);
-		when(competitionService.getById(competitionId)).thenReturn(competition);
+		when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 	
 		ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().withOrganisation(organisationId).build();
 		Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = MapFunctions.asMap(FinanceRowType.LABOUR, new LabourCostCategory());
@@ -182,7 +177,5 @@ public class DefaultFinanceModelManagerTest {
 
 		OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(organisationTypeResource.getId()).withOrganisationTypeName(organisationTypeName).withOrganisationType().build();
 		when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
-
-		when(organisationDetailsRestService.getOrganisationSizes()).thenReturn(restSuccess(new ArrayList<>()));
 	}
 }

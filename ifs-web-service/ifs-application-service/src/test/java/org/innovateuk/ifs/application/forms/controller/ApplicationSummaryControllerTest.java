@@ -3,12 +3,12 @@ package org.innovateuk.ifs.application.forms.controller;
 import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategorySummaryModelPopulator;
-import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
-import org.innovateuk.ifs.application.common.populator.SummaryViewModelPopulator;
+import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategorySummaryModelPopulator;
+import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.summary.controller.ApplicationSummaryController;
@@ -23,6 +23,7 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -64,7 +65,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
     @Spy
     @InjectMocks
-    private SummaryViewModelPopulator summaryViewModelPopulator;
+    private SummaryViewModelFragmentPopulator summaryViewModelPopulator;
 
     @Spy
     @InjectMocks
@@ -108,6 +109,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     @Mock
     private ProjectService projectService;
 
+    @Mock
+    private InviteService inviteService;
+
     @Override
     protected ApplicationSummaryController supplyControllerUnderTest() {
         return new ApplicationSummaryController();
@@ -130,7 +134,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testApplicationSummaryWithProjectWithdrawn() throws Exception {
+    public void applicationSummaryWithProjectWithdrawn() throws Exception {
         CompetitionResource competition = competitionResources.get(0);
         competition.setCompetitionStatus(PROJECT_SETUP);
 
@@ -146,7 +150,7 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
     }
 
     @Test
-    public void testApplicationSummary() throws Exception {
+    public void applicationSummary() throws Exception {
         ApplicationResource app = applications.get(0);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));

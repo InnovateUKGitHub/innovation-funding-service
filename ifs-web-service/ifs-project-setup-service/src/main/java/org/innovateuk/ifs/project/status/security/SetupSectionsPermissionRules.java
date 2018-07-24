@@ -4,12 +4,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
@@ -45,7 +45,7 @@ public class SetupSectionsPermissionRules {
     private ApplicationService applicationService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private StatusService statusService;
@@ -90,7 +90,7 @@ public class SetupSectionsPermissionRules {
     private boolean isPartnerProjectLocationRequired(ProjectCompositeId projectCompositeId) {
         ProjectResource project = projectService.getById(projectCompositeId.id());
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
-        CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
         return competition.isLocationPerPartner();
     }

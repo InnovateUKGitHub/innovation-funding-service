@@ -82,7 +82,19 @@ Create new application with the same user
     the user navigates to the page        ${openCompetitionBusinessRTO_overview}
     the user clicks the button/link       jQuery=a:contains("Start new application")
     check if there is an existing application in progress for this competition
-    the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
+    #Here, add org selection etc
+        the user selects the radio button   organisationTypeId  1      #forularise
+        the user clicks the button/link     jQuery = button:contains("Save and continue")
+        the user clicks the Not on company house link
+        the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
+        the user clicks the button/link            jQuery = .button:contains("Find UK address")
+        the user clicks the button/link            jQuery = .button:contains("Find UK address")
+        the user clicks the button/link            css=#select-address-block > button
+        the user clicks the button/link            jQuery=.button:contains("Continue")
+        the user clicks the button/link            jQuery=.button:contains("Save and continue")
+        the user clicks the button/link            id=application-question-save
+    #To here
+    #the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
     the user clicks the button/link       link=Application details
     the user enters text to a text field  css=[id="application.name"]  ${Application_title}
     the user clicks the button/link       jQuery=button:contains("Save and return")
@@ -197,7 +209,7 @@ the user verifies email
     The guest user inserts user email and password             ${EMAIL_INVITED}  ${correct_password}
     The guest user clicks the log-in button
 
-the user follows the flow to register their organisation
+the user follows the flow to register their organisation   #This could be used instead of the one I wrote??
     [Arguments]   ${org_type_id}
     the user clicks the button/link         jQuery=a:contains("Start new application")
     the user clicks the button/link         link=Continue without an account

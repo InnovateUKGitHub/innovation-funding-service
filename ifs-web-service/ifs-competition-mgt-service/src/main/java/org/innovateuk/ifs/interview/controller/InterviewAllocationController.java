@@ -3,10 +3,10 @@ package org.innovateuk.ifs.interview.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.form.InterviewAllocationNotifyForm;
 import org.innovateuk.ifs.interview.form.InterviewAllocationSelectionForm;
@@ -15,7 +15,7 @@ import org.innovateuk.ifs.interview.model.InterviewAcceptedAssessorsModelPopulat
 import org.innovateuk.ifs.interview.model.UnallocatedInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.interview.resource.InterviewNotifyAllocationResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
-import org.innovateuk.ifs.management.application.populator.AllocateInterviewApplicationsModelPopulator;
+import org.innovateuk.ifs.interview.AllocateInterviewApplicationsModelPopulator;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.navigation.NavigationOrigin;
@@ -72,7 +72,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
     private InterviewAllocationRestService interviewAllocationRestService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Override
     protected String getCookieName() {
@@ -89,7 +89,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam MultiValueMap<String, String> queryParams,
                            @RequestParam(value = "page", defaultValue = "0") int page) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         String originQuery = buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.INTERVIEW_ALLOCATION, queryParams);
 
@@ -163,7 +163,7 @@ public class InterviewAllocationController extends CompetitionManagementCookieCo
         return ifSelectionFormIsNotEmpty(competitionId, userId, request, selectionForm -> {
             model.addAttribute("model", allocateInterviewApplicationsModelPopulator.populateModel(competitionId, userId, selectionForm.getSelectedIds()));
             model.addAttribute("form", form);
-            CompetitionResource competition = competitionService.getById(competitionId);
+            CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
             form.setSubject(format("Applications for interview panel for '%s'", competition.getName()));
             queryParams.put("assessorId", singletonList(String.valueOf(userId)));
             String originQuery = buildOriginQueryString(NavigationOrigin.INTERVIEW_PANEL_ALLOCATE, queryParams);

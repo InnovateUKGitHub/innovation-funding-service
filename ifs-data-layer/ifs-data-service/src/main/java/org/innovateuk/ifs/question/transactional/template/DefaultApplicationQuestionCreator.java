@@ -38,9 +38,10 @@ public class DefaultApplicationQuestionCreator {
         FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
 
         FormInput maxWordCountInput = buildApplicantTextInput(competition, notEmptyValidator, wordCountValidator);
-        FormInput questionScoreInput = buildQuestionScoreInput(competition, notEmptyValidator);
-        FormInput feedbackInput = buildFeedbackInput(competition, notEmptyValidator, wordCountValidator);
         FormInput appendixInput = buildAppendixInput(competition);
+
+        FormInput feedbackInput = buildFeedbackInput(competition, notEmptyValidator, wordCountValidator);
+        FormInput questionScoreInput = buildQuestionScoreInput(competition, notEmptyValidator);
 
         Question question = new Question();
         question.setCompetition(competition);
@@ -72,7 +73,7 @@ public class DefaultApplicationQuestionCreator {
         input.setType(FormInputType.ASSESSOR_SCORE);
         input.setCompetition(competition);
         input.setIncludedInApplicationSummary(false);
-        input.setPriority(0);
+        input.setPriority(1);
         input.setDescription("Feedback");
         input.setScope(FormInputScope.ASSESSMENT);
         input.setActive(true);

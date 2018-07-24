@@ -34,7 +34,6 @@ Requesting the id of this Competition and moving to Open
     Set suite variable  ${competitionId}
     The competition moves to Open state  ${competitionId}
 
-#Below is currently failing
 Applicant Applies to Generic competition and is able to see the Ts&Cs
     [Documentation]  IFS-1012  IFS-2879
     [Tags]

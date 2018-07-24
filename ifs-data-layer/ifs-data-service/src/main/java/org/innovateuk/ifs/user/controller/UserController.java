@@ -223,7 +223,7 @@ public class UserController {
     }
 
     @PostMapping("{id}/grant/{role}")
-    public RestResult<Void> grantRole(@PathVariable("id") final Long id,
+    public RestResult<Void> grantRole(@PathVariable("id") final long id,
                                            @PathVariable("role") final Role role) {
         return userService.grantRole(new GrantRoleCommand(id, role)).toPostResponse();
     }
