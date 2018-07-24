@@ -57,6 +57,7 @@ dependencies {
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
 
     testCompile "net.sf.opencsv:opencsv:2.3"
 

@@ -1,15 +1,16 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
+import org.innovateuk.ifs.ApplicationModelPopulator;
+import org.innovateuk.ifs.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummaryViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
-import org.innovateuk.ifs.application.populator.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.ApplicationModelPopulator;
-import org.innovateuk.ifs.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.populator.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
@@ -24,7 +25,6 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;

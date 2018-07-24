@@ -14,7 +14,7 @@ import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -51,7 +51,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private UserService userService;
 
     @Mock
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private ProjectService projectService;
@@ -136,7 +136,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(userService.getLeadApplicantProcessRoleOrNull(projectResource.getApplication())).thenReturn(processRoleResource);
 
-        when(organisationService.getOrganisationById(processRoleResource.getOrganisationId())).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationById(processRoleResource.getOrganisationId())).thenReturn(restSuccess(organisationResource));
 
         OrganisationResource returnedOrganisationResource = service.getLeadOrganisation(projectResource.getId());
 
