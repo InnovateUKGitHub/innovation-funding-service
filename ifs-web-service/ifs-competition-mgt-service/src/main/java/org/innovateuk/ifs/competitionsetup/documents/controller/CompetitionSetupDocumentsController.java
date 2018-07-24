@@ -120,7 +120,7 @@ public class CompetitionSetupDocumentsController {
         return String.format("redirect:/competition/setup/%d/section/documents/landing-page", competitionId);
     }
 
-    @PostMapping("/document/{documentId}/edit", params = "removeDocument")
+    @PostMapping(value = "/document/{documentId}/edit", params = "removeDocument")
     public String removeDocumentInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                             @PathVariable("documentId") Long documentId,
                                             Model model) {
