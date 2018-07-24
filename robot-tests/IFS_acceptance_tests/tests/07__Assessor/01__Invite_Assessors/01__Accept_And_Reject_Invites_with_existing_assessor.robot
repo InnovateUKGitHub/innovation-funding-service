@@ -57,16 +57,11 @@ Assessor dashboard contains the correct competitions
     And The user should see the element       jQuery=h2:contains("Upcoming competitions to assess") ~ ul a:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
     And The user should see the element       jQuery=h2:contains("Invitations to assess")
 
-Competition brief link can be seen
-    [Documentation]    INFUND-5494
-    [Tags]
-    When the user clicks the button/link        link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    Then The user opens the link in new window  View competition brief
-
 User can view the competition brief
     [Documentation]    INFUND-5494
     [Tags]
-    When The user opens the link in new window  View competition brief
+    When the user clicks the button/link        link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    And The user opens the link in new window  View competition brief
     Then The user should get a competition brief window
     And the user should not see an error in the page
     And the user should see the element         jQuery=h1:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
