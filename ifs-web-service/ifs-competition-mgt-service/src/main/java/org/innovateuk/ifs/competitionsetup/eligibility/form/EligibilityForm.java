@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * Form for the eligibility competition setup section.
  */
-@FieldRequiredIf(required = "fundingLevelPercentage", argument = "overrideFundingRules", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "fundingLevelPercentage", argument = "overrideFundingRules", predicate = true, message = "{validation.eligibilityform.fundingLevel.required}")
 public class EligibilityForm extends CompetitionSetupForm {
 
     @NotBlank(message = "{validation.eligibilityform.multiplestream.required}")

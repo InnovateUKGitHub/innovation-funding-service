@@ -88,7 +88,7 @@
                 <fieldset class="inline">
                     <legend id="overrideFundingRules">
                         <span class="form-label-bold">Override funding rules</span>
-                        <span class="hint">Do you want to override the standard funding rules and manually set the percentage that business can apply for?</span>
+                        <span class="hint">Do you want to override the standard <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules">funding rules</a> and manually set the percentage that business can apply for?</span>
                         <th:block th:if="${#fields.hasErrors('overrideFundingRules')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('overrideFundingRules')}" th:text="${err}"></span>
                         </th:block>
@@ -133,6 +133,9 @@
                                 id="fundingLevels"
                                 required="required"
                                 th:attr="data-required-errormessage=#{validation.eligibilityform.fundingLevel.required}">
+                            <option value=""
+                                    disabled="disabled"
+                                    th:selected="${competitionSetupForm.fundingLevelPercentage == null}">Please select &hellip;</option>
                             <option th:each="fundingLevel : ${model.fundingLevels}"
                                     th:text="${fundingLevel.textValue}"
                                     th:value="${fundingLevel.percentage}"

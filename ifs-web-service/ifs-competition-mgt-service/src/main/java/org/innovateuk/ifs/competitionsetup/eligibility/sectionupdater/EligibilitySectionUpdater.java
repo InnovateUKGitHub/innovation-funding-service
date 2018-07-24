@@ -78,10 +78,22 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
             competition.setStreamName(null);
         }
 
-        Set<GrantClaimMaximumResource> gcms = getBusinessTypeGrantClaimMaximumsForCompetition(competition);
+        handleGrantClaimMaximumChanges(competition, eligibilityForm);
 
+        competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
+
+        CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
+        competition.setCollaborationLevel(level);
+        competition.setLeadApplicantTypes(eligibilityForm.getLeadApplicantTypes());
+
+        return competitionSetupRestService.update(competition).toServiceResult();
+    }
+
+    private void handleGrantClaimMaximumChanges(CompetitionResource competition,
+                                                EligibilityForm eligibilityForm) {
+        Set<GrantClaimMaximumResource> businessGcms = getBusinessTypeGrantClaimMaximumsForCompetition(competition);
         if (eligibilityForm.getOverrideFundingRules()) {
-            gcms.forEach(oldGCM -> {
+            businessGcms.forEach(oldGCM -> {
                 GrantClaimMaximumResource toSaveGCM = createNewGCM(oldGCM, eligibilityForm.getFundingLevelPercentage());
 
                 if (!toSaveGCM.getMaximum().equals(oldGCM.getMaximum())) {
@@ -95,22 +107,17 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
         } else {
             CompetitionResource templateCompetition = competitionRestService.findTemplateCompetitionForCompetitionType(
                     competition.getCompetitionType()).getSuccess();
-
             Set<GrantClaimMaximumResource> gcmsTemplate = getBusinessTypeGrantClaimMaximumsForCompetition(templateCompetition);
-            Set<Long> gcmsTemplateIds = grantClaimMaximumToIdSet(gcmsTemplate);
-            Set<Long> gcmsIds = grantClaimMaximumToIdSet(gcms);
 
+            Set<Long> gcmsTemplateIds = grantClaimMaximumToIdSet(gcmsTemplate);
+            Set<Long> gcmsIds = grantClaimMaximumToIdSet(businessGcms);
+
+            // remove the old
             competition.getGrantClaimMaximums().removeAll(gcmsIds);
+
+            //save the new
             competition.getGrantClaimMaximums().addAll(gcmsTemplateIds);
         }
-
-        competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
-
-        CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
-        competition.setCollaborationLevel(level);
-        competition.setLeadApplicantTypes(eligibilityForm.getLeadApplicantTypes());
-
-        return competitionSetupRestService.update(competition).toServiceResult();
     }
 
     private GrantClaimMaximumResource createNewGCM(GrantClaimMaximumResource oldGCM, Integer newValue) {

@@ -7,7 +7,7 @@ import java.util.Set;
 
 public interface GrantClaimMaximumRestService {
 
-    RestResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id);
-
     RestResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource);
+
+    RestResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id);
 }
