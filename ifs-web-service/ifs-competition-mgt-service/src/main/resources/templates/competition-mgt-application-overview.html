@@ -11,7 +11,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkUrl=@{(${backUrl.contains(T(org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationService).PROJECT_SETUP_MANAGEMENT_SERVICE)} ? ${'~'+backUrl} : ${backUrl})})" />
+    <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='govuk-back-link',linkUrl=@{(${backUrl.contains(T(org.innovateuk.ifs.management.application.service.CompetitionManagementApplicationService).PROJECT_SETUP_MANAGEMENT_SERVICE)} ? ${'~'+backUrl} : ${backUrl})})" />
 
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -79,7 +79,9 @@
                     <h3 class="govuk-heading-s govuk-!-margin-0" th:text="${appendix.title}">
                         View project management appendix:
                     </h3>
-                    <a target="_blank" th:href="${appendix.getDownloadURL()}"
+                    <a target="_blank"
+                       class="govuk-link"
+                       th:href="${appendix.getDownloadURL()}"
                        th:text="${appendix.name + ', ' + appendix.getHumanReadableFileSize() + ' (opens in a new window)'}">
                         Project-plan.pdf (161.96 KB)
                     </a>
