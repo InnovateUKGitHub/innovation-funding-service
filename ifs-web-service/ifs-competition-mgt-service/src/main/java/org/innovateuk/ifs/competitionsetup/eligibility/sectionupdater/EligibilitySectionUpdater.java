@@ -35,11 +35,14 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
 
     private CompetitionSetupRestService competitionSetupRestService;
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
+    private CompetitionRestService competitionRestService;
 
     public EligibilitySectionUpdater(CompetitionSetupRestService competitionSetupRestService,
-                                     GrantClaimMaximumRestService grantClaimMaximumRestService) {
+                                     GrantClaimMaximumRestService grantClaimMaximumRestService,
+                                     CompetitionRestService competitionRestService) {
         this.competitionSetupRestService = competitionSetupRestService;
         this.grantClaimMaximumRestService = grantClaimMaximumRestService;
+        this.competitionRestService = competitionRestService;
     }
 
     @Override
@@ -75,23 +78,31 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
             competition.setStreamName(null);
         }
 
-        Set<GrantClaimMaximumResource> gcms = competition.getGrantClaimMaximums()
-                .stream()
-                .map(id -> grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess())
-                .filter(gcm -> gcm.getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId()))
-                .collect(Collectors.toSet());
+        Set<GrantClaimMaximumResource> gcms = getBusinessTypeGrantClaimMaximumsForCompetition(competition);
 
-        gcms.forEach(oldGCM -> {
-            GrantClaimMaximumResource toSaveGCM = createNewGCM(oldGCM, eligibilityForm.getFundingLevelPercentage());
+        if (eligibilityForm.getOverrideFundingRules()) {
+            gcms.forEach(oldGCM -> {
+                GrantClaimMaximumResource toSaveGCM = createNewGCM(oldGCM, eligibilityForm.getFundingLevelPercentage());
 
-            if (!toSaveGCM.getMaximum().equals(oldGCM.getMaximum())) {
-                // remove the old
-                competition.getGrantClaimMaximums().remove(oldGCM.getId());
-                // save the new
-                GrantClaimMaximumResource saved = grantClaimMaximumRestService.save(toSaveGCM).getSuccess();
-                competition.getGrantClaimMaximums().add(saved.getId());
-            }
-        });
+                if (!toSaveGCM.getMaximum().equals(oldGCM.getMaximum())) {
+                    // remove the old
+                    competition.getGrantClaimMaximums().remove(oldGCM.getId());
+                    // save the new
+                    GrantClaimMaximumResource saved = grantClaimMaximumRestService.save(toSaveGCM).getSuccess();
+                    competition.getGrantClaimMaximums().add(saved.getId());
+                }
+            });
+        } else {
+            CompetitionResource templateCompetition = competitionRestService.findTemplateCompetitionForCompetitionType(
+                    competition.getCompetitionType()).getSuccess();
+
+            Set<GrantClaimMaximumResource> gcmsTemplate = getBusinessTypeGrantClaimMaximumsForCompetition(templateCompetition);
+            Set<Long> gcmsTemplateIds = grantClaimMaximumToIdSet(gcmsTemplate);
+            Set<Long> gcmsIds = grantClaimMaximumToIdSet(gcms);
+
+            competition.getGrantClaimMaximums().removeAll(gcmsIds);
+            competition.getGrantClaimMaximums().addAll(gcmsTemplateIds);
+        }
 
         competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
 
@@ -110,6 +121,18 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
         newGcm.setCompetitionType(oldGCM.getCompetitionType());
         newGcm.setMaximum(newValue);
         return newGcm;
+    }
+
+    private Set<GrantClaimMaximumResource> getBusinessTypeGrantClaimMaximumsForCompetition(CompetitionResource competition) {
+        return competition.getGrantClaimMaximums()
+                .stream()
+                .map(id -> grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess())
+                .filter(gcm -> gcm.getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId()))
+                .collect(Collectors.toSet());
+    }
+
+    private Set<Long> grantClaimMaximumToIdSet(Set<GrantClaimMaximumResource> gcms) {
+        return gcms.stream().map(GrantClaimMaximumResource::getId).collect(Collectors.toSet());
     }
 
     @Override
