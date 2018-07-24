@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.populator.section;
+package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.form.ApplicationForm;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.populator;
+package org.innovateuk.ifs.application.forms.researchcategory.populator;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;

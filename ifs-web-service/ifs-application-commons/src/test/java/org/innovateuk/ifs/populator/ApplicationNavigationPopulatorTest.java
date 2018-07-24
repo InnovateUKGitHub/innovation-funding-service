@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.application.populator;
+package org.innovateuk.ifs.populator;
 
+import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;

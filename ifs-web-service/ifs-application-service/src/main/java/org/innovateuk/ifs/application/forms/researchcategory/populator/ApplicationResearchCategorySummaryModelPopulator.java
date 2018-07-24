@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.forms.researchcategory.populator;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.researchcategory.viewmodel.ResearchCategorySummaryViewModel;
-import org.innovateuk.ifs.application.populator.AbstractLeadOnlyModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;

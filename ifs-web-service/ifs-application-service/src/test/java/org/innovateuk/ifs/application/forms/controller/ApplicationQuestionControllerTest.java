@@ -27,7 +27,6 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.populator.ApplicationSectionAndQuestionModelPopulator;
-import org.innovateuk.ifs.populator.OpenSectionModelPopulator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

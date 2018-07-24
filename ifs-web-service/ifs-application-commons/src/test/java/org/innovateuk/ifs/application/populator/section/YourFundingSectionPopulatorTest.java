@@ -1,15 +1,19 @@
 package org.innovateuk.ifs.application.populator.section;
 
-
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
+import org.innovateuk.ifs.application.populator.YourFundingSectionPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
-import org.innovateuk.ifs.application.viewmodel.section.YourOrganisationSectionViewModel;
-import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.application.viewmodel.section.YourFundingSectionViewModel;
+import org.innovateuk.ifs.form.ApplicationForm;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -18,33 +22,33 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
-import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests for {@link YourOrganisationSectionPopulator}
+ * Tests for {@link YourFundingSectionPopulator}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class YourOrganisationSectionPopulatorTest {
+public class YourFundingSectionPopulatorTest {
 
     @InjectMocks
-    private YourOrganisationSectionPopulator yourOrganisationSectionPopulator;
+    private YourFundingSectionPopulator yourFundingSectionPopulator;
 
     @Mock
     private ApplicationNavigationPopulator navigationPopulator;
@@ -54,6 +58,12 @@ public class YourOrganisationSectionPopulatorTest {
 
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
+
+    @Mock
+    QuestionRestService questionRestService;
+
+    @Mock
+    QuestionService questionService;
 
     @Test
     public void testPopulate() {
@@ -67,30 +77,25 @@ public class YourOrganisationSectionPopulatorTest {
         ApplicationForm form = mock(ApplicationForm.class);
         Model model = mock(Model.class);
         BindingResult bindingResult = mock(BindingResult.class);
+        AbstractFormInputViewModel formInputViewModel = mock(AbstractFormInputViewModel.class);
 
-        AbstractFormInputViewModel organisationSize = mock(AbstractFormInputViewModel.class);
-        AbstractFormInputViewModel financialYearEnd = mock(AbstractFormInputViewModel.class);
-        AbstractFormInputViewModel overviewRow = mock(AbstractFormInputViewModel.class);
+        QuestionResource researchQuestion = newQuestionResource().build();
+        SectionResource yourOrganisationSection = newSectionResource().build();
 
-        List<AbstractFormInputViewModel> formInputViewModels = asList(organisationSize, financialYearEnd, overviewRow);
+        when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(asList(yourOrganisationSection.getId()));
+        when(formInputViewModelGenerator.fromSection(section, section, form, false)).thenReturn(asList(formInputViewModel));
+        when(questionService.getQuestionStatusesForApplicationAndOrganisation(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(asMap(researchQuestion.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build()));
+        when(sectionService.getOrganisationFinanceSection(section.getCompetition().getId())).thenReturn(yourOrganisationSection);
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(section.getCompetition().getId(), QuestionSetupType.RESEARCH_CATEGORY)).thenReturn(restSuccess(researchQuestion));
 
-        when(organisationSize.getFormInput()).thenReturn(newFormInputResource().withType(FormInputType.ORGANISATION_SIZE).build());
-        when(financialYearEnd.getFormInput()).thenReturn(newFormInputResource().withType(FormInputType.FINANCIAL_YEAR_END).build());
-        when(overviewRow.getFormInput()).thenReturn(newFormInputResource().withType(FormInputType.FINANCIAL_OVERVIEW_ROW).build());
-        when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(emptyList());
-        when(formInputViewModelGenerator.fromSection(section, section, form, false)).thenReturn(formInputViewModels);
-
-        YourOrganisationSectionViewModel viewModel = yourOrganisationSectionPopulator.populate(section, form, model, bindingResult, false, Optional.of(2L), true);
+        YourFundingSectionViewModel viewModel = yourFundingSectionPopulator.populate(section, form, model, bindingResult, false, Optional.empty(), false);
 
         assertThat(viewModel.isSection(), equalTo(true));
         assertThat(viewModel.isComplete(), equalTo(false));
-        assertThat(viewModel.getFormInputViewModels(), equalTo(formInputViewModels));
-        assertThat(viewModel.getOrganisationSizeFormInputViewModel(), equalTo(organisationSize));
-        assertThat(viewModel.getFinancialEndYearFormInputViewModel(), equalTo(financialYearEnd));
-        assertThat(viewModel.getFinanceOverviewRows(), equalTo(singletonList(overviewRow)));
-        assertThat(viewModel.getStandardInputViewModels(), equalTo(emptyList()));
-        assertThat(viewModel.getApplicantOrganisationId(), equalTo(2L));
-        assertThat(viewModel.isReadOnlyAllApplicantApplicationFinances(), equalTo(true));
+        assertThat(viewModel.getFormInputViewModels(), equalTo(asList(formInputViewModel)));
+        assertThat(viewModel.isFundingSectionLocked(), equalTo(false));
+        assertThat(viewModel.getResearchCategoryQuestionId(), equalTo(researchQuestion.getId()));
+        assertThat(viewModel.getYourOrganisationSectionId(), equalTo(yourOrganisationSection.getId()));
     }
 
 }
