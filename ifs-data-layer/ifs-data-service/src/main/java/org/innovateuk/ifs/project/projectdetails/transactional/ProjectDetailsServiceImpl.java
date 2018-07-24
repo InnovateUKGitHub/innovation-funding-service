@@ -450,10 +450,4 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private String getInviteUrl(String baseUrl, InviteProjectResource inviteResource) {
         return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
     }
-
-    private ServiceResult<Boolean> handleInviteError(ProjectInvite i, ServiceFailure failure) {
-        LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
-        List<Error> errors = failure.getErrors();
-        return serviceFailure(errors);
-    }
 }

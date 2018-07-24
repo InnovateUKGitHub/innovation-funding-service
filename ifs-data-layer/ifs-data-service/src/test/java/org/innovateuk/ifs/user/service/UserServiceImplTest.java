@@ -214,6 +214,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         service.sendPasswordResetNotification(user).getSuccess();
 
         verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
+        verify(randomHashSupplierMock).get();
     }
 
     @Test

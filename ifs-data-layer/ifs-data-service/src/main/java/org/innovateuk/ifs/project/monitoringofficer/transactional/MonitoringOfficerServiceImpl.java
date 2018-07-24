@@ -146,8 +146,19 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
         NotificationTarget moTarget = createMonitoringOfficerNotificationTarget(monitoringOfficer);
         NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
 
-        Notification moNotification = new Notification(systemNotificationSource, moTarget, Notifications.MONITORING_OFFICER_ASSIGNED, createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager));
-        Notification pmNotification = new Notification(systemNotificationSource, pmTarget, Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER, createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager));
+        Notification moNotification = new Notification(systemNotificationSource,
+                                                       moTarget,
+                                                       Notifications.MONITORING_OFFICER_ASSIGNED,
+                                                       createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer,
+                                                                                                         project,
+                                                                                                         projectManager));
+
+        Notification pmNotification = new Notification(systemNotificationSource,
+                                                       pmTarget,
+                                                       Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
+                                                       createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer,
+                                                                                                         project,
+                                                                                                         projectManager));
 
         return notificationService.sendNotificationWithFlush(moNotification, EMAIL).andOnSuccess(() ->
                notificationService.sendNotificationWithFlush(pmNotification, EMAIL));

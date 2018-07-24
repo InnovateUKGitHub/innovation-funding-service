@@ -51,6 +51,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     static final DateTimeFormatter INVITE_DATE_FORMAT = ofPattern("d MMMM yyyy");
 
+    private final String REVIEW_APPLICATIONS_EMAIL_SUBJECT = "Applications ready for review";
+
     @Autowired
     private ApplicationRepository applicationRepository;
 
@@ -211,7 +213,7 @@ public class ReviewServiceImpl implements ReviewService {
                 recipient,
                 notificationType,
                 asMap(
-                        "subject", "Applications ready for review",
+                        "subject", REVIEW_APPLICATIONS_EMAIL_SUBJECT,
                         "name", review.getParticipant().getUser().getName(),
                         "competitionName", review.getTarget().getCompetition().getName(),
                         "panelDate", review.getTarget().getCompetition().getAssessmentPanelDate().format(INVITE_DATE_FORMAT),

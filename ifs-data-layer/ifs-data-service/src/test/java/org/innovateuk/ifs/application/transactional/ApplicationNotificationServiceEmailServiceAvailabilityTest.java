@@ -31,16 +31,13 @@ public class ApplicationNotificationServiceEmailServiceAvailabilityTest extends 
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private TestService testService;
 
     @Autowired
     private DatabaseTestHelper databaseTestHelper;
 
     @Test
-    public void informIneligible() throws SQLException {
+    public void informIneligible() {
 
         withIneligibleApplication(ineligibleApplication -> {
 
@@ -62,7 +59,7 @@ public class ApplicationNotificationServiceEmailServiceAvailabilityTest extends 
     }
 
     @Test
-    public void notifyApplicantsByCompetition() throws SQLException {
+    public void notifyApplicantsByCompetition() {
 
         long fundingDecisionApplicationCompetition = testService.doWithinTransaction(() -> {
             Application approvedApplication = applicationRepository.findByApplicationProcessActivityStateIn(singleton(ApplicationState.APPROVED)).findFirst().get();
@@ -79,7 +76,7 @@ public class ApplicationNotificationServiceEmailServiceAvailabilityTest extends 
     }
 
     @Test
-    public void sendNotificationApplicationSubmitted() throws SQLException {
+    public void sendNotificationApplicationSubmitted() {
 
         Application submittedApplication = testService.doWithinTransaction(() -> {
             Application application = applicationRepository.findByApplicationProcessActivityStateIn(singleton(ApplicationState.SUBMITTED)).findFirst().get();

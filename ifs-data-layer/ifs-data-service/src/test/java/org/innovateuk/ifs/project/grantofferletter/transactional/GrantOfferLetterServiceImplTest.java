@@ -821,7 +821,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Notification notification = new Notification(systemNotificationSource, to, GRANT_OFFER_LETTER_PROJECT_MANAGER, expectedNotificationArguments);
         when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
 
-        User user = UserBuilder.newUser().build();
+        User user = newUser().build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 

@@ -26,7 +26,7 @@ public class DatabaseTestHelper {
     private String databasePassword;
 
     /**
-     * Assert that no database changes occur durinh the running of the given action
+     * Assert that no database changes occur during the running of the given action
      */
     public void assertingNoDatabaseChangesOccur(Runnable action) {
 
@@ -37,7 +37,7 @@ public class DatabaseTestHelper {
     }
 
     /**
-     * Assert that no database changes occur durinh the running of the given action
+     * Assert that no database changes occur during the running of the given action
      */
     public <T> T assertingNoDatabaseChangesOccur(Supplier<T> action) {
 

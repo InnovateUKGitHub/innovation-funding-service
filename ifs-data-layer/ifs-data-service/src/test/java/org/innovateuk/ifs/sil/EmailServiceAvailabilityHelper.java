@@ -31,7 +31,7 @@ public class EmailServiceAvailabilityHelper {
     }
 
     /**
-     * Temporarily swaps out the SIL Email Service's Rest Template out for a mock one during a test run, and restores the
+     * Temporarily swaps the SIL Email Service's Rest Template out for a mock one during a test run, and restores the
      * original afterwards
      */
     void withMockSilEmailRestTemplate(Consumer<AbstractRestTemplateAdaptor> testCode) {

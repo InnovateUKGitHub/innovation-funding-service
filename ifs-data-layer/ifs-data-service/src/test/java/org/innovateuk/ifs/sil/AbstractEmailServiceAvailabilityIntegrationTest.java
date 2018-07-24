@@ -34,7 +34,7 @@ public abstract class AbstractEmailServiceAvailabilityIntegrationTest extends Ba
     }
 
     /**
-     * Temporarily swaps out the SIL Email Service's Rest Template out for a mock one during a test run, and restores the
+     * Temporarily swaps the SIL Email Service's Rest Template out for a mock one during a test run, and restores the
      * original afterwards
      */
     public void withMockSilEmailRestTemplate(Consumer<AbstractRestTemplateAdaptor> testCode) {

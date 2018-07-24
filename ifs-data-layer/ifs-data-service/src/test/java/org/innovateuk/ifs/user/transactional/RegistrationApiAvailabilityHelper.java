@@ -45,7 +45,7 @@ class RegistrationApiAvailabilityHelper {
     }
 
     /**
-     * Temporarily swaps out the IDP Service's Rest Template out for a mock one during a test run, and restores the
+     * Temporarily swaps the IDP Service's Rest Template out for a mock one during a test run, and restores the
      * original afterwards
      */
     void withMockIdpRestTemplate(Consumer<AbstractRestTemplateAdaptor> testCode) {

@@ -28,6 +28,9 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
+/**
+ * Service for managing notifications around registration
+ */
 @Service
 class RegistrationNotificationService {
 

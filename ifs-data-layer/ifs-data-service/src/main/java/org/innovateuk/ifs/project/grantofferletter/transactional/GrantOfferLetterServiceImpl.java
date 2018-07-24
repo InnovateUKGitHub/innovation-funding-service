@@ -508,7 +508,11 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
 
             return sendGrantOfferLetterSuccess(project).andOnSuccess(() -> {
-                Notification notification = new Notification(systemNotificationSource, singletonList(pmTarget), NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
+                Notification notification = new Notification(systemNotificationSource,
+                                                             singletonList(pmTarget),
+                                                             NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER,
+                                                             notificationArguments);
+
                 return notificationService.sendNotificationWithFlush(notification, EMAIL);
             });
         });

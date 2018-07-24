@@ -1129,6 +1129,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
 
         verify(projectInviteRepositoryMock).save(projectInvite);
+        verify(inviteProjectMapperMock).mapToDomain(inviteResource);
     }
 
     @Override
