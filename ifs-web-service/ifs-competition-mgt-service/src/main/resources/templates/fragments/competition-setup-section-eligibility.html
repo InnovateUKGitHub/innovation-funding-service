@@ -233,6 +233,14 @@
                 <dt>Lead applicant</dt>
                 <dd th:text="${model.leadApplicantTypesText}"></dd>
 
+                <dt>Override funding rules</dt>
+                <dd th:text="${#bools.isTrue(competitionSetupForm.overrideFundingRules) ? 'Yes' : 'No'}"></dd>
+
+                <th:block th:if="${competitionSetupForm.overrideFundingRules}">
+                    <dt>Set funding level</dt>
+                    <dd th:text="${competitionSetupForm.fundingLevelPercentage + '%'}"></dd>
+                </th:block>
+
                 <th:block th:if="${!#arrays.isEmpty(model.researchParticipationAmounts)}">
                     <dt>Research participation</dt>
                     <dd th:each="(researchParticipationAmount : ${model.researchParticipationAmounts})"
