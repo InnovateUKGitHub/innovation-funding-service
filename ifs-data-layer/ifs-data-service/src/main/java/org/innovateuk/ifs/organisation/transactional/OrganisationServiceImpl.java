@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparingLong;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_COMPANY_NAME_TOO_LONG;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -64,10 +65,13 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
         final Comparator<OrganisationResource> comparator;
 
+        Comparator<OrganisationResource> normalOrgComparator = comparingLong(OrganisationResource::getId);
+
         if (leadOrganisationId != null) {
-            comparator = Comparator.comparing(organisationResource -> leadOrganisationId.equals(organisationResource.getId()), Comparator.reverseOrder());
+            Comparator<OrganisationResource> leadComparator = Comparator.comparing(organisationResource -> leadOrganisationId.equals(organisationResource.getId()), Comparator.reverseOrder());
+            comparator = leadComparator.thenComparing(normalOrgComparator);
         } else {
-            comparator = Comparator.comparingLong(OrganisationResource::getId);
+            comparator = normalOrgComparator;
         }
 
         Set<ProcessRole> applicantRoles = new HashSet<>(simpleFilter(roles, ProcessRole::isLeadApplicantOrCollaborator));

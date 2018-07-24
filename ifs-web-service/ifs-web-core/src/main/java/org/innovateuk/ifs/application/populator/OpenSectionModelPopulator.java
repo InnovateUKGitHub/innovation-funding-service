@@ -24,6 +24,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparingLong;
+
 /**
  * Class for creating the model for the open section page.
  * These are rendered in the ApplicationFormController.applicationFormWithOpenSection method
@@ -109,11 +111,13 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
                 .findAny().orElse(null);
 
         final Comparator<OrganisationResource> comparator;
+        Comparator<OrganisationResource> normalOrgComparator = comparingLong(OrganisationResource::getId);
 
         if (leadOrganisation != null) {
-            comparator = Comparator.comparing(organisationResource -> leadOrganisation.getId().equals(organisationResource.getId()), Comparator.reverseOrder());
+            Comparator<OrganisationResource> leadComparator = Comparator.comparing(organisationResource -> leadOrganisation.getId().equals(organisationResource.getId()), Comparator.reverseOrder());
+            comparator = leadComparator.thenComparing(normalOrgComparator);
         } else {
-            comparator = Comparator.comparingLong(OrganisationResource::getId);
+            comparator = normalOrgComparator;
         }
 
         final Supplier<TreeSet<OrganisationResource>> supplier = () -> new TreeSet<>(comparator);
