@@ -2,12 +2,12 @@ package org.innovateuk.ifs.application.populator.section;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
-import org.innovateuk.ifs.application.finance.view.ProjectFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
-import org.innovateuk.ifs.application.populator.BaseOpenFinanceSectionModelPopulator;
+import org.innovateuk.ifs.application.populator.finance.view.FinanceViewHandlerProvider;
+import org.innovateuk.ifs.application.populator.finance.view.ProjectFinanceOverviewModelManager;
+import org.innovateuk.ifs.application.populator.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.BaseOpenFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;

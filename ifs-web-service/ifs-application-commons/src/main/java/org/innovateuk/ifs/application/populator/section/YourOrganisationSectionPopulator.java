@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application.populator.section;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
-import org.innovateuk.ifs.application.populator.AbstractSectionPopulator;
+import org.innovateuk.ifs.application.AbstractSectionPopulator;
 import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.YourOrganisationSectionViewModel;
 import org.innovateuk.ifs.form.resource.SectionType;

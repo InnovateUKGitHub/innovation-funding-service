@@ -6,7 +6,7 @@ import org.innovateuk.ifs.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder;
-import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
+import org.innovateuk.ifs.application.populator.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationService;

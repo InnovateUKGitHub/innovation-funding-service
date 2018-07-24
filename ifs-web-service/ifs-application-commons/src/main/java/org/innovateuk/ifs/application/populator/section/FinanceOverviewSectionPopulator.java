@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.application.populator.section;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
-import org.innovateuk.ifs.application.populator.AbstractSectionPopulator;
-import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
+import org.innovateuk.ifs.application.AbstractSectionPopulator;
+import org.innovateuk.ifs.application.OpenSectionModelPopulator;
 import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.FinanceOverviewSectionViewModel;
 import org.innovateuk.ifs.form.resource.SectionType;

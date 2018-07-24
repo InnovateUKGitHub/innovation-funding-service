@@ -11,10 +11,10 @@ import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewMode
 import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewSectionModelPopulator;
 import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewUserModelPopulator;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewViewModel;
-import org.innovateuk.ifs.application.populator.ApplicationCompletedModelPopulator;
+import org.innovateuk.ifs.application.ApplicationCompletedModelPopulator;
 import org.innovateuk.ifs.ApplicationModelPopulator;
 import org.innovateuk.ifs.ApplicationSectionAndQuestionModelPopulator;
-import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;

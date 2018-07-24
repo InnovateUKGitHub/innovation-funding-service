@@ -5,7 +5,7 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.feedback.populator.AssessorQuestionFeedbackPopulator;
 import org.innovateuk.ifs.application.feedback.populator.FeedbackNavigationPopulator;
 import org.innovateuk.ifs.application.feedback.viewmodel.AssessQuestionFeedbackViewModel;
-import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;

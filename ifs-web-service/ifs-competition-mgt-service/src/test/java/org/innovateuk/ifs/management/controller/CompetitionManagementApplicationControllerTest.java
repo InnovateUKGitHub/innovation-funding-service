@@ -7,11 +7,11 @@ import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummary
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.ApplicationResearchParticipationViewModelPopulator;
 import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
-import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
+import org.innovateuk.ifs.application.populator.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.ApplicationModelPopulator;
 import org.innovateuk.ifs.ApplicationSectionAndQuestionModelPopulator;
-import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -34,7 +34,7 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverv
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManageApplicationViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligibleApplicationViewModel;
-import org.innovateuk.ifs.invite.service.InviteService;
+import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.OrganisationDetailsModelPopulator;

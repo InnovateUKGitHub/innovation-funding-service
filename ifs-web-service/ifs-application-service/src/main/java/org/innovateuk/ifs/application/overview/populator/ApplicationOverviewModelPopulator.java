@@ -5,11 +5,11 @@ import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewAssi
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewUserViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewViewModel;
-import org.innovateuk.ifs.application.populator.AbstractApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationCompletedModelPopulator;
+import org.innovateuk.ifs.application.AbstractApplicationModelPopulator;
+import org.innovateuk.ifs.application.ApplicationCompletedModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.forms.service;
 
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
-import org.innovateuk.ifs.application.finance.view.jes.JESFinanceFormHandler;
+import org.innovateuk.ifs.application.populator.finance.view.jes.JESFinanceFormHandler;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.SectionService;

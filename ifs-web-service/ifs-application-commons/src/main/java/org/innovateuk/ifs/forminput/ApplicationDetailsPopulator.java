@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.forminput;
 
 import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
-import org.innovateuk.ifs.application.populator.forminput.AbstractFormInputPopulator;
+import org.innovateuk.ifs.application.forminput.AbstractFormInputPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.forminput.ApplicationDetailsInputViewModel;
 import org.innovateuk.ifs.form.ApplicationForm;

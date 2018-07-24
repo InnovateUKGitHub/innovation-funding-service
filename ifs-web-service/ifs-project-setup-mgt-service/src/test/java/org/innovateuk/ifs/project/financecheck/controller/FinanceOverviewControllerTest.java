@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.project.financecheck.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.finance.ProjectFinanceService;
+import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
-import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
+import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.financecheck.viewmodel.FinanceCheckOverviewViewModel;
 import org.innovateuk.ifs.project.financechecks.controller.FinanceOverviewController;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;

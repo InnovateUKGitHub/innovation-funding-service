@@ -3,7 +3,7 @@ package org.innovateuk.ifs.forminput;
 import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
-import org.innovateuk.ifs.application.populator.forminput.AbstractFormInputPopulator;
+import org.innovateuk.ifs.application.forminput.AbstractFormInputPopulator;
 import org.innovateuk.ifs.application.viewmodel.forminput.FileUploadInputViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.AssignButtonsPopulator;
