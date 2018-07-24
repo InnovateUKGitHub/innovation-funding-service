@@ -60,14 +60,14 @@ public class FinanceChecksViabilityController {
 
     @GetMapping
     public String viewViability(@PathVariable("projectId") Long projectId,
-                                @PathVariable("organisationId") Long organisationId, Model model) {
+                                @PathVariable("organisationId") Long organisationId, Long applicationId, Model model) {
 
-        return doViewViability(projectId, organisationId, model, getViabilityForm(projectId, organisationId));
+        return doViewViability(projectId, organisationId, applicationId, model, getViabilityForm(projectId, organisationId));
     }
 
     @PostMapping(params = "save-and-continue")
     public String saveAndContinue(@PathVariable("projectId") Long projectId,
-                                  @PathVariable("organisationId") Long organisationId,
+                                  @PathVariable("organisationId") Long organisationId, Long applicationId,
                                   @ModelAttribute("form") FinanceChecksViabilityForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler,
@@ -75,12 +75,12 @@ public class FinanceChecksViabilityController {
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        return doSaveViability(projectId, organisationId, Viability.REVIEW, form, validationHandler, model, successView);
+        return doSaveViability(projectId, organisationId, applicationId, Viability.REVIEW, form, validationHandler, model, successView);
     }
 
     @PostMapping(params = "confirm-viability")
     public String confirmViability(@PathVariable("projectId") Long projectId,
-                                   @PathVariable("organisationId") Long organisationId,
+                                   @PathVariable("organisationId") Long organisationId, Long applicationId,
                                    @ModelAttribute("form") FinanceChecksViabilityForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
@@ -89,13 +89,13 @@ public class FinanceChecksViabilityController {
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/viability";
 
-        return doSaveViability(projectId, organisationId, Viability.APPROVED, form, validationHandler, model, successView);
+        return doSaveViability(projectId, organisationId, applicationId, Viability.APPROVED, form, validationHandler, model, successView);
     }
 
-    private String doSaveViability(Long projectId, Long organisationId, Viability viability, FinanceChecksViabilityForm form,
+    private String doSaveViability(Long projectId, Long organisationId, Long applicationId, Viability viability, FinanceChecksViabilityForm form,
                                    ValidationHandler validationHandler, Model model, Supplier<String> successView) {
 
-        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, model, form);
+        Supplier<String> failureView = () -> doViewViability(projectId, organisationId, applicationId, model, form);
 
         ServiceResult<Void> saveCreditReportResult = financeService.saveCreditReportConfirmed(projectId, organisationId, form.isCreditReportConfirmed());
 
