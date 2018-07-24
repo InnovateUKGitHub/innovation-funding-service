@@ -4,9 +4,9 @@ import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewMod
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -33,7 +33,7 @@ public class ApplicationPrintPopulator {
     private SectionService sectionService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private FormInputResponseService formInputResponseService;
@@ -60,7 +60,7 @@ public class ApplicationPrintPopulator {
     public String print(final Long applicationId,
                            Model model, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
@@ -78,7 +78,7 @@ public class ApplicationPrintPopulator {
         applicationModelPopulator.addUserDetails(model, user, userApplicationRoles);
         applicationModelPopulator.addApplicationInputs(application, model);
         applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, user.getId(), completedSectionsByOrganisation, Optional.empty());
-        applicationFinanceOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId, userOrganisation.map(OrganisationResource::getId));
+        applicationFinanceOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId);
 
         return "application/print";
     }

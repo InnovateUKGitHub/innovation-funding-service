@@ -33,7 +33,7 @@
               th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${model.general.competition.id}, questionId=${competitionSetupForm.question.questionId})}"
               th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
               data-th-attr="data-competition=${model.general.competition.id}, data-objectId=${competitionSetupForm.question.questionId},
-              data-subsection=${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE ? 'project' : 'question'}"
+              data-subsection=${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE ? 'project' : 'question'}"
               data-section="application"
               novalidate="novalidate">
 

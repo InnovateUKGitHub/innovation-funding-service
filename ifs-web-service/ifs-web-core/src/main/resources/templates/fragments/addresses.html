@@ -139,7 +139,7 @@
 <th:block th:fragment="organisation-details-minimal">
     <fieldset class="govuk-fieldset">
         <legend class="govuk-visually-hidden" th:text="${selectedOrganisation.name} + ''">? Organisation</legend>
-        <div class="form-block">
+        <div class="govuk-form-group">
             <h3 class="govuk-heading-s">Organisation name</h3>
             <p class="govuk-body" th:text="${selectedOrganisation.name}"></p>
         </div>
@@ -149,7 +149,8 @@
 <th:block th:fragment="organisation-details">
     <fieldset class="govuk-fieldset">
         <legend class="govuk-visually-hidden" th:text="${organisationType.name} + ''">? Organisation</legend>
-        <div class="form-block">
+        <div class="govuk-form-group">
+
             <th:block th:if="${showOrgType}">
                 <h3 class="govuk-heading-s">Organisation type</h3>
                 <p class="govuk-body" th:text="${organisationType.name}">Business</p>
@@ -192,7 +193,7 @@
 
 <th:block th:fragment="business-details">
     <fieldset class="govuk-fieldset">
-        <div class="form-block">
+        <div class="govuk-form-group">
             <h3 class="govuk-heading-s">Organisation name</h3>
             <p class="govuk-body" th:text="${organisationForm.organisationName}"></p>
 

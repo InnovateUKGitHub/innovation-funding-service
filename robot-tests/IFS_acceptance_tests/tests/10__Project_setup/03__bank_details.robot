@@ -96,7 +96,7 @@ The user enters bank details, wants to manually enter their address, leaves the 
     And the user clicks the button/link           css = button[name = "manual-address"]        #Enter address manually
     Then the user clicks the button/link          jQuery = button:contains("Submit bank account details")
     And the user clicks the button/link           id=submit-bank-details
-    And the user should see a summary error       The address cannot be blank.
+    And the user should see a summary error       The first line of the address cannot be blank.
     And the user should see a summary error       The postcode cannot be blank.
     And the user should see a summary error       The town cannot be blank.
 

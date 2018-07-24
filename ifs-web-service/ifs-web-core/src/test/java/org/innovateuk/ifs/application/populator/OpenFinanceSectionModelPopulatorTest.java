@@ -13,15 +13,13 @@ import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
@@ -60,6 +58,7 @@ import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionR
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
@@ -77,6 +76,9 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private QuestionService questionService;
+
+    @Mock
+    private QuestionRestService questionRestService;
 
     @Mock
     private SectionService sectionService;
@@ -100,7 +102,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
     private FormInputResponseRestService formInputResponseRestService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private InviteRestService inviteRestService;
@@ -150,7 +152,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
                 .withCompetition(competitionId)
                 .build();
         UserResource user = newUserResource().build();
-        CompetitionResource competition = newCompetitionResource().withId(competitionId).build();
+        CompetitionResource competition = newCompetitionResource().withId(competitionId).withUseNewApplicantMenu(true).build();
         List<SectionResource> allSections = newSectionResource().withCompetition(competitionId).build(5);
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(section.getQuestions().get(0)).build(2);
         setupServices(competition, application, user, formInputs);
@@ -195,7 +197,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
                 .withCompetition(231L)
                 .build();
         UserResource user = newUserResource().build();
-        CompetitionResource competition = newCompetitionResource().withId(321L).build();
+        CompetitionResource competition = newCompetitionResource().withId(321L).withUseNewApplicantMenu(true).build();
         List<SectionResource> allSections = newSectionResource().withCompetition(132L).build(1);
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(123L).build(1);
         setupServices(competition, application, user, formInputs);
@@ -223,7 +225,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
     }
 
     private void setupServices(CompetitionResource competitionResource, ApplicationResource applicationResource, UserResource userResource, List<FormInputResource> formInputs) {
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(applicationResource.getCompetition())).thenReturn(restSuccess(competitionResource));
 
         InviteOrganisationResource inviteOrg1 = new InviteOrganisationResource();
         inviteOrg1.setId(234L);
@@ -252,6 +254,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
 
         QuestionResource question = newQuestionResource().build();
         when(questionService.getQuestionByCompetitionIdAndFormInputType(anyLong(), eq(FormInputType.APPLICATION_DETAILS))).thenReturn(ServiceResult.serviceSuccess(question));
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(anyLong(), eq(RESEARCH_CATEGORY))).thenReturn(restSuccess(question));
         Map<Long, QuestionStatusResource> statuses = new HashMap<>();
         statuses.put(question.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build());
         when(questionService.getQuestionStatusesForApplicationAndOrganisation(eq(applicationResource.getId()), anyLong())).thenReturn(statuses);

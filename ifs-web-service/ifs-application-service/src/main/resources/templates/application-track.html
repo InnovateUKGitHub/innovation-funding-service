@@ -80,7 +80,7 @@
         </p>
 
         <div class="govuk-!-margin-top-6">
-            <a href="/applicant/dashboard" class="govuk-button">Return to dashboard</a>
+            <a th:href="@{/survey/{competitionId}/feedback(competitionId=${currentCompetition.id})}" class="govuk-button">Finished</a>
         </div>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

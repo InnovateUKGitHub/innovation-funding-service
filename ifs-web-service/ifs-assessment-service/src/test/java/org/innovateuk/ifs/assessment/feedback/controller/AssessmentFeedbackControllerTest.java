@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
@@ -22,11 +21,13 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -114,7 +115,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private FormInputResponseRestService formInputResponseRestService;
@@ -136,6 +137,9 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
 
     @Mock
     private ProcessRoleService processRoleService;
+
+    @Mock
+    private InviteService inviteService;
 
     @Override
     protected AssessmentFeedbackController supplyControllerUnderTest() {
@@ -208,13 +212,13 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .andExpect(view().name("assessment/application-question"));
 
         InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseRestService,
-                assessmentService, competitionService, formInputResponseRestService, categoryRestServiceMock);
+                assessmentService, competitionRestService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(
                 assessmentResource.getId(), questionResource.getId());
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
-        inOrder.verify(competitionService).getById(competitionResource.getId());
+        inOrder.verify(competitionRestService).getCompetitionById(competitionResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseRestService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), ASSESSMENT);
@@ -282,13 +286,13 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .andExpect(view().name("assessment/application-question"));
 
         InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseRestService,
-                assessmentService, competitionService, formInputResponseRestService, categoryRestServiceMock);
+                assessmentService, competitionRestService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(
                 assessmentResource.getId(), questionResource.getId());
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
-        inOrder.verify(competitionService).getById(competitionResource.getId());
+        inOrder.verify(competitionRestService).getCompetitionById(competitionResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseRestService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), ASSESSMENT);
@@ -320,7 +324,10 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .withSection(financeSectionResource.getId())
                 .build();
 
+        // The next question should be skipped since it's within the Finance section
         setupQuestionNavigation(questionResource.getId(), of(previousQuestionResource), of(nextQuestionResource));
+        // There is also no navigation from the question following that
+        when(questionService.getNextQuestion(nextQuestionResource.getId())).thenReturn(empty());
 
         List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA);
         setupApplicantResponses(applicationId, applicationFormInputs);
@@ -470,12 +477,12 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .andExpect(view().name("assessment/application-question"));
 
         InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseRestService, assessmentService,
-                competitionService, formInputResponseRestService, categoryRestServiceMock);
+                competitionRestService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentResource.getId(), questionResource.getId());
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
-        inOrder.verify(competitionService).getById(competitionResource.getId());
+        inOrder.verify(competitionRestService).getCompetitionById(competitionResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseRestService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), ASSESSMENT);
@@ -542,12 +549,12 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .andExpect(view().name("assessment/application-question"));
 
         InOrder inOrder = inOrder(questionService, formInputRestService, assessorFormInputResponseRestService,
-                assessmentService, competitionService, formInputResponseRestService, categoryRestServiceMock);
+                assessmentService, competitionRestService, formInputResponseRestService, categoryRestServiceMock);
         inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         inOrder.verify(assessorFormInputResponseRestService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentResource.getId(), questionResource.getId());
         inOrder.verify(assessmentService).getById(assessmentResource.getId());
-        inOrder.verify(competitionService).getById(competitionResource.getId());
+        inOrder.verify(competitionRestService).getCompetitionById(competitionResource.getId());
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), APPLICATION);
         applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseRestService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
         inOrder.verify(formInputRestService).getByQuestionIdAndScope(questionResource.getId(), ASSESSMENT);
@@ -854,7 +861,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .withAssessorDeadlineDate(twoHoursAgo.plusDays(4))
                 .build();
 
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         return competitionResource;
     }

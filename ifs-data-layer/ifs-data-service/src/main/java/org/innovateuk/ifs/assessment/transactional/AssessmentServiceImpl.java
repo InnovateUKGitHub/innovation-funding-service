@@ -12,6 +12,10 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
+import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
+import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -50,6 +54,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
     private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
+    private CompetitionParticipantService competitionParticipantService;
 
     public AssessmentServiceImpl() {
     }
@@ -59,12 +64,14 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                                  AssessmentMapper assessmentMapper,
                                  AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper,
                                  AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper,
-                                 AssessmentWorkflowHandler assessmentWorkflowHandler) {
+                                 AssessmentWorkflowHandler assessmentWorkflowHandler,
+                                 CompetitionParticipantService competitionParticipantService) {
         this.assessmentRepository = assessmentRepository;
         this.assessmentMapper = assessmentMapper;
         this.assessmentRejectOutcomeMapper = assessmentRejectOutcomeMapper;
         this.assessmentFundingDecisionOutcomeMapper = assessmentFundingDecisionOutcomeMapper;
         this.assessmentWorkflowHandler = assessmentWorkflowHandler;
+        this.competitionParticipantService = competitionParticipantService;
     }
 
     @Override
@@ -94,6 +101,18 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId) {
+
+        List<CompetitionParticipantResource> competitionParticipantList = competitionParticipantService.getCompetitionParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR).getSuccess();
+
+        competitionParticipantList = competitionParticipantList.stream()
+                .filter(participant -> participant.getCompetitionId().equals(competitionId))
+                .filter(participant -> participant.getStatus().equals(ParticipantStatusResource.ACCEPTED))
+                .collect(toList());
+
+        if (competitionParticipantList.isEmpty()) {
+            return serviceFailure(notFoundError(Competition.class, competitionId));
+        }
+
         return serviceSuccess(
                 simpleMap(
                         sort(assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId),

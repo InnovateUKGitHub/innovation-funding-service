@@ -24,7 +24,7 @@
 
 
 <!-- ======== Assessment - sub header back to assessment overview ======= -->
-<div th:fragment="assessment-header-sub (linkTitle, linkUrl, linkClass)">
+<div th:fragment="assessment-header-sub (linkTitle, linkUrl)">
     <a th:if="${linkTitle != null and linkUrl != null}"
        class="govuk-back-link"
        th:href="${linkUrl}"

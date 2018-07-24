@@ -1,7 +1,7 @@
 <th:block th:fragment="user-list(users)">
     <p class="govuk-body">
         <span class="govuk-heading-xl govuk-!-margin-0" th:text="${users.size()}">38</span>
-        <span class="govuk-heading-s">users with IFS account</span>
+        <span class="govuk-heading-s">users</span>
     </p>
     <th:block th:insert="fragments/external-users :: users-table(users=${users})" />
 </th:block>
@@ -14,6 +14,7 @@
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" scope="col">Name</th>
                 <th class="govuk-table__header" scope="col">Organisation name</th>
+                <th class="govuk-table__header" scope="col">Organisation type</th>
                 <th class="govuk-table__header" scope="col">Organisation ID</th>
                 <th class="govuk-table__header" scope="col">Email</th>
                 <th class="govuk-table__header" scope="col">Status</th>
@@ -23,6 +24,7 @@
             <tr class="govuk-table__row" th:each="user : ${users}">
                 <td class="govuk-table__cell" th:text="${user.name}">Steve Smith</td>
                 <td class="govuk-table__cell" th:text="${user.organisationName}">Empire Limited</td>
+                <td class="govuk-table__cell" th:text="${user.organisationType}">Research</td>
                 <td class="govuk-table__cell" th:text="${user.organisationId}">10</td>
                 <td class="govuk-table__cell" th:text="${user.email}">steve.smith@empire.com</td>
                 <td class="govuk-table__cell" th:text="${user.status.displayName}">Verified</td>

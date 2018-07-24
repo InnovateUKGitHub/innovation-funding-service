@@ -92,15 +92,11 @@ Application details server side
     And the user enters text to a text field  id=application_details-startdate_month  ${EMPTY}
     And the user enters text to a text field  id=application_details-startdate_year    ${EMPTY}
     And the user enters text to a text field  id=application.durationInMonths    ${EMPTY}
-    And the user unchecks the resubmission radio button
     And the user clicks the button/link       id=application-question-complete
-#    Then the user should see a field and summary error  Please tell us if this application is a resubmission or not.
-# TODO IFS-3188
     And The user should see a field and summary error   Please enter the full title of the project.
     And the user should see a field and summary error   Please enter a future date.
     And the user should see a field and summary error   This field cannot be left blank.
     And the user should see a field and summary error   Please enter the full title of the project.
-    And the user should see a field and summary error   Please select a research category.
     [Teardown]  the user enters text to a text field    id=application.name  ${applicationTitle}
 
 
@@ -160,7 +156,3 @@ the applicant should not see the validation error of the duration any more
     Focus    css=.app-submit-btn
     wait for autosave
     The user should not see the text in the page    Your project should last between 1 and 36 months
-
-the user unchecks the resubmission radio button
-    Run Keyword And Ignore Error Without Screenshots  Execute Javascript  jQuery('#application\\.resubmission-yes').get(0).removeAttribute('checked');
-    Run Keyword And Ignore Error Without Screenshots  Execute Javascript  jQuery('#application\\.resubmission-no').get(0).removeAttribute('checked');

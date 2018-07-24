@@ -14,9 +14,12 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.currentCompetition})" />
-        <th:block th:insert="fragments/elements :: competition-status-message (app=${model.currentApplication}, competition=${model.currentCompetition}, projectWithdrawn=${model.projectWithdrawn})" />
+        <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.applicationState}, competition=${model.currentCompetition}, projectWithdrawn=${model.projectWithdrawn})" />
 
-        <th:block th:with="applicationName=${#strings.isEmpty(model.currentApplication.name)} ? #{ifs.application.no_title} : ${model.currentApplication.name}">
+
+        <<<<<<< HEAD
+
+        <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='govuk-heading-xl'" />
         </th:block>
 
@@ -24,7 +27,7 @@
             <div class="govuk-grid-column-one-half">
                 <dl class="govuk-list govuk-!-font-size-16">
                     <dt>Application number:</dt>
-                    <dd th:text="${model.currentApplication.id}"/>
+                    <dd th:text="${model.applicationId}"/>
                     <dt>Competition:</dt>
                     <dd th:text="${model.currentCompetition.name}"/>
                     <dt>Funding body:</dt>
@@ -41,29 +44,27 @@
                      th:with="percentage=${model.completedQuestionsPercentage},size='medium'" class="govuk-!-margin-top-6"/>
             </div>
             <div class="govuk-grid-column-one-half">
-                <ul class="govuk-list govuk-list--bullet">
-                    <th:block th:unless="${model.currentCompetition.useNewApplicantMenu}">
-                        <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.currentApplication.id})}" class="govuk-link">view and manage contributors and collaborators</a></li>
-                    </th:block>
+                <ul class="govuk-list govuk-list--bullet" th:unless="${model.currentCompetition.useNewApplicantMenu}">
+                    <li><a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="govuk-link">view and manage contributors and collaborators</a></li>
                     <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link">view the grant terms and conditions</a></li>
                 </ul>
+                <a th:if="${model.currentCompetition.useNewApplicantMenu}" th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.currentCompetition.id})}" class="govuk-link">View the grant terms and conditions</a>
             </div>
         </div>
-        <div class="govuk-!-margin-bottom-6"
-             th:if="${model.completedQuestionsPercentage == 100 and !model.currentApplication.submitted and model.user.userIsLeadApplicant}">
-            <div class="message-alert">
+        <div class="govuk-!-margin-bottom-6">
+            <div class="message-alert" th:if="${model.completedQuestionsPercentage == 100 and !model.applicationSubmitted and model.user.userIsLeadApplicant}">
                 <p class="govuk-body">Now your application is complete, you need to review and then submit.</p>
             </div>
         </div>
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post" class="application-overview">
             <th:block th:each="section,iteration : ${model.section.sections.values()}">
                 <section th:id="'section-'+${section.id}">
-                    <h2 class="govuk-heading-m govuk-!-margin-bottom-1" th:text="${section.name}" />
+                    <h2 th:class="${iteration.index == 0} ? 'govuk-!-font-size-24 govuk-!-font-weight-bold': 'govuk-heading-m govuk-!-margin-bottom-0'" th:text="${section.name}" />
                     <p class="govuk-body" th:text="${section.description}"></p>
                     <ul th:with="currentUser=${#authentication.getDetails()}" class="task-list">
                         <th:block th:unless="${model.section.hasSubSection(section.id)}">
                             <div th:replace="application/single-section-details :: sectionDetails (questionAssignees=${model.assignable.questionAssignees},
-                            userIsLeadApplicant=${model.user.userIsLeadApplicant}, section=${section}, currentApplication=${model.currentApplication}, currentUser=${currentUser})"></div>
+                            userIsLeadApplicant=${model.user.userIsLeadApplicant}, section=${section}, applicationId=${model.applicationId}, currentUser=${currentUser})"></div>
                         </th:block>
                         <th:block th:if="${model.section.hasSubSection(section.id)}">
                             <li th:each="childSection : ${model.section.subSections.get(section.id)}">
@@ -74,15 +75,15 @@
                                            class="govuk-link" />
                                     </h3>
                                 </div>
-                                <th:block th:if="${childSection.id.equals(model.financeSectionId)}">
-                                    <div th:unless="${model.completed.userFinanceSectionCompleted}"
+                                <th:block th:if="${model.user.userIsLeadApplicant or childSection.id.equals(model.financeSectionId)}">
+                                    <div th:unless="${model.isFinanceSectionComplete(childSection)}"
                                          class="task-status-incomplete">
                                         <span>Incomplete</span>
                                     </div>
-                                    <div th:if="${model.completed.userFinanceSectionCompleted}"
+                                    <div th:if="${model.isFinanceSectionComplete(childSection)}"
                                          class="task-status-complete">
                                         <span>Complete</span>
-                                    </div>
+                                        </div>
                                 </th:block>
                             </li>
                         </th:block>
@@ -91,14 +92,13 @@
             </th:block>
         </form>
 
-        <a th:id="${model.user.ableToSubmitApplication ? 'application-overview-submit-cta' : 'application-overview-review-cta'}"
-           class="govuk-button" th:href="@{/application/{id}/summary(id=${model.currentApplication.id})}"
-           th:text="${model.user.ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
-        <a id="application-overview-print"
-           class="button-clear"
-           th:href="@{/application/{id}/print(id=${model.currentApplication.id})}" rel="nofollow" target="_blank">
-            <span class="icon icon-print"></span> Print your application</a>
-
+    <a th:id="${model.user.ableToSubmitApplication ? 'application-overview-submit-cta' : 'application-overview-review-cta'}"
+       class="govuk-button" th:href="@{/application/{id}/summary(id=${model.applicationId})}"
+       th:text="${model.user.ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
+    <a id="application-overview-print"
+       class="button-clear"
+       th:href="@{/application/{id}/print(id=${model.applicationId})}" rel="nofollow" target="_blank">
+        <span class="icon icon-print"></span> Print your application</a>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

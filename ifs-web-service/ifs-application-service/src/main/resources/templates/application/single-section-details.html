@@ -3,7 +3,7 @@
 <body>
 
 <th:block
-    th:fragment="sectionDetails (questionAssignees, userIsLeadApplicant, section, currentApplication, currentUser)">
+    th:fragment="sectionDetails (questionAssignees, userIsLeadApplicant, section, applicationId, currentUser)">
     <th:block th:each="question : ${model.section.sectionQuestions.get(section.id)}"
               th:with="leadApplicant=${model.user.leadApplicant},
             assignableUsers=${model.assignable.assignableUsers},
@@ -13,16 +13,17 @@
             th:id="'form-input-'+${question.id}">
             <div class="task">
                 <h3 class="govuk-heading-s">
-                    <a th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${currentApplication.id},questionId=${question.id})}"
+                    <a th:href="@{/application/{applicationId}/form/question/{questionId}(applicationId=${applicationId},questionId=${question.id})}"
                        th:text="|${questionNumber}${question.shortName}|"
                        th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''"
                        class="govuk-link" />
+
                 </h3>
             </div>
             <th:block th:unless="${model.completed.completedOrMarkedAsComplete(question, section)}">
 
                 <!-- /* 'Assigned to' info */-->
-                <th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_TEAM}">
+                <th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
                     <!--/* lead */-->
                     <th:block th:if="${userIsLeadApplicant}">
                         <th:block

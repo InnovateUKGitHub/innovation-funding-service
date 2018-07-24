@@ -41,16 +41,14 @@
 
                     <ul>
                         <li th:each="app : ${model.applications}">
-
                             <th:block>
                                 <div class="task">
                                     <a class="govuk-heading-s"
-                                       th:href="@{~/application/{applicationId}/feedback(applicationId=${app.applicationId})}"
+                                       th:href="@{~/application/{applicationId}/feedback(applicationId=${app.applicationId})} + ${model.originQuery}"
                                        th:text="${app.displayLabel}">Application name</a>
                                     <p th:text="${app.leadOrganisation}" class="govuk-body govuk-!-margin-0"/>
                                 </div>
                             </th:block>
-
                         </li>
                         <th:block th:if="${#lists.isEmpty(model.applications)}">
                             <li class="status-2-col">

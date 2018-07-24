@@ -220,7 +220,7 @@
                     <input class="govuk-input"
                            th:attr="data-calculation-fields=|[id='formInput[cost-${academicFinance.allocatedInvestigators?.id}-cost]'],
                            [id='formInput[cost-${academicFinance.allocatedEstatesCosts?.id}-cost]'],
-                           [id='formInput[cost-${academicFinance.allocatedOtherCosts?.id}-cost']|"
+                           [id='formInput[cost-${academicFinance.allocatedOtherCosts?.id}-cost]']|"
                            data-calculation-operations="+"
                            readonly="readonly" id="subtotal-directly-allocated"
                            th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalAllocated(),0, 'DEFAULT')}"/>

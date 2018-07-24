@@ -10,11 +10,10 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${competitionSummary.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionSummary.competitionId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision',subTitle=|${competitionSummary.competitionId} : ${competitionSummary.competitionName}|,size='govuk-heading-xl'" />
-
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding decision',subTitle=|${model.competitionSummary.competitionId} : ${model.competitionSummary.competitionName}|,size='govuk-heading-xl'" />
 
         <form method="GET" th:object="${fundingDecisionFilterForm}">
             <div class="search-filters govuk-!-margin-top-6">
@@ -41,7 +40,7 @@
                                 <select name="fundingFilter"
                                         id="fundingFilter"
                                         class="govuk-select"
-                                        th:field="*{fundingFilter}">
+                                        th:value="*{fundingFilterValue}">
                                     <option value="">Show all</option>
                                     <option value="UNDECIDED">Blank</option>
                                     <option value="FUNDED">Successful</option>
@@ -64,24 +63,20 @@
             <input type="hidden" name="filterChanged" value="1"/>
         </form>
 
-        <div th:if="${fundingNotDecidedForAllApplications}" class="event-alert">
-            <p class="govuk-body"><span>A funding decision is required for all applications to the competition.</span></p>
-        </div>
-
-        <div class="warning-alert govuk-!-margin-bottom-6" th:if="${selectionLimitWarning}">
+        <div class="warning-alert govuk-!-margin-bottom-6" th:if="${model.selectionLimitWarning}">
             <p class="govuk-body" th:text="#{competition.management.limit.warning}"></p>
         </div>
         <div data-selection-limit-exceeded-block=""></div>
 
         <div class="govuk-grid-row sorting">
             <div class="govuk-grid-column-one-half">
-                <h3><span class="govuk-heading-xl govuk-!-margin-0" th:text="${results.totalElements}" /> applications</h3>
+                <h3><span class="govuk-heading-xl govuk-!-margin-0" th:text="${model.results.totalElements}" /> applications</h3>
             </div>
         </div>
         <form method="POST"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               data-multipage-select=""
-              th:attr="data-total-checkboxes=${results.totalElements}"
+              th:attr="data-total-checkboxes=${model.results.totalElements}"
               autocomplete="off">
             <div class="govuk-grid-row sorting">
                 <div class="govuk-grid-column-one-half">
@@ -90,8 +85,8 @@
                             <legend class="govuk-visually-hidden">Select applications</legend>
                             <div class="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item">
-                                    <input th:disabled="${selectAllDisabled || selectionLimitWarning}"
-                                           th:checked="${selectionForm.isAllSelected()}"
+                                    <input th:disabled="${model.selectAllDisabled || model.selectionLimitWarning}"
+                                           th:checked="${model.selectionForm.isAllSelected()}"
                                            class="govuk-checkboxes__input select-all"
                                            id="select-all-1"
                                            value="select-all"
@@ -112,9 +107,9 @@
                     <fieldset class="govuk-fieldset mark-applications">
                         <legend class="govuk-visually-hidden">Mark selected applications</legend>
                         <h3>Mark application as:</h3>
-                        <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Successful</button>
-                        <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='UNFUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Unsuccessful</button>
-                        <button th:disabled="${selectionForm.applicationIds.isEmpty()}" type="submit" value='ON_HOLD' name="fundingDecision" class="button-secondary" data-submit-el="">On hold</button>
+                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Successful</button>
+                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='UNFUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Unsuccessful</button>
+                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='ON_HOLD' name="fundingDecision" class="button-secondary" data-submit-el="">On hold</button>
                     </fieldset>
                 </div>
             </div>
@@ -134,7 +129,7 @@
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="result, index : ${results.content}">
+                    <tr class="govuk-table__row" th:each="result, index : ${model.results.content}">
                         <td class="govuk-table__cell">
                             <div class="govuk-checkboxes">
                                 <div class="govuk-checkboxes__item" th:if="${result.applicationFundingDecisionIsChangeable()}">
@@ -142,7 +137,7 @@
                                            class="govuk-checkboxes__input"
                                            name="applicationIds"
                                            th:id="${'app-row-'+index.count}"
-                                           th:checked="${#lists.contains(selectionForm.applicationIds, result.id)}"
+                                           th:checked="${#lists.contains(model.selectionForm.applicationIds, result.id)}"
                                            th:value="${result.id}"
                                            aria-labelledby="select-applications-label" />
                                     <label th:for="${'app-row-'+index.count}"
@@ -155,7 +150,7 @@
                                 <span class="empty-table-cell-select">-</span>
                             </th:block>
                         </td>
-                        <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{rid}(cid=${competitionSummary.competitionId}, rid=${result.id})} + ${originQuery}"  th:text="${result.id}" class="govuk-link" /></td>
+                        <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/application/{rid}(cid=${model.competitionSummary.competitionId}, rid=${result.id})} + ${model.originQuery}"  th:text="${result.id}" class="govuk-link" /></td>
                         <td class="govuk-table__cell" th:text="${result.name}"></td>
                         <td class="govuk-table__cell" th:text="${result.lead}"></td>
                         <td class="govuk-table__cell" th:text="${result.numberOfPartners}"></td>

@@ -6,7 +6,7 @@ log in and create new application if there is not one already
     [Arguments]  ${application_name}
     Given the user logs-in in new browser  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain  ${application_name}
-    Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user  ${application_name}
+    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  AND  the user selects Research category  Industrial research
 
 Login new application invite academic
     [Arguments]  ${recipient}  ${subject}  ${pattern}
@@ -31,14 +31,23 @@ create new account for submitting
     the user clicks the button/link                   link=Application details
     the user enters text to a text field              css=[id="application.name"]    ${application_name}
     the user clicks the button/link                   jQuery=button:contains("Save and return")
-    the user marks every section but one as complete  ${application_name}
+    the user marks every section but one as complete  ${application_name}  Experimental development
 
 the user marks every section but one as complete
-    [Arguments]  ${application_name}
+    [Arguments]  ${application_name}  ${rescat}
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
     the applicant completes Application Team
+    the user selects Research category  ${rescat}
     the lead applicant fills all the questions and marks as complete(programme)
+
+the user selects Research category
+    [Arguments]  ${res_category}
+    the user clicks the button/link   link=Research category
+    the user clicks the button twice  jQuery=label:contains("${res_category}")
+    the user clicks the button/link   id=application-question-complete
+    the user should see the element   jQuery=li:contains("Research category") > .task-status-complete
+
 
 the lead applicant fills all the questions and marks as complete(programme)
     the user marks the project details as complete

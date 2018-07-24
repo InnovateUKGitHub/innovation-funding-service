@@ -320,10 +320,10 @@
             </th:block>
 
             <th:block
-                th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
+                th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">
 
                 <input type="hidden" name="competitionSetupForm.question.type"
-                       th:value="${T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}"/>
+                       th:value="${T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION}"/>
 
                 <h2 class="govuk-heading-m govuk-!-margin-top-6">Assessment of this question</h2>
 
@@ -547,9 +547,10 @@
                         <div class="govuk-form-group">
 
                             <input type="hidden" name="removeGuidanceRow"/>
+
                             <h3 class="govuk-heading-s">Guidance table</h3>
                             <table id="guidance-table" class="govuk-table assessed-guidance"
-                                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION}">
+                                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION}">
                                 <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
                                     <th class="govuk-table__header" scope="col">Score <span class="govuk-visually-hidden"> from</span></th>
@@ -642,7 +643,7 @@
                             </table>
 
                             <table class="govuk-table" id="guidance-table"
-                                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
+                                   th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">
                                 <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
                                     <th class="govuk-table__header" scope="col">Subject</th>

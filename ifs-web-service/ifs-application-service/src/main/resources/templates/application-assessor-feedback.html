@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Feedback overview',linkUrl=@{/application/{applicationId}/feedback(applicationId=${model.application.id})}"  />
+    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Feedback overview',linkUrl=@{/application/{applicationId}/feedback(applicationId=${model.application.id})} + ${model.originQuery}"  />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Dashboard',size='govuk-heading-l'" />
@@ -46,13 +46,13 @@
 
         <ul class="pagination">
             <li class="prev" th:if="${model.navigation.previousUrl}">
-                <a rel="prev" title="Navigate to previous part" th:href="@{${model.navigation.previousUrl}}">
+                <a rel="prev" title="Navigate to previous part" th:href="@{${model.navigation.previousUrl}} + ${model.originQuery}">
                     <span class="pagination-label">Previous</span>
                     <span class="pagination-part-title" th:text="${model.navigation.previousText}">6. Innovation</span>
                 </a>
             </li>
             <li class="next" th:if="${model.navigation.nextUrl}">
-                <a rel="next" title="Navigate to next part" th:href="@{${model.navigation.nextUrl}}">
+                <a rel="next" title="Navigate to next part" th:href="@{${model.navigation.nextUrl}} + ${model.originQuery}">
                     <span class="pagination-label">Next</span>
                     <span class="pagination-part-title" th:text="${model.navigation.nextText}">8. Project team</span>
                 </a>

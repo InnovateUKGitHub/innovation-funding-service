@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-    <!-- ===========================Form: finance =========================== -->
+    <!-- ===========================Form: Your funding =========================== -->
     <th:block th:fragment="finance(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
         <th:block th:unless="${model.readonly}">
             <div th:class="govuk-form-group" th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'govuk-form-group--error'">
@@ -52,6 +52,7 @@
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="organisationSize">
                         <h2 class="govuk-fieldset__heading" th:text="${formInput.description}"></h2>
                     </legend>
+<<<<<<< HEAD
                     <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
                     <th:block th:if="${#fields.hasErrors('organisationSize')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}"></span>
@@ -71,6 +72,18 @@
                                    th:text="${size.description}"
                                    class="govuk-label govuk-radios__label">Label</label>
                         </div>
+=======
+                    <div class="multiple-choice"
+                         th:each="size : ${T(org.innovateuk.ifs.finance.resource.OrganisationSize).values()}">
+                        <input type="radio"
+                               th:id="'financePosition-organisationSize-'+${size.id}"
+                               th:name="'financePosition-organisationSize'"
+                               th:value="${size.id}"
+                               th:checked="${size == model.organisationFinanceSize}"
+                               required="required"
+                               th:attr="data-required-errormessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED}"/>
+                        <label th:for="'financePosition-organisationSize-'+${size.id}" th:text="${size.description}">Label</label>
+>>>>>>> development
                     </div>
 
                 </fieldset>
@@ -80,10 +93,8 @@
             <!--/* view  */-->
             <dl class="readonly-data">
                 <dt th:text="${formInput.description}">Size</dt>
-
-                <th:block th:unless="${model.organisationFinanceSize == null}" th:each="size : ${model.organisationSizes}">
-                    <dd th:if="${model.organisationFinanceSize == size.id}" th:text="${size.description}">Micro or small: claim up to 70%</dd>
-                </th:block>
+                <dd th:unless="${model.organisationFinanceSize == null}"
+                    th:text="${model.organisationFinanceSize.description}">Micro or small: claim up to 70%</dd>
             </dl>
         </th:block>
     </th:block>

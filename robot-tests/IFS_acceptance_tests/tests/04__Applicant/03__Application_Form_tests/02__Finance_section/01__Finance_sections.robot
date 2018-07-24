@@ -97,11 +97,11 @@ Non-academic partner finance section
     [Tags]    HappyPath
     [Setup]  Log in as a different user     &{collaborator1_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
-    Then The user should see the element      JQuery=span.summary:contains("Not requesting funding")
+    And The user should see the element      JQuery=span.summary:contains("Not requesting funding")
     and the user should see the element     link=Your project costs
     and the user should see the element     link=Your organisation
-    and the user should not see the element     link=Your funding
-    and the user should not see the element     link=application details
+    When the user clicks the button/link    link=Your funding
+    Then the user should see the element    jQuery=.list li:contains("the lead applicant must select a research category")
 
 Academic partner finance section
     [Documentation]    INFUND-7522

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
@@ -13,6 +12,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -34,7 +34,8 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
@@ -49,7 +50,7 @@ public class AssessmentOverviewModelPopulator {
     public static final BigDecimal ONE_KB = BigDecimal.valueOf(1024L);
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private QuestionService questionService;
@@ -71,7 +72,7 @@ public class AssessmentOverviewModelPopulator {
 
     public AssessmentOverviewViewModel populateModel(long assessmentId) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
-        CompetitionResource competition = competitionService.getById(assessment.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(assessment.getCompetition()).getSuccess();
 
         List<QuestionResource> questions = questionService.findByCompetition(assessment.getCompetition());
         List<QuestionResource> assessorViewQuestions = questions
@@ -102,7 +103,7 @@ public class AssessmentOverviewModelPopulator {
             List<QuestionResource> sectionQuestions = sectionResource.getQuestions()
                     .stream()
                     .map(questionsMap::get)
-                    .filter(question -> question.getQuestionSetupType() != APPLICATION_TEAM)
+                    .filter(this::isAssessmentQuestion)
                     .collect(toList());
 
             return new AssessmentOverviewSectionViewModel(sectionResource.getId(),
@@ -182,6 +183,10 @@ public class AssessmentOverviewModelPopulator {
     private Optional<String> getResponseValue(FormInputResource formInput,
                                               Map<Long, AssessorFormInputResponseResource> responses) {
         return ofNullable(responses.get(formInput.getId())).map(AssessorFormInputResponseResource::getValue);
+    }
+
+    private boolean isAssessmentQuestion(QuestionResource question) {
+        return question.getQuestionSetupType() != APPLICATION_TEAM && question.getQuestionSetupType() != RESEARCH_CATEGORY;
     }
 
     private AssessmentOverviewAppendixViewModel getAppendix(FormInputResponseResource formInputResponse,

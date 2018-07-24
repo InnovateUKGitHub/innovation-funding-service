@@ -548,7 +548,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccess().size());
         assertEquals("Aaron Powell", result.getSuccess().get(0).getName());
+        assertEquals("Guitar Gods Ltd", result.getSuccess().get(0).getOrganisationName());
+        assertEquals("Business", result.getSuccess().get(0).getOrganisationType());
         assertEquals("David Wellington", result.getSuccess().get(1).getName());
+        assertEquals("Engine Equations Ltd", result.getSuccess().get(1).getOrganisationName());
+        assertEquals("Research", result.getSuccess().get(1).getOrganisationType());
 
         verify(userOrganisationRepositoryMock).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
         verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
@@ -557,9 +561,15 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     private List<UserOrganisation> setUpMockingFindByProcessRolesAndSearchCriteria() {
 
-        UserOrganisationResource userOrganisationResource1 = newUserOrganisationResource().withName("Aaron Powell").withEmail("aaron.powell@example.com").withStatus(UserStatus.ACTIVE)
+        UserOrganisationResource userOrganisationResource1 = newUserOrganisationResource().withName("Aaron Powell")
+                .withOrganisationName("Guitar Gods Ltd")
+                .withOrganisationType("Business")
+                .withEmail("aaron.powell@example.com").withStatus(UserStatus.ACTIVE)
                 .withOrganisationId(1L).withOrganisationName("Guitar Gods Ltd").build();
-        UserOrganisationResource userOrganisationResource2 = newUserOrganisationResource().withName("David Wellington").withEmail("david.wellington@load.example.com").withStatus(UserStatus.ACTIVE)
+        UserOrganisationResource userOrganisationResource2 = newUserOrganisationResource().withName("David Wellington")
+                .withOrganisationName("Engine Equations Ltd")
+                .withOrganisationType("Research")
+                .withEmail("david.wellington@load.example.com").withStatus(UserStatus.ACTIVE)
                 .withOrganisationId(2L).withOrganisationName("Engine Equations Ltd").build();
 
         List<UserOrganisation> userOrganisations = newUserOrganisation()
