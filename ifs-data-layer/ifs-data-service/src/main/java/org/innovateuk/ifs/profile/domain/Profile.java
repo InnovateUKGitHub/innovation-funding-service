@@ -144,7 +144,7 @@ public class Profile extends AuditableEntity {
                         );
     }
 
-    protected static LocalDate startOfCurrentFinancialYear(ZonedDateTime now) {
+    static LocalDate startOfCurrentFinancialYear(ZonedDateTime now) {
         if (!DOI_EXPIRE_DATE.isAfter(MonthDay.of(now.getMonth(), now.getDayOfMonth()))) {
             return DOI_EXPIRE_DATE.atYear(now.getYear());
         }
