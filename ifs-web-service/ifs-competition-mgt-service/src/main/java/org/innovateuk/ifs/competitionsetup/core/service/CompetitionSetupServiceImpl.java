@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competitionsetup.core.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -11,6 +10,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.application.form.AbstractQuestionForm;
 import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
@@ -38,9 +38,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
 
     @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
     @Autowired
@@ -51,6 +48,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     @Autowired
     private CompetitionSetupPopulator competitionSetupPopulator;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
     private Map<CompetitionSetupSubsection, CompetitionSetupSubsectionFormPopulator> subsectionFormPopulators;
@@ -291,7 +291,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     @Override
     public ServiceResult<Void> setCompetitionAsReadyToOpen(Long competitionId) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
         if (competitionResource.getCompetitionStatus() == CompetitionStatus.READY_TO_OPEN) {
             return serviceSuccess();
         }
@@ -320,6 +320,16 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
                 });
     }
 
+    @Override
+    public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
+        return competitionRestService.addInnovationLead(competitionId, innovationLeadUserId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
+        return competitionRestService.removeInnovationLead(competitionId, innovationLeadUserId).toServiceResult();
+    }
+
     private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
         List<CompetitionSetupSection> requiredSections = new ArrayList<>();
         requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
@@ -332,8 +342,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         return requiredSections;
     }
 
-    private void checkIfSubsectionIsInSection(CompetitionSetupSection section, CompetitionSetupSubsection subsection) {
-        if (!section.getSubsections().contains(subsection)) {
+	private void checkIfSubsectionIsInSection(CompetitionSetupSection section, CompetitionSetupSubsection subsection) {
+        if(!section.getSubsections().contains(subsection)) {
             LOG.error("Subsection(" + subsection + ") not found on section " + section);
             throw new IllegalArgumentException();
         }

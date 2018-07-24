@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.application.list.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.application.list.viewmodel.NavigateApplicationsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Component;
 public class NavigateApplicationsModelPopulator {
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     public NavigateApplicationsViewModel populateModel(long competitionId) {
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         return new NavigateApplicationsViewModel(competitionId, competition.getName());
     }
