@@ -10,6 +10,7 @@ import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewApplicatio
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewFeedbackViewModel;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -32,7 +33,7 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
     private SummaryViewModelFragmentPopulator summaryViewModelPopulator;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private ProcessRoleService processRoleService;
@@ -46,7 +47,7 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
     public AssessmentReviewApplicationSummaryViewModel populateModel(ApplicationForm form, UserResource user, long applicationId) {
         form.setAdminMode(true);
         SummaryViewModel viewModel = summaryViewModelPopulator.populate(applicationId, user, form);
-        CompetitionResource competition = competitionService.getById(viewModel.getCurrentApplication().getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(viewModel.getCurrentApplication().getCompetition()).getSuccess();
         return new AssessmentReviewApplicationSummaryViewModel(viewModel, competition, assessmentDetails(applicationId, user, viewModel));
     }
 

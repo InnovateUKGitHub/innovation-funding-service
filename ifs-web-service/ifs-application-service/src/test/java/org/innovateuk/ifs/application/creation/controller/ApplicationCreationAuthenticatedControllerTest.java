@@ -3,9 +3,9 @@ package org.innovateuk.ifs.application.creation.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -64,7 +64,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     private OrganisationService organisationService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private UserService userService;
@@ -88,7 +88,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
                 .withOrganisationType(RTO.getId())
                 .withOrganisationTypeName(RTO.name())
                 .withName(COMPANY_NAME).build());
-        when(competitionService.getById(1L)).thenReturn(newCompetitionResource().withLeadApplicantType(asList(2L, 3L)).build());
+        when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(newCompetitionResource().withLeadApplicantType(asList(2L, 3L)).build()));
     }
 
     @Test
@@ -199,7 +199,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
 
     @Test
     public void testGetCreateNewApplicationNotEligible() throws Exception {
-        when(competitionService.getById(1L)).thenReturn(newCompetitionResource().withLeadApplicantType(asList(1L)).build());
+        when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(newCompetitionResource().withLeadApplicantType(asList(1L)).build()));
         mockMvc.perform(get("/application/create-authenticated/1")
                 .param("createNewApplication", "0"))
                 .andExpect(status().is3xxRedirection())
@@ -208,7 +208,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
 
     @Test
     public void testPostCreateNewApplicationNotEligible() throws Exception {
-        when(competitionService.getById(1L)).thenReturn(newCompetitionResource().withLeadApplicantType(asList(1L)).build());
+        when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(newCompetitionResource().withLeadApplicantType(asList(1L)).build()));
         mockMvc.perform(post("/application/create-authenticated/1")
                 .param("createNewApplication", "0"))
                 .andExpect(status().is3xxRedirection())

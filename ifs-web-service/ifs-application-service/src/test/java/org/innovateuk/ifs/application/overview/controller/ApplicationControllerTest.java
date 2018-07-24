@@ -184,7 +184,7 @@ public class ApplicationControllerTest extends AbstractApplicationMockMVCTest<Ap
         assertEquals(app.getApplicationState(), viewModel.getApplicationState());
         assertEquals(app.isSubmitted(), viewModel.isApplicationSubmitted());
         assertEquals(sections, viewModel.getCompleted().getCompletedSections());
-        assertEquals(competitionService.getById(app.getCompetition()), viewModel.getCurrentCompetition());
+        assertEquals(competitionRestService.getCompetitionById(app.getCompetition()).getSuccess(), viewModel.getCurrentCompetition());
 
         assertTrue(viewModel.getAssignable().getPendingAssignableUsers().size() == 0);
     }

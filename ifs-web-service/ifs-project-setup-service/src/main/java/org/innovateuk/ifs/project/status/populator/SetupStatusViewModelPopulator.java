@@ -2,9 +2,9 @@ package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.monitoringofficer.MonitoringOfficerService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -48,7 +48,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     private ApplicationService applicationService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     public CompletableFuture<SetupStatusViewModel> populateViewModel(Long projectId,
                                                                      UserResource loggedInUser,
@@ -58,7 +58,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         CompletableFuture<OrganisationResource> organisationRequest = async(() -> projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId()));
 
         CompletableFuture<ApplicationResource> applicationRequest = awaitAll(projectRequest).thenApply(project -> applicationService.getById(project.getApplication()));
-        CompletableFuture<CompetitionResource> competitionRequest = awaitAll(applicationRequest).thenApply(application -> competitionService.getById(application.getCompetition()));
+        CompletableFuture<CompetitionResource> competitionRequest = awaitAll(applicationRequest).thenApply(application ->
+                competitionRestService.getCompetitionById(application.getCompetition()).getSuccess());
         CompletableFuture<BasicDetails> basicDetailsRequest = awaitAll(projectRequest, competitionRequest, organisationRequest).thenApply(BasicDetails::new);
 
         CompletableFuture<ProjectTeamStatusResource> teamStatusRequest = async(() -> statusService.getProjectTeamStatus(projectId, Optional.empty()));

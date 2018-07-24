@@ -1,18 +1,21 @@
 package org.innovateuk.ifs.application.common.populator;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.AbstractApplicationModelPopulator;
+import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.application.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.forminput.AbstractFormInputViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -42,7 +45,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelPopulator {
 
     private ApplicationService applicationService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private SectionService sectionService;
     private QuestionService questionService;
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
@@ -60,7 +63,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
     private UserService userService;
 
     public SummaryViewModelFragmentPopulator(ApplicationService applicationService,
-                                             CompetitionService competitionService,
+                                             CompetitionRestService competitionRestService,
                                              SectionService sectionService,
                                              QuestionService questionService,
                                              AssessorFormInputResponseRestService assessorFormInputResponseRestService,
@@ -78,7 +81,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
                                              UserService userService) {
         super(sectionService, questionService);
         this.applicationService = applicationService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.sectionService = sectionService;
         this.questionService = questionService;
         this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
@@ -99,7 +102,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
     public SummaryViewModel populate (long applicationId, UserResource user, ApplicationForm form) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         Map<Long, List<QuestionResource>> sectionQuestions = getSectionQuestions(competition.getId());
 

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.populator.finance.service.FinanceService;
 import org.innovateuk.ifs.application.populator.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.populator.section.YourProjectCostsSectionPopulator;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
@@ -13,6 +12,7 @@ import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentDetailedFinanc
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.ApplicationForm;
@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.form.resource.SectionType.PROJECT_COST_FINANCES
 public class AssessmentDetailedFinancesModelPopulator {
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private AssessmentService assessmentService;
@@ -66,7 +66,7 @@ public class AssessmentDetailedFinancesModelPopulator {
 
     public AssessmentDetailedFinancesViewModel populateModel(long assessmentId, long organisationId, Model model) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
-        CompetitionResource competition = competitionService.getById(assessment.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(assessment.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         List<ProcessRoleResource> applicationRoles = processRoleService.getByApplicationId(assessment.getApplication());
 

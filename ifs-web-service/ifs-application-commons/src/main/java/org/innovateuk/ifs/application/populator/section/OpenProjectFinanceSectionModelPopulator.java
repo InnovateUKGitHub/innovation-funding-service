@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.populator.finance.view.FinanceViewHandlerP
 import org.innovateuk.ifs.application.populator.finance.view.ProjectFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.populator.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.BaseOpenFinanceSectionModelPopulator;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
@@ -37,9 +36,6 @@ public class OpenProjectFinanceSectionModelPopulator extends BaseOpenFinanceSect
 
     @Autowired
     private OrganisationService organisationService;
-
-    @Autowired
-    private CompetitionService competitionService;
 
     @Autowired
     private ProjectFinanceOverviewModelManager projectFinanceOverviewModelManager;

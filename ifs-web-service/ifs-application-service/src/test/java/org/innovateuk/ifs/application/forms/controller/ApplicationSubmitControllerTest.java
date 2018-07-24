@@ -176,14 +176,17 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
 
     @Test
     public void applicationSubmitAgreeingToTerms() throws Exception {
-        ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(OPEN).build();
+        ApplicationResource app = newApplicationResource()
+                .withId(1L)
+                .withCompetitionStatus(OPEN)
+                .withCompetition(competitionId)
+                .build();
         when(userService.isLeadApplicant(applicant.getId(), app)).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(app.getId())).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(applicationRestService.updateApplicationState(app.getId(), SUBMITTED)).thenReturn(restSuccess());
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-
 
         mockMvc.perform(post("/application/" + app.getId() + "/submit")
                 .param("agreeTerms", "yes"))
@@ -216,7 +219,6 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.SUBMITTED);
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(competitionService.getById(anyLong())).thenReturn(competitionResource);
 
         mockMvc.perform(get("/application/" + app.getId() + "/track"))
                 .andExpect(view().name("application-track"))
@@ -231,7 +233,6 @@ public class ApplicationSubmitControllerTest extends AbstractApplicationMockMVCT
         app.setApplicationState(ApplicationState.OPEN);
 
         when(applicationService.getById(app.getId())).thenReturn(app);
-        when(competitionService.getById(app.getCompetition())).thenReturn(competitionResource);
 
         mockMvc.perform(get("/application/" + app.getId() + "/track"))
                 .andExpect(status().is3xxRedirection())

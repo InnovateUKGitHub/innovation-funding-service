@@ -292,7 +292,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
 
         competitionResource.setCompetitionStatus(CompetitionStatus.FUNDERS_PANEL);
 
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         ApplicationOverviewIneligibilityViewModel expectedIneligibility = new ApplicationOverviewIneligibilityViewModel(
                 true, "Removed by", now, "Reason for removal...");
@@ -310,7 +310,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
 
         competitionResource.setCompetitionStatus(CompetitionStatus.IN_ASSESSMENT);
 
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
 
         expectedIneligibility = new ApplicationOverviewIneligibilityViewModel(
                 false, "Removed by", now, "Reason for removal...");

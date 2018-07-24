@@ -2,12 +2,11 @@ package org.innovateuk.ifs.application.creation.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
@@ -23,6 +22,7 @@ import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.mockito.Matchers.any;
@@ -46,10 +46,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
     private OrganisationService organisationService;
 
     @Mock
-    private ApplicationService applicationService;
-
-    @Mock
-    private CompetitionService competitionService;
+    private PublicContentItemRestService publicContentItemRestService;
 
     @Override
     protected ApplicationCreationController supplyControllerUnderTest() {
@@ -70,7 +67,6 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
         when(organisationService.getCompanyHouseOrganisation(COMPANY_ID)).thenReturn(organisationSearchResult);
-        when(applicationService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(applicationResource);
     }
 
     @Test
@@ -81,7 +77,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .withCompetitionCloseDate(ZonedDateTime.now().plusDays(1))
                 .withNonIfs(false)
                 .build();
-        when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
 
         MvcResult result = mockMvc.perform(get("/application/create/start-application/{competitionId}", competitionId))
                 .andExpect(status().is2xxSuccessful())
@@ -101,7 +97,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .withCompetitionCloseDate(ZonedDateTime.now().plusDays(1))
                 .withNonIfs(true)
                 .build();
-        when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
 
         mockMvc.perform(get("/application/create/start-application/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())
@@ -120,7 +116,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .withCompetitionCloseDate(ZonedDateTime.now().plusDays(2))
                 .withNonIfs(false)
                 .build();
-        when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
 
         mockMvc.perform(get("/application/create/start-application/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())
@@ -138,7 +134,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .withCompetitionCloseDate(ZonedDateTime.now().minusDays(1))
                 .withNonIfs(false)
                 .build();
-        when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(publicContentItem));
 
         mockMvc.perform(get("/application/create/start-application/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())

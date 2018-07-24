@@ -8,12 +8,12 @@ import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewView
 import org.innovateuk.ifs.application.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.ApplicationCompletedModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 @Component
 public class ApplicationOverviewModelPopulator extends AbstractApplicationModelPopulator {
 
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private ProcessRoleService processRoleService;
     private OrganisationService organisationService;
     private ProjectService projectService;
@@ -45,7 +45,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
     private ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator;
     private ApplicationOverviewUserModelPopulator applicationOverviewUserModelPopulator;
 
-    public ApplicationOverviewModelPopulator(CompetitionService competitionService,
+    public ApplicationOverviewModelPopulator(CompetitionRestService competitionRestService,
                                              ProcessRoleService processRoleService,
                                              OrganisationService organisationService,
                                              SectionService sectionService,
@@ -56,7 +56,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
                                              ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator,
                                              ApplicationOverviewUserModelPopulator applicationOverviewUserModelPopulator) {
         super(sectionService, questionService);
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.processRoleService = processRoleService;
         this.sectionService = sectionService;
         this.organisationService = organisationService;
@@ -68,7 +68,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
     }
 
     public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId, ApplicationForm form){
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
         ProjectResource projectResource = projectService.getByApplicationId(application.getId());

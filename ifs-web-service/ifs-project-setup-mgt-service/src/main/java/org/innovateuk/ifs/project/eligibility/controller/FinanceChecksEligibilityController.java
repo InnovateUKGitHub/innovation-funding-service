@@ -13,13 +13,13 @@ import org.innovateuk.ifs.application.populator.finance.viewmodel.ProjectFinance
 import org.innovateuk.ifs.application.populator.section.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -99,7 +99,7 @@ public class FinanceChecksEligibilityController {
     private ApplicationModelPopulator applicationModelPopulator;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
@@ -136,7 +136,7 @@ public class FinanceChecksEligibilityController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         return doViewEligibility(competition, application, project, allSections, user, isLeadPartnerOrganisation, organisation, model, null, form, bindingResult);
     }
@@ -236,7 +236,7 @@ public class FinanceChecksEligibilityController {
             OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
             boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
             List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicationResource.getCompetition());
-            CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
+            CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
             validationHandler.addAnyErrors(saveApplicationErrors);
             return doViewEligibility(competition, applicationResource, projectResource, allSections, user, isLeadPartnerOrganisation, organisationResource, model, null, form, bindingResult);
         } else {
@@ -294,7 +294,7 @@ public class FinanceChecksEligibilityController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicationResource.getCompetition());
-        CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
@@ -321,7 +321,7 @@ public class FinanceChecksEligibilityController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicationResource.getCompetition());
-        CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 

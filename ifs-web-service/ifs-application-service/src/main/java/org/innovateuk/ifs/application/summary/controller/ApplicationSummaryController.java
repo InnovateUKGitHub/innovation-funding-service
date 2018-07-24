@@ -3,10 +3,10 @@ package org.innovateuk.ifs.application.summary.controller;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.summary.populator.ApplicationSummaryViewModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -27,7 +27,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ApplicationSummaryController {
 
     private ApplicationService applicationService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
 
@@ -36,11 +36,11 @@ public class ApplicationSummaryController {
 
     @Autowired
     public ApplicationSummaryController(ApplicationService applicationService,
-                                        CompetitionService competitionService,
+                                        CompetitionRestService competitionRestService,
                                         InterviewAssignmentRestService interviewAssignmentRestService,
                                         ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
         this.applicationService = applicationService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;
     }
@@ -58,7 +58,7 @@ public class ApplicationSummaryController {
                                      @RequestParam MultiValueMap<String, String> queryParams) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
         if (competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview) {

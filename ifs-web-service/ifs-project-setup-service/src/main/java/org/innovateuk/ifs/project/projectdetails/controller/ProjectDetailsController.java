@@ -4,7 +4,6 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -12,6 +11,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -91,7 +91,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     private ApplicationService applicationService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private OrganisationService organisationService;
@@ -112,7 +112,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
         boolean partnerProjectLocationRequired = competitionResource.isLocationPerPartner();
 
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
@@ -146,7 +146,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -594,7 +594,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", invite.getId()))
             .collect(toList());
 
-        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
         SelectProjectManagerViewModel viewModel = new SelectProjectManagerViewModel(thisOrganisationUsers, invitedUsers, projectResource, loggedInUser.getId(), applicationResource, competitionResource, inviteAction);
 
@@ -648,7 +648,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         List<InviteProjectResource> inviteProjectResources = simpleFilter(inviteProjectResourceList, inviteProjectResourceFilterFn);
         List<ProjectUserInviteModel> invitedUsers = simpleMap(inviteProjectResources, inviteeMappingFn);
 
-        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
         SelectFinanceContactViewModel viewModel = new SelectFinanceContactViewModel(thisOrganisationUsers, invitedUsers, financeContactForm.getOrganisation(), projectResource, loggedInUser.getId(), applicationResource, competitionResource, inviteAction);
 

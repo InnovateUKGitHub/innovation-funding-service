@@ -7,6 +7,7 @@ import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForInterviewDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForInterviewDashboardViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
 import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -27,19 +28,19 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class AssessorCompetitionForInterviewDashboardModelPopulator {
 
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private ApplicationService applicationService;
     private ProcessRoleService processRoleService;
     private OrganisationService organisationService;
     private InterviewAllocationRestService interviewAllocateRestService;
 
     @Autowired
-    public AssessorCompetitionForInterviewDashboardModelPopulator(CompetitionService competitionService,
+    public AssessorCompetitionForInterviewDashboardModelPopulator(CompetitionRestService competitionRestService,
                                                                   ApplicationService applicationService,
                                                                   ProcessRoleService processRoleService,
                                                                   InterviewAllocationRestService interviewAllocateRestService,
                                                                   OrganisationService organisationService) {
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.applicationService = applicationService;
         this.processRoleService = processRoleService;
         this.interviewAllocateRestService = interviewAllocateRestService;
@@ -47,7 +48,7 @@ public class AssessorCompetitionForInterviewDashboardModelPopulator {
     }
 
     public AssessorCompetitionForInterviewDashboardViewModel populateModel(long competitionId, long userId, String originQuery) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         List<AssessorCompetitionForInterviewDashboardApplicationViewModel> applications = getApplications(userId, competitionId);
 

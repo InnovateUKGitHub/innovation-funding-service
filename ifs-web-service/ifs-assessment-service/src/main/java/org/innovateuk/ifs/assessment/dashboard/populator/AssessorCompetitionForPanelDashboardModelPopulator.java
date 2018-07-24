@@ -7,6 +7,7 @@ import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
@@ -27,18 +28,18 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class AssessorCompetitionForPanelDashboardModelPopulator {
 
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private ApplicationService applicationService;
     private ProcessRoleService processRoleService;
     private ReviewRestService reviewRestService;
     private OrganisationService organisationService;
 
-    public AssessorCompetitionForPanelDashboardModelPopulator(CompetitionService competitionService,
+    public AssessorCompetitionForPanelDashboardModelPopulator(CompetitionRestService competitionRestService,
                                                               ApplicationService applicationService,
                                                               ProcessRoleService processRoleService,
                                                               ReviewRestService reviewRestService,
                                                               OrganisationService organisationService) {
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.applicationService = applicationService;
         this.processRoleService = processRoleService;
         this.reviewRestService = reviewRestService;
@@ -46,7 +47,7 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
     }
 
     public AssessorCompetitionForPanelDashboardViewModel populateModel(Long competitionId, Long userId) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ZonedDateTime panelDate = competition.getFundersPanelDate();
 
         List<AssessorCompetitionForPanelDashboardApplicationViewModel> applications = getApplications(userId, competitionId);
