@@ -20,6 +20,8 @@ public class GrantClaimMaximumResource {
 
     private Integer maximum;
 
+    private Long competitionType;
+
     public Long getId() {
         return id;
     }
@@ -66,5 +68,13 @@ public class GrantClaimMaximumResource {
 
     public void setCompetitions(List<CompetitionResource> competitions) {
         this.competitions = competitions;
+    }
+
+    public Long getCompetitionType() {
+        return competitionType;
+    }
+
+    public void setCompetitionType(Long competitionType) {
+        this.competitionType = competitionType;
     }
 }

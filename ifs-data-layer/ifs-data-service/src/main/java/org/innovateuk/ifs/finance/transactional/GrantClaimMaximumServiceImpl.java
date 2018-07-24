@@ -14,26 +14,24 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class GrantClaimMaximumServiceImpl implements GrantClaimMaximumService {
 
-    private GrantClaimMaximumRepository repository;
+    private GrantClaimMaximumRepository grantClaimMaximumRepository;
     private GrantClaimMaximumMapper grantClaimMaximumMapper;
 
-    public GrantClaimMaximumServiceImpl(GrantClaimMaximumRepository repository,
+    public GrantClaimMaximumServiceImpl(GrantClaimMaximumRepository grantClaimMaximumRepository,
                                         GrantClaimMaximumMapper grantClaimMaximumMapper) {
-        this.repository = repository;
+        this.grantClaimMaximumRepository = grantClaimMaximumRepository;
         this.grantClaimMaximumMapper = grantClaimMaximumMapper;
     }
 
     @Override
     public ServiceResult<GrantClaimMaximumResource> getGrantClaimMaximumById(Long id) {
-        return find(repository.findOne(id), notFoundError(GrantClaimMaximum.class, id)).andOnSuccess(
+        return find(grantClaimMaximumRepository.findOne(id), notFoundError(GrantClaimMaximum.class, id)).andOnSuccess(
                 maximum -> serviceSuccess(grantClaimMaximumMapper.mapToResource(maximum)));
     }
 
     @Override
-    public ServiceResult<Void> update(GrantClaimMaximumResource grantClaimMaximumResource) {
-        GrantClaimMaximum max = grantClaimMaximumMapper.mapIdToDomain(grantClaimMaximumResource.getId());
-        max.setMaximum(grantClaimMaximumResource.getMaximum());
-        repository.save(max);
-        return serviceSuccess();
+    public ServiceResult<GrantClaimMaximumResource> save(GrantClaimMaximumResource grantClaimMaximumResource) {
+        GrantClaimMaximum gcm = grantClaimMaximumRepository.save(grantClaimMaximumMapper.mapToDomain(grantClaimMaximumResource));
+        return serviceSuccess(grantClaimMaximumMapper.mapToResource(gcm));
     }
 }

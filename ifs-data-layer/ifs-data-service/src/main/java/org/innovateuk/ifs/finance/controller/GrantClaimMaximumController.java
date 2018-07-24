@@ -25,8 +25,8 @@ public class GrantClaimMaximumController {
         return grantClaimMaximumService.getGrantClaimMaximumById(id).toGetResponse();
     }
 
-    @PutMapping("/")
-    public RestResult<Void> update(@RequestBody final GrantClaimMaximumResource gcm) {
-        return grantClaimMaximumService.update(gcm).toPutResponse();
+    @PostMapping("/")
+    public RestResult<GrantClaimMaximumResource> update(@RequestBody final GrantClaimMaximumResource gcm) {
+        return grantClaimMaximumService.save(gcm).toPostCreateResponse();
     }
 }

@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Competition setup section saver for the eligibility section.
@@ -32,14 +34,11 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
     public static final String LEAD_APPLICANT_TYPES = "leadApplicantTypes";
 
     private CompetitionSetupRestService competitionSetupRestService;
-    private CompetitionRestService competitionRestService;
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
     public EligibilitySectionUpdater(CompetitionSetupRestService competitionSetupRestService,
-                                     CompetitionRestService competitionRestService,
                                      GrantClaimMaximumRestService grantClaimMaximumRestService) {
         this.competitionSetupRestService = competitionSetupRestService;
-        this.competitionRestService = competitionRestService;
         this.grantClaimMaximumRestService = grantClaimMaximumRestService;
     }
 
@@ -76,30 +75,43 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
             competition.setStreamName(null);
         }
 
-        if (eligibilityForm.getOverrideFundingRules()) {
-            competition.getGrantClaimMaximums().forEach(gcmId -> {
-                GrantClaimMaximumResource gcm = grantClaimMaximumRestService.getGrantClaimMaximumById(gcmId).getSuccess();
-//                if (gcm.getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS)) {
-                    gcm.setMaximum(eligibilityForm.getFundingLevelPercentage());
-                    grantClaimMaximumRestService.update(gcm);
-//                }
-            });
-        } else {
-            //TODO: only for organisationtype is business
-            CompetitionResource template = competitionRestService.findTemplateCompetitionForCompetitionType(
-                    competition.getCompetitionType()).getSuccess();
-            competition.setGrantClaimMaximums(template.getGrantClaimMaximums());
-        }
+        Set<GrantClaimMaximumResource> gcms = competition.getGrantClaimMaximums()
+                .stream()
+                .map(id -> grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess())
+                .filter(gcm -> gcm.getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId()))
+                .collect(Collectors.toSet());
 
+        gcms.forEach(oldGCM -> {
+            GrantClaimMaximumResource toSaveGCM = createNewGCM(oldGCM, eligibilityForm.getFundingLevelPercentage());
+
+            if (!toSaveGCM.getMaximum().equals(oldGCM.getMaximum())) {
+                // remove the old
+                competition.getGrantClaimMaximums().remove(oldGCM.getId());
+                // save the new
+                GrantClaimMaximumResource saved = grantClaimMaximumRestService.save(toSaveGCM).getSuccess();
+                competition.getGrantClaimMaximums().add(saved.getId());
+            }
+        });
+        eligibilityForm.setOldFundingPercentage(eligibilityForm.getFundingLevelPercentage());
+        eligibilityForm.setOldOverrideFundingRules(eligibilityForm.getOverrideFundingRules());
 
         competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
 
         CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
         competition.setCollaborationLevel(level);
-
         competition.setLeadApplicantTypes(eligibilityForm.getLeadApplicantTypes());
 
         return competitionSetupRestService.update(competition).toServiceResult();
+    }
+
+    private GrantClaimMaximumResource createNewGCM(GrantClaimMaximumResource oldGCM, Integer newValue) {
+        GrantClaimMaximumResource newGcm = new GrantClaimMaximumResource();
+        newGcm.setOrganisationSize(oldGCM.getOrganisationSize());
+        newGcm.setOrganisationType(oldGCM.getOrganisationType());
+        newGcm.setResearchCategory(oldGCM.getResearchCategory());
+        newGcm.setCompetitionType(oldGCM.getCompetitionType());
+        newGcm.setMaximum(newValue);
+        return newGcm;
     }
 
     @Override
