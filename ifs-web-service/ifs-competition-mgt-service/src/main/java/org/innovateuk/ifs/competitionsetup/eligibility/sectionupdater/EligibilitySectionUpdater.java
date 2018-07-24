@@ -92,8 +92,6 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
                 competition.getGrantClaimMaximums().add(saved.getId());
             }
         });
-        eligibilityForm.setOldFundingPercentage(eligibilityForm.getFundingLevelPercentage());
-        eligibilityForm.setOldOverrideFundingRules(eligibilityForm.getOverrideFundingRules());
 
         competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
 
