@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewMod
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.populator.section.OpenApplicationFinanceSectionModelPopulator;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
@@ -25,8 +26,8 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.ApplicationModelPopulator;
+import org.innovateuk.ifs.ApplicationSectionAndQuestionModelPopulator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

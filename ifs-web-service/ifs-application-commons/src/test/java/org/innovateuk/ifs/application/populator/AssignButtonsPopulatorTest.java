@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.populator;
+package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.AssignButtonsPopulator;
 import org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder;
 import org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;

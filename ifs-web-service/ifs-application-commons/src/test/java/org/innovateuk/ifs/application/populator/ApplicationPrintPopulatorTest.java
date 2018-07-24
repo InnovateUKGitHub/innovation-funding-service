@@ -1,5 +1,9 @@
-package org.innovateuk.ifs.populator;
+package org.innovateuk.ifs.application.populator;
 
+import org.innovateuk.ifs.ApplicationModelPopulator;
+import org.innovateuk.ifs.ApplicationPrintPopulator;
+import org.innovateuk.ifs.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;

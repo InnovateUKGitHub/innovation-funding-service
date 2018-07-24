@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.populator;
+package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteService;

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.innovateuk.ifs.populator.ApplicationPrintPopulator;
+import org.innovateuk.ifs.ApplicationPrintPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;

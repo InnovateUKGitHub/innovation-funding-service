@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
-import org.innovateuk.ifs.populator.ApplicationPrintPopulator;
+import org.innovateuk.ifs.ApplicationPrintPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.user.resource.UserResource;

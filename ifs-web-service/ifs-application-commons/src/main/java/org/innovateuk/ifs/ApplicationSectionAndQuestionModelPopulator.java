@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.populator;
+package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;

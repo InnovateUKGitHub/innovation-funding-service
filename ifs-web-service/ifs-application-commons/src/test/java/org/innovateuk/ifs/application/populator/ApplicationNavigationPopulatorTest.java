@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.populator;
+package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationState;

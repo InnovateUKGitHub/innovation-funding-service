@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.populator;
+package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;

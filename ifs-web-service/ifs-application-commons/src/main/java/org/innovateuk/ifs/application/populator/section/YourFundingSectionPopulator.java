@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.application.populator;
+package org.innovateuk.ifs.application.populator.section;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.application.populator.AbstractSectionPopulator;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
