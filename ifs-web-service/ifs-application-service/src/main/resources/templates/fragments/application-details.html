@@ -4,7 +4,7 @@
     <th:block th:unless="${model.readonly}">
         <!--/* start of edit template */-->
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'govuk-form-group--error'">
-            <label class="govuk-label" for="application.name">
+            <label class="govuk-label--s" for="application.name">
                 Application title
             </label>
             <th:block th:insert="question-type/form-elements :: form-hint (hint='Enter the full title of your proposed project.')" />
@@ -52,7 +52,7 @@
                 <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategory')" />
             </label>
             <div th:if="${model.researchCategoryHasBeenSelected}">
-                Chosen research category: <th:block th:text="${model.selectedResearchCategoryName}"/>
+                <p class="govuk-body">Chosen research category: <th:block th:text="${model.selectedResearchCategoryName}"/></p>
 
                 <!--/* Input is used here to easily check if a Research Category has been selected for mark as complete validation */-->
                 <input type="hidden" th:field="*{__application.researchCategory.name__}" value="Research category has been selected"/>

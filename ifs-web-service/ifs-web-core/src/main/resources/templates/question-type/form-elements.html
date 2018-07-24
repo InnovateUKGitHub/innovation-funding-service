@@ -3,7 +3,7 @@
 
 <!-- =========================== Form label =========================== -->
 <th:block th:fragment="form-label (name)">
-    <label class=govuk-label" th:if="${name}" th:for="${id}">
+    <label class="govuk-label" th:if="${name}" th:for="${id}">
         <span th:text="${name}"></span>
     </label>
 </th:block>
@@ -329,26 +329,26 @@
 <!-- ========================= Assign - make selection =========================== -->
 <th:block th:fragment="assign-button-body (model)" th:with="question=${model.question}">
     <th:block th:if="${model.assigned}">
-        <span class="secondary-notification" th:if="${model.assignedToCurrentUser}">
+        <span class="secondary-notification govuk-body" th:if="${model.assignedToCurrentUser}">
           <th:block th:if="${model.assignedByLead}"
                     th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you </th:block>
           <th:block th:unless="${model.assignedByLead}"
                     th:text="${fullButtonText} ? 'Reassigned to you.' : 'Reassigned to'">Reassigned to you </th:block>
         </span>
-        <span class="secondary-notification"
+        <span class="secondary-notification govuk-body"
               th:unless="${model.assignedToCurrentUser}"
               th:text="${fullButtonText} ? |Assigned to ${name}. | : 'Assigned to'"
               th:with="name=${model.assignee.name}">
-            <span class="assign-name" th:text="${name}">NAME</span>
+            <span class="assign-name govuk-body" th:text="${name}">NAME</span>
         </span>
     </th:block>
 
     <th:block th:if="${model.notAssigned}">
-        <span class="secondary-notification" th:if="${model.currentUserIsLead}">
+        <span class="secondary-notification govuk-body" th:if="${model.currentUserIsLead}">
             <th:block th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you</th:block>
         </span>
-        <span class="secondary-notification" th:unless="${model.currentUserIsLead}">
-            Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
+        <span class="secondary-notification govuk-body" th:unless="${model.currentUserIsLead}">
+            Assigned to <span class="govuk-body" th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
         </span>
     </th:block>
 
@@ -390,7 +390,7 @@
   <th:block th:unless="${model.notAssigned} ">
 
     <th:block th:if="${model.currentUserIsLead}">
-        <span class="secondary-notification" th:if="${model.assignedToCurrentUser}">
+        <span class="secondary-notification govuk-body" th:if="${model.assignedToCurrentUser}">
             <th:block th:if="${model.assignedByLead}"
                       th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'">ASSIGN BUTTON TEXT</th:block>
             <th:block th:unless="${model.assignedByLead}"
@@ -399,13 +399,13 @@
     </th:block>
 
     <th:block th:unless="${model.currentUserIsLead}">
-        <span class="secondary-notification" th:if="${model.assignedToCurrentUser}">
+        <span class="secondary-notification govuk-body" th:if="${model.assignedToCurrentUser}">
             <th:block th:if="${model.assignedByLead}">Assigned to you</th:block>
             <th:block th:unless="${model.assignedByLead}">Reassigned to you</th:block>
         </span>
     </th:block>
 
-    <span class="secondary-notification secondary-notification-button" th:unless="${model.assignedToCurrentUser}">
+    <span class="secondary-notification govuk-body secondary-notification-button" th:unless="${model.assignedToCurrentUser}">
         <th:block th:unless="${model.currentUserIsLead}">Assigned to</th:block>
         <span th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : ${name}"
               th:with="name=${model.assignee.name}">
@@ -416,13 +416,13 @@
   </th:block>
 
   <th:block th:if="${model.notAssigned}">
-    <span class="secondary-notification" th:if="${model.currentUserIsLead}">
+    <span class="secondary-notification govuk-body" th:if="${model.currentUserIsLead}">
         <th:block th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'"
                   th:if="${question.isAssignEnabled()}">ASSIGN BUTTON TEXT</th:block>
         <th:block th:unless="${question.isAssignEnabled()}">Assigned to you</th:block>
     </span>
-    <span class="secondary-notification" th:unless="${model.currentUserIsLead}">
-      Assigned to <span th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
+    <span class="secondary-notification govuk-body" th:unless="${model.currentUserIsLead}">
+      Assigned to <span class="govuk-body" th:text="${name}" th:with="name=${model.leadApplicant.name}"></span>
     </span>
   </th:block>
 </th:block>

@@ -3,7 +3,7 @@
     "compass-importer": "^0.4.1",
     "eslint": "^4.19.1",
     "files-exist": "^1.1.0",
-    "govuk-frontend": "^1.0.0",
+    "govuk-frontend": "^1.1.1",
     "gulp": "^4.0.0",
     "gulp-chug": "^0.5.1",
     "gulp-concat": "^2.6.1",
