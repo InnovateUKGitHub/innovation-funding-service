@@ -96,6 +96,7 @@ public class CompetitionSetupDocumentsController {
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
+        model.addAttribute(NEW_DOCUMENT_TAG, Boolean.FALSE);
         return getDocumentPage(model, competitionResource, competitionId, documentId, true, null);
     }
 
@@ -119,13 +120,22 @@ public class CompetitionSetupDocumentsController {
         return String.format("redirect:/competition/setup/%d/section/documents/landing-page", competitionId);
     }
 
+    @PostMapping("/document/{documentId}/edit", params = "removeDocument")
+    public String removeDocumentInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                            @PathVariable("documentId") Long documentId,
+                                            Model model) {
+
+        // TODO: delete old row
+        model.addAttribute(NEW_DOCUMENT_TAG, Boolean.FALSE);
+        return String.format("redirect:/competition/setup/%d/section/documents/landing-page", competitionId);
+    }
+
     @PostMapping("/document/{documentId}/edit")
     public String saveDocumentInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                           @PathVariable("documentId") Long documentId,
                                           Model model) {
 
         // TODO: save over old row
-        model.addAttribute(NEW_DOCUMENT_TAG, Boolean.FALSE);
         return String.format("redirect:/competition/setup/%d/section/documents/landing-page", competitionId);
     }
 

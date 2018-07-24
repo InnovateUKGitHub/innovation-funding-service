@@ -102,6 +102,13 @@ PARAMETERS NOT USED YET..
 
         </th:block>
 
+    <!-- new link -->
+    <th:form th:unless="${new_document}">
+        <p>
+            <button type="submit" name="removeDocument" class="buttonlink">Remove</button>
+        </p>
+    </th:form>
+
 		<div class="extra-margin">
 	        <button type="submit" class="button">
 	            Done
