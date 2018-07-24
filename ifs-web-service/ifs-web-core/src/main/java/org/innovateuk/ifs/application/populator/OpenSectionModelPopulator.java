@@ -24,7 +24,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.util.Comparator.comparingLong;
+import static org.innovateuk.ifs.organisation.resource.OrganisationResource.normalOrgComparator;
 
 /**
  * Class for creating the model for the open section page.
@@ -111,7 +111,6 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
                 .findAny().orElse(null);
 
         final Comparator<OrganisationResource> comparator;
-        Comparator<OrganisationResource> normalOrgComparator = comparingLong(OrganisationResource::getId);
 
         if (leadOrganisation != null) {
             Comparator<OrganisationResource> leadComparator = Comparator.comparing(organisationResource -> leadOrganisation.getId().equals(organisationResource.getId()), Comparator.reverseOrder());
