@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.CharMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.application.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.assessor.form.AssessorsForm;
@@ -26,10 +26,8 @@ import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm
 import org.innovateuk.ifs.competitionsetup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestonesForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -65,11 +63,12 @@ public class CompetitionSetupController {
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String SECTION_PATH_KEY = "sectionPath";
     private static final String SUBSECTION_PATH_KEY = "subsectionPath";
-    public static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
+    private static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
+    private static final String DASHBOARD_REDIRECT = "redirect:/dashboard";
     private static final String MODEL = "model";
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -97,7 +96,7 @@ public class CompetitionSetupController {
                                               @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                               @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompetitionSetupSummaryForm competitionSetupSummaryForm,
                                               @SuppressWarnings("UnusedParameters") BindingResult bindingResult) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         if (competition.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
@@ -114,32 +113,35 @@ public class CompetitionSetupController {
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
         if (section == null) {
             LOG.error("Invalid section path specified: " + sectionPath);
-            return "redirect:/dashboard";
+            return DASHBOARD_REDIRECT;
         }
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (section.preventEdit(competition)) {
-            return "redirect:/dashboard";
+            return DASHBOARD_REDIRECT;
         }
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        competitionSetupRestService.markSectionIncomplete(competitionId, section).getSuccess();
-        if (!competition.isSetupAndLive()) {
-            competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
-        }
-
-        return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
+        return competitionSetupRestService.markSectionIncomplete(competitionId, section).handleSuccessOrFailure(
+                failure -> "redirect:/competition/setup/" + competition.getId(),
+                success -> {
+                    if (!competition.isSetupAndLive()) {
+                        competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
+                    }
+                    return "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
+                }
+        );
     }
 
     @GetMapping("/{competitionId}/section/{sectionPath}")
     public String editCompetitionSetupSection(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                               @PathVariable(SECTION_PATH_KEY) String sectionPath,
                                               Model model) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
@@ -148,7 +150,7 @@ public class CompetitionSetupController {
 
         if (section == null) {
             LOG.error("Invalid section path specified: " + sectionPath);
-            return "redirect:/dashboard";
+            return DASHBOARD_REDIRECT;
         } else if (section == CompetitionSetupSection.APPLICATION_FORM) {
             return format(APPLICATION_LANDING_REDIRECT, competitionId);
         } else if (section == CompetitionSetupSection.CONTENT) {
@@ -179,7 +181,7 @@ public class CompetitionSetupController {
                                     @PathVariable(SECTION_PATH_KEY) String sectionPath,
                                     @PathVariable(SUBSECTION_PATH_KEY) String subsectionPath) {
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
         CompetitionSetupSubsection subsection = CompetitionSetupSubsection.fromPath(subsectionPath);
 
@@ -207,7 +209,7 @@ public class CompetitionSetupController {
                                     @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                     @PathVariable(SECTION_PATH_KEY) String sectionPath) {
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
         try {
             competitionSetupService.autoSaveCompetitionSetupSection(competition,
@@ -246,7 +248,7 @@ public class CompetitionSetupController {
                                                  ValidationHandler validationHandler,
                                                  long competitionId,
                                                  Model model) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         checkRestrictionOfInitialDetails(CompetitionSetupSection.INITIAL_DETAILS, competition, model);
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.INITIAL_DETAILS, model);
@@ -258,7 +260,7 @@ public class CompetitionSetupController {
                                                  ValidationHandler validationHandler,
                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                  Model model, HttpServletRequest request) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (request.getParameterMap().containsKey("generate-code")) {
             if (competition.getStartDate() != null) {
@@ -290,7 +292,7 @@ public class CompetitionSetupController {
                                                   ValidationHandler validationHandler,
                                                   @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                   Model model) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if ("yes".equals(competitionSetupForm.getMultipleStream()) && StringUtils.isEmpty(competitionSetupForm.getStreamName())) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "streamName", "A stream name is required"));
@@ -306,7 +308,7 @@ public class CompetitionSetupController {
                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                  Model model) {
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (bindingResult.hasErrors()) {
             competitionSetupMilestoneService.sortMilestones(competitionSetupForm);
@@ -321,7 +323,7 @@ public class CompetitionSetupController {
                                                       ValidationHandler validationHandler,
                                                       @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                       Model model) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.APPLICATION_FORM, model);
     }
@@ -333,7 +335,7 @@ public class CompetitionSetupController {
                                                 ValidationHandler validationHandler,
                                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                 Model model) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ASSESSORS, model);
     }
@@ -344,7 +346,7 @@ public class CompetitionSetupController {
                                                 ValidationHandler validationHandler,
                                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                 Model model) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
     }
@@ -374,17 +376,16 @@ public class CompetitionSetupController {
         ServiceResult<Void> deleteResult = competitionSetupService.deleteCompetition(competitionId);
 
         return validationHandler.addAnyErrors(deleteResult, asGlobalErrors())
-                .failNowOrSucceedWith(failureView, () -> "redirect:/dashboard");
+                .failNowOrSucceedWith(failureView, () -> DASHBOARD_REDIRECT);
     }
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @GetMapping("/{competitionId}/manage-innovation-leads/find")
-    public String manageInnovationLead(@P("competitionId")@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                       Model model,
-                                       UserResource loggedInUser) {
+    public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                       Model model) {
 
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
@@ -397,11 +398,10 @@ public class CompetitionSetupController {
 
     @PreAuthorize("hasPermission(#competitionId,'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @GetMapping("/{competitionId}/manage-innovation-leads/overview")
-    public String manageInnovationLeadOverview(@P("competitionId") @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                       Model model,
-                                       UserResource loggedInUser) {
+    public String manageInnovationLeadOverview(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                               Model model) {
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
@@ -414,49 +414,52 @@ public class CompetitionSetupController {
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @PostMapping("/{competitionId}/add-innovation-lead/{innovationLeadUserId}")
-    public String addInnovationLead(@P("competitionId")@PathVariable(COMPETITION_ID_KEY) long competitionId,
+    public String addInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                     @PathVariable("innovationLeadUserId") long innovationLeadUserId,
-                                    Model model,
-                                    UserResource loggedInUser) {
+                                    Model model) {
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
-        competitionService.addInnovationLead(competitionId, innovationLeadUserId);
-        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-
-        return "competition/manage-innovation-leads-find";
+        return competitionSetupService.addInnovationLead(competitionId, innovationLeadUserId).handleSuccessOrFailure(
+                failure -> "redirect:/competition/manage-innovation-leads/find",
+                success -> {
+                    model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
+                    return "competition/manage-innovation-leads-find";
+                }
+        );
     }
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @PostMapping("/{competitionId}/remove-innovation-lead/{innovationLeadUserId}")
-    public String removeInnovationLead(@P("competitionId") @PathVariable(COMPETITION_ID_KEY) long competitionId,
+    public String removeInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        @PathVariable("innovationLeadUserId") long innovationLeadUserId,
-                                       Model model,
-                                       UserResource loggedInUser) {
+                                       Model model) {
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
-        competitionService.removeInnovationLead(competitionId, innovationLeadUserId);
-        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-
-        return "competition/manage-innovation-leads-overview";
+        return competitionSetupService.removeInnovationLead(competitionId, innovationLeadUserId).handleSuccessOrFailure(
+                failure -> "redirect:/competition/manage-innovation-leads/overview",
+                success -> {
+                    model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
+                    return "competition/manage-innovation-leads-overview";
+                }
+        );
     }
-
 
     /* AJAX Function */
     @GetMapping("/{competitionId}/generateCompetitionCode")
     @ResponseBody
     public JsonNode generateCompetitionCode(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         if (competition.getStartDate() != null) {
             return this.createJsonObjectNode(true, competitionSetupRestService.generateCompetitionCode(competitionId, competition.getStartDate())
                     .getSuccess());
