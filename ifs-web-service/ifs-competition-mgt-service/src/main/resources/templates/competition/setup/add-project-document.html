@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+   <head>
+      <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+   </head>
+   <body class="competition-management competition-setup">
+      <th:block th:insert="fragments/layout :: body-start" />
+      <th:block th:insert="fragments/layout :: global-header" />
+      <main tabindex="-1" id="content">
+         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Documents',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/section/documents/landing-page(competitionId=${model.general.competition.id})}" />
+         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Document type',size='heading-xlarge'" />
+         <form method="post"
+            th:object="${form}"
+            th:action="@{'/competition/setup/{competitionId}/section/project-documents/add'(competitionId=${competitionId})}"
+            >
+            <th:block id="section-input">
+               <div class="form-group" >
+                  <label class="form-label" for="title">
+                  <span class="form-label-bold">Title</span>
+                  </label>
+                  <input id="title"
+                     class="form-control width-x-large"
+                     th:errorclass="form-control-error"
+                     type="text"
+                     th:field="${form.title}"
+                     required="required"
+                     th:attr="data-required-errormessage=#{validation.standard.title.required}" />
+               </div>
+               <div class="form-group" >
+                  <label class="form-label">
+                  <span class="form-label-bold">Accepted file types</span>
+                  </label>
+                  <div class="multiple-choice">
+                     <input id="pdf"
+                        type="checkbox"
+                        value="accepted"
+                        th:field="${form.pdf}"
+                        data-autosave-disabled
+                        />
+                     <label th:for="pdf">
+                     <span>PDF</span>
+                     </label>
+                  </div>
+                  <div class="multiple-choice">
+                     <input id="spreadsheet"
+                        type="checkbox"
+                        th:field="${form.spreadsheet}"
+                        />
+                     <label th:for="spreadsheet">
+                     <span>spreadsheet</span>
+                     </label>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="form-label" for="guidance">
+                  <span class="form-label-bold">Guidance</span>
+                  </label>
+                  <div class="textarea-wrapped">
+                     <textarea id="guidance"
+                        rows="16"
+                        class="form-control width-full"
+                        data-editor="html"
+                        th:errorclass="form-control-error"
+                        maxlength="5000"
+                        th:field="${form.guidance}"
+                        required="required"
+                        th:attr="data-required-errormessage=#{validation.documentguidance.message.required}"></textarea>
+                  </div>
+               </div>
+            </th:block>
+            <th:form th:unless="${new_document}">
+               <p>
+                  <button type="submit" name="removeDocument" class="buttonlink">Remove</button>
+               </p>
+            </th:form>
+            <div class="extra-margin">
+               <button type="submit" class="button">
+               Done
+               </button>
+            </div>
+         </form>
+         <th:block th:insert="fragments/layout :: main-content-end" />
+      </main>
+      <th:block th:insert="fragments/layout :: footer" />
+      <th:block th:insert="fragments/layout :: body-end" />
+      <th:block th:insert="fragments/service-layout :: body-end" />
+   </body>
+</html>

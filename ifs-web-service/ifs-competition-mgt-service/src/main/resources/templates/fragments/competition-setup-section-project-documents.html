@@ -49,7 +49,10 @@
             <!-- new link -->
             <th:form th:unless="${model.general.state.preventEdit}">
                 <p>
-                    <button type="submit" name="createDocument" class="buttonlink">Add document type</button>
+                    <a th:href="@{/competition/setup/{competitionId}/section/project-documents/add(competitionId=${model.general.competition.id})}">
+                        Add document type
+                    </a>
+                    <!-- <button type="submit" name="createDocument" class="buttonlink">Add document type</button> -->
                 </p>
             </th:form>
 
