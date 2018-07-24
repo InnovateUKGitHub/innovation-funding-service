@@ -10,12 +10,13 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import javax.persistence.*;
-import java.time.Period;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.time.Month.APRIL;
 
 /**
  * A {@link User}'s profile with their {@link Address}, skills areas and signed {@link Agreement}.
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @Entity
 public class Profile extends AuditableEntity {
 
-    private static final Period DOI_EXPIRE_PERIOD = Period.ofYears(1);
+    private static final MonthDay DOI_EXPIRE_DATE = MonthDay.of(APRIL, 6);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -136,7 +137,20 @@ public class Profile extends AuditableEntity {
 
     public static boolean isAffiliationsComplete(User user) {
         Optional<ZonedDateTime> doiLastSignedDateTime = user.getAffiliations().stream().findAny().map(AuditableEntity::getModifiedOn);
-        return doiLastSignedDateTime.isPresent() && doiLastSignedDateTime.get().isAfter(ZonedDateTime.now().minus(DOI_EXPIRE_PERIOD));
+        return doiLastSignedDateTime.isPresent() &&
+                doiLastSignedDateTime.get()
+                        .isAfter(startOfCurrentFinancialYear(
+                                ZonedDateTime.now()).atStartOfDay(ZoneId.systemDefault())
+                        );
+    }
+
+    protected static LocalDate startOfCurrentFinancialYear(ZonedDateTime now) {
+        if (!DOI_EXPIRE_DATE.isAfter(MonthDay.of(now.getMonth(), now.getDayOfMonth()))) {
+            return DOI_EXPIRE_DATE.atYear(now.getYear());
+        }
+        else {
+            return DOI_EXPIRE_DATE.atYear(now.getYear()-1);
+        }
     }
 
     @Override
