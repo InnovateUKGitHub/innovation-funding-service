@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.finance.view;
 
-import org.innovateuk.ifs.application.finance.FundingLevelResetHandler;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;

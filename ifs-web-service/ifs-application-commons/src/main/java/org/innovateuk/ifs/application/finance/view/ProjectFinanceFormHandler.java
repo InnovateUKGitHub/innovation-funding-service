@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.finance;
+package org.innovateuk.ifs.application.finance.view;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.commons.error.ValidationMessages;

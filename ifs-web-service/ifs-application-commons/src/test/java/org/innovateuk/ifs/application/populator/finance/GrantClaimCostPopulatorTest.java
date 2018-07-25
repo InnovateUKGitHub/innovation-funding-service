@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.populator.finance;
 
 import org.innovateuk.ifs.applicant.resource.*;
-import org.innovateuk.ifs.application.finance.FinanceFormHandler;
-import org.innovateuk.ifs.application.finance.FinanceViewHandlerProvider;
+import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.viewmodel.finance.GrantClaimCostViewModel;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;

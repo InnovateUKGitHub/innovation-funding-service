@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.finance;
+package org.innovateuk.ifs.application.finance.view;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;

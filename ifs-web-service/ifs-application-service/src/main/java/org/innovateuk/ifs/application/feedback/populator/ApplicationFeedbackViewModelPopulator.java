@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdo
 import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackViewModel;
 import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.populator.section.FinanceOverviewSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.finance;
+package org.innovateuk.ifs.application.finance.view;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.finance.service.FinanceService;

@@ -2,9 +2,9 @@ package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.DefaultFinanceFormHandler;
-import org.innovateuk.ifs.application.finance.DefaultFinanceModelManager;
-import org.innovateuk.ifs.application.finance.FinanceViewHandlerProvider;
+import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
+import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
