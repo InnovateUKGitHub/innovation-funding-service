@@ -7,14 +7,20 @@
       <th:block th:insert="fragments/layout :: body-start" />
       <th:block th:insert="fragments/layout :: global-header" />
       <main tabindex="-1" id="content">
-         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Documents',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/section/documents/landing-page(competitionId=${model.general.competition.id})}" />
+         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Documents',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/section/project-documents/landing-page(competitionId=${model.general.competition.id})}" />
+
+         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+              <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
+              <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+          </div>
+
          <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Document type',size='heading-xlarge'" />
          <form method="post"
             th:object="${form}"
             th:action="@{'/competition/setup/{competitionId}/section/project-documents/add'(competitionId=${competitionId})}"
             >
             <th:block id="section-input">
-               <div class="form-group" >
+               <div class="form-group"  th:classappend="${#fields.hasErrors('title')} ? 'form-group-error'" >
                   <label class="form-label" for="title">
                   <span class="form-label-bold">Title</span>
                   </label>
@@ -26,7 +32,7 @@
                      required="required"
                      th:attr="data-required-errormessage=#{validation.standard.title.required}" />
                </div>
-               <div class="form-group" >
+               <div class="form-group">
                   <label class="form-label">
                   <span class="form-label-bold">Accepted file types</span>
                   </label>
@@ -51,7 +57,7 @@
                      </label>
                   </div>
                </div>
-               <div class="form-group">
+               <div class="form-group"  th:classappend="${#fields.hasErrors('guidance')} ? 'form-group-error'">
                   <label class="form-label" for="guidance">
                   <span class="form-label-bold">Guidance</span>
                   </label>

@@ -33,7 +33,6 @@
                                     <span th:text=${document.title}>document_title</span>
                                     <span class="end-label-link">
                                         <th>
-                                            <!-- <button type="submit" th:value="${document.id}" name="editDocument" class="buttonlink no-margin">Edit</button> -->
                                              <a th:href="@{/competition/setup/{competitionId}/section/documents/document/{documentId}/edit(competitionId=${model.general.competition.id}, documentId=${document.id})}">
                                                 Edit
                                             </a>
@@ -52,7 +51,6 @@
                     <a th:href="@{/competition/setup/{competitionId}/section/project-documents/add(competitionId=${model.general.competition.id})}">
                         Add document type
                     </a>
-                    <!-- <button type="submit" name="createDocument" class="buttonlink">Add document type</button> -->
                 </p>
             </th:form>
 
@@ -61,14 +59,6 @@
         </div>
 
     </form>
-
-
-   
-<!--     <p><a th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='documents')}">
-        Add new link</a>
-    </p> -->
-
-   
 
     <ul class="pagination">
         <li class="prev">
