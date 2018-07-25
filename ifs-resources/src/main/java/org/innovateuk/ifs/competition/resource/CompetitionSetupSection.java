@@ -23,8 +23,8 @@ public enum CompetitionSetupSection {
 	ASSESSORS(7L, "assessors", "Assessors", emptyList(), true),
 	DOCUMENTS(11L, "documents", "Documents", emptyList(), true),
 	CONTENT(8L, "content", "Public content", emptyList(), true),
-	PROJECT_DOCUMENTS(10L, "project-documents", "Documents in project setup", emptyList(), false);
-
+	PROJECT_DOCUMENT(10L, "project-document", "Documents in project setup", emptyList(), false);
+	
 	private Long id;
 	private String path;
 	private String name;
