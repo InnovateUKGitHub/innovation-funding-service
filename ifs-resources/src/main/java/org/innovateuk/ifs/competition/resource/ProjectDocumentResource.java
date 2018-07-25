@@ -17,6 +17,18 @@ public class ProjectDocumentResource {
     private boolean pdf;
     private boolean spreadsheet;
 
+    public ProjectDocumentResource(Long competition, String title, String guidance, boolean enabled, boolean pdf, boolean spreadsheet) {
+        this.competition = competition;
+        this.title = title;
+        this.guidance = guidance;
+        this.enabled = enabled;
+        this.pdf = pdf;
+        this.spreadsheet = spreadsheet;
+    }
+
+    public ProjectDocumentResource() {
+    }
+
     public Long getId() {
         return id;
     }

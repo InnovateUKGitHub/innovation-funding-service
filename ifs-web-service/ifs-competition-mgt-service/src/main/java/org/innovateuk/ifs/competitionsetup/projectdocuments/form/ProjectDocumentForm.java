@@ -11,6 +11,7 @@ public class ProjectDocumentForm extends BaseBindingResultTarget {
     @NotBlank(message = "{validation.field.must.not.be.blank}")
     private String title;
 
+    @NotBlank(message = "{validation.field.must.not.be.blank}")
     private String guidance;
 
     private boolean enabled;
