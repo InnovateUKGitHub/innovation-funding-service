@@ -9,6 +9,7 @@ import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
+import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
@@ -219,5 +220,11 @@ public class UserController {
     @GetMapping("/id/{id}/reactivate")
     public RestResult<Void> reactivateUser(@PathVariable("id") final Long id) {
         return registrationService.activateUser(id).toGetResponse();
+    }
+
+    @PostMapping("{id}/grant/{role}")
+    public RestResult<Void> grantRole(@PathVariable("id") final long id,
+                                           @PathVariable("role") final Role role) {
+        return userService.grantRole(new GrantRoleCommand(id, role)).toPostResponse();
     }
  }

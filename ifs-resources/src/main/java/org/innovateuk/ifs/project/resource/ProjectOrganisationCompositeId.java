@@ -8,13 +8,15 @@ import java.io.Serializable;
 
 public class ProjectOrganisationCompositeId implements Serializable {
 
-    private final Long projectId;
+    private Long projectId;
 
-    private final Long organisationId;
+    private Long organisationId;
 
     public static ProjectOrganisationCompositeId id(Long projectId, Long organisationId){
         return new ProjectOrganisationCompositeId(projectId, organisationId);
     }
+
+    public ProjectOrganisationCompositeId() {}
 
     public ProjectOrganisationCompositeId(Long projectId, Long organisationId) {
 
@@ -28,6 +30,14 @@ public class ProjectOrganisationCompositeId implements Serializable {
 
     public Long getOrganisationId() {
         return organisationId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 
     @Override

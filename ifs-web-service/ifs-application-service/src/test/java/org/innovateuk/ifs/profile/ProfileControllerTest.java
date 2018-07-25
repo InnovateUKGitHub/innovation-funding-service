@@ -92,7 +92,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 .withAddress(asList(addressResources))
                 .build();
         when(organisationService.getOrganisationById(6L)).thenReturn(organisation);
-        when(organisationService.getOrganisationForUser(user.getId())).thenReturn(organisation);
+        when(organisationService.getPrimaryForUser(user.getId())).thenReturn(organisation);
     }
 
     private OrganisationAddressResource organisationAddress(OrganisationAddressType addressType) {

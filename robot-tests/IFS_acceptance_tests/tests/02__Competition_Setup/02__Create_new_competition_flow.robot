@@ -719,12 +719,12 @@ The Applicant is able to apply to the competition once is Open
     [Tags]  HappyPath  MySQL
     [Setup]  the competition moves to Open state    ${competitionId}
     Given log in as a different user                &{lead_applicant_credentials}
-    And logged in user applies to competition       ${competitionTitle}
+    And logged in user applies to competition       ${competitionTitle}  1
 
 The Applicant see the correct Questions
     [Documentation]   IFS-182
     Given the user should see the element            jQuery=li:contains("${customQuestion}")
-    And the user should not see the element         jQuery=li:contains("Costs and value for money")
+    And the user should not see the element          jQuery=li:contains("Costs and value for money")
     #default question that has been removed is not there.
 
 *** Keywords ***

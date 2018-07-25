@@ -55,7 +55,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
         inviteOrganisationResource.setOrganisationNameConfirmed("Name Two");
 
-        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);
+        when(organisationService.getPrimaryForUser(anyLong())).thenReturn(expected);
         when(userService.findUserByEmail(userOne.getEmail())).thenReturn(of(userOne));
 
         assertTrue(service.isInviteForDifferentOrganisationThanUsersAndDifferentName(inviteResource, inviteOrganisationResource));
@@ -71,7 +71,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
         inviteOrganisationResource.setOrganisationNameConfirmed("Name Two");
 
-        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);
+        when(organisationService.getPrimaryForUser(anyLong())).thenReturn(expected);
         when(userService.findUserByEmail(userOne.getEmail())).thenReturn(of(userOne));
 
         assertTrue(service.isInviteForDifferentOrganisationThanUsersButSameName(inviteResource, inviteOrganisationResource));
@@ -87,7 +87,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         ApplicationInviteResource inviteResource = newApplicationInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().build();
 
-        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);
+        when(organisationService.getPrimaryForUser(anyLong())).thenReturn(expected);
         when(userService.findUserByEmail(userOne.getEmail())).thenReturn(of(userOne));
 
         assertFalse(service.isInviteForDifferentOrganisationThanUsersButSameName(inviteResource, inviteOrganisationResource));

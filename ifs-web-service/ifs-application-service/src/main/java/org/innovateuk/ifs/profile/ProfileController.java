@@ -60,14 +60,14 @@ public class ProfileController {
     @GetMapping("/view")
     public String viewUserProfile(Model model,
                                   UserResource userResource) {
-        final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
+        final OrganisationResource organisationResource = organisationService.getPrimaryForUser(userResource.getId());
 
         model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccess()));
         return "profile/user-profile";
     }
 
     private void populateUserDetailsForm(Model model, UserResource userResource){
-        final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
+        final OrganisationResource organisationResource = organisationService.getPrimaryForUser(userResource.getId());
         UserDetailsForm userDetailsForm = buildUserDetailsForm(userResource, organisationResource);
         setFormActionURL(userDetailsForm);
         model.addAttribute("userDetailsForm", userDetailsForm);

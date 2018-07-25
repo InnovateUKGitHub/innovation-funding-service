@@ -16,7 +16,11 @@ public interface OrganisationService {
 
     OrganisationResource getOrganisationById(Long organisationId);
 
-    OrganisationResource getOrganisationForUser(Long userId);
+    OrganisationResource getPrimaryForUser(Long userId);
+
+    OrganisationResource getByUserAndApplicationId(long userId, long applicationId);
+
+    OrganisationResource getByUserAndProjectId(long userId, long projectId);
 
     OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId);
 

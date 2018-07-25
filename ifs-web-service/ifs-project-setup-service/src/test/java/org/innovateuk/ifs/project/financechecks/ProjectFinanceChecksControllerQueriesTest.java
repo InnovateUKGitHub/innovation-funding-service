@@ -141,9 +141,9 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         super.setUp();
         setupCookieUtil(cookieUtil);
         when(userService.findById(financeTeamUser.getId())).thenReturn(financeTeamUser);
-        when(organisationService.getOrganisationForUser(financeTeamUser.getId())).thenReturn(innovateOrganisationResource);
+        when(organisationService.getByUserAndProjectId(financeTeamUser.getId(), projectId)).thenReturn(innovateOrganisationResource);
         when(userService.findById(financeContactUser.getId())).thenReturn(financeContactUser);
-        when(organisationService.getOrganisationForUser(financeContactUser.getId())).thenReturn(leadOrganisationResource);
+        when(organisationService.getByUserAndProjectId(financeContactUser.getId(), projectId)).thenReturn(leadOrganisationResource);
         when(userService.findById(financeContactUser.getId())).thenReturn(financeContactUser);
 
         // populate viewmodel

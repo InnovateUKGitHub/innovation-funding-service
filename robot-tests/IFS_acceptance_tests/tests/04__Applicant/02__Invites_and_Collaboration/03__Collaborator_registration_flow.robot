@@ -75,14 +75,11 @@ Research and technology organisations (RTO) search (empty, invalid & valid input
     When the user clicks the button/link           jQuery=.button:contains("Search")
     Then the user should see a field error         Please enter an organisation name to search.
     When the user clicks the button/link           jQuery=summary:contains("Enter details manually")
-    And the user enters text to a text field       name=organisationName    Digital Catapult
+    Then the user enters organisation details      Digital Catapult
 
 Research and technology organisations (RTO) search (accept invitation flow)
     [Documentation]    INFUND-1230
     [Tags]    HappyPath
-    When the user clicks the button/link           jQuery=.button:contains("Continue")
-    Then the user should see the element           jQuery=h3:contains("Registered name")~ p:contains("Digital Catapult")
-    And the user clicks the button/link            jQuery=.button:contains("Save and continue")
     When the user navigates to the page            ${server}/registration/register
     Then the invited user fills the create account form    Thierry    Henry
 
@@ -120,3 +117,15 @@ Custom Suite Setup
 the radio button should have the new selection
     [Arguments]    ${ORG_TYPE}
     Radio Button Should Be Set To    organisationType    ${ORG_TYPE}
+
+the user enters organisation details
+    [Arguments]    ${orgName}
+    the user enters text to a text field       id = organisationSearchName    ${orgName}
+    the user clicks the button/link            id=org-search
+    the user clicks the button/link            link=INNOVATE LTD
+    the user clicks the button/link            jQuery=button:contains("Enter address manually")
+    the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    the user clicks the button/link            css=#select-address-block > button
+    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user clicks the button/link            jQuery=.button:contains("Save and continue")

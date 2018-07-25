@@ -57,7 +57,6 @@ Invite a user with the same organisation under the same organisation
     When Existing user creates a new application and invites a user from the same organisation
     Then the invited user should get a message to contact the helpdesk  ${test_mailbox_one}+invite2@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
-
 *** Keywords ***
 the user enters profile details
     The user enters text to a text field  id=firstName    Dennis
@@ -78,6 +77,17 @@ Existing user creates a new application and invites a user from the same organis
     the user should see a field and summary error   Please select an option to continue.
     the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
     the user clicks the button/link       jQuery=.button:contains("Continue")
+        the user selects the radio button      organisationTypeId  1
+        the user clicks the button/link            jQuery=.button:contains("Save and continue")
+        the user enters text to a text field       id = organisationSearchName    Innovate
+        the user clicks the button/link            id=org-search
+        the user clicks the button/link            link=INNOVATE LTD
+        the user clicks the button/link            jQuery=button:contains("Enter address manually")
+        the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
+        the user clicks the button/link            jQuery = .button:contains("Find UK address")
+        the user clicks the button/link            css=#select-address-block > button
+        the user clicks the button/link            jQuery=.button:contains("Save and continue")
+        the user clicks the button/link            jQuery=.button:contains("Save and continue")
     the user clicks the button/link       jQuery=a:contains("Update and add contributors from INNOVATE LTD")
     The user clicks the button/link       jQuery=button:contains("Add another contributor")
     The user enters text to a text field  name=stagedInvite.name    Olivier Giroud

@@ -368,4 +368,13 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 HttpStatus.OK);
         assertTrue(service.agreeNewSiteTermsAndConditions(userId).isSuccess());
     }
+
+    @Test
+    public void grantRole() {
+        long userId = 1L;
+        Role role = Role.APPLICANT;
+        setupPostWithRestResultExpectations(format("%s/%s/grant/%s", usersUrl, userId, role.name()),
+                HttpStatus.OK);
+        assertTrue(service.grantRole(userId, role).isSuccess());
+    }
 }

@@ -245,7 +245,7 @@ project lead submits project address
 #Used in 12__ATI_compCreationToSubmission
     [Arguments]  ${project_id}
     the user navigates to the page     ${server}/project-setup/project/${project_id}/details/project-address
-    the user selects the radio button  addressType  address-use-org
+    the user selects the radio button  addressType  OPERATING
     the user clicks the button/link    css=#content > form > button  #Save project address
 
 project lead submits project details

@@ -296,7 +296,7 @@ public class FinanceChecksQueriesController {
 
         if (queriesResult.isSuccess()) {
             return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(),
-                    threadViewModelPopulator.namedProjectFinanceOrNamedExternalUser());
+                    threadViewModelPopulator.namedProjectFinanceOrNamedExternalUser(projectId));
 
         } else {
             return emptyList();

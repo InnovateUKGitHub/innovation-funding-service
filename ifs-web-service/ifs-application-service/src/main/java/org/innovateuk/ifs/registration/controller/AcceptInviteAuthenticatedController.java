@@ -94,7 +94,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
         if (inviteOrganisation.getOrganisation() == null) {
             // No one has confirmed the InviteOrganisation, we can use the users Organisation.
             // Note that this makes the assumption that the user will have an organisation
-            return organisationService.getOrganisationForUser(loggedInUser.getId());
+            return organisationService.getPrimaryForUser(loggedInUser.getId());
         } else {
             return organisationService.getOrganisationById(inviteOrganisation.getOrganisation());
         }
