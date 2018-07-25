@@ -18,7 +18,10 @@
          <form method="post"
             th:object="${form}"
             th:action="@{'/competition/setup/{competitionId}/section/project-document/save'(competitionId=${competitionId})}"
+            novalidate="novalidate"
             >
+            <input type="hidden" th:field="${form.enabled}" />
+            <input type="hidden" th:field="${form.projectDocumentId}" />
             <th:block id="section-input">
                <div class="form-group"  th:classappend="${#fields.hasErrors('title')} ? 'form-group-error'" >
                   <label class="form-label" for="title">
@@ -37,13 +40,16 @@
                   <fieldset>
                      <legend id="acceptedFileTypesId">
                         <span class="form-label-bold">Accepted file types</span>
+                        <th:block th:if="${#fields.hasErrors('pdf')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('pdf')}" th:text="${err}"></span>
+                        </th:block>
                      </legend>
 
                      <div class="multiple-choice">
                         <input id="pdf"
                            type="checkbox"
                            name="acceptedFileTypesId"
-                           value="accepted"
+                           value="pdf"
                            th:field="${form.pdf}"
                            required="required"
                            th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
@@ -56,6 +62,7 @@
                         <input id="spreadsheet"
                            type="checkbox"
                            name="acceptedFileTypesId"
+                           value="spreadsheet"
                            th:field="${form.spreadsheet}"
                            required="required"
                            th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
@@ -66,32 +73,6 @@
                      </div>
                   </fieldset>
                </div>
-
-               <!-- <div class="form-group">
-                  <label class="form-label">
-                  <span class="form-label-bold">Accepted file types</span>
-                  </label>
-                  <div class="multiple-choice">
-                     <input id="pdf"
-                        type="checkbox"
-                        value="accepted"
-                        th:field="${form.pdf}"
-                        data-autosave-disabled
-                        />
-                     <label th:for="pdf">
-                     <span>PDF</span>
-                     </label>
-                  </div>
-                  <div class="multiple-choice">
-                     <input id="spreadsheet"
-                        type="checkbox"
-                        th:field="${form.spreadsheet}"
-                        />
-                     <label th:for="spreadsheet">
-                     <span>spreadsheet</span>
-                     </label>
-                  </div>
-               </div> -->
                <div class="form-group"  th:classappend="${#fields.hasErrors('guidance')} ? 'form-group-error'">
                   <label class="form-label" for="guidance">
                      <span class="form-label-bold">Guidance</span>
