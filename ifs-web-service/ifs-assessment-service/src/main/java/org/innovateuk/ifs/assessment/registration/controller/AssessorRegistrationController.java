@@ -86,6 +86,7 @@ public class AssessorRegistrationController {
                                     ValidationHandler validationHandler) {
 
         addAddressOptions(registrationForm);
+        validateAddressForm(registrationForm, bindingResult);
         registrationForm.getAddressForm().setTriedToSave(true);
 
         Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
@@ -212,5 +213,18 @@ public class AssessorRegistrationController {
     private String doViewYourDetails(Model model, String inviteHash) {
         model.addAttribute("model", yourDetailsModelPopulator.populateModel(inviteHash));
         return "registration/register";
+    }
+
+    private void validateAddressForm(AssessorRegistrationForm assessorRegistrationForm, BindingResult bindingResult) {
+        if (!postcodeIsSelected(assessorRegistrationForm)) {
+            if (postcodeIndexIsSubmitted(assessorRegistrationForm)) {
+                bindingResult.rejectValue("addressForm.postcodeOptions", "validation.standard.postcodeoptions.required");
+                assessorRegistrationForm.getAddressForm().setSelectedPostcodeIndex(null);
+            } else {
+                bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
+                assessorRegistrationForm.getAddressForm().setTriedToSearch(true);
+                assessorRegistrationForm.getAddressForm().setTriedToSave(true);
+            }
+        }
     }
 }
