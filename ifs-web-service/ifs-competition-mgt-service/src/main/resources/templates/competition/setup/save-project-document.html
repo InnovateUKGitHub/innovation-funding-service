@@ -17,7 +17,7 @@
          <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Document type',size='heading-xlarge'" />
          <form method="post"
             th:object="${form}"
-            th:action="@{'/competition/setup/{competitionId}/section/project-document/add'(competitionId=${competitionId})}"
+            th:action="@{'/competition/setup/{competitionId}/section/project-document/save'(competitionId=${competitionId})}"
             >
             <th:block id="section-input">
                <div class="form-group"  th:classappend="${#fields.hasErrors('title')} ? 'form-group-error'" >
