@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.projectdocuments.form;
+package org.innovateuk.ifs.competitionsetup.projectdocument.form;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;

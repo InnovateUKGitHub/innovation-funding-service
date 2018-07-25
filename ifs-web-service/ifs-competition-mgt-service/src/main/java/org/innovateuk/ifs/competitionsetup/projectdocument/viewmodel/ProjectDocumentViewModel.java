@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.projectdocuments.viewmodel;
+package org.innovateuk.ifs.competitionsetup.projectdocument.viewmodel;
 
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
