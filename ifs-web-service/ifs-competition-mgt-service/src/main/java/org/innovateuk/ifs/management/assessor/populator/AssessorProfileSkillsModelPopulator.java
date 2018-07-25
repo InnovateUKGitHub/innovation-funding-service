@@ -27,9 +27,9 @@ public class AssessorProfileSkillsModelPopulator {
     private CompetitionRestService competitionRestService;
     private AssessorRestService assessorRestService;
 
-    public AssessorProfileSkillsModelPopulator(CompetitionService competitionService,
+    public AssessorProfileSkillsModelPopulator(CompetitionRestService competitionRestService,
                                                AssessorRestService assessorRestService) {
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.assessorRestService = assessorRestService;
     }
 

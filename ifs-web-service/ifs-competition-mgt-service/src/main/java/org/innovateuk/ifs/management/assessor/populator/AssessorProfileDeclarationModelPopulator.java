@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.management.assessor.populator;
 
 import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessor.viewmodel.AssessorProfileDeclarationViewModel;
 import org.innovateuk.ifs.profile.populator.AssessorProfileDeclarationBasePopulator;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
@@ -25,20 +25,20 @@ import java.util.Optional;
 public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDeclarationBasePopulator {
 
     private AffiliationRestService affiliationRestService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private AssessorRestService assessorRestService;
 
     public AssessorProfileDeclarationModelPopulator(AffiliationRestService affiliationRestService,
-                                                    CompetitionService competitionService,
+                                                    CompetitionRestService competitionRestService,
                                                     AssessorRestService assessorRestService) {
         this.affiliationRestService = affiliationRestService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.assessorRestService = assessorRestService;
     }
 
     public AssessorProfileDeclarationViewModel populateModel(long assessorId, long competitionId, String originQuery) {
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccess();
 
         UserResource user = assessorProfile.getUser();
@@ -51,7 +51,7 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
         return new AssessorProfileDeclarationViewModel(
                 competition,
                 assessorId,
-                user.getFirstName() + " " + user.getLastName(),
+                user.getName(),
                 user.getEmail(),
                 user.getPhoneNumber(),
                 profile.getAddress(),
