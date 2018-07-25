@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.projectdocuments.controller;
+package org.innovateuk.ifs.competitionsetup.projectdocument.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.competition.service.CompetitionSetupProjectDocumentRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.projectdocuments.form.ProjectDocumentForm;
+import org.innovateuk.ifs.competitionsetup.projectdocument.form.ProjectDocumentForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;

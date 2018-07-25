@@ -50,7 +50,7 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.competitionsetup.application.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
 import static org.innovateuk.ifs.competitionsetup.documents.controller.CompetitionSetupDocumentsController.DOCUMENTS_LANDING_REDIRECT;
-import static org.innovateuk.ifs.competitionsetup.projectdocuments.controller.CompetitionSetupProjectDocumentController.PROJECT_DOCUMENT_LANDING_REDIRECT;
+import static org.innovateuk.ifs.competitionsetup.projectdocument.controller.CompetitionSetupProjectDocumentController.PROJECT_DOCUMENT_LANDING_REDIRECT;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
