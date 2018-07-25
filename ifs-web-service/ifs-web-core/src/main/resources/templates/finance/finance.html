@@ -52,38 +52,25 @@
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="organisationSize">
                         <h2 class="govuk-fieldset__heading" th:text="${formInput.description}"></h2>
                     </legend>
-<<<<<<< HEAD
                     <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
                     <th:block th:if="${#fields.hasErrors('organisationSize')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item"
-                             th:each="size : ${model.organisationSizes}">
+                             th:each="size : ${T(org.innovateuk.ifs.finance.resource.OrganisationSize).values()}">
                             <input type="radio"
                                    class="govuk-radios__input"
                                    th:id="'financePosition-organisationSize-'+${size.id}"
                                    th:name="'financePosition-organisationSize'"
                                    th:value="${size.id}"
-                                   th:checked="${size.id == model.organisationFinanceSize}"
+                                   th:checked="${size == model.organisationFinanceSize}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED}"/>
                             <label th:for="'financePosition-organisationSize-'+${size.id}"
                                    th:text="${size.description}"
                                    class="govuk-label govuk-radios__label">Label</label>
                         </div>
-=======
-                    <div class="multiple-choice"
-                         th:each="size : ${T(org.innovateuk.ifs.finance.resource.OrganisationSize).values()}">
-                        <input type="radio"
-                               th:id="'financePosition-organisationSize-'+${size.id}"
-                               th:name="'financePosition-organisationSize'"
-                               th:value="${size.id}"
-                               th:checked="${size == model.organisationFinanceSize}"
-                               required="required"
-                               th:attr="data-required-errormessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED}"/>
-                        <label th:for="'financePosition-organisationSize-'+${size.id}" th:text="${size.description}">Label</label>
->>>>>>> development
                     </div>
 
                 </fieldset>
