@@ -66,10 +66,10 @@
                             </p>
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
-                            <label for="sort-by">Sort by</label>
+                            <label for="sort-by" class="govuk-label">Sort by</label>
                             <select id="sort-by"
                                     name="sort"
-                                    class="js-auto-submit govuk-select--error">
+                                    class="js-auto-submit govuk-select govuk-input--width-20">
                                 <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>
                                 <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead</option>
                             </select>
@@ -93,7 +93,8 @@
                                 <td class="govuk-table__cell">
                                     <a
                                     th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
-                                    th:text="${row.id}">194731</a>
+                                    th:text="${row.id}"
+                                    class="govuk-link">194731</a>
                                 </td>
                                 <td class="govuk-table__cell" th:text="${row.projectTitle}">Machine learning in robots</td>
                                 <td class="govuk-table__cell" th:text="${row.lead}">PWC</td>
