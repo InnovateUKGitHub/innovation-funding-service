@@ -76,7 +76,7 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 
     private Boolean getOverrideFundingRulesSet(CompetitionResource competitionResource,
                                                EligibilityForm eligibilityForm) {
-        if(isFirstTimeInForm(eligibilityForm)) {
+        if (isFirstTimeInForm(eligibilityForm)) {
             return fundingRulesAreOverriden(competitionResource);
         }
 
@@ -86,7 +86,7 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
     private boolean isFirstTimeInForm(EligibilityForm eligibilityForm) {
         return (eligibilityForm.getMultipleStream() != null) &&
                 (!eligibilityForm.getResearchCategoryId().isEmpty() && eligibilityForm.getResearchCategoryId() != null) &&
-                ( eligibilityForm.getSingleOrCollaborative() != null) &&
+                (eligibilityForm.getSingleOrCollaborative() != null) &&
                 (!eligibilityForm.getLeadApplicantTypes().isEmpty() && eligibilityForm.getLeadApplicantTypes() != null) &&
                 (eligibilityForm.getResubmission() != null);
     }
