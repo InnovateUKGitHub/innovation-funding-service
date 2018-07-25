@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.assessment.dashboard.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.*;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
@@ -34,19 +34,18 @@ public class AssessorDashboardModelPopulator {
 
     private ReviewInviteRestService reviewInviteRestService;
 
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     public AssessorDashboardModelPopulator(CompetitionParticipantRestService competitionParticipantRestService,
                                            InterviewInviteRestService interviewInviteRestService,
                                            ProfileRestService profileRestService,
                                            ReviewInviteRestService reviewInviteRestService,
-                                           CompetitionService competitionService
-                                           ) {
+                                           CompetitionRestService competitionRestService) {
         this.competitionParticipantRestService = competitionParticipantRestService;
         this.interviewInviteRestService = interviewInviteRestService;
         this.profileRestService = profileRestService;
         this.reviewInviteRestService = reviewInviteRestService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
     }
 
     public AssessorDashboardViewModel populateModel(Long userId) {
@@ -168,7 +167,7 @@ public class AssessorDashboardModelPopulator {
     }
 
     private boolean isAfterPanelDate(long competitionId) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ZonedDateTime panelDate = competition.getFundersPanelDate();
 
         return ZonedDateTime.now().plusDays(1L).isAfter(panelDate);

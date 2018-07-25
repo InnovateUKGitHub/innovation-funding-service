@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.competition.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Key stats to be displayed in the competitions funded panel
  */
@@ -70,28 +73,35 @@ public class CompetitionFundedKeyApplicationStatisticsResource {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         CompetitionFundedKeyApplicationStatisticsResource that = (CompetitionFundedKeyApplicationStatisticsResource) o;
 
-        if (applicationsSubmitted != that.applicationsSubmitted) return false;
-        if (applicationsFunded != that.applicationsFunded) return false;
-        if (applicationsNotFunded != that.applicationsNotFunded) return false;
-        if (applicationsOnHold != that.applicationsOnHold) return false;
-        if (applicationsNotifiedOfDecision != that.applicationsNotifiedOfDecision) return false;
-        return applicationsAwaitingDecision == that.applicationsAwaitingDecision;
-
+        return new EqualsBuilder()
+                .append(applicationsSubmitted, that.applicationsSubmitted)
+                .append(applicationsFunded, that.applicationsFunded)
+                .append(applicationsNotFunded, that.applicationsNotFunded)
+                .append(applicationsOnHold, that.applicationsOnHold)
+                .append(applicationsNotifiedOfDecision, that.applicationsNotifiedOfDecision)
+                .append(applicationsAwaitingDecision, that.applicationsAwaitingDecision)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = applicationsSubmitted;
-        result = 31 * result + applicationsFunded;
-        result = 31 * result + applicationsNotFunded;
-        result = 31 * result + applicationsOnHold;
-        result = 31 * result + applicationsNotifiedOfDecision;
-        result = 31 * result + applicationsAwaitingDecision;
-        return result;
+
+        return new HashCodeBuilder(17, 37)
+                .append(applicationsSubmitted)
+                .append(applicationsFunded)
+                .append(applicationsNotFunded)
+                .append(applicationsOnHold)
+                .append(applicationsNotifiedOfDecision)
+                .append(applicationsAwaitingDecision)
+                .toHashCode();
     }
 }

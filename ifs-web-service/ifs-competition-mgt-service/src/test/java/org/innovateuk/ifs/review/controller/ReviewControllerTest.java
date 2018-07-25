@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.review.model.ReviewModelPopulator;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewController> {
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private CompetitionKeyApplicationStatisticsRestService competitionKeyApplicationStatisticsRestService;
@@ -77,7 +77,7 @@ public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewContro
                 .build();
 
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(competitionKeyApplicationStatisticsRestService.getReviewKeyStatisticsByCompetition(competitionId))
                 .thenReturn(toGetResponse(reviewKeyStatisticsResource));
         when(reviewRestService.isPendingReviewNotifications(competitionId))
@@ -90,7 +90,7 @@ public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewContro
 
         ReviewViewModel model = (ReviewViewModel) result.getModelAndView().getModel().get("model");
 
-        verify(competitionService, only()).getById(competitionId);
+        verify(competitionRestService, only()).getCompetitionById(competitionId);
 
         assertEquals(competitionId, model.getCompetitionId());
         assertEquals(competitionName, model.getCompetitionName());
