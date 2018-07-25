@@ -67,7 +67,7 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
         this.applicationOverviewUserModelPopulator = applicationOverviewUserModelPopulator;
     }
 
-    public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId, ApplicationForm form){
+    public ApplicationOverviewViewModel populateModel(ApplicationResource application, Long userId){
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);

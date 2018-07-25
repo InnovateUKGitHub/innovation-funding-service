@@ -260,12 +260,12 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
     @Override
     public void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-        updateFinancePosition(applicationFinanceResource, fieldName, value, competitionId, userId);
+        updateFinancePosition(applicationFinanceResource, fieldName, value);
         applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
     }
 
 
-    private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value, Long competitionId, Long userId) {
+    private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value) {
         String fieldNameReplaced = fieldName.replace("financePosition-", "");
         switch (fieldNameReplaced) {
             case "projectLocation":
