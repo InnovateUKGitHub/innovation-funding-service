@@ -405,7 +405,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                         service.generateGrantOfferLetter(123L, fileEntryResource));
 
         verify(spendProfileRepositoryMock, times(3)).findOneByProjectIdAndOrganisationId(anyLong(), anyLong());
-        verify(costRepositoryMock, times(3)).findByCostGroupId(anyLong());
+        verify(costRepositoryMock, times(3)).findByCostGroupId(nullable(Long.class));
         verify(industrialFinanceTablePopulatorMock).createTable(anyMap());
         verify(academicFinanceTablePopulatorMock).createTable(anyMap());
         verify(financeTotalsTablePopulatorMock).createTable(anyMap(), anyLong());
@@ -556,7 +556,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
 
         verify(spendProfileRepositoryMock, times(3)).findOneByProjectIdAndOrganisationId(anyLong(), anyLong());
-        verify(costRepositoryMock, times(3)).findByCostGroupId(anyLong());
+        verify(costRepositoryMock, times(3)).findByCostGroupId(nullable(Long.class));
         verify(industrialFinanceTablePopulatorMock).createTable(anyMap());
         verify(academicFinanceTablePopulatorMock).createTable(anyMap());
         verify(financeTotalsTablePopulatorMock).createTable(anyMap(), anyLong());

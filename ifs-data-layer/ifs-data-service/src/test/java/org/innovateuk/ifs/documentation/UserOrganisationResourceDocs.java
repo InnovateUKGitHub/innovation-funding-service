@@ -12,5 +12,6 @@ public class UserOrganisationResourceDocs {
             fieldWithPath("organisationId").description("id of the organisation"),
             fieldWithPath("email").description("email of the user"),
             fieldWithPath("status").description("status of the user organisation"),
+            fieldWithPath("organisationType").description("type of the user organisation")
     };
 }
