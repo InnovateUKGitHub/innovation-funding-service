@@ -46,7 +46,6 @@ The Applicant is able to apply to the competition once is Open and see the corre
     [Setup]  the competition moves to Open state  ${reseachCompId}
     Given log in as a different user              &{collaborator2_credentials}
     And logged in user applies to competition research     ${compResearch}  2
-    #And the user clicks the button/link                  link=Save and return to application overview
     Then the user should see the element          jQuery=li:contains("${customQuestion}")
     When the user should see the element          jQuery=li:contains("Scope")
     Then the user should not see the element      jQuery=li:contains("Public description")

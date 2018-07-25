@@ -6,14 +6,14 @@ log in and create new application if there is not one already
     [Arguments]  ${application_name}
     Given the user logs-in in new browser  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain  ${application_name}
-    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  AND  the user selects Research category  Industrial research
+    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  ${orgType} AND  the user selects Research category  Industrial research
 
 Login new application invite academic
     [Arguments]  ${recipient}  ${subject}  ${pattern}
     [Tags]  Email
     Logging in and Error Checking  &{lead_applicant_credentials}
     ${STATUS}  ${VALUE} =  Run Keyword And Ignore Error Without Screenshots  Page Should Contain  Academic robot test application
-    Run Keyword If  '${status}' == 'FAIL'  Run keywords  Create new application with the same user  Academic robot test application
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords  Create new application with the same user  Academic robot test application  1
     ...                                            AND   Invite and accept the invitation  ${recipient}  ${subject}  ${pattern}
 
 new account complete all but one
@@ -78,26 +78,23 @@ the user marks the section as complete
     #the user clicks the button/link    css=.next
 
 Create new application with the same user
-    [Arguments]  ${Application_title}
-    the user navigates to the page        ${openCompetitionBusinessRTO_overview}
-    the user clicks the button/link       jQuery=a:contains("Start new application")
+    [Arguments]  ${Application_title}   ${orgType}
+    the user navigates to the page             ${openCompetitionBusinessRTO_overview}
+    the user clicks the button/link            jQuery=a:contains("Start new application")
     check if there is an existing application in progress for this competition
-    #Here, add org selection etc
-        the user selects the radio button   organisationTypeId  1      #forularise
-        the user clicks the button/link     jQuery = button:contains("Save and continue")
-        the user clicks the Not on company house link
-        the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-        the user clicks the button/link            jQuery = .button:contains("Find UK address")
-        the user clicks the button/link            jQuery = .button:contains("Find UK address")
-        the user clicks the button/link            css=#select-address-block > button
-        the user clicks the button/link            jQuery=.button:contains("Continue")
-        the user clicks the button/link            jQuery=.button:contains("Save and continue")
-        the user clicks the button/link            id=application-question-save
-    #To here
-    #the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
-    the user clicks the button/link       link=Application details
-    the user enters text to a text field  css=[id="application.name"]  ${Application_title}
-    the user clicks the button/link       jQuery=button:contains("Save and return")
+    the user selects the radio button          organisationTypeId  ${orgType}
+    the user clicks the button/link            jQuery = button:contains("Save and continue")
+    the user clicks the Not on company house link
+    the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
+    the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    the user clicks the button/link            css=#select-address-block > button
+    the user clicks the button/link            jQuery=.button:contains("Continue")
+    the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    the user clicks the button/link            id=application-question-save
+    the user clicks the button/link            link=Application details
+    the user enters text to a text field       css=[id="application.name"]  ${Application_title}
+    the user clicks the button/link            jQuery=button:contains("Save and return")
 
 check if there is an existing application in progress for this competition
     wait until page contains element    css=body
@@ -209,7 +206,7 @@ the user verifies email
     The guest user inserts user email and password             ${EMAIL_INVITED}  ${correct_password}
     The guest user clicks the log-in button
 
-the user follows the flow to register their organisation   #This could be used instead of the one I wrote??
+the user follows the flow to register their organisation
     [Arguments]   ${org_type_id}
     the user clicks the button/link         jQuery=a:contains("Start new application")
     the user clicks the button/link         link=Continue without an account

@@ -70,7 +70,7 @@ the user should see the change in the view team members page
     The user clicks the button/link  link=Application team
     The user should see the element  jQuery=.table-overflow:eq(1) td:nth-child(1):contains("Dennis Bergkamp")
 
-Existing user creates a new application and invites a user from the same organisation   #Edited for the last two tests above
+Existing user creates a new application and invites a user from the same organisation
     the user navigates to the page        ${openCompetitionBusinessRTO_overview}
     the user clicks the button/link       jQuery=a:contains("Start new application")
     the user clicks the button/link       jQuery=.button:contains("Continue")
