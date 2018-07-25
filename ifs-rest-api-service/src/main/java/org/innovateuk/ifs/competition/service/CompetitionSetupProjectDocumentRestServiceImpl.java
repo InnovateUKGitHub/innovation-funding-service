@@ -17,5 +17,10 @@ public class CompetitionSetupProjectDocumentRestServiceImpl extends BaseRestServ
     public RestResult<ProjectDocumentResource> save(ProjectDocumentResource projectDocumentResource) {
         return postWithRestResult(competitionSetupProjectDocumentRestURL + "/save", projectDocumentResource, ProjectDocumentResource.class);
     }
+
+    @Override
+    public RestResult<ProjectDocumentResource> findOne(Long id) {
+        return getWithRestResult(competitionSetupProjectDocumentRestURL + "/" + id, ProjectDocumentResource.class);
+    }
 }
 

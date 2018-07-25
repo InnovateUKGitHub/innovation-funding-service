@@ -9,4 +9,6 @@ import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
 public interface CompetitionSetupProjectDocumentRestService {
 
     RestResult<ProjectDocumentResource> save(ProjectDocumentResource projectDocumentResource);
+
+    RestResult<ProjectDocumentResource> findOne(Long id);
 }
