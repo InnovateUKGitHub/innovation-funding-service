@@ -33,9 +33,7 @@
                                     <span th:text=${document.title}>document_title</span>
                                     <span class="end-label-link">
                                         <th>
-                                             <a th:href="@{/competition/setup/{competitionId}/section/documents/document/{documentId}/edit(competitionId=${model.general.competition.id}, documentId=${document.id})}">
-                                                Edit
-                                            </a>
+                                             <a th:href="@{/competition/setup/{competitionId}/section/documents/document/{documentId}/edit(competitionId=${model.general.competition.id}, documentId=${document.id})}">Edit</a>
                                         </th>
                                     </span>
                                 </label>
@@ -48,14 +46,12 @@
             <!-- new link -->
             <th:form th:unless="${model.general.state.preventEdit}">
                 <p>
-                    <a th:href="@{/competition/setup/{competitionId}/section/project-documents/add(competitionId=${model.general.competition.id})}">
-                        Add document type
-                    </a>
+                    <a th:href="@{/competition/setup/{competitionId}/section/project-documents/add(competitionId=${model.general.competition.id})}">Add document type</a>
                 </p>
             </th:form>
 
              <!-- post button -->
-            <button class="button">Done</button>
+            <button class="button" id="doneButton">Done</button>
         </div>
 
     </form>
