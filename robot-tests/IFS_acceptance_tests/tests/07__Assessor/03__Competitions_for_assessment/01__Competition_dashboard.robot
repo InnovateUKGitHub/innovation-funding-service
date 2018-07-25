@@ -50,10 +50,6 @@ Details of the competition are visible
     ${date} =  request the date from the database
     And the user should see the element    jQuery=dt:contains("Submit applications deadline:") + dd:contains("${date}")
 
-Competition brief link can be seen
-    [Documentation]    INFUND-5494
-    [Tags]
-    Then The user opens the link in new window   View competition brief
 
 User can view the competition brief
     [Documentation]    INFUND-5494

@@ -54,9 +54,17 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -154,6 +162,11 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
 
     @Test
     public void applicationSummary() throws Exception {
+        ApplicationSummaryViewModel model = testApplicationSummary();
+        assertFalse(model.isSupport());
+    }
+
+    private ApplicationSummaryViewModel testApplicationSummary() throws Exception {
         ApplicationResource app = applications.get(0);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
@@ -189,6 +202,8 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         assertEquals(applicationTeamViewModel, model.getApplicationTeamViewModel());
         assertEquals(researchCategorySummaryViewModel, model.getResearchCategorySummaryViewModel());
         assertTrue(model.isUserIsLeadApplicant());
+
+        return model;
     }
 
     private ApplicationTeamViewModel setupApplicationTeamViewModel() {
@@ -216,5 +231,13 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
                 false,
                 false,
                 false);
+    }
+
+    @Test
+    public void applicationSummaryWhenLoggedInAsSupport() throws Exception {
+        setLoggedInUser(support);
+        ApplicationSummaryViewModel model = testApplicationSummary();
+        assertTrue(model.isSupport());
+
     }
 }

@@ -96,10 +96,18 @@
                     </thead>
                     <tbody>
                         <tr class="filtered-result" th:each="row, iterStat : ${model.applications}">
-                            <td>
-                                <a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
-                                   th:text="${row.id}">194731</a>
-                            </td>
+                            <th:block th:unless="${model.support && (row.status.equalsIgnoreCase('Started') || row.status.equalsIgnoreCase('In Progress'))}">
+                                <td>
+                                    <a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
+                                       th:text="${row.id}">194731</a>
+                                </td>
+                            </th:block>
+                            <th:block th:if="${model.support && (row.status.equalsIgnoreCase('Started') || row.status.equalsIgnoreCase('In Progress'))}">
+                                <td>
+                                    <a th:href="'/application/' + ${row.id} + '/summary'"
+                                       th:text="${row.id}">194731</a>
+                                </td>
+                            </th:block>
                             <td th:text="${row.projectTitle}">Machine learning in robots</td>
                             <td th:text="${row.lead}">PWC</td>
                             <td th:text="${row.innovationArea} ?: 'Not listed'">HVM</td>
