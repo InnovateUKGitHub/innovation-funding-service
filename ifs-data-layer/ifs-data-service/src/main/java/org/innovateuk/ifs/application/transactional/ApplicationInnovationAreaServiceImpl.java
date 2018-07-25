@@ -31,9 +31,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalService implements ApplicationInnovationAreaService {
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private ApplicationMapper applicationMapper;
 
     @Autowired

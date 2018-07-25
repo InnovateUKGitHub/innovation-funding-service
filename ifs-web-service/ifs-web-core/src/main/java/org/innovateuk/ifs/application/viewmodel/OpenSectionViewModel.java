@@ -17,7 +17,6 @@ public class OpenSectionViewModel extends BaseSectionViewModel {
     private OrganisationResource leadOrganisation;
 
     private Map<Long, Set<Long>> completedSectionsByOrganisation;
-    private Set<Long> sectionsMarkedAsComplete;
     private Boolean allQuestionsCompleted;
     private boolean yourFinancesCompleteForAllOrganisations;
     private Long eachCollaboratorFinanceSectionId;

@@ -59,16 +59,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class CompetitionServiceImpl extends BaseTransactionalService implements CompetitionService {
 
     @Autowired
-    private CompetitionRepository competitionRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private InnovationLeadRepository innovationLeadRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
@@ -81,9 +72,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private OrganisationTypeMapper organisationTypeMapper;
-
-    @Autowired
-    private ProjectRepository projectRepository;
 
     @Autowired
     private PublicContentService publicContentService;

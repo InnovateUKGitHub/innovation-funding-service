@@ -19,9 +19,6 @@ public class CompetitionFunderServiceImpl extends BaseTransactionalService imple
     @Autowired
     private CompetitionFunderRepository competitionFunderRepository;
 
-    @Autowired
-    private CompetitionRepository competitionRepository;
-
     @Override
     @Transactional
     public void reinsertFunders(CompetitionResource resource) {

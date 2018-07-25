@@ -55,21 +55,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
 
     @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private ProjectUserRepository projectUserRepository;
-
-    @Autowired
-    private ProjectUserMapper projectUserMapper;
-
-    @Autowired
-    private ProjectMapper projectMapper;
-
-    @Autowired
-    private OrganisationRepository organisationRepository;
-
-    @Autowired
     private OrganisationMapper organisationMapper;
 
     @Autowired

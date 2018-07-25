@@ -29,9 +29,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class SectionServiceImpl extends BaseTransactionalService implements SectionService {
 
     @Autowired
-    private SectionRepository sectionRepository;
-
-    @Autowired
     private SectionMapper sectionMapper;
 
     @Autowired

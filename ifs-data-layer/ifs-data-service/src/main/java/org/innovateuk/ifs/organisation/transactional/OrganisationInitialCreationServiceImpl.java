@@ -37,9 +37,6 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
 
-    @Autowired
-    private OrganisationRepository organisationRepository;
-
     @Override
     @Transactional
     public ServiceResult<OrganisationResource> createOrMatch(OrganisationResource organisationToCreate) {

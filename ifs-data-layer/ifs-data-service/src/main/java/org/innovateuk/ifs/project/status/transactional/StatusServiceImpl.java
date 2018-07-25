@@ -60,9 +60,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class StatusServiceImpl extends AbstractProjectServiceImpl implements StatusService {
 
     @Autowired
-    private CompetitionRepository competitionRepository;
-
-    @Autowired
     private ProjectUsersHelper projectUsersHelper;
 
     @Autowired
@@ -73,9 +70,6 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Autowired
     private GrantOfferLetterWorkflowHandler golWorkflowHandler;
-
-    @Autowired
-    private FinanceService financeService;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;

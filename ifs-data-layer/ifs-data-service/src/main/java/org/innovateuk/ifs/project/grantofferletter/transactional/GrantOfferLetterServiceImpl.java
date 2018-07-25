@@ -90,12 +90,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private static final String GOL_TEMPLATES_PATH = "common" + separator + "grantoffer" + separator + "grant_offer_letter.html";
 
     @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private OrganisationRepository organisationRepository;
-
-    @Autowired
     private FileService fileService;
 
     @Autowired

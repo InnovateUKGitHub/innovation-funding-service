@@ -80,22 +80,13 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     public static final String WEB_CONTEXT = "/project-setup";
 
     @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
     private AddressRepository addressRepository;
 
     @Autowired
     private AddressMapper addressMapper;
 
     @Autowired
-    private OrganisationRepository organisationRepository;
-
-    @Autowired
     private OrganisationAddressRepository organisationAddressRepository;
-
-    @Autowired
-    private AddressTypeRepository addressTypeRepository;
 
     @Autowired
     private EmailService projectEmailService;

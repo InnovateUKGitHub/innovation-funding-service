@@ -60,9 +60,6 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private CompetitionService competitionService;
 
     @Autowired

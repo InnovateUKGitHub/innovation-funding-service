@@ -41,9 +41,6 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     private MilestoneRepository milestoneRepository;
 
     @Autowired
-    private CompetitionRepository competitionRepository;
-
-    @Autowired
     private MilestoneMapper milestoneMapper;
 
     @Override

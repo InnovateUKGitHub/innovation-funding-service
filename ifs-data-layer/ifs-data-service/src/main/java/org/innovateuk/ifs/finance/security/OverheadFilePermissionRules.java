@@ -26,9 +26,6 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 public class OverheadFilePermissionRules extends BasePermissionRules {
 
     @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
     private ApplicationFinanceRowRepository financeRowRepository;
 
     @PermissionRule(value = "CREATE_OVERHEAD_FILE", description = "The consortium can create the overhead file for their application and organisation")

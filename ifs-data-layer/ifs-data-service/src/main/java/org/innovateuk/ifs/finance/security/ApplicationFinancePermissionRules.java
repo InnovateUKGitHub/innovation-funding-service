@@ -26,9 +26,6 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 public class ApplicationFinancePermissionRules extends BasePermissionRules {
 
     @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
     private CompetitionRepository competitionRepository;
 
     @PermissionRule(value = "READ", description = "The consortium can see the application finances of their own organisation")

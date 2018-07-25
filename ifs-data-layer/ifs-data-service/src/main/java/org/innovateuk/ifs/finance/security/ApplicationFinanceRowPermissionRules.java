@@ -28,9 +28,6 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 public class ApplicationFinanceRowPermissionRules extends BasePermissionRules {
 
     @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
     private ApplicationFinanceRowRepository financeRowRepository;
 
     @PermissionRule(value = "UPDATE", description = "The consortium can update the cost for their application and organisation")

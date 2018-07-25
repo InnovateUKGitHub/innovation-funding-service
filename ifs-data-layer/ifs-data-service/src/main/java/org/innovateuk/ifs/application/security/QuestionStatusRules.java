@@ -26,9 +26,6 @@ public class QuestionStatusRules extends BasePermissionRules {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
     private QuestionStatusRepository questionStatusRepository;
 
     @PermissionRule(value = "READ", description = "Users can only read statuses of applications they are connected to")

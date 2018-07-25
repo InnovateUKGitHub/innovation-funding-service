@@ -50,9 +50,6 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
     @Autowired
     private PublicContentMapper publicContentMapper;
 
-    @Autowired
-    private CompetitionRepository competitionRepository;
-
     public static final Integer MAX_ALLOWED_KEYWORDS = 10;
 
     private static Log LOG = LogFactory.getLog(PublicContentItemServiceImpl.class);

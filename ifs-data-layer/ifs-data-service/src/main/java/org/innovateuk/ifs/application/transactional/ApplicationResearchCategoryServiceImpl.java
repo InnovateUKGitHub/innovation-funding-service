@@ -38,9 +38,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalService implements ApplicationResearchCategoryService {
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private ResearchCategoryRepository researchCategoryRepository;
 
     @Autowired

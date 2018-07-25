@@ -38,9 +38,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
  */
 public abstract class AbstractContentGroupController<M extends AbstractPublicContentViewModel, F extends AbstractContentGroupForm> extends AbstractPublicContentSectionController<M, F> {
 
-    @Autowired
-    private CompetitionSetupService competitionSetupService;
-
     @PostMapping(value = "/{competitionId}/edit", params = "uploadFile")
     public String saveAndUpload(Model model,
                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,

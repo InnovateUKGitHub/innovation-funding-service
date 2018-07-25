@@ -71,9 +71,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private FinanceCheckRepository financeCheckRepository;
 
     @Autowired
-    private FinanceService financeService;
-
-    @Autowired
     private ProjectFinanceRowService projectFinanceRowService;
 
     @Autowired
@@ -96,12 +93,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private CompetitionSetupTransactionalService competitionSetupTransactionalService;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;

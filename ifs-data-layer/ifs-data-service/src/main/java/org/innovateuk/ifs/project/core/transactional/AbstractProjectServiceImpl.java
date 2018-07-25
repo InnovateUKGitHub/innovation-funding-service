@@ -53,9 +53,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     @Autowired
-    protected ProjectRepository projectRepository;
-
-    @Autowired
     protected ProjectMapper projectMapper;
 
     @Autowired
@@ -93,9 +90,6 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     @Autowired
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
-
-    @Autowired
-    protected PartnerOrganisationRepository partnerOrganisationRepository;
 
     List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
         return projectUserRepository.findByProjectId(projectId);

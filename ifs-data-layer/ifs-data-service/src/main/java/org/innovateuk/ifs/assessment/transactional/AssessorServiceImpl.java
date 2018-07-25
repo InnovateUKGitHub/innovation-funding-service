@@ -67,9 +67,6 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private AssessorProfileMapper assessorProfileMapper;
 
     @Autowired

@@ -106,9 +106,6 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     private InnovationAreaMapper innovationAreaMapper;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private ProfileRepository profileRepository;
 
     @Autowired

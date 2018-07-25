@@ -24,9 +24,6 @@ public class WithdrawResponseInterviewAssignmentAction extends BaseInterviewAssi
     @Autowired
     private InterviewAssignmentResponseOutcomeRepository interviewAssignmentResponseOutcomeRepository;
 
-    @Autowired
-    private InterviewAssignmentRepository interviewAssignmentRepository;
-
     @Override
     protected void doExecute(InterviewAssignment interviewAssignment, StateContext<InterviewAssignmentState, InterviewAssignmentEvent> context) {
         long fileId = interviewAssignment.getResponse().getFileResponse().getId();
