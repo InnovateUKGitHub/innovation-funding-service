@@ -20,4 +20,9 @@ public class CompetitionSetupProjectDocumentController {
     public RestResult<ProjectDocumentResource> save(@RequestBody ProjectDocumentResource projectDocumentResource) {
         return competitionSetupProjectDocumentService.save(projectDocumentResource).toGetResponse();
     }
+
+    @GetMapping("/{id}")
+    public RestResult<ProjectDocumentResource> findOne(@PathVariable("id") final long id) {
+        return competitionSetupProjectDocumentService.findOne(id).toGetResponse();
+    }
 }

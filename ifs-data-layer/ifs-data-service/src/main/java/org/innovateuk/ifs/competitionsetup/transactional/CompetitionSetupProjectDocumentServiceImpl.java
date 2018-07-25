@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
- * Service for operations around the usage and processing of Project Documents
+ * Service for operations around the usage and processing of Project Document
  */
 @Service
 public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactionalService implements CompetitionSetupProjectDocumentService {
@@ -30,6 +30,13 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
         ProjectDocument projectDocument = projectDocumentMapper.mapToDomain(projectDocumentResource);
 
         projectDocument = projectDocumentRepository.save(projectDocument);
+        return serviceSuccess(projectDocumentMapper.mapToResource(projectDocument));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<ProjectDocumentResource> findOne(Long id) {
+        ProjectDocument projectDocument = projectDocumentRepository.findOne(id);
         return serviceSuccess(projectDocumentMapper.mapToResource(projectDocument));
     }
 }

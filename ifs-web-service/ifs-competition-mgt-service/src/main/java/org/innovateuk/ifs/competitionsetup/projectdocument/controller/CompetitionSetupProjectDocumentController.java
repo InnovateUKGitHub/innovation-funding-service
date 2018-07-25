@@ -69,30 +69,61 @@ public class CompetitionSetupProjectDocumentController {
                                      Model model) {
 
         String redirect = doViewProjectDocument(model, competitionId);
-        return redirect != null ? redirect : doViewAddProjectDocument(model);
+
+        ProjectDocumentForm form = new ProjectDocumentForm();
+        form.setEnabled(true);
+        return redirect != null ? redirect : doViewSaveProjectDocument(model, form);
     }
 
-    private String doViewAddProjectDocument(Model model) {
-        model.addAttribute(FORM_ATTR_NAME, new ProjectDocumentForm());
-        return "competition/setup/add-project-document";
+    private String doViewSaveProjectDocument(Model model, ProjectDocumentForm form) {
+        model.addAttribute(FORM_ATTR_NAME, form);
+        return "competition/setup/save-project-document";
     }
 
-    @PostMapping("/add")
-    public String addProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+    @GetMapping("/{projectDocumentId}/edit")
+    public String viewEditProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                          @PathVariable("projectDocumentId") long projectDocumentId,
+                                         Model model) {
+
+        String redirect = doViewProjectDocument(model, competitionId);
+        return redirect != null ? redirect : doViewEditProjectDocument(model, projectDocumentId);
+    }
+
+    private String doViewEditProjectDocument(Model model, long projectDocumentId) {
+
+        ProjectDocumentForm form = createProjectDocumentForm(competitionSetupProjectDocumentRestService.findOne(projectDocumentId).getSuccess());
+
+        return doViewSaveProjectDocument(model, form);
+    }
+
+    @PostMapping("/save")
+    public String saveProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                      Model model,
                                      @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDocumentForm form,
                                      @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                      UserResource loggedInUser) {
 
-        ProjectDocumentResource projectDocumentResource = createProjectDocumentResource(form, true, competitionId);
+        ProjectDocumentResource projectDocumentResource = createProjectDocumentResource(form, competitionId);
         competitionSetupProjectDocumentRestService.save(projectDocumentResource);
 
         return projectDocumentLandingPage(model, competitionId);
     }
 
-    private ProjectDocumentResource createProjectDocumentResource(ProjectDocumentForm form, boolean enabled, long competitionId) {
+    private ProjectDocumentResource createProjectDocumentResource(ProjectDocumentForm form, long competitionId) {
 
-        return new ProjectDocumentResource(competitionId, form.getTitle(), form.getGuidance(), enabled, form.isPdf(), form.isSpreadsheet());
+        ProjectDocumentResource projectDocumentResource = new ProjectDocumentResource(competitionId, form.getTitle(), form.getGuidance(), form.isEnabled(), form.isPdf(), form.isSpreadsheet());
+
+        if (form.getProjectDocumentId() != null) {
+            projectDocumentResource.setId(form.getProjectDocumentId());
+        }
+
+        return projectDocumentResource;
+
+    }
+
+    private ProjectDocumentForm createProjectDocumentForm(ProjectDocumentResource resource) {
+
+        return new ProjectDocumentForm(resource.getId(), resource.getTitle(), resource.getGuidance(), resource.isEnabled(), resource.isPdf(), resource.isSpreadsheet());
 
     }
 }
