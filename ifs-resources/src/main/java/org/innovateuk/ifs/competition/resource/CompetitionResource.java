@@ -21,8 +21,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 public class CompetitionResource {
 
-    public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
-    public static final int CLOSING_SOON_AMOUNT = 3;
+    private static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
+    private static final int CLOSING_SOON_AMOUNT = 3;
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
@@ -100,8 +100,10 @@ public class CompetitionResource {
     private boolean locationPerPartner = true;
     private Boolean stateAid;
 
-    // IFS-3088: This is temporary until all competitions with the old menu view are complete
+    // IFS-3088 & IFS-2123 & IFS-3753: This is temporary until all competitions with the old menu view are complete
     private boolean useNewApplicantMenu;
+
+    private Set<Long> grantClaimMaximums;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -227,7 +229,9 @@ public class CompetitionResource {
         this.releaseFeedbackDate = releaseFeedbackDate;
     }
 
-    public ZonedDateTime getFeedbackReleasedDate() { return feedbackReleasedDate; }
+    public ZonedDateTime getFeedbackReleasedDate() {
+        return feedbackReleasedDate;
+    }
 
     public void setFeedbackReleasedDate(ZonedDateTime feedbackReleasedDate) {
         this.feedbackReleasedDate = feedbackReleasedDate;
@@ -640,18 +644,31 @@ public class CompetitionResource {
         this.useNewApplicantMenu = useNewApplicantMenu;
     }
 
+    public Set<Long> getGrantClaimMaximums() {
+        return grantClaimMaximums;
+    }
+
+    public void setGrantClaimMaximums(final Set<Long> grantClaimMaximums) {
+        this.grantClaimMaximums = grantClaimMaximums;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o){
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        CompetitionResource that = (CompetitionResource) o;
+        final CompetitionResource that = (CompetitionResource) o;
 
         return new EqualsBuilder()
                 .append(setupComplete, that.setupComplete)
-                .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(nonIfs, that.nonIfs)
+                .append(locationPerPartner, that.locationPerPartner)
+                .append(useNewApplicantMenu, that.useNewApplicantMenu)
                 .append(id, that.id)
                 .append(milestones, that.milestones)
                 .append(funders, that.funders)
@@ -689,17 +706,20 @@ public class CompetitionResource {
                 .append(collaborationLevel, that.collaborationLevel)
                 .append(leadApplicantTypes, that.leadApplicantTypes)
                 .append(researchCategories, that.researchCategories)
+                .append(minProjectDuration, that.minProjectDuration)
+                .append(maxProjectDuration, that.maxProjectDuration)
                 .append(assessorCount, that.assessorCount)
                 .append(assessorPay, that.assessorPay)
                 .append(activityCode, that.activityCode)
                 .append(fullApplicationFinance, that.fullApplicationFinance)
+                .append(useResubmissionQuestion, that.useResubmissionQuestion)
                 .append(hasAssessmentPanel, that.hasAssessmentPanel)
                 .append(hasInterviewStage, that.hasInterviewStage)
                 .append(assessorFinanceView, that.assessorFinanceView)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
-                .append(locationPerPartner, that.locationPerPartner)
                 .append(stateAid, that.stateAid)
+                .append(grantClaimMaximums, that.grantClaimMaximums)
                 .isEquals();
     }
 
@@ -743,6 +763,8 @@ public class CompetitionResource {
                 .append(collaborationLevel)
                 .append(leadApplicantTypes)
                 .append(researchCategories)
+                .append(minProjectDuration)
+                .append(maxProjectDuration)
                 .append(assessorCount)
                 .append(assessorPay)
                 .append(activityCode)
@@ -757,6 +779,8 @@ public class CompetitionResource {
                 .append(termsAndConditions)
                 .append(locationPerPartner)
                 .append(stateAid)
+                .append(useNewApplicantMenu)
+                .append(grantClaimMaximums)
                 .toHashCode();
     }
 }

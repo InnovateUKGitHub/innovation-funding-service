@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-    <!-- ===========================Form: finance =========================== -->
+    <!-- ===========================Form: Your funding =========================== -->
     <th:block th:fragment="finance(model, internalView)" th:with="formInput=${model.formInput}, question=${model.question}">
         <th:block th:unless="${model.readonly}">
             <div th:class="form-group" th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'form-group-error'">
@@ -55,12 +55,13 @@
                             <span class="error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
-                    <div class="multiple-choice" th:each="size : ${model.organisationSizes}">
+                    <div class="multiple-choice"
+                         th:each="size : ${T(org.innovateuk.ifs.finance.resource.OrganisationSize).values()}">
                         <input type="radio"
                                th:id="'financePosition-organisationSize-'+${size.id}"
                                th:name="'financePosition-organisationSize'"
                                th:value="${size.id}"
-                               th:checked="${size.id == model.organisationFinanceSize}"
+                               th:checked="${size == model.organisationFinanceSize}"
                                required="required"
                                th:attr="data-required-errormessage=#{APPLICATION_ORGANISATION_SIZE_REQUIRED}"/>
                         <label th:for="'financePosition-organisationSize-'+${size.id}" th:text="${size.description}">Label</label>
@@ -72,10 +73,8 @@
             <!--/* view  */-->
             <dl class="readonly-data">
                 <dt th:text="${formInput.description}">Size</dt>
-
-                <th:block th:unless="${model.organisationFinanceSize == null}" th:each="size : ${model.organisationSizes}">
-                    <dd th:if="${model.organisationFinanceSize == size.id}" th:text="${size.description}">Micro or small: claim up to 70%</dd>
-                </th:block>
+                <dd th:unless="${model.organisationFinanceSize == null}"
+                    th:text="${model.organisationFinanceSize.description}">Micro or small: claim up to 70%</dd>
             </dl>
         </th:block>
     </th:block>

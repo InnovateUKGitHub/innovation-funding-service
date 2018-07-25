@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.publiccontent.modelpopulator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.innovateuk.ifs.publiccontent.viewmodel.PublicContentMenuViewModel;
 import org.junit.Test;
@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
@@ -39,7 +40,7 @@ public class PublicContentMenuPopulatorTest {
     private PublicContentService publicContentService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Test
     public void testPopulate() {
@@ -59,7 +60,7 @@ public class PublicContentMenuPopulatorTest {
         CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
 
         when(publicContentService.getCompetitionById(COMPETITION_ID)).thenReturn(publicContent);
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
 
         PublicContentMenuViewModel viewModel = target.populate(competition, WEB_BASE_URL);
 

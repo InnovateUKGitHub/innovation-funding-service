@@ -5,8 +5,8 @@ import com.bmuschko.gradle.docker.tasks.container.extras.*
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
 
-buildscript {
 
+buildscript {
 
     repositories {
         jcenter()
@@ -82,5 +82,3 @@ task createFractal(type: DockerCreateContainer, dependsOn: [buildFractal, remove
 task deployFractal(type: DockerStartContainer, dependsOn: createFractal) {
     targetContainerId { createFractal.getContainerId() }
 }
-
-

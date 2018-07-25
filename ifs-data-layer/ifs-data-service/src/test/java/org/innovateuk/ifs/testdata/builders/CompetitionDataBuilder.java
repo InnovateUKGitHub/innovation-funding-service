@@ -32,7 +32,7 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -453,7 +453,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public void removeApplicationTeamFromCompetition(Long competitionId) {
         asCompAdmin(data -> questionService
-                .getQuestionByCompetitionIdAndCompetitionSetupQuestionType
+                .getQuestionByCompetitionIdAndQuestionSetupType
                         (competitionId, APPLICATION_TEAM).andOnSuccess(
                         question -> questionSetupTemplateService.deleteQuestionInCompetition(question
                                 .getId())));

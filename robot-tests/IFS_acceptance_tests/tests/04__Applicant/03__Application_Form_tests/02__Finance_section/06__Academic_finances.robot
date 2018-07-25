@@ -85,6 +85,7 @@ Academic partner can view the file on the finances
     [Tags]    HappyPath
     When the user opens the link in new window  ${valid_pdf}
     Then the user should not see an error in the page
+    And the user closes the last opened tab
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
@@ -177,7 +178,8 @@ the finance table should be correct
 Lead applicant marks the finances as complete
     Log in as a different user                       &{lead_applicant_credentials}
     the user clicks the button/link                  link=Academic robot test application
-    the applicant completes the application details  Academic robot test application  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant completes the application details  Academic robot test application  ${tomorrowday}  ${month}  ${nextyear}
+    then the user selects research category  Feasibility studies
     the user navigates to Your-finances page  Academic robot test application
     the user marks the finances as complete          Academic robot test application  labour costs  n/a  no
 

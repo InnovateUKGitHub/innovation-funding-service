@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
@@ -39,6 +40,10 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
     @SafeVarargs
     public final UserResourceBuilder withRolesGlobal(List<Role>... rolesList) {
         return withArray((roles, user) -> user.setRoles(roles), rolesList);
+    }
+
+    public final UserResourceBuilder withRoleGlobal(Role role) {
+        return withRolesGlobal(singletonList(role));
     }
 
     public UserResourceBuilder withId(Long... ids) {
