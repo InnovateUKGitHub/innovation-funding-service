@@ -5,7 +5,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.application.finance.form.AcademicFinance;
 import org.innovateuk.ifs.application.finance.model.AcademicFinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
-import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
+import org.innovateuk.ifs.application.finance.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;

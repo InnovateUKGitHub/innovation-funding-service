@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
+import org.innovateuk.ifs.application.finance.ApplicationFinanceOverviewModelManager;
+import org.innovateuk.ifs.application.finance.FinanceModelManager;
+import org.innovateuk.ifs.application.finance.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;

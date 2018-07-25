@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.saver;
 
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
+import org.innovateuk.ifs.application.finance.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
