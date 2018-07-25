@@ -218,7 +218,7 @@ public class AssessorRegistrationController {
     private void validateAddressForm(AssessorRegistrationForm assessorRegistrationForm, BindingResult bindingResult) {
         if (!postcodeIsSelected(assessorRegistrationForm)) {
             if (postcodeIndexIsSubmitted(assessorRegistrationForm)) {
-                bindingResult.rejectValue("addressForm.postcodeOptions", "validation.standard.postcodeoptions.required");
+                bindingResult.rejectValue("addressForm.selectedPostcodeIndex", "validation.standard.postcodeoptions.required");
                 assessorRegistrationForm.getAddressForm().setSelectedPostcodeIndex(null);
             } else {
                 bindingResult.rejectValue("addressForm.postcodeInput", "validation.standard.postcodesearch.required");
