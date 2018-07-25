@@ -124,7 +124,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     }
 
     @Test
-    public void testSaveOrganisation() throws Exception {
+    public void saveOrganisation() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
         when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
@@ -141,7 +141,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     }
 
     @Test
-    public void testSaveOrganisation_loggedInUser() throws Exception {
+    public void saveOrganisation_loggedInUser() throws Exception {
         setLoggedInUser(loggedInUser);
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
@@ -163,7 +163,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     }
 
     @Test
-    public void testSaveOrganisation_loggedInUserOldApplication() throws Exception {
+    public void saveOrganisation_loggedInUserOldApplication() throws Exception {
         setLoggedInUser(loggedInUser);
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
@@ -185,7 +185,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     }
 
     @Test
-    public void testSaveOrganisation_loggedInAssessor() throws Exception {
+    public void saveOrganisation_loggedInAssessor() throws Exception {
         setLoggedInUser(newUserResource().withId(ASSESSOR_ID).withRolesGlobal(asList(Role.ASSESSOR)).build());
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
@@ -211,7 +211,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
 
 
     @Test
-    public void testSaveOrganisation_createOrMatchServiceCallIsMadeWhenHashIsNotPresent() throws Exception {
+    public void saveOrganisation_createOrMatchServiceCallIsMadeWhenHashIsNotPresent() throws Exception {
         when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.empty());
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
@@ -226,7 +226,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     }
 
     @Test
-    public void testSaveOrganisation_createAndLinkByInviteServiceCallIsMadeWhenHashIsPresent() throws Exception {
+    public void saveOrganisation_createAndLinkByInviteServiceCallIsMadeWhenHashIsPresent() throws Exception {
 
         when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
@@ -243,7 +243,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     }
 
     @Test
-    public void testConfirmBusiness() throws Exception {
+    public void confirmBusiness() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
@@ -254,7 +254,7 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
     }
 
     @Test
-    public void testConfirmCompany() throws Exception {
+    public void confirmCompany() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 

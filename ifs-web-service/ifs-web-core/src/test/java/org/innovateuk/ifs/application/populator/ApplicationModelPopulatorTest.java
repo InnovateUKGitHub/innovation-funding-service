@@ -178,7 +178,7 @@ public class ApplicationModelPopulatorTest {
         when(questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(costsQuestions);
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
 
-        when(organisationService.getOrganisationForUser(user.getId())).thenReturn(userOrganisation);
+        when(organisationService.getPrimaryForUser(user.getId())).thenReturn(userOrganisation);
         when(financeViewHandlerProvider.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);
 
         ProcessRoleResource processRole  = newProcessRoleResource().withOrganisation().withUser(user).build();
@@ -191,7 +191,7 @@ public class ApplicationModelPopulatorTest {
         verifyNoMoreInteractions(model);
 
         //Verify model calls
-        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competitionId, applicationId, Optional.of(organisationId));
+        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competitionId, applicationId);
         verify(financeModelManager).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
     }
 }

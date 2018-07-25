@@ -3,17 +3,17 @@ package org.innovateuk.ifs.assessment.dashboard.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorCompetitionForPanelDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -52,7 +53,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
     private AssessorCompetitionForPanelDashboardModelPopulator assessorCompetitionForPanelDashboardModelPopulator;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private ReviewRestService reviewRestService;
@@ -64,7 +65,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
     private ApplicationService applicationService;
 
     @Mock
-    private OrganisationRestService organisationRestService;
+    private OrganisationService organisationService;
 
     @Override
     protected AssessorCompetitionForPanelDashboardController supplyControllerUnderTest() {
@@ -92,7 +93,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
                 .withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId(), organisations.get(3).getId())
                 .build(4);
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(reviewRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(assessmentReviews));
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
@@ -100,7 +101,10 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
         when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
 
-        organisations.forEach(organisation -> when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation)));
+        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(0)))).thenReturn(Optional.ofNullable(organisations.get(0)));
+        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(1)))).thenReturn(Optional.ofNullable(organisations.get(1)));
+        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(2)))).thenReturn(Optional.ofNullable(organisations.get(2)));
+        when(organisationService.getApplicationLeadOrganisation(asList(participants.get(3)))).thenReturn(Optional.ofNullable(organisations.get(3)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}/panel", competition.getId()))
                 .andExpect(status().isOk())
@@ -108,14 +112,14 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
                 .andExpect(view().name("assessor-competition-for-panel-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, reviewRestService, applicationService, processRoleService, organisationRestService);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, reviewRestService, applicationService, processRoleService, organisationService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(reviewRestService).getAssessmentReviews(userId, competition.getId());
 
         assessmentReviews.forEach(assessmentReview -> {
             inOrder.verify(applicationService).getById(assessmentReview.getApplication());
             inOrder.verify(processRoleService).findProcessRolesByApplicationId(assessmentReview.getApplication());
-            inOrder.verify(organisationRestService).getOrganisationById(isA(Long.class));
+            inOrder.verify(organisationService).getApplicationLeadOrganisation(anyList());
         });
 
         inOrder.verifyNoMoreInteractions();
@@ -141,7 +145,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
 
         CompetitionResource competition = buildTestCompetition();
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(reviewRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}/panel", competition.getId()))
@@ -150,14 +154,14 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
                 .andExpect(view().name("assessor-competition-for-panel-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, reviewRestService);
-        inOrder.verify(competitionService).getById(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, reviewRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(reviewRestService).getAssessmentReviews(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
         verifyZeroInteractions(applicationService);
         verifyZeroInteractions(processRoleService);
-        verifyZeroInteractions(organisationRestService);
+        verifyZeroInteractions(organisationService);
 
         AssessorCompetitionForPanelDashboardViewModel model = (AssessorCompetitionForPanelDashboardViewModel) result.getModelAndView().getModel().get("model");
 

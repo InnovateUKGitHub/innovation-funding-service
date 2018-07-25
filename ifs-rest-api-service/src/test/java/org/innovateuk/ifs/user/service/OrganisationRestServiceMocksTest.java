@@ -33,7 +33,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
     @Test
      public void test_getOrganisationsByApplicationId() {
 
-        String expectedUrl = BaseRestServiceUnitTest.dataServicesUrl + organisationsUrl + "/findByApplicationId/123";
+        String expectedUrl = BaseRestServiceUnitTest.dataServicesUrl + organisationsUrl + "/find-by-application-id/123";
         List<OrganisationResource> returnedResponse = Arrays.asList(1,2,3).stream().map(i -> new OrganisationResource()).collect(Collectors.toList());// newOrganisationResource().build(3);
         ResponseEntity<List<OrganisationResource>> responseEntity = new ResponseEntity<>(returnedResponse, OK);
 
@@ -47,7 +47,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
     @Test
     public void test_getOrganisationById() {
 
-        String expectedUrl = BaseRestServiceUnitTest.dataServicesUrl + organisationsUrl + "/findById/123";
+        String expectedUrl = BaseRestServiceUnitTest.dataServicesUrl + organisationsUrl + "/find-by-id/123";
         OrganisationResource returnedResponse =  new OrganisationResource();
         ResponseEntity<OrganisationResource> responseEntity = new ResponseEntity<>(returnedResponse, OK);
 
@@ -69,7 +69,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
 
         String organisationNameEncoded = UriUtils.encode(organisation.getName(), "UTF-8");
 
-        setupPostWithRestResultExpectations(organisationsUrl + "/updateNameAndRegistration/" + organisationId + "?name=" + organisationNameEncoded + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class, null, organisation, OK);
+        setupPostWithRestResultExpectations(organisationsUrl + "/update-name-and-registration/" + organisationId + "?name=" + organisationNameEncoded + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class, null, organisation, OK);
         OrganisationResource receivedResource = service.updateNameAndRegistration(organisation).getSuccess();
 
         Assert.assertEquals(organisation, receivedResource);
@@ -79,7 +79,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
     public void createOrMatch() {
         OrganisationResource expected = newOrganisationResource().build();
 
-        setupPostWithRestResultAnonymousExpectations(format("%s/createOrMatch", organisationsUrl), OrganisationResource.class, expected, expected, OK);
+        setupPostWithRestResultAnonymousExpectations(format("%s/create-or-match", organisationsUrl), OrganisationResource.class, expected, expected, OK);
 
         OrganisationResource response = service.createOrMatch(expected).getSuccess();
         assertEquals(expected, response);
@@ -90,9 +90,44 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
         String inviteHash = "abc123";
         OrganisationResource expected = newOrganisationResource().build();
 
-        setupPostWithRestResultAnonymousExpectations(format("%s/createAndLinkByInvite?inviteHash=%s", organisationsUrl, inviteHash), OrganisationResource.class, expected, expected, OK);
+        setupPostWithRestResultAnonymousExpectations(format("%s/create-and-link-by-invite?inviteHash=%s", organisationsUrl, inviteHash), OrganisationResource.class, expected, expected, OK);
 
         OrganisationResource response = service.createAndLinkByInvite(expected, inviteHash).getSuccess();
         assertEquals(expected, response);
+    }
+
+    @Test
+    public void getPrimaryForUser() {
+        long userId = 1L;
+        OrganisationResource organisationResource = newOrganisationResource().build();
+        setupGetWithRestResultExpectations(format("%s/primary-for-user/%s", organisationsUrl, userId), OrganisationResource.class, organisationResource);
+
+        OrganisationResource result = service.getPrimaryForUser(userId).getSuccess();
+
+        assertEquals(result, organisationResource);
+    }
+
+    @Test
+    public void getByUserAndApplicationId() {
+        long userId = 1L;
+        long applicationId = 2L;
+        OrganisationResource organisationResource = newOrganisationResource().build();
+        setupGetWithRestResultExpectations(format("%s/by-user-and-application-id/%s/%s", organisationsUrl, userId, applicationId), OrganisationResource.class, organisationResource);
+
+        OrganisationResource result = service.getByUserAndApplicationId(userId, applicationId).getSuccess();
+
+        assertEquals(result, organisationResource);
+    }
+
+    @Test
+    public void getByUserAndProjectId() {
+        long userId = 1L;
+        long projectId = 2L;
+        OrganisationResource organisationResource = newOrganisationResource().build();
+        setupGetWithRestResultExpectations(format("%s/by-user-and-project-id/%s/%s", organisationsUrl, userId, projectId), OrganisationResource.class, organisationResource);
+
+        OrganisationResource result = service.getByUserAndProjectId(userId, projectId).getSuccess();
+
+        assertEquals(result, organisationResource);
     }
 }

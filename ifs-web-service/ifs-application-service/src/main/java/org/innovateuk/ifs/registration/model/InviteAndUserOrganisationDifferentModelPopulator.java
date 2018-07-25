@@ -22,7 +22,7 @@ public class InviteAndUserOrganisationDifferentModelPopulator {
     public InviteAndUserOrganisationDifferentViewModel populateModel(ApplicationInviteResource invite) {
         String inviteOrganisationName = invite.getInviteOrganisationNameConfirmedSafe();
         UserResource user = userService.findUserByEmail(invite.getEmail()).get();
-        OrganisationResource userOrganisation = organisationService.getOrganisationForUser(user.getId());
+        OrganisationResource userOrganisation = organisationService.getPrimaryForUser(user.getId());
         String leadApplicantName = invite.getLeadApplicant();
         String leadApplicantEmail = invite.getLeadApplicantEmail();
         return new InviteAndUserOrganisationDifferentViewModel(inviteOrganisationName, userOrganisation.getName(), leadApplicantName, leadApplicantEmail);

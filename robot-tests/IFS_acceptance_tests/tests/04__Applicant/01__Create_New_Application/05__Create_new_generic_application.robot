@@ -15,7 +15,7 @@ ${competitionName}  Generic competition for TsnCs
 User can edit the assesed question
     [Documentation]    IFS-747
     [Tags]  HappyPath
-    [Setup]  logged in user applies to competition  ${openGenericCompetition}
+    [Setup]  logged in user applies to competition  ${openGenericCompetition}  1
     Given the user should not see the element  a:contains("7.")  # This comp has only 1 question
     When the user clicks the button/link  link=1. Generic question title
     Then the user should see the element  jQuery=button:contains("Mark as complete")
@@ -38,10 +38,10 @@ Applicant Applies to Generic competition and is able to see the Ts&Cs
     [Documentation]  IFS-1012  IFS-2879
     [Tags]
     [Setup]  Log in as a different user             becky.mason@gmail.com  ${short_password}
-    Given logged in user applies to competition     ${competitionName}
+    Given logged in user applies to competition     ${competitionName}   4
     When the user clicks the button/link            link=Application details
     Then the user fills in the Application details  Application Ts&Cs  ${tomorrowday}  ${month}  ${nextyear}
-    When the user clicks the button/link            link=view the grant terms and conditions
+    When the user clicks the button/link            link=View the grant terms and conditions
     Then the user should see the element            jQuery=h1:contains("Terms and conditions of an Innovate UK grant award")
 
 *** Keywords ***

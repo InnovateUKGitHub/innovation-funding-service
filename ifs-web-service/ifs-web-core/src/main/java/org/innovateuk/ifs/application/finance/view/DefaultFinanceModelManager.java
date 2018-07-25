@@ -7,17 +7,15 @@ import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -65,10 +63,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     private ApplicationService applicationService;
 
     @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
-    private OrganisationDetailsRestService organisationDetailsRestService;
+    private CompetitionRestService competitionRestService;
 
     //TODO: make sure this function is not going to be used anymore - IFS-3801
     @Override
@@ -78,13 +73,11 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 
         if (applicationFinanceResource != null) {
             OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccess();
-            List<OrganisationSizeResource> organisationSizes = organisationDetailsRestService.getOrganisationSizes().getSuccess();
             model.addAttribute("organisationFinance", applicationFinanceResource.getFinanceOrganisationDetails());
             model.addAttribute("organisationFinanceSize", applicationFinanceResource.getOrganisationSize());
             model.addAttribute("organisationType", organisationType);
             model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
             model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
-            model.addAttribute("organisationSizes", organisationSizes);
             model.addAttribute("maximumGrantClaimPercentage", applicationFinanceResource.getMaximumFundingLevel());
             model.addAttribute("financeView", "finance");
             model.addAttribute("financeQuestions", CollectionFunctions.simpleToMap(costsQuestions, this::costTypeForQuestion));
@@ -109,13 +102,11 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 
         if (applicationFinanceResource != null) {
             OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccess();
-            List<OrganisationSizeResource> organisationSizes = organisationDetailsRestService.getOrganisationSizes().getSuccess();
             financeViewModel.setOrganisationFinance(applicationFinanceResource.getFinanceOrganisationDetails());
             financeViewModel.setOrganisationFinanceSize(applicationFinanceResource.getOrganisationSize());
             financeViewModel.setOrganisationType(organisationType);
             financeViewModel.setOrganisationFinanceId(applicationFinanceResource.getId());
             financeViewModel.setOrganisationFinanceTotal(applicationFinanceResource.getTotal());
-            financeViewModel.setOrganisationSizes(organisationSizes);
             financeViewModel.setMaximumGrantClaimPercentage(applicationFinanceResource.getMaximumFundingLevel());
             financeViewModel.setFinanceView("finance");
             financeViewModel.setFinanceQuestions(CollectionFunctions.simpleToMap(costsQuestions, this::costTypeForQuestion));
@@ -141,7 +132,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 
         Long organisationType = organisationService.getOrganisationType(userId, applicationId);
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         if (!application.isSubmitted() && competition.isOpen()) {
             // add cost for each cost question

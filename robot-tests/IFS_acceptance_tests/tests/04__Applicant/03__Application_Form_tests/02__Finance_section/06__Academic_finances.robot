@@ -85,6 +85,7 @@ Academic partner can view the file on the finances
     [Tags]    HappyPath
     When the user opens the link in new window  ${valid_pdf}
     Then the user should not see an error in the page
+    And the user closes the last opened tab
 
 Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917

@@ -15,6 +15,7 @@ Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../10__Project_setup/PS_Common.robot
+Resource          ../Applicant_Commons.robot
 
 *** Test Cases ***
 Non registered users non companies house route
@@ -27,6 +28,7 @@ Non registered users non companies house route
     And the user selects the radio button          organisationTypeId    radio-1
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
     When the user clicks the Not on company house link
+    Then the user fills in the non CH address
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
     Then The user should see the element           jQuery=h1:contains("Your details")
 
@@ -69,11 +71,6 @@ the new application should be visible in the dashboard page
     the user should see the text in the page  ${test_title}
     the user should see the text in the page  Application number:
 
-the user clicks the Not on company house link
-    the user clicks the button/link    jQuery=summary:contains("Enter details manually")
-    The user enters text to a text field  name=organisationName    org2
-    the user clicks the button/link       jQuery=.button:contains("Continue")
-
 the user edits the application title
     the user clicks the button/link         link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user should see the element         link=Application details
@@ -115,5 +112,10 @@ the user is redirected to overview page if he has been there already
     the user clicks the button/link      link=Application team
     logout as user
 
-
-
+the user fills in the non CH address
+    And the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
+    And the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    And the user clicks the button/link            jQuery = .button:contains("Find UK address")
+    Then the user should see the element           css=#select-address-block
+    And the user clicks the button/link            css=#select-address-block > button
+    And the user clicks the button/link            jQuery=.button:contains("Continue")

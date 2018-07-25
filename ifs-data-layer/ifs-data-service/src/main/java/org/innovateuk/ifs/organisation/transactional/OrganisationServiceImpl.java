@@ -17,6 +17,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_COMPANY_NAME_TOO_LONG;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.organisation.resource.OrganisationResource.normalOrgComparator;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -52,18 +54,33 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     private AddressMapper addressMapper;
 
     @Override
-    public ServiceResult<Set<OrganisationResource>> findByApplicationId(final Long applicationId) {
+    public ServiceResult<Set<OrganisationResource>> findByApplicationId(final long applicationId) {
 
         List<ProcessRole> roles = processRoleRepository.findByApplicationId(applicationId);
+
+        Long leadOrganisationId = roles.stream()
+                .filter(role -> role.getRole().equals(Role.LEADAPPLICANT))
+                .map(role -> role.getOrganisationId())
+                .findAny().orElse(null);
+
+        final Comparator<OrganisationResource> comparator;
+
+        if (leadOrganisationId != null) {
+            Comparator<OrganisationResource> leadComparator = Comparator.comparing(organisationResource -> leadOrganisationId.equals(organisationResource.getId()), Comparator.reverseOrder());
+            comparator = leadComparator.thenComparing(normalOrgComparator);
+        } else {
+            comparator = normalOrgComparator;
+        }
+
         Set<ProcessRole> applicantRoles = new HashSet<>(simpleFilter(roles, ProcessRole::isLeadApplicantOrCollaborator));
         List<Organisation> organisations = simpleMap(applicantRoles, role -> organisationRepository.findOne(role.getOrganisationId()));
         List<OrganisationResource> organisationResources = new ArrayList<>(simpleMap(organisations, organisationMapper::mapToResource));
-        organisationResources.sort(Comparator.comparing(OrganisationResource::getId));
+        organisationResources.sort(comparator);
         return serviceSuccess(new LinkedHashSet<>(organisationResources));
     }
 
     @Override
-    public ServiceResult<OrganisationResource> findById(final Long organisationId) {
+    public ServiceResult<OrganisationResource> findById(final long organisationId) {
         Organisation org = organisationRepository.findOne(organisationId);
         return find(org, notFoundError(Organisation.class, organisationId)).andOnSuccessReturn(o ->
             organisationMapper.mapToResource(o)
@@ -71,7 +88,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<OrganisationResource> getPrimaryForUser(final Long userId) {
+    public ServiceResult<OrganisationResource> getPrimaryForUser(final long userId) {
         List<Organisation> organisations = organisationRepository.findByUsersId(userId);
         if (organisations.isEmpty()) {
             return serviceFailure(CommonErrors.notFoundError(Organisation.class));
@@ -80,12 +97,27 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<List<OrganisationResource>> getAllForUser(Long userId) {
+    public ServiceResult<List<OrganisationResource>> getAllForUser(long userId) {
         List<Organisation> organisations = organisationRepository.findByUsersId(userId);
         if (organisations.isEmpty()) {
             return serviceFailure(CommonErrors.notFoundError(Organisation.class));
         }
         return serviceSuccess(organisationsToResources(organisations));
+    }
+
+    public ServiceResult<OrganisationResource> getByUserAndApplicationId(long userId, long applicationId) {
+        Organisation org = organisationRepository.findByProcessRolesUserIdAndProcessRolesApplicationId(userId, applicationId);
+        return find(org, notFoundError(Organisation.class, userId, applicationId)).andOnSuccessReturn(o ->
+                organisationMapper.mapToResource(o)
+        );
+    }
+
+    @Override
+    public ServiceResult<OrganisationResource> getByUserAndProjectId(long userId, long projectId) {
+        Organisation org = organisationRepository.findByUserAndProjectId(userId, projectId);
+        return find(org, notFoundError(Organisation.class, userId, projectId)).andOnSuccessReturn(o ->
+                organisationMapper.mapToResource(o)
+        );
     }
 
     @Override
@@ -109,7 +141,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final Long organisationId, final String organisationName, final String registrationNumber) {
+    public ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final long organisationId, final String organisationName, final String registrationNumber) {
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
             if (organisationName.length() <= MAX_CHARACTER_DB_LENGTH) {
                 organisation.setName(decodeOrganisationName(organisationName));
@@ -122,7 +154,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<OrganisationResource> addAddress(final Long organisationId, final OrganisationAddressType organisationAddressType, AddressResource addressResource) {
+    public ServiceResult<OrganisationResource> addAddress(final long organisationId, final OrganisationAddressType organisationAddressType, AddressResource addressResource) {
         return find(organisation(organisationId)).andOnSuccessReturn(organisation -> {
             Address address = addressMapper.mapToDomain(addressResource);
             AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
@@ -151,7 +183,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<OrganisationSearchResult> getSearchOrganisation(final Long searchOrganisationId) {
+    public ServiceResult<OrganisationSearchResult> getSearchOrganisation(final long searchOrganisationId) {
         Academic academic = academicRepository.findById(searchOrganisationId);
 
         ServiceResult<OrganisationSearchResult> organisationResults;

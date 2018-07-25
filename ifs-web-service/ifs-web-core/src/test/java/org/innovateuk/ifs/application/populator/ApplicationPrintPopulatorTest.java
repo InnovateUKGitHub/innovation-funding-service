@@ -6,10 +6,10 @@ import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewMod
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
@@ -45,7 +45,7 @@ public class ApplicationPrintPopulatorTest {
     private ApplicationService applicationService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private FormInputResponseRestService formInputResponseRestService;
@@ -86,7 +86,7 @@ public class ApplicationPrintPopulatorTest {
         Optional<Boolean> markAsCompleteEnabled = Optional.empty();
 
         when(applicationService.getById(applicationId)).thenReturn(application);
-        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(formInputResponseRestService.getResponsesByApplicationId(applicationId)).thenReturn(restSuccess(responses));
         when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
         when(applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles)).thenReturn(userOrganisation);
@@ -107,6 +107,6 @@ public class ApplicationPrintPopulatorTest {
         verify(applicationModelPopulator).addUserDetails(model, user, userApplicationRoles);
         verify(applicationModelPopulator).addApplicationInputs(application, model);
         verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation, user.getId(), emptyMap(), markAsCompleteEnabled);
-        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competition.getId(), applicationId, userOrganisation.map(OrganisationResource::getId));
+        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competition.getId(), applicationId);
     }
 }
