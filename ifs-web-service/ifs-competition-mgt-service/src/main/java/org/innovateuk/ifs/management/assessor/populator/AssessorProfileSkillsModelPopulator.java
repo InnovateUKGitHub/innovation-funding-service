@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.management.assessor.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessor.viewmodel.AssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.groupingBy;
 @Component
 public class AssessorProfileSkillsModelPopulator {
 
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private AssessorRestService assessorRestService;
 
     public AssessorProfileSkillsModelPopulator(CompetitionService competitionService,
@@ -34,7 +34,7 @@ public class AssessorProfileSkillsModelPopulator {
     }
 
     public AssessorProfileSkillsViewModel populateModel(long assessorId, long competitionId, String originQuery) {
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccess();
 
         UserResource user = assessorProfile.getUser();
