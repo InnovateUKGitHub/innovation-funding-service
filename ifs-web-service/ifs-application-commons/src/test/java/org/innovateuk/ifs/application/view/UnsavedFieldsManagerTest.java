@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.view;
 
-import org.innovateuk.ifs.application.populator.finance.model.FinanceFormField;
-import org.innovateuk.ifs.application.populator.finance.view.UnsavedFieldsManager;
+import org.innovateuk.ifs.application.finance.model.FinanceFormField;
+import org.innovateuk.ifs.application.finance.view.UnsavedFieldsManager;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.project.eligibility.controller;
 
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
-import org.innovateuk.ifs.ApplicationModelPopulator;
-import org.innovateuk.ifs.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.ApplicationNavigationPopulator;
-import org.innovateuk.ifs.application.populator.finance.view.DefaultProjectFinanceModelManager;
-import org.innovateuk.ifs.application.populator.finance.view.ProjectFinanceFormHandler;
-import org.innovateuk.ifs.application.populator.finance.view.ProjectFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.populator.finance.viewmodel.FinanceViewModel;
-import org.innovateuk.ifs.application.populator.section.OpenProjectFinanceSectionModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
+import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
+import org.innovateuk.ifs.application.finance.view.ProjectFinanceFormHandler;
+import org.innovateuk.ifs.application.finance.view.ProjectFinanceOverviewModelManager;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.ProjectFinanceService;

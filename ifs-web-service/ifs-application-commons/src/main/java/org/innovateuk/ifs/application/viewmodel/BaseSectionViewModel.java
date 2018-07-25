@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
-import org.innovateuk.ifs.application.populator.finance.viewmodel.BaseFinanceOverviewViewModel;
-import org.innovateuk.ifs.application.populator.finance.viewmodel.BaseFinanceViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceOverviewViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;

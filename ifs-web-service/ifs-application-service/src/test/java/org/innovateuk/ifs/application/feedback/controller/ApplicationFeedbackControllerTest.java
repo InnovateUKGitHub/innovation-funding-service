@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.common.populator.ApplicationFinanceSummary
 import org.innovateuk.ifs.application.common.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.feedback.populator.ApplicationFeedbackViewModelPopulator;
 import org.innovateuk.ifs.application.feedback.populator.InterviewFeedbackViewModelPopulator;
-import org.innovateuk.ifs.application.forminput.FormInputViewModelGenerator;
+import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;

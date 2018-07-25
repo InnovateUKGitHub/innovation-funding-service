@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.viewmodel;
 
-import org.innovateuk.ifs.application.populator.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.SectionResource;

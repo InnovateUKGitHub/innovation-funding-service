@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.financebuilder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.populator.finance.view.OrganisationApplicationFinanceOverviewImpl;
-import org.innovateuk.ifs.application.populator.finance.view.OrganisationFinanceOverview;
+import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.finance.view.OrganisationFinanceOverview;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 
 import java.util.List;

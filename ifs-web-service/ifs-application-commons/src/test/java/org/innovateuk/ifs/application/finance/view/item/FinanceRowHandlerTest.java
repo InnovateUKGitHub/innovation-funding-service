@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.finance.view.item;
 
-import org.innovateuk.ifs.application.populator.finance.view.jes.AcademicFinanceHandler;
+import org.innovateuk.ifs.application.finance.view.jes.AcademicFinanceHandler;
 import org.innovateuk.ifs.util.NumberUtils;
 import org.junit.Rule;
 import org.junit.Test;

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.form.ApplicationForm;
-import org.innovateuk.ifs.ApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;

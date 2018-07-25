@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.populator.viewmodel;
 
-import org.innovateuk.ifs.application.populator.finance.viewmodel.ApplicationFinanceOverviewViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

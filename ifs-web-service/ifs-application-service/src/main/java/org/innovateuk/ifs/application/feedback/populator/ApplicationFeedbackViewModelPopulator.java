@@ -6,9 +6,9 @@ import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummary
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackViewModel;
 import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
-import org.innovateuk.ifs.application.populator.finance.service.FinanceService;
-import org.innovateuk.ifs.application.populator.finance.view.OrganisationApplicationFinanceOverviewImpl;
-import org.innovateuk.ifs.application.AbstractApplicationModelPopulator;
+import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.populator.section.FinanceOverviewSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 @Component
-public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationModelPopulator {
+public class ApplicationFeedbackViewModelPopulator extends FinanceOverviewSectionPopulator.AbstractApplicationModelPopulator {
 
     private OrganisationRestService organisationRestService;
     private OrganisationService organisationService;

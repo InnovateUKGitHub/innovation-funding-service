@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.finance.view;
 
-import org.innovateuk.ifs.application.populator.finance.model.FinanceFormField;
-import org.innovateuk.ifs.application.populator.finance.view.item.GrantClaimHandler;
+import org.innovateuk.ifs.application.finance.model.FinanceFormField;
+import org.innovateuk.ifs.application.finance.view.item.GrantClaimHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.junit.Test;

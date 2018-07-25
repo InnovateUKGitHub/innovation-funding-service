@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.populator.finance;
 
-import org.innovateuk.ifs.application.forminput.AbstractFormInputPopulator;
+import org.innovateuk.ifs.application.populator.forminput.AbstractFormInputPopulator;
 import org.innovateuk.ifs.application.viewmodel.finance.OrganisationTurnoverViewModel;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.stereotype.Component;

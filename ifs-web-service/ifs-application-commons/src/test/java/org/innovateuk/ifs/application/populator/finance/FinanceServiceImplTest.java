@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.populator.finance;
 
-import org.innovateuk.ifs.application.populator.finance.service.FinanceServiceImpl;
+import org.innovateuk.ifs.application.finance.service.FinanceServiceImpl;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;

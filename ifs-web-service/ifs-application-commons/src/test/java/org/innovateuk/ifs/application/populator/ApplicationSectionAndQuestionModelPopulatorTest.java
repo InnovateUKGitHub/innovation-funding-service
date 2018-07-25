@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.form.ApplicationForm;

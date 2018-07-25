@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.populator.viewmodel;
 
-import org.innovateuk.ifs.application.populator.finance.viewmodel.ProjectFinanceViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceViewModel;
 import org.junit.Before;
 import org.mockito.InjectMocks;
 
