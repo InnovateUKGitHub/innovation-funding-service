@@ -39,5 +39,12 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
         ProjectDocument projectDocument = projectDocumentRepository.findOne(id);
         return serviceSuccess(projectDocumentMapper.mapToResource(projectDocument));
     }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> delete(Long id) {
+        projectDocumentRepository.delete(id);
+        return serviceSuccess();
+    }
 }
 
