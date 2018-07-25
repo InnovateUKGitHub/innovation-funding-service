@@ -17,6 +17,7 @@
          <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Document type',size='heading-xlarge'" />
          <form method="post"
             th:object="${form}"
+            data-section="document"
             th:action="@{'/competition/setup/{competitionId}/section/project-document/add'(competitionId=${competitionId})}"
             >
             <th:block id="section-input">
@@ -32,7 +33,42 @@
                      required="required"
                      th:attr="data-required-errormessage=#{validation.standard.title.required}" />
                </div>
-               <div class="form-group">
+
+               <div class="form-group" th:classappend="${#fields.hasErrors('pdf')} ? 'form-group-error'">
+                  <fieldset>
+                     <legend id="acceptedFileTypesId">
+                        <span class="form-label-bold">Accepted file types</span>
+                     </legend>
+
+                     <div class="multiple-choice">
+                        <input id="pdf"
+                           type="checkbox"
+                           name="acceptedFileTypesId"
+                           value="accepted"
+                           th:field="${form.pdf}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
+                           />
+                        <label th:for="pdf">
+                        <span>PDF</span>
+                        </label>
+                     </div>
+                     <div class="multiple-choice">
+                        <input id="spreadsheet"
+                           type="checkbox"
+                           name="acceptedFileTypesId"
+                           th:field="${form.spreadsheet}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
+                           />
+                        <label th:for="spreadsheet">
+                        <span>spreadsheet</span>
+                        </label>
+                     </div>
+                  </fieldset>
+               </div>
+
+               <!-- <div class="form-group">
                   <label class="form-label">
                   <span class="form-label-bold">Accepted file types</span>
                   </label>
@@ -56,13 +92,14 @@
                      <span>spreadsheet</span>
                      </label>
                   </div>
-               </div>
+               </div> -->
                <div class="form-group"  th:classappend="${#fields.hasErrors('guidance')} ? 'form-group-error'">
                   <label class="form-label" for="guidance">
-                  <span class="form-label-bold">Guidance</span>
+                     <span class="form-label-bold">Guidance</span>
                   </label>
                   <div class="textarea-wrapped">
                      <textarea id="guidance"
+                        name="guidance"
                         rows="16"
                         class="form-control width-full"
                         data-editor="html"
@@ -70,7 +107,7 @@
                         maxlength="5000"
                         th:field="${form.guidance}"
                         required="required"
-                        th:attr="data-required-errormessage=#{validation.documentguidance.message.required}"></textarea>
+                        th:attr="data-required-errormessage=#{validation.documentform.guidance.required}"></textarea>
                   </div>
                </div>
             </th:block>
