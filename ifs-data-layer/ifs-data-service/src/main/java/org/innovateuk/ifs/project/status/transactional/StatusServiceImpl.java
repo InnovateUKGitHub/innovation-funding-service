@@ -138,7 +138,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired) {
         for (Organisation organisation : project.getOrganisations()) {
             Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
-            if (!financeContact.isPresent()) {
+            if (financeContact == null || !financeContact.isPresent()) {
                 return PENDING;
             }
         }
