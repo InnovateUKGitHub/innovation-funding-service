@@ -89,7 +89,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<OrganisationResource> getPrimaryForUser(final long userId) {
-        List<Organisation> organisations = organisationRepository.findByUsersId(userId);
+        List<Organisation> organisations = organisationRepository.findDistinctByUsersId(userId);
         if (organisations.isEmpty()) {
             return serviceFailure(CommonErrors.notFoundError(Organisation.class));
         }
@@ -98,7 +98,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<List<OrganisationResource>> getAllForUser(long userId) {
-        List<Organisation> organisations = organisationRepository.findByUsersId(userId);
+        List<Organisation> organisations = organisationRepository.findDistinctByUsersId(userId);
         if (organisations.isEmpty()) {
             return serviceFailure(CommonErrors.notFoundError(Organisation.class));
         }

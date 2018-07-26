@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationNotificationServi
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Test;
@@ -53,6 +54,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Mock
     private IneligibleOutcomeMapper ineligibleOutcomeMapperMock;
+
+    @Mock
+    private CrmService crmService;
 
 
     @Override
@@ -151,6 +155,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .content(objectMapper.writeValueAsString(applicationNameNode)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", notNullValue()));
+
+        verify(crmService).syncCrmContact(userId);
     }
 
     @Test

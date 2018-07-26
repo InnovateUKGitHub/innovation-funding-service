@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +43,9 @@ public class ApplicationController {
 
     @Autowired
     private ApplicationProgressService applicationProgressService;
+
+    @Autowired
+    private CrmService crmService;
 
     @GetMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
@@ -111,9 +115,12 @@ public class ApplicationController {
             @RequestBody JsonNode jsonObj) {
 
         String name = jsonObj.get("name").textValue();
-        ServiceResult<ApplicationResource> applicationResult =
-                applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId, organisationId);
-        return applicationResult.toPostCreateResponse();
+        return applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId, organisationId)
+                .andOnSuccessReturn(result -> {
+                    crmService.syncCrmContact(userId);
+                    return result;
+                })
+                .toPostCreateResponse();
     }
 
     @PostMapping("/{applicationId}/ineligible")

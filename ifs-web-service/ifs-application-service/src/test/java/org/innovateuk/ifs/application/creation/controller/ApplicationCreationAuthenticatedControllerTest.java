@@ -72,7 +72,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
 
         verify(registrationCookieService).deleteAllRegistrationJourneyCookies(any());
         verify(registrationCookieService).saveToCompetitionIdCookie(eq(1L), any());
-gi    }
+    }
 
     @Test
     public void testPostNoNewApplication() throws Exception {

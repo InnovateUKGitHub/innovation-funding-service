@@ -15,8 +15,8 @@ public interface OrganisationRepository extends PagingAndSortingRepository<Organ
     Organisation findByProcessRoles(@Param("processRoles") ProcessRole processRole);
     Organisation findOneByName(String name);
     Optional<Organisation> findFirstByUsers(User user);
-    List<Organisation> findByUsers(User user);
-    List<Organisation> findByUsersId(Long userId);
+    List<Organisation> findDistinctByUsers(User user);
+    List<Organisation> findDistinctByUsersId(Long userId);
     List<Organisation> findByNameOrderById(String name);
     List<Organisation> findByCompanyHouseNumberOrderById(String companiesHouseNumber);
     Organisation findByProcessRolesUserIdAndProcessRolesApplicationId(long userId, long applicationId);
