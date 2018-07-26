@@ -83,16 +83,26 @@ the user selects Research Participation if required
 
 the user fills in the CS Milestones
     [Arguments]  ${month}  ${nextyear}
-    the user clicks the button/link       link=Milestones
+    the user clicks the button/link              link = Milestones
     ${i} =  Set Variable   1
      :FOR   ${ELEMENT}   IN    @{milestones}
-      \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.day input  ${i}
-      \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.month input  ${month}
-      \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.year input  ${nextyear}
+      \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.day input  ${i}
+      \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.month input  ${month}
+      \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.year input  ${nextyear}
       \    ${i} =   Evaluate   ${i} + 1
-    the user clicks the button/link       jQuery=button:contains("Done")
-    the user clicks the button/link       link=Competition setup
-    the user should see the element       jQuery=div:contains("Milestones") ~ .task-status-complete
+    the user clicks the button/link              jQuery = button:contains("Done")
+    the user clicks the button/link              link = Competition setup
+    the user should see the element              jQuery = div:contains("Milestones") ~ .task-status-complete
+
+the user fills in the CS Documents in other projects
+    Given the user clicks the button/link        link = Documents in project setup
+    And the user clicks the button/link          link = Add document type
+    When the user enters text to a text field    id = title         Test document type
+    And the user selects the checkbox            id = pdf
+    And the user selects the checkbox            id = spreadsheet
+    And the user enters text to a text field     id = guidance      Guidance test.
+    And the user clicks the button/link          id = doneButton
+    Then the user should see the element
 
 the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}

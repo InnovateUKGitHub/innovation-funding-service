@@ -42,6 +42,7 @@ Comp Admin starts a new Competition
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
+    And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
@@ -108,7 +109,7 @@ Once the project growth table is selected
     [Tags]
     [Setup]    log in as a different user                &{Comp_admin1_credentials}
     Given the user navigates to the page                 ${CA_UpcomingComp}
-    When the user clicks the button/link                 jQuery=.button:contains("Create competition")
+    When the user clicks the button/link                 jQuery = .button:contains("Create competition")
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user selects the Terms and Conditions
@@ -117,14 +118,15 @@ Once the project growth table is selected
     And the user fills in the CS Milestones              ${month}  ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
-    When the user clicks the button/link                 link=Public content
+    And the user fills in the CS Documents in other projects
+    When the user clicks the button/link                 link = Public content
     Then the user fills in the Public content and publishes  GrowthTable
-    And the user clicks the button/link                  link=Return to setup overview
-    And the user should see the element                  jQuery=div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link                 jQuery=a:contains("Complete")
-    Then the user clicks the button/link                 css=button[type="submit"]
+    And the user clicks the button/link                  link = Return to setup overview
+    And the user should see the element                  jQuery = div:contains("Public content") ~ .task-status-complete
+    When the user clicks the button/link                 jQuery = a:contains("Complete")
+    Then the user clicks the button/link                 css = button[type = "submit"]
     And the user navigates to the page                   ${CA_UpcomingComp}
-    Then the user should see the element                 jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
+    Then the user should see the element                 jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
     [Teardown]  The competitions date changes so it is now Open  ${compWithGrowth}
 
 As next step the Applicant cannot see the turnover field

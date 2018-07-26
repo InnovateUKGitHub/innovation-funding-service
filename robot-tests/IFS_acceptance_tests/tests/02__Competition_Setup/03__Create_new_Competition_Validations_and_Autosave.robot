@@ -234,6 +234,15 @@ Assessor: Client-side validation
     When The user enters text to a text field  id=assessorPay  120
     And the user selects the radio button      assessorCount   5
     Then The user should not see the text in the page  This field can only accept whole numbers
+    And the user clicks the button/link        link = Competition setup
+
+Documents in project setup: The competition admin is required to enter a title and guidance message
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link       link = Documents in project setup
+    And the user clicks the button/link         link = Add document type
+    When the user clicks the button/link        id = doneButton
+    Then check for any error messages
 
 *** Keywords ***
 Custom suite setup

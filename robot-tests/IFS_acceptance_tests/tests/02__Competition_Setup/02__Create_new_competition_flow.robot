@@ -89,56 +89,78 @@ User can create a new competition
     [Documentation]    INFUND-2945, INFUND-2982, INFUND-2983, INFUND-2986, INFUND-3888, INFUND-3002, INFUND-2980, INFUND-4725, IFS-1104
     [Tags]    HappyPath
     Given the user navigates to the page       ${CA_UpcomingComp}
-    When the user clicks the button/link       jQuery=.button:contains("Create competition")
-    And The user should see the element        css=#compCTA[disabled]
-    And The user should not see the element    link=Funding information
-    And The user should not see the element    link=Eligibility
-    And The user should not see the element    link=Milestones
-    And The user should not see the element    link=Application
-    And The user should not see the element    link=Assessors
-    And The user should not see the element    link=Public content
-    And The user should see the element        link=Initial details
-    And The user should not see the element    link=Stakeholders
-    And The user should see the element        jQuery=p:contains("Once you complete, this competition will be ready to open.")
+    When the user clicks the button/link       jQuery = .button:contains("Create competition")
+    And The user should see the element        css = #compCTA[disabled]
+    And The user should not see the element    link = Funding information
+    And The user should not see the element    link = Eligibility
+    And The user should not see the element    link = Milestones
+    And The user should not see the element    link = Application
+    And The user should not see the element    link = Assessors
+    And The user should not see the element    link = Documents in project setup
+    And The user should not see the element    link = Public content
+    And The user should see the element        link = Initial details
+    And The user should not see the element    link = Stakeholders
+    And The user should see the element        jQuery = p:contains("Once you complete, this competition will be ready to open.")
+
+#Initial details - User enters valid values and marks as done
+#    [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
+#    [Tags]    HappyPath
+#    Given the user clicks the button/link                       link = Initial details
+#    #And the user should see the option in the drop-down menu    Generic  id=competitionTypeId
+#    #When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
+#    And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
+#    And the user enters valid data in the initial details
+#    And the user moves focus and waits for autosave
+#    And the user clicks the button twice             css = label[for = "stateAid2"]
+#    When the user clicks the button/link             jQuery = button:contains("Done")
+#    Then the user should see the text in the page    John Doe
+#    And the user should see the text in the page     10/1/${nextyear}
+#    And the user should see the text in the page     Ian Cooper
+#    And the user should see the text in the page     Competition title
+#    And the user should see the text in the page     Emerging and enabling
+#    And the user should see the text in the page     Satellite applications
+#    And the user should see the text in the page     Space technology
+#    And the user should see the text in the page     Sector
+#    And the user should see the element              jQuery=dt:contains("State aid") ~ dd:contains("No")
+#    And the user should see the element              jQuery=.button:contains("Edit")
 
 Initial details - User enters valid values and marks as done
     [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
     [Tags]    HappyPath
-    Given the user clicks the button/link                       link=Initial details
-    And the user should see the option in the drop-down menu    Generic  id=competitionTypeId
-    When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
-    And the user clicks the button/link                         jQuery=button:contains("+ add another innovation area")
+    Given the user clicks the button/link                       link = Initial details
+    #And the user should see the option in the drop-down menu    Generic  id=competitionTypeId
+    #When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
+    And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
     And the user enters valid data in the initial details
     And the user moves focus and waits for autosave
-    And the user clicks the button twice             css=label[for="stateAid2"]
-    When the user clicks the button/link             jQuery=button:contains("Done")
-    Then the user should see the text in the page    John Doe
-    And the user should see the text in the page     10/1/${nextyear}
-    And the user should see the text in the page     Ian Cooper
-    And the user should see the text in the page     Competition title
-    And the user should see the text in the page     Emerging and enabling
-    And the user should see the text in the page     Satellite applications
-    And the user should see the text in the page     Space technology
-    And the user should see the text in the page     Sector
-    And the user should see the element              jQuery=dt:contains("State aid") ~ dd:contains("No")
-    And the user should see the element              jQuery=.button:contains("Edit")
+    And the user clicks the button twice             css = label[for = "stateAid2"]
+    When the user clicks the button/link             jQuery = button:contains("Done")
+    Then the user should see the read-only view of the initial details
+
+#Initial details - Innovation sector of Open should be visible
+#    [Documentation]    INFUND-9152
+#    [Tags]    HappyPath
+#    Given the user clicks the button/link                       jQuery=.button:contains("Edit")
+#    Then the user should see the element                        jQuery=button:contains("+ add another innovation area")
+#    When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
+#    And the user selects the option from the drop-down menu     Open    id=innovationSectorCategoryId
+#    And the user selects the option from the drop-down menu     Biosciences    name=innovationAreaCategoryIds[0]
+#    And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
+#    Then the user selects the option from the drop-down menu    Sector    id = competitionTypeId
+#    When the user selects the option from the drop-down menu    Open    id = innovationSectorCategoryId
+#    Then the user should not see the selected option again
+#    When the user clicks the button/link                        jQuery = button:contains("Done")
+#    Then the user should see the text in the page               Open
+#    And the user should see the text in the page                Biosciences
+#    And the user should see the element                         jQuery = .button:contains("Edit")
 
 Initial details - Innovation sector of Open should be visible
     [Documentation]    INFUND-9152
     [Tags]    HappyPath
-    Given the user clicks the button/link                               jQuery=.button:contains("Edit")
-    Then the user should see the element                                jQuery=button:contains("+ add another innovation area")
-    When the user selects the option from the drop-down menu            Programme    id=competitionTypeId
-    And the user selects the option from the drop-down menu             Open    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu             Biosciences    name=innovationAreaCategoryIds[0]
-    And the user clicks the button/link                                 jQuery=button:contains("+ add another innovation area")
-    Then the user selects the option from the drop-down menu            Sector    id=competitionTypeId
-    When the user selects the option from the drop-down menu            Open    id=innovationSectorCategoryId
-    Then the user should not see the selected option again
-    When the user clicks the button/link                                jQuery=button:contains("Done")
-    Then the user should see the text in the page                       Open
-    And the user should see the text in the page                        Biosciences
-    And the user should see the element                                 jQuery=.button:contains("Edit")
+    Given the user clicks the button/link                       css = button[type = "submit"]  # Click Edit
+    When the user selects the option from the drop-down menu    Programme    id = competitionTypeId
+    Then the user selects the option from the drop-down menu    Sector    id = competitionTypeId
+    When the user clicks the button/link                        css = button[class = "button"]  # Click Done
 
 Initial details - Competitions allow multiple innovation areas
     [Documentation]    INFUND-6478, INFUND-6479
@@ -164,20 +186,20 @@ Initial Details - drop down menu is populated with comp admin users
     When the user should see the option in the drop-down menu    John Doe    name=executiveUserId
     And the user should see the option in the drop-down menu    Robert Johnson    name=executiveUserId
 
-Initial details - Comp Type and Date should not be editable
-    [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
-    [Tags]    HappyPath
-    And the user enters text to a text field  css=#title  ${competitionTitle}
-    And The element should be disabled        css=#competitionTypeId
-    And The element should be disabled        css=#openingDateDay
-    And the user clicks the button/link       jQuery=button:contains("Done")
-    Then the user should see the text in the page   10/1/${nextyear}
-    And the user should see the text in the page    Ian Cooper
-    And the user should see the text in the page    ${competitionTitle}
-    And the user should see the text in the page    Open
-    And the user should see the text in the page    Biosciences
-    And the user should see the text in the page    Creative industries
-    And the user should see the element              jQuery=dt:contains("State aid") ~ dd:contains("No")
+#Initial details - Comp Type and Date should not be editable
+#    [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
+#    [Tags]    HappyPath
+#    And the user enters text to a text field  css=#title  ${competitionTitle}
+#    And The element should be disabled        css=#competitionTypeId
+#    And The element should be disabled        css=#openingDateDay
+#    And the user clicks the button/link       jQuery=button:contains("Done")
+#    Then the user should see the text in the page   10/1/${nextyear}
+#    And the user should see the text in the page    Ian Cooper
+#    And the user should see the text in the page    ${competitionTitle}
+#    And the user should see the text in the page    Open
+#    And the user should see the text in the page    Biosciences
+#    And the user should see the text in the page    Creative industries
+#    And the user should see the element              jQuery=dt:contains("State aid") ~ dd:contains("No")
 
 Initial details - should have a green check
     [Documentation]    INFUND-3002
@@ -188,14 +210,15 @@ Initial details - should have a green check
 
 User should have access to all the sections
     [Documentation]    INFUND-4725, IFS-1104  IFS-3086
-    Given The user should see the element   link=Terms and conditions
-    And The user should see the element     link=Funding information
-    And The user should see the element     link=Eligibility
-    And The user should see the element     link=Milestones
-    And The user should see the element     link=Application
-    And The user should see the element     link=Assessors
-    And The user should see the element     link=Public content
-    And The user should see the element     link=Stakeholders
+    Given The user should see the element   link = Terms and conditions
+    And The user should see the element     link = Funding information
+    And The user should see the element     link = Eligibility
+    And The user should see the element     link = Milestones
+    And The user should see the element     link = Application
+    And The user should see the element     link = Assessors
+    And the user should see the element     link = Documents in project setup
+    And The user should see the element     link = Public content
+    And The user should see the element     link = Stakeholders
 
 The user must select the Terms and Conditions they want Applicants to accept
     [Documentation]  IFS-3086
@@ -674,28 +697,39 @@ Assessor: Should have a Green Check
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    jQuery=section:contains("Ready to open") li:contains("${competitionTitle}")
 
+Documents in project setup: The competition admin adds document requirements
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link        link = Documents in project setup
+    And the user clicks the button/link          link = Add document type
+    When the user enters text to a text field    id = title         Test document type
+    And the user selects the checkbox            id = pdf
+    And the user selects the checkbox            id = spreadsheet
+    And the user enters text to a text field     id = guidance      Guidance test.
+    And the user clicks the button/link          id = doneButton
+    Then the user should see the element
+
 Innovation leads can be added to a competition
     [Documentation]    IFS-192, IFS-1104
     [Tags]  HappyPath
-    [Setup]  the user clicks the button/link  link=${competitionTitle}
-    Given The user clicks the button/link     link=View and update competition setup
-    And The user clicks the button/link       link=Stakeholders
-    And the user should see the element       jQuery=h1:contains("Manage innovation leads")
-    And the user should see the element       jQuery=span.lead-count:contains("0")  # Lead count from key statistics
-    And the user should see the element       jQuery=.standard-definition-list dd:contains("Open") ~ dd:contains("Biosciences") ~ dd:contains("Ian Cooper") ~ dd:contains("John Doe")
-    And the user should see the element       jQuery=li.selected a:contains("Find")
-    When the user clicks the button/link      jQuery=td:contains(${peter_freeman}) button:contains("Add")
-    Then the user should not see the element  jQuery=td:contains(${peter_freeman})
-    And the user should not see the element   jQuery=td:contains("Ian Cooper")
-    And the user should see the element       jQuery=span.lead-count:contains("1")
-    When the user clicks the button/link      jQuery=a:contains("Overview")
-    Then the user should see the element      jQuery=span.total-count:contains("1")
-    And the user should not see the element   jQuery=td:contains("Ian Cooper")
-    And the user clicks the button/link       jQuery=td:contains(${peter_freeman}) button:contains("Remove")
-    And the user should see the element       jQuery=span.lead-count:contains("0")
-    And the user should see the element       jQuery=span.total-count:contains("0")
-    When the user clicks the button/link      jQuery=.inline-nav a:contains("Find")
-    Then the user should see the element      jQuery=td:contains(${peter_freeman}) button:contains("Add")
+    [Setup]  the user clicks the button/link  link = ${competitionTitle}
+    Given The user clicks the button/link     link = View and update competition setup
+    And The user clicks the button/link       link = Stakeholders
+    And the user should see the element       jQuery = h1:contains("Manage innovation leads")
+    #And the user should see the element       jQuery=span.lead-count:contains("0")  # Lead count from key statistics
+    And the user should see the element       jQuery = .standard-definition-list dd:contains("Open") ~ dd:contains("Biosciences") ~ dd:contains("Ian Cooper") ~ dd:contains("John Doe")
+    When the user clicks the button/link      jQuery = td:contains(${peter_freeman}) button:contains("Add")
+    Then the user should not see the element  jQuery = td:contains(${peter_freeman})
+    #And the user should not see the element   jQuery=td:contains("Ian Cooper")
+    And the user should see the element       jQuery = span.lead-count:contains("1")
+    When the user clicks the button/link      jQuery = a:contains("Overview")
+    Then the user should see the element      jQuery = span.total-count:contains("1")
+    #And the user should not see the element   jQuery=td:contains("Ian Cooper")
+    And the user clicks the button/link       jQuery = td:contains(${peter_freeman}) button:contains("Remove")
+    And the user should see the element       jQuery = span.lead-count:contains("0")
+    And the user should see the element       jQuery = span.total-count:contains("0")
+    When the user clicks the button/link      jQuery = .inline-nav a:contains("Find")
+    Then the user should see the element      jQuery = td:contains(${peter_freeman}) button:contains("Add")
 
 User deletes the competition
     [Documentation]  IFS-1084
@@ -809,20 +843,22 @@ the resubmission should not have a default selection
     the user should see the element  css=[name="resubmission"]:not(:checked) ~ label
 
 The user enters valid data in the initial details
-    Given the user enters text to a text field                css=#title  Competition title
-    When the user selects the option from the drop-down menu  Sector  id=competitionTypeId
-    And the user selects the option from the drop-down menu   Infrastructure systems  id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu   Offshore wind  name=innovationAreaCategoryIds[0]
-    And the user selects the option from the drop-down menu   Open  id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu   Biosciences     name=innovationAreaCategoryIds[0]
-    And the user selects the option from the drop-down menu   Emerging and enabling  id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu   Satellite applications  name=innovationAreaCategoryIds[0]
-    And the user selects the option from the drop-down menu   Space technology  name=innovationAreaCategoryIds[1]
-    And the user enters text to a text field    id=openingDateDay    10
-    And the user enters text to a text field    Id=openingDateMonth    1
-    And the user enters text to a text field    id=openingDateYear  ${nextyear}
-    And the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
-    And the user selects the option from the drop-down menu    John Doe   id=executiveUserId
+    Given the user enters text to a text field                 css = #title  Competition title
+    When the user selects the option from the drop-down menu   Sector  id = competitionTypeId
+    And the user selects the option from the drop-down menu    Infrastructure systems  id = innovationSectorCategoryId
+    And the user selects the option from the drop-down menu    Offshore wind  name = innovationAreaCategoryIds[0]
+    And the user selects the option from the drop-down menu    Open  id = innovationSectorCategoryId
+    And the user selects the option from the drop-down menu    Biosciences     name = innovationAreaCategoryIds[0]
+    And the user selects the option from the drop-down menu    Emerging and enabling  id = innovationSectorCategoryId
+    And the user selects the option from the drop-down menu    Satellite applications  name = innovationAreaCategoryIds[0]
+    And the user selects the option from the drop-down menu    Space technology  name = innovationAreaCategoryIds[1]
+#    And the user enters text to a text field                   id = openingDateDay    10
+#    And the user enters text to a text field                   id = openingDateMonth    1
+    And the user enters text to a text field                   id = openingDateDay      get tomorrow
+    And the user enters text to a text field                   id = openingDateMonth    get next month
+    And the user enters text to a text field                   id = openingDateYear     ${nextyear}
+    And the user selects the option from the drop-down menu    Ian Cooper    id = innovationLeadUserId
+    And the user selects the option from the drop-down menu    John Doe   id = executiveUserId
 
 The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}
@@ -887,3 +923,13 @@ the user marks question as complete
     the user clicks the button/link      css=button[type="submit"]
     the user should see the element      jQuery=li:contains("${question_link}") .task-status-complete
 
+the user should see the read-only view of the initial details
+    the user should see the element    jQuery = dd:contains("Competition title")
+    the user should see the element    jQuery = dd:contains("Sector")
+    the user should see the element    jQuery = dd:contains("Emerging and enabling")
+    the user should see the element    jQuery = dd:contains("Satellite applications")
+    the user should see the element    jQuery = dd:contains("Space technology")
+    the user should see the element    jQuery = dd:contains("10/1/${nextyear}")
+    the user should see the element    jQuery = dd:contains("Ian Cooper")
+    the user should see the element    jQuery = dd:contains("John Doe")
+    the user should see the element    jQuery = dt:contains("State aid") ~ dd:contains("No")
