@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -70,7 +71,7 @@ public class ApplicationTeamModelPopulator {
                 getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
                 userIsLeadApplicant,
                 applicationCanBegin,
-                isApplicationSubmitted(applicationResource),
+                isApplicationSubmitted(applicationResource) || !isCompetitionOpen(applicationResource),
                 isComplete,
                 userIsLeadApplicant,
                 allReadonly);
@@ -171,6 +172,10 @@ public class ApplicationTeamModelPopulator {
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         return userService.findById(leadApplicantProcessRole.getUser());
+    }
+
+    private boolean isCompetitionOpen(ApplicationResource applicationResource) {
+        return CompetitionStatus.OPEN == applicationResource.getCompetitionStatus();
     }
 
     private boolean isApplicationSubmitted(ApplicationResource applicationResource) {
