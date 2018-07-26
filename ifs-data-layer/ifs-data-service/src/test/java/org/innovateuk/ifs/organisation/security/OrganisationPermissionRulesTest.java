@@ -320,6 +320,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         assertTrue(rules.usersCanViewOrganisationsTheyAreInvitedTo(organisation, invitedUser));
         assertFalse(rules.usersCanViewOrganisationsTheyAreInvitedTo(organisation, notInvitedUser));
     }
+
     @Override
     protected OrganisationPermissionRules supplyPermissionRulesUnderTest() {
         return new OrganisationPermissionRules();
