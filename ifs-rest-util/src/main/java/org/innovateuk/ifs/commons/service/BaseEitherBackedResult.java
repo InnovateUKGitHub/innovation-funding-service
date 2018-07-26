@@ -108,8 +108,8 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         }
 
         try {
-            R result = successHandler.get();
-            return createSuccess(result);
+            R successResult = successHandler.get();
+            return createSuccess(successResult);
         } catch (Exception e) {
             LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
