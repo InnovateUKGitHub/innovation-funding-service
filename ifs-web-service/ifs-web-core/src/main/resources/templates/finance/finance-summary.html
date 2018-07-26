@@ -242,7 +242,7 @@
                 <a th:if="${applicationOrganisation.id == userOrganisation.id}"
                    th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"
                    th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.getId()},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
-                   class="govuk-link">Return to the finances section to complete your finances</a>
+                   class="govuk-body govuk-link">Return to the finances section to complete your finances</a>
             </th:block>
 
             <p class="govuk-body">This application cannot be submitted unless finances have been marked as complete by all partners.</p>
