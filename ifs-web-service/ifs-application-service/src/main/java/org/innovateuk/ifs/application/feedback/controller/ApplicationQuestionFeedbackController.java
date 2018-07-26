@@ -26,7 +26,6 @@ import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 public class ApplicationQuestionFeedbackController {
 
     private ApplicationRestService applicationRestService;
-    private ProcessRoleService processRoleService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
 
@@ -34,9 +33,8 @@ public class ApplicationQuestionFeedbackController {
     }
 
     @Autowired
-    public ApplicationQuestionFeedbackController(ApplicationRestService applicationRestService, ProcessRoleService processRoleService, InterviewAssignmentRestService interviewAssignmentRestService, AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator) {
+    public ApplicationQuestionFeedbackController(ApplicationRestService applicationRestService, InterviewAssignmentRestService interviewAssignmentRestService, AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator) {
         this.applicationRestService = applicationRestService;
-        this.processRoleService = processRoleService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.assessorQuestionFeedbackPopulator = assessorQuestionFeedbackPopulator;
     }

@@ -39,7 +39,6 @@ public class ApplicationOverviewModelPopulator extends AbstractApplicationModelP
     private OrganisationService organisationService;
     private ProjectService projectService;
     private SectionService sectionService;
-    private QuestionService questionService;
     private ApplicationOverviewSectionModelPopulator applicationOverviewSectionModelPopulator;
     private ApplicationCompletedModelPopulator applicationCompletedModelPopulator;
     private ApplicationOverviewAssignableModelPopulator applicationOverviewAssignableModelPopulator;

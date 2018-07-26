@@ -45,7 +45,6 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
     private CompetitionRestService competitionRestService;
     private SectionService sectionService;
     private QuestionService questionService;
-    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
     private ProcessRoleService processRoleService;
     private OrganisationService organisationService;
     private FormInputRestService formInputRestService;
@@ -63,7 +62,6 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
                                              CompetitionRestService competitionRestService,
                                              SectionService sectionService,
                                              QuestionService questionService,
-                                             AssessorFormInputResponseRestService assessorFormInputResponseRestService,
                                              ProcessRoleService processRoleService,
                                              OrganisationService organisationService,
                                              FormInputRestService formInputRestService,
@@ -81,7 +79,6 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
         this.competitionRestService = competitionRestService;
         this.sectionService = sectionService;
         this.questionService = questionService;
-        this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
         this.processRoleService = processRoleService;
         this.organisationService = organisationService;
         this.formInputRestService = formInputRestService;

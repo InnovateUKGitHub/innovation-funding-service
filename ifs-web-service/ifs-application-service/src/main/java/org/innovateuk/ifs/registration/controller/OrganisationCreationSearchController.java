@@ -176,7 +176,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     @GetMapping("/" + SELECTED_ORGANISATION + "{searchOrganisationId}/search-postcode")
-    public String amendOrganisationAddressPostcode(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
+    public String amendOrganisationAddressSearchPostCode(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                                    Model model,
                                                    @PathVariable("searchOrganisationId") final String searchOrganisationId,
                                                    @RequestParam(value = "searchTerm", required = false) String searchTerm,

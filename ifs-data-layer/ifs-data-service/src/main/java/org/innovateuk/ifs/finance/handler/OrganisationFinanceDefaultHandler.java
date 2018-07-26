@@ -177,11 +177,6 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return costCategories;
     }
 
-    private Map<FinanceRowType, FinanceRowCostCategory> resetCosts(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
-        costCategories.values().forEach(cc -> cc.setCosts(new ArrayList<>()));
-        return costCategories;
-    }
-
     @Override
     public ApplicationFinanceRow costItemToCost(FinanceRowItem costItem) {
         return buildFinanceRowHandler(costItem).toCost(costItem);

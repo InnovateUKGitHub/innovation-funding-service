@@ -99,6 +99,7 @@ public class MilestonesSectionUpdater extends AbstractSectionUpdater implements 
         return MilestonesForm.class.equals(clazz);
     }
 
+    @Override
     protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
                                                               String fieldName,
                                                               String value,

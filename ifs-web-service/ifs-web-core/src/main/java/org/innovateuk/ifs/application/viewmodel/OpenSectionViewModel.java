@@ -67,10 +67,12 @@ public class OpenSectionViewModel extends BaseSectionViewModel {
         this.completedSectionsByOrganisation = completedSectionsByOrganisation;
     }
 
+    @Override
     public Set<Long> getSectionsMarkedAsComplete() {
         return sectionsMarkedAsComplete;
     }
 
+    @Override
     public void setSectionsMarkedAsComplete(Set<Long> sectionsMarkedAsComplete) {
         this.sectionsMarkedAsComplete = sectionsMarkedAsComplete;
     }
