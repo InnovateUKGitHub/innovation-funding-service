@@ -16,7 +16,7 @@ public class GrantClaimMaximumResource {
 
     private OrganisationSize organisationSize;
 
-    private List<CompetitionResource> competitions;
+    private List<Long> competitions;
 
     private Integer maximum;
 
@@ -62,11 +62,11 @@ public class GrantClaimMaximumResource {
         this.maximum = maximum;
     }
 
-    public List<CompetitionResource> getCompetitions() {
+    public List<Long> getCompetitions() {
         return competitions;
     }
 
-    public void setCompetitions(List<CompetitionResource> competitions) {
+    public void setCompetitions(List<Long> competitions) {
         this.competitions = competitions;
     }
 
