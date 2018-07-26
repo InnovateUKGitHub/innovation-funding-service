@@ -131,9 +131,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     private TokenRepository tokenRepositoryMock;
 
     @Mock
-    private OrganisationRepository organisationRepositoryMock;
-
-    @Mock
     private NotificationService notificationServiceMock;
 
     @Mock
@@ -262,14 +259,11 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         Long organisationId = 123L;
         SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
-        Organisation selectedOrganisation = newOrganisation().withId(organisationId).build();
         Role applicantRole = Role.APPLICANT;
 
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
         when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(selectedOrganisation);
-        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         Profile expectedProfile = newProfile().withId(7L).build();
@@ -291,9 +285,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Long.valueOf(2), user.getEthnicity().getId());
             assertEquals(1, user.getRoles().size());
             assertTrue(user.getRoles().contains(applicantRole));
-            List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
-            assertEquals(1, orgs.size());
-            assertEquals(selectedOrganisation, orgs.get(0));
             assertEquals(expectedProfile.getId(), user.getProfileId());
             assertEquals(new LinkedHashSet<>(asList(siteTermsAndConditions.getId())), user.getTermsAndConditionsIds());
 
@@ -615,10 +606,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 build();
 
         Long organisationId = 123L;
-        Organisation selectedOrganisation = newOrganisation().withId(organisationId).build();
 
         when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
-        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         Profile expectedProfile = newProfile().withId(7L).build();
@@ -640,9 +629,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Long.valueOf(2), user.getEthnicity().getId());
             assertEquals(1, user.getRoles().size());
             assertTrue(user.getRoles().contains(Role.COMP_ADMIN));
-            List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
-            assertEquals(1, orgs.size());
-            assertEquals(selectedOrganisation, orgs.get(0));
             assertEquals(expectedProfile.getId(), user.getProfileId());
 
             return true;

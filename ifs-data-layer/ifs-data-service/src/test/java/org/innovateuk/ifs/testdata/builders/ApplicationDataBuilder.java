@@ -123,7 +123,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
         return asLeadApplicant(data -> {
 
-            List<Organisation> organisations = organisationRepository.findByUsersId(collaborator.getId());
+            List<Organisation> organisations = organisationRepository.findDistinctByUsersId(collaborator.getId());
             Organisation organisation = organisations.get(0);
 
             ApplicationInviteResource singleInvite = doInviteCollaborator(data, organisation.getName(),
@@ -191,7 +191,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         ApplicationInviteResourceBuilder baseApplicationInviteBuilder =
                 userId.map(id -> newApplicationInviteResource().withUsers(id)).orElse(newApplicationInviteResource());
 
-        List<Organisation> organisations = organisationRepository.findByUsersId(data.getLeadApplicant().getId());
+        List<Organisation> organisations = organisationRepository.findDistinctByUsersId(data.getLeadApplicant().getId());
         Organisation leadOrganisation = organisations.get(0);
 
         List<ApplicationInviteResource> applicationInvite = baseApplicationInviteBuilder.

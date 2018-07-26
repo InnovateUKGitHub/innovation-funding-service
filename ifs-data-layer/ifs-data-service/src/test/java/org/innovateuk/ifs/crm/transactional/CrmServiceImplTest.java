@@ -12,6 +12,7 @@ import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -46,16 +47,16 @@ public class CrmServiceImplTest extends BaseServiceUnitTest<CrmServiceImpl> {
     public void testSycCrmContact() {
         Long userId = 1L;
         UserResource user = newUserResource().build();
-        OrganisationResource organisation = newOrganisationResource().withCompanyHouseNumber("Something").build();
+        List<OrganisationResource> organisations = newOrganisationResource().withCompanyHouseNumber("Something", "Else").build(2);
         when(baseUserService.getUserById(userId)).thenReturn(serviceSuccess(user));
-        when(organisationService.getPrimaryForUser(userId)).thenReturn(serviceSuccess(organisation));
+        when(organisationService.getAllForUser(userId)).thenReturn(serviceSuccess(organisations));
         when(silCrmEndpoint.updateContact(any(SilContact.class))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.syncCrmContact(userId);
 
         assertThat(result.isSuccess(), equalTo(true));
-        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchSilContact(user, organisation)));
-
+        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchSilContact(user, organisations.get(0))));
+        verify(silCrmEndpoint).updateContact(LambdaMatcher.createLambdaMatcher(matchSilContact(user, organisations.get(1))));
     }
 
     private Predicate<SilContact> matchSilContact(UserResource user, OrganisationResource organisation) {

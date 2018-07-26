@@ -159,7 +159,7 @@ public class PasswordPolicyValidator {
             Organisation organisation = organisationRepository.findOne(organisationId);
             return asList(organisation.getName());
         }
-        return organisationRepository.findByUsersId(user.getId()).stream()
+        return organisationRepository.findDistinctByUsersId(user.getId()).stream()
                 .filter(organisation -> organisation.getName() != null)
                 .map(Organisation::getName)
                 .collect(Collectors.toList());
