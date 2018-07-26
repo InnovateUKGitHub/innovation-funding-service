@@ -47,7 +47,8 @@ public class AllApplicationsPageModelPopulator {
                 getApplications(applicationSummaryPageResource),
                 new Pagination(applicationSummaryPageResource, origin),
                 user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) ? "Dashboard" : "Applications",
-                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) ? "/dashboard/live" : "/competition/" + competitionId + "/applications"
+                user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD) ? "/dashboard/live" : "/competition/" + competitionId + "/applications",
+                user.hasRole(SUPPORT)
         );
     }
 
