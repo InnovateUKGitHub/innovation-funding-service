@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -14,11 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/grantClaimMaximum")
 public class GrantClaimMaximumController {
 
+    @Autowired
     private GrantClaimMaximumService grantClaimMaximumService;
 
-    public GrantClaimMaximumController(GrantClaimMaximumService grantClaimMaximumService) {
-        this.grantClaimMaximumService = grantClaimMaximumService;
-    }
+//    public GrantClaimMaximumController(GrantClaimMaximumService grantClaimMaximumService) {
+//        this.grantClaimMaximumService = grantClaimMaximumService;
+//    }
 
     @GetMapping("/{id}")
     public RestResult<GrantClaimMaximumResource> getGrantClaimMaximumById(@PathVariable("id") final long id) {

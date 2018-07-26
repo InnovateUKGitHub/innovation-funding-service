@@ -2,6 +2,8 @@ package org.innovateuk.ifs.finance.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
+import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
+import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.junit.Test;
@@ -12,6 +14,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
+import static org.innovateuk.ifs.finance.domain.builder.GrantClaimMaximumBuilder.newGrantClaimMaximum;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -23,9 +26,10 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
     @Mock
     private GrantClaimMaximumService grantClaimMaximumService;
 
+
     @Override
     protected GrantClaimMaximumController supplyControllerUnderTest() {
-        return new GrantClaimMaximumController(grantClaimMaximumService);
+        return new GrantClaimMaximumController();
     }
 
     @Test
@@ -53,17 +57,16 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
 
     @Test
     public void save() throws Exception {
-        final Long gcmId = 1L;
+        GrantClaimMaximumResource gcmResource = newGrantClaimMaximumResource().build();
+        GrantClaimMaximumResource expectedGcmResource = newGrantClaimMaximumResource().build();
 
-        GrantClaimMaximumResource gcm = newGrantClaimMaximumResource().withId(gcmId).build();
-
-        when(grantClaimMaximumService.save(gcm)).thenReturn(serviceSuccess(gcm));
+        when(grantClaimMaximumService.save(gcmResource)).thenReturn(serviceSuccess(expectedGcmResource));
 
         mockMvc.perform(post("/grantClaimMaximum/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson((gcm))))
+                .content(toJson((gcmResource))))
                 .andExpect(status().isCreated());
 
-        verify(grantClaimMaximumService, only()).save(gcm);
+        verify(grantClaimMaximumService, only()).save(gcmResource);
     }
 }

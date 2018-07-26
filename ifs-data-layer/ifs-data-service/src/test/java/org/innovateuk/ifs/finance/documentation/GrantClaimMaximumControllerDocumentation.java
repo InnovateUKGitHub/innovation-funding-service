@@ -31,7 +31,7 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
 
     @Override
     public GrantClaimMaximumController supplyControllerUnderTest() {
-        return new GrantClaimMaximumController(grantClaimMaximumService);
+        return new GrantClaimMaximumController();
     }
 
     @Test
