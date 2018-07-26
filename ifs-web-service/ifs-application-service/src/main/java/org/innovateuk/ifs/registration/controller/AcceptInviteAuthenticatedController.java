@@ -4,13 +4,15 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.model.InviteAndUserOrganisationDifferentModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -27,8 +29,9 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
  * This class is use as an entry point to accept a invite, to a application.
  */
 @Controller
-@SecuredBySpring(value="Controller", description = "TODO", securedType = AcceptInviteAuthenticatedController.class)
-@PreAuthorize("hasAuthority('applicant')")
+@SecuredBySpring(value="Controller", description = "Applicants and assessors can accept invites to an application." +
+        " Assessors will become applicants by accepting", securedType = AcceptInviteAuthenticatedController.class)
+@PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
 public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteController {
     @Autowired
     private InviteRestService inviteRestService;
@@ -42,23 +45,26 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     @Autowired
     private InviteAndUserOrganisationDifferentModelPopulator inviteAndUserOrganisationDifferentModelPopulator;
 
-    private static final String INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_VIEW = "registration/invite-for-different-organisation-than-users";
-    private static final String INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_BUT_SAME_NAME_VIEW = "registration/invite-for-different-organisation-than-users-but-same-name";
+    @Autowired
+    private UserRestService userRestService;
+
+    @Autowired
+    private CookieUtil cookieUtil;
 
     @GetMapping("/accept-invite-authenticated/confirm-invited-organisation")
-    public String confirmInvite(HttpServletResponse response,
+    public String existingUserAndOrganisation(HttpServletResponse response,
                                 HttpServletRequest request,
                                 UserResource loggedInUser,
                                 Model model) {
         String hash = registrationCookieService.getInviteHashCookieValue(request).orElse(null);
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccess(invite ->
                 inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
-                            String validateView = validate(invite, inviteOrganisation, response, loggedInUser, model);
+                            String validateView = validate(invite, response, loggedInUser, model);
                             if (validateView != null) {
                                 return validateView;
                             }
                             // Success
-                            OrganisationResource organisation = getInviteOrganisationOrElseUserOrganisation(loggedInUser, inviteOrganisation);
+                            OrganisationResource organisation = organisationService.getOrganisationById(inviteOrganisation.getOrganisation());
                             model.addAttribute("model",
                                     new ConfirmOrganisationInviteOrganisationViewModel(invite, organisation, getOrganisationAddress(organisation),
                                             "/accept-invite-authenticated/confirm-invited-organisation/confirm"));
@@ -70,60 +76,55 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     }
 
     @GetMapping("/accept-invite-authenticated/confirm-invited-organisation/confirm")
-    public String confirmedInvite(HttpServletResponse response,
+    public String confirmExistingUserAndOrganisation(HttpServletResponse response,
                                   HttpServletRequest request,
                                   UserResource loggedInUser,
                                   Model model) {
         String hash = registrationCookieService.getInviteHashCookieValue(request).orElse(null);
-        RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccess(invite ->
-                inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
-                    String validateView = validate(invite, inviteOrganisation, response, loggedInUser, model);
+        RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccessReturn(invite -> {
+                    String validateView = validate(invite, response, loggedInUser, model);
                     if (validateView != null) {
                         return validateView;
+                    }
+
+                    if (!loggedInUser.hasRole(Role.APPLICANT)) {
+                        userRestService.grantRole(loggedInUser.getId(), Role.APPLICANT).getSuccess();
+                        cookieUtil.saveToCookie(response, "role", Role.APPLICANT.getName());
                     }
                     // Success
                     inviteRestService.acceptInvite(invite.getHash(), loggedInUser.getId()).getSuccess();
                     clearDownInviteFlowCookies(response);
                     return "redirect:/application/" + invite.getApplication();
-                })
+                }
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
         return view.getSuccess();
     }
 
-    private OrganisationResource getInviteOrganisationOrElseUserOrganisation(UserResource loggedInUser, InviteOrganisationResource inviteOrganisation) {
-        if (inviteOrganisation.getOrganisation() == null) {
-            // No one has confirmed the InviteOrganisation, we can use the users Organisation.
-            // Note that this makes the assumption that the user will have an organisation
-            return organisationService.getPrimaryForUser(loggedInUser.getId());
-        } else {
-            return organisationService.getOrganisationById(inviteOrganisation.getOrganisation());
-        }
+    @GetMapping("/accept-invite-authenticated/confirm-new-organisation")
+    public String existingUserAndNewOrganisation(HttpServletResponse response,
+                                    HttpServletRequest request,
+                                    UserResource loggedInUser,
+                                    Model model) {
+        String hash = registrationCookieService.getInviteHashCookieValue(request).orElse(null);
+        RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccessReturn(invite -> {
+                    String validateView = validate(invite, response, loggedInUser, model);
+                    if (validateView != null) {
+                        return validateView;
+                    }
+
+                    return "redirect:/organisation/create/new-account-organisation-type";
+                }
+        ).andOnFailure(clearDownInviteFlowCookiesFn(response));
+        return view.getSuccess();
     }
 
-    private String validate(ApplicationInviteResource invite, InviteOrganisationResource inviteOrganisation, HttpServletResponse response, UserResource loggedInUser, Model model) {
+    private String validate(ApplicationInviteResource invite, HttpServletResponse response, UserResource loggedInUser, Model model) {
         if (!SENT.equals(invite.getStatus())) {
             return alreadyAcceptedView(response);
         }
         if (loggedInAsNonInviteUser(invite, loggedInUser)) {
             return LOGGED_IN_WITH_ANOTHER_USER_VIEW;
-        } else if (registrationService.isInviteForDifferentOrganisationThanUsersAndDifferentName(invite, inviteOrganisation)) {
-            return inviteForDifferentOrganisationThanUsers(response, model, invite);
-        } else if (registrationService.isInviteForDifferentOrganisationThanUsersButSameName(invite, inviteOrganisation)) {
-            return inviteForDifferentOrganisationThanUsersButSameName(response, model, invite);
         }
         return null;
     }
-
-    private String inviteForDifferentOrganisationThanUsers(HttpServletResponse response, Model model, ApplicationInviteResource invite) {
-        clearDownInviteFlowCookies(response);
-        model.addAttribute("model", inviteAndUserOrganisationDifferentModelPopulator.populateModel(invite));
-        return INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_VIEW;
-    }
-
-    private String inviteForDifferentOrganisationThanUsersButSameName(HttpServletResponse response, Model model, ApplicationInviteResource invite) {
-        clearDownInviteFlowCookies(response);
-        model.addAttribute("model", inviteAndUserOrganisationDifferentModelPopulator.populateModel(invite));
-        return INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_BUT_SAME_NAME_VIEW;
-    }
-
 }

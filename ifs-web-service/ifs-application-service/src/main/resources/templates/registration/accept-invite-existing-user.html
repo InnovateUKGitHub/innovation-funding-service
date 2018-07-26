@@ -24,7 +24,7 @@
 
                 <h2 class="heading-medium">We have found an account with the invited email address</h2>
                 <p>Please sign in or continue to accept the invitation.</p>
-                <a th:href="@{/accept-invite-authenticated/confirm-invited-organisation}" class="button">Continue or sign in</a>
+                <a th:href="${model.inviteOrganisationExists} ? @{/accept-invite-authenticated/confirm-invited-organisation} : @{/accept-invite-authenticated/confirm-new-organisation}" class="button">Continue or sign in</a>
                 <p>If you do not wish to accept this invitation, please let the lead applicant know.</p>
             </div>
             <th:block th:insert="fragments/layout :: main-content-end" />

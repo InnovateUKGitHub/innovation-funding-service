@@ -8,6 +8,8 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
@@ -66,6 +68,9 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     @Autowired
     private CookieUtil cookieUtil;
 
+    @Autowired
+    private InviteRestService inviteRestService;
+
     @GetMapping("/" + CONFIRM_ORGANISATION)
     public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                  Model model,
@@ -122,7 +127,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
 
         organisationResource = createOrRetrieveOrganisation(organisationResource, request);
         if (user != null) {
-            return createApplicationAndShowInvitees(user, registrationCookieService.getCompetitionIdCookieValue(request).get(), organisationResource.getId(), response);
+            return handleExistingUser(user, registrationCookieService.getCompetitionIdCookieValue(request), organisationResource.getId(), response, request);
         } else {
             registrationCookieService.saveToOrganisationIdCookie(organisationResource.getId(), response);
             return "redirect:" + RegistrationController.BASE_URL;
@@ -138,24 +143,43 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         return organisationService.createOrMatch(organisationResource);
     }
 
-    private String createApplicationAndShowInvitees(UserResource user, long competitionId, long organisationId, HttpServletResponse response) {
+    private String handleExistingUser(UserResource user, Optional<Long> competitionId, long organisationId, HttpServletResponse response, HttpServletRequest request) {
         if (!user.hasRole(Role.APPLICANT)) {
             userRestService.grantRole(user.getId(), Role.APPLICANT).getSuccess();
             cookieUtil.saveToCookie(response, "role", Role.APPLICANT.getName());
         }
 
-        ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), organisationId, "");
-        if (application != null) {
-            return questionRestService
-                    .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM)
-                    .handleSuccessOrFailure(
-                            failure ->  format("redirect:/application/%s/team", application.getId()),
-                            question -> format("redirect:/application/%s/form/question/%s", application.getId(),
-                                    question.getId())
-                    );
-        } else {
-            throw new ObjectNotFoundException("Could not create a new application",
-                    Arrays.asList(String.valueOf(competitionId), String.valueOf(user.getId())));
+        Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
+
+        ApplicationResource application = null;
+        if (inviteHash.isPresent()) {
+            application = acceptInvite(inviteHash.get(), response, request, user);
+        } else if (competitionId.isPresent()) {
+            application = applicationService.createApplication(competitionId.get(), user.getId(), organisationId, "");
         }
+
+        if (application == null) {
+            throw new ObjectNotFoundException("Could not create or find application",
+                    Arrays.asList(String.valueOf(competitionId.orElse(null)), inviteHash.orElse(null), String.valueOf(user.getId())));
+        }
+
+        return redirectToApplication(application);
+    }
+
+    private ApplicationResource acceptInvite(String inviteHash, HttpServletResponse response, HttpServletRequest request, UserResource userResource) {
+        ApplicationInviteResource invite = inviteRestService.getInviteByHash(inviteHash).getSuccess();
+        inviteRestService.acceptInvite(inviteHash, userResource.getId()).getSuccess();
+        registrationCookieService.deleteInviteHashCookie(response);
+        return applicationService.getById(invite.getApplication());
+    }
+
+    private String redirectToApplication(ApplicationResource application) {
+        return questionRestService
+                .getQuestionByCompetitionIdAndQuestionSetupType(application.getCompetition(), APPLICATION_TEAM)
+                .handleSuccessOrFailure(
+                        failure -> format("redirect:/application/%s/team", application.getId()),
+                        question -> format("redirect:/application/%s/form/question/%s", application.getId(),
+                                question.getId())
+                );
     }
 }
