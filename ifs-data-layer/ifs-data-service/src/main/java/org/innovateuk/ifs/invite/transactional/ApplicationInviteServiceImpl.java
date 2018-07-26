@@ -140,7 +140,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         validator.validate(invite, errors);
 
         if (errors.hasErrors()) {
-            errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
+            errors.getFieldErrors().forEach(e -> LOG.debug(format("Field error: %s ", e.getField())));
             return serviceFailure(internalServerErrorError()).andOnFailure(logInviteError(invite));
         } else {
             if (invite.getId() == null) {
