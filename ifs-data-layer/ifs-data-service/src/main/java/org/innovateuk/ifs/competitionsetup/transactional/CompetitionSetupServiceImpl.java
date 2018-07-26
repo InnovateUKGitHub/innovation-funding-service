@@ -17,6 +17,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
+import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
@@ -32,10 +33,7 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -346,9 +344,29 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 (GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
 
         competition.setTermsAndConditions(defaultTermsAndConditions);
+        competition.setProjectDocuments(createDefaultProjectDocuments(competition));
 
         Competition savedCompetition = competitionRepository.save(competition);
         return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
                 .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
+    }
+
+    private List<ProjectDocument> createDefaultProjectDocuments(Competition competition) {
+
+        List<ProjectDocument> defaultProjectDocuments = new ArrayList<>();
+        defaultProjectDocuments.add(createCollaborationAgreement(competition));
+        defaultProjectDocuments.add(createExploitationPlan(competition));
+
+        return defaultProjectDocuments;
+    }
+
+    private ProjectDocument createCollaborationAgreement(Competition competition) {
+        return new ProjectDocument(competition, "Collaboration agreement", "Enter guidance for Collaboration agreement",
+                true, true, false);
+    }
+
+    private ProjectDocument createExploitationPlan(Competition competition) {
+        return new ProjectDocument(competition, "Exploitation plan", "Enter guidance for Exploitation plan",
+                true, true, false);
     }
 }

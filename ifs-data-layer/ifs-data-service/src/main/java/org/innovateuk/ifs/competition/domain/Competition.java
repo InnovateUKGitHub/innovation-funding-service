@@ -88,7 +88,7 @@ public class Competition implements ProcessActivity {
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CompetitionResearchCategoryLink> researchCategories = new HashSet<>();
 
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "competition", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<ProjectDocument> projectDocuments = new ArrayList<>();
 
     private String activityCode;

@@ -23,6 +23,18 @@ public class ProjectDocument {
     private boolean pdf;
     private boolean spreadsheet;
 
+    public ProjectDocument(Competition competition, String title, String guidance, boolean enabled, boolean pdf, boolean spreadsheet) {
+        this.competition = competition;
+        this.title = title;
+        this.guidance = guidance;
+        this.enabled = enabled;
+        this.pdf = pdf;
+        this.spreadsheet = spreadsheet;
+    }
+
+    public ProjectDocument() {
+    }
+
     public Long getId() {
         return id;
     }
