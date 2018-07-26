@@ -1,14 +1,18 @@
 package org.innovateuk.ifs.finance.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
-import org.innovateuk.ifs.finance.transactional.OrganisationSizeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -19,12 +23,14 @@ import java.util.List;
 @RequestMapping("/organisation-size")
 public class OrganisationSizeController {
 
-    @Autowired
-    private OrganisationSizeService organisationSizeService;
-
     @GetMapping
+    @ZeroDowntime(reference = "IFS-3818", description = "To support instances of older REST clients before " +
+            "the OrganisationSize enum was introduced")
     public RestResult<List<OrganisationSizeResource>> getOrganisationSizes() {
-        return organisationSizeService.getOrganisationSizes().toGetResponse();
+        return restSuccess(Stream.of(OrganisationSize.values()).map(this::map).collect(toList()));
     }
-    
+
+    private OrganisationSizeResource map(OrganisationSize organisationSize) {
+        return new OrganisationSizeResource(organisationSize.getId(), organisationSize.getDescription());
+    }
 }

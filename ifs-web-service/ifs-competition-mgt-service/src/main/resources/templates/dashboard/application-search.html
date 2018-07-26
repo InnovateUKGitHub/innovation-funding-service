@@ -26,7 +26,7 @@
         </p>
     </th:block>
     
-    <th:block th:insert="fragments/dashboard-application-search :: application-search(applications=${model.applications}, count=${model.applicationCount}, pagination=${model.applicationPagination})" />
+    <th:block th:insert="fragments/dashboard-application-search :: application-search(applications=${model.applications}, count=${model.applicationCount}, pagination=${model.applicationPagination}, isSupport=${model.support})" />
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

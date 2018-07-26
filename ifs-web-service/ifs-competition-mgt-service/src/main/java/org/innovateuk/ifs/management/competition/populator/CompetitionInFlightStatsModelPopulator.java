@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.management.competition.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionKeyApplicationStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,10 +22,11 @@ public class CompetitionInFlightStatsModelPopulator {
     private CompetitionKeyAssessmentStatisticsRestService competitionKeyAssessmentStatisticsRestService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     public CompetitionInFlightStatsViewModel populateStatsViewModel(Long competitionId) {
-        return populateStatsViewModel(competitionService.getById(competitionId));
+        CompetitionResource competititon = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        return populateStatsViewModel(competititon);
     }
 
     public CompetitionInFlightStatsViewModel populateStatsViewModel(CompetitionResource competitionResource) {

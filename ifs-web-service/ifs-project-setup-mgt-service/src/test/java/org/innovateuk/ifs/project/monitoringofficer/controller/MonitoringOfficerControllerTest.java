@@ -6,10 +6,10 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.monitoringofficer.MonitoringOfficerService;
@@ -117,7 +117,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
     private ApplicationService applicationService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private ApplicationSummaryRestService applicationSummaryRestService;
@@ -604,7 +604,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(applicationService.getById(applicationId)).thenReturn(application);
-        when(competitionService.getById(competitionId)).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummary));
         when(projectService.getLeadOrganisation(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1").build());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1", "Partner Org 2").build(2));

@@ -27,7 +27,7 @@ public class RestSilCrmEndpoint implements SilCrmEndpoint {
     @Qualifier("sil_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
 
-    @Value("${sil.rest.crmBaseURL}")
+    @Value("${sil.rest.baseURL}")
     private String silRestServiceUrl;
 
     @Value("${sil.rest.crmContacts}")

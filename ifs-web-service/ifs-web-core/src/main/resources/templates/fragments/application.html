@@ -1,139 +1,155 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="application-summary">
-  <section th:each="section : ${sections.values()}"
-           th:unless="${section.name.equals('Finances')}"
-           th:with="appIsClosed=${!(currentApplication.isOpen() and isApplicant)}">
+    <section th:each="section : ${sections.values()}"
+             th:unless="${section.name.equals('Finances')}"
+             th:with="appIsClosed=${!(currentApplication.isOpen() and isApplicant)}">
 
-      <h2 th:text="${section.name}" class="heading-medium" th:unless="${section.name.equals('Project details') and appIsClosed}"/>
+        <h2 th:text="${section.name}" class="heading-medium"
+            th:unless="${section.name.equals('Project details') and appIsClosed}"/>
 
-      <!--/* (In e.g. internal view) show the 'report' version of the application details above the collapsible sections */-->
-      <th:block th:if="${section.name.equals('Project details')}">
-          <th:block th:each="question : ${sectionQuestions.get(section.id)}"
-                    th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS and appIsClosed and !hideDetails}">
-<div class="extra-margin">
-                      <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}"
-                           th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
-                              <th:block th:insert="question-type/application-details :: read-only (${formInputViewModels.get(formInput.id)})" />
-                      </div>
-                  </div>
+        <!--/* (In e.g. internal view) show the 'report' version of the application details above the collapsible sections */-->
+        <th:block th:if="${section.name.equals('Project details')}">
+            <th:block th:each="question : ${sectionQuestions.get(section.id)}"
+                      th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS and appIsClosed and !hideDetails}">
+                <div class="extra-margin">
+                    <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}"
+                         th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
+                        <th:block
+                            th:insert="question-type/application-details :: read-only (${formInputViewModels.get(formInput.id)})"/>
+                    </div>
+                </div>
 
-                  <h2 th:text="${section.name}" class="heading-medium" />
+                <h2 th:text="${section.name}" class="heading-medium"/>
 
-          </th:block>
-      </th:block>
+            </th:block>
+        </th:block>
 
-      <!--/* Show the collapsible sections */-->
-      <th:block th:each="question : ${sectionQuestions.get(section.id)}">
-          <div class="collapsible" th:unless="${(question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS
+        <!--/* Show the collapsible sections */-->
+        <th:block th:each="question : ${sectionQuestions.get(section.id)}">
+            <div class="collapsible" th:unless="${(question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS
                                                     and appIsClosed)
                                              or (question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM
                                                     and !isApplicant)
                                              or (question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY
                                                     and !isApplicant)}">
-            <h3>
-                <th:block th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
-                <th:block th:if="${!appIsClosed}">
-                    <div class="section-status section-complete" th:if="${completedViewModel.markedAsComplete.contains(question.id)}">
-                        Complete
+                <h3>
+                    <th:block
+                        th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}"/>
+                    <th:block th:if="${!appIsClosed}">
+                        <div class="section-status section-complete"
+                             th:if="${completedViewModel.markedAsComplete.contains(question.id)}">
+                            Complete
+                        </div>
+                        <div class="section-status section-incomplete"
+                             th:unless="${completedViewModel.markedAsComplete.contains(question.id)}">
+                            Incomplete
+                        </div>
+                    </th:block>
+                </h3>
+
+                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
+                    <th:block
+                        th:insert="fragments/application-team :: application_team(${model.applicationTeamViewModel},${question})" />
+                </th:block>
+
+                <th:block
+                  th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY}">
+                  <th:block
+                      th:insert="fragments/research-category :: research_category_summary(${model.researchCategorySummaryViewModel})" />
+                </th:block>
+
+                <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}"
+                     th:if='${formInput.isIncludedInApplicationSummary()}'
+                     th:with="formInputIndex=(${status.index}), hideDetails=${hideDetails}, summary=true, readonly=true, appIsClosed=${!(currentApplication.isOpen() and isApplicant)},
+                            response=(${responses.get(formInput.getId())}),
+                            questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
+                     th:id="'form-input-'+${formInput.getId()}">
+
+                    <th:block
+                        th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
+                        <th:block
+                            th:unless="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
+                            <th:block
+                                th:insert="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})"/>
+                        </th:block>
+                        <th:block
+                            th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
+                            <th:block
+                                th:insert="fragments/application-details :: application_details(${formInputViewModels.get(formInput.id)})"/>
+                        </th:block>
+                        <th:block
+                            th:if="${question.questionNumber!=null && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FILEUPLOAD}">
+                            <th:block th:if="!${#lists.isEmpty(feedback)}">
+                                <th:block th:each="item : ${feedback}">
+                                    <div th:if="${formInput.getQuestion()} == ${item.question}" class="clear-floats">
+                                        <div class="grid-row">
+                                            <div class="column-half">
+                                                <h3 class="heading-small">Feedback</h3>
+                                            </div>
+                                            <div class="column-half alignright heading-small">
+                                                <th:block th:each="score : ${score}">
+                                                    <th:block th:if="${formInput.getQuestion()} == ${score.question}">
+                                                        Score <span th:text="${score.value}">Feedback score</span>/10
+                                                    </th:block>
+                                                </th:block>
+                                            </div>
+                                        </div>
+                                        <div class="grid-row">
+                                            <div class="column-one">
+                                                <p th:text="${item.value}">Feedback text</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th:block>
+                            </th:block>
+                        </th:block>
+
+                    </th:block>
+                </div>
+            </div>
+
+        </th:block>
+
+    </section>
+
+    <section th:if="${hasFinanceSection}">
+        <h2 class="heading-medium">Finance</h2>
+        <div class="collapsible">
+            <h3>Finances summary
+                <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
+                    <div class="section-status section-complete"
+                         th:if="${completedViewModel.sectionsMarkedAsComplete.contains(financeSectionId)}">Complete
                     </div>
                     <div class="section-status section-incomplete"
-                         th:unless="${completedViewModel.markedAsComplete.contains(question.id)}">
+                         th:unless="${completedViewModel.sectionsMarkedAsComplete.contains(financeSectionId)}">
                         Incomplete
                     </div>
                 </th:block>
             </h3>
 
-            <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
-                <th:block
-                    th:insert="fragments/application-team :: application_team(${model.applicationTeamViewModel},${question})" />
-            </th:block>
+            <div class="question">
 
-            <th:block
-              th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY}">
-              <th:block
-                  th:insert="fragments/research-category :: research_category_summary(${model.researchCategorySummaryViewModel})" />
-            </th:block>
+                <p>This is the overview of the finances provided by all partners in this project.</p>
+                <p th:if="${(currentApplication.isOpen() and isApplicant)}">To make changes to your organisations'
+                    finances, go back to the <a
+                        th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'>your
+                        finances</a> section.</p>
 
-            <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
-                 th:with="formInputIndex=(${status.index}), hideDetails=${hideDetails}, summary=true, readonly=true, appIsClosed=${!(currentApplication.isOpen() and isApplicant)},
-                            response=(${responses.get(formInput.getId())}),
-                            questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
-                 th:id="'form-input-'+${formInput.getId()}">
+                <div>
+                    <th:block ifs:global="${applicationFinanceSummaryViewModel}"
+                              th:replace="finance/finance-summary :: application_finances_summary (isApplicant = ${isApplicant || isApplicant == null}, supportUserAndSummaryPage=${supportUserAndSummaryPage})"></th:block>
+                    <th:block ifs:global="${applicationResearchParticipationViewModel}"
+                              th:replace="finance/finance-summary :: research_participation_alert"
+                              th:if="${(currentApplication.isOpen() and isApplicant)}"></th:block>
 
-                <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
-                    <th:block th:unless="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
-                        <th:block th:insert="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
-                    </th:block>
-                    <th:block th:if="${formInput.type == T(org.innovateuk.ifs.form.resource.FormInputType).APPLICATION_DETAILS}">
-                        <th:block th:insert="fragments/application-details :: application_details(${formInputViewModels.get(formInput.id)})" />
-                    </th:block>
-                    <th:block th:if="${question.questionNumber!=null && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FILEUPLOAD}">
-                        <th:block th:if="!${#lists.isEmpty(feedback)}">
-                            <th:block th:each="item : ${feedback}">
-                                <div th:if="${formInput.getQuestion()} == ${item.question}" class="clear-floats">
-                                    <div class="grid-row">
-                                        <div class="column-half">
-                                            <h3 class="heading-small">Feedback</h3>
-                                        </div>
-                                        <div class="column-half alignright heading-small">
-                                            <th:block th:each="score : ${score}">
-                                                <th:block th:if="${formInput.getQuestion()} == ${score.question}">
-                                                    Score <span th:text="${score.value}">Feedback score</span>/10
-                                                </th:block>
-                                            </th:block>
-                                        </div>
-                                    </div>
-                                    <div class="grid-row">
-                                        <div class="column-one">
-                                            <p th:text="${item.value}">Feedback text</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </th:block>
-                        </th:block>
-                    </th:block>
-
-                </th:block>
+                    <h2 class="heading-small">Funding breakdown</h2>
+                    <th:block ifs:global="${applicationFundingBreakdownViewModel}"
+                              th:insert="finance/finance-summary :: financial_summary_table"/>
+                </div>
             </div>
-          </div>
-
-      </th:block>
-
-  </section>
-
-  <section th:if="${hasFinanceSection}">
-      <h2 class="heading-medium">Finance</h2>
-      <div class="collapsible">
-          <h3>Finances summary
-              <th:block th:if="${(currentApplication.isOpen() and userIsLeadApplicant)}">
-                  <div class="section-status section-complete" th:if="${completedViewModel.sectionsMarkedAsComplete.contains(financeSectionId)}">Complete</div>
-                  <div class="section-status section-incomplete" th:unless="${completedViewModel.sectionsMarkedAsComplete.contains(financeSectionId)}">Incomplete</div>
-              </th:block>
-          </h3>
-
-          <div class="question">
-
-              <p>This is the overview of the finances provided by all partners in this project.</p>
-              <p th:if="${(currentApplication.isOpen() and isApplicant)}">To make changes to your organisations' finances, go back to the <a th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"}'>your                  finances</a> section.</p>
-
-              <div th:if="${fromApplicationService}">
-                <th:block ifs:global="${applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></th:block>
-                <th:block ifs:global="${applicationResearchParticipationViewModel}" th:replace="finance/finance-summary :: research_participation_alert" th:if="${(currentApplication.isOpen() and isApplicant)}"></th:block>
-
-                <h2 class="heading-small">Funding breakdown</h2>
-                <th:block ifs:global="${applicationFundingBreakdownViewModel}" th:insert="finance/finance-summary :: financial_summary_table" />
-              </div>
-              <div th:unless="${fromApplicationService}">
-                  <div th:replace="finance/finance-summary :: application_finances_summary (isApplicant=${isApplicant})"></div>
-                  <div th:replace="finance/finance-summary :: research_participation_alert" th:if="${(currentApplication.isOpen() and isApplicant)}"></div>
-
-                  <h2 class="heading-small">Funding breakdown</h2>
-                  <th:block th:insert="finance/finance-summary :: financial_summary_table" />
-              </div>
-          </div>
-      </div>
-  </section>
+        </div>
+    </section>
 
     <section th:if="!${#lists.isEmpty(feedbackSummary)}">
         <h2 class="heading-medium">Feedback summary</h2>

@@ -4,7 +4,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+
+import static java.util.Comparator.comparingLong;
 
 public class OrganisationResource {
     private Long id;
@@ -17,6 +20,8 @@ public class OrganisationResource {
     private Long organisationType;
     private String organisationTypeName;
     private String organisationTypeDescription;
+
+    public static final Comparator<OrganisationResource> normalOrgComparator = comparingLong(OrganisationResource::getId);
 
     public Long getId() {
         return id;

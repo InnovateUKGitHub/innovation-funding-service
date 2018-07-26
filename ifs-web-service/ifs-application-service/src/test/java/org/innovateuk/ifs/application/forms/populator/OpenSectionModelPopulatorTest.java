@@ -5,14 +5,15 @@ import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -21,6 +22,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -80,7 +82,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     private FormInputResponseRestService formInputResponseRestService;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private InviteRestService inviteRestService;
@@ -92,10 +94,16 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
     private UserService userService;
 
     @Mock
+    private InviteService inviteService;
+
+    @Mock
     private Model model;
 
     @Mock
     private ApplicationNavigationPopulator applicationNavigationPopulator;
+
+    @Mock
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Before
     public void setUp() {
@@ -138,7 +146,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
                 .withApplicants(asList(applicant))
                 .withSection(section).withCurrentUser(user).build();
 
-        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(userService.retrieveUserById(user.getId())).thenReturn(user);
 
         InviteOrganisationResource inviteOrg1 = new InviteOrganisationResource();
