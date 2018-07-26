@@ -197,7 +197,7 @@
                     <ul class="govuk-list boxed-list">
                         <li th:each="item, iterStat : ${model.feedback}">
                             <h3 class="govuk-heading-s" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
-                            <div th:text="${item}" data-text-to-html="" class="wysiwyg-styles">Feedback text</div>
+                            <div th:text="${item}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
                         </li>
                     </ul>
                 </div>

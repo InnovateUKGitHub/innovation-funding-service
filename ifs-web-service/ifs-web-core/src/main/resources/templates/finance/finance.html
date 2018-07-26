@@ -26,7 +26,7 @@
                        placeholder="0"
                        th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
                                 data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}"
-                        />%
+                        />&percnt;
             </div>
         </th:block>
         <th:block th:if="${model.readonly}">
@@ -241,7 +241,7 @@
     <th:block th:fragment="your_finance (model, internalView)">
         <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${#strings.replace(model.question.name,'{organisationName}',
         model.currentApplicant.organisation.name)}" />
-        <p ifs:utext="${model.question.description}" />
+        <p class="govuk-body" ifs:utext="${model.question.description}" />
 
         <section class="collapsible" th:each="projectCostSection : ${model.defaultProjectCostSections}">
             <h2>
@@ -402,7 +402,7 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another role', question=${question},rowcontainer='.labour-costs-table tbody')" />
                     </p>
                 </div>
-                <h4 class="alignright section-total-summary">
+                <h4 class="govuk-heading-s alignright section-total-summary">
                     Total labour costs
                     <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -663,7 +663,7 @@
 
             <div class="govuk-form-group" id="overhead-default-percentage">
                 <p class="govuk-body" th:unless="${internalView}">There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
-                <h4 class="alignright section-total-summary">
+                <h4 class="govuk-heading-s alignright section-total-summary">
                     Total overhead costs
                     <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -882,7 +882,7 @@
                         </p>
                     </div>
                 </div>
-                <h4 class="alignright section-total-summary">
+                <h4 class="govuk-heading-s alignright section-total-summary">
                     Total materials costs
                     <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -1034,7 +1034,7 @@
             <p class="alignright">
                 <th:block th:insert="question-type/types :: add_row(text='Add another asset', question=${question},rowcontainer='#capital_usage')" />
             </p>
-            <h4 class="alignright section-total-summary">
+            <h4 class="govuk-heading-s alignright section-total-summary">
                 Total capital usage costs
                 <span class="govuk-heading-s"
                       th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -1055,7 +1055,7 @@
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <div th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}" class="form-row">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'govuk-form-group--error'">
-                    <label th:for="|formInput[cost-${costIdentifier}-description]|">
+                    <label class="govuk-label" th:for="|formInput[cost-${costIdentifier}-description]|">
                         <span>Item description</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
                     </label>
@@ -1256,7 +1256,7 @@
             <p class="alignright">
                 <th:block th:insert="question-type/types :: add_row(text='Add another subcontractor', question=${question},rowcontainer='#subcontracting')" />
             </p>
-            <h4 class="alignright section-total-summary">
+            <h4 class="govuk-heading-s alignright section-total-summary">
                 Total subcontracting costs
                 <span class="govuk-heading-s"
                       th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -1407,7 +1407,7 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another travel cost', question=${question},rowcontainer='#travel-costs-table tbody')" />
                     </p>
                 </div>
-                <h4 class="alignright section-total-summary">
+                <h4 class="govuk-heading-s alignright section-total-summary">
                     Total travel and subsistence costs
                     <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -1565,7 +1565,7 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another cost', question=${question},rowcontainer='#other-costs-table tbody')" />
                     </p>
                 </div>
-                <h4 class="alignright section-total-summary">
+                <h4 class="govuk-heading-s alignright section-total-summary">
                     Total other costs
                     <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"

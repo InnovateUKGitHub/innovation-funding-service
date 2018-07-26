@@ -94,7 +94,7 @@ gulp.task('web-core:css', gulp.parallel('web-core:copy-images-govuk', 'web-core:
     }))
     .pipe(sassLint.format())
     .pipe(sass({includePaths: [
-        govukFrontendPath
+        nodeModulesPath
     ],
       importer: compass,
       outputStyle: 'compressed'

@@ -38,10 +38,10 @@
                     </fieldset>
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'govuk-form-group--error'">
-                    <label for="application.durationInMonths" class="govuk-label"">
+                    <label for="application.durationInMonths" class="govuk-label">
                         Duration in months
                     </label>
-                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')" />
                     <input class="govuk-input govuk-input--width-3"
                            id="application.durationInMonths"
                            th:field="*{__application.durationInMonths__}"
@@ -185,13 +185,14 @@
 
         <th:block th:unless="${formInputViewModel.summary}">
             <th:block th:if="${formInputViewModel.readonly}">
-                <a th:href="${backURL}" class="button-secondary"
+                <a th:href="${backURL}"
+                   class="button-secondary"
                    th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
             </th:block>
             <th:block th:unless="${formInputViewModel.readonly}">
                 <button id="application-question-save"
                         type="submit"
-                        class="button app-submit-btn"
+                        class="govuk-button app-submit-btn"
                         name="submit-section">Save and return to application overview
                 </button>
             </th:block>
