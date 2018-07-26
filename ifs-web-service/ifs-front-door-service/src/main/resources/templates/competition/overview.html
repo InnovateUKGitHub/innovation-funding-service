@@ -13,7 +13,7 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},subTitle='Funding competition',size='govuk-heading-l'" />
 
-            <p class="wysiwyg-styles" ifs:utext="${model.shortDescription}"></p>
+            <p class="govuk-body wysiwyg-styles" ifs:utext="${model.shortDescription}"></p>
 
             <ul class="govuk-list">
                 <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMMM yyyy')}"></span></li>

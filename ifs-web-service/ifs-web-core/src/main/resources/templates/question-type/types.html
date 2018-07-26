@@ -166,12 +166,12 @@
         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${formInput.id}, field=${field})" />
-        <span>%</span>
+        <span>&percnt;</span>
     </div>
 
     <!-- ===========================Form: empty / no question =========================== -->
     <th:block th:fragment="empty(costViewModel, internalView)" th:with="formInput=${costViewModel.formInput}, question=${costViewModel.question}">
-        <th:block ifs:utext="${question.description}" />
+        <div class="govuk-body" ifs:utext="${question.description}" />
         <th:block th:unless="${costViewModel.readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
     </th:block>
 

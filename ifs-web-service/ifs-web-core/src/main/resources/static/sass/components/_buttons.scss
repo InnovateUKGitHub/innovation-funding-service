@@ -59,6 +59,19 @@ table {
     text-decoration: none;
   }
 
+  &.disabled,
+  &[disabled]{
+    text-decoration: none;
+    background: transparent;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      color: $govuk-secondary-text-colour;
+      text-decoration: none;
+    }
+  }
+
   @include is-ie8() {
     border-bottom: none;
   }

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="your_finance (model, internalView)" th:with="question=${model.applicantQuestion.question}, userOrganisation=${model.currentApplicant.organisation}, readonly=${model.allReadOnly or model.complete}">
     <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}"/>
-    <p ifs:utext="${question.description}"/>
+    <p class="govuk-body" ifs:utext="${question.description}"/>
     <fieldset class="govuk-fieldset">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
             <h2 class="govuk-fieldset__heading">Innovate UK funding</h2>

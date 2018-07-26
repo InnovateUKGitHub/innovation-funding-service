@@ -25,7 +25,7 @@
         <h3 class="govuk-heading-m">Your answer:</h3>
         <th:block th:each="item : ${model.responses}">
             <th:block th:unless="${item.fileEntry}">
-                <div th:text="${item.value}" data-md-to-html="" class="wysiwyg-styles"></div>
+                <div th:text="${item.value}" data-md-to-html="" class="govuk-body wysiwyg-styles"></div>
             </th:block>
             <th:block th:if="${item.fileEntry}">
                 <h3 class="govuk-heading-s govuk-!-margin-0">View appendix:</h3>
@@ -40,7 +40,7 @@
         <ul class="govuk-list boxed-list">
             <li th:each="item, iterStat : ${model.aggregateResource.feedback}">
                 <h4 class="govuk-heading-s" th:text="|Assessor ${iterStat.count}|">Assessor 1</h4>
-                <div th:text="${item}" data-md-to-html="" class="wysiwyg-styles">Feedback text</div>
+                <div th:text="${item}" data-md-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
             </li>
         </ul>
 

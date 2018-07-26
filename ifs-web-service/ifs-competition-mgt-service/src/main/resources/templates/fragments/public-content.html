@@ -470,7 +470,7 @@
                 <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${contentGroup.heading}"></h2>
             </div>
             <div class="govuk-grid-column-two-thirds">
-                <div class="wysiwyg-styles" ifs:utext="${contentGroup.content}"></div>
+                <div class="govuk-body wysiwyg-styles" ifs:utext="${contentGroup.content}"></div>
                 <th:block th:if="${model.hasAttachment(contentGroup.id)}">
                     <p class="govuk-body"><a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
                           th:text="${model.fileName(contentGroup.id)}"

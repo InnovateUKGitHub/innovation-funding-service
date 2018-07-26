@@ -26,7 +26,7 @@
                        placeholder="0"
                        th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
                                 data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}"
-                        />%
+                        />&percnt;
             </div>
         </th:block>
         <th:block th:if="${model.readonly}">
@@ -241,7 +241,7 @@
     <th:block th:fragment="your_finance (model, internalView)">
         <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${#strings.replace(model.question.name,'{organisationName}',
         model.currentApplicant.organisation.name)}" />
-        <p ifs:utext="${model.question.description}" />
+        <p class="govuk-body" ifs:utext="${model.question.description}" />
 
         <section class="collapsible" th:each="projectCostSection : ${model.defaultProjectCostSections}">
             <h2>
@@ -360,11 +360,11 @@
         <th:block th:if="${viewmode == 'edit'}">
             <div th:attr="data-repeatable-container=${question.id}">
                 <div class="govuk-form-group inline" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'govuk-form-group--error'">
-                    <label th:for="|formInput[cost-${costCategory.workingDaysPerYearCostItem?.id}-labourDays]|">
-                        <span>Working days per year</span>
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id})" />
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id +'-labourDays'})" />
+                    <label class="govuk-label" th:for="|formInput[cost-${costCategory.workingDaysPerYearCostItem?.id}-labourDays]|">
+                        Working days per year
                     </label>
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id})" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id +'-labourDays'})" />
                     <input type="number"
                            class="govuk-input govuk-input--width-4"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'govuk-input--error'"
@@ -377,7 +377,7 @@
                            step="1"
                            required="required" />
                 </div>
-                <h3>Number of staff and roles within the project</h3>
+                <h3 class="govuk-heading-s">Number of staff and roles within the project</h3>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table labour-costs-table">
                         <thead class="govuk-table__head">
@@ -402,7 +402,7 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another role', question=${question},rowcontainer='.labour-costs-table tbody')" />
                     </p>
                 </div>
-                <h4 class="alignright section-total-summary">
+                <h4 class="govuk-heading-s alignright section-total-summary">
                     Total labour costs
                     <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -663,7 +663,7 @@
 
             <div class="govuk-form-group" id="overhead-default-percentage">
                 <p class="govuk-body" th:unless="${internalView}">There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.</p>
-                <h4 class="alignright section-total-summary">
+                <h4 class="govuk-heading-s alignright section-total-summary">
                     Total overhead costs
                     <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -882,7 +882,7 @@
                         </p>
                     </div>
                 </div>
-                <h4 class="alignright section-total-summary">
+                <h4 class="govuk-heading-s alignright section-total-summary">
                     Total materials costs
                     <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -1034,7 +1034,7 @@
             <p class="alignright">
                 <th:block th:insert="question-type/types :: add_row(text='Add another asset', question=${question},rowcontainer='#capital_usage')" />
             </p>
-            <h4 class="alignright section-total-summary">
+            <h4 class="govuk-heading-s alignright section-total-summary">
                 Total capital usage costs
                 <span class="govuk-heading-s"
                       th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -1055,7 +1055,7 @@
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <div th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}" class="form-row">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'govuk-form-group--error'">
-                    <label th:for="|formInput[cost-${costIdentifier}-description]|">
+                    <label class="govuk-label" th:for="|formInput[cost-${costIdentifier}-description]|">
                         <span>Item description</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
                     </label>
@@ -1256,7 +1256,7 @@
             <p class="alignright">
                 <th:block th:insert="question-type/types :: add_row(text='Add another subcontractor', question=${question},rowcontainer='#subcontracting')" />
             </p>
-            <h4 class="alignright section-total-summary">
+            <h4 class="govuk-heading-s alignright section-total-summary">
                 Total subcontracting costs
                 <span class="govuk-heading-s"
                       th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -1407,7 +1407,7 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another travel cost', question=${question},rowcontainer='#travel-costs-table tbody')" />
                     </p>
                 </div>
-                <h4 class="alignright section-total-summary">
+                <h4 class="govuk-heading-s alignright section-total-summary">
                     Total travel and subsistence costs
                     <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -1565,7 +1565,7 @@
                         <th:block th:insert="question-type/types :: add_row(text='Add another cost', question=${question},rowcontainer='#other-costs-table tbody')" />
                     </p>
                 </div>
-                <h4 class="alignright section-total-summary">
+                <h4 class="govuk-heading-s alignright section-total-summary">
                     Total other costs
                     <span class="govuk-heading-s"
                           th:attr="data-mirror='#section-total-'+${subSection.id}"
@@ -1585,14 +1585,14 @@
         <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
             class="form-group-row-validated"
             th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')})) ? 'govuk-form-group--error'">
-            <td class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'govuk-form-group--error'">
+            <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'govuk-form-group--error'">
                 <label th:for="|formInput[cost-${costIdentifier}-description]|">
                     <span class="govuk-visually-hidden">Description and justification of the cost</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
                 </label>
                 <th:block th:insert="question-type/form-elements :: form-finance-textarea (type='other_costs', id=${costIdentifier}, name='description', value=${cost.description},readonly=false,required=true)"  />
             </td>
-            <td class="numeric govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-form-group--error'"  >
+            <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-form-group--error'"  >
                 <label th:for="|formInput[cost-${costIdentifier}-cost]|">
                     <span class="govuk-visually-hidden">Estimated cost (&pound;)</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})"  />

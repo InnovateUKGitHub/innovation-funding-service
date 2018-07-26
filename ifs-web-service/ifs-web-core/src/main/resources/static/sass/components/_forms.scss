@@ -64,7 +64,7 @@ input {
   }
 }
 
-.form-group {
+.govuk-form-group {
   .form-finances-subcontracting-cost {
     text-align: right;
   }
@@ -79,7 +79,7 @@ input {
 
 td,
 tr {
-  &.form-group {
+  &.govuk-form-group {
     float:none;
     width:auto;
     padding-left:0;
@@ -89,7 +89,7 @@ tr {
       vertical-align: top;
     }
 
-    &.form-group-error {
+    &.govuk-form-group--error {
       border-left:none;
     }
   }
@@ -112,14 +112,6 @@ table {
 
     &.bold {
       font-weight: 700;
-    }
-
-    &.numeric {
-      text-align: right;
-
-      input {
-        text-align: right;
-      }
     }
 
     &.cta {
@@ -506,6 +498,13 @@ td {
 
   .button-clear {
     margin-bottom: 0;
+
+    &.disabled,
+    &[disabled] {
+      text-decoration: none;
+      color: $govuk-secondary-text-colour;
+      background: transparent;
+    }
   }
 
   .autosave-info {

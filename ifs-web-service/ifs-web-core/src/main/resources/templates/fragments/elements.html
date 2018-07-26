@@ -168,7 +168,7 @@
 
 <!--  ========================== Element: Agree to application terms =============== -->
 <th:block th:fragment="application-agree-to-state-aid">
-    <div  th:class="${#fields.hasErrors('stateAidAgreed')}? 'govuk-form-group govuk-form-group--error':'govuk-form-group'">
+    <div th:class="${#fields.hasErrors('stateAidAgreed')}? 'govuk-form-group govuk-form-group--error':'govuk-form-group'">
         <th:block th:if="${#fields.hasErrors('stateAidAgreed')}">
             <span class="govuk-error-message"  th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}" />
         </th:block>

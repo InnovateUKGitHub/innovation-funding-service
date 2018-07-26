@@ -46,7 +46,7 @@
                                     <th:block th:text="${post.username}">Created by user</th:block>
                                     <small th:text="${#temporals.format(post.createdOn, 'hh:mma d MMMM yyyy')}">13:21 27 February 2017</small>
                                 </p>
-                                <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}">Content of the note.</p>
+                                <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${post.body}">Content of the note.</p>
                                 <th:block th:unless="${post.attachments.isEmpty()}">
                                     <h3 class="govuk-heading-s">Supporting documentation</h3>
                                     <ul>
