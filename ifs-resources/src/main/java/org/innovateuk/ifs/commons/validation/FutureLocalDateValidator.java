@@ -14,7 +14,7 @@ public class FutureLocalDateValidator implements ConstraintValidator<FutureLocal
 
     @Override
     public void initialize(FutureLocalDate constraintAnnotation) {
-
+        // does nothing
     }
 
     @Override
