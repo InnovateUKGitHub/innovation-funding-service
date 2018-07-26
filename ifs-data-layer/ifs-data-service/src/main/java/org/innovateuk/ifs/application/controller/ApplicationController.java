@@ -32,20 +32,26 @@ public class ApplicationController {
 
     private static final String UNSUCCESSFUL_APP_DEFAULT_FILTER = "ALL";
 
-    @Autowired
     private IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
-    @Autowired
     private ApplicationService applicationService;
 
-    @Autowired
     private ApplicationNotificationService applicationNotificationService;
 
-    @Autowired
     private ApplicationProgressService applicationProgressService;
 
-    @Autowired
     private CrmService crmService;
+
+    public ApplicationController() {}
+
+    @Autowired
+    public ApplicationController(IneligibleOutcomeMapper ineligibleOutcomeMapper, ApplicationService applicationService, ApplicationNotificationService applicationNotificationService, ApplicationProgressService applicationProgressService, CrmService crmService) {
+        this.ineligibleOutcomeMapper = ineligibleOutcomeMapper;
+        this.applicationService = applicationService;
+        this.applicationNotificationService = applicationNotificationService;
+        this.applicationProgressService = applicationProgressService;
+        this.crmService = crmService;
+    }
 
     @GetMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {

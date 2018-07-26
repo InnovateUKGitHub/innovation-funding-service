@@ -58,7 +58,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     @Mock
     private CrmService crmService;
 
-
     @Override
     protected ApplicationController supplyControllerUnderTest() {
         return new ApplicationController();
@@ -156,7 +155,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", notNullValue()));
 
-        verify(crmService).syncCrmContact(userId);
+        verify(crmService, only()).syncCrmContact(userId);
     }
 
     @Test
