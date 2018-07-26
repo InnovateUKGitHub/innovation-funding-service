@@ -25,4 +25,9 @@ public class CompetitionSetupProjectDocumentController {
     public RestResult<ProjectDocumentResource> findOne(@PathVariable("id") final long id) {
         return competitionSetupProjectDocumentService.findOne(id).toGetResponse();
     }
+
+    @DeleteMapping("/{id}")
+    public RestResult<Void> delete(@PathVariable("id") final long id) {
+        return competitionSetupProjectDocumentService.delete(id).toGetResponse();
+    }
 }

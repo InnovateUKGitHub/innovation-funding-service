@@ -126,4 +126,14 @@ public class CompetitionSetupProjectDocumentController {
         return new ProjectDocumentForm(resource.getId(), resource.getTitle(), resource.getGuidance(), resource.isEnabled(), resource.isPdf(), resource.isSpreadsheet());
 
     }
+
+    @PostMapping("/{projectDocumentId}/delete")
+    public String deleteProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                          @PathVariable("projectDocumentId") long projectDocumentId,
+                                          Model model) {
+
+        competitionSetupProjectDocumentRestService.delete(projectDocumentId);
+
+        return projectDocumentLandingPage(model, competitionId);
+    }
 }

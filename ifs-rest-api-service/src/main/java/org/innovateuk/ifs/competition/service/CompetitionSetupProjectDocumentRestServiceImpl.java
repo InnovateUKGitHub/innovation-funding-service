@@ -22,5 +22,10 @@ public class CompetitionSetupProjectDocumentRestServiceImpl extends BaseRestServ
     public RestResult<ProjectDocumentResource> findOne(Long id) {
         return getWithRestResult(competitionSetupProjectDocumentRestURL + "/" + id, ProjectDocumentResource.class);
     }
+
+    @Override
+    public RestResult<Void> delete(Long id) {
+        return deleteWithRestResult(competitionSetupProjectDocumentRestURL + "/" + id, Void.class);
+    }
 }
 

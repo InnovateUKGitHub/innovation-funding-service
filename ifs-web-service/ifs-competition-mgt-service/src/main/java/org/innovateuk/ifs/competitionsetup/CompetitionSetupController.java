@@ -49,7 +49,6 @@ import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.competitionsetup.application.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
-import static org.innovateuk.ifs.competitionsetup.documents.controller.CompetitionSetupDocumentsController.DOCUMENTS_LANDING_REDIRECT;
 import static org.innovateuk.ifs.competitionsetup.projectdocument.controller.CompetitionSetupProjectDocumentController.PROJECT_DOCUMENT_LANDING_REDIRECT;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
@@ -153,8 +152,6 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
         } else if (section == CompetitionSetupSection.APPLICATION_FORM) {
             return format(APPLICATION_LANDING_REDIRECT, competitionId);
-        } else if (section == CompetitionSetupSection.DOCUMENTS) {
-            return format(DOCUMENTS_LANDING_REDIRECT, competitionId);
         } else if (section == CompetitionSetupSection.PROJECT_DOCUMENT) {
             return format(PROJECT_DOCUMENT_LANDING_REDIRECT, competitionId);
         } else if (section == CompetitionSetupSection.CONTENT) {

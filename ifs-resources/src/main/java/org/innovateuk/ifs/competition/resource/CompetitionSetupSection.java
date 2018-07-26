@@ -21,7 +21,6 @@ public enum CompetitionSetupSection {
 	MILESTONES(5L, "milestones", "Milestones", emptyList(), true),
 	APPLICATION_FORM(6L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS), false),
 	ASSESSORS(7L, "assessors", "Assessors", emptyList(), true),
-	DOCUMENTS(11L, "documents", "Documents", emptyList(), true),
 	CONTENT(8L, "content", "Public content", emptyList(), true),
 	PROJECT_DOCUMENT(10L, "project-document", "Documents in project setup", emptyList(), false);
 	

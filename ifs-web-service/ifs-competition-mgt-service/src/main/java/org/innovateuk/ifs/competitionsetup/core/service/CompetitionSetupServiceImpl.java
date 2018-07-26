@@ -329,7 +329,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         requiredSections.add(CompetitionSetupSection.MILESTONES);
         requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
         requiredSections.add(CompetitionSetupSection.CONTENT);
-        requiredSections.add(CompetitionSetupSection.DOCUMENTS);
         return requiredSections;
     }
 

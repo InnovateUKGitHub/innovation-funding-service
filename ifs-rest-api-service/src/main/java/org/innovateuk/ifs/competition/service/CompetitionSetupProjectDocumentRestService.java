@@ -11,4 +11,6 @@ public interface CompetitionSetupProjectDocumentRestService {
     RestResult<ProjectDocumentResource> save(ProjectDocumentResource projectDocumentResource);
 
     RestResult<ProjectDocumentResource> findOne(Long id);
+
+    RestResult<Void> delete(Long id);
 }
