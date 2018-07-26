@@ -45,23 +45,6 @@ public class PublicContentStatusDeterminerTest {
         assertEquals(PublicContentStatusText.OPEN_NOW, result);
     }
 
-    @Ignore
-    @Test
-    public void getApplicablePublicContentStatusText_openDateInPastAndClosingDateInLessThanTwoWeeksAwayReturnsClosingSoon() throws Exception {
-        PublicContentStatusDeterminer publicContentStatusDeterminer = new PublicContentStatusDeterminer();
-
-        ZonedDateTime inTwoWeeks = ZonedDateTime.now().plusDays(14L);
-        ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1L);
-
-        PublicContentItemResource publicContentItemResource = newPublicContentItemResource()
-                .withCompetitionOpenDate(yesterday)
-                .withCompetitionCloseDate(inTwoWeeks).build();
-
-        PublicContentStatusText result = publicContentStatusDeterminer.getApplicablePublicContentStatusText(publicContentItemResource);
-
-        assertEquals(PublicContentStatusText.CLOSING_SOON, result);
-    }
-
     @Test
     public void getApplicablePublicContentStatusText_openDateInPastAndClosingDateJustUnderTwoWeeksAwayReturnsOpenNow() throws Exception {
         PublicContentStatusDeterminer publicContentStatusDeterminer = new PublicContentStatusDeterminer();

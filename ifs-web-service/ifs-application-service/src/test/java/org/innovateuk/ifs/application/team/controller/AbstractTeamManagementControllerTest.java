@@ -270,19 +270,6 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    @Ignore
-    public void confirmDeleteInviteOrganisation_shouldReturnNotFoundWhenOrganisationIsInvalid() throws Exception {
-        when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(false);
-
-        mockMvc.perform(get("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
-                .param("confirmDeleteOrganisation", "true"))
-                .andExpect(status().is4xxClientError())
-                .andExpect(view().name("404"));
-
-        verify(testTeamManagementService, never()).createViewModel(anyLong(), anyLong(), any());
-    }
-
-    @Test
     public void deleteOrganisation_shouldReturnSuccessViewWhenOrganisationIsValid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
