@@ -327,18 +327,11 @@ public class FileServiceImpl extends RootTransactionalService implements FileSer
 
     private ServiceResult<Path> updateFileWithContents(Path file, Supplier<InputStream> inputStreamSupplier) {
 
-        try {
-            try (InputStream sourceInputStream = inputStreamSupplier.get()) {
-                try {
-                    Files.copy(sourceInputStream, file, StandardCopyOption.REPLACE_EXISTING);
-                    return serviceSuccess(file);
-                } catch (IOException e) {
-                    LOG.error("Could not write data to file " + file, e);
-                    return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
-                }
-            }
+        try (InputStream sourceInputStream = inputStreamSupplier.get()) {
+            Files.copy(sourceInputStream, file, StandardCopyOption.REPLACE_EXISTING);
+            return serviceSuccess(file);
         } catch (IOException e) {
-            LOG.error("Error closing file stream for file " + file, e);
+            LOG.error("Error writing data to file " + file, e);
             return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         }
     }
