@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.projectdocument.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
@@ -18,8 +19,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.function.Supplier;
+
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_ID_KEY;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/project-document")
@@ -98,15 +103,26 @@ public class CompetitionSetupProjectDocumentController {
 
     @PostMapping("/save")
     public String saveProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                     Model model,
-                                     @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDocumentForm form,
-                                     @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                     UserResource loggedInUser) {
+                                      Model model,
+                                      @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDocumentForm form,
+                                      @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                      UserResource loggedInUser) {
 
-        ProjectDocumentResource projectDocumentResource = createProjectDocumentResource(form, competitionId);
-        competitionSetupProjectDocumentRestService.save(projectDocumentResource);
+        Supplier<String> failureView = () -> saveProjectDocumentFailureView(competitionId, model, form);
 
-        return projectDocumentLandingPage(model, competitionId);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
+            ProjectDocumentResource projectDocumentResource = createProjectDocumentResource(form, competitionId);
+            RestResult<ProjectDocumentResource> updateResult = competitionSetupProjectDocumentRestService.save(projectDocumentResource);
+
+            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> projectDocumentLandingPage(model, competitionId));
+        });
+    }
+
+    private String saveProjectDocumentFailureView(long competitionId, Model model, ProjectDocumentForm form) {
+        String redirect = doViewProjectDocument(model, competitionId);
+        return redirect != null ? redirect : doViewSaveProjectDocument(model, form);
     }
 
     private ProjectDocumentResource createProjectDocumentResource(ProjectDocumentForm form, long competitionId) {
