@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -47,7 +48,7 @@ public class CrmServiceImpl implements CrmService {
                     for (OrganisationResource organisation : organisations) {
                         result = result.andOnSuccess(() -> {
                             SilContact silContact = toSilContact(user.getSuccess(), organisation);
-                            LOG.info(String.format("Updating CRM contact %s and organisation %s",
+                            LOG.info(format("Updating CRM contact %s and organisation %s",
                                     silContact.getEmail(), silContact.getOrganisation().getName()));
                             return silCrmEndpoint.updateContact(silContact);
                         });
