@@ -89,7 +89,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     @Override
-    public Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
+    public Map<FinanceRowType, List<ChangedFinanceRowPair>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
         ProjectFinance projectFinance = projectFinanceRepository.findOne(projectFinanceId);
         Long applicationId = projectFinance.getProject().getApplication().getId();
         Long organisationId = projectFinance.getOrganisation().getId();
@@ -282,18 +282,18 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         }
     }
 
-    private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>>
+    private Map<FinanceRowType, List<ChangedFinanceRowPair>>
                                         getProjectCostChangesByType(List<ImmutablePair<Optional<ApplicationFinanceRow>,
                                                                     Optional<ApplicationFinanceRow>>> costs) {
 
-        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changedPairs = new LinkedHashMap<>();
+        Map<FinanceRowType, List<ChangedFinanceRowPair>> changedPairs = new LinkedHashMap<>();
 
         for(ImmutablePair<Optional<ApplicationFinanceRow>, Optional<ApplicationFinanceRow>> pair : costs) {
             Optional<ApplicationFinanceRow> applicationCost = pair.getLeft();
             Optional<ApplicationFinanceRow> projectCost = pair.getRight();
             FinanceRowType costType = getCostType(applicationCost, projectCost);
 
-            ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> updatedPair;
+            ChangedFinanceRowPair updatedPair;
             if(isNew(applicationCost)){
                 updatedPair = buildPairWithTypeOfChange(applicationCost, projectCost, costType, TypeOfChange.NEW);
             } else if(isRemoved(applicationCost, projectCost)){
@@ -325,8 +325,8 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return !applicationCost.isPresent();
     }
 
-    private List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>> addNewOrUpdate(Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changedPairs, FinanceRowType costType, ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> pair){
-        List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>> listOfChangedRows = changedPairs.get(costType);
+    private List<ChangedFinanceRowPair> addNewOrUpdate(Map<FinanceRowType, List<ChangedFinanceRowPair>> changedPairs, FinanceRowType costType, ChangedFinanceRowPair pair){
+        List<ChangedFinanceRowPair> listOfChangedRows = changedPairs.get(costType);
         if(listOfChangedRows == null){
             listOfChangedRows = new ArrayList<>();
         }
@@ -342,7 +342,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return (applicationCost.isPresent() && !projectCost.isPresent());
     }
 
-    private ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> buildPairWithTypeOfChange(Optional<ApplicationFinanceRow> applicationCost, Optional<ApplicationFinanceRow> projectCost, FinanceRowType costType, TypeOfChange typeOfChange){
+    private ChangedFinanceRowPair buildPairWithTypeOfChange(Optional<ApplicationFinanceRow> applicationCost, Optional<ApplicationFinanceRow> projectCost, FinanceRowType costType, TypeOfChange typeOfChange){
         FinanceRowItem applicationFinanceRowItem = !applicationCost.isPresent() ? null : getApplicationCostItem(costType, applicationCost.get());
         FinanceRowItem projectFinanceRowItem = !projectCost.isPresent() ? null : getApplicationCostItem(costType, projectCost.get());
         return ChangedFinanceRowPair.of(typeOfChange, applicationFinanceRowItem, projectFinanceRowItem);

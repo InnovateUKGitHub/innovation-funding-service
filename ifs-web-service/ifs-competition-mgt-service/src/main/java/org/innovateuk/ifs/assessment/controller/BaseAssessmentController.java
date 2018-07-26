@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = BaseAssessmentController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-public abstract class BaseAssessmentController<T extends AssessmentCountSummaryPageResource> {
+public abstract class BaseAssessmentController {
 
     protected static final int PAGE_SIZE = 20;
 

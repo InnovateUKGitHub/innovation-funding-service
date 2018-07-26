@@ -107,7 +107,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
         Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getProjectOrganisationFinances(projectFinanceResource.getId(), competition);
         projectFinanceResource.setFinanceOrganisationDetails(costs);
 
-        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges =
+        Map<FinanceRowType, List<ChangedFinanceRowPair>> costChanges =
                 organisationFinanceHandler.getProjectOrganisationFinanceChanges(projectFinanceResource.getId());
         projectFinanceResource.setCostChanges(costChanges);
     }

@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class ProjectFinanceResource extends BaseFinanceResource {
 
-    private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges;
+    private Map<FinanceRowType, List<ChangedFinanceRowPair>> costChanges;
 
     public ProjectFinanceResource(BaseFinanceResource originalFinance) {
         super(originalFinance);
@@ -32,11 +32,11 @@ public class ProjectFinanceResource extends BaseFinanceResource {
         super.setTarget(target);
     }
 
-    public Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getCostChanges() {
+    public Map<FinanceRowType, List<ChangedFinanceRowPair>> getCostChanges() {
         return costChanges;
     }
 
-    public void setCostChanges(Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges) {
+    public void setCostChanges(Map<FinanceRowType, List<ChangedFinanceRowPair>> costChanges) {
         this.costChanges = costChanges;
     }
 

@@ -12,7 +12,7 @@ import static java.util.stream.Collectors.toMap;
 /**
  * The role of {@link ProjectUser}.
  */
-public enum ProjectParticipantRole implements ParticipantRole<Project> {
+public enum ProjectParticipantRole implements ParticipantRole {
     PROJECT_PARTNER(10, "partner"),
     PROJECT_MANAGER(11, "project_manager"),
     PROJECT_FINANCE_CONTACT(9, "finance_contact");
