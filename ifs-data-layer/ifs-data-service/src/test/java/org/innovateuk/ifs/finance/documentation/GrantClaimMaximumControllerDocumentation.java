@@ -15,6 +15,7 @@ import static org.innovateuk.ifs.documentation.GrantClaimMaximumDocs.grantClaimM
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
 import static org.innovateuk.ifs.finance.domain.builder.GrantClaimMaximumBuilder.newGrantClaimMaximum;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -54,7 +55,7 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
     @Test
     public void save() throws Exception {
         GrantClaimMaximumResource gcm = newGrantClaimMaximumResource().build();
-        when(grantClaimMaximumService.save(gcm)).thenReturn(serviceSuccess(gcm));
+        when(grantClaimMaximumService.save(any(GrantClaimMaximumResource.class))).thenReturn(serviceSuccess(gcm));
 
         mockMvc.perform(post("/grantClaimMaximum/")
                 .contentType(MediaType.APPLICATION_JSON)

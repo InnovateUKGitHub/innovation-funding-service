@@ -58,15 +58,14 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
     @Test
     public void save() throws Exception {
         GrantClaimMaximumResource gcmResource = newGrantClaimMaximumResource().build();
-        GrantClaimMaximumResource expectedGcmResource = newGrantClaimMaximumResource().build();
 
-        when(grantClaimMaximumService.save(gcmResource)).thenReturn(serviceSuccess(expectedGcmResource));
+        when(grantClaimMaximumService.save(any(GrantClaimMaximumResource.class))).thenReturn(serviceSuccess(gcmResource));
 
         mockMvc.perform(post("/grantClaimMaximum/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson((gcmResource))))
                 .andExpect(status().isCreated());
 
-        verify(grantClaimMaximumService, only()).save(gcmResource);
+        verify(grantClaimMaximumService, only()).save(any(GrantClaimMaximumResource.class));
     }
 }
