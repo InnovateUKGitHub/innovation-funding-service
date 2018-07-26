@@ -720,14 +720,6 @@ The Applicant is able to apply to the competition once is Open
     [Setup]  the competition moves to Open state    ${competitionId}
     Given log in as a different user                &{lead_applicant_credentials}
     And logged in user applies to competition       ${competitionTitle}  1
-    And the user enters text to a text field    id=organisationSearchName    Innovate
-    And the user clicks the button/link         id=org-search
-    And the user clicks the button/link         link=INNOVATE LTD
-    And the user selects the checkbox           address-same
-    And the user clicks the button/link         jQuery=.button:contains("Save and continue")
-    And the user clicks the button/link         jQuery=.button:contains("Save and continue")
-    And the user clicks the button/link         jQuery=button:contains("Mark as complete")
-    And the user clicks the button/link         jQuery=button:contains("Save and return to application overview")
 
 The Applicant see the correct Questions
     [Documentation]   IFS-182
