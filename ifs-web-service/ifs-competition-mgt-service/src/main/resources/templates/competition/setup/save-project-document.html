@@ -91,9 +91,9 @@
                   </div>
                </div>
             </th:block>
-            <th:form th:unless="${new_document}">
+            <th:form th:if="${form.projectDocumentId}">
                <p>
-                  <button type="submit" name="removeDocument" class="buttonlink">Remove</button>
+                  <button type="submit" th:formaction="@{'/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/delete'(competitionId=${competitionId}, projectDocumentId=${form.projectDocumentId})}" name="removeDocument" class="buttonlink">Remove</button>
                </p>
             </th:form>
             <div class="extra-margin">

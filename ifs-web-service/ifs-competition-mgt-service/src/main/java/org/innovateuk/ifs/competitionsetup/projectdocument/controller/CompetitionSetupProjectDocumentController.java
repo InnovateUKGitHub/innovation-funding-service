@@ -127,7 +127,7 @@ public class CompetitionSetupProjectDocumentController {
 
     }
 
-    @DeleteMapping("/{projectDocumentId}")
+    @PostMapping("/{projectDocumentId}/delete")
     public String deleteProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                           @PathVariable("projectDocumentId") long projectDocumentId,
                                           Model model) {
