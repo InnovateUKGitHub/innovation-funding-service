@@ -16,7 +16,7 @@ public class OrganisationAddressViewModel {
     }
 
     public boolean isResearch() {
-        return OrganisationTypeEnum.RESEARCH.getId().equals(organisationType.getId());
+        return OrganisationTypeEnum.RESEARCH.getId() == organisationType.getId();
     }
 
     public OrganisationTypeResource getOrganisationType() {
@@ -31,7 +31,7 @@ public class OrganisationAddressViewModel {
         return organisationType.getName().toLowerCase();
     }
 
-    public Boolean isShowOrgType() {
+    public boolean isShowOrgType() {
         return !isLeadApplicant;
     }
 }

@@ -58,7 +58,7 @@ public class ApplicationSectionFinanceSaverTest {
 
     @Test
     public void handleMarkAcademicFinancesAsNotRequired() {
-        saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.PUBLICSECTOR_OR_CHARITY.getId(), newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build(), 3L, competitionId, 7L);
+        saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.PUBLIC_SECTOR_OR_CHARITY.getId(), newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build(), 3L, competitionId, 7L);
         saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.RESEARCH.getId(), newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build(), 3L, competitionId, 7L);
 
         saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.RESEARCH.getId(), newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build(), 3L, competitionId, 7L);

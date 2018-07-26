@@ -66,6 +66,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -551,8 +553,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         testCostCategory.setName("One");
         testCostCategory.setLabel("Group Name");
 
-        OrganisationType organisationType = new OrganisationType();
-        organisationType.setId(OrganisationTypeEnum.BUSINESS.getId());
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
         when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
@@ -589,8 +590,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         testCostCategory.setId(1L);
         testCostCategory.setName("One");
 
-        OrganisationType organisationType = new OrganisationType();
-        organisationType.setId(OrganisationTypeEnum.BUSINESS.getId());
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
         when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
@@ -888,8 +888,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         spendProfileInDB.setMarkedAsComplete(true);
 
-        OrganisationType organisationType = new OrganisationType();
-        organisationType.setId(OrganisationTypeEnum.BUSINESS.getId());
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
         when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
@@ -926,8 +925,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                         3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0")))
         );
 
-        OrganisationType organisationType = new OrganisationType();
-        organisationType.setId(OrganisationTypeEnum.BUSINESS.getId());
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
         when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
@@ -965,8 +963,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         );
 
 
-        OrganisationType organisationType = new OrganisationType();
-        organisationType.setId(OrganisationTypeEnum.BUSINESS.getId());
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(BUSINESS).build();
         Organisation organisation1 = newOrganisation().withId(organisationId).withOrganisationType(organisationType).withName("TEST").build();
         when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
@@ -1266,7 +1263,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
             setLoggedInUser(loggedInUser);
             when(userRepositoryMock.findOne(loggedInUser.getId())).thenReturn(user);
 
-            organisation1 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+            organisation1 = newOrganisation().withOrganisationType(BUSINESS).build();
             organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.RTO).build();
 
             PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().withOrganisation(organisation1).build();
