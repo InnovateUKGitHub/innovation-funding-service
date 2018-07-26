@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.competition.service.CompetitionSetupProjectDocumentRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.projectdocument.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.projectdocument.form.ProjectDocumentForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -64,7 +65,21 @@ public class CompetitionSetupProjectDocumentController {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
+        LandingPageForm landingPageForm = new LandingPageForm(competitionResource.getProjectDocuments());
         model.addAttribute("model", competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT));
+        model.addAttribute("landingPageForm", landingPageForm);
+
+        return null;
+    }
+
+    @PostMapping("/landing-page")
+    public String saveProjectDocumentLandingPage(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                  Model model,
+                                                  @Valid @ModelAttribute("landingPageForm") LandingPageForm form,
+                                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                                  UserResource loggedInUser) {
+
+        System.out.println("Set a debug point here and ensure the form is populated correctly.");
 
         return null;
     }
