@@ -105,7 +105,7 @@ public abstract class AbstractApplicationSectionUpdater extends AbstractSectionU
     protected abstract ServiceResult<Void> autoSaveGuidanceRowSubject(GuidanceRowResource guidanceRow, String fieldName, String value);
 
     private Integer getGuidanceRowsIndex(String fieldName) throws ParseException {
-        return Integer.parseInt(fieldName.substring(fieldName.indexOf("[") + 1, fieldName.indexOf("]")));
+        return Integer.parseInt(fieldName.substring(fieldName.indexOf('[') + 1, fieldName.indexOf(']')));
     }
 
     private void addNotSavedGuidanceRows(CompetitionSetupQuestionResource question, Integer index) {
