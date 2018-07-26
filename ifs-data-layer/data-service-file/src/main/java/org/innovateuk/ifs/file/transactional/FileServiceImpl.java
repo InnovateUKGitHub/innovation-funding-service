@@ -115,6 +115,7 @@ public class FileServiceImpl extends RootTransactionalService implements FileSer
     }
 
     /**
+     * @deprecated
      * Avoid using this and use deleteFileIgnoreNotFound unless you intend to block user from not being able to
      * remove file entrys with associated files missing.  See IFS-955
      * @param fileEntryId
