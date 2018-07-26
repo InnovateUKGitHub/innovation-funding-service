@@ -99,7 +99,7 @@
 <th:block th:fragment="research_category_summary(model)">
 
     <div class="question">
-        <dl class="govuk-!-font-size-16">
+        <dl class="govuk-list govuk-!-font-size-16">
             <dt>Selected research category</dt>
             <dd th:text="${model.researchCategory} ?: 'This field has not been completed.'"
                 th:classappend="${#strings.isEmpty(model.researchCategory)}? 'form-hint'">Experimental development

@@ -202,12 +202,13 @@
 
 <th:block th:fragment="funding_finances(model, internalView)">
     <th:block th:if="${model.fundingSectionLocked}">
-        The following steps must be completed before you can supply funding details:
-        <ul class="list list-bullet">
+        <p class="govuk-body">The following steps must be completed before you can supply funding details:</p>
+        <ul class="govuk-list govuk-list--bullet">
             <th:block th:unless="${model.researchCategoryComplete}">
                 <th:block th:if="${model.leadApplicant}">
                     <li>you must select a
-                        <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.researchCategoryQuestionId})}">
+                        <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.id}, questionId=${model.researchCategoryQuestionId})}"
+                           class="govuk-link">
                             research category
                         </a>
                     </li>
@@ -218,7 +219,8 @@
             </th:block>
             <th:block th:unless="${model.yourOrganisationComplete}">
                 <li>you must state
-                    <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}">
+                    <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.yourOrganisationSectionId})}"
+                       class="govuk-link">
                         your organisation size
                     </a>
                 </li>
