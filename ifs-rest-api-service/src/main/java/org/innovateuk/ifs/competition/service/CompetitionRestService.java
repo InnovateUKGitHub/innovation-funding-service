@@ -42,6 +42,4 @@ public interface CompetitionRestService {
     RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long id);
 
     RestResult<Void> updateTermsAndConditionsForCompetition(long competitionId, long termsAndConditionsId);
-
-    RestResult<CompetitionResource> findTemplateCompetitionForCompetitionType(long competitionTypeId);
 }

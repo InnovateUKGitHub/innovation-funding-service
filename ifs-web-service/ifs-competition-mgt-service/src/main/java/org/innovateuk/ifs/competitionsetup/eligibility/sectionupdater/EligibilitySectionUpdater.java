@@ -13,10 +13,8 @@ import org.innovateuk.ifs.competitionsetup.core.sectionupdater.CompetitionSetupS
 import org.innovateuk.ifs.competitionsetup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -35,14 +33,11 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
 
     private CompetitionSetupRestService competitionSetupRestService;
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
-    private CompetitionRestService competitionRestService;
 
     public EligibilitySectionUpdater(CompetitionSetupRestService competitionSetupRestService,
-                                     GrantClaimMaximumRestService grantClaimMaximumRestService,
-                                     CompetitionRestService competitionRestService) {
+                                     GrantClaimMaximumRestService grantClaimMaximumRestService) {
         this.competitionSetupRestService = competitionSetupRestService;
         this.grantClaimMaximumRestService = grantClaimMaximumRestService;
-        this.competitionRestService = competitionRestService;
     }
 
     @Override
@@ -91,7 +86,11 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
 
     private void handleGrantClaimMaximumChanges(CompetitionResource competition,
                                                 EligibilityForm eligibilityForm) {
-        Set<GrantClaimMaximumResource> businessGcms = getBusinessTypeGrantClaimMaximumsForCompetition(competition);
+        Set<GrantClaimMaximumResource> businessGcms = competition.getGrantClaimMaximums().stream()
+                .map(id -> grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess())
+                .filter(gcm -> gcm.getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId()))
+                .collect(Collectors.toSet());
+
         if (eligibilityForm.getOverrideFundingRules()) {
             businessGcms.forEach(oldGCM -> {
                 GrantClaimMaximumResource toSaveGCM = createNewGCM(oldGCM, eligibilityForm.getFundingLevelPercentage());
@@ -105,15 +104,14 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
                 }
             });
         } else {
-            CompetitionResource templateCompetition = competitionRestService.findTemplateCompetitionForCompetitionType(
+            Set<Long> gcmsForCompetitionType = grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(
                     competition.getCompetitionType()).getSuccess();
-            Set<GrantClaimMaximumResource> gcmsTemplate = getBusinessTypeGrantClaimMaximumsForCompetition(templateCompetition);
 
-            Set<Long> gcmsTemplateIds = grantClaimMaximumToIdSet(gcmsTemplate);
-            Set<Long> gcmsIds = grantClaimMaximumToIdSet(businessGcms);
+            Set<Long> gcmsTemplateIds = filterToOnlyBusinessGcm(gcmsForCompetitionType);
+            Set<Long> businessGcmsIds = grantClaimMaximumToIdSet(businessGcms);
 
             // remove the old
-            competition.getGrantClaimMaximums().removeAll(gcmsIds);
+            competition.getGrantClaimMaximums().removeAll(businessGcmsIds);
 
             //save the new
             competition.getGrantClaimMaximums().addAll(gcmsTemplateIds);
@@ -130,11 +128,11 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
         return newGcm;
     }
 
-    private Set<GrantClaimMaximumResource> getBusinessTypeGrantClaimMaximumsForCompetition(CompetitionResource competition) {
-        return competition.getGrantClaimMaximums()
-                .stream()
+    private Set<Long> filterToOnlyBusinessGcm(Set<Long> gcms) {
+        return gcms.stream()
                 .map(id -> grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess())
                 .filter(gcm -> gcm.getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId()))
+                .map(GrantClaimMaximumResource::getId)
                 .collect(Collectors.toSet());
     }
 

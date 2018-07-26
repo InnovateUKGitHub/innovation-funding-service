@@ -5,6 +5,10 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsSetType;
+
 @Service
 public class GrantClaimMaximumRestServiceImpl extends BaseRestService implements GrantClaimMaximumRestService {
 
@@ -13,6 +17,11 @@ public class GrantClaimMaximumRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<GrantClaimMaximumResource> getGrantClaimMaximumById(long id) {
         return getWithRestResult(grantClaimMaximumRestURL + "/" + id, GrantClaimMaximumResource.class);
+    }
+
+    @Override
+    public RestResult<Set<Long>> getGrantClaimMaximumsForCompetitionType(long competititionTypeId) {
+        return getWithRestResult(grantClaimMaximumRestURL + "/getForCompetitionType/" + competititionTypeId, longsSetType());
     }
 
     @Override

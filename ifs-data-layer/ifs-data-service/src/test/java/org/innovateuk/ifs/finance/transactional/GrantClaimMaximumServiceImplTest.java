@@ -2,6 +2,8 @@ package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
+import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
 import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
@@ -22,11 +24,18 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
     private GrantClaimMaximumRepository grantClaimMaximumRepository;
 
     @Mock
+    private CompetitionTypeRepository competitionTypeRepository;
+
+    @Mock
+    private CompetitionMapper competitionMapper;
+
+    @Mock
     private GrantClaimMaximumMapper grantClaimMaximumMapper;
 
     @Override
     protected GrantClaimMaximumServiceImpl supplyServiceUnderTest() {
-        return new GrantClaimMaximumServiceImpl(grantClaimMaximumRepository, grantClaimMaximumMapper);
+        return new GrantClaimMaximumServiceImpl(grantClaimMaximumRepository, competitionTypeRepository,
+                grantClaimMaximumMapper, competitionMapper);
     }
 
     @Test

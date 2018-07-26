@@ -31,17 +31,13 @@ import static org.mockito.Mockito.when;
 public class EligibilityFormPopulatorTest {
 
     @Mock
-    private CompetitionRestService competitionRestService;
-
-    @Mock
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
     private EligibilityFormPopulator service;
 
     @Before
     public void setUp() {
-        service = new EligibilityFormPopulator(competitionRestService,
-                grantClaimMaximumRestService);
+        service = new EligibilityFormPopulator(grantClaimMaximumRestService);
     }
 
     @Test
@@ -74,7 +70,7 @@ public class EligibilityFormPopulatorTest {
                 .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(2).getId(), gcms.get(3).getId()))
                 .build();
 
-        when(competitionRestService.findTemplateCompetitionForCompetitionType(competition.getCompetitionType())).thenReturn(restSuccess(template));
+        when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType())).thenReturn(restSuccess(template.getGrantClaimMaximums()));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(0).getId())).thenReturn(restSuccess(gcms.get(0)));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(1).getId())).thenReturn(restSuccess(gcms.get(1)));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(2).getId())).thenReturn(restSuccess(gcms.get(2)));
@@ -114,7 +110,7 @@ public class EligibilityFormPopulatorTest {
                 .withLeadApplicantType(asList(2L))
                 .build();
 
-        when(competitionRestService.findTemplateCompetitionForCompetitionType(competition.getCompetitionType())).thenReturn(restSuccess(template));
+        when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType())).thenReturn(restSuccess(template.getGrantClaimMaximums()));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(0).getId())).thenReturn(restSuccess(gcms.get(0)));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(1).getId())).thenReturn(restSuccess(gcms.get(1)));
         when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(2).getId())).thenReturn(restSuccess(gcms.get(2)));

@@ -26,7 +26,7 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
 
     @Override
     protected GrantClaimMaximumController supplyControllerUnderTest() {
-        return new GrantClaimMaximumController();
+        return new GrantClaimMaximumController(grantClaimMaximumService);
     }
 
     @Test

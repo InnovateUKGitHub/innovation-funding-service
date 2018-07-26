@@ -25,12 +25,9 @@ import java.util.stream.Collectors;
 @Service
 public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 
-    private CompetitionRestService competitionRestService;
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
-    public EligibilityFormPopulator(CompetitionRestService competitionRestService,
-                                    GrantClaimMaximumRestService grantClaimMaximumRestService) {
-        this.competitionRestService = competitionRestService;
+    public EligibilityFormPopulator(GrantClaimMaximumRestService grantClaimMaximumRestService) {
         this.grantClaimMaximumRestService = grantClaimMaximumRestService;
     }
 
@@ -92,11 +89,10 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
     }
 
     private boolean fundingRulesAreOverriden(CompetitionResource competitionResource) {
-        CompetitionResource template = competitionRestService.findTemplateCompetitionForCompetitionType(
+        Set<Long> templateGrantClaimMaximums = grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(
                 competitionResource.getCompetitionType()).getSuccess();
 
         Set<Long> currentGrantClaimMaximums = competitionResource.getGrantClaimMaximums();
-        Set<Long> templateGrantClaimMaximums = template.getGrantClaimMaximums();
         return !currentGrantClaimMaximums.equals(templateGrantClaimMaximums);
     }
 

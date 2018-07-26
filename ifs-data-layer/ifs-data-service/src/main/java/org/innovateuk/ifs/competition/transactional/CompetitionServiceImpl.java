@@ -191,13 +191,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    @Transactional
-    public ServiceResult<CompetitionResource> findTemplateCompetitionForCompetitionType(long competitionTypeId) {
-        return find(competitionTypeRepository.findOne(competitionTypeId), notFoundError(CompetitionTypeResource.class, competitionTypeId))
-                .andOnSuccess(competitionType -> serviceSuccess(competitionMapper.mapToResource(competitionType.getTemplate())));
-    }
-
-    @Override
     public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
         String searchQueryLike = String.format("%%%s%%", searchQuery);
         PageRequest pageRequest = new PageRequest(page, size);
