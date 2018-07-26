@@ -310,7 +310,15 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     private FinanceRowType getCostType(Optional<ApplicationFinanceRow> applicationCost, Optional<ApplicationFinanceRow> projectCost){
-        FinanceRow availableRow = applicationCost.isPresent() ? applicationCost.get() : (projectCost.isPresent() ? projectCost.get() : null);
+        FinanceRow availableRow;
+        if (applicationCost.isPresent()) {
+            availableRow = applicationCost.get();
+        } else if(projectCost.isPresent()) {
+            availableRow = projectCost.get();
+        } else {
+            availableRow = null;
+        }
+
         FinanceRowType costType = OTHER_COSTS;
         if(availableRow != null) {
             List<FormInput> formInputs = availableRow.getQuestion().getFormInputs();
