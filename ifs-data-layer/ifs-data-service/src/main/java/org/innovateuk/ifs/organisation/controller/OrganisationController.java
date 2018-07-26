@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.organisation.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -17,6 +18,7 @@ import java.util.Set;
  * to manage {@link Organisation} related data.
  */
 @RestController
+@ZeroDowntime(reference = "IFS-4104", description = "Remove non kebab case mappings. ")
 @RequestMapping("/organisation")
 public class OrganisationController {
 

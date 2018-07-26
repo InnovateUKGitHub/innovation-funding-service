@@ -153,7 +153,8 @@ Project Finance user can view academic Jes form
     When the user clicks the button/link    css=a.eligibility-1
     Then the user should see the text in the page    Download Je-S form
     When the user opens the link in new window   jes-form104.pdf
-    Then the user goes back to the previous tab
+    Then the user should not see an error in the page
+    And the user closes the last opened tab
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 

@@ -118,7 +118,7 @@ the radio button should have the new selection
     [Arguments]    ${ORG_TYPE}
     Radio Button Should Be Set To    organisationType    ${ORG_TYPE}
 
-the user enters organisation details     #Formula?
+the user enters organisation details
     [Arguments]    ${orgName}
     the user enters text to a text field       id = organisationSearchName    ${orgName}
     the user clicks the button/link            id=org-search
