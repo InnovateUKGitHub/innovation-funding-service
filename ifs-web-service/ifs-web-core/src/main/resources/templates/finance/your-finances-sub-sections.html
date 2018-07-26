@@ -108,35 +108,6 @@
             <div class="form-footer__actions">
                 <button id="mark-all-as-complete"
                         th:unless="${model.complete}"
-                        type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete
-                </button>
-                <button th:if="${model.complete}"
-                        type="submit" name="mark_section_as_incomplete" class="buttonlink"
-                        th:text="${'Edit ' + #strings.toLowerCase(model.section.name)}">Edit
-                </button>
-            </div>
-        </div>
-        <div>
-            <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.id}, sectionId=${model.section.parentSection})}"
-               th:if="${model.complete}"
-               class="extra-margin button-secondary">Return to finances
-            </a>
-            <button type="submit"
-                    th:unless="${model.complete}"
-                    class="extra-margin button">
-                Save and return to finances
-            </button>
-        </div>
-    </th:block>
-</th:block>
-
-<!-- ===========================Subsection buttons =========================== -->
-<th:block th:fragment="subsection_buttons (model)">
-    <th:block th:unless="${model.readOnlyAllApplicantApplicationFinances}">
-        <div th:unless="${model.applicationIsReadOnly}" class="form-footer">
-            <div class="form-footer__actions">
-                <button id="mark-all-as-complete"
-                        th:unless="${model.complete}"
                         type="submit" name="mark_section_as_complete" class="button-clear">Mark as complete
                 </button>
                 <button th:if="${model.complete}"
@@ -151,8 +122,8 @@
                class="govuk-!-margin-top-6 button-secondary">Return to finances
             </a>
             <button type="submit"
-               th:unless="${model.complete}"
-               class="govuk-!-margin-top-6 govuk-button">
+                    th:unless="${model.complete}"
+                    class="govuk-!-margin-top-6 govuk-button">
                 Save and return to finances
             </button>
         </div>

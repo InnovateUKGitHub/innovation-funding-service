@@ -360,11 +360,11 @@
         <th:block th:if="${viewmode == 'edit'}">
             <div th:attr="data-repeatable-container=${question.id}">
                 <div class="govuk-form-group inline" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'govuk-form-group--error'">
-                    <label th:for="|formInput[cost-${costCategory.workingDaysPerYearCostItem?.id}-labourDays]|">
-                        <span>Working days per year</span>
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id})" />
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id +'-labourDays'})" />
+                    <label class="govuk-label" th:for="|formInput[cost-${costCategory.workingDaysPerYearCostItem?.id}-labourDays]|">
+                        Working days per year
                     </label>
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id})" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id +'-labourDays'})" />
                     <input type="number"
                            class="govuk-input govuk-input--width-4"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'govuk-input--error'"
@@ -377,7 +377,7 @@
                            step="1"
                            required="required" />
                 </div>
-                <h3>Number of staff and roles within the project</h3>
+                <h3 class="govuk-heading-s">Number of staff and roles within the project</h3>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table labour-costs-table">
                         <thead class="govuk-table__head">
@@ -1585,14 +1585,14 @@
         <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}"
             class="form-group-row-validated"
             th:classappend="((${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')}) or (${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')})) ? 'govuk-form-group--error'">
-            <td class="govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'govuk-form-group--error'">
+            <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'govuk-form-group--error'">
                 <label th:for="|formInput[cost-${costIdentifier}-description]|">
                     <span class="govuk-visually-hidden">Description and justification of the cost</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
                 </label>
                 <th:block th:insert="question-type/form-elements :: form-finance-textarea (type='other_costs', id=${costIdentifier}, name='description', value=${cost.description},readonly=false,required=true)"  />
             </td>
-            <td class="numeric govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-form-group--error'"  >
+            <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'govuk-form-group--error'"  >
                 <label th:for="|formInput[cost-${costIdentifier}-cost]|">
                     <span class="govuk-visually-hidden">Estimated cost (&pound;)</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})"  />
