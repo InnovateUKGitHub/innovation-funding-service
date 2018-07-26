@@ -64,7 +64,7 @@ public class ApplicationResearchCategorySummaryModelPopulatorTest extends BaseUn
 
         ResearchCategorySummaryViewModel viewModel = populator.populate(application, loggedInUser, userIsLeadApplicant);
 
-        assertTrue(viewModel.isClosed());
+        assertFalse(viewModel.isClosed());
         assertTrue(viewModel.isComplete());
         assertTrue(viewModel.isCanMarkAsComplete());
         assertTrue(viewModel.isAllReadOnly());
@@ -100,7 +100,7 @@ public class ApplicationResearchCategorySummaryModelPopulatorTest extends BaseUn
 
         ResearchCategorySummaryViewModel viewModel = populator.populate(application, loggedInUser, userIsLeadApplicant);
 
-        assertTrue(viewModel.isClosed());
+        assertFalse(viewModel.isClosed());
         assertTrue(viewModel.isComplete());
         assertFalse(viewModel.isCanMarkAsComplete());
         assertTrue(viewModel.isAllReadOnly());

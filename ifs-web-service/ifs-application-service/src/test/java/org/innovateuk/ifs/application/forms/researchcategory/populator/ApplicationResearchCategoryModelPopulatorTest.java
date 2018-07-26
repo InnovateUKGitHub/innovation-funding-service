@@ -109,7 +109,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         assertEquals(researchCategories.get(0).getName(), researchCategoryViewModel.getResearchCategory());
         assertEquals(questionResource.getId(), researchCategoryViewModel.getQuestionId());
         assertEquals(applicationResource.getId(), researchCategoryViewModel.getApplicationId());
-        assertTrue(researchCategoryViewModel.isClosed());
+        assertFalse(researchCategoryViewModel.isClosed());
         assertTrue(researchCategoryViewModel.isComplete());
         assertTrue(researchCategoryViewModel.isCanMarkAsComplete());
         assertTrue(researchCategoryViewModel.isAllReadOnly());
@@ -166,7 +166,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         assertEquals(researchCategories.get(0).getName(), researchCategoryViewModel.getResearchCategory());
         assertEquals(questionResource.getId(), researchCategoryViewModel.getQuestionId());
         assertEquals(applicationResource.getId(), researchCategoryViewModel.getApplicationId());
-        assertTrue(researchCategoryViewModel.isClosed());
+        assertFalse(researchCategoryViewModel.isClosed());
         assertTrue(researchCategoryViewModel.isComplete());
         assertTrue(researchCategoryViewModel.isCanMarkAsComplete());
         assertTrue(researchCategoryViewModel.isAllReadOnly());
