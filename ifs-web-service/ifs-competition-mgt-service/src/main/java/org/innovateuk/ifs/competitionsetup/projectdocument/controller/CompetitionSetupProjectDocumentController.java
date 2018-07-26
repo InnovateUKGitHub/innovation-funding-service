@@ -77,6 +77,7 @@ public class CompetitionSetupProjectDocumentController {
 
         ProjectDocumentForm form = new ProjectDocumentForm();
         form.setEnabled(true);
+        form.setEditable(true);
         return redirect != null ? redirect : doViewSaveProjectDocument(model, form);
     }
 
@@ -127,7 +128,7 @@ public class CompetitionSetupProjectDocumentController {
 
     private ProjectDocumentResource createProjectDocumentResource(ProjectDocumentForm form, long competitionId) {
 
-        ProjectDocumentResource projectDocumentResource = new ProjectDocumentResource(competitionId, form.getTitle(), form.getGuidance(), form.isEnabled(), form.isPdf(), form.isSpreadsheet());
+        ProjectDocumentResource projectDocumentResource = new ProjectDocumentResource(competitionId, form.getTitle(), form.getGuidance(), form.isEditable(), form.isEnabled(), form.isPdf(), form.isSpreadsheet());
 
         if (form.getProjectDocumentId() != null) {
             projectDocumentResource.setId(form.getProjectDocumentId());
@@ -139,7 +140,7 @@ public class CompetitionSetupProjectDocumentController {
 
     private ProjectDocumentForm createProjectDocumentForm(ProjectDocumentResource resource) {
 
-        return new ProjectDocumentForm(resource.getId(), resource.getTitle(), resource.getGuidance(), resource.isEnabled(), resource.isPdf(), resource.isSpreadsheet());
+        return new ProjectDocumentForm(resource.getId(), resource.getTitle(), resource.getGuidance(), resource.isEditable(), resource.isEnabled(), resource.isPdf(), resource.isSpreadsheet());
 
     }
 

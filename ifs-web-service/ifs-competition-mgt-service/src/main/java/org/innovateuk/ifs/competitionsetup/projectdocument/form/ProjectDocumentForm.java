@@ -16,6 +16,7 @@ public class ProjectDocumentForm extends BaseBindingResultTarget {
     @NotBlank(message = "{validation.field.must.not.be.blank}")
     private String guidance;
 
+    private boolean editable;
     private boolean enabled;
     private boolean pdf;
     private boolean spreadsheet;
@@ -24,10 +25,11 @@ public class ProjectDocumentForm extends BaseBindingResultTarget {
     public ProjectDocumentForm() {
     }
 
-    public ProjectDocumentForm(Long projectDocumentId, String title, String guidance, boolean enabled, boolean pdf, boolean spreadsheet) {
+    public ProjectDocumentForm(Long projectDocumentId, String title, String guidance, boolean editable, boolean enabled, boolean pdf, boolean spreadsheet) {
         this.projectDocumentId = projectDocumentId;
         this.title = title;
         this.guidance = guidance;
+        this.editable = editable;
         this.enabled = enabled;
         this.pdf = pdf;
         this.spreadsheet = spreadsheet;
@@ -55,6 +57,14 @@ public class ProjectDocumentForm extends BaseBindingResultTarget {
 
     public void setGuidance(String guidance) {
         this.guidance = guidance;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 
     public boolean isEnabled() {

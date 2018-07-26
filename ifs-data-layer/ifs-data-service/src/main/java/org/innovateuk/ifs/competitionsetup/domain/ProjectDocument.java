@@ -19,14 +19,16 @@ public class ProjectDocument {
 
     private String guidance;
 
+    private boolean editable;
     private boolean enabled;
     private boolean pdf;
     private boolean spreadsheet;
 
-    public ProjectDocument(Competition competition, String title, String guidance, boolean enabled, boolean pdf, boolean spreadsheet) {
+    public ProjectDocument(Competition competition, String title, String guidance, boolean editable, boolean enabled, boolean pdf, boolean spreadsheet) {
         this.competition = competition;
         this.title = title;
         this.guidance = guidance;
+        this.editable = editable;
         this.enabled = enabled;
         this.pdf = pdf;
         this.spreadsheet = spreadsheet;
@@ -65,6 +67,14 @@ public class ProjectDocument {
 
     public void setGuidance(String guidance) {
         this.guidance = guidance;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 
     public boolean isEnabled() {

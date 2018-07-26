@@ -362,11 +362,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     private ProjectDocument createCollaborationAgreement(Competition competition) {
         return new ProjectDocument(competition, "Collaboration agreement", "Enter guidance for Collaboration agreement",
-                true, true, false);
+                false, true, true, false);
     }
 
     private ProjectDocument createExploitationPlan(Competition competition) {
         return new ProjectDocument(competition, "Exploitation plan", "Enter guidance for Exploitation plan",
-                true, true, false);
+                false, true, true, false);
     }
 }

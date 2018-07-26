@@ -13,14 +13,16 @@ public class ProjectDocumentResource {
 
     private String guidance;
 
+    private boolean editable;
     private boolean enabled;
     private boolean pdf;
     private boolean spreadsheet;
 
-    public ProjectDocumentResource(Long competition, String title, String guidance, boolean enabled, boolean pdf, boolean spreadsheet) {
+    public ProjectDocumentResource(Long competition, String title, String guidance, boolean editable, boolean enabled, boolean pdf, boolean spreadsheet) {
         this.competition = competition;
         this.title = title;
         this.guidance = guidance;
+        this.editable = editable;
         this.enabled = enabled;
         this.pdf = pdf;
         this.spreadsheet = spreadsheet;
@@ -61,6 +63,14 @@ public class ProjectDocumentResource {
         this.guidance = guidance;
     }
 
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -94,6 +104,7 @@ public class ProjectDocumentResource {
         ProjectDocumentResource that = (ProjectDocumentResource) o;
 
         return new EqualsBuilder()
+                .append(editable, that.editable)
                 .append(enabled, that.enabled)
                 .append(pdf, that.pdf)
                 .append(spreadsheet, that.spreadsheet)
@@ -111,6 +122,7 @@ public class ProjectDocumentResource {
                 .append(competition)
                 .append(title)
                 .append(guidance)
+                .append(editable)
                 .append(enabled)
                 .append(pdf)
                 .append(spreadsheet)
