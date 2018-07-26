@@ -9,11 +9,8 @@ import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceBuilder;
-import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceFields;
 import static org.innovateuk.ifs.documentation.GrantClaimMaximumDocs.grantClaimMaximumResourceFields;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
-import static org.innovateuk.ifs.finance.domain.builder.GrantClaimMaximumBuilder.newGrantClaimMaximum;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
