@@ -20,6 +20,8 @@ public class ProjectDocumentForm extends BaseBindingResultTarget {
     private boolean enabled;
     private boolean pdf;
     private boolean spreadsheet;
+    // Added for binding errors, unsaved
+    private String acceptedFileTypesId;
 
     // for spring form binding
     public ProjectDocumentForm() {
@@ -89,6 +91,12 @@ public class ProjectDocumentForm extends BaseBindingResultTarget {
 
     public void setSpreadsheet(boolean spreadsheet) {
         this.spreadsheet = spreadsheet;
+    }
+    
+    public String getAcceptedFileTypesId() { return acceptedFileTypesId; }
+
+    public void setAcceptedFileTypesId(String acceptedFileTypesId) {
+        this.acceptedFileTypesId = acceptedFileTypesId;
     }
 }
 

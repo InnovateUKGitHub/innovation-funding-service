@@ -41,14 +41,20 @@
                </div>
 
                <div class="form-group" th:classappend="${#fields.hasErrors('pdf')} ? 'form-group-error'">
+
                   <fieldset>
                      <legend id="acceptedFileTypesId">
                         <span class="form-label-bold">Accepted file types</span>
+                        <th:block th:if="${#fields.hasErrors('acceptedFileTypesId')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('acceptedFileTypesId')}" th:text="${err}"></span>
+                        </th:block>
                      </legend>
 
                      <div class="multiple-choice">
                         <input id="pdf"
                            type="checkbox"
+                           data-required-group="acceptedFileTypesId"
+                           th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
                            value="pdf"
                            th:field="${form.pdf}"
                            />
@@ -59,6 +65,8 @@
                      <div class="multiple-choice">
                         <input id="spreadsheet"
                            type="checkbox"
+                           data-required-group="acceptedFileTypesId"
+                           th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
                            value="spreadsheet"
                            th:field="${form.spreadsheet}"
                            />

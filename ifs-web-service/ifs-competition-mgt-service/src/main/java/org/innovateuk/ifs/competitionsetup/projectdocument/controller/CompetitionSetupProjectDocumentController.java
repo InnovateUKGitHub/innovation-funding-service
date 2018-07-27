@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -126,8 +127,12 @@ public class CompetitionSetupProjectDocumentController {
     public String saveProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                       Model model,
                                       @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDocumentForm form,
-                                      @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                      BindingResult bindingResult, ValidationHandler validationHandler,
                                       UserResource loggedInUser) {
+
+        if (!form.isPdf() && !form.isSpreadsheet()) {
+            bindingResult.addError(new FieldError(FORM_ATTR_NAME, "acceptedFileTypesId", "You need to select at least one file type."));
+        }
 
         Supplier<String> failureView = () -> saveProjectDocumentFailureView(competitionId, model, form);
 
