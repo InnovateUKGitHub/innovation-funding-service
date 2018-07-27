@@ -68,11 +68,22 @@ public class CompetitionManagementAssessorProfileController {
         }
     }
 
+    @GetMapping("/profile/{assessorId}")
+    public String profile(@PathVariable("competitionId") long competitionId,
+                          @PathVariable("assessorId") long assessorId,
+                          @RequestParam(value = "origin", defaultValue = "ASSESSOR_FIND") String origin,
+                          @RequestParam MultiValueMap<String, String> queryParams) {
+
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.valueOf(origin), queryParams);
+
+        return "redirect:/competition/" + competitionId + "/assessors/profile/" + assessorId + "/skills" + originQuery;
+    }
+
     @GetMapping("/profile/{assessorId}/skills")
     public String profileSkills(Model model,
                                 @PathVariable("competitionId") long competitionId,
                                 @PathVariable("assessorId") long assessorId,
-                                @RequestParam(value = "origin", defaultValue = "APPLICATION_PROGRESS") String origin,
+                                @RequestParam(value = "origin", defaultValue = "ASSESSOR_FIND") String origin,
                                 @RequestParam(value = "applicationId", required = false) Long applicationId,
                                 @RequestParam MultiValueMap<String, String> queryParams) {
 
@@ -88,7 +99,7 @@ public class CompetitionManagementAssessorProfileController {
     public String profileDeclaration(Model model,
                                      @PathVariable("competitionId") long competitionId,
                                      @PathVariable("assessorId") long assessorId,
-                                     @RequestParam(value = "origin", defaultValue = "APPLICATION_PROGRESS") String origin,
+                                     @RequestParam(value = "origin", defaultValue = "ASSESSOR_FIND") String origin,
                                      @RequestParam(value = "applicationId", required = false) Long applicationId,
                                      @RequestParam MultiValueMap<String, String> queryParams) {
 

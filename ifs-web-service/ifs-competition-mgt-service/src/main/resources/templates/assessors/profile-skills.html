@@ -72,6 +72,9 @@
         </table>
     </div>
 
+    <h3 class="heading-medium">Skill areas</h3>
+    <p th:if="${model.skillAreas}" th:text="${model.skillAreas}">skillAreas</p>
+
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 

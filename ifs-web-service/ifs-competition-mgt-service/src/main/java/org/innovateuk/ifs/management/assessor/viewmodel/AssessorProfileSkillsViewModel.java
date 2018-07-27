@@ -19,7 +19,7 @@ public class AssessorProfileSkillsViewModel {
     private AddressResource address;
     private List<InnovationSectorViewModel> innovationSectors;
     private String businessType;
-    private String skills;
+    private String skillAreas;
     private String originQuery;
 
     public AssessorProfileSkillsViewModel(
@@ -31,7 +31,7 @@ public class AssessorProfileSkillsViewModel {
             AddressResource addressResource,
             List<InnovationSectorViewModel> innovationSectors,
             String businessType,
-            String skills,
+            String skillAreas,
             String originQuery) {
         this.competition = competition;
         this.assessorId = assessorId;
@@ -41,7 +41,7 @@ public class AssessorProfileSkillsViewModel {
         this.address = addressResource;
         this.innovationSectors = innovationSectors;
         this.businessType = businessType;
-        this.skills = skills;
+        this.skillAreas = skillAreas;
         this.originQuery = originQuery;
     }
 
@@ -75,8 +75,8 @@ public class AssessorProfileSkillsViewModel {
         return businessType;
     }
 
-    public String getSkills() {
-        return skills;
+    public String getSkillAreas() {
+        return skillAreas;
     }
 
     public String getOriginQuery() {
