@@ -4,10 +4,15 @@ Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts o
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so...
 ...
 ...               INFUND-7060 As an assessor I can view my declaration of interest page so...
+...
+...               IFS-3941 Introduce date to DOI
 Suite Setup       The user logs-in in new browser    &{existing_assessor1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
+
+*** Variables ***
+${assessor_id}          ${user_ids['${test_mailbox_one}+jeremy.alufson@gmail.com']}
 
 *** Test Cases ***
 Back to the dashboard link
@@ -87,6 +92,14 @@ Successful save for the DOI form
     And the user clicks the button/link    jQuery=a:contains("Edit")
     And the user should see the correct inputs in the declaration form
 
+the user checks for the update DOI meesage
+    [Documentation]  IFS-3941
+    [Tags]
+    Given the user clicks the button/link   link=Dashboard
+    When the user update the DOI modifiled date
+    And the user reloads the page
+    Then the user should see the element    jQuery=div li a:contains("your declaration of interest")
+
 *** Keywords ***
 the user correctly fills out the role, principle employer and accurate fields
     the user enters text to a text field    id=principalEmployer    University
@@ -122,3 +135,7 @@ the user should see the proper validation messages triggered
     the user should see a field and summary error    Please tell us if you have any other financial interests.
     the user should see a field and summary error    Please tell us if you have any appointments or directorships.
     the user should see a field and summary error    You must agree that your account is accurate.
+
+the user update the DOI modifiled date
+    Connect to Database    @{database}
+    Execute sql string     UPDATE `${database_name}`.`affiliation` SET `modified_on`='2018-04-05 00:00:00' WHERE `user_id`='${assessor_id}';
