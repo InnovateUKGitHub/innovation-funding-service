@@ -23,10 +23,10 @@
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
                                 <h2 class="govuk-fieldset__heading">Filter assessors</h2>
                             </legend>
-                            <div class="govuk-grid-column-one-quarter">
+                            <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-one-half">
                                     <div class="govuk-form-group">
-                                        <label for="innovationSector">Innovation sector</label>
+                                        <label for="innovationSector" class="govuk-label">Innovation sector</label>
                                         <select class="govuk-select"
                                                 name="innovationSector"
                                                 id="innovationSector">
@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="govuk-grid-column-one-half">
                                     <div class="govuk-form-group">
-                                        <label for="businessType">Type</label>
+                                        <label for="businessType" class="govuk-label">Type</label>
                                         <select class="govuk-select"
                                                 name="businessType"
                                                 id="businessType">
@@ -55,9 +55,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="govuk-grid-column-one-quarter">
-                                <div class="column-one alignright">
-                                    <button class="govuk-button govuk-!-margin-0">Filter</button>
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-full">
+                                    <div class="column-one alignright">
+                                        <button class="govuk-button govuk-!-margin-0">Filter</button>
+                                    </div>
                                 </div>
                             </div>
                         </fieldset>
@@ -83,7 +85,7 @@
                         </thead>
                         <tbody class="govuk-table__body">
                             <tr class="govuk-table__row" th:each="assessor : ${model.assessors}">
-                                <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}"/></td>
+                                <td class="govuk-table__cell"><a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${assessor.id})} + ${originQuery}" th:text="${assessor.name}" class="govuk-link"/></td>
                                 <td class="govuk-table__cell" th:text="${assessor.skillAreas}">skill areas</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.total}">4</td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${assessor.assigned}">4</td>

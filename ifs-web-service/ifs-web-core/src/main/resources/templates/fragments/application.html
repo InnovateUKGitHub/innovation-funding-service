@@ -6,7 +6,7 @@
            th:with="appIsClosed=${!(currentApplication.isOpen() and isApplicant)}">
 
       <h2 th:text="${section.name}"
-          class="govuk-heading-m"
+          class="govuk-heading-m govuk-!-margin-top-6"
           th:unless="${section.name.equals('Project details') and appIsClosed}"/>
 
       <!--/* (In e.g. internal view) show the 'report' version of the application details above the collapsible sections */-->
@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-                  <h2 th:text="${section.name}" class="govuk-heading-m" />
+                  <h2 th:text="${section.name}" class="govuk-heading-m govuk-!-margin-top-6" />
 
           </th:block>
       </th:block>
@@ -114,7 +114,7 @@
     </section>
 
     <section th:if="${hasFinanceSection}">
-        <h2 class="govuk-heading-m">Finance</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-6">Finance</h2>
         <div class="collapsible">
             <h3>Finances summary
                 <th:block th:if="${(currentApplication.isOpen() and isApplicant)}">
@@ -155,7 +155,7 @@
     </section>
 
     <section th:if="!${#lists.isEmpty(feedbackSummary)}">
-        <h2 class="govuk-heading-m">Feedback summary</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-6">Feedback summary</h2>
         <h3 class="govuk-heading-s">Do you believe that this application is suitable for funding?</h3>
         <p class="govuk-body" th:if="${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">Yes</p>
         <p class="govuk-body" th:if="!${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">No</p>

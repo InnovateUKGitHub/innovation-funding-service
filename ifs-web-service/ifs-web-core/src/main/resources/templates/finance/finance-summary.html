@@ -57,11 +57,11 @@
                                     View finances
                                 </a>
                             </th>
-                            <td class="govuk-table__cell govuk-table__cell--numeric bold" th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
+                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold" th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                                 <span th:text="'£'+${#numbers.formatInteger(organisationFinance.total, 0, 'DEFAULT')}" />
                             </td>
                             <th:block th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">
-                                <td class="govuk-table__cell govuk-table__cell--numeric bold"><span>&pound;0</span></td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><span>&pound;0</span></td>
                             </th:block>
                             <th:block th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},
                             formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}">
@@ -83,14 +83,14 @@
                             <div th:text="${pendingOrganisationName}"></div>
                             <div><small>(pending)</small></div>
                         </th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric bold"><span>&pound;0</span></td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"><span>&pound;0</span></td>
                         <th:block th:each="financeSubSection : ${financeSectionChildren}">
                             <td class="govuk-table__cell govuk-table__cell--numeric">0</td>
                         </th:block>
                     </tr>
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="row">Total</th>
-                        <td class="numeric bold">
+                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">
                             <span th:if="${financeTotal != null}" th:text="'£'+${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" />
                         </td>
                         <th:block th:each="financeSubSection : ${financeSectionChildren}"
@@ -115,7 +115,7 @@
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th />
+                    <td class="govuk-table__cell"/>
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total costs</th>
                     <th scope="col" class="govuk-table__header govuk-table__header--numeric width-80">% Grant</th>
                     <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Funding sought (&pound;)</th>

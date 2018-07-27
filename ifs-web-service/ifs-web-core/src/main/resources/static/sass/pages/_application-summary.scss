@@ -25,6 +25,9 @@
       td {
         @include govuk-font(16);
       }
+      th{
+        font-weight: 700;
+      }
     }
   }
 }

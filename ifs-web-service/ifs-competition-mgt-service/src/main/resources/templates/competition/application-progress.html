@@ -21,10 +21,10 @@
                     94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes
                 </h2>
 
-                <div class="govuk-grid-column-one-quarter govuk-!-margin-top-6">
+                <div class="govuk-grid-row govuk-!-margin-top-6">
                     <div class="govuk-grid-column-one-quarter">
-                        <h3 class="govuk-heading-s">Partners</h3>
-                        <ul>
+                        <h3 class="govuk-heading-s govuk-!-margin-0">Partners</h3>
+                        <ul class="govuk-list">
                             <li th:unless="${#strings.isEmpty(model.leadOrganisation)}"
                                 th:text="${model.leadOrganisation} + ' (Lead)'">Aptrans Ltd (Lead)
                             </li>
@@ -32,11 +32,11 @@
                         </ul>
                     </div>
                     <div class="govuk-grid-column-one-quarter">
-                        <h3 class="govuk-heading-s">Innovation area</h3>
-                        <span th:text="${model.applicationInnovationArea} ? ${model.applicationInnovationArea} : 'Not listed'"></span>
+                        <h3 class="govuk-heading-s govuk-!-margin-0">Innovation area</h3>
+                        <span class="govuk-body" th:text="${model.applicationInnovationArea} ? ${model.applicationInnovationArea} : 'Not listed'"></span>
                     </div>
                 </div>
-                <div class="govuk-!-margin-top-6">
+                <div class="govuk-body govuk-!-margin-top-3 govuk-!-bottom-top-6">
                     <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})} + ${applicationOriginQuery}" class="govuk-link">Review application</a>
                 </div>
 
@@ -86,14 +86,13 @@
                                     <span th:remove="${assessor.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
                                 </td>
                                 <td class="govuk-table__cell alignright">
-                                    <a th:if="${assessor.notified}" class="button-secondary govuk-!-margin-0" data-js-modal="remove-assigned-assessor-modal"
+                                    <a th:if="${assessor.notified}" class="button-secondary govuk-!-margin-0 govuk-link" data-js-modal="remove-assigned-assessor-modal"
                                        th:href="${removeActionNonJs}"
                                        th:attr="data-modal-form-action=${removeAction}"
                                        th:with="
                                        removeAction=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})},
                                        removeActionNonJs=@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}"
-                                       th:unless="${assessor.submitted}"
-                                       class="govuk-link">Remove</a>
+                                       th:unless="${assessor.submitted}">Remove</a>
                                     <form th:unless="${assessor.notified}" method="post"
                                           th:action="@{/assessment/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}">
                                         <button type="submit" class="button-secondary govuk-!-margin-0">Remove</button>
@@ -187,7 +186,7 @@
                 <div class="search-filters govuk-!-margin-top-6">
                     <form action="#" method="GET">
                         <fieldset class="govuk-fieldset">
-                            <div class="govuk-grid-column-one-quarter">
+                            <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-two-thirds">
                                     <div class="govuk-form-group">
                                         <label class="govuk-label"
@@ -216,9 +215,11 @@
                     </form>
                 </div>
 
-                <div class="govuk-grid-column-one-quarter sorting">
+                <div class="govuk-grid-row sorting">
                     <div class="govuk-grid-column-two-thirds">
-                        <p class="govuk-body"><span class="govuk-heading-xl govuk-!-margin-0" th:text="${model.pagination.totalCount}">20</span> <span class="govuk-heading-s">Assessors</span></p>
+                        <p class="govuk-body govuk-!-margin-bottom-0">
+                            <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                            <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Assessors</span></p>
                     </div>
                 </div>
 

@@ -28,7 +28,7 @@
         <p class="govuk-heading-m">Application:</p>
         <p class="govuk-body" th:text="|${model.applicationId}: ${model.applicationName}|"/>
 
-        <div class="message-alert">The following email will be sent to the lead applicant after which the application will not be available for assessment.</div>
+        <div class="message-alert govuk-body">The following email will be sent to the lead applicant after which the application will not be available for assessment.</div>
 
         <p class="govuk-heading-m" th:text="|Recipient: ${model.leadApplicant}|">Dave smith</p>
 
@@ -65,7 +65,7 @@
                 <th:block th:if="${#fields.hasErrors('message')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
                 </th:block>
-                <div class="textarea-wrapped">
+                <div class="textarea-wrapped govuk-body">
                     <textarea id="message"
                               rows="16"
                               class="govuk-textarea"
