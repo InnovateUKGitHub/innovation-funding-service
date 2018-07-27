@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competitionsetup.projectdocument.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.projectdocument.form.ProjectDocumentForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,11 +18,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -106,9 +103,7 @@ public class CompetitionSetupProjectDocumentController {
 
         String redirect = doViewProjectDocument(model, competitionId);
 
-        ProjectDocumentForm form = new ProjectDocumentForm();
-        form.setEnabled(true);
-        form.setEditable(true);
+        ProjectDocumentForm form = new ProjectDocumentForm(true, true);
         return redirect != null ? redirect : doViewSaveProjectDocument(model, form);
     }
 
@@ -158,21 +153,16 @@ public class CompetitionSetupProjectDocumentController {
     }
 
     private ProjectDocumentResource createProjectDocumentResource(ProjectDocumentForm form, long competitionId) {
-
         ProjectDocumentResource projectDocumentResource = new ProjectDocumentResource(competitionId, form.getTitle(), form.getGuidance(), form.isEditable(), form.isEnabled(), form.isPdf(), form.isSpreadsheet());
 
         if (form.getProjectDocumentId() != null) {
             projectDocumentResource.setId(form.getProjectDocumentId());
         }
-
         return projectDocumentResource;
-
     }
 
-    public ProjectDocumentForm createProjectDocumentForm(ProjectDocumentResource resource) {
-
+    private ProjectDocumentForm createProjectDocumentForm(ProjectDocumentResource resource) {
         return new ProjectDocumentForm(resource.getId(), resource.getTitle(), resource.getGuidance(), resource.isEditable(), resource.isEnabled(), resource.isPdf(), resource.isSpreadsheet());
-
     }
 
     @PostMapping("/{projectDocumentId}/delete")
@@ -181,7 +171,6 @@ public class CompetitionSetupProjectDocumentController {
                                           Model model) {
 
         competitionSetupProjectDocumentRestService.delete(projectDocumentId);
-
         return projectDocumentLandingPage(model, competitionId);
     }
 }
