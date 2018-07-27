@@ -72,7 +72,7 @@
                                     <th:block th:if="${isError}">
                                         <span class="govuk-error-message" th:each="err : ${#fields.errors(fieldName)}" th:text="${err}" />
                                     </th:block>
-                                    <p class="uploaded-file">No file currently uploaded</p>
+                                    <p class="govuk-body uploaded-file">No file currently uploaded</p>
                                 </th:block>
                                 <th:block th:unless="${app.hasAttachment()}">
                                     <div class="upload-section">

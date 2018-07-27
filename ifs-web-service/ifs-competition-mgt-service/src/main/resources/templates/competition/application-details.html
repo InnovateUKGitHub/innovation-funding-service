@@ -115,7 +115,7 @@
         <th:block th:unless="${model.editable}">
 
             <h2 class="govuk-heading-m">Project duration in months</h2>
-            <dl class="application-question-list govuk-grid-row">
+            <dl class="govuk-list application-question-list govuk-grid-row">
                 <dt class="govuk-grid-column-one-third">Minimum</dt>
                 <dd class="govuk-grid-column-two-thirds"
                     th:text="${competitionSetupForm.minProjectDuration}" />
@@ -124,7 +124,7 @@
                     th:text="${competitionSetupForm.maxProjectDuration}" />
             </dl>
 
-            <dl class="application-question-list govuk-grid-row">
+            <dl class="govuk-list application-question-list govuk-grid-row">
                 <dt class="govuk-grid-column-one-third dt-title">Include the resubmission question?</dt>
                 <dd class="govuk-grid-column-two-thirds"
                     th:text="${competitionSetupForm.useResubmissionQuestion ? 'Yes' : 'No'}" />

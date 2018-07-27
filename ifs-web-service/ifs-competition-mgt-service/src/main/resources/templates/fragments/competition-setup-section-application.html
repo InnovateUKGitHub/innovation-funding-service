@@ -80,7 +80,7 @@
                 <th:block th:unless="${model.questionStatuses.get(question.id)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id}, questionId=${question.id})}">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id}, questionId=${question.id})}" class="govuk-link">
                                 <th:block th:text="${question.questionNumber} + '. '"></th:block>
                                 <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
                             </a>
@@ -106,7 +106,7 @@
                 <th:block th:if="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).FINANCES)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance(competitionId=${model.general.competition.id})}">Finances</a>
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance(competitionId=${model.general.competition.id})}" class="govuk-link">Finances</a>
                         </h4>
                     </div>
                     <div class="task-status-complete"><span>Complete</span></div>
@@ -114,14 +114,14 @@
                 <th:block th:unless="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).FINANCES)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${model.general.competition.id})}">Finances</a>
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${model.general.competition.id})}" class="govuk-link">Finances</a>
                         </h4>
                     </div>
                 </th:block>
             </li>
         </ul>
 
-        <div class="govuk-grid-column-one-quarter">
+        <div class="govuk-grid-row">
             <div class="govuk-grid-column-full govuk-!-margin-top-6">
                 <button th:if="${model.general.editable}" th:disabled="${!model.allComplete}" class="govuk-button">Done</button>
             </div>

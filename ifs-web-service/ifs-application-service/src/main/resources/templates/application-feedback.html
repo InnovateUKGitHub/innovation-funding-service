@@ -75,13 +75,13 @@
                                     <th:block th:if="${#fields.hasErrors('response')}">
                                         <span class="govuk-error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
                                     </th:block>
-                                    <p class="uploaded-file">No file currently uploaded</p>
+                                    <p class="govuk-body uploaded-file">No file currently uploaded</p>
                                     <input type="file" id="response" name="response" class="inputfile">
                                     <label for="response" class="button-secondary govuk-!-margin-top-6">+ Upload</label>
                                     <button name="uploadResponse" class="button-secondary" data-for-file-upload="response"></button>
                                 </div>
                                 <div th:if="${model.interviewFeedbackViewModel.hasResponse()}">
-                                    <p class="uploaded-file"><a th:href="@{/application/{applicationId}/feedback/download-response(applicationId=${model.application.id})}"
+                                    <p class="govuk-body uploaded-file"><a th:href="@{/application/{applicationId}/feedback/download-response(applicationId=${model.application.id})}"
                                                                 th:text="${model.interviewFeedbackViewModel.responseFilename}"
                                                                 target="_blank"
                                                                 class="govuk-link">File</a> (opens in a new window)</p>
@@ -98,7 +98,7 @@
                         <th:block th:if="${model.interviewFeedbackViewModel.hasResponse()}">
                             <div class="govuk-form-group download">
                                 <h3 class="govuk-heading-s govuk-!-margin-0">Lead applicant response</h3>
-                                <p class="uploaded-file"><a th:href="@{/application/{applicationId}/feedback/download-response(applicationId=${model.application.id})}"
+                                <p class="govuk-body uploaded-file"><a th:href="@{/application/{applicationId}/feedback/download-response(applicationId=${model.application.id})}"
                                                             th:text="${model.interviewFeedbackViewModel.responseFilename + ' (opens in a new window)'}"
                                                             target="_blank"
                                                             class="govuk-link">File</a></p>

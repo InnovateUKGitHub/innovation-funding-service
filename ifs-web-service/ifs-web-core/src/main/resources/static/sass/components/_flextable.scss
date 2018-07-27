@@ -61,7 +61,7 @@
   }
 
   .form-group-row {
-    &.form-group-error {
+    &.govuk-form-group--error {
       .fix-right {
         @extend %fix-right;
       }
@@ -85,7 +85,7 @@
 
     tr {
       &.form-group-row {
-        &.form-group-error {
+        &.govuk-form-group--error {
           > * {
             &:first-child {
               margin-top:-1px;
@@ -101,7 +101,7 @@
   tbody {
     tr {
       &.form-group-row {
-        &.form-group-error {
+        &.govuk-form-group--error {
           th {
             &:first-of-type {
               margin-top:1px;

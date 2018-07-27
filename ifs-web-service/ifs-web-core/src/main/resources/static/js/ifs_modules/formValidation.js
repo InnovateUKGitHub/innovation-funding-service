@@ -794,7 +794,7 @@ IFS.core.formValidation = (function () {
         var linkedErrorEl = formGroupRow.find('[data-errorfield="' + name + '"]:contains("' + message + '")')
         if (linkedErrorEl.length === 0) {
           if (visuallyhidden === false) { field.addClass('govuk-input--error') }
-          formGroupRow.find('legend,label,[scope="row"]').first().after('<span data-errorfield="' + name + '" class="govuk-error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
+          formGroupRow.find('legend,label,[scope="row"]').first().append('<span data-errorfield="' + name + '" class="govuk-error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
         }
       }
 

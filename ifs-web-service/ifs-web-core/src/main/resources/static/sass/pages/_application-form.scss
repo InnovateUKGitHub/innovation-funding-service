@@ -43,7 +43,7 @@
         }
 
         &.form-group-row-validated {
-          &.form-group-error {
+          &.govuk-form-group--error {
             td {
               &:first-child {
                 border-left: 10px solid $govuk-error-colour;
@@ -63,7 +63,7 @@
     #other-costs-table {
       tr {
         &.form-group-row-validated {
-          &.form-group-error {
+          &.govuk-form-group--error {
             td {
               &:first-child {
                 border-left: 10px solid $govuk-error-colour;

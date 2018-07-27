@@ -6,7 +6,7 @@
                 <h2 class="govuk-fieldset__heading">Application question</h2>
             </legend>
 
-            <dl class="application-question-list govuk-grid-row">
+            <dl class="govuk-list application-question-list govuk-grid-row">
                 <dt class="govuk-grid-column-one-third">Question heading</dt>
                 <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.shortTitle)}">None</dd>
                 <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.shortTitle)}"
@@ -54,7 +54,7 @@
                 <h2 class="govuk-fieldset__heading">Assessment of this question</h2>
             </legend>
 
-            <dl class="application-question-list govuk-grid-row">
+            <dl class="govuk-list application-question-list govuk-grid-row">
                 <th:block th:if="${question.scored != null}">
                     <dt class="govuk-grid-column-one-third">Scored</dt>
                     <dd class="govuk-grid-column-two-thirds" th:text="${question.scored ? 'Yes' : 'No'}"></dd>
