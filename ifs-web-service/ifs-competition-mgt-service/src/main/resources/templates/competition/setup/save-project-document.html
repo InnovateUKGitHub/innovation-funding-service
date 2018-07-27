@@ -19,6 +19,7 @@
             novalidate="novalidate"
             th:object="${form}"
             th:action="@{'/competition/setup/{competitionId}/section/project-document/save'(competitionId=${competitionId})}"
+            data-single-submit=""
             >
             <input type="hidden" th:field="${form.enabled}" />
             <input type="hidden" th:field="${form.projectDocumentId}" />
