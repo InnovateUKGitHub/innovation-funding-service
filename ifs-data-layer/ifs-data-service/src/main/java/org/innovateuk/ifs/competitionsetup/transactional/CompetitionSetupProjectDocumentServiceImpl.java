@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.competitionsetup.mapper.ProjectDocumentMapper;
 import org.innovateuk.ifs.competitionsetup.repository.ProjectDocumentRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
