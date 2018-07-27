@@ -9,7 +9,7 @@
 
 
     <form th:action="@{(${model.general.editable} ? '' : 'documents/edit')}"
-          th:object="${competitionSetupForm}"
+          th:object="${landingPageForm}"
           th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           data-section="documents"
           method="post" novalidate="novalidate">
@@ -18,22 +18,43 @@
         <div th:if="${model.general.editable}" id="section-3-edit">
 
             <div class="form-group">
-                <!-- for each document in documents, add name, add edit link -->
+                <fieldset>
+                    <div class="multiple-choice" th:each="document : ${model.general.competition.projectDocuments}" >
+                        <input th:value="${document.id}"
+                                type="checkbox"
+                                name="enabledIds"
+                                th:id="${'projectdocument-enabled-' + document.id}"
+                                th:checked="${document.enabled}" />
+                        <label th:for=${checkboxId}>
+                            <span th:text=${document.title}>document_title</span>
+                            <span class="end-label-link">
+                                <th>
+                                     <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}">Edit</a>
+                                </th>
+                            </span>
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+
+          <!--   <div class="form-group">
                 <ul>
-                    <li th:each="document : ${model.general.competition.projectDocuments}" class="multiple-choice">
-                        <th:block th:with="checkboxId=${'enabled[' + document.id + ']'}">
+                    <li th:each="document : ${landingPageForm.projectDocumentForms}" class="multiple-choice">
+                        <th:block th:with="checkboxId=${'projectDocumentForms[' + document.projectDocumentId + '].enabled'}">
                             <div>
+                                <input type="hidden" 
+                                th:name="'projectDocumentForms[' + ${document.projectDocumentId} + '].projectDocumentId'"
+                               th:value="${document.projectDocumentId}">
                                 <input th:id=${checkboxId}
                                     type="checkbox"
-                                    value="include"
+                                    value="enabled"
                                     th:checked=${document.enabled}
-                                    data-autosave-disabled
                                 />
                                 <label th:for=${checkboxId}>
                                     <span th:text=${document.title}>document_title</span>
                                     <span class="end-label-link">
                                         <th>
-                                             <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.id})}">Edit</a>
+                                             <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.projectDocumentId})}">Edit</a>
                                         </th>
                                     </span>
                                 </label>
@@ -42,7 +63,7 @@
                     </li>
                 </ul>
             </div>
-
+ -->
             <!-- new link -->
             <th:form th:unless="${model.general.state.preventEdit}">
                 <p>

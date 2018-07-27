@@ -35,6 +35,7 @@ public class CompetitionSetupProjectDocumentController {
 
     public static final String PROJECT_DOCUMENT_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/project-document/landing-page";
     private static final String FORM_ATTR_NAME = "form";
+    private static final String LANDING_FORM_ATTR_NAME = "landingPageForm";
 
     @Autowired
     private CompetitionService competitionService;
@@ -65,21 +66,25 @@ public class CompetitionSetupProjectDocumentController {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
-        LandingPageForm landingPageForm = new LandingPageForm(competitionResource.getProjectDocuments());
         model.addAttribute("model", competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT));
-        model.addAttribute("landingPageForm", landingPageForm);
+        model.addAttribute(LANDING_FORM_ATTR_NAME, new LandingPageForm());
 
         return null;
     }
 
+
+
     @PostMapping("/landing-page")
-    public String saveProjectDocumentLandingPage(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                                  Model model,
-                                                  @Valid @ModelAttribute("landingPageForm") LandingPageForm form,
-                                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                                  UserResource loggedInUser) {
+    public String saveProjectDocumentLandingPage( @ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form,
+                                                  BindingResult bindingResult,
+                                                  ValidationHandler validationHandler,
+                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                  Model model) {
 
         System.out.println("Set a debug point here and ensure the form is populated correctly.");
+
+        // cycle through posted data and rebuild the resources and then save
+
 
         return null;
     }
@@ -153,7 +158,7 @@ public class CompetitionSetupProjectDocumentController {
 
     }
 
-    private ProjectDocumentForm createProjectDocumentForm(ProjectDocumentResource resource) {
+    public ProjectDocumentForm createProjectDocumentForm(ProjectDocumentResource resource) {
 
         return new ProjectDocumentForm(resource.getId(), resource.getTitle(), resource.getGuidance(), resource.isEditable(), resource.isEnabled(), resource.isPdf(), resource.isSpreadsheet());
 

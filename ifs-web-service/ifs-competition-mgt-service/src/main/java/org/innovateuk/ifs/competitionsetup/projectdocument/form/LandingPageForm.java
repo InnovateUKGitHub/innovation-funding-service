@@ -4,27 +4,25 @@ import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Form to capture the details of the new project document
  */
 public class LandingPageForm extends BaseBindingResultTarget {
 
-    private List<ProjectDocumentResource> projectDocumentResources;
+    private Set<Long> enabledIds;
 
-    public LandingPageForm(List<ProjectDocumentResource> projectDocumentResources) {
-        this.projectDocumentResources = projectDocumentResources;
+    public Set<Long> getEnabledIds() {
+        return enabledIds;
+    }
+
+    public void setEnabledIds(Set<Long> enabledIds) {
+        this.enabledIds = enabledIds;
     }
 
     public LandingPageForm() {
-    }
-
-    public List<ProjectDocumentResource> getProjectDocumentResources() {
-        return projectDocumentResources;
-    }
-
-    public void setProjectDocumentResources(List<ProjectDocumentResource> projectDocumentResources) {
-        this.projectDocumentResources = projectDocumentResources;
     }
 }
 
