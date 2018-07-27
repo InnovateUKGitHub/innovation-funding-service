@@ -30,9 +30,9 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/profile/details")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileDetailsController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileDetailsEditController.class)
 @PreAuthorize("hasAuthority('assessor')")
-public class AssessorProfileDetailsController {
+public class AssessorProfileDetailsEditController {
 
     @Autowired
     private AssessorProfileDetailsModelPopulator assessorDetailsModelPopulator;
@@ -46,9 +46,8 @@ public class AssessorProfileDetailsController {
     private static final String FORM_ATTR_NAME = "form";
 
     @GetMapping
-    public String getDetails(Model model,
-                             UserResource loggedInUser) {
-        return doViewYourDetails(loggedInUser, model);
+    public String getDetails() {
+        return "redirect:/profile/details/skills";
     }
 
     @GetMapping("/edit")
@@ -82,11 +81,6 @@ public class AssessorProfileDetailsController {
             return validationHandler.addAnyErrors(detailsResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> "redirect:/assessor/dashboard");
         });
-    }
-
-    private String doViewYourDetails(UserResource loggedInUser, Model model) {
-        model.addAttribute("model", assessorDetailsModelPopulator.populateModel(loggedInUser));
-        return "profile/details";
     }
 
     private String doViewEditYourDetails(UserResource loggedInUser, Model model, AssessorProfileEditDetailsForm form, BindingResult bindingResult) {

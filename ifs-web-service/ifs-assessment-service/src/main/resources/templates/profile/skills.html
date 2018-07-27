@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<html class="no-js" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your skills'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details'" />
     </head>
 
     <body>
@@ -10,40 +10,81 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',size='heading-xlarge'" />
+            <p>These details will be used for all accounts linked to your email address.</p>
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your skills',size='heading-xlarge'" />
-            <p>These innovation areas have been chosen as your current areas of expertise. They will influence the types
-                of competition you will be invited to assess. If you would like to amend them or add new ones please
-                contact Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.
-            </p>
+            <dl>
+                <dt>Your name</dt>
+                <dd>
+                    <th:block th:text="${model.assessorProfileDetailsViewModel.firstName}" /> <th:block th:text="${model.assessorProfileDetailsViewModel.lastName}" />
+                </dd>
 
-            <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
+                <dt th:if="${model.assessorProfileDetailsViewModel.address}">Address</dt>
+                <dd th:if="${model.assessorProfileDetailsViewModel.address}">
+                    <th:block th:text="${model.assessorProfileDetailsViewModel.address.addressLine1}" /><br />
+                    <th:block th:unless="${#strings.isEmpty(model.assessorProfileDetailsViewModel.address.addressLine2)}">
+                        <th:block th:text="${model.assessorProfileDetailsViewModel.address.addressLine2}" /><br />
+                    </th:block>
+                    <th:block th:unless="${#strings.isEmpty(model.assessorProfileDetailsViewModel.address.addressLine3)}">
+                        <th:block th:text="${model.assessorProfileDetailsViewModel.address.addressLine3}" /><br />
+                    </th:block>
+                    <th:block th:text="${model.assessorProfileDetailsViewModel.address.town}" /><br />
+                    <th:block th:text="${model.assessorProfileDetailsViewModel.address.county}" /><br />
+                    <th:block th:text="${model.assessorProfileDetailsViewModel.address.postcode}" />
+                </dd>
 
-            <ul class="list list-bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
-              <th:block th:each="innovationSectorEntry : ${model.innovationAreas}"
-                        th:with="innovationSector=${innovationSectorEntry.key},innovationAreas=${innovationSectorEntry.value}">
-                <li th:each="innovationArea: ${innovationAreas}" th:text="${innovationArea}">
-                  information and communications technology (ICT)
+                <dt th:if="${model.assessorProfileDetailsViewModel.phoneNumber}">Phone number</dt>
+                <dd th:if="${model.assessorProfileDetailsViewModel.phoneNumber}" th:text="${model.assessorProfileDetailsViewModel.phoneNumber}" />
+
+                <dt>Email address</dt>
+                <dd th:text="${model.assessorProfileDetailsViewModel.email}" />
+            </dl>
+
+            <!--<div class="grid-row extra-margin">-->
+                <!--<div class="column-half">-->
+                    <!--<a th:href="@{/assessor/dashboard}" class="button">Return to assessor dashboard</a>-->
+                <!--</div>-->
+                <!--<div class="column-half alignright">-->
+                    <!--<a th:href="@{/profile/details/edit}" class="button-secondary">Edit</a>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <ul class="inline-nav">
+                <li class="selected">
+                    <a th:href="@{/profile/details/skills}">Skills</a>
                 </li>
-              </th:block>
+                <li class="not-selected">
+                    <a th:href="@{/profile/details/declaration}">DOI</a>
+                </li>
             </ul>
 
-            <h2 class="heading-medium">Skill areas</h2>
-            <p id="skillAreas"
-               th:text="${model.skillAreas} ? (${model.skillAreas} != '' ? ${model.skillAreas} : 'None declared') : 'Not answered'" />
-
-            <h2 class="heading-medium">Assessor type</h2>
-            <p id="assessorType"
-               th:text="${model.assessorType} ? ${model.assessorType.displayName} : 'Not answered'" />
-
-            <div class="form-footer">
-                <div class="form-footer__actions">
-                    <a th:href="@{/profile/skills/edit}">Edit</a>
-                </div>
-            </div>
+            <h3 class="heading-medium">Innovation areas</h3>
 
             <div class="extra-margin">
-                <a th:href="@{/assessor/dashboard}" class="button-secondary">Return to assessor dashboard</a>
+                <table th:each="innovationSector : ${model.innovationAreas}">
+                    <thead>
+                    <tr>
+                        <th scope="col" th:text="${innovationSector.key}">materials and manufacturing</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="innovationArea : ${innovationSector.value}">
+                        <td th:text="${innovationArea}">digital sciences</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="heading-medium">Skill areas</h3>
+            <p th:if="${model.skillAreas}" th:text="${model.skillAreas}">skillAreas</p>
+
+            <div class="form-footer">
+                <div class="form-footer__actions"><a th:href="@{/profile/skills/edit}">Edit</a></div>
+                <div class="form-footer__info">
+                    <span class="textarea-footer"></span>
+                    <span class="update-label">Created by IFS Web System User on </span>
+                    <span class="update-details">13 September 2017</span>
+                </div>
             </div>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

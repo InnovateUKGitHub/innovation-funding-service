@@ -1,106 +1,152 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-    <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Declaration of interest'" />
-    </head>
+<html class="no-js" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details'" />
+</head>
 
-    <body>
-        <th:block th:insert="fragments/layout :: body-start" />
-        <th:block th:insert="fragments/layout :: global-header" />
+<body>
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
-        <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Declaration of interest',size='heading-xlarge'" />
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',size='heading-xlarge'" />
+    <p>These details will be used for all accounts linked to your email address.</p>
 
-            <h2 class="heading-medium no-margin-bottom">Principal employer and role</h2>
-            <p th:if="${model.principalEmployer}">
-                <th:block th:text="${model.principalEmployer}">ASDF solutions</th:block><br />
-                <th:block th:text="${model.role}">CEO</th:block>
-            </p>
-            <p th:unless="${model.principalEmployer}">Not answered</p>
+    <dl>
+        <dt>Your name</dt>
+        <dd>
+            <th:block th:text="${model.assessorProfileDetailsViewModel.firstName}" /> <th:block th:text="${model.assessorProfileDetailsViewModel.lastName}" />
+        </dd>
 
-            <h2 class="heading-medium no-margin-bottom">Professional affiliations</h2>
-            <p th:text="${model.professionalAffiliations}"
-               th:unless="${#strings.isEmpty(model.professionalAffiliations)}">
-                Professional affiliation
-            </p>
-            <p th:if="${#strings.isEmpty(model.professionalAffiliations)}"
-               th:text="${model.completed} ? 'None declared' : 'Not answered'">
-                None declared
-            </p>
+        <dt th:if="${model.assessorProfileDetailsViewModel.address}">Address</dt>
+        <dd th:if="${model.assessorProfileDetailsViewModel.address}">
+            <th:block th:text="${model.assessorProfileDetailsViewModel.address.addressLine1}" /><br />
+            <th:block th:unless="${#strings.isEmpty(model.assessorProfileDetailsViewModel.address.addressLine2)}">
+                <th:block th:text="${model.assessorProfileDetailsViewModel.address.addressLine2}" /><br />
+            </th:block>
+            <th:block th:unless="${#strings.isEmpty(model.assessorProfileDetailsViewModel.address.addressLine3)}">
+                <th:block th:text="${model.assessorProfileDetailsViewModel.address.addressLine3}" /><br />
+            </th:block>
+            <th:block th:text="${model.assessorProfileDetailsViewModel.address.town}" /><br />
+            <th:block th:text="${model.assessorProfileDetailsViewModel.address.county}" /><br />
+            <th:block th:text="${model.assessorProfileDetailsViewModel.address.postcode}" />
+        </dd>
 
-            <h2 class="heading-medium no-margin-bottom">Appointments, directorships and consultancies</h2>
-            <table class="extra-margin" th:unless="${#lists.isEmpty(model.appointments)}">
-                <thead>
-                    <tr>
-                        <th scope="col">Organisation</th>
-                        <th scope="col">Position</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="appointment : ${model.appointments}">
-                        <td th:text="${appointment.organisation}">Aptrans Ltd</td>
-                        <td th:text="${appointment.position}">Executive consultant</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p th:if="${#lists.isEmpty(model.appointments)}"
-               th:text="${model.completed} ? 'None declared' : 'Not answered' ">
-                None declared
-            </p>
+        <dt th:if="${model.assessorProfileDetailsViewModel.phoneNumber}">Phone number</dt>
+        <dd th:if="${model.assessorProfileDetailsViewModel.phoneNumber}" th:text="${model.assessorProfileDetailsViewModel.phoneNumber}" />
 
-            <h2 class="heading-medium no-margin-bottom">Other financial interests</h2>
+        <dt>Email address</dt>
+        <dd th:text="${model.assessorProfileDetailsViewModel.email}" />
+    </dl>
 
-            <p th:if="${model.financialInterests}" th:text="${model.financialInterests}">Financial interests</p>
-            <p th:unless="${model.financialInterests}"
-               th:text="${model.completed} ? 'None declared' : 'Not answered'">
-                None declared
-            </p>
 
-            <h2 class="heading-medium no-margin-bottom">Close family member appointments, directorships and consultancies</h2>
-            <table class="extra-margin" th:unless="${#lists.isEmpty(model.familyAffiliations)}">
-                <thead>
-                    <tr>
-                        <th scope="col">Relation</th>
-                        <th scope="col">Organisation</th>
-                        <th scope="col">Position</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="familyAffiliation : ${model.familyAffiliations}">
-                        <td th:text="${familyAffiliation.relation}">Sister</td>
-                        <td th:text="${familyAffiliation.organisation}">Innovate UK</td>
-                        <td th:text="${familyAffiliation.position}">Executive consultant</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p th:if="${#lists.isEmpty(model.familyAffiliations)}"
-               th:text="${model.completed} ? 'None declared' : 'Not answered' ">
-                None declared
-            </p>
+    <!--<div class="grid-row extra-margin">-->
+    <!--<div class="column-half">-->
+    <!--<a th:href="@{/assessor/dashboard}" class="button">Return to assessor dashboard</a>-->
+    <!--</div>-->
+    <!--<div class="column-half alignright">-->
+    <!--<a th:href="@{/profile/details/edit}" class="button-secondary">Edit</a>-->
+    <!--</div>-->
+    <!--</div>-->
 
-            <h2 class="heading-medium no-margin-bottom">Close family members' other financial interests</h2>
-            <p th:if="${model.familyFinancialInterests}" th:text="${model.familyFinancialInterests}">Family members' financial interests</p>
-            <p th:unless="${model.familyFinancialInterests}"
-               th:text="${model.completed} ? 'None declared' : 'Not answered'">
-                None declared
-            </p>
+    <ul class="inline-nav">
+        <li class="not-selected">
+            <a th:href="@{/profile/details/skills}">Skills</a>
+        </li>
+        <li class="selected">
+            <a th:href="@{/profile/details/declaration}">DOI</a>
+        </li>
+    </ul>
 
-            <div class="form-footer">
-                <div class="form-footer__actions">
-                    <a th:href="@{/profile/declaration/edit}">Edit</a>
-                </div>
-            </div>
+    <h2 class="heading-medium no-margin-bottom">Principal employer and role</h2>
+    <p th:if="${model.principalEmployer}">
+        <th:block th:text="${model.principalEmployer}">ASDF solutions</th:block><br />
+        <th:block th:text="${model.role}">CEO</th:block>
+    </p>
+    <p th:unless="${model.principalEmployer}">Not answered</p>
 
-            <div class="extra-margin">
-                <a th:href="@{/assessor/dashboard}" class="button-secondary">Return to assessor dashboard</a>
-            </div>
+    <h2 class="heading-medium no-margin-bottom">Professional affiliations</h2>
+    <p th:text="${model.professionalAffiliations}"
+       th:unless="${#strings.isEmpty(model.professionalAffiliations)}">
+        Professional affiliation
+    </p>
+    <p th:if="${#strings.isEmpty(model.professionalAffiliations)}"
+       th:text="${model.completed} ? 'None declared' : 'Not answered'">
+        None declared
+    </p>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
-        </main>
+    <h2 class="heading-medium no-margin-bottom">Appointments, directorships and consultancies</h2>
+    <table class="extra-margin" th:unless="${#lists.isEmpty(model.appointments)}">
+        <thead>
+        <tr>
+            <th scope="col">Organisation</th>
+            <th scope="col">Position</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="appointment : ${model.appointments}">
+            <td th:text="${appointment.organisation}">Aptrans Ltd</td>
+            <td th:text="${appointment.position}">Executive consultant</td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(model.appointments)}"
+       th:text="${model.completed} ? 'None declared' : 'Not answered' ">
+        None declared
+    </p>
 
-        <th:block th:insert="fragments/layout :: footer" />
-        <th:block th:insert="fragments/layout :: body-end" />
-        <th:block th:insert="fragments/service-layout :: body-end" />
-    </body>
+    <h2 class="heading-medium no-margin-bottom">Other financial interests</h2>
+
+    <p th:if="${model.financialInterests}" th:text="${model.financialInterests}">Financial interests</p>
+    <p th:unless="${model.financialInterests}"
+       th:text="${model.completed} ? 'None declared' : 'Not answered'">
+        None declared
+    </p>
+
+    <h2 class="heading-medium no-margin-bottom">Close family member appointments, directorships and consultancies</h2>
+    <table class="extra-margin" th:unless="${#lists.isEmpty(model.familyAffiliations)}">
+        <thead>
+        <tr>
+            <th scope="col">Relation</th>
+            <th scope="col">Organisation</th>
+            <th scope="col">Position</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="familyAffiliation : ${model.familyAffiliations}">
+            <td th:text="${familyAffiliation.relation}">Sister</td>
+            <td th:text="${familyAffiliation.organisation}">Innovate UK</td>
+            <td th:text="${familyAffiliation.position}">Executive consultant</td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(model.familyAffiliations)}"
+       th:text="${model.completed} ? 'None declared' : 'Not answered' ">
+        None declared
+    </p>
+
+    <h2 class="heading-medium no-margin-bottom">Close family members' other financial interests</h2>
+    <p th:if="${model.familyFinancialInterests}" th:text="${model.familyFinancialInterests}">Family members' financial interests</p>
+    <p th:unless="${model.familyFinancialInterests}"
+       th:text="${model.completed} ? 'None declared' : 'Not answered'">
+        None declared
+    </p>
+
+    <div class="form-footer">
+        <div class="form-footer__actions"><a th:href="@{/profile/declaration/edit}">Edit</a></div>
+        <div class="form-footer__info">
+            <span class="textarea-footer"></span>
+            <span class="update-label">Created by IFS Web System User on </span>
+            <span class="update-details">13 September 2017</span>
+        </div>
+    </div>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
 </html>

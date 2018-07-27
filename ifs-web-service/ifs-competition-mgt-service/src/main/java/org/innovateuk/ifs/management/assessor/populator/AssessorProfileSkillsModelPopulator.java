@@ -43,7 +43,7 @@ public class AssessorProfileSkillsModelPopulator {
         return new AssessorProfileSkillsViewModel(
                 competition,
                 user.getId(),
-                user.getFirstName() + " " + user.getLastName(),
+                user.getName(),
                 user.getEmail(),
                 user.getPhoneNumber(),
                 profile.getAddress(),

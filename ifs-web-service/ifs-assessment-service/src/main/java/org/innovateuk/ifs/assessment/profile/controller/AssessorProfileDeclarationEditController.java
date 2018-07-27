@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -38,9 +37,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
  */
 @Controller
 @RequestMapping("/profile/declaration")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileDeclarationController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileDeclarationEditController.class)
 @PreAuthorize("hasAuthority('assessor')")
-public class AssessorProfileDeclarationController {
+public class AssessorProfileDeclarationEditController {
 
     @Autowired
     private AffiliationRestService affiliationRestService;
@@ -58,10 +57,8 @@ public class AssessorProfileDeclarationController {
     private static final String FORM_ATTR_NAME = "form";
 
     @GetMapping
-    public String getDeclaration(Model model,
-                                 UserResource loggedInUser) {
-        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(loggedInUser));
-        return "profile/declaration-of-interest";
+    public String getDeclaration() {
+        return "redirect:/profile/details/declaration";
     }
 
     @GetMapping(path = "/edit")

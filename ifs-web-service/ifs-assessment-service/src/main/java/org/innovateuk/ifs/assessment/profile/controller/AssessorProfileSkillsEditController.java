@@ -31,9 +31,9 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/profile/skills")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileSkillsController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileSkillsEditController.class)
 @PreAuthorize("hasAuthority('assessor')")
-public class AssessorProfileSkillsController {
+public class AssessorProfileSkillsEditController {
 
     @Autowired
     private ProfileRestService profileRestService;
@@ -47,11 +47,8 @@ public class AssessorProfileSkillsController {
     private static final String FORM_ATTR_NAME = "form";
 
     @GetMapping
-    public String getReadonlySkills(Model model,
-                                    UserResource loggedInUser) {
-        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccess();
-        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(profileSkillsResource));
-        return "profile/skills";
+    public String getReadonlySkills() {
+        return "redirect:/profile/details/skills";
     }
 
     @GetMapping("/edit")

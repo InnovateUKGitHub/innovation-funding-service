@@ -7,7 +7,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessor.populator.AssessorProfileSkillsModelPopulator;
-import org.innovateuk.ifs.management.assessor.viewmodel.AssessorProfileSkillsViewModel;
+import org.innovateuk.ifs.assessor.profile.viewmodel.AssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Before;

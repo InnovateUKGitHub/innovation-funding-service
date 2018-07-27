@@ -4,7 +4,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileSkillsForm;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditSkillsModelPopulator;
-import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileEditSkillsViewModel;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
@@ -45,11 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTest<AssessorProfileSkillsController> {
-
-    @Spy
-    @InjectMocks
-    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
+public class AssessorProfileSkillsEditControllerTest extends BaseControllerMockMVCTest<AssessorProfileSkillsEditController> {
 
     @Spy
     @InjectMocks
@@ -59,8 +54,8 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
     private ProfileRestService profileRestService;
 
     @Override
-    protected AssessorProfileSkillsController supplyControllerUnderTest() {
-        return new AssessorProfileSkillsController();
+    protected AssessorProfileSkillsEditController supplyControllerUnderTest() {
+        return new AssessorProfileSkillsEditController();
     }
 
     @Test

@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCTest<AssessorProfileDetailsController> {
+public class AssessorProfileDetailsEditControllerTest extends BaseControllerMockMVCTest<AssessorProfileDetailsEditController> {
     @Spy
     @InjectMocks
     private AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator;
@@ -56,8 +56,8 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
     private Validator validator;
 
     @Override
-    protected AssessorProfileDetailsController supplyControllerUnderTest() {
-        return new AssessorProfileDetailsController();
+    protected AssessorProfileDetailsEditController supplyControllerUnderTest() {
+        return new AssessorProfileDetailsEditController();
     }
 
     @Test
