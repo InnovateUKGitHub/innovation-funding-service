@@ -101,7 +101,7 @@ public class AssessorProfileSkillsModelPopulatorTest {
         assertEquals(expectedFirstName + " " + expectedLastName, viewModel.getName());
         assertEquals(expectedEmail, viewModel.getEmail());
         assertEquals(expectedPhone, viewModel.getPhone());
-        assertEquals(expectedSkills, viewModel.getSkills());
+        assertEquals(expectedSkills, viewModel.getSkillAreas());
         assertEquals(expectedAddress, viewModel.getAddress());
         assertEquals(expectedBusinessType.getDisplayName(), viewModel.getBusinessType());
         assertEquals(2, viewModel.getInnovationSectors().size());

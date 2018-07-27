@@ -121,7 +121,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
         assertEquals("Test Tester", model.getName());
         assertEquals("012345", model.getPhone());
-        assertEquals("A Skill", model.getSkills());
+        assertEquals("A Skill", model.getSkillAreas());
         assertEquals(ACADEMIC.getDisplayName(), model.getBusinessType());
         assertEquals("test@test.com", model.getEmail());
         assertEquals(2, model.getInnovationSectors().size());
@@ -169,7 +169,6 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
     @Test
     public void displayAssessorProfile_backUrlPreservesQueryParams() throws Exception {
         Long assessorId = 1L;
-        Long applicationId = 2L;
 
         AddressResource expectedAddress = getExpectedAddress();
         List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
@@ -177,7 +176,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
 
-        String expectedBackUrl = "/assessment/competition/" + competition.getId() + "/application/" + applicationId + "/assessors?param1=abc&param2=def%26ghi";
+        String expectedBackUrl = "/competition/" + competition.getId() + "/assessors/find?param1=abc&param2=def%26ghi";
 
         mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId)
                 .param("param1", "abc")
