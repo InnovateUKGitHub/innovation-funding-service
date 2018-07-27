@@ -181,9 +181,10 @@ hr,
     color: $govuk-link-colour;
 
     &:active,
-     &:hover {
-       color: $govuk-link-hover-colour;
-     }
+    &:hover {
+      color: $govuk-link-hover-colour;
+    }
+
     &:visited {
       color: $govuk-link-visited-colour;
     }

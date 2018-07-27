@@ -155,13 +155,13 @@ col {
 */
 .icon-print {
   @include govuk-device-pixel-ratio() {
-    background-image: file-url("ifs-images/icons/icon-print-2x.png");
+    background-image: url("ifs-images/icons/icon-print-2x.png");
     background-size: 100%;
   }
 
   width: 16px;
   height: 18px;
-  background-image: file-url("ifs-images/icons/icon-print.png");
+  background-image: url("ifs-images/icons/icon-print.png");
 }
 
 .questions-dl {

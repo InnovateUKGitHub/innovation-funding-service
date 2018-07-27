@@ -7,7 +7,7 @@
     </div>
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Initial details',size='govuk-heading-xl'" />
-    <div class="panel">
+    <div class="govuk-body panel">
         This will create a new competition. You will be able to add more details later on.
     </div>
 
@@ -18,7 +18,7 @@
 
         <th:block th:if="${model.general.editable}" id="section-1-edit">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('title')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="title">
+                <label class="govuk-label govuk-label--s" for="title">
                     Competition title
                 </label>
                 <th:block th:if="${#fields.hasErrors('title')}">
@@ -35,7 +35,7 @@
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('competitionTypeId')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="competitionTypeId">
+                <label class="govuk-label govuk-label--s" for="competitionTypeId">
                     Competition type
                 </label>
                 <th:block th:if="${#fields.hasErrors('competitionTypeId')}">
@@ -60,7 +60,7 @@
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="innovationSectorCategoryId">
+                <label class="govuk-label govuk-label--s" for="innovationSectorCategoryId">
                     Innovation sector
                 </label>
                 <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
@@ -85,7 +85,7 @@
                 </legend>
             <th:block th:each="innovationAreaCategoryId,status : ${competitionSetupForm.innovationAreaCategoryIds}">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')} ? 'govuk-form-group--error'" th:id="innovation-row-__${status.index}__">
-                    <label class="govuk-label"
+                    <label class="govuk-label govuk-label--s"
                            th:for="innovationAreaCategoryIds[__${status.index}__]"
                            th:classappend="${status.index > 0} ? 'govuk-visually-hidden': ''">
                         Innovation area
@@ -110,7 +110,7 @@
             </fieldset>
             <th:block th:if="${competitionSetupForm.innovationAreaCategoryIds == null or competitionSetupForm.innovationAreaCategoryIds.size() == 0}">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryIds')}? 'govuk-form-group--error'" th:id="innovation-row-0">
-                    <label class="govuk-label" th:for="innovationAreaCategoryIds">
+                    <label class="govuk-label govuk-label--s" th:for="innovationAreaCategoryIds">
                         Innovation area
                     </label>
                     <th:block th:if="${#fields.hasErrors('innovationAreaCategoryIds')}">
@@ -202,7 +202,7 @@
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationLeadUserId')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="innovationLeadUserId">
+                <label class="govuk-label govuk-label--s" for="innovationLeadUserId">
                     Competition Innovation Lead
                 </label>
                 <th:block th:if="${#fields.hasErrors('innovationLeadUserId')}">
@@ -219,7 +219,7 @@
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('executiveUserId')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="executiveUserId">
+                <label class="govuk-label govuk-label--s" for="executiveUserId">
                     Portfolio Manager
                 </label>
                 <th:block th:if="${#fields.hasErrors('executiveUserId')}">

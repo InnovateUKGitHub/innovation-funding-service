@@ -146,6 +146,14 @@ table {
 
       line-height:1.15;
     }
+
+    &.button-secondary {
+      @include govuk-media-query(mobile) {
+        margin-top:0px;
+      }
+
+      line-height:1.15;
+    }
   }
 
   &.govuk-input--error,
