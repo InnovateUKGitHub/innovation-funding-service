@@ -121,7 +121,7 @@ table {
 
     tr{
       &.form-group-row-validated{
-        border-top: 1px solid #bfc1c3;
+        border-top: 1px solid $govuk-border-colour;
 
         &:first-child{
           border:none;
@@ -135,7 +135,7 @@ table {
 
         td{
           &.form-group-error {
-            border-left: 4px solid #b10e1e;
+            border-left: 4px solid $govuk-error-colour;
             margin-right: 15px;
             padding-left: 10px;
           }
@@ -173,5 +173,20 @@ hr,
   .govuk-link {
     color: govuk-colour("white");
 
+  }
+}
+
+.govuk-body {
+  a {
+    color: $govuk-link-colour;
+
+    &:active,
+    &:hover {
+      color: $govuk-link-hover-colour;
+    }
+
+    &:visited {
+      color: $govuk-link-visited-colour;
+    }
   }
 }

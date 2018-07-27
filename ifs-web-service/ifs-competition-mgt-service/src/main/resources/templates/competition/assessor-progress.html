@@ -25,20 +25,20 @@
 
         <h3 class="govuk-heading-m govuk-!-margin-0">Innovation area and skills</h3>
 
-        <div class="govuk-grid-row">
+        <div class="govuk-grid-row govuk-!-margin-top-6">
             <div class="govuk-grid-column-one-half">
-                <h4 class="govuk-heading-s">Innovation area</h4>
-                <ul>
+                <h4 class="govuk-heading-s govuk-!-margin-bottom-0">Innovation area</h4>
+                <ul class="govuk-list">
                     <li th:each="area : ${model.innovationAreas}" th:text="${area}" />
                 </ul>
             </div>
             <div class="govuk-grid-column-one-half">
-                <h4 class="govuk-heading-s">Type</h4>
-                <span th:text="${#strings.isEmpty(model.businessType)} ? 'Unknown' : ${model.businessType}" />
+                <h4 class="govuk-heading-s govuk-!-margin-bottom-0">Type</h4>
+                <span class="govuk-body" th:text="${#strings.isEmpty(model.businessType)} ? 'Unknown' : ${model.businessType}" />
             </div>
         </div>
 
-        <div class="govuk-!-margin-top-6">
+        <div class="govuk-body govuk-!-margin-top-3 govuk-!-bottom-top-6">
             <a th:href="@{/competition/{cid}/assessors/profile/{aid}(cid=${model.competitionId},aid=${model.assessorId})} + ${originQuery}"
                th:text="'Review assessor'"
                class="govuk-link" />
@@ -92,7 +92,7 @@
                         </td>
                         <td class="govuk-table__cell" th:text="${app.applicationName}">Application name</td>
                         <td class="govuk-table__cell" th:text="${app.leadOrganisation}">Lead organisation</td>
-                        <td class="govuk-table__cell" th:text="${app.totalAssessors}" class="numeric">3</td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${app.totalAssessors}">3</td>
                         <td class="govuk-table__cell aligncentre"
                             th:if="${model.competitionInAssessment}"
                             th:text="${app.notified} ? 'Yes' : '-'">
@@ -251,7 +251,7 @@
                 */-->
         <div class="govuk-grid-row sorting">
             <div class="govuk-grid-column-one-half">
-                <div class="data">
+                <div class="govuk-body govuk-!-margin-bottom-0 data">
                     <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.applicationsView.totalApplications}">2</span>
                     <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Applications</span>
                 </div>

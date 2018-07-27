@@ -53,6 +53,19 @@
   background-image: url('../images/ifs-images/icons/icon-alert.png');
   color: $govuk-error-colour;
   border-color: $govuk-error-colour;
+
+  .govuk-heading-m,
+  .govuk-heading-s,
+  .govuk-heading-l,
+  .govuk-body {
+    color: $govuk-error-colour;
+  }
+}
+
+.govuk-list {
+  li {
+    color:  $govuk-error-colour;
+  }
 }
 
 .message-alert,

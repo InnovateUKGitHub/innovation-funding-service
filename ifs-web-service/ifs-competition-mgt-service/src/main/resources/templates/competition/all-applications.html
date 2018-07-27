@@ -16,35 +16,31 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='All applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
                 <h2 class="govuk-heading-m">Key statistics</h2>
-                <ul class="govuk-grid-column-one-quarter govuk-!-margin-bottom-6">
+                <ul class="govuk-grid-row govuk-list govuk-!-margin-bottom-6">
                     <li class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="govuk-heading-l" th:text="${model.totalNumberOfApplications}">22</span>
-                            <br />
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.totalNumberOfApplications}">22</span>
                             <small>Total number of applications</small>
                         </div>
                     </li>
 
                     <li class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="govuk-heading-l" th:text="${model.applicationsStarted}">12</span>
-                            <br />
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsStarted}">12</span>
                             <small>Applications started</small>
                         </div>
                     </li>
 
                     <li class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="govuk-heading-l" th:text="${model.applicationsInProgress}">6</span>
-                            <br />
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsInProgress}">6</span>
                             <small>Applications beyond 50%</small>
                         </div>
                     </li>
 
                     <li class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="govuk-heading-l" th:text="${model.applicationsSubmitted}">4</span>
-                            <br />
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsSubmitted}">4</span>
                             <small>Applications submitted</small>
                         </div>
                     </li>
@@ -55,7 +51,7 @@
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
                                 <h2 class="govuk-fieldset__heading">Filter applications</h2>
                             </legend>
-                            <div class="govuk-grid-column-one-quarter">
+                            <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-two-thirds">
                                     <label class="govuk-label"
                                            for="filterSearch">Search by application number.</label>
@@ -75,17 +71,17 @@
                             <a href="?" th:href="'?sort=' + ${model.sorting}" class="govuk-link">Clear all filters</a>
                         </div>
                     </div>
-                    <div class="govuk-grid-column-one-quarter sorting">
+                    <div class="govuk-grid-row sorting">
                         <div class="govuk-grid-column-one-half">
                             <p class="govuk-body"><span class="govuk-heading-xl govuk-!-margin-0" th:text="${model.pagination.totalCount}">22</span>
                                 <span class="govuk-heading-s">applications</span>
                             </p>
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
-                            <label for="sort-by">Sort by</label>
+                            <label for="sort-by" class="govuk-label">Sort by</label>
                             <select id="sort-by"
                                     name="sort"
-                                    class="js-auto-submit govuk-select">
+                                    class="js-auto-submit govuk-select govuk-input--width-20">
                                 <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>
                                 <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead</option>
                                 <option value="percentageComplete" th:selected="${(model.sorting == 'percentageComplete')}">Percentage complete</option>
@@ -110,7 +106,7 @@
                             <tr class="govuk-table__row filtered-result" th:each="row, iterStat : ${model.applications}">
                                 <td class="govuk-table__cell">
                                     <a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
-                                       th:text="${row.id}">194731</a>
+                                       th:text="${row.id}" class="govuk-link">194731</a>
                                 </td>
                                 <td class="govuk-table__cell" th:text="${row.projectTitle}">Machine learning in robots</td>
                                 <td class="govuk-table__cell" th:text="${row.lead}">PWC</td>

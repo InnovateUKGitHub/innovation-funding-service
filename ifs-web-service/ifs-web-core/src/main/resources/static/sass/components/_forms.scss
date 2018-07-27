@@ -146,6 +146,14 @@ table {
 
       line-height:1.15;
     }
+
+    &.button-secondary {
+      @include govuk-media-query(mobile) {
+        margin-top:0px;
+      }
+
+      line-height:1.15;
+    }
   }
 
   &.govuk-input--error,
@@ -429,7 +437,7 @@ td {
   }
 }
 
-.form-group {
+.govuk-form-group {
   &.download {
     padding: 10px 0 10px 50px;
     background: url(../images/ifs-images/icons/icon-download.png) no-repeat;

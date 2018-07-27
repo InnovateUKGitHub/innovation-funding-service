@@ -32,7 +32,7 @@
 	</th:block>
 
 	<th:block th:if="${param.compName != null and param.compName[0] == 'updated'}">
-		<div class="panel" th:unless="${param.status != null and param.status[0] == 'approved'}">
+		<div class="govuk-body panel" th:unless="${param.status != null and param.status[0] == 'approved'}">
 			<h2 class="govuk-heading-m govuk-!-margin-top-0">Company name updated since original application</h2>
 
 			<dl class="standard-definition-list">
@@ -49,7 +49,7 @@
 		</div>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
-			<div class="panel">
+			<div class="govuk-body panel">
 				<dl class="standard-definition-list">
 					<dt>Name in application</dt>
 					<dd>Aptran</dd>
@@ -109,7 +109,7 @@
 
 			<th:block th:if="${param.orgSizeGroup != null and param.orgSizeGroup[0] == 'Large'}">
 
-				<div class="panel">
+				<div class="govuk-body panel">
 
 					<h3 class="govuk-heading-s govuk-!-margin-0">Business size has been changed from medium (60%) to large (50% grant).</h3>
 
@@ -130,7 +130,7 @@
 
 			<th:block th:if="${param.orgSizeGroup != null and param.orgSizeGroup[0] == 'Micro'}">
 
-				<div class="panel">
+				<div class="govuk-body panel">
 
 					<h3 class="govuk-heading-s govuk-!-margin-0">Changing the business size from medium (60% grant) to small (70% grant).</h3>
 

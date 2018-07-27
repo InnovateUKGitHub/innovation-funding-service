@@ -19,7 +19,7 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application finances',size='govuk-heading-xl'" />
-        <div class="panel">
+        <div class="govuk-body panel">
             The competition template will select the following finance sections for each partner.
         </div>
         <form th:if="${model.editable}" th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" method="POST"

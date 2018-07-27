@@ -49,7 +49,7 @@
                                         </label>
                                     </div>
 
-                                    <div id="registeredAddress" class="panel" th:if="${model.registeredAddress}">
+                                    <div id="registeredAddress" class="govuk-body panel" th:if="${model.registeredAddress}">
                                         <p class="govuk-body">
                                             <th:block th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}">
                                                 <th:block th:text="${addressLine}">An address line</th:block><br />
@@ -74,7 +74,7 @@
                                         </label>
                                     </div>
 
-                                    <div id="operatingAddress" class="panel" th:if="${model.operatingAddress}">
+                                    <div id="operatingAddress" class="govuk-body panel" th:if="${model.operatingAddress}">
                                         <p class="govuk-body">
                                             <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
                                                 <th:block th:text="${addressLine}">An address line</th:block><br />
@@ -99,7 +99,7 @@
                                         </label>
                                     </div>
 
-                                    <div id="projectAddress" class="panel" th:if="${model.projectAddress}">
+                                    <div id="projectAddress" class="govuk-body panel" th:if="${model.projectAddress}">
                                         <p class="govuk-body">
                                             <th:block th:each="addressLine : ${model.projectAddress.getNonEmptyLines()}">
                                                 <th:block th:text="${addressLine}">An address line</th:block><br />
@@ -123,7 +123,7 @@
                                     </label>
                                 </div>
 
-                                <div id="custom-postcode" class="panel">
+                                <div id="custom-postcode" class="govuk-body panel">
                                     <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}" />
                                 </div>
                             </div>

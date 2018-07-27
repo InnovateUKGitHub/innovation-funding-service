@@ -26,7 +26,7 @@
               novalidate="novalidate"
               data-section="milestones">
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('title')} ? 'govuk-form-group--error'">
-              <label class="govuk-label" for="title">
+              <label class="govuk-label--s" for="title">
                   Competition title
               </label>
               <th:block th:if="${#fields.hasErrors('title')}">
@@ -41,7 +41,7 @@
                      th:attr="data-required-errormessage=#{validation.standard.title.required}" />
           </div>
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'govuk-form-group--error'">
-              <label class="govuk-label" for="innovationSectorCategoryId">
+              <label class="govuk-label--s" for="innovationSectorCategoryId">
                   Innovation sector
               </label>
               <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
@@ -58,7 +58,7 @@
           </div>
 
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryId')} ? 'govuk-form-group--error'">
-              <label class="govuk-label" for="innovationAreaCategoryId">
+              <label class="govuk-label--s" for="innovationAreaCategoryId">
                   Innovation area
               </label>
               <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">

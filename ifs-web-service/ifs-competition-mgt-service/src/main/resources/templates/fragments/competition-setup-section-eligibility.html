@@ -76,9 +76,9 @@
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="leadApplicantTypes">
                        <h2 class="govuk-fieldset__heading">Lead applicant</h2>
                     </legend>
-                    <span class="hint">Select the lead applicant type required.</span>
+                    <span class="govuk-hint">Select the lead applicant type required.</span>
                     <th:block th:if="${#fields.hasErrors('leadApplicantTypes')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('leadApplicantTypes')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('leadApplicantTypes')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item"
@@ -107,9 +107,9 @@
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="researchParticipationAmountId">
                         <h2 class="govuk-fieldset__heading">Research participation</h2>
                     </legend>
-                    <span class="hint">This indicates the maximum level of research participation allowed.</span>
+                    <span class="govuk-hint">This indicates the maximum level of research participation allowed.</span>
                     <th:block th:if="${#fields.hasErrors('researchParticipationAmountId')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}"></span>
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}"></span>
                     </th:block>
                     <select class="govuk-select govuk-!-width-one-quarter"
                             name="researchParticipationAmountId"
@@ -131,9 +131,9 @@
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="resubmission">
                         <h2 class="govuk-fieldset__heading">Are resubmissions allowed?</h2>
                     </legend>
-                    <span class="hint">Are applicants able to resubmit an application?</span>
+                    <span class="govuk-hint">Are applicants able to resubmit an application?</span>
                     <th:block th:if="${#fields.hasErrors('resubmission')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('resubmission')}" th:text="${err}"></span>
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('resubmission')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios govuk-radios--inline">
                         <div class="govuk-radios__item">

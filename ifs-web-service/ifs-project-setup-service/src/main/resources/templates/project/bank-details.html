@@ -120,7 +120,7 @@
                                 Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
                             </label>
                         </div>
-                        <div id="registeredAddress" class="panel">
+                        <div id="registeredAddress" class="govuk-body panel">
                             <p class="govuk-body">
                                 <th:block th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}">
                                     <th:block th:text="${addressLine}">An address line</th:block><br />
@@ -143,7 +143,7 @@
                                 Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
                             </label>
                         </div>
-                        <div id="operatingAddress" class="panel">
+                        <div id="operatingAddress" class="govuk-body panel">
                             <p class="govuk-body">
                                 <th:block th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}">
                                     <th:block th:text="${addressLine}">An address line</th:block><br />
@@ -166,7 +166,7 @@
                             Enter an alternative billing address
                         </label>
                     </div>
-                    <div id="custom-postcode" class="panel">
+                    <div id="custom-postcode" class="govuk-body panel">
                         <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}" />
                     </div>
                 </div>

@@ -63,7 +63,7 @@
                                 <span th:text="${type.name}"></span>
                                 <span class="govuk-hint" th:text="${type.description}"></span>
                             </label>
-                            <div th:if="${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id}" id="rto-guidance" class="panel">
+                            <div th:if="${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id}" id="rto-guidance" class="govuk-body panel">
                                 <h2 class="govuk-heading-s">You can only lead an application as an RTO if both the following rules are met:</h2>
                                 <ul class="govuk-list govuk-list--bullet">
                                     <li>you must prove within the scope section of your application that you are the best placed consortium partner to lead this project</li>

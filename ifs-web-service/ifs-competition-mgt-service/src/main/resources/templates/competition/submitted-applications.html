@@ -16,19 +16,17 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submitted applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='govuk-heading-xl'" />
 
                 <h2 class="govuk-heading-m">Key statistics</h2>
-                <ul class="govuk-grid-row govuk-!-margin-bottom-6">
+                <ul class="govuk-grid-row govuk-list govuk-!-margin-bottom-6">
                     <li class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="govuk-heading-m" th:text="${#temporals.format(model.assessmentDeadline, 'd MMMM Y')}">17 November 2016</span>
-                            <br />
+                            <span class="govuk-heading-m govuk-!-margin-0" th:text="${#temporals.format(model.assessmentDeadline, 'd MMMM Y')}">17 November 2016</span>
                             <small>Assessment deadline</small>
                         </div>
                     </li>
 
                     <li class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="govuk-heading-l" th:text="${model.applicationsSubmitted}">18</span>
-                            <br />
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsSubmitted}">18</span>
                             <small>Applications submitted</small>
                         </div>
                     </li>
@@ -65,10 +63,10 @@
                             </p>
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
-                            <label for="sort-by">Sort by</label>
+                            <label for="sort-by" class="govuk-label">Sort by</label>
                             <select id="sort-by"
                                     name="sort"
-                                    class="js-auto-submit govuk-select">
+                                    class="js-auto-submit govuk-select govuk-input--width-20">
                                 <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>
                                 <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead</option>
                             </select>
@@ -95,7 +93,8 @@
                                 <td class="govuk-table__cell">
                                     <a
                                     th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
-                                    th:text="${row.id}">194731</a>
+                                    th:text="${row.id}"
+                                    class="govuk-link">194731</a>
                                 </td>
                                 <td class="govuk-table__cell" th:text="${row.projectTitle}">Machine learning in robots</td>
                                 <td class="govuk-table__cell" th:text="${row.lead}">PWC</td>
