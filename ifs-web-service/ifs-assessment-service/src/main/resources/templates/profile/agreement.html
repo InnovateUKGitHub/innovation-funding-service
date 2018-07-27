@@ -15,7 +15,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessor agreement',size='govuk-heading-xl'" />
                 <p class="govuk-body">Please read through all of the terms of service before agreeing.</p>
 
-                <div ifs:utext="${model.text}" />
+                <div class="govuk-body" ifs:utext="${model.text}" />
 
                 <p class="govuk-hint">You can access this assessor agreement at any time from your profile. <a target="_blank" href="/assessment/documents/New simple assessor agreement.pdf">Download assessor agreement (opens in a new window)</a>.</p>
 
@@ -25,7 +25,7 @@
                     <a th:href="@{/assessor/dashboard}" class="govuk-link">Cancel</a>
                 </form>
 
-                <p class="govuk-!-margin-top-6" th:text="|You signed the assessor agreement on ${#temporals.format(model.agreementSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">
+                <p class="govuk-body govuk-!-margin-top-6" th:text="|You signed the assessor agreement on ${#temporals.format(model.agreementSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">
                     <span class="icon icon-important"></span>
                     You signed the assessor agreement on 1 January 1970.
                 </p>

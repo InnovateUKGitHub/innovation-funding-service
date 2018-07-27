@@ -77,7 +77,7 @@
             <option value="">Set score</option>
             <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,model.maximumScore)}" />
         </select>
-        / <span id="aria-desc-assessor-question-score">
+        / <span id="aria-desc-assessor-question-score" class="govuk-body">
             <span class="govuk-visually-hidden">out of</span>
             <th:block th:text="${model.maximumScore}">10</th:block>
         </span>

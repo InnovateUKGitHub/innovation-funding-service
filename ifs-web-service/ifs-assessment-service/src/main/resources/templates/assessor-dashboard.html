@@ -71,7 +71,7 @@
                         <ul>
                             <li th:each="activeCompetition : ${model.activeCompetitions}">
                                 <div class="task">
-                                    <h3 class="govuk-heading-s"><a
+                                    <h3 class="govuk-heading-s"><a class="govuk-link"
                                         th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
                                         th:text="${activeCompetition.displayLabel}"/></h3>
                                     <div th:if="${!activeCompetition.hasPendingAssessments() && !activeCompetition.hasApplicationsToAssess()}">
