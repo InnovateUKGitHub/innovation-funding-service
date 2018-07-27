@@ -24,7 +24,7 @@ small {
   @extend .form-hint;
   @include govuk-font(16);
   display: inline;
-  color: govuk-colour("secondary-text-colour");
+  color: $govuk-secondary-text-colour;
 }
 
 .list-indent {
