@@ -40,7 +40,7 @@ SELECT  ct.template_competition_id, gcm.id
 FROM
    grant_claim_maximum gcm
 INNER JOIN competition_type ct ON gcm.competition_type_id = ct.id
-WHERE template_competition_id IS NOT null
+WHERE ct.template_competition_id IS NOT null
 ORDER BY ct.template_competition_id, gcm.id;
 
 -- Insert grant claim maximum competition values for all of the non-template competitions
