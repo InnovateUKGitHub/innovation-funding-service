@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_ID_KEY;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -148,7 +149,7 @@ public class CompetitionSetupProjectDocumentController {
             RestResult<ProjectDocumentResource> updateResult = competitionSetupProjectDocumentRestService.save(projectDocumentResource);
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> projectDocumentLandingPage(model, competitionId));
+                    failNowOrSucceedWith(failureView, () -> format(PROJECT_DOCUMENT_LANDING_REDIRECT, competitionId));
         });
     }
 
@@ -176,6 +177,6 @@ public class CompetitionSetupProjectDocumentController {
                                           Model model) {
 
         competitionSetupProjectDocumentRestService.delete(projectDocumentId);
-        return projectDocumentLandingPage(model, competitionId);
+        return format(PROJECT_DOCUMENT_LANDING_REDIRECT, competitionId);
     }
 }

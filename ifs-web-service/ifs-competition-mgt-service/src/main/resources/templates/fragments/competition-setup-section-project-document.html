@@ -1,5 +1,5 @@
 
-<!-- =================Section:Documents (10) =========================== -->
+<!-- =================Section:Project Documents (10) =========================== -->
 <th:block th:fragment="section-content">
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents in project setup',size='heading-xlarge'" />
@@ -7,16 +7,13 @@
     <h2 class="heading-small">Required documents</h2>
     <p class="form-hint">The project manager will have to upload these in project setup.</p>
 
-
     <form th:action="@{(${model.general.editable} ? '' : 'documents/edit')}"
           th:object="${landingPageForm}"
           th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
-          data-section="documents"
+          data-section="project-document"
           method="post" novalidate="novalidate">
-        
 
-        <div th:if="${model.general.editable}" id="section-3-edit">
-
+        <div th:if="${model.general.editable}">
             <div class="form-group">
                 <fieldset>
                     <div class="multiple-choice" th:each="document : ${model.general.competition.projectDocuments}" >
@@ -37,41 +34,12 @@
                 </fieldset>
             </div>
 
-          <!--   <div class="form-group">
-                <ul>
-                    <li th:each="document : ${landingPageForm.projectDocumentForms}" class="multiple-choice">
-                        <th:block th:with="checkboxId=${'projectDocumentForms[' + document.projectDocumentId + '].enabled'}">
-                            <div>
-                                <input type="hidden" 
-                                th:name="'projectDocumentForms[' + ${document.projectDocumentId} + '].projectDocumentId'"
-                               th:value="${document.projectDocumentId}">
-                                <input th:id=${checkboxId}
-                                    type="checkbox"
-                                    value="enabled"
-                                    th:checked=${document.enabled}
-                                />
-                                <label th:for=${checkboxId}>
-                                    <span th:text=${document.title}>document_title</span>
-                                    <span class="end-label-link">
-                                        <th>
-                                             <a th:href="@{/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/edit(competitionId=${model.general.competition.id}, projectDocumentId=${document.projectDocumentId})}">Edit</a>
-                                        </th>
-                                    </span>
-                                </label>
-                            </div>
-                        </th:block>
-                    </li>
-                </ul>
-            </div>
- -->
-            <!-- new link -->
             <th:form th:unless="${model.general.state.preventEdit}">
                 <p>
                     <a th:href="@{/competition/setup/{competitionId}/section/project-document/add(competitionId=${model.general.competition.id})}">Add document type</a>
                 </p>
             </th:form>
 
-             <!-- post button -->
             <button class="button" id="doneButton">Done</button>
         </div>
 
