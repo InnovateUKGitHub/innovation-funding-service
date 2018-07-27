@@ -16,16 +16,20 @@
 
          <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Document type',size='heading-xlarge'" />
          <form method="post"
+            novalidate="novalidate"
             th:object="${form}"
             th:action="@{'/competition/setup/{competitionId}/section/project-document/save'(competitionId=${competitionId})}"
-            novalidate="novalidate"
             >
             <input type="hidden" th:field="${form.enabled}" />
             <input type="hidden" th:field="${form.projectDocumentId}" />
+            <input type="hidden" th:field="${form.editable}" />
             <th:block id="section-input">
                <div class="form-group"  th:classappend="${#fields.hasErrors('title')} ? 'form-group-error'" >
                   <label class="form-label" for="title">
                   <span class="form-label-bold">Title</span>
+                  <th:block th:if="${#fields.hasErrors('title')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
+                  </th:block>
                   </label>
                   <input id="title"
                      class="form-control width-x-large"
@@ -40,19 +44,13 @@
                   <fieldset>
                      <legend id="acceptedFileTypesId">
                         <span class="form-label-bold">Accepted file types</span>
-                        <th:block th:if="${#fields.hasErrors('pdf')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('pdf')}" th:text="${err}"></span>
-                        </th:block>
                      </legend>
 
                      <div class="multiple-choice">
                         <input id="pdf"
                            type="checkbox"
-                           name="acceptedFileTypesId"
                            value="pdf"
                            th:field="${form.pdf}"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
                            />
                         <label th:for="pdf">
                         <span>PDF</span>
@@ -61,11 +59,8 @@
                      <div class="multiple-choice">
                         <input id="spreadsheet"
                            type="checkbox"
-                           name="acceptedFileTypesId"
                            value="spreadsheet"
                            th:field="${form.spreadsheet}"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.documentform.acceptedfiletypes.required}"
                            />
                         <label th:for="spreadsheet">
                         <span>spreadsheet</span>
@@ -76,14 +71,17 @@
                <div class="form-group"  th:classappend="${#fields.hasErrors('guidance')} ? 'form-group-error'">
                   <label class="form-label" for="guidance">
                      <span class="form-label-bold">Guidance</span>
+                     <th:block th:if="${#fields.hasErrors('guidance')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('guidance')}" th:text="${err}"></span>
+                    </th:block>
                   </label>
                   <div class="textarea-wrapped">
                      <textarea id="guidance"
-                        name="guidance"
+                        th:disabled="${form.editable}" 
                         rows="16"
                         class="form-control width-full"
                         data-editor="html"
-                        th:errorclass="form-control-error"
+                        th:classappend="${#fields.hasErrors('guidance')} ? 'form-control-error'"
                         maxlength="5000"
                         th:field="${form.guidance}"
                         required="required"
@@ -93,7 +91,7 @@
             </th:block>
             <th:form th:if="${form.projectDocumentId}">
                <p>
-                  <button type="submit" th:formaction="@{'/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/delete'(competitionId=${competitionId}, projectDocumentId=${form.projectDocumentId})}" name="removeDocument" class="buttonlink">Remove</button>
+                  <button type="submit" th:formaction="@{'/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/delete'(competitionId=${competitionId}, projectDocumentId=${form.projectDocumentId})}" formnovalidate name="removeDocument" class="buttonlink">Remove</button>
                </p>
             </th:form>
             <div class="extra-margin">
