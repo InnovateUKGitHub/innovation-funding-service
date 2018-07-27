@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
@@ -73,8 +75,6 @@ public class CompetitionSetupProjectDocumentController {
         return null;
     }
 
-
-
     @PostMapping("/landing-page")
     public String saveProjectDocumentLandingPage( @ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form,
                                                   BindingResult bindingResult,
@@ -82,12 +82,20 @@ public class CompetitionSetupProjectDocumentController {
                                                   @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                   Model model) {
 
-        System.out.println("Set a debug point here and ensure the form is populated correctly.");
+        Supplier<String> failureView = () -> projectDocumentLandingPage(model, competitionId);
+        Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId;
 
-        // cycle through posted data and rebuild the resources and then save
+        List<ProjectDocumentResource> projectDocumentResources =  competitionSetupProjectDocumentRestService.findByCompetitionId(competitionId).getSuccess();
+        projectDocumentResources.forEach(projectDocumentResource -> enableOrDisableProjectDocument(projectDocumentResource, form.getEnabledIds()));
 
+        RestResult<List<ProjectDocumentResource>> updateResult = competitionSetupProjectDocumentRestService.save(projectDocumentResources);
 
-        return null;
+        return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                failNowOrSucceedWith(failureView, successView);
+    }
+
+    private void enableOrDisableProjectDocument(ProjectDocumentResource projectDocumentResource, Set<Long> enabledIds) {
+        projectDocumentResource.setEnabled(enabledIds != null && enabledIds.contains(projectDocumentResource.getId()));
     }
 
     @GetMapping("/add")
@@ -96,9 +104,7 @@ public class CompetitionSetupProjectDocumentController {
 
         String redirect = doViewProjectDocument(model, competitionId);
 
-        ProjectDocumentForm form = new ProjectDocumentForm();
-        form.setEnabled(true);
-        form.setEditable(true);
+        ProjectDocumentForm form = new ProjectDocumentForm(true, true);
         return redirect != null ? redirect : doViewSaveProjectDocument(model, form);
     }
 
@@ -152,21 +158,16 @@ public class CompetitionSetupProjectDocumentController {
     }
 
     private ProjectDocumentResource createProjectDocumentResource(ProjectDocumentForm form, long competitionId) {
-
         ProjectDocumentResource projectDocumentResource = new ProjectDocumentResource(competitionId, form.getTitle(), form.getGuidance(), form.isEditable(), form.isEnabled(), form.isPdf(), form.isSpreadsheet());
 
         if (form.getProjectDocumentId() != null) {
             projectDocumentResource.setId(form.getProjectDocumentId());
         }
-
         return projectDocumentResource;
-
     }
 
-    public ProjectDocumentForm createProjectDocumentForm(ProjectDocumentResource resource) {
-
+    private ProjectDocumentForm createProjectDocumentForm(ProjectDocumentResource resource) {
         return new ProjectDocumentForm(resource.getId(), resource.getTitle(), resource.getGuidance(), resource.isEditable(), resource.isEnabled(), resource.isPdf(), resource.isSpreadsheet());
-
     }
 
     @PostMapping("/{projectDocumentId}/delete")
@@ -175,7 +176,6 @@ public class CompetitionSetupProjectDocumentController {
                                           Model model) {
 
         competitionSetupProjectDocumentRestService.delete(projectDocumentId);
-
         return projectDocumentLandingPage(model, competitionId);
     }
 }
