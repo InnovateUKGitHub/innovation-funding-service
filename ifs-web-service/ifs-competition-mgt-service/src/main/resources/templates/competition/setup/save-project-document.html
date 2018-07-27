@@ -84,7 +84,7 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('guidance')}" th:text="${err}"></span>
                     </th:block>
                   </label>
-                  <div class="textarea-wrapped">
+                  <div class="textarea-wrapped" id="guidance_wrapper">
                      <textarea id="guidance"
                         rows="16"
                         class="form-control width-full"
