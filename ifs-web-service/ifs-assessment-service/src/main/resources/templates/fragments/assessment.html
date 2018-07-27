@@ -31,7 +31,7 @@
        th:text="${linkTitle}" />
 </div>
 
-<div th:fragment="assessment-header-deadline-sub (linkTitle, linkUrl, linkClass, daysPercentage, daysLeft)">
+<div th:fragment="assessment-header-deadline-sub (linkTitle, linkUrl, daysPercentage, daysLeft)">
     <div class="sub-header">
         <a th:if="${linkTitle != null and linkUrl != null}"
            class="govuk-back-link"

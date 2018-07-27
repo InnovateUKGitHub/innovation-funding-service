@@ -201,32 +201,20 @@
 
 <!-- =========================== Element : subheader =========================== -->
 <th:block th:fragment="header-sub">
-    <span th:if="${javascriptBackLink}"
-          class="govuk-back-link"
-          th:attr="data-javascript-back-link=${linkTitle}"></span>
-    <a th:if="${linkTitle != null and linkUrl != null and javascriptBackLink != true}"
-       class="govuk-back-link"
-       th:href="${linkUrl}"
-       th:text="${linkTitle}" />
-</th:block>
-
-<th:block th:fragment="header-sub-generic">
     <div class="sub-header">
-        <div class="deadline">
-            <th:block th:text="${deadlineText}" />
-            <span th:text="${daysLeft}"></span>
+        <span th:if="${javascriptBackLink}"
+              class="govuk-back-link"
+              th:attr="data-javascript-back-link=${linkTitle}"></span>
+        <a th:if="${linkTitle != null and linkUrl != null and javascriptBackLink != true}"
+           class="govuk-back-link"
+           th:href="${linkUrl}"
+           th:text="${linkTitle}" />
+        <div class="deadline"
+             th:if="${currentCompetition != null && currentCompetition.open}">
+            <th:block th:text="${currentCompetition.getDaysLeft()}" />
+            days left to submit
         </div>
-        <strong th:text="${title}" />
     </div>
 </th:block>
-
-<th:block th:fragment="deadline">
-    <div class="deadline" th:if="${currentCompetition != null && currentCompetition.open}">
-        <th:block th:text="${currentCompetition.getDaysLeft()}" />
-    </div>
-</th:block>
-
-
-
 
 </html>

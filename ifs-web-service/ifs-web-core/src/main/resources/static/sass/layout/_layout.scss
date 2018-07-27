@@ -53,22 +53,6 @@
   padding: 5px 0px;
   position: relative;
 
-  nav {
-    display: inline;
-  }
-
-  a {
-    display: inline-block;
-    border-bottom: 1px solid govuk-colour("black");
-    color: govuk-colour("black");
-    line-height: 1.25;
-    margin-bottom: $govuk-gutter-half;
-    margin-top: $govuk-gutter-half;
-    position: relative;
-    text-decoration: none;
-    vertical-align: middle;
-  }
-
   .deadline {
     @include media-down(mobile) {
       @include govuk-font(14);
