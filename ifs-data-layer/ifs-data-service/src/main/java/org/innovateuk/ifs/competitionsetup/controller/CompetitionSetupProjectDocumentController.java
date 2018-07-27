@@ -6,6 +6,8 @@ import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupProject
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Controller for handling project documents during competition setup
  */
@@ -21,9 +23,19 @@ public class CompetitionSetupProjectDocumentController {
         return competitionSetupProjectDocumentService.save(projectDocumentResource).toGetResponse();
     }
 
+    @PostMapping("/save-all")
+    public RestResult<List<ProjectDocumentResource>> save(@RequestBody List<ProjectDocumentResource> projectDocumentResources) {
+        return competitionSetupProjectDocumentService.saveAll(projectDocumentResources).toGetResponse();
+    }
+
     @GetMapping("/{id}")
     public RestResult<ProjectDocumentResource> findOne(@PathVariable("id") final long id) {
         return competitionSetupProjectDocumentService.findOne(id).toGetResponse();
+    }
+
+    @GetMapping("/findByCompetitionId/{competitionId}")
+    public RestResult<List<ProjectDocumentResource>> findByCompetitionId(@PathVariable("competitionId") final long competitionId) {
+        return competitionSetupProjectDocumentService.findByCompetitionId(competitionId).toGetResponse();
     }
 
     @DeleteMapping("/{id}")

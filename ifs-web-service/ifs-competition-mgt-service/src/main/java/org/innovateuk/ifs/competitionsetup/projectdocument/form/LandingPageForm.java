@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.projectdocument.form;
 
-import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
 
 /**

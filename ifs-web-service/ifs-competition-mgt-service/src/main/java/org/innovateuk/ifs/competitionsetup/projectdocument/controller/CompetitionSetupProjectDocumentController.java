@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competitionsetup.projectdocument.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.projectdocument.form.ProjectDocumentForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -18,8 +19,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
@@ -72,8 +77,6 @@ public class CompetitionSetupProjectDocumentController {
         return null;
     }
 
-
-
     @PostMapping("/landing-page")
     public String saveProjectDocumentLandingPage( @ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form,
                                                   BindingResult bindingResult,
@@ -81,12 +84,20 @@ public class CompetitionSetupProjectDocumentController {
                                                   @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                   Model model) {
 
-        System.out.println("Set a debug point here and ensure the form is populated correctly.");
+        Supplier<String> failureView = () -> projectDocumentLandingPage(model, competitionId);
+        Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId;
 
-        // cycle through posted data and rebuild the resources and then save
+        List<ProjectDocumentResource> projectDocumentResources =  competitionSetupProjectDocumentRestService.findByCompetitionId(competitionId).getSuccess();
+        projectDocumentResources.forEach(projectDocumentResource -> enableOrDisableProjectDocument(projectDocumentResource, form.getEnabledIds()));
 
+        RestResult<List<ProjectDocumentResource>> updateResult = competitionSetupProjectDocumentRestService.save(projectDocumentResources);
 
-        return null;
+        return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                failNowOrSucceedWith(failureView, successView);
+    }
+
+    private void enableOrDisableProjectDocument(ProjectDocumentResource projectDocumentResource, Set<Long> enabledIds) {
+        projectDocumentResource.setEnabled(enabledIds != null && enabledIds.contains(projectDocumentResource.getId()));
     }
 
     @GetMapping("/add")
