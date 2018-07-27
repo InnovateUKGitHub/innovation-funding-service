@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/initialize")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationLeadInitializationController.class)
+@SecuredBySpring(value = "Controller", description = "Anyone can start the lead applicant journey.", securedType = OrganisationCreationLeadInitializationController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationLeadInitializationController extends AbstractOrganisationCreationController {
     @GetMapping

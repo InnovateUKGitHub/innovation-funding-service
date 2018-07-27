@@ -32,7 +32,9 @@ import static org.innovateuk.ifs.registration.controller.AbstractOrganisationCre
 import static org.innovateuk.ifs.registration.controller.OrganisationCreationLeadTypeController.NOT_ELIGIBLE;
 
 @RequestMapping("/organisation/select")
-@SecuredBySpring(value="Controller", description = "TODO", securedType = OrganisationSelectionController.class)
+@SecuredBySpring(value="Controller", description = "An existing applicant can pick a previous organisation." +
+        " An assessor will be passed on to create an organisation for the first time and become an applicant. ",
+        securedType = OrganisationSelectionController.class)
 @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
 @Controller
 public class OrganisationSelectionController {
