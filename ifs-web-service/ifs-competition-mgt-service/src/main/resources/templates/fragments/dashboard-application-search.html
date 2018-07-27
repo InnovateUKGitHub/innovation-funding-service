@@ -1,4 +1,4 @@
-<th:block th:fragment="application-search(applications, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
+<th:block th:fragment="application-search(applications, count, pagination, isSupport)" xmlns:th="http://www.w3.org/1999/html">
 
     <th:block th:insert="fragments/dashboard-application-search :: search-result-table(applications=${applications})" />
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
@@ -18,9 +18,18 @@
             </thead>
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row" th:each="app : ${applications}">
-                <td class="govuk-table__cell">
-                    <a th:href="${'/management/competition/' + app.competition + '/application/' + app.id}" th:text="${app.id}" class="govuk-link"></a>
-                </td>
+                <th:block th:if="${isSupport && app.isOpen() && !app.getCompetitionStatus().isFeedbackReleased()}">
+                    <td class="govuk-table__cell">
+                        <a th:href="'/application/' + ${app.id} + '/summary'"
+                           th:text="${app.id}"
+                           class="govuk-link"></a>
+                    </td>
+                </th:block>
+                <th:block th:unless="${isSupport && app.isOpen() && !app.getCompetitionStatus().isFeedbackReleased()}">
+                    <td class="govuk-table__cell">
+                        <a th:href="${'/management/competition/' + app.competition + '/application/' + app.id}" th:text="${app.id}" class="govuk-link"></a>
+                    </td>
+                </th:block>
                 <td class="govuk-table__cell" th:text="${app.name}"></td>
                 <th:block th:if="${app.isApproved()}">
                     <td class="govuk-table__cell"><a th:href="${'/project-setup-management/competition/' + app.competition + '/status/all'}" th:text="${app.competitionName}" class="govuk-link"></a></td>

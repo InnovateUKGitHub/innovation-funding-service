@@ -139,8 +139,9 @@
                                class="govuk-link">
                                 View finances
                             </a>
-                            <a th:if="${showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id)}"
+                            <a th:if="${(supportUserAndSummaryPage != null && supportUserAndSummaryPage) || (showDetailedFinanceLink != null && showDetailedFinanceLink.get(applicationOrganisation.id))}"
                                th:href='${"/application/"+currentApplication.id+"/form/section/"+financeSectionId+"/"+applicationOrganisation.id}'
+                               th:style="'font-weight: normal;'"
                                class="govuk-link">
                                 View finances
                             </a>

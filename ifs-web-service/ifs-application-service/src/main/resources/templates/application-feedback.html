@@ -183,9 +183,9 @@
                 <section th:if="${model.hasFinanceSection}">
                     <h2 class="govuk-heading-m">Finance</h2>
                     <div class="collapsible">
-                        <h3>Finances summary</h3>
+                        <h3 class="govuk-heading-s">Finances summary</h3>
                         <div class="question">
-                            <div ifs:global="${model.applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></div>
+                            <div ifs:global="${model.applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true, supportUserAndSummaryPage = false)"></div>
                             <h2 class="govuk-heading-m">Funding breakdown</h2>
                             <th:block ifs:global="${model.applicationFundingBreakdownViewModel}" th:insert="finance/finance-summary :: financial_summary_table" />
                         </div>

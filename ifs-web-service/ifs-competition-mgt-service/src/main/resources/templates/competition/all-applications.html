@@ -104,10 +104,18 @@
                         </thead>
                         <tbody class="govuk-table__body">
                             <tr class="govuk-table__row filtered-result" th:each="row, iterStat : ${model.applications}">
-                                <td class="govuk-table__cell">
-                                    <a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
-                                       th:text="${row.id}" class="govuk-link">194731</a>
-                                </td>
+                                <th:block th:unless="${model.support && (row.status.equalsIgnoreCase('Started') || row.status.equalsIgnoreCase('In Progress'))}">
+                                    <td class="govuk-table__cell">
+                                        <a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})} + ${originQuery}"
+                                           th:text="${row.id}" class="govuk-link">194731</a>
+                                    </td>
+                                </th:block>
+                                <th:block th:if="${model.support && (row.status.equalsIgnoreCase('Started') || row.status.equalsIgnoreCase('In Progress'))}">
+                                    <td class="govuk-table__cell">
+                                        <a th:href="'/application/' + ${row.id} + '/summary'"
+                                           th:text="${row.id}" class="govuk-link">194731</a>
+                                    </td>
+                                </th:block>
                                 <td class="govuk-table__cell" th:text="${row.projectTitle}">Machine learning in robots</td>
                                 <td class="govuk-table__cell" th:text="${row.lead}">PWC</td>
                                 <td class="govuk-table__cell" th:text="${row.innovationArea} ?: 'Not listed'">HVM</td>
