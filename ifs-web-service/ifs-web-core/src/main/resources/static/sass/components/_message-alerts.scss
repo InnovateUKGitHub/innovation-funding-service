@@ -34,8 +34,11 @@
   @extend %alert-panel;
   background-image: url('../images/ifs-images/icons/icon-tick.png');
   background-size: 20px 17px;
-  color: $govuk-button-colour;
   border-color: $govuk-button-colour;
+
+  .govuk-heading-s{
+    color: $govuk-button-colour;
+  }
 }
 
 .fail-alert {

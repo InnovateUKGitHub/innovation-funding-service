@@ -43,7 +43,7 @@
                 <form th:action="@{/project/{projectId}/monitoring-officer/confirm(projectId=${model.projectId})}" th:object="${form}" method="post" th:with="readonly=${model.readOnly}" novalidate="novalidate">
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" for="firstName">
+                        <label class="govuk-label govuk-!-font-weight-bold" for="firstName">
                             First name
                         </label>
                         <th:block th:if="${#fields.hasErrors('firstName')}">
@@ -63,7 +63,7 @@
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" for="lastName">
+                        <label class="govuk-label govuk-!-font-weight-bold" for="lastName">
                             Last name
                         </label>
                         <th:block th:if="${#fields.hasErrors('lastName')}">
@@ -83,7 +83,7 @@
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('emailAddress')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" for="emailAddress">
+                        <label class="govuk-label govuk-!-font-weight-bold" for="emailAddress">
                             Email
                         </label>
                         <th:block th:if="${#fields.hasErrors('emailAddress')}">
@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" for="phoneNumber">
+                        <label class="govuk-label govuk-!-font-weight-bold" for="phoneNumber">
                             Phone number
                         </label>
                         <th:block th:if="${#fields.hasErrors('phoneNumber')}">
@@ -108,7 +108,7 @@
                         </th:block>
                         <input type="tel"
                                th:errorclass="govuk-input--error"
-                               class="govuk-input"
+                               class="govuk-input govuk-grid-column-one-half"
                                th:readonly="${readonly}"
                                th:field="*{phoneNumber}"
                                required="required"
@@ -118,11 +118,11 @@
                     <a th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/edit'}" th:if="${model.displayChangeMonitoringOfficerLink}" class="govuk-link">
                         Change Monitoring Officer
                     </a>
-
-                    <button data-js-modal="modal-assign-mo" type="submit" class="govuk-button" th:if="${model.displayAssignMonitoringOfficerButton}">
-                        Assign Monitoring Officer
-                    </button>
-
+                    <div class="govuk-form-group">
+                        <button data-js-modal="modal-assign-mo" type="submit" class="govuk-button govuk-!-margin-top-6" th:if="${model.displayAssignMonitoringOfficerButton}">
+                            Assign Monitoring Officer
+                        </button>
+                    </div>
                     <th:block th:insert="fragments/modals :: modal-assign-mo" />
                 </form>
             </div>

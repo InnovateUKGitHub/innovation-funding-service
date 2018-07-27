@@ -198,7 +198,7 @@
           <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Billing address</h2>
           <p class="govuk-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
 
-          <p class="govuk-!-margin-top-6" th:if="${bankDetails?.organisationAddress.address}" >
+          <p class="govuk-body govuk-!-margin-top-6" th:if="${bankDetails?.organisationAddress.address}" >
             <th:block th:each="addressLine,stats : ${bankDetails?.organisationAddress.address.getNonEmptyLines()}">
                 <th:block th:text="${addressLine+' '}">An address line</th:block><br th:unless="${stats.index == 0}"/>
             </th:block>
