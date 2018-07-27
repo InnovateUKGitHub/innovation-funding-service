@@ -238,6 +238,11 @@
     background-color: govuk-colour("grey-4");
     color: $govuk-secondary-text-colour;
 
+    .govuk-heading-s,
+    .govuk-body{
+      color: govuk-colour("grey-1");
+    }
+
     .msg-progress{
       color: $govuk-secondary-text-colour;
       font-weight: normal;
