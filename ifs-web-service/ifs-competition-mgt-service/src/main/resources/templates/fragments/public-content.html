@@ -1,7 +1,7 @@
 <!-- =================== Public content section - Competition information and search  ============================== -->
 <th:block th:fragment="section-search(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
-        <dl class="readonly-list">
+        <dl class="govuk-list readonly-list">
             <dt>Short description</dt>
             <dd th:text="${form.shortDescription}"></dd>
             <dt>Project funding range</dt>
@@ -98,7 +98,7 @@
             <div class="govuk-radios">
                 <div class="govuk-radios__item">
                     <input id="publishSetting-0"
-                           class="govuk-radios__item"
+                           class="govuk-radios__input"
                            type="radio"
                            th:field="${form.publishSetting}"
                            value="public"
@@ -145,7 +145,7 @@
                 <h2 class="govuk-heading-m govuk-!-margin-0">Description</h2>
             </div>
             <div class="govuk-grid-column-two-thirds">
-                <div class="wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${form.description}"></div>
+                <div class="govuk-body wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${form.description}"></div>
             </div>
         </div>
         <div class="govuk-grid-row govuk-!-margin-bottom-6">
@@ -261,7 +261,7 @@
                     <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${event.dateTimeFormatted}"></h2>
                 </div>
                 <div class="govuk-grid-column-two-thirds">
-                    <div class="wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${event.content}"></div>
+                    <div class="govuk-body wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${event.content}"></div>
                 </div>
             </div>
         </th:block>
@@ -275,7 +275,7 @@
                     <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${event.dateTimeFormatted}"></h2>
                 </div>
                 <div class="govuk-grid-column-two-thirds">
-                    <div class="wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${event.content}"></div>
+                    <div class="govuk-body wysiwyg-styles govuk-!-margin-bottom-6" ifs:utext="${event.content}"></div>
                 </div>
             </div>
         </th:block>
@@ -465,7 +465,7 @@
 <!-- =================== Public content group - Read only  ==================================================== -->
 <th:block th:fragment="content-groups-read-only(form, model)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:each="contentGroup: ${form.contentGroups}">
-        <div class="govuk-grid-column-one-quarter govuk-!-margin-bottom-6">
+        <div class="govuk-grid-row govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-one-third">
                 <h2 class="govuk-heading-m govuk-!-margin-0" th:text="${contentGroup.heading}"></h2>
             </div>

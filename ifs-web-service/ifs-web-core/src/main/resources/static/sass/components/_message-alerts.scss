@@ -61,11 +61,11 @@
   .govuk-body {
     color: $govuk-error-colour;
   }
-}
 
-.govuk-list {
-  li {
-    color:  $govuk-error-colour;
+  .govuk-list {
+    li {
+      color:  $govuk-error-colour;
+    }
   }
 }
 

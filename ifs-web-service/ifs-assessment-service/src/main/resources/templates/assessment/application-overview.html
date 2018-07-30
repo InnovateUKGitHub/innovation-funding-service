@@ -10,7 +10,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your competition dashboard',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
+            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your competition dashboard',linkClass='govuk-back-link',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -30,7 +30,7 @@
                 </div>
 
                 <section th:each="section,iterStat : ${model.sections}">
-                    <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'govuk-!-font-size-24 govuk-!-font-weight-bold': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
+                    <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'govuk-heading-m': 'govuk-heading-m govuk-!-margin-bottom-0'"/>
                     <p class="govuk-hint" th:text="${section.guidance}" />
                     <ul class="task-list">
                         <li th:each="question : ${section.questions}" th:class="${!question.responseRequired}? 'read-only'" th:unless="${section.finance}">
@@ -60,7 +60,7 @@
 
                 <th:block th:unless="${#lists.isEmpty(model.appendices)}">
                     <h2 class="govuk-heading-m">Appendices</h2>
-                    <ul th:each="appendix : ${model.appendices}">
+                    <ul th:each="appendix : ${model.appendices}" class="govuk-body govuk-list">
                         <li class="govuk-form-group download">
                             <div class="govuk-heading-s govuk-!-margin-0" th:text="|${appendix.title}:|">View project management appendix:</div>
                             <a target="_blank" th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId})}" th:text="|${appendix.name}, ${appendix.size} (opens in a new window)|">Project-plan.pdf, 161.96 KB (opens in a new window)</a>
@@ -88,7 +88,7 @@
                                     <th:block th:if="${#fields.hasErrors('rejectReason')}">
                                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                                     </th:block>
-                                    <select class="govuk-select--error"
+                                    <select class="govuk-select"
                                             th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
                                             th:errorclass="govuk-select--error"
                                             required="required"

@@ -133,7 +133,7 @@
 
         </form>
         <th:block th:unless="${model.editable}">
-            <dl class="application-question-list govuk-grid-column-one-quarter">
+            <dl class="govuk-list application-question-list govuk-grid-row">
                 <dt class="govuk-grid-column-one-third">Finances form</dt>
                 <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.applicationFinanceType.name}" />
                 <th:block th:unless="${model.subsection.noneFinanceCompetition}">

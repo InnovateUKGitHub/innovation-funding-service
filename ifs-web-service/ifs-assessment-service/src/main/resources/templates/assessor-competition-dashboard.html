@@ -91,9 +91,9 @@
 
                                             </div>
                                         </th:block>
-                                        <h3 class="govuk-heading-s"><a
-                                            th:href="${app.pending} ? ${assignmentUrl} : @{/{assessmentId}(assessmentId=${app.assessmentId})}"
-                                            th:text="${app.displayLabel}"/></h3>
+                                        <h3 class="govuk-heading-s"><a class="govuk-link"
+                                                th:href="${app.pending} ? ${assignmentUrl} : @{/{assessmentId}(assessmentId=${app.assessmentId})}"
+                                                th:text="${app.displayLabel}"/></h3>
                                         <p th:text="${app.leadOrganisation}" class="govuk-body govuk-!-margin-0"/>
                                     </div>
 

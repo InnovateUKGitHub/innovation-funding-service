@@ -185,7 +185,7 @@ table {
 
 tr {
   &.form-group-row-validated {
-    &.form-group-error {
+    &.govuk-form-group--error {
       td {
         vertical-align: bottom;
 
@@ -198,12 +198,12 @@ tr {
   }
 
   &.form-group-row {
-    &.form-group-error {
+    &.govuk-form-group--error {
       border:none;
       background-position: 4px 50%;
 
       .govuk-error-message {
-        @include govuk-visually-hidden
+        @include govuk-visually-hidden;
       }
 
       > * {

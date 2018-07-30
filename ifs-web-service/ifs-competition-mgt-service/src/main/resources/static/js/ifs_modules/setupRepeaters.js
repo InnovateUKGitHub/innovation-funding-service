@@ -125,7 +125,7 @@ IFS.competitionManagement.repeater = (function () {
                         '<input type="file" id="contentGroups-' + idCount + '.attachment" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
                         '<label for="contentGroups-' + idCount + '.attachment" class="button-secondary govuk-!-margin-top-6">+ Upload</label>' +
                         '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="contentGroups-' + idCount + '.attachment" value="' + count + '">Save</button>' +
-                        '<p class="uploaded-file">No file currently uploaded</p>' +
+                        '<p class="govuk-body uploaded-file">No file currently uploaded</p>' +
                     '</div>' +
                     '<button type="button" class="button-clear govuk-!-margin-0" data-remove-row="contentGroup">Remove section</button>' +
                   '</div>'
@@ -148,7 +148,7 @@ IFS.competitionManagement.repeater = (function () {
       }
 
       var html = '<div class="contentGroup" id="contentDateGroup-row-' + idCount + '">' +
-                 '<div class="govuk-form-group"><fieldset>' +
+                 '<div class="govuk-form-group"><fieldset class="govuk-fieldset">' +
                     '<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"><span class="govuk-fieldset__heading">Date</span></legend>' +
                     '<div class="date-group">' +
                         '<input type="hidden" disabled name="dates[' + count + '].combined" />' +

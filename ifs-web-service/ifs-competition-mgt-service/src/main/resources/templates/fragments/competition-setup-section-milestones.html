@@ -51,7 +51,7 @@
 
                           <select th:if="${milestoneEntry.value.timeOption}"
                                   th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                  class="govuk-select govuk-!-width-one-quarter"
+                                  class="govuk-select"
                                   required="required"
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   th:readonly="${!milestoneEntry.value.readonly}">

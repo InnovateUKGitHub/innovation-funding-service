@@ -136,7 +136,7 @@
                     </th:block>
                 </th:block>
                 <th:block th:if="${#strings.isEmpty(filename)}">
-                    <p class="uploaded-file">No file currently uploaded</p>
+                    <p class="govuk-body uploaded-file">No file currently uploaded</p>
                     <th:block th:if="${autoSaveOff}">
                         <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" data-autosave-disabled=""/>
                     </th:block>
