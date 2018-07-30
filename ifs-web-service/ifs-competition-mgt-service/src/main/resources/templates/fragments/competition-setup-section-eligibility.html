@@ -93,7 +93,7 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('overrideFundingRules')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
-                    <div class="multiple-choice" data-target="funding-level">
+                    <div class="multiple-choice" data-target="funding-level" data-target-clear-form="true">
                         <input type="radio"
                                id="comp-overrideFundingRules-yes"
                                th:field="*{overrideFundingRules}"
