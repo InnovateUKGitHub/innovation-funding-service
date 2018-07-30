@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupProject
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class CompetitionSetupProjectDocumentController {
     private CompetitionSetupProjectDocumentService competitionSetupProjectDocumentService;
 
     @PostMapping("/save")
-    public RestResult<ProjectDocumentResource> save(@RequestBody ProjectDocumentResource projectDocumentResource) {
+    public RestResult<ProjectDocumentResource> save(@Valid @RequestBody ProjectDocumentResource projectDocumentResource) {
         return competitionSetupProjectDocumentService.save(projectDocumentResource).toGetResponse();
     }
 

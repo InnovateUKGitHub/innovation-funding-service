@@ -16,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,10 +25,12 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_DOCUMENT;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_ID_KEY;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingErrorKeyToField;
 
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/project-document")
@@ -137,10 +138,6 @@ public class CompetitionSetupProjectDocumentController {
                                       BindingResult bindingResult, ValidationHandler validationHandler,
                                       UserResource loggedInUser) {
 
-        if (!form.isPdf() && !form.isSpreadsheet()) {
-            bindingResult.addError(new FieldError(FORM_ATTR_NAME, "acceptedFileTypesId", "You need to select at least one file type."));
-        }
-
         Supplier<String> failureView = () -> saveProjectDocumentFailureView(competitionId, model, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -148,7 +145,9 @@ public class CompetitionSetupProjectDocumentController {
             ProjectDocumentResource projectDocumentResource = createProjectDocumentResource(form, competitionId);
             RestResult<ProjectDocumentResource> updateResult = competitionSetupProjectDocumentRestService.save(projectDocumentResource);
 
-            return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+            return validationHandler.addAnyErrors(updateResult,
+                                                    mappingErrorKeyToField(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE, "acceptedFileTypesId"),
+                                                    fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> format(PROJECT_DOCUMENT_LANDING_REDIRECT, competitionId));
         });
     }
@@ -159,7 +158,8 @@ public class CompetitionSetupProjectDocumentController {
     }
 
     private ProjectDocumentResource createProjectDocumentResource(ProjectDocumentForm form, long competitionId) {
-        ProjectDocumentResource projectDocumentResource = new ProjectDocumentResource(competitionId, form.getTitle(), form.getGuidance(), form.isEditable(), form.isEnabled(), form.isPdf(), form.isSpreadsheet());
+        ProjectDocumentResource projectDocumentResource = new ProjectDocumentResource(competitionId, form.getTitle(), form.getGuidance(),
+                form.isEditable(), form.isEnabled(), form.isPdf(), form.isSpreadsheet());
 
         if (form.getProjectDocumentId() != null) {
             projectDocumentResource.setId(form.getProjectDocumentId());
@@ -168,7 +168,8 @@ public class CompetitionSetupProjectDocumentController {
     }
 
     private ProjectDocumentForm createProjectDocumentForm(ProjectDocumentResource resource) {
-        return new ProjectDocumentForm(resource.getId(), resource.getTitle(), resource.getGuidance(), resource.isEditable(), resource.isEnabled(), resource.isPdf(), resource.isSpreadsheet());
+        return new ProjectDocumentForm(resource.getId(), resource.getTitle(), resource.getGuidance(),
+                resource.isEditable(), resource.isEnabled(), resource.isPdf(), resource.isSpreadsheet());
     }
 
     @PostMapping("/{projectDocumentId}/delete")

@@ -24,7 +24,8 @@ public class ProjectDocument {
     private boolean pdf;
     private boolean spreadsheet;
 
-    public ProjectDocument(Competition competition, String title, String guidance, boolean editable, boolean enabled, boolean pdf, boolean spreadsheet) {
+    public ProjectDocument(Competition competition, String title, String guidance,
+                           boolean editable, boolean enabled, boolean pdf, boolean spreadsheet) {
         this.competition = competition;
         this.title = title;
         this.guidance = guidance;

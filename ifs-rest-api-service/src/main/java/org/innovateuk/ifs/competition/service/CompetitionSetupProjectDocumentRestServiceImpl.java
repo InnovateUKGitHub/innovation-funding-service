@@ -38,7 +38,7 @@ public class CompetitionSetupProjectDocumentRestServiceImpl extends BaseRestServ
     }
 
     @Override
-    public RestResult<Void> delete(Long id) {
+    public RestResult<Void> delete(long id) {
         return deleteWithRestResult(competitionSetupProjectDocumentRestURL + "/" + id, Void.class);
     }
 }

@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -25,15 +27,23 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     private ProjectDocumentMapper projectDocumentMapper;
 
     @Autowired
-    protected ProjectDocumentRepository projectDocumentRepository;
+    private ProjectDocumentRepository projectDocumentRepository;
 
     @Override
     @Transactional
     public ServiceResult<ProjectDocumentResource> save(ProjectDocumentResource projectDocumentResource) {
-        ProjectDocument projectDocument = projectDocumentMapper.mapToDomain(projectDocumentResource);
 
-        projectDocument = projectDocumentRepository.save(projectDocument);
-        return serviceSuccess(projectDocumentMapper.mapToResource(projectDocument));
+        return validateProjectDocument(projectDocumentResource).andOnSuccess(() -> {
+
+            ProjectDocument projectDocument = projectDocumentMapper.mapToDomain(projectDocumentResource);
+
+            projectDocument = projectDocumentRepository.save(projectDocument);
+            return serviceSuccess(projectDocumentMapper.mapToResource(projectDocument));
+        });
+    }
+
+    private ServiceResult<Void> validateProjectDocument(ProjectDocumentResource projectDocumentResource) {
+        return !projectDocumentResource.isPdf() && !projectDocumentResource.isSpreadsheet() ? serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE) : serviceSuccess();
     }
 
     @Override

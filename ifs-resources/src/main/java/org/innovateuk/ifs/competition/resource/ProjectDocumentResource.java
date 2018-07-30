@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 
 public class ProjectDocumentResource {
 
@@ -9,8 +10,10 @@ public class ProjectDocumentResource {
 
     private Long competition;
 
+    @NotBlank(message = "{validation.standard.title.required}")
     private String title;
 
+    @NotBlank(message = "{validation.documentform.guidance.required}")
     private String guidance;
 
     private boolean editable;
