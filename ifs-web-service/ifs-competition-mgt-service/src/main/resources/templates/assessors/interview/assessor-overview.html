@@ -20,19 +20,19 @@
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="govuk-heading-l" th:text="${model.assessorsInvited}">60</span><br/>
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsInvited}">60</span>
                             <small>Invited</small>
                         </div>
                     </div>
                     <div class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="govuk-heading-l" th:text="${model.assessorsAccepted}">23</span><br/>
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsAccepted}">23</span>
                             <small>Accepted</small>
                         </div>
                     </div>
                     <div class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="govuk-heading-l" th:text="${model.assessorsDeclined}">3</span><br/>
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsDeclined}">3</span>
                             <small>Declined</small>
                         </div>
                     </div>
@@ -73,10 +73,10 @@
                 </div>
                 <div data-selection-limit-exceeded-block=""></div>
 
-                <div class="govuk-grid-row sorting">
+                <div class="govuk-grid-row govuk-body govuk-!-margin-0 sorting">
                     <div class="govuk-grid-column-one-half">
-                        <span class="govuk-heading-xl govuk-!-margin-0" th:text="${model.pagination.totalCount}">20</span>
-                        <span class="govuk-heading-s">assessors</span>
+                        <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                        <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">assessors</span>
                     </div>
                 </div>
 
@@ -100,14 +100,16 @@
                                     <label for="select-all-check"
                                            class="govuk-label govuk-checkboxes__label">
                                         Select all assessors
+                                        <span class="govuk-hint govuk-!-padding-left-6">
+                                            <span data-count-selected="" th:text="${#lists.size(interviewOverviewSelectionForm.selectedInviteIds)}"></span>
+                                            assessors selected
+                                        </span>
                                     </label>
                                 </div>
                             </div>
-                            <span class="govuk-hint">
-                            <span data-count-selected="" th:text="${#lists.size(interviewOverviewSelectionForm.selectedInviteIds)}"></span> assessors selected</span>
                         </div>
                         <div class="govuk-grid-column-one-half select-all alignright">
-                            <button class="govuk-button" name="resendInvites" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewOverviewSelectionForm.selectedInviteIds)}">
+                            <button class="govuk-button govuk-!-margin-bottom-3" name="resendInvites" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewOverviewSelectionForm.selectedInviteIds)}">
                                 Resend invites
                             </button>
                         </div>
@@ -146,21 +148,22 @@
                                 </td>
                                 <td class="govuk-table__cell">
                                     <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}" th:if="${assessor.id}"
-                                       th:text="${assessor.name}">John Barnes
+                                       th:text="${assessor.name}"
+                                       class="govuk-link">John Barnes
                                     </a>
                                     <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
                                 </td>
-                                <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
-                                <td th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
+                                <td class="govuk-table__cell" th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
+                                <td class="govuk-table__cell" th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
                                 <td class="govuk-table__cell">
                                     <span class="yes" th:if="${assessor.compliant}">Yes</span>
                                     <span class="no" th:unless="${assessor.compliant}">No</span>
                                 </td>
-                                <td th:text="${assessor.status.displayName}">Invite accepted</td>
-                                <td th:text="${assessor.details}">assessor details</td>
+                                <td class="govuk-table__cell" th:text="${assessor.status.displayName}">Invite accepted</td>
+                                <td class="govuk-table__cell" th:text="${assessor.details}">assessor details</td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(model.assessors)}">
-                                <td colspan="7">There are no assessors invited to this interview panel.</td>
+                                <td class="govuk-table__cell" colspan="7">There are no assessors invited to this interview panel.</td>
                             </tr>
                             </tbody>
                         </table>
