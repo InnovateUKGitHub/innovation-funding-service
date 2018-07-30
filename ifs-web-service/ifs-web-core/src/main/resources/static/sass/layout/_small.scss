@@ -143,6 +143,10 @@ th {
   text-align:center;
 }
 
+.display-inline {
+  display: inline;
+}
+
 col {
   &.border {
     border-right: 1px solid $govuk-border-colour;

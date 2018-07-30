@@ -9,10 +9,12 @@
 
     h3{
       margin: 10px 0 0 0;
+      color: $govuk-secondary-text-colour;
     }
 
     p{
       margin: 0 0 10px 0;
+      color: $govuk-secondary-text-colour;
     }
 
     &:first-child{
@@ -24,6 +26,14 @@
       background-position: right 1em;
       border-top: 1px solid $govuk-text-colour;
       color: $govuk-text-colour;
+
+      h3{
+        color: $govuk-text-colour;
+      }
+
+      p{
+        color: $govuk-text-colour;
+      }
 
       &:first-child{
         border-top: none;

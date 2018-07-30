@@ -56,17 +56,16 @@
                             </div>
                         </fieldset>
                         <div class="clear-search-filters">
-                            <a href="?" th:href="'?sort=' + ${model.sorting}" class="govuk-link">Clear all filters</a>
+                            <a href="?" th:href="'?sort=' + ${model.sorting}" class="govuk-body govuk-link">Clear all filters</a>
                         </div>
                     </div>
-                    <div class="govuk-grid-row sorting">
+                    <div class="govuk-body govuk-grid-row sorting">
                         <div class="govuk-grid-column-one-half">
-                            <p class="govuk-body"><span class="govuk-heading-xl govuk-!-margin-0" th:text="${model.pagination.totalCount}">22</span>
-                                <span class="govuk-heading-s">applications</span>
-                            </p>
+                            <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">22</span>
+                            <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">applications</span>
                         </div>
                         <div class="govuk-grid-column-one-half alignright">
-                            <label for="sort-by" class="govuk-label">Sort by</label>
+                            <label for="sort-by" class="govuk-label display-inline">Sort by</label>
                             <select id="sort-by"
                                     name="sort"
                                     class="js-auto-submit govuk-select govuk-input--width-20">

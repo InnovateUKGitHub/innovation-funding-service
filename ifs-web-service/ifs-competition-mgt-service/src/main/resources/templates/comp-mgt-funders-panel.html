@@ -57,7 +57,7 @@
                     </div>
                 </fieldset>
                 <div class="clear-search-filters">
-                    <a href="?filterChanged=1" class="govuk-link">Clear all filters</a>
+                    <a href="?filterChanged=1" class="govuk-body govuk-link">Clear all filters</a>
                 </div>
             </div>
             <input type="hidden" name="filterChanged" value="1"/>
@@ -68,9 +68,9 @@
         </div>
         <div data-selection-limit-exceeded-block=""></div>
 
-        <div class="govuk-grid-row sorting">
+        <div class="govuk-body govuk-grid-row sorting">
             <div class="govuk-grid-column-one-half">
-                <h3><span class="govuk-heading-xl govuk-!-margin-0" th:text="${model.results.totalElements}" /> applications</h3>
+                <h3 class="govuk-!-margin-0 govuk-!-font-size-19 govuk-!-font-weight-bold"><span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.results.totalElements}" /> applications</h3>
             </div>
         </div>
         <form method="POST"

@@ -230,28 +230,13 @@
                     </div>
                 </fieldset>
                 <div class="govuk-!-margin-top-6">
-                    <a href="?" th:href="'?filterSearch='" class="govuk-link">Clear all filters</a>
+                    <a href="?" th:href="'?filterSearch='" class="govuk-body govuk-link">Clear all filters</a>
                 </div>
             </div>
         </form>
-                <!--/*
-                    <div class="govuk-grid-column-one-half alignright">
-                    <div class="govuk-form-group">
-                        <label for="sort-by">Sort by</label>
-                        <select id="sort-by" name="sortField" class="js-auto-submit govuk-select">
-                            <option value="id" th:selected="${(model.applicationsView.sortField == 'id')}">Application no.</option>
-                            <option value="appTitle" th:selected="${(model.applicationsView.sortField == 'appTitle')}">Title</option>
-                            <option value="leadOrg" th:selected="${(model.applicationsView.sortField == 'leadOrg')}">Lead organisation</option>
-                            <option value="assignedApps" th:selected="${(model.applicationsView.sortField == 'assignedApps')}">Assigned applications</option>
-                            <option th:if="${model.applicationsView.inAssessment}" value="completedApps" th:selected="${(model.applicationsView.sortField == 'completedApps')}">Completed applications</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="button-secondary govuk-!-margin-0 js-hidden">Sort</button>
-                     </div>
-                */-->
-        <div class="govuk-grid-row sorting">
+        <div class="govuk-body govuk-grid-row sorting">
             <div class="govuk-grid-column-one-half">
-                <div class="govuk-body govuk-!-margin-bottom-0 data">
+                <div class="data">
                     <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.applicationsView.totalApplications}">2</span>
                     <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Applications</span>
                 </div>
