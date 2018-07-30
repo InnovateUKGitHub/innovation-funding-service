@@ -95,14 +95,15 @@ the user fills in the CS Milestones
     the user should see the element              jQuery = div:contains("Milestones") ~ .task-status-complete
 
 the user fills in the CS Documents in other projects
-    Given the user clicks the button/link        link = Documents in project setup
-    And the user clicks the button/link          link = Add document type
-    When the user enters text to a text field    id = title         Test document type
-    And the user selects the checkbox            id = pdf
-    And the user selects the checkbox            id = spreadsheet
-    And the user enters text to a text field     id = guidance      Guidance test.
-    And the user clicks the button/link          id = doneButton
-    Then the user should see the element
+    the user clicks the button/link          link = Documents in project setup
+    the user clicks the button/link          link = Add document type
+    the user enters text to a text field     id = title    Test document type
+    the user clicks the button/link          id = pdf
+    the user clicks the button/link          id = spreadsheet
+    the user enters text to a text field     css = .editor    Guidance test.
+    the user clicks the button/link          css = button[type = "submit"]
+    the user should see the element          jQuety = span:contains("Test document type")
+    the user clicks the button/link          link = Competition setup
 
 the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
