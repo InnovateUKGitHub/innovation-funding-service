@@ -92,13 +92,16 @@ Successful save for the DOI form
     And the user clicks the button/link    jQuery=a:contains("Edit")
     And the user should see the correct inputs in the declaration form
 
-the user checks for the update DOI meesage
+the user checks for the update DOI message
     [Documentation]  IFS-3941
     [Tags]
-    Given the user clicks the button/link   link=Dashboard
-    When the user update the DOI modifiled date
+    [Setup]  Save DOI current modified date
+    Given the user clicks the button/link   link = Dashboard
+    When the user updates the DOI modified date
     And the user reloads the page
-    Then the user should see the element    jQuery=div li a:contains("your declaration of interest")
+    Then the user should see the element    jQuery = div li a:contains("your declaration of interest")
+    ${modified_date} =  Save DOI current modified date
+    [Teardown]  Return the DOI modified_on date to initial value   ${modified_date}
 
 *** Keywords ***
 the user correctly fills out the role, principle employer and accurate fields
@@ -136,6 +139,18 @@ the user should see the proper validation messages triggered
     the user should see a field and summary error    Please tell us if you have any appointments or directorships.
     the user should see a field and summary error    You must agree that your account is accurate.
 
-the user update the DOI modifiled date
+Save DOI current modified date
+    Connect to Database  @{database}
+    ${result} =  Query  SELECT DATE_FORMAT(`modified_on`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`affiliation` WHERE `user_id`='${assessor_id}';
+    ${result} =  get from list  ${result}  0
+    ${modified_on} =  get from list  ${result}  0
+    [Return]  ${modified_on}
+
+Return the DOI modified_on date to initial value
+    [Arguments]  ${modified_date}
     Connect to Database    @{database}
-    Execute sql string     UPDATE `${database_name}`.`affiliation` SET `modified_on`='2018-04-05 00:00:00' WHERE `user_id`='${assessor_id}';
+    Execute sql string     UPDATE `${database_name}`.`affiliation` SET `modified_on` = '${modified_date}' WHERE `user_id` = '${assessor_id}';
+
+the user updates the DOI modified date
+    Connect to Database    @{database}
+    Execute sql string     UPDATE `${database_name}`.`affiliation` SET `modified_on` = '2018-04-05 00:00:00' WHERE `user_id` = '${assessor_id}';
