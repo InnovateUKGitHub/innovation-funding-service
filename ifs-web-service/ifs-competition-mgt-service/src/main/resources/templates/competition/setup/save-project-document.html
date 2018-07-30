@@ -4,6 +4,7 @@
       <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
    </head>
    <body class="competition-management competition-setup">
+      <th:block th:insert="fragments/modals :: modal-overlay" />
       <th:block th:insert="fragments/layout :: body-start" />
       <th:block th:insert="fragments/layout :: global-header" />
       <main tabindex="-1" id="content">
@@ -14,11 +15,14 @@
               <th:block th:insert="fragments/elements :: error-summary-list(form)" />
           </div>
 
-         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Document type',size='heading-xlarge'" />
+          <th:block th:with="competitionTitle=${#strings.isEmpty(model.general.competition.name)} ? |${model.general.competition.id}: $#{ifs.competition.no_title}| : |${model.general.competition.id}: ${model.general.competition.name}|">
+                  <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Document type',subTitle=${competitionTitle},size='heading-xlarge'" />
+          </th:block>
+
          <form method="post"
             novalidate="novalidate"
             th:object="${form}"
-            th:action="@{'/competition/setup/{competitionId}/section/project-document/save'(competitionId=${competitionId})}"
+            th:action="@{'/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/delete'(competitionId=${competitionId}, projectDocumentId=${form.projectDocumentId})}"
             data-single-submit=""
             >
             <input type="hidden" th:field="${form.enabled}" />
@@ -99,11 +103,12 @@
             </th:block>
             <th:form th:if="${form.projectDocumentId}">
                <p>
-                  <button type="submit" th:formaction="@{'/competition/setup/{competitionId}/section/project-document/{projectDocumentId}/delete'(competitionId=${competitionId}, projectDocumentId=${form.projectDocumentId})}" formnovalidate name="removeDocument" class="buttonlink">Remove</button>
+                  <button type="submit" data-js-modal="modal-confirm-document-remove" formnovalidate name="removeDocument" class="buttonlink">Remove</button>
                </p>
             </th:form>
+            <th:block th:insert="fragments/modals :: modal-confirm-document-remove" />
             <div class="extra-margin">
-               <button type="submit" class="button">
+               <button type="submit" class="button" th:formaction="@{'/competition/setup/{competitionId}/section/project-document/save'(competitionId=${competitionId})}">
                Done
                </button>
             </div>

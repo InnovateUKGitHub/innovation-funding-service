@@ -2,7 +2,9 @@
 <!-- =================Section:Project Documents (10) =========================== -->
 <th:block th:fragment="section-content">
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents in project setup',size='heading-xlarge'" />
+    <th:block th:with="competitionTitle=${#strings.isEmpty(model.general.competition.name)} ? |${model.general.competition.id}: $#{ifs.competition.no_title}| : |${model.general.competition.id}: ${model.general.competition.name}|">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents in project setup',subTitle=${competitionTitle},size='heading-xlarge'" />
+    </th:block>
 
     <h2 class="heading-small">Required documents</h2>
     <p class="form-hint">The project manager will have to upload these in project setup.</p>
