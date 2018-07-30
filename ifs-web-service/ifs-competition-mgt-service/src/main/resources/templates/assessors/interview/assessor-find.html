@@ -21,19 +21,19 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="govuk-heading-l" th:text="${model.assessorsInvited}">60</span><br/>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsInvited}">60</span>
                     <small>Invited</small>
                 </div>
             </div>
             <div class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="govuk-heading-l" th:text="${model.assessorsAccepted}">23</span><br/>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsAccepted}">23</span>
                     <small>Accepted</small>
                 </div>
             </div>
             <div class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="govuk-heading-l" th:text="${model.assessorsDeclined}">3</span><br/>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsDeclined}">3</span>
                     <small>Declined</small>
                 </div>
             </div>
@@ -74,7 +74,7 @@
         </div>
         <div data-selection-limit-exceeded-block=""></div>
 
-        <div class="govuk-body govuk-grid-row sorting">
+        <div class="govuk-grid-row govuk-body govuk-!-margin-0 sorting">
             <div class="govuk-grid-column-full">
                 <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
                 <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">assessors</span>
@@ -101,16 +101,16 @@
                             <label for="select-all-check"
                                    class="govuk-label govuk-checkboxes__label">
                                 Select all assessors
+                                <span class="govuk-hint govuk-!-padding-left-6">
+                                    <span data-count-selected="" th:text="${#lists.size(interviewSelectionForm.selectedAssessorIds)}"></span> assessors selected
+                                </span>
                             </label>
                         </div>
                     </div>
 
-                    <span class="govuk-hint">
-                        <span data-count-selected="" th:text="${#lists.size(interviewSelectionForm.selectedAssessorIds)}"></span> assessors selected
-                    </span>
                 </div>
                 <div class="govuk-grid-column-one-half select-all alignright">
-                    <button class="govuk-button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewSelectionForm.selectedAssessorIds)}">
+                    <button class="govuk-button govuk-!-margin-bottom-3" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewSelectionForm.selectedAssessorIds)}">
                         Add selected to invite list
                     </button>
                 </div>
@@ -147,7 +147,7 @@
                         </td>
                         <td class="govuk-table__cell">
                             <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
-                               th:text="${assessor.name}">John Barnes
+                               th:text="${assessor.name}" class="govuk-link">John Barnes
                             </a>
                         </td>
                         <td class="govuk-table__cell" th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Industry</td>
