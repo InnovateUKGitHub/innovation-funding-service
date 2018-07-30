@@ -12,7 +12,7 @@ public class UserProfileStatusResourceBuilderTest {
 
     @Test
     public void testBuildOne() {
-        Long expectedUser = 1L;
+        long expectedUser = 1L;
         boolean expectedSkillsComplete = true;
         boolean expectedAffiliationsComplete = false;
         boolean expectedAgreementComplete = true;
@@ -32,7 +32,7 @@ public class UserProfileStatusResourceBuilderTest {
 
     @Test
     public void testBuildMany() {
-        Long[] expectedUsers = {1L, 2L};
+        long[] expectedUsers = {1L, 2L};
         Boolean[] expectedSkillsComplete = {true, false};
         Boolean[] expectedAffiliationsComplete = {false, true};
         Boolean[] expectedAgreementComplete = {true, false};
