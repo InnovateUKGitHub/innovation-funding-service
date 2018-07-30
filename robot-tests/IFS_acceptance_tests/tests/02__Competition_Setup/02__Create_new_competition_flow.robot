@@ -552,6 +552,7 @@ Documents in project setup: The competition admin removes a document
     [Tags]
     Given the user clicks the button/link       jQuery = span:contains("Test document type") ~ span:contains("Edit")
     When the user clicks the button/link        css = button[name = "removeDocument"]
+    And the user clicks the button/link         jQuery = button:contains("Confirm")
     Then the user should not see the element    jQuery = span:contains("Test document type")
     And the user clicks the button/link         link = Competition setup
 

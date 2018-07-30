@@ -464,7 +464,6 @@ User creates a new competition
     When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}
     And the user selects the Terms and Conditions
     And the user fills in the CS Milestones  ${month}  ${nextyear}
-    And the user fills in the CS Documents in other projects
 
 the user enters valid data in the summary details
     The user enters text to a text field    css=.editor  This is a Summary description
