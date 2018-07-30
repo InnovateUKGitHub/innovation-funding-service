@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/java.gradle")
 
 group 'innovateuk'
 version project.version
@@ -9,6 +9,9 @@ dependencies {
     compile "commons-beanutils:commons-beanutils:1.9.3"
     compile project(':ifs-error-util')
     compile project(":ifs-commons")
+
+    testCompile "org.springframework.boot:spring-boot-starter-web:1.5.11.RELEASE"
+    testCompile 'org.springframework.boot:spring-boot-starter-test:1.5.11.RELEASE'
 }
 
 configurations {
@@ -21,6 +24,3 @@ task testJar (type: Jar) {
 artifacts {
     testArtifacts testJar
 }
-
-bootJar.enabled=false
-jar.enabled=true

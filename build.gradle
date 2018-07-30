@@ -37,7 +37,6 @@ buildscript {
 
     ext {
         springBootVersion = '2.0.3.RELEASE'
-        springCloudVersion = 'Finchley.RELEASE'
     }
 
     repositories {

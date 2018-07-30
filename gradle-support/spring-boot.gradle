@@ -1,11 +1,6 @@
+apply from: rootProject.file("gradle-support/java.gradle")
 
-apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
-apply plugin: 'jacoco'
-apply plugin: 'io.spring.dependency-management'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 jacocoTestReport {
     afterEvaluate {
@@ -64,21 +59,10 @@ bootJar {
     mainClassName = 'org.innovateuk.ifs.Application'
 }
 
+ext.springCloudVersion = 'Finchley.RELEASE'
+
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
-}
-
-
-repositories {
-    jcenter()
-}
-
-jar {
-    manifest.attributes provider: 'gradle'
-}
-
-compileJava {
-    options.compilerArgs += '-parameters'
 }

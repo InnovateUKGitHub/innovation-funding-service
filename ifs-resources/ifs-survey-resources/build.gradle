@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/java.gradle")
 
 dependencies {
     compile project(':ifs-resources')
@@ -16,6 +16,3 @@ task testJar (type: Jar) {
 artifacts {
     testArtifacts testJar
 }
-
-bootJar.enabled=false
-jar.enabled=true
