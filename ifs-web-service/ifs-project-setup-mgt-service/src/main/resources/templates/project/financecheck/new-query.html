@@ -36,7 +36,7 @@
         <form class="govuk-!-margin-top-6" id="post-new-query-form" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
               th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
                 <h2 class="govuk-heading-m">Post a new query</h2>
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'govuk-form-group--error'">
+                <div class="govuk-form-group govuk-!-width-one-half" th:classappend="${#fields.hasErrors('queryTitle')}? 'govuk-form-group--error'">
                     <label class="govuk-label" for="queryTitle">
                         Title
                     </label>
@@ -54,7 +54,7 @@
                                     data-required-errormessage=#{validation.field.must.not.be.blank},
                                     data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
                 </div>
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('section')}? 'govuk-form-group--error'">
+                <div class="govuk-form-group govuk-!-width-one-half" th:classappend="${#fields.hasErrors('section')}? 'govuk-form-group--error'">
                     <label class="govuk-label" for="section">
                         Section
                     </label>
@@ -84,7 +84,7 @@
                         </th:block>
                     </select>
                 </div>
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('query')}? 'govuk-form-group--error'">
+                <div class="govuk-form-group govuk-!-width-one-half" th:classappend="${#fields.hasErrors('query')}? 'govuk-form-group--error'">
                     <label class="govuk-label" for="query">
                         Query
                     </label>
@@ -110,7 +110,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="upload-section">
+                <div class="upload-section govuk-!-width-one-half">
                     <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
                         <h3 class="govuk-heading-s">Supporting documentation</h3>
                         <ul>

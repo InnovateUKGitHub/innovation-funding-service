@@ -70,18 +70,18 @@
             th:if="${model.financeCheckSummaryResource.researchParticipationPercentage &gt; model.financeCheckSummaryResource.competitionMaximumResearchPercentage}"
             th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.financeCheckSummaryResource.researchParticipationPercentage},maxResearchPercentage=${model.financeCheckSummaryResource.competitionMaximumResearchPercentage})"/>
 
-        <h2 class="govuk-heading-m">Partner finances</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-7">Partner finances</h2>
         <div class="table-overflow govuk-!-margin-bottom-6">
             <table class="govuk-table table-progress">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Organisation</th>
-                        <th scope="col" class="govuk-table__header aligncentre">Viability</th>
-                        <th scope="col" class="govuk-table__header aligncentre cell-border-right">RAG</th>
-                        <th scope="col" class="govuk-table__header aligncentre">Eligibility</th>
-                        <th scope="col" class="govuk-table__header aligncentre cell-border-right">RAG</th>
-                        <th scope="col" class="govuk-table__header aligncentre">Queries raised</th>
-                        <th scope="col" class="govuk-table__header aligncentre">Notes</th>
+                        <th class="govuk-table__header govuk-!-font-weight-bold" scope="col">Organisation</th>
+                        <th scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold">Viability</th>
+                        <th scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold cell-border-right">RAG</th>
+                        <th scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold">Eligibility</th>
+                        <th scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold cell-border-right">RAG</th>
+                        <th scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold">Queries raised</th>
+                        <th scope="col" class="govuk-table__header aligncentre govuk-!-font-weight-bold">Notes</th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
