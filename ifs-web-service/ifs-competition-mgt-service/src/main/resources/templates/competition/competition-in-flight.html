@@ -61,7 +61,7 @@
                             </div>
                             <div class="govuk-grid-column-one-third">
                                 <div class="highlight-panel highlight-panel-padded">
-                                    <span class="govuk-heading-l" th:text="${model.changesSinceLastNotify}">10</span><br/>
+                                    <span class="govuk-heading-l govuk-!-margin-bottom-0" th:text="${model.changesSinceLastNotify}">10</span>
                                     <small>changes since last notification</small>
                                 </div>
                             </div>
@@ -177,7 +177,7 @@
                                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK}">
                                     <a class="govuk-button" th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
                                         th:if="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
-                                    <a class="disabled button button-large" aria-disabled="true"
+                                    <a class="disabled govuk-button" aria-disabled="true"
                                        th:unless="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
                                 </th:block>
                                 <button th:unless="${model.readOnly}"

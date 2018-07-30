@@ -31,6 +31,16 @@ table {
   &:focus {
     background-color: darken(govuk-colour("grey-3"), 5%);
   }
+
+  &.disabled,
+  &[disabled]{
+    background-color: govuk-colour("grey-3");
+
+    &:hover,
+    &:focus {
+      background-color: govuk-colour("grey-3");
+    }
+  }
 }
 
 .button-warning{

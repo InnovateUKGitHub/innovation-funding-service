@@ -99,14 +99,14 @@
                                 </div>
                             </div>
 
-                            <span class="govuk-hint"><span th:text="${selectionForm.applicationIds.size()}" data-count-selected="">0</span> applications selected</span>
+                            <span class="govuk-hint"><span th:text="${model.selectionForm.applicationIds.size()}" data-count-selected="">0</span> applications selected</span>
                         </fieldset>
                     </div>
                 </div>
                 <div class="govuk-grid-column-one-half">
                     <fieldset class="govuk-fieldset mark-applications">
                         <legend class="govuk-visually-hidden">Mark selected applications</legend>
-                        <h3>Mark application as:</h3>
+                        <h3 class="govuk-heading-s">Mark application as:</h3>
                         <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Successful</button>
                         <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='UNFUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Unsuccessful</button>
                         <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='ON_HOLD' name="fundingDecision" class="button-secondary" data-submit-el="">On hold</button>
@@ -182,7 +182,7 @@
                 </table>
             </div>
         </form>
-        <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
+        <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

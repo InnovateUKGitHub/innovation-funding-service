@@ -27,7 +27,7 @@
 
         <th:block th:if="${model.isApproved()}">
             <div class="success-alert govuk-!-margin-bottom-6">
-                The checks have been completed and your finances approved.
+                <p class="govuk-body">The checks have been completed and your finances approved.</p>
             </div>
             <p class="govuk-body"> Review your <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}" class="govuk-link">finances</a>
                 or your <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}" class="govuk-link">project finance overview</a>.
