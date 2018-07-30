@@ -31,7 +31,8 @@
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">
                             <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${model.applicationId})} + ${model.originQuery}"
-                                th:text="${model.applicationId}">114
+                               th:text="${model.applicationId}"
+                               class="govuk-link">114
                             </a>
                         </td>
                         <td class="govuk-table__cell" th:text="${model.title}">Electronics, sensors &amp; photonics, Materials</td>
@@ -72,7 +73,7 @@
                 Email: competitions@innovateuk.ukri.org
             </p>
 
-            <div class="govuk-!-margin-top-6">
+            <div class="govuk-link govuk-!-margin-top-6">
                 <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/edit(competitionId=${model.competitionId}, applicationId=${model.applicationId})}" class="govuk-button">Edit and resend invite</a>
                 <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" class="button-clear">Cancel</a>
             </div>

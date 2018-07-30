@@ -21,13 +21,13 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="govuk-heading-l" th:text="${model.applicationsInCompetition}">45</span><br/>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsInCompetition}">45</span>
                     <small>Applications in competition</small>
                 </div>
             </div>
             <div class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="govuk-heading-l" th:text="${model.applicationsInPanel}">23</span><br/>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsInPanel}">23</span>
                     <small>Assigned to interview panel</small>
                 </div>
             </div>
@@ -85,16 +85,15 @@
                             <label for="select-all-check"
                                    class="govuk-label govuk-checkboxes__label">
                                 Select all applications
+                                <span class="govuk-hint govuk-!-padding-left-6">
+                                    <span data-count-selected="" th:text="${#lists.size(interviewAssignmentApplicationSelectionForm.selectedIds)}"></span> applications selected
+                                </span>
                             </label>
                         </div>
                     </div>
-
-                    <span class="govuk-hint">
-                        <span data-count-selected="" th:text="${#lists.size(interviewAssignmentApplicationSelectionForm.selectedIds)}"></span> applications selected
-                    </span>
                 </div>
                 <div class="govuk-grid-column-one-half select-all alignright">
-                    <button class="govuk-button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAssignmentApplicationSelectionForm.selectedIds)}">
+                    <button class="govuk-button govuk-!-margin-bottom-3" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAssignmentApplicationSelectionForm.selectedIds)}">
                         Add selected to invite list
                     </button>
                 </div>
@@ -130,7 +129,8 @@
                         </td>
                         <td class="govuk-table__cell">
                             <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.id})} + ${originQuery}"
-                               th:text="${app.id}">123
+                               th:text="${app.id}"
+                               class="govuk-link">123
                             </a>
                         </td>
                         <td class="govuk-table__cell">

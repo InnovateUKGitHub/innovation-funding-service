@@ -26,13 +26,13 @@
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="govuk-heading-l" th:text="${model.applicationsInCompetition}">45</span><br/>
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsInCompetition}">45</span>
                             <small>Applications in competition</small>
                         </div>
                     </div>
                     <div class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
-                            <span class="govuk-heading-l" th:text="${model.applicationsInPanel}">23</span><br/>
+                            <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsInPanel}">23</span>
                             <small>Assigned to interview panel</small>
                         </div>
                     </div>
@@ -90,7 +90,8 @@
                             <tr class="govuk-table__row" th:each="app : ${model.applications}">
                                 <td class="govuk-table__cell">
                                     <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${originQuery}"
-                                       th:text="${app.applicationId}">123
+                                       th:text="${app.applicationId}"
+                                       class="govuk-link">123
                                     </a>
                                 </td>
                                 <td class="govuk-table__cell" th:text="${app.applicationName}">Application name</td>
