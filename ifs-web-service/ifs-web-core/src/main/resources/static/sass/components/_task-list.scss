@@ -148,6 +148,10 @@
     &.read-only {
       background-color: govuk-colour("grey-4");
       color: $govuk-secondary-text-colour;
+
+      .govuk-heading-s{
+        color: $govuk-secondary-text-colour;
+      }
     }
 
     &:last-child {

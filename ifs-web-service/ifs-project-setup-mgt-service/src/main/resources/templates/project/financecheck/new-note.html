@@ -22,7 +22,7 @@
                 <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post"
                       enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                     <h2 class="govuk-heading-m">New note</h2>
-                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('noteTitle')} ? 'govuk-form-group--error'">
+                    <div class="govuk-form-group govuk-!-width-one-half" th:classappend="${#fields.hasErrors('noteTitle')} ? 'govuk-form-group--error'">
                         <label class="govuk-label" for="noteTitle">
                             Title
                         </label>
@@ -40,7 +40,7 @@
                                         data-required-errormessage=#{validation.field.must.not.be.blank},
                                         data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
                     </div>
-                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('note')} ? 'govuk-form-group--error'">
+                    <div class="govuk-form-group govuk-!-width-one-half" th:classappend="${#fields.hasErrors('note')} ? 'govuk-form-group--error'">
                         <label class="govuk-label" for="note">
                             Note
                         </label>
@@ -66,7 +66,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="upload-section">
+                    <div class="upload-section govuk-!-width-one-half">
                         <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
                             <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h2>
                             <ul>

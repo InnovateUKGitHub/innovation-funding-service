@@ -49,7 +49,7 @@
 
             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Company details</h2>
             <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('organisationName')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="organisationName">
+                <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" for="organisationName">
                     Company name
                 </label>
                 <th:block th:if="${#fields.hasErrors('organisationName')}">
@@ -59,13 +59,13 @@
                         th:errorclass="govuk-input--error"
                         required="required"
                         name="company-name"
-                        class="govuk-input"
+                        class="govuk-input govuk-!-width-one-half"
                         maxlength="255"
                         th:field="*{organisationName}"
                         th:attr="data-required-errormessage=#{validation.standard.organisationname.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('registrationNumber')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="registrationNumber">
+                <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" for="registrationNumber">
                     Companies house number
                 </label>
                 <p class="govuk-hint">For example: 15489657</p>
@@ -80,7 +80,7 @@
                        maxlength="8"
                        minlength="8"
                        name="companies-house-number"
-                       class="govuk-input"
+                       class="govuk-input govuk-!-width-one-half"
                        th:field="*{registrationNumber}"
                        data-switches-button-status="#modal-change-bank-details"/>
             </div>
@@ -88,7 +88,7 @@
             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Account details</h2>
             <p class="govuk-hint">This is the bank account that the applicant will use for the duration of the project</p>
             <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('accountNumber')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="accountNumber">
+                <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" for="accountNumber">
                     Account number
                 </label>
                 <p class="govuk-hint">For example: 15489657</p>
@@ -104,12 +104,12 @@
                        data-prevent-input-regex="[^0-9]"
                        maxlength="8"
                        minlength="8"
-                       class="govuk-input"
+                       class="govuk-input govuk-!-width-one-half"
                        th:field="*{accountNumber}"
                        data-switches-button-status="#modal-change-bank-details"/>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="sortCode">
+                <label class="govuk-label govuk-!-font-weight-bold" for="sortCode">
                     Sort code
                 </label>
                 <p class="govuk-hint">For example: 311212</p>
@@ -136,13 +136,13 @@
                 </legend>
                 <span class="govuk-hint">This is the billing address of the bank account. This is not the address of the bank.</span>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.addressLine1')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" for="addressForm.selectedPostcode.addressLine1">
+                    <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" for="addressForm.selectedPostcode.addressLine1">
                         Street
                     </label>
                     <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.addressLine1')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine1')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input"
+                    <input class="govuk-input govuk-!-width-one-half"
                            type="text"
                            th:errorclass="govuk-input--error"
                            required="required"
@@ -157,7 +157,7 @@
                     <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.addressLine2')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine2')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input"
+                    <input class="govuk-input govuk-!-width-one-half"
                            type="text"
                            th:errorclass="govuk-input--error"
                            th:field="*{addressForm.selectedPostcode.addressLine2}"/>
@@ -169,20 +169,20 @@
                     <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.addressLine3')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.addressLine3')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input"
+                    <input class="govuk-input govuk-!-width-one-half"
                            type="text"
                            th:errorclass="govuk-input--error"
                            th:field="*{addressForm.selectedPostcode.addressLine3}"/>
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.town')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label"
+                    <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half"
                            for="addressForm.selectedPostcode.town">
                         Town
                     </label>
                     <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.town')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.town')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input"
+                    <input class="govuk-input govuk-!-width-one-half"
                            type="text"
                            th:errorclass="govuk-input--error"
                            required="required"
@@ -190,26 +190,26 @@
                            th:field="*{addressForm.selectedPostcode.town}"/>
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.county')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" for="addressForm.selectedPostcode.county">
+                    <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half" for="addressForm.selectedPostcode.county">
                         County
                     </label>
                     <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.county')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.county')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input"
+                    <input class="govuk-input govuk-!-width-one-half"
                            type="text"
                            th:errorclass="govuk-input--error"
                            th:field="*{addressForm.selectedPostcode.county}"/>
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('addressForm.selectedPostcode.postcode')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label"
+                    <label class="govuk-label govuk-!-font-weight-bold govuk-!-width-one-half"
                            for="addressForm.selectedPostcode.postcode">
                         Postcode
                     </label>
                     <th:block th:if="${#fields.hasErrors('addressForm.selectedPostcode.postcode')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('addressForm.selectedPostcode.postcode')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input postcode"
+                    <input class="govuk-input postcode govuk-!-width-one-half"
                            type="text"
                            th:errorclass="govuk-input--error"
                            required="required"

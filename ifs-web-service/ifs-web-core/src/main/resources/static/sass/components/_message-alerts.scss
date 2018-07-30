@@ -36,7 +36,8 @@
   background-size: 20px 17px;
   border-color: $govuk-button-colour;
 
-  .govuk-heading-s{
+  .govuk-heading-s,
+  .govuk-body{
     color: $govuk-button-colour;
   }
 }
