@@ -4,11 +4,11 @@
 
   input {
     &.search-query {
+      @include govuk-font(19);
       padding-right:35px;
       height: 35px;
       box-sizing: border-box;
       width: 100%;
-      @include govuk-font(19);
       font-weight: 200;
     }
 

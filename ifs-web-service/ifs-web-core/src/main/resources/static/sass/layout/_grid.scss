@@ -66,3 +66,13 @@
     }
   }
 }
+
+.grid-column-one-fifth {
+  @include box-sizing(border-box);
+  @include media-down(mobile) {
+    width: 100%;
+  }
+  width: 20%;
+  float: left;
+  padding: 0 15px;
+}
