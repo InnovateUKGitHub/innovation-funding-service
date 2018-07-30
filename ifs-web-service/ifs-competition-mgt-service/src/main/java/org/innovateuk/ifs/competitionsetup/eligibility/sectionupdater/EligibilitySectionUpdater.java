@@ -73,7 +73,9 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
             competition.setStreamName(null);
         }
 
-        handleGrantClaimMaximumChanges(competition, eligibilityForm);
+        if(!competitionSetupForm.isAutoSaveAction()) {
+            handleGrantClaimMaximumChanges(competition, eligibilityForm);
+        }
 
         competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
 
@@ -86,16 +88,13 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
 
     private void handleGrantClaimMaximumChanges(CompetitionResource competition,
                                                 EligibilityForm eligibilityForm) {
-        if(eligibilityForm.getOverrideFundingRules() == null) {
-            return;
-        }
-
         Set<GrantClaimMaximumResource> businessGcms = competition.getGrantClaimMaximums().stream()
                 .map(id -> grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess())
                 .filter(gcm -> gcm.getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId()))
                 .collect(Collectors.toSet());
 
-        if (eligibilityForm.getOverrideFundingRules() && eligibilityForm.getFundingLevelPercentage() != null) {
+        if (eligibilityForm.getOverrideFundingRules() != null && eligibilityForm.getOverrideFundingRules() &&
+                eligibilityForm.getFundingLevelPercentage() != null) {
             businessGcms.forEach(oldGCM -> {
                 GrantClaimMaximumResource toSaveGCM = createNewGCM(oldGCM, eligibilityForm.getFundingLevelPercentage());
 
