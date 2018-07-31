@@ -17,11 +17,7 @@ IFS.core.singleSubmit = (function () {
     disableButton: function (form) {
       var submitButton = form.find(':button')
       submitButton.attr('disabled', 'disabled')
-      submitButton.each(function () {
-        if (jQuery(this).is('[data-content-on-submit]')) {
-          jQuery(this).html(jQuery(this).attr('data-content-on-submit'))
-        }
-      })
+      submitButton.filter('.button:not(.button-secondary)').html('Please wait...')
     }
   }
 })()
