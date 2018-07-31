@@ -280,46 +280,51 @@ Funding information: should have a green check
 Eligibility: Contain the correct options
     [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=Eligibility
+    Given the user clicks the button/link  link = Eligibility
     And the user should see the text in the page    Please choose the project type.
-    Then the user should see the element    jQuery=label:contains("Single or Collaborative")
-    When the user should see the element    jQuery=label:contains("Collaborative")
-    And the user should see the element    jQuery=label:contains("Business")
-    And the user should see the element    jQuery=label[for="lead-applicant-type-2"]:contains("Research")
-    And the user should see the element    jQuery=label:contains("Research and technology organisation")
-    And the user should see the element    jQuery=label:contains("Public sector")
-    And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
-    And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
-    And the user should see the element    jQuery=label:contains("Feasibility studies")
-    And the user should see the element    jQuery=label:contains("Industrial research")
-    And the user should see the element    jQuery=label:contains("Experimental development")
+    Then the user should see the element   jQuery = label:contains("Single or Collaborative")
+    When the user should see the element   jQuery = label:contains("Collaborative")
+    And the user should see the element    jQuery = label:contains("Business")
+    And the user should see the element    jQuery = label[for="lead-applicant-type-2"]:contains("Research")
+    And the user should see the element    jQuery = label:contains("Research and technology organisation")
+    And the user should see the element    jQuery = label:contains("Public sector")
+    And the user should see the element    css = label[for="comp-resubmissions-yes"]
+    And the user should see the element    css = label[for="comp-resubmissions-no"]
+    And the user should see the element    jQuery = label:contains("Feasibility studies")
+    And the user should see the element    jQuery = label:contains("Industrial research")
+    And the user should see the element    jQuery = label:contains("Experimental development")
+    And the user should see the element    css = label[for="comp-overrideFundingRules-yes"]
+    And the user should see the element    css = label[for="comp-overrideFundingRules-no"]
     And the resubmission should not have a default selection
 
 Eligibility: Mark as Done then Edit again
     [Documentation]    INFUND-3051 INFUND-3872 INFUND-3002 INFUND-9225
     [Tags]    HappyPath
-    Given the user selects the checkbox    research-categories-33
-    And the user selects the checkbox    research-categories-34
-    And the user selects the checkbox    research-categories-35
+    Given the user selects the checkbox      research-categories-33
+    And the user selects the checkbox        research-categories-34
+    And the user selects the checkbox        research-categories-35
     And the user selects the radio button    singleOrCollaborative    single
-    And the user selects the checkbox   lead-applicant-type-1  # business
-    And the user selects the checkbox   lead-applicant-type-3  # RTOs
+    And the user selects the checkbox        lead-applicant-type-1  # business
+    And the user selects the checkbox        lead-applicant-type-3  # RTOs
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
-    And the user moves focus and waits for autosave
     And the user selects the radio button    resubmission    no
-    When the user clicks the button/link    jQuery=button:contains("Done")
-    Then the user should see the element    jQuery=dt:contains("Project type") ~ dd:contains("Single")
-    And the user should see the element     jQuery=dt:contains("Research categories") ~ dd:contains("Feasibility studies")
-    And the user should see the element     jQuery=dt:contains("Research categories") ~ dd:contains("Industrial research")
-    And the user should see the element     jQuery=dt:contains("Research categories") ~ dd:contains("Experimental development")
-    And the user should see the element     jQuery=dt:contains("Lead applicant") ~ dd:contains("Business")
-    And the user should see the element     jQuery=dt:contains("Research participation") ~ dd:contains("50%")
-    And the user should see the element     jQuery=dt:contains("Are resubmissions allowed") ~ dd:contains("No")
-    And The user should not see the element    id=streamName
-    When the user clicks the button/link    link=Competition setup
-    When the user clicks the button/link    link=Eligibility
-    And the user clicks the button/link    jQuery=.button:contains("Edit")
-    And the user clicks the button/link    jQuery=button:contains("Done")
+    And the user moves focus and waits for autosave
+    And the user clicks the button twice     css = label[for="comp-overrideFundingRules-no"]
+    And the user moves focus and waits for autosave
+    When the user clicks the button/link     jQuery = button:contains("Done")
+    Then the user should see the element     jQuery = dt:contains("Project type") ~ dd:contains("Single")
+    And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Feasibility studies")
+    And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Industrial research")
+    And the user should see the element      jQuery = dt:contains("Research categories") ~ dd:contains("Experimental development")
+    And the user should see the element      jQuery = dt:contains("Lead applicant") ~ dd:contains("Business")
+    And the user should see the element      jQuery = dt:contains("Research participation") ~ dd:contains("50%")
+    And the user should see the element      jQuery = dt:contains("Are resubmissions allowed") ~ dd:contains("No")
+    And the user should see the element      jQuery = dt:contains("Override funding rules") ~ dd:contains("No")
+    And The user should not see the element  id = streamName
+    When the user clicks the button/link     link = Competition setup
+    When the user clicks the button/link     link = Eligibility
+    And the user clicks the button/link      jQuery = .button:contains("Edit")
+    And the user clicks the button/link      jQuery = button:contains("Done")
 
 Eligibility: Should have a Green Check
     [Documentation]    INFUND-3002

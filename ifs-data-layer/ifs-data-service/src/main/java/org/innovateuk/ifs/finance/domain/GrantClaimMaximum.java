@@ -36,6 +36,9 @@ public class GrantClaimMaximum {
     @Column(name = "organisation_size_id")
     private OrganisationSize organisationSize;
 
+    @Column(name = "competition_type_id")
+    private Long competitionType;
+
     private Integer maximum;
 
     public Long getId() {
@@ -84,5 +87,13 @@ public class GrantClaimMaximum {
 
     public void setMaximum(Integer maximum) {
         this.maximum = maximum;
+    }
+
+    public Long getCompetitionType() {
+        return competitionType;
+    }
+
+    public void setCompetitionType(Long competitionType) {
+        this.competitionType = competitionType;
     }
 }
