@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
@@ -28,6 +29,9 @@ public class ApplicationInviteController {
 
     @Autowired
     private AcceptApplicationInviteService acceptApplicationInviteService;
+
+    @Autowired
+    private CrmService crmService;
 
     @PostMapping("/createApplicationInvites")
     public RestResult<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
@@ -61,12 +65,22 @@ public class ApplicationInviteController {
 
     @PutMapping("/acceptInvite/{hash}/{userId}")
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
-        return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.empty()).toPutResponse();
+        return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.empty())
+                .andOnSuccessReturn(result -> {
+                    crmService.syncCrmContact(userId);
+                    return result;
+                })
+                .toPutResponse();
     }
 
     @PutMapping("/acceptInvite/{hash}/{userId}/{organisationId}")
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") long userId, @PathVariable("organisationId") long organisationId) {
-        return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId)).toPutResponse();
+        return acceptApplicationInviteService.acceptInvite(hash, userId, Optional.of(organisationId))
+                .andOnSuccessReturn(result -> {
+                    crmService.syncCrmContact(userId);
+                    return result;
+                })
+                .toPutResponse();
     }
 
     @DeleteMapping("/removeInvite/{inviteId}")

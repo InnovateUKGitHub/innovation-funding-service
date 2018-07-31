@@ -56,8 +56,8 @@ public class OrganisationController {
     }
 
     @GetMapping("/all-by-user-id/{userId}")
-    public RestResult<List<OrganisationResource>> getAllUsersOrganisations(@PathVariable("userId") final long userId) {
-        return organisationService.getAllUsersOrganisations(userId).toGetResponse();
+    public RestResult<List<OrganisationResource>> getAllByUserId(@PathVariable("userId") final long userId) {
+        return organisationService.getAllByUserId(userId).toGetResponse();
     }
 
     @PostMapping({"/create-or-match", "/createOrMatch"})

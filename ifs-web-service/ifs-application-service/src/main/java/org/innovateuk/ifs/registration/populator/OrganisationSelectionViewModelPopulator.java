@@ -28,7 +28,7 @@ public class OrganisationSelectionViewModelPopulator {
     }
 
     public OrganisationSelectionViewModel populate(UserResource userResource, HttpServletRequest request, String newOrganisationUrl) {
-        Set<OrganisationSelectionChoiceViewModel> choices = organisationRestService.getAllUsersOrganisations(userResource.getId()).getSuccess()
+        Set<OrganisationSelectionChoiceViewModel> choices = organisationRestService.getAllByUserId(userResource.getId()).getSuccess()
                 .stream()
                 .map(this::choice)
                 .collect(toSet());

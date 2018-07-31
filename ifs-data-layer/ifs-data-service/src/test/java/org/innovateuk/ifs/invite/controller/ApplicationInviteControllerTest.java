@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
@@ -57,6 +58,9 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private CrmService crmService;
 
     @Before
     public void setUp() {
@@ -130,6 +134,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(status().isOk());
 
         verify(acceptApplicationInviteService).acceptInvite(hash, userId, Optional.empty());
+        verify(crmService).syncCrmContact(userId);
     }
 
     @Test
@@ -144,5 +149,6 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(status().isOk());
 
         verify(acceptApplicationInviteService).acceptInvite(hash, userId, Optional.of(organisationId));
+        verify(crmService).syncCrmContact(userId);
     }
 }

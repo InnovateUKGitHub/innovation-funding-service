@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -45,6 +46,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     @Mock
     private ApplicationProgressService applicationProgressServiceMock;
 
+    @Mock
+    private CrmService crmService;
 
     @Override
     protected ApplicationController supplyControllerUnderTest() {

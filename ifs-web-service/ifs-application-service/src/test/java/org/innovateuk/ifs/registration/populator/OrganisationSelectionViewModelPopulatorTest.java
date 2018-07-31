@@ -46,7 +46,7 @@ public class OrganisationSelectionViewModelPopulatorTest {
                 .withOrganisationTypeName("Type 1", "Type 2")
                 .build(2);
 
-        when(organisationRestService.getAllUsersOrganisations(user.getId())).thenReturn(restSuccess(organisations));
+        when(organisationRestService.getAllByUserId(user.getId())).thenReturn(restSuccess(organisations));
         when(registrationCookieService.isCollaboratorJourney(request)).thenReturn(false);
 
         OrganisationSelectionViewModel viewModel = populator.populate(user, request, url);

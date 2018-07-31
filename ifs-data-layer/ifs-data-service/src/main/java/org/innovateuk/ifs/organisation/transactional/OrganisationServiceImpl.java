@@ -113,7 +113,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<List<OrganisationResource>> getAllUsersOrganisations(long userId) {
+    public ServiceResult<List<OrganisationResource>> getAllByUserId(long userId) {
         return serviceSuccess(simpleMap(organisationRepository.findDistinctByUsersId(userId),
                 organisationMapper::mapToResource));
     }
@@ -202,5 +202,9 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
             organisationNameDecoded = encodedName;
         }
         return organisationNameDecoded;
+    }
+
+    private List<OrganisationResource> organisationsToResources(List<Organisation> organisations) {
+        return simpleMap(organisations, organisation -> organisationMapper.mapToResource(organisation));
     }
 }

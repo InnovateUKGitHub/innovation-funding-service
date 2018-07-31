@@ -18,7 +18,6 @@ import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
@@ -44,7 +43,10 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
@@ -129,9 +131,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
     @Mock
     private TokenRepository tokenRepositoryMock;
-
-    @Mock
-    private OrganisationRepository organisationRepositoryMock;
 
     @Mock
     private NotificationService notificationServiceMock;
@@ -262,14 +261,11 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         Long organisationId = 123L;
         SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
-        Organisation selectedOrganisation = newOrganisation().withId(organisationId).build();
         Role applicantRole = Role.APPLICANT;
 
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
         when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(selectedOrganisation);
-        when(organisationRepositoryMock.findDistinctByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         Profile expectedProfile = newProfile().withId(7L).build();
@@ -291,9 +287,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Long.valueOf(2), user.getEthnicity().getId());
             assertEquals(1, user.getRoles().size());
             assertTrue(user.getRoles().contains(applicantRole));
-            List<Organisation> orgs = organisationRepositoryMock.findDistinctByUsersId(user.getId());
-            assertEquals(1, orgs.size());
-            assertEquals(selectedOrganisation, orgs.get(0));
             assertEquals(expectedProfile.getId(), user.getProfileId());
             assertEquals(new LinkedHashSet<>(asList(siteTermsAndConditions.getId())), user.getTermsAndConditionsIds());
 
@@ -615,10 +608,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 build();
 
         Long organisationId = 123L;
-        Organisation selectedOrganisation = newOrganisation().withId(organisationId).build();
 
         when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
-        when(organisationRepositoryMock.findDistinctByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         Profile expectedProfile = newProfile().withId(7L).build();
@@ -640,9 +631,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Long.valueOf(2), user.getEthnicity().getId());
             assertEquals(1, user.getRoles().size());
             assertTrue(user.getRoles().contains(Role.COMP_ADMIN));
-            List<Organisation> orgs = organisationRepositoryMock.findDistinctByUsersId(user.getId());
-            assertEquals(1, orgs.size());
-            assertEquals(selectedOrganisation, orgs.get(0));
             assertEquals(expectedProfile.getId(), user.getProfileId());
 
             return true;
