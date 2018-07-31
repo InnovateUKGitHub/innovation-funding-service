@@ -1,0 +1,12 @@
+---
+- hosts: testserver
+  become: true
+  roles:
+    - python
+    - geerlingguy.docker
+    - java8
+    - JCE
+    - andrewrothstein.openshift-origin-client-tools
+    - mysql-cli
+    - prebuild
+    - build

@@ -23,6 +23,10 @@ public abstract class AbstractLeadOnlyModelPopulator {
         return CompetitionStatus.OPEN == applicationResource.getCompetitionStatus();
     }
 
+    protected boolean isApplicationSubmitted(ApplicationResource applicationResource) {
+        return applicationResource.isSubmitted();
+    }
+
     protected boolean isComplete(ApplicationResource applicationResource, long loggedInUserId) {
         return questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(
                 applicationResource.getCompetition(), RESEARCH_CATEGORY).handleSuccessOrFailure(
