@@ -40,7 +40,7 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
         GrantClaimMaximumResource gcm = newGrantClaimMaximumResource().withId(gcmId).build();
         when(grantClaimMaximumService.getGrantClaimMaximumById(gcmId)).thenReturn(serviceSuccess(gcm));
 
-        mockMvc.perform(get("/grantClaimMaximum/{id}", gcmId))
+        mockMvc.perform(get("/grant-claim-maximum/{id}", gcmId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(gcm)));
 
@@ -50,7 +50,7 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
     @Test
     public void getGrantClaimMaximumByIdNotFound() throws Exception {
         when(grantClaimMaximumService.getGrantClaimMaximumById(1L)).thenReturn(serviceFailure(notFoundError(GrantClaimMaximum.class, 1L)));
-        mockMvc.perform(get("/grantClaimMaximum/{id}", 1L))
+        mockMvc.perform(get("/grant-claim-maximum/{id}", 1L))
                 .andExpect(status().isNotFound());
 
         verify(grantClaimMaximumService, only()).getGrantClaimMaximumById(1L);
@@ -62,7 +62,7 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
         Set<Long> expectedGcms = CollectionFunctions.asLinkedSet(2L, 3L);
         when(grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(competitionType)).thenReturn(serviceSuccess(expectedGcms));
 
-        mockMvc.perform(get("/grantClaimMaximum/getForCompetitionType/{competitionTypeId}", competitionType))
+        mockMvc.perform(get("/grant-claim-maximum/get-for-competition-type/{competitionTypeId}", competitionType))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedGcms)));
 
@@ -72,7 +72,7 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
     @Test
     public void getGrantClaimMaximumsForCompetitionTypeNotFound() throws Exception {
         when(grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(1L)).thenReturn(serviceFailure(notFoundError(CompetitionTypeResource.class, 1L)));
-        mockMvc.perform(get("/grantClaimMaximum/getForCompetitionType/{competitionTypeId}", 1L))
+        mockMvc.perform(get("/grant-claim-maximum/get-for-competition-type/{competitionTypeId}", 1L))
                 .andExpect(status().isNotFound());
 
         verify(grantClaimMaximumService, only()).getGrantClaimMaximumsForCompetitionType(1L);
@@ -84,7 +84,7 @@ public class GrantClaimMaximumControllerTest extends BaseControllerMockMVCTest<G
 
         when(grantClaimMaximumService.save(any(GrantClaimMaximumResource.class))).thenReturn(serviceSuccess(gcmResource));
 
-        mockMvc.perform(post("/grantClaimMaximum/")
+        mockMvc.perform(post("/grant-claim-maximum/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson((gcmResource))))
                 .andExpect(status().isCreated());

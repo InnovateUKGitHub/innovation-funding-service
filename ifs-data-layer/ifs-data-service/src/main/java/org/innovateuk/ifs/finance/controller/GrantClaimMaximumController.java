@@ -14,7 +14,7 @@ import java.util.Set;
  * to manage {@link org.innovateuk.ifs.finance.domain.GrantClaimMaximum} related data.
  */
 @RestController
-@RequestMapping("/grantClaimMaximum")
+@RequestMapping("/grant-claim-maximum")
 public class GrantClaimMaximumController {
 
     private GrantClaimMaximumService grantClaimMaximumService;
@@ -28,7 +28,7 @@ public class GrantClaimMaximumController {
         return grantClaimMaximumService.getGrantClaimMaximumById(id).toGetResponse();
     }
 
-    @GetMapping("/getForCompetitionType/{competitionTypeId}")
+    @GetMapping("/get-for-competition-type/{competitionTypeId}")
     public RestResult<Set<Long>> getGrantClaimMaximumsForCompetitionType(@PathVariable("competitionTypeId") final long competitionTypeId) {
         return grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(competitionTypeId).toGetResponse();
     }

@@ -42,10 +42,10 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
 
         when(grantClaimMaximumService.getGrantClaimMaximumById(grantClaimMaximumId)).thenReturn(serviceSuccess(newGrantClaimMaximumResource().build()));
 
-        mockMvc.perform(get("/grantClaimMaximum/{id}", grantClaimMaximumId))
+        mockMvc.perform(get("/grant-claim-maximum/{id}", grantClaimMaximumId))
                 .andExpect(status().isOk())
                 .andDo(document(
-                        "grantClaimMaximum/{method-name}",
+                        "grant-claim-maximum/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the grantClaimMaximum to be retrieved")
                         ),
@@ -58,12 +58,12 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
         GrantClaimMaximumResource gcm = newGrantClaimMaximumResource().build();
         when(grantClaimMaximumService.save(any(GrantClaimMaximumResource.class))).thenReturn(serviceSuccess(gcm));
 
-        mockMvc.perform(post("/grantClaimMaximum/")
+        mockMvc.perform(post("/grant-claim-maximum/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson((gcm))))
                 .andExpect(status().isCreated())
                 .andDo(document(
-                        "grantClaimMaximum/{method-name}",
+                        "grant-claim-maximum/{method-name}",
                         responseFields(grantClaimMaximumResourceFields)
                 ));
     }
@@ -74,10 +74,10 @@ public class GrantClaimMaximumControllerDocumentation extends MockMvcTest<GrantC
         Set<Long> expectedGcms = CollectionFunctions.asLinkedSet(2L, 3L);
         when(grantClaimMaximumService.getGrantClaimMaximumsForCompetitionType(competitionType)).thenReturn(serviceSuccess(expectedGcms));
 
-        mockMvc.perform(get("/grantClaimMaximum/getForCompetitionType/{competitionTypeId}", competitionType))
+        mockMvc.perform(get("/grant-claim-maximum/get-for-competition-type/{competitionTypeId}", competitionType))
                 .andExpect(status().isOk())
                 .andDo(document(
-                        "grantClaimMaximum/{method-name}",
+                        "grant-claim-maximum/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionTypeId").description("id of the CompetitionType to be retrieved")
                         ),

@@ -95,9 +95,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private MilestoneService milestoneService;
 
-    @Autowired
-    private CompetitionTypeRepository competitionTypeRepository;
-
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
         return find(competitionRepository.findById(id), notFoundError(Competition.class, id)).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
