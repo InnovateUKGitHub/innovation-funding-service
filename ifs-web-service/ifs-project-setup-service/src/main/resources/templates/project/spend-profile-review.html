@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile'" />
 </head>
-<body th:class="${(param.view != null and param.view[0] == 'full' ? 'govuk-template__body app-overview wide-page' : 'govuk-template__body app-overview')}">
+<body class="govuk-template__body app-overview" th:classappend="${(param.view != null and param.view[0] == 'full' ? 'wide-page' : '')}">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />

@@ -64,12 +64,12 @@
                 Assign applications to panel
                 </a>
                 <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
-                   class="disabled" aria-disabled="true" >
+                   class="govuk-link disabled" aria-disabled="true" >
                     Assign applications to panel
                 </a>
             </li>
 
-            <li><a class="disabled" aria-disabled="true">Allocate applications to assessors</a></li>
+            <li><a class="govuk-link disabled" aria-disabled="true">Allocate applications to assessors</a></li>
         </ul>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

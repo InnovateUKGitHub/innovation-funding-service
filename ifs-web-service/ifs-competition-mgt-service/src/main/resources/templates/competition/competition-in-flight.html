@@ -177,7 +177,7 @@
                                           th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL || model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK}">
                                     <a class="govuk-button" th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
                                         th:if="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
-                                    <a class="disabled govuk-button" aria-disabled="true"
+                                    <a class="govuk-button--disabled govuk-button" aria-disabled="true"
                                        th:unless="${model.keyStatistics.canManageFundingNotifications}">Manage funding notifications</a>
                                 </th:block>
                                 <button th:unless="${model.readOnly}"
