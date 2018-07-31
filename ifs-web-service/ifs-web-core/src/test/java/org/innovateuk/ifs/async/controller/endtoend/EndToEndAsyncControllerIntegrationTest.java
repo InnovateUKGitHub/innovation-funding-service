@@ -251,7 +251,7 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
         List<Long> leadOrganisationUserIds = asList(2L, 4L, 6L);
         OrganisationResource leadOrganisation = newOrganisationResource().withUsers(leadOrganisationUserIds).build();
 
-        when(restTemplateMock.exchange(eq(baseRestUrl + "/organisation/findById/444"), eq(HttpMethod.GET), isA(HttpEntity.class),
+        when(restTemplateMock.exchange(eq(baseRestUrl + "/organisation/find-by-id/444"), eq(HttpMethod.GET), isA(HttpEntity.class),
                 eq(OrganisationResource.class))).thenAnswer(invocation -> dataLayerResponse(leadOrganisation, executionBehaviour));
         return leadOrganisationUserIds;
     }
