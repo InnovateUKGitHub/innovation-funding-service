@@ -101,13 +101,12 @@
                             <label for="select-all-check"
                                    class="govuk-label govuk-checkboxes__label">
                                 Select all assessors
-                                <span class="govuk-hint govuk-!-padding-left-6">
-                                    <span data-count-selected="" th:text="${#lists.size(interviewSelectionForm.selectedAssessorIds)}"></span> assessors selected
-                                </span>
                             </label>
                         </div>
                     </div>
-
+                    <span class="govuk-hint">
+                        <span data-count-selected="" th:text="${#lists.size(interviewSelectionForm.selectedAssessorIds)}"></span> assessors selected
+                    </span>
                 </div>
                 <div class="govuk-grid-column-one-half select-all alignright">
                     <button class="govuk-button govuk-!-margin-bottom-3" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewSelectionForm.selectedAssessorIds)}">
