@@ -17,12 +17,6 @@ import java.util.Optional;
 
 public interface ApplicationInviteService {
 
-    @PreFilter(filterTarget = "invites", value = "hasPermission(filterObject, 'SEND')")
-    ServiceResult<Void> inviteCollaborators(String baseUrl, @P("invites") List<ApplicationInvite> invites);
-
-    @PreAuthorize("hasPermission(#invite, 'SEND')")
-    ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, @P("invite") ApplicationInvite invite);
-
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationInvite> findOneByHash(String hash);
 

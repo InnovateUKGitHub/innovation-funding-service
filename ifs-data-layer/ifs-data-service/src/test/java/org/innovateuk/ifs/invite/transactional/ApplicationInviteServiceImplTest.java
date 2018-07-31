@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.invite.transactional;
 
-import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.transactional.ApplicationProgressServiceImpl;
@@ -17,9 +16,6 @@ import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.notifications.resource.NotificationMedium;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -35,9 +31,6 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -49,7 +42,6 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -63,15 +55,11 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationInviteServiceImplTest {
-
-    @Mock
-    private NotificationService notificationService;
 
     @Mock
     private ApplicationInviteMapper applicationInviteMapper;
@@ -107,22 +95,14 @@ public class ApplicationInviteServiceImplTest {
     private LoggedInUserSupplier loggedInUserSupplierMock;
 
     @Mock
-    private SystemNotificationSource systemNotificationSourceMock;
+    private ApplicationInviteNotificationService applicationInviteNotificationServiceMock;
 
     @InjectMocks
     private ApplicationInviteServiceImpl inviteService = new ApplicationInviteServiceImpl();
-    private LocalValidatorFactoryBean localValidatorFactory;
 
     @Before
     public void setup() {
         when(applicationInviteRepositoryMock.save(any(ApplicationInvite.class))).thenReturn(new ApplicationInvite());
-        ServiceResult<Void> result = serviceSuccess();
-        when(notificationService.sendNotificationWithFlush(any(), eq(NotificationMedium.EMAIL))).thenReturn(result);
-
-        localValidatorFactory = new LocalValidatorFactoryBean();
-        localValidatorFactory.setProviderClass(HibernateValidator.class);
-        localValidatorFactory.afterPropertiesSet();
-
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
     }
 
@@ -136,105 +116,6 @@ public class ApplicationInviteServiceImplTest {
         ServiceResult<ApplicationInvite> result = inviteService.findOneByHash(hash);
 
         assertThat(result.getSuccess()).isEqualTo(applicationInvite);
-    }
-
-    @Test
-    public void validatorEmpty() {
-        Application application = newApplication().withName("AppName").build();
-        User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
-        Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
-        ProcessRole processRole1 = newProcessRole()
-                .with(id(1L))
-                .withApplication(application)
-                .withUser(leadApplicant)
-                .withRole(Role.LEADAPPLICANT)
-                .withOrganisationId(leadOrganisation.getId())
-                .build();
-        application.setProcessRoles(singletonList(processRole1));
-
-        ApplicationInvite invite = ApplicationInviteBuilder.newApplicationInvite().withApplication(application).build();
-        Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
-        localValidatorFactory.validate(invite, errors);
-
-        assertThat(errors.getErrorCount()).isEqualTo(2);
-    }
-
-    @Test
-    public void validatorEmail() {
-        Application application = newApplication().withName("AppName").build();
-        User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
-        Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
-        ProcessRole processRole1 = newProcessRole().with(id(1L))
-                .withApplication(application)
-                .withUser(leadApplicant)
-                .withRole(Role.LEADAPPLICANT)
-                .withOrganisationId(leadOrganisation.getId())
-                .build();
-        application.setProcessRoles(singletonList(processRole1));
-
-        ApplicationInvite invite = ApplicationInviteBuilder.newApplicationInvite().withApplication(application).build();
-        invite.setName("Nico");
-        invite.setEmail("email-invalid");
-        Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
-        localValidatorFactory.validate(invite, errors);
-
-        assertThat(errors.getErrorCount()).isOne();
-    }
-
-    @Test
-    public void inviteCollaborators() throws Exception {
-        Competition competition = newCompetition().build();
-        Application application = newApplication().withCompetition(competition).withName("AppName").build();
-        User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
-
-        Organisation leadOrganisation = newOrganisation()
-                .withId(43L)
-                .withName("Empire Ltd")
-                .build();
-        when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);
-
-        ProcessRole processRole1 = newProcessRole()
-                .with(id(1L))
-                .withApplication(application)
-                .withUser(leadApplicant)
-                .withRole(Role.LEADAPPLICANT)
-                .withOrganisationId(leadOrganisation.getId())
-                .build();
-        application.setProcessRoles(singletonList(processRole1));
-
-        ApplicationInvite invite = ApplicationInviteBuilder.newApplicationInvite().withApplication(application).build();
-        invite.setName("Nico");
-        invite.setEmail("nico@test.nl");
-        InviteOrganisation inviteOrganisation =
-                new InviteOrganisation("SomeOrg", null, singletonList(invite));
-        invite.setInviteOrganisation(inviteOrganisation);
-
-        ServiceResult<Void> results =
-                inviteService.inviteCollaborators("http:localhost:189809", singletonList(invite));
-        assertThat(results.isSuccess()).isTrue();
-    }
-
-    @Test
-    public void inviteCollaboratorsInvalid() throws Exception {
-        Application application = newApplication().withName("AppName").build();
-        User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
-        Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
-        ProcessRole processRole1 = newProcessRole()
-                .with(id(1L))
-                .withApplication(application)
-                .withUser(leadApplicant)
-                .withRole(Role.LEADAPPLICANT)
-                .withOrganisationId(leadOrganisation.getId())
-                .build();
-        application.setProcessRoles(singletonList(processRole1));
-
-        ApplicationInvite invite = ApplicationInviteBuilder.newApplicationInvite().withApplication(application).build();
-        invite.setName("Nico");
-        invite.setEmail("nicotest.nl");
-
-        ServiceResult<Void> results =
-                inviteService.inviteCollaborators("http:localhost:189809", singletonList(invite));
-        assertThat(results.isFailure()).isTrue();
     }
 
     @Test
@@ -275,6 +156,7 @@ public class ApplicationInviteServiceImplTest {
 
         when(applicationInviteRepositoryMock.save(saveInvitesExpectations)).thenReturn(savedInvites);
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
+        when(applicationInviteNotificationServiceMock.inviteCollaborators(isA(List.class))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
@@ -283,6 +165,7 @@ public class ApplicationInviteServiceImplTest {
 
         verify(inviteOrganisationRepositoryMock).save(isA(InviteOrganisation.class));
         verify(applicationInviteRepositoryMock, times(5)).save(isA(ApplicationInvite.class));
+        verify(applicationInviteNotificationServiceMock, times(1)).inviteCollaborators(isA(List.class));
     }
 
     @Test
@@ -366,6 +249,7 @@ public class ApplicationInviteServiceImplTest {
         when(inviteOrganisationRepositoryMock.findAll(isA(List.class)))
                 .thenReturn(newInviteOrganisation().build(inviteResources.size()));
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
+        when(applicationInviteNotificationServiceMock.inviteCollaborators(isA(List.class))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
@@ -379,6 +263,7 @@ public class ApplicationInviteServiceImplTest {
         assertThat(argument.getValue().getOrganisation()).isNull();
 
         verify(applicationInviteRepositoryMock, times(1)).save(isA(ApplicationInvite.class));
+        verify(applicationInviteNotificationServiceMock, times(1)).inviteCollaborators(isA(List.class));
     }
 
     @Test
@@ -403,6 +288,7 @@ public class ApplicationInviteServiceImplTest {
         when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(inviteResources.size()));
         when(organisationRepositoryMock.findOne(inviteOrganisationResource.getOrganisation())).thenReturn(organisation);
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
+        when(applicationInviteNotificationServiceMock.inviteCollaborators(isA(List.class))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
@@ -418,7 +304,7 @@ public class ApplicationInviteServiceImplTest {
                 .isEqualTo(argument.getValue().getOrganisationName());
 
         verify(applicationInviteRepositoryMock, times(1)).save(isA(ApplicationInvite.class));
-
+        verify(applicationInviteNotificationServiceMock, times(1)).inviteCollaborators(isA(List.class));
     }
 
     @Test
@@ -451,6 +337,7 @@ public class ApplicationInviteServiceImplTest {
                 .thenReturn(inviteOrganisation);
 
         when(applicationRepositoryMock.findOne(isA(Long.class))).thenReturn(newApplication().withId(1L).build());
+        when(applicationInviteNotificationServiceMock.inviteCollaborators(isA(List.class))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
@@ -466,6 +353,7 @@ public class ApplicationInviteServiceImplTest {
                 .isEqualTo(argument.getValue().getOrganisationName());
 
         verify(applicationInviteRepositoryMock, times(1)).save(isA(ApplicationInvite.class));
+        verify(applicationInviteNotificationServiceMock, times(1)).inviteCollaborators(isA(List.class));
     }
 
     @Test
