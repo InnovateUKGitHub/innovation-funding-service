@@ -89,13 +89,6 @@ table {
     text-decoration: underline;
     padding-left: 0;
     padding-right: 0;
-
-    &:hover,
-    &:focus {
-      background-color: transparent;
-      color: #000;
-      text-decoration: none;
-    }
   }
 
   @include is-ie8() {
