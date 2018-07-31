@@ -92,7 +92,8 @@
                     <tr class="govuk-table__row" th:each="row, index : ${model.rows}">
                         <td class="govuk-table__cell">
                             <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${row.id})} + ${model.originQuery}"
-                               th:text="${row.id}">123
+                               th:text="${row.id}"
+                               class="govuk-link">123
                             </a>
                         </td>
                         <td class="govuk-table__cell">
