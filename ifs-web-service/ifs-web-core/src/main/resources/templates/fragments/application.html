@@ -83,9 +83,9 @@
                           <th:block th:if="!${#lists.isEmpty(feedback)}">
                               <th:block th:each="item : ${feedback}">
                                   <div th:if="${formInput.getQuestion()} == ${item.question}" class="clear-floats">
-                                      <div class="grid-row">
-                                          <div class="column-half">
-                                              <h3 class="heading-small">Feedback</h3>
+                                      <div class="govuk-grid-row govuk-!-margin-top-6">
+                                          <div class="govuk-grid-column-one-half">
+                                              <h3 class="govuk-heading-s">Feedback</h3>
                                           </div>
                                           <div class="govuk-grid-column-one-half alignright govuk-heading-s">
                                               <th:block th:each="score : ${score}">
