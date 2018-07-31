@@ -36,7 +36,7 @@ Comp Admin starts a new Competition
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page           ${CA_UpcomingComp}
-    When the user clicks the button/link           jQuery=.button:contains("Create competition")
+    When the user clicks the button/link           jQuery = .button:contains("Create competition")
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
