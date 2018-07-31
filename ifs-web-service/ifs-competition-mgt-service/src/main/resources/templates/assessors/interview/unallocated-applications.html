@@ -65,10 +65,10 @@
         </div>
         <div data-selection-limit-exceeded-block=""></div>
 
-        <div class="grid-row sorting">
+        <div class="govuk-body govuk-grid-row sorting">
             <div class="column-one">
-                <span class="govuk-heading-xl govuk-!-margin-0" th:text="${model.pagination.totalCount}">20</span>
-                <span class="govuk-heading-s">applications</span>
+                <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">applications</span>
             </div>
         </div>
 
@@ -79,7 +79,7 @@
               autocomplete="off"
               th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
-            <div class="grid-row sorting">
+            <div class="govuk-grid-row sorting">
                 <div class="govuk-grid-column-one-half select-all">
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
@@ -95,13 +95,12 @@
                             </label>
                         </div>
                     </div>
-
                     <span class="govuk-hint">
                         <span data-count-selected="" th:text="${#lists.size(interviewAllocationSelectionForm.selectedIds)}"></span> applications selected
                     </span>
                 </div>
                 <div class="govuk-grid-column-one-half select-all alignright">
-                    <button class="govuk-button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAllocationSelectionForm.selectedIds)}">
+                    <button class="govuk-button govuk-!-margin-bottom-3" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAllocationSelectionForm.selectedIds)}">
                         Allocate
                     </button>
                 </div>
@@ -112,10 +111,10 @@
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="col">Select</th>
-                        <th scope="col" class="width-80">Application number</th>
+                        <th class="govuk-table__header width-80" scope="col">Application number</th>
                         <th class="govuk-table__header" scope="col">Project title</th>
                         <th class="govuk-table__header" scope="col">Lead organisation</th>
-                        <th class="alignright" scope="col">Assessors</th>
+                        <th class="govuk-table__header alignright" scope="col">Assessors</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -134,11 +133,11 @@
                                     </label>
                                 </div>
                             </div>
-
                         </td>
                         <td class="govuk-table__cell">
                             <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${row.id})} + ${model.originQuery}"
-                               th:text="${row.id}">123
+                               th:text="${row.id}"
+                               class="govuk-link">123
                             </a>
                         </td>
                         <td class="govuk-table__cell">

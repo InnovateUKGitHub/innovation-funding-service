@@ -62,7 +62,7 @@
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row" th:each="row, iterStat : ${model.unsuccessfulApplications}">
                         <td class="govuk-table__cell">
-                            <a th:href="@{'/competition/' + ${row.competition} + '/application/' + ${row.id} + ${originQuery}}" th:text="${row.id}">124</a>
+                            <a class="govuk-link" th:href="@{'/competition/' + ${row.competition} + '/application/' + ${row.id} + ${originQuery}}" th:text="${row.id}">124</a>
                         </td>
                         <td class="govuk-table__cell" th:text="${row.name}">Automated Project Title generator</td>
                         <td class="govuk-table__cell" th:text="${row.leadOrganisationName}">B.Systems</td>

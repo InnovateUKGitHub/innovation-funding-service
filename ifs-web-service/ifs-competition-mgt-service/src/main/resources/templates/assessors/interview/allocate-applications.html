@@ -20,9 +20,9 @@
 
         <p class="govuk-body">Review the allocated applications, edit the email and click notify. Feedback will then be released to the assessor.</p>
 
-        <div class="grid-row sorting govuk-!-margin-top-6">
-            <span class="govuk-heading-xl govuk-!-margin-0" th:text="${#lists.size(model.applications)}">4</span>
-            <span class="govuk-heading-s">applications</span>
+        <div class="govuk-body govuk-grid-row sorting govuk-!-margin-top-6">
+            <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${#lists.size(model.applications)}">4</span>
+            <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">applications</span>
         </div>
 
         <form method="POST"
@@ -100,11 +100,13 @@
                     Email: competitions@innovateuk.ukri.org
                 </p>
 
-                <input type="submit" class="govuk-button" value="Notify"/>
+                <div class="govuk-body govuk-!-margin-top-6">
+                    <input type="submit" class="govuk-button" value="Notify"/>
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}" class="button-clear">
+                        Cancel
+                    </a>
+                </div>
 
-                <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/unallocated-applications/{userId}(competitionId=${model.competitionId},userId=${model.user.id})}" class="button-clear">
-                    Cancel
-                </a>
             </fieldset>
         </form>
 

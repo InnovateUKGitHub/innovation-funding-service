@@ -26,14 +26,14 @@
               novalidate="novalidate"
               data-section="milestones">
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('title')} ? 'govuk-form-group--error'">
-              <label class="govuk-label--s" for="title">
+              <label class="govuk-label govuk-label--s" for="title">
                   Competition title
               </label>
               <th:block th:if="${#fields.hasErrors('title')}">
                   <span class="govuk-error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
               </th:block>
               <input id="title"
-                     class="govuk-input width-xlarge"
+                     class="govuk-input govuk-!-width-one-half"
                      th:errorclass="govuk-input--error"
                      type="text"
                      th:field="${form.title}"
@@ -41,7 +41,7 @@
                      th:attr="data-required-errormessage=#{validation.standard.title.required}" />
           </div>
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'govuk-form-group--error'">
-              <label class="govuk-label--s" for="innovationSectorCategoryId">
+              <label class="govuk-label govuk-label--s" for="innovationSectorCategoryId">
                   Innovation sector
               </label>
               <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
@@ -58,7 +58,7 @@
           </div>
 
           <div class="govuk-form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryId')} ? 'govuk-form-group--error'">
-              <label class="govuk-label--s" for="innovationAreaCategoryId">
+              <label class="govuk-label govuk-label--s" for="innovationAreaCategoryId">
                   Innovation area
               </label>
               <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">
@@ -314,9 +314,9 @@
                        required="required"
                        th:attr="data-required-errormessage=#{validation.nonifs.detailsform.url.required}" />
             </div>
-            <div class="govuk-!-margin-top-6">
-                <button class="govuk-button">Save and continue</button>
-                <a th:href="@{/dashboard}" class="govuk-link">Cancel</a>
+            <div class="govuk-body govuk-!-margin-top-6">
+                <button class="govuk-button govuk-!-margin-right-6">Save and continue</button>
+                <a th:href="@{/dashboard}" class="button-clear">Cancel</a>
             </div>
         </form>
 
