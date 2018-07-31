@@ -175,7 +175,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .withOrganisation(organisation)
                 .withWorkPostcode("UB7 8QF")
                 .build();
-        applicationFinances = Collections.singletonList(applicationFinance);
+        applicationFinances = singletonList(applicationFinance);
 
         application = newApplication().
                 withId(applicationId).

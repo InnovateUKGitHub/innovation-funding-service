@@ -75,7 +75,7 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((name, application) -> application.setName(name), names);
     }
 
-    public ApplicationBuilder withApplicationFinancesList(List<ApplicationFinance> ...applicationFinancesLists) {
+    public ApplicationBuilder withApplicationFinancesList(List<ApplicationFinance>... applicationFinancesLists) {
         return withArray((applicationFinancesList, application) -> application.setApplicationFinances(applicationFinancesList), applicationFinancesLists);
     }
 

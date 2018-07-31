@@ -265,9 +265,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private PartnerOrganisation createPartnerOrganisation(Application application, Project project, Organisation org, ProcessRole leadApplicantRole) {
         PartnerOrganisation partnerOrganisation = new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisationId()));
 
-        application.getApplicationFinances().stream()
-                .filter(applicationFinance -> applicationFinance.getOrganisation().getId().equals(org.getId()))
-                .findFirst()
+        simpleFindFirst(application.getApplicationFinances(), applicationFinance -> applicationFinance.getOrganisation().getId().equals(org.getId()))
                 .ifPresent(applicationFinance -> partnerOrganisation.setPostcode(applicationFinance.getWorkPostcode()));
 
         return partnerOrganisation;
