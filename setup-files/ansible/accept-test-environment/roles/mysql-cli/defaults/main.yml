@@ -1,0 +1,6 @@
+---
+# Install the mysql command line client
+mysql_client_install_client: true
+
+# Install the mysql client libraries
+mysql_client_install_libraries: false
