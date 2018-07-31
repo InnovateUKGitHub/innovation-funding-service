@@ -43,18 +43,30 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     }
 
     private ServiceResult<Void> validateProjectDocument(ProjectDocumentResource projectDocumentResource) {
-        return !projectDocumentResource.isPdf() && !projectDocumentResource.isSpreadsheet() ? serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE) : serviceSuccess();
+        return isPdfOrSpreadSheet(projectDocumentResource) ? serviceSuccess() : serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
+    }
+
+    private boolean isPdfOrSpreadSheet(ProjectDocumentResource projectDocumentResource) {
+        return projectDocumentResource.isPdf() || projectDocumentResource.isSpreadsheet();
+    }
+
+    private ServiceResult<Void> validateProjectDocument(List<ProjectDocumentResource> projectDocumentResources) {
+        return projectDocumentResources.stream().anyMatch(projectDocumentResource -> !isPdfOrSpreadSheet(projectDocumentResource)) ?
+                serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE) : serviceSuccess();
     }
 
     @Override
     @Transactional
     public ServiceResult<List<ProjectDocumentResource>> saveAll(List<ProjectDocumentResource> projectDocumentResources) {
 
-        List<ProjectDocument> projectDocuments = simpleMap(projectDocumentResources,
-                projectDocumentResource -> projectDocumentMapper.mapToDomain(projectDocumentResource));
+        return validateProjectDocument(projectDocumentResources).andOnSuccess(() -> {
 
-        projectDocuments = (List<ProjectDocument>) projectDocumentRepository.save(projectDocuments);
-        return serviceSuccess(simpleMap(projectDocuments, projectDocument -> projectDocumentMapper.mapToResource(projectDocument)));
+            List<ProjectDocument> projectDocuments = simpleMap(projectDocumentResources,
+                    projectDocumentResource -> projectDocumentMapper.mapToDomain(projectDocumentResource));
+
+            projectDocuments = (List<ProjectDocument>) projectDocumentRepository.save(projectDocuments);
+            return serviceSuccess(simpleMap(projectDocuments, projectDocument -> projectDocumentMapper.mapToResource(projectDocument)));
+        });
     }
 
     @Override

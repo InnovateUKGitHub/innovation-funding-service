@@ -25,7 +25,7 @@ public class CompetitionSetupProjectDocumentController {
     }
 
     @PostMapping("/save-all")
-    public RestResult<List<ProjectDocumentResource>> save(@RequestBody List<ProjectDocumentResource> projectDocumentResources) {
+    public RestResult<List<ProjectDocumentResource>> save(@Valid @RequestBody List<ProjectDocumentResource> projectDocumentResources) {
         return competitionSetupProjectDocumentService.saveAll(projectDocumentResources).toGetResponse();
     }
 
