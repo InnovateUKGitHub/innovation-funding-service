@@ -110,7 +110,6 @@
                                 <!--/* readonly */-->
                                 <th:block th:if="${readonly}">
                                     <tr class="govuk-table__row" th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}"
-                                        class="form-group-row"
                                         th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'govuk-form-group--error' : ''}">
                                         <th class="govuk-table__header" scope="row">
                                             <span th:text="${model.table.costCategoryResourceMap.get(row.key).getName()}"></span>
