@@ -32,10 +32,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class OrganisationCreationSaveControllerTest extends BaseControllerMockMVCTest<OrganisationCreationSaveController> {
 
-    private static String COMPANY_NAME = "organisation name";
-    private static String COMPANY_ID = "1";
-    private static String INVITE_HASH = "123abc";
-    private static String VIEW = "some-view";
+    private static final String COMPANY_NAME = "organisation name";
+    private static final String COMPANY_ID = "1";
+    private static final String INVITE_HASH = "123abc";
+    private static final String VIEW = "some-view";
 
     protected OrganisationCreationSaveController supplyControllerUnderTest() {
         return new OrganisationCreationSaveController();
@@ -125,7 +125,6 @@ public class OrganisationCreationSaveControllerTest extends BaseControllerMockMV
         verify(organisationService).createAndLinkByInvite(any(), eq(INVITE_HASH));
         verify(organisationJourneyEnd).completeProcess(any(), any(), any(), eq(2L));
     }
-
 
     @Test
     public void confirmBusiness() throws Exception {

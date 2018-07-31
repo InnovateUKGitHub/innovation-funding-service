@@ -17,11 +17,15 @@ import static java.util.stream.Collectors.toSet;
 @Component
 public class OrganisationSelectionViewModelPopulator {
 
-    @Autowired
     private OrganisationRestService organisationRestService;
 
-    @Autowired
     private RegistrationCookieService registrationCookieService;
+
+    @Autowired
+    public OrganisationSelectionViewModelPopulator(OrganisationRestService organisationRestService, RegistrationCookieService registrationCookieService) {
+        this.organisationRestService = organisationRestService;
+        this.registrationCookieService = registrationCookieService;
+    }
 
     public OrganisationSelectionViewModel populate(UserResource userResource, HttpServletRequest request, String newOrganisationUrl) {
         Set<OrganisationSelectionChoiceViewModel> choices = organisationRestService.getAllUsersOrganisations(userResource.getId()).getSuccess()

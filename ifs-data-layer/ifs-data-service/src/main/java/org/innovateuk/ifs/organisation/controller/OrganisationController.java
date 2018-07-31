@@ -56,7 +56,7 @@ public class OrganisationController {
     }
 
     @GetMapping("/all-by-user-id/{userId}")
-    public RestResult<List<OrganisationResource>> getAllUsersOrganisations(@PathVariable("userId") final Long userId) {
+    public RestResult<List<OrganisationResource>> getAllUsersOrganisations(@PathVariable("userId") final long userId) {
         return organisationService.getAllUsersOrganisations(userId).toGetResponse();
     }
 

@@ -77,7 +77,6 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
                 .andExpect(redirectedUrl("/organisation/create/lead-organisation-type/not-eligible"));
     }
 
-
     @Test
     public void selectOrganisation_collaborator() throws Exception {
         long organisationId = 2L;
@@ -92,7 +91,6 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
         verify(organisationJourneyEnd).completeProcess(any(), any(), eq(loggedInUser), eq(organisationId));
     }
-
 
     @Override
     protected OrganisationSelectionController supplyControllerUnderTest() {

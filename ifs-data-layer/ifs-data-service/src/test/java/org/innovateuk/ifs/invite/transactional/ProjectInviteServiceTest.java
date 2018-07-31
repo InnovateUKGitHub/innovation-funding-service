@@ -66,7 +66,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     private ProjectUserRepository projectUserRepositoryMock;
 
     @Test
-    public void testAcceptProjectInviteSuccess() throws Exception {
+    public void acceptProjectInvite_success() throws Exception {
         Project project = newProject().build();
         Organisation organisation = newOrganisation().build();
         User user = newUser().withEmailAddress("email@example.com").build();
@@ -82,7 +82,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
 
     @Test
-    public void testAcceptProjectInviteHashDoesNotExist() throws Exception {
+    public void acceptProjectInvite_hashDoesNotExist() throws Exception {
         String hash = "hash";
         User user = newUser().withEmailAddress("email@example.com").build();
         when(projectInviteRepositoryMock.getByHash(hash)).thenReturn(null);
@@ -93,7 +93,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testAcceptProjectInviteUserDoesNotExist() throws Exception {
+    public void acceptProjectInvite_userDoesNotExist() throws Exception {
         Long userId = 1L;
         ProjectInvite projectInvite = newProjectInvite().withEmail("email@example.com").withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
@@ -105,7 +105,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
 
     @Test
-    public void testCheckUserExistingByInviteHashSuccess() throws Exception {
+    public void checkUserExistsForInvite_success() throws Exception {
         User user = newUser().withEmailAddress("email@example.com").build();
         ProjectInvite projectInvite = newProjectInvite().withEmail(user.getEmail()).withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
@@ -116,7 +116,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testCheckUserExistingByInviteHashHashNotFound() throws Exception {
+    public void checkUserExistsForInvite_hashHashNotFound() throws Exception {
         String hash = "hash";
         when(projectInviteRepositoryMock.getByHash(hash)).thenReturn(null);
         ServiceResult<Boolean> result = projectInviteService.checkUserExistsForInvite(hash);
@@ -125,7 +125,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testCheckUserExistingByInviteHashNoUserFound() throws Exception {
+    public void checkUserExistsForInvite_hashNoUserFound() throws Exception {
         ProjectInvite projectInvite = newProjectInvite().withEmail("email@example.com").withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(empty());
@@ -136,7 +136,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
 
     @Test
-    public void testSaveFinanceContactInviteSuccess() throws Exception {
+    public void saveProjectInvite_success() throws Exception {
         Organisation organisation = newOrganisation().build();
         when(organisationRepositoryMock.findDistinctByUsers(any(User.class))).thenReturn(singletonList(organisation));
 
@@ -158,7 +158,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testSaveFinanceContactInviteValidationFailure() throws Exception {
+    public void saveProjectInvite_validationFailure() throws Exception {
         Organisation organisation = newOrganisation().build();
         Project project = newProject().withName("project name").build();
         User user = newUser().withEmailAddress("email@example.com").build();
@@ -201,7 +201,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testGetInvitesByProject() throws Exception {
+    public void getInvitesByProject() throws Exception {
 
         ProjectResource projectResource = newProjectResource()
                 .build();

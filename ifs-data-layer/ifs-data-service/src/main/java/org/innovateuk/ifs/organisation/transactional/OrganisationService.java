@@ -34,7 +34,7 @@ public interface OrganisationService {
     ServiceResult<OrganisationResource> getByUserAndProjectId(long userId, long projectId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<OrganisationResource>> getAllUsersOrganisations(Long userId);
+    ServiceResult<List<OrganisationResource>> getAllUsersOrganisations(long userId);
 
     @PreAuthorize("hasPermission(#organisation, 'CREATE')")
     ServiceResult<OrganisationResource> create(@P("organisation") OrganisationResource organisation);

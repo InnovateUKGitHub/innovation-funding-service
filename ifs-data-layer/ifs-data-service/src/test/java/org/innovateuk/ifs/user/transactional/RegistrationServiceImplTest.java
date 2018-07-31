@@ -246,7 +246,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void testCreateOrganisationUser() {
+    public void createUser_organisation() {
 
         UserResource userToCreate = newUserResource().
                 withFirstName("First").
@@ -322,7 +322,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void testCreateApplicantUserButIdpCallFails() {
+    public void createUser_applicantUserButIdpCallFails() {
 
         UserResource userToCreate = newUserResource().
                 withFirstName("First").
@@ -349,7 +349,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void testCreateApplicantUserButPasswordValidationFails() {
+    public void createUser_applicantUserButPasswordValidationFails() {
 
         UserResource userToCreate = newUserResource().withPassword("thepassword").build();
         Organisation selectedOrganisation = newOrganisation().build();
@@ -365,7 +365,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void testSendUserVerificationEmail() {
+    public void sendUserVerificationEmail() {
         final UserResource userResource = newUserResource()
                 .withId(1L)
                 .withFirstName("Sample")
@@ -400,7 +400,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void testResendUserVerificationEmail() {
+    public void resendUserVerificationEmail() {
         final UserResource userResource = newUserResource()
                 .withId(1L)
                 .withFirstName("Sample")
@@ -437,7 +437,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void testCreateInternalUser() throws Exception {
+    public void createInternalUser() throws Exception {
         RoleInvite roleInvite = newRoleInvite().withRole(Role.PROJECT_FINANCE).build();
         InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
                 .withFirstName("First")
@@ -468,7 +468,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void editInternalUserWhenNewRoleIsNotInternalRole() {
+    public void editInternalUser_whenNewRoleIsNotInternalRole() {
 
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
@@ -480,7 +480,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void editInternalUserWhenUserDoesNotExist() {
+    public void editInternalUser_whenUserDoesNotExist() {
 
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
@@ -494,7 +494,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void editInternalUserSuccess() {
+    public void editInternalUser_success() {
 
         setUpUsersForEditInternalUserSuccess();
 
@@ -514,7 +514,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void deactivateUserSuccess() {
+    public void deactivateUser_success() {
 
         setUpUsersForEditInternalUserSuccess();
 
@@ -531,7 +531,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void deactivateUserIdpFails() {
+    public void deactivateUser_idpFails() {
 
         setUpUsersForEditInternalUserSuccess();
 
@@ -544,7 +544,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void deactivateUserNoUser() {
+    public void deactivateUser_noUser() {
 
         setUpUsersForEditInternalUserSuccess();
 
@@ -556,7 +556,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void activateUserSuccess() {
+    public void activateUser_success() {
 
         setUpUsersForEditInternalUserSuccess();
 
@@ -573,7 +573,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void activateUserIdpFails() {
+    public void activateUser_idpFails() {
 
         setUpUsersForEditInternalUserSuccess();
 
@@ -586,7 +586,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void activateUserNoUser() {
+    public void activateUser_noUser() {
 
         setUpUsersForEditInternalUserSuccess();
 
@@ -598,7 +598,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void testCreateCompAdminOrganisationUser() {
+    public void createUser_compAdminOrganisationUser() {
 
         Role roleResource = Role.COMP_ADMIN;
         UserResource userToCreate = newUserResource().
