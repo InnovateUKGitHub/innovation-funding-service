@@ -873,7 +873,6 @@ IFS.core.formValidation = (function () {
           formGroupRow.removeClass('govuk-form-group--error')
         }
       }
-
       // updating the error summary
       if (errorSummary.length) {
         if (id.length) {
@@ -883,7 +882,7 @@ IFS.core.formValidation = (function () {
         }
         if (jQuery('.govuk-error-summary__list li:not(.list-header)').length === 0) {
           jQuery('.govuk-error-summary__list li.list-header').remove()
-          jQuery('.govuk-error-summary__list:not([data-ignore-errors])').attr('aria-hidden', 'true')
+          jQuery('.govuk-error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true')
         }
       }
 

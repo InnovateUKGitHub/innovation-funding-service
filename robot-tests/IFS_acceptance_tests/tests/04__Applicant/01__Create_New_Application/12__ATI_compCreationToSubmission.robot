@@ -98,7 +98,7 @@ Requesting Project ID of this Project
 
 User fills in funding overide
     the user clicks the button/link   link = Eligibility
-    the user clicks the button/link   css = .button[type=submit]
+    the user clicks the button/link   css = .govuk-button[type=submit]
     the user clicks the button twice  css = label[for="comp-overrideFundingRules-yes"]
     the user selects the option from the drop-down menu  100%  id = fundingLevelPercentage
     the user clicks the button/link   jQuery = button:contains("Done")
