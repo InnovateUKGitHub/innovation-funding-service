@@ -12,7 +12,7 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +42,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private SectionService sectionService;
@@ -68,7 +68,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
                                                   HttpServletResponse response, Boolean validFinanceTerms) {
 
         Long applicationId = application.getId();
-        ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
+        ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
         SectionResource selectedSection = sectionService.getById(sectionId);
         Map<String, String[]> params = request.getParameterMap();
         boolean ignoreEmpty = !isMarkSectionRequest(params);

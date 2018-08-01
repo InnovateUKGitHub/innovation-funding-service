@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.common.populator;
 
-
 import org.innovateuk.ifs.application.common.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
@@ -21,7 +20,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +44,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     private ApplicationService applicationService;
     private SectionService sectionService;
     private OrganisationService organisationService;
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
     private UserService userService;
     private CompetitionRestService competitionRestService;
 
@@ -55,7 +54,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                                                        FileEntryRestService fileEntryRestService,
                                                        OrganisationRestService organisationRestService,
                                                        OrganisationService organisationService,
-                                                       ProcessRoleService processRoleService,
+                                                       UserRestService userRestService,
                                                        UserService userService,
                                                        CompetitionRestService competitionRestService) {
         this.applicationService = applicationService;
@@ -64,7 +63,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         this.fileEntryRestService = fileEntryRestService;
         this.organisationRestService = organisationRestService;
         this.organisationService = organisationService;
-        this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
         this.userService = userService;
         this.competitionRestService = competitionRestService;
     }
@@ -187,7 +186,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         OrganisationResource userOrganisation = null;
 
         if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR)) {
-            ProcessRoleResource userProcessRole = processRoleService.findProcessRole(user.getId(), applicationId);
+            ProcessRoleResource userProcessRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
             userOrganisation = organisationService.getOrganisationById(userProcessRole.getOrganisationId());
         }
 

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +24,14 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     private OrganisationRestService organisationRestService;
     private CompanyHouseRestService companyHouseRestService;
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     public OrganisationServiceImpl(OrganisationRestService organisationRestService,
                                    CompanyHouseRestService companyHouseRestService,
-                                   ProcessRoleService processRoleService) {
+                                   UserRestService userRestService) {
         this.organisationRestService = organisationRestService;
         this.companyHouseRestService = companyHouseRestService;
-        this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
     }
 
     @Override
@@ -70,7 +71,7 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     @Override
     public Long getOrganisationType(Long userId, Long applicationId) {
-        final ProcessRoleResource processRoleResource = processRoleService.findProcessRole(userId, applicationId);
+        final ProcessRoleResource processRoleResource = userRestService.findProcessRole(userId, applicationId).getSuccess();
         if (processRoleResource != null && processRoleResource.getOrganisationId() != null) {
             final OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRoleResource.getOrganisationId()).getSuccess();
             return organisationResource.getOrganisationType();

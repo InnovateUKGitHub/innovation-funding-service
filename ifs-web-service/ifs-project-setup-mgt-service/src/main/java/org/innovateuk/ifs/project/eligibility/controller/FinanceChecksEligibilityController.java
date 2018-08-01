@@ -45,6 +45,7 @@ import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -117,7 +118,7 @@ public class FinanceChecksEligibilityController {
     private FinanceService financeService;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private ApplicantRestService applicantRestService;
@@ -382,7 +383,7 @@ public class FinanceChecksEligibilityController {
                                                                  Optional<SectionResource> section, Optional<Long> currentQuestionId,
                                                                  final Model model, final ApplicationForm form) {
 
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles);
     }
 

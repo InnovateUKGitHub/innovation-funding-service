@@ -388,7 +388,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
-        when(processRoleService.findProcessRolesByApplicationId(applicationResource.getId())).thenReturn(asList(assessorRole));
+        when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(asList(assessorRole)));
         when(organisationService.getApplicationOrganisations(asList(assessorRole))).thenReturn(orgSet);
         when(organisationService.getApplicationLeadOrganisation(asList(assessorRole))).thenReturn(Optional.ofNullable(newOrganisationResource().build()));
 
@@ -451,7 +451,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
-        when(processRoleService.getByApplicationId(assessmentResource.getApplication())).thenReturn(application1ProcessRoles);
+        when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         when(formInputViewModelGenerator.fromSection(section, costSection, form, true)).thenReturn(asList(formInputViewModel));
@@ -528,7 +528,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
 
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
         when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
-        when(processRoleService.getByApplicationId(assessmentResource.getApplication())).thenReturn(application1ProcessRoles);
+        when(userRestService.findProcessRole(assessmentResource.getApplication())).thenReturn(restSuccess(application1ProcessRoles));
         when(sectionService.getSectionsForCompetitionByType(competitionResource.getId(), SectionType.PROJECT_COST_FINANCES)).thenReturn(Arrays.asList(sectionResources.get(7)));
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         when(financeViewHandlerProvider.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType())).thenReturn(financeModelManager);
@@ -762,7 +762,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId());
 
 
-        when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(asList(assessorRole));
+        when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(asList(assessorRole)));
         when(formInputResponseRestService.getFile(formInputId,
                 applicationId,
                 assessorRole.getId()))
@@ -779,7 +779,7 @@ public class AssessmentOverviewControllerTest extends AbstractApplicationMockMVC
                 .andExpect(header().string("Content-Type", "text/hello"))
                 .andExpect(header().longValue("Content-Length", "The returned file data".length()));
 
-        verify(processRoleService).findProcessRolesByApplicationId(applicationId);
+        verify(userRestService).findProcessRole(applicationId);
         verify(formInputResponseRestService).getFile(formInputId, applicationId, assessorRole.getId());
         verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, assessorRole.getId());
     }

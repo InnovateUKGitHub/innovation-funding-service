@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRoleName()
                 .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().equals(userId));
 
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ProcessRoleResource getLeadApplicantProcessRoleOrNull(Long applicationId) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(applicationId);
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(applicationId).getSuccess();
         for (final ProcessRoleResource processRole : userApplicationRoles) {
             if (processRole.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())) {
                 return processRole;
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         return userApplicationRoles.stream()
                 .filter(prr -> organisation.equals(prr.getOrganisationId()))
                 .collect(Collectors.toList());
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         if (leadProcessRole == null) {
             return new ArrayList<>();
         }
-        return processRoleService.getByApplicationId(application.getId()).stream()
+        return userRestService.findProcessRole(application.getId()).getSuccess().stream()
                 .filter(pr -> leadProcessRole.getOrganisationId().equals(pr.getOrganisationId()))
                 .collect(Collectors.toList());
     }

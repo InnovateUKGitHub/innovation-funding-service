@@ -14,6 +14,7 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -44,6 +45,7 @@ public class ApplicationSubmitController {
 
     private QuestionService questionService;
     private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
     private ApplicationService applicationService;
     private ApplicationRestService applicationRestService;
     private CompetitionRestService competitionRestService;
@@ -56,6 +58,7 @@ public class ApplicationSubmitController {
     @Autowired
     public ApplicationSubmitController(QuestionService questionService,
                                        ProcessRoleService processRoleService,
+                                       UserRestService userRestService,
                                        ApplicationService applicationService,
                                        ApplicationRestService applicationRestService,
                                        CompetitionRestService competitionRestService,
@@ -63,6 +66,7 @@ public class ApplicationSubmitController {
                                        CookieFlashMessageFilter cookieFlashMessageFilter) {
         this.questionService = questionService;
         this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
         this.applicationService = applicationService;
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
@@ -84,12 +88,12 @@ public class ApplicationSubmitController {
         Map<String, String[]> params = request.getParameterMap();
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
-            ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+            ProcessRoleResource assignedBy = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
             questionService.assignQuestion(applicationId, request, assignedBy);
         } else if (params.containsKey(MARK_AS_COMPLETE)) {
             Long markQuestionCompleteId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
             if (markQuestionCompleteId != null) {
-                ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+                ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
                 List<ValidationMessages> markAsCompleteErrors = questionService.markAsComplete(markQuestionCompleteId, applicationId, processRole.getId());
 
                 if (collectValidationMessages(markAsCompleteErrors).hasErrors()) {
@@ -109,7 +113,7 @@ public class ApplicationSubmitController {
                                            UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         applicationModelPopulator.addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.empty());
         return "application-confirm-submit";
     }

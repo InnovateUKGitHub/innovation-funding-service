@@ -29,8 +29,10 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,6 +76,7 @@ import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionR
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -81,6 +84,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static java.util.Arrays.asList;
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -136,7 +140,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
     private FormInputResponseService formInputResponseService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Mock
     private InviteService inviteService;
@@ -358,6 +362,12 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .withDurationInMonths(20L)
                 .build();
 
+        ProcessRoleResource processRole = newProcessRoleResource().with(id(1L))
+                .withApplication(applicationResource.getId())
+                .withRoleName(UserApplicationRole.LEAD_APPLICANT.getRoleName())
+                .withOrganisation(1L)
+                .withUser(applicant).build();
+
         CompetitionResource competitionResource = setupCompetitionResource();
 
         AssessmentResource assessmentResource = setupAssessment(competitionResource.getId(), applicationResource.getId());
@@ -378,6 +388,8 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
 
         when(organisationRestService.getOrganisationsByApplicationId(applicationResource.getId())).thenReturn(restSuccess(emptyList()));
+
+        when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(asList(processRole)));
 
         setupQuestionNavigation(questionResource.getId(), empty(), of(nextQuestionResource));
 

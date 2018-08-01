@@ -59,9 +59,6 @@ public class ApplicationModelPopulatorTest {
     protected QuestionService questionService;
 
     @Mock
-    protected ProcessRoleService processRoleService;
-
-    @Mock
     protected SectionService sectionService;
 
     @Mock
@@ -111,7 +108,7 @@ public class ApplicationModelPopulatorTest {
 
         when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
         when(userRestService.retrieveUserById(leadApplicantId)).thenReturn(restSuccess(leadApplicant));
-        when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(userApplicationRoles));
 
         applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
 

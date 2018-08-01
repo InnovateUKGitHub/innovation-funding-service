@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
@@ -38,18 +39,18 @@ public class AssessorCompetitionDashboardModelPopulator {
     private AssessmentService assessmentService;
     private ApplicationService applicationService;
     private OrganisationService organisationService;
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     public AssessorCompetitionDashboardModelPopulator(CompetitionRestService competitionService,
                                                       AssessmentService assessmentService,
                                                       ApplicationService applicationService,
                                                       OrganisationService organisationService,
-                                                      ProcessRoleService processRoleService) {
+                                                      UserRestService userRestService) {
         this.competitionRestService = competitionService;
         this.assessmentService = assessmentService;
         this.applicationService = applicationService;
         this.organisationService = organisationService;
-        this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
     }
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
@@ -88,7 +89,7 @@ public class AssessorCompetitionDashboardModelPopulator {
 
     private AssessorCompetitionDashboardApplicationViewModel createApplicationViewModel(AssessmentResource assessment) {
         ApplicationResource application = applicationService.getById(assessment.getApplication());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         Optional<OrganisationResource> leadOrganisation = organisationService.getApplicationLeadOrganisation(userApplicationRoles);
         return new AssessorCompetitionDashboardApplicationViewModel(application.getId(),
                 assessment.getId(),

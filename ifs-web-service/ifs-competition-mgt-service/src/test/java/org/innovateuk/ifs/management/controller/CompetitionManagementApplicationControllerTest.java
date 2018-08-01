@@ -158,9 +158,6 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Mock
-    private UserRestService userRestServiceMock;
-
-    @Mock
     private InviteService inviteService;
 
     @Mock
@@ -562,7 +559,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
         when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
+        when(userRestService.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
 
@@ -589,7 +586,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
         when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
+        when(userRestService.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
 
         MvcResult result = mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "")
@@ -703,7 +700,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
         when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
-        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
+        when(userRestService.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
         when(assessmentRestService.getByUserAndApplication(anyLong(), anyLong())).thenReturn(restSuccess(emptyList()));
@@ -783,7 +780,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         Long formInputId = 35L;
         long processRoleId = 73L;
         ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
-        when(processRoleService.findProcessRole(user.getId(), applications.get(0).getId())).thenReturn(processRoleResource);
+        when(userRestService.findProcessRole(user.getId(), applications.get(0).getId())).thenReturn(restSuccess(processRoleResource));
         ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
         when(formInputResponseRestService.getFile(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(restSuccess(bar));
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
@@ -811,7 +808,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         Long formInputId = 35L;
         long processRoleId = 73L;
         ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
-        when(processRoleService.findProcessRole(user.getId(), applications.get(0).getId())).thenReturn(processRoleResource);
+        when(userRestService.findProcessRole(user.getId(), applications.get(0).getId())).thenReturn(restSuccess(processRoleResource));
         ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
         when(formInputResponseRestService.getFile(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(restSuccess(bar));
         when(formInputResponseRestService.getFileDetails(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(RestResult.restFailure(GENERAL_NOT_FOUND));
@@ -834,7 +831,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
         Long formInputId = 35L;
         long processRoleId = 73L;
         ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
-        when(processRoleService.findProcessRole(user.getId(), applications.get(0).getId())).thenReturn(processRoleResource);
+        when(userRestService.findProcessRole(user.getId(), applications.get(0).getId())).thenReturn(restSuccess(processRoleResource));
         when(formInputResponseRestService.getFile(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(restFailure(GENERAL_NOT_FOUND));
 
         mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/forminput/" + formInputId + "/download"))

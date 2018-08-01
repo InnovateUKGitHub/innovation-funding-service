@@ -17,6 +17,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,7 @@ public class ApplicantDashboardPopulator {
     private ApplicationRestService applicationRestService;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private ProjectService projectService;
@@ -128,7 +129,7 @@ public class ApplicantDashboardPopulator {
     private List<ProcessRoleResource> getUserProcessRolesWithApplicationRole(Long userId) {
 
         return simpleFilter(
-                processRoleService.getByUserId(userId),
+                userRestService.findProcessRoleByUserId(userId).getSuccess(),
                 this::hasAnApplicantRole
         );
     }

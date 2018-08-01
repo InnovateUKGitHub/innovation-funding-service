@@ -18,6 +18,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -72,6 +73,9 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     private ProcessRoleService processRoleService;
 
     @Mock
+    private UserRestService userRestService;
+
+    @Mock
     private ApplicationService applicationService;
 
     @Mock
@@ -118,10 +122,10 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
 
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
+        when(userRestService.findProcessRole(applications.get(0).getId())).thenReturn(restSuccess(asList(participants.get(0))));
+        when(userRestService.findProcessRole(applications.get(1).getId())).thenReturn(restSuccess(asList(participants.get(1))));
+        when(userRestService.findProcessRole(applications.get(2).getId())).thenReturn(restSuccess(asList(participants.get(2))));
+        when(userRestService.findProcessRole(applications.get(3).getId())).thenReturn(restSuccess(asList(participants.get(3))));
         when(organisationService.getApplicationLeadOrganisation(asList(participants.get(0)))).thenReturn(Optional.ofNullable(organisations.get(0)));
         when(organisationService.getApplicationLeadOrganisation(asList(participants.get(1)))).thenReturn(Optional.ofNullable(organisations.get(1)));
         when(organisationService.getApplicationLeadOrganisation(asList(participants.get(2)))).thenReturn(Optional.ofNullable(organisations.get(2)));
@@ -135,13 +139,13 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionRestService, assessmentService, applicationService, processRoleService, organisationService);
+        InOrder inOrder = inOrder(competitionRestService, assessmentService, applicationService, userRestService, organisationService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
 
         assessments.forEach(assessment -> {
             inOrder.verify(applicationService).getById(assessment.getApplication());
-            inOrder.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
+            inOrder.verify(userRestService).findProcessRole(assessment.getApplication());
             inOrder.verify(organisationService).getApplicationLeadOrganisation(anyList());
             if (assessment.getAssessmentState() == SUBMITTED || assessment.getAssessmentState() == READY_TO_SUBMIT) {
                 inOrder.verify(assessmentService).getTotalScore(assessment.getId());
@@ -208,10 +212,10 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(assessmentService.getByUserAndCompetition(userId, competition.getId())).thenReturn(assessments);
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(2).getId())).thenReturn(asList(participants.get(2)));
-        when(processRoleService.findProcessRolesByApplicationId(applications.get(3).getId())).thenReturn(asList(participants.get(3)));
+        when(userRestService.findProcessRole(applications.get(0).getId())).thenReturn(restSuccess(asList(participants.get(0))));
+        when(userRestService.findProcessRole(applications.get(1).getId())).thenReturn(restSuccess(asList(participants.get(1))));
+        when(userRestService.findProcessRole(applications.get(2).getId())).thenReturn(restSuccess(asList(participants.get(2))));
+        when(userRestService.findProcessRole(applications.get(3).getId())).thenReturn(restSuccess(asList(participants.get(3))));
         when(organisationService.getApplicationLeadOrganisation(asList(participants.get(0)))).thenReturn(Optional.ofNullable(organisations.get(0)));
         when(organisationService.getApplicationLeadOrganisation(asList(participants.get(1)))).thenReturn(Optional.ofNullable(organisations.get(1)));
         when(organisationService.getApplicationLeadOrganisation(asList(participants.get(2)))).thenReturn(Optional.ofNullable(organisations.get(2)));
@@ -224,13 +228,13 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .andExpect(view().name("assessor-competition-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionRestService, assessmentService, applicationService, processRoleService, organisationService);
+        InOrder inOrder = inOrder(competitionRestService, assessmentService, applicationService, userRestService, organisationService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(assessmentService).getByUserAndCompetition(userId, competition.getId());
 
         assessments.forEach(assessment -> {
             inOrder.verify(applicationService).getById(assessment.getApplication());
-            inOrder.verify(processRoleService).findProcessRolesByApplicationId(assessment.getApplication());
+            inOrder.verify(userRestService).findProcessRole(assessment.getApplication());
             inOrder.verify(organisationService).getApplicationLeadOrganisation(anyList());
             if (assessment.getAssessmentState() == SUBMITTED || assessment.getAssessmentState() == READY_TO_SUBMIT) {
                 inOrder.verify(assessmentService).getTotalScore(assessment.getId());

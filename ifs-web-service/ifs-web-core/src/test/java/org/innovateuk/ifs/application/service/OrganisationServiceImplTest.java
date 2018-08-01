@@ -7,7 +7,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -24,14 +24,14 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     private OrganisationRestService organisationRestService;
 
     @Mock
-    private CompanyHouseRestService companyHouseRestService;
+    private UserRestService userRestService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private CompanyHouseRestService companyHouseRestService;
 
     @Override
     protected OrganisationService supplyServiceUnderTest() {
-        return new OrganisationServiceImpl(organisationRestService, companyHouseRestService, processRoleService);
+        return new OrganisationServiceImpl(organisationRestService, companyHouseRestService, userRestService);
     }
 
     @Test
@@ -111,7 +111,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         processRole.setOrganisationId(organisationId);
         OrganisationResource organisation = new OrganisationResource();
         organisation.setOrganisationType(organisationType);
-        when(processRoleService.findProcessRole(userId, applicationId)).thenReturn(processRole);
+        when(userRestService.findProcessRole(userId, applicationId)).thenReturn(restSuccess(processRole));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
         Long returnedOrganisationType = service.getOrganisationType(userId, applicationId);

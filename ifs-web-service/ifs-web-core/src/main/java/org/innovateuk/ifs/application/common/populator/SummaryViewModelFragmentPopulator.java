@@ -25,6 +25,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +47,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
     private SectionService sectionService;
     private QuestionService questionService;
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
     private OrganisationService organisationService;
     private FormInputRestService formInputRestService;
     private FormInputResponseRestService formInputResponseRestService;
@@ -64,7 +65,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
                                              SectionService sectionService,
                                              QuestionService questionService,
                                              AssessorFormInputResponseRestService assessorFormInputResponseRestService,
-                                             ProcessRoleService processRoleService,
+                                             UserRestService userRestService,
                                              OrganisationService organisationService,
                                              FormInputRestService formInputRestService,
                                              FormInputResponseRestService formInputResponseRestService,
@@ -82,7 +83,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
         this.sectionService = sectionService;
         this.questionService = questionService;
         this.assessorFormInputResponseRestService = assessorFormInputResponseRestService;
-        this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
         this.organisationService = organisationService;
         this.formInputRestService = formInputRestService;
         this.formInputResponseRestService = formInputResponseRestService;
@@ -103,7 +104,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
 
         Map<Long, List<QuestionResource>> sectionQuestions = getSectionQuestions(competition.getId());
 
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(user.getId(), userApplicationRoles);
 
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();

@@ -24,6 +24,7 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +74,7 @@ public class ApplicationQuestionController {
     private ApplicationService applicationService;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private QuestionService questionService;
@@ -244,7 +245,7 @@ public class ApplicationQuestionController {
             Long questionId,
             UserResource user
     ) {
-        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         if (processRole != null) {
             questionService.markAsIncomplete(questionId, applicationId, processRole.getId());
         } else {

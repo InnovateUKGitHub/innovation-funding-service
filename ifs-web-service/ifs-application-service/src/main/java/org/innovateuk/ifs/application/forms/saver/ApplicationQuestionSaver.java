@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
     private static final String MARKED_AS_COMPLETE_INVALID_DATA_KEY = "mark.as.complete.invalid.data.exists";
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -63,7 +63,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         final ValidationMessages errors = new ValidationMessages();
         final boolean ignoreEmpty = !params.containsKey(MARK_AS_COMPLETE);
 
-        ProcessRoleResource processRole = processRoleService.findProcessRole(userId, application.getId());
+        ProcessRoleResource processRole = userRestService.findProcessRole(userId, application.getId()).getSuccess();
         ApplicationResource updatedApplication = form.getApplication();
 
         if (!isMarkQuestionAsIncompleteRequest(params)) {

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.management.ineligible.form.InformIneligibleForm;
 import org.innovateuk.ifs.management.ineligible.viewmodel.InformIneligibleViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,15 +20,18 @@ import java.util.Optional;
 @Component
 public class InformIneligibleModelPopulator {
 
-    @Autowired
-    private ProcessRoleService processRoleService;
-
-    @Autowired
+    private UserRestService userRestService;
     private ApplicationNotificationTemplateRestService templateRestService;
+
+    public InformIneligibleModelPopulator(UserRestService userRestService,
+                                          ApplicationNotificationTemplateRestService templateRestService) {
+        this.userRestService = userRestService;
+        this.templateRestService = templateRestService;
+    }
 
     public InformIneligibleViewModel populateModel(ApplicationResource applicationResource, InformIneligibleForm form) {
 
-        List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(applicationResource.getId());
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationResource.getId()).getSuccess();
         Optional<ProcessRoleResource> leadApplicant = processRoles.stream()
                 .filter(pr -> pr.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .findFirst();

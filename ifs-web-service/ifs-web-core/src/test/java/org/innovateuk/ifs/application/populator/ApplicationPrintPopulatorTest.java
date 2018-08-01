@@ -19,7 +19,7 @@ import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -54,7 +54,7 @@ public class ApplicationPrintPopulatorTest {
     private FormInputResponseService formInputResponseService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Mock
     private ApplicationModelPopulator applicationModelPopulator;
@@ -88,7 +88,7 @@ public class ApplicationPrintPopulatorTest {
         when(applicationService.getById(applicationId)).thenReturn(application);
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(formInputResponseRestService.getResponsesByApplicationId(applicationId)).thenReturn(restSuccess(responses));
-        when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(userApplicationRoles));
         when(applicationModelPopulator.getUserOrganisation(user.getId(), userApplicationRoles)).thenReturn(userOrganisation);
         when(formInputResponseService.mapFormInputResponsesToFormInput(responses)).thenReturn(mappedResponses);
         when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(emptyMap());

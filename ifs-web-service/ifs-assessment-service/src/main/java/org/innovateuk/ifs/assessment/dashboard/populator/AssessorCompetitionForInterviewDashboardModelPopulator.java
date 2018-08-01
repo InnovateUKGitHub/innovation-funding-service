@@ -12,6 +12,7 @@ import org.innovateuk.ifs.interview.service.InterviewAllocationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,19 +30,19 @@ public class AssessorCompetitionForInterviewDashboardModelPopulator {
 
     private CompetitionRestService competitionRestService;
     private ApplicationService applicationService;
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
     private OrganisationService organisationService;
     private InterviewAllocationRestService interviewAllocateRestService;
 
     @Autowired
     public AssessorCompetitionForInterviewDashboardModelPopulator(CompetitionRestService competitionRestService,
                                                                   ApplicationService applicationService,
-                                                                  ProcessRoleService processRoleService,
+                                                                  UserRestService userRestService,
                                                                   InterviewAllocationRestService interviewAllocateRestService,
                                                                   OrganisationService organisationService) {
         this.competitionRestService = competitionRestService;
         this.applicationService = applicationService;
-        this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
         this.interviewAllocateRestService = interviewAllocateRestService;
         this.organisationService = organisationService;
     }
@@ -66,7 +67,7 @@ public class AssessorCompetitionForInterviewDashboardModelPopulator {
 
     private AssessorCompetitionForInterviewDashboardApplicationViewModel createApplicationViewModel(InterviewResource assessmentInterview) {
         ApplicationResource application = applicationService.getById(assessmentInterview.getApplication());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
         Optional<OrganisationResource> leadOrganisation = organisationService.getApplicationLeadOrganisation(userApplicationRoles);
 
         return new AssessorCompetitionForInterviewDashboardApplicationViewModel(application.getId(),

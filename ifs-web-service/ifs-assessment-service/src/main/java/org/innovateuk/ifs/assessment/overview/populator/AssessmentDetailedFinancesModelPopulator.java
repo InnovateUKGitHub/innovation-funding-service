@@ -21,7 +21,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,7 +44,7 @@ public class AssessmentDetailedFinancesModelPopulator {
     private AssessmentService assessmentService;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private OrganisationRestService organisationRestService;
@@ -68,7 +68,7 @@ public class AssessmentDetailedFinancesModelPopulator {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         CompetitionResource competition = competitionRestService.getCompetitionById(assessment.getCompetition()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        List<ProcessRoleResource> applicationRoles = processRoleService.getByApplicationId(assessment.getApplication());
+        List<ProcessRoleResource> applicationRoles = userRestService.findProcessRole(assessment.getApplication()).getSuccess();
 
         addApplicationAndOrganisationDetails(model, applicationRoles, organisation, competition.getAssessorFinanceView());
         addFinanceDetails(model, assessment.getApplication());

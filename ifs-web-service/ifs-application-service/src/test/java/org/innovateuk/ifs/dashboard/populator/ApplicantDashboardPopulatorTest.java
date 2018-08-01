@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,7 +78,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Mock
     private InterviewAssignmentRestService interviewAssignmentRestService;
@@ -130,10 +131,10 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
         when(applicationRestService.getAssignedQuestionsCount(anyLong(), anyLong())).thenReturn(restSuccess(2));
 
-        when(processRoleService.getByUserId(loggedInUser.getId())).thenReturn(newProcessRoleResource()
+        when(userRestService.findProcessRoleByUserId(loggedInUser.getId())).thenReturn(restSuccess(newProcessRoleResource()
                 .withApplication(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_PROJECT_WITHDRAWN, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED)
                 .withRole(LEADAPPLICANT, LEADAPPLICANT, APPLICANT, APPLICANT, APPLICANT)
-                .build(4));
+                .build(4)));
 
         when(interviewAssignmentRestService.isAssignedToInterview(APPLICATION_ID_SUBMITTED)).thenReturn(restSuccess(true));
         when(interviewAssignmentRestService.isAssignedToInterview(APPLICATION_ID_IN_PROGRESS)).thenReturn(restSuccess(true));

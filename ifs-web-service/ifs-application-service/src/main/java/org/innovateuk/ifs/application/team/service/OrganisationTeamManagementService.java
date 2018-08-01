@@ -8,6 +8,7 @@ import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +22,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OrganisationTeamManagementService extends AbstractTeamManagementService {
-    @Autowired
-    private ProcessRoleService processRoleService;
+
+    private UserRestService userRestService;
+
+    public OrganisationTeamManagementService(UserRestService userRestService) {
+        this.userRestService = userRestService;
+    }
 
     public ApplicationTeamManagementViewModel createViewModel(long applicationId, long organisationId, UserResource loggedInUser) {
         return applicationTeamManagementModelPopulator.populateModelByOrganisationId(
@@ -37,7 +42,7 @@ public class OrganisationTeamManagementService extends AbstractTeamManagementSer
     }
 
     public boolean applicationAndOrganisationIdCombinationIsValid(Long applicationId, Long organisationId) {
-        List<ProcessRoleResource> processRoles = processRoleService.getByApplicationId(applicationId);
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(applicationId).getSuccess();
         if (processRoles.stream().anyMatch(processRoleResource -> organisationId.equals(processRoleResource.getOrganisationId()))) {
             return true;
         }

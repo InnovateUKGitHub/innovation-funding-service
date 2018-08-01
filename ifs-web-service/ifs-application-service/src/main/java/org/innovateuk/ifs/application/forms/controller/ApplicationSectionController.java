@@ -26,6 +26,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -84,7 +85,7 @@ public class ApplicationSectionController {
     private ApplicationSectionSaver applicationSaver;
 
     @Autowired
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -129,8 +130,14 @@ public class ApplicationSectionController {
                                                              UserResource user) {
 
         ApplicationResource application = applicationService.getById(applicationId);
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(application.getId()).getSuccess();
 
-        ProcessRoleResource applicantUser = processRoleService.getByApplicationId(application.getId()).stream().filter(pr -> pr.getOrganisationId().equals(applicantOrganisationId) && Arrays.asList(UserApplicationRole.LEAD_APPLICANT.getRoleName(), UserApplicationRole.COLLABORATOR.getRoleName()).contains(pr.getRoleName())).findFirst().orElseThrow(() -> new ObjectNotFoundException());
+        ProcessRoleResource applicantUser = processRoles.stream()
+                .filter(pr -> pr.getOrganisationId().equals(applicantOrganisationId) &&
+                        Arrays.asList(UserApplicationRole.LEAD_APPLICANT.getRoleName(), UserApplicationRole.COLLABORATOR.getRoleName())
+                                .contains(pr.getRoleName()))
+                .findFirst()
+                .orElseThrow(() -> new ObjectNotFoundException());
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
         populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true);

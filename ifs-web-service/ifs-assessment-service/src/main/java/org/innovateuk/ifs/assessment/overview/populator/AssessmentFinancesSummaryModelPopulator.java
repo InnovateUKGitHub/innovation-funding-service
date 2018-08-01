@@ -22,7 +22,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -35,7 +35,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
 
     private CompetitionRestService competitionRestService;
     private AssessmentService assessmentService;
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
     private FileEntryRestService fileEntryRestService;
     private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
@@ -44,7 +44,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
 
     public AssessmentFinancesSummaryModelPopulator(CompetitionRestService competitionRestService,
                                                    AssessmentService assessmentService,
-                                                   ProcessRoleService processRoleService,
+                                                   UserRestService userRestService,
                                                    FileEntryRestService fileEntryRestService,
                                                    ApplicationFinanceRestService applicationFinanceRestService,
                                                    FinanceService financeService,
@@ -57,7 +57,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
         this.sectionService = sectionService;
         this.competitionRestService = competitionRestService;
         this.assessmentService = assessmentService;
-        this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
         this.fileEntryRestService = fileEntryRestService;
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.financeService = financeService;
@@ -75,7 +75,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
     }
 
     private void addApplicationAndOrganisationDetails(Model model, long applicationId, AssessorFinanceView financeVew) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(applicationId).getSuccess();
         addOrganisationDetails(model, userApplicationRoles, financeVew);
     }
 

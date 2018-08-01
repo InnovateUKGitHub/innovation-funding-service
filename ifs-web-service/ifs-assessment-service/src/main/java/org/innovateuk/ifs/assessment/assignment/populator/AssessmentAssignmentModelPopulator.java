@@ -9,6 +9,7 @@ import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -22,16 +23,16 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUM
 public class AssessmentAssignmentModelPopulator {
 
     private AssessmentService assessmentService;
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
     private FormInputResponseRestService formInputResponseRestService;
     private OrganisationService organisationService;
 
     public AssessmentAssignmentModelPopulator(AssessmentService assessmentService,
-                                              ProcessRoleService processRoleService,
+                                              UserRestService userRestService,
                                               FormInputResponseRestService formInputResponseRestService,
                                               OrganisationService organisationService) {
         this.assessmentService = assessmentService;
-        this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
         this.formInputResponseRestService = formInputResponseRestService;
         this.organisationService = organisationService;
     }
@@ -39,7 +40,7 @@ public class AssessmentAssignmentModelPopulator {
     public AssessmentAssignmentViewModel populateModel(Long assessmentId) {
         AssessmentResource assessment = assessmentService.getAssignableById(assessmentId);
         String projectSummary = getProjectSummary(assessment);
-        List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(assessment.getApplication());
+        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(assessment.getApplication()).getSuccess();
         SortedSet<OrganisationResource> collaborators = organisationService.getApplicationOrganisations(processRoles);
         OrganisationResource leadPartner = organisationService.getApplicationLeadOrganisation(processRoles).orElse(null);
         return new AssessmentAssignmentViewModel(assessmentId, assessment.getCompetition(), assessment.getApplicationName(),

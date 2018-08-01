@@ -12,6 +12,7 @@ import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,14 +32,17 @@ public class QuestionServiceImpl implements QuestionService {
     private static final Log LOG = LogFactory.getLog(QuestionServiceImpl.class);
     private static final String ASSIGN_QUESTION_PARAM = "assign_question";
 
-    @Autowired
     private QuestionRestService questionRestService;
-
-    @Autowired
     private QuestionStatusRestService questionStatusRestService;
+    private UserRestService userRestService;
 
-    @Autowired
-    private ProcessRoleService processRoleService;
+    public QuestionServiceImpl(QuestionRestService questionRestService,
+                               QuestionStatusRestService questionStatusRestService,
+                               UserRestService userRestService) {
+        this.questionRestService = questionRestService;
+        this.questionStatusRestService = questionStatusRestService;
+        this.userRestService = userRestService;
+    }
 
     @Override
     public ServiceResult<Void> assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
@@ -187,7 +191,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void assignQuestion(Long applicationId, UserResource user, HttpServletRequest request) {
-        ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource assignedBy = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         assignQuestion(applicationId, request, assignedBy);
     }
 

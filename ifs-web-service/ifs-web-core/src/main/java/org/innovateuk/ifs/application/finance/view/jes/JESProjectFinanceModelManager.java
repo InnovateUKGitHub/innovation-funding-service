@@ -16,6 +16,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -36,13 +37,16 @@ public class JESProjectFinanceModelManager implements FinanceModelManager {
     @Autowired
     FinanceService financeService;
 
+    @Autowired
+    UserRestService userRestService;
+
     @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
 
         if (applicationFinanceResource != null) {
 
-            ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
+            ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
             OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisationId());
 
             Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
@@ -71,7 +75,7 @@ public class JESProjectFinanceModelManager implements FinanceModelManager {
 
         if (applicationFinanceResource != null) {
 
-            ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
+            ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
             OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisationId());
 
             Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
