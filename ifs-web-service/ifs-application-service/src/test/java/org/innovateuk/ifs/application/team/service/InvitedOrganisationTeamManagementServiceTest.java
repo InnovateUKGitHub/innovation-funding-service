@@ -13,7 +13,6 @@ import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -39,15 +38,8 @@ public class InvitedOrganisationTeamManagementServiceTest extends BaseServiceUni
     @Mock
     private InviteOrganisationRestService inviteOrganisationRestServiceMock;
 
-    private long applicationId;
-    private long inviteOrganisationId;
-
-    @Before
-    public void setUp() {
-        super.setup();
-        applicationId = 1L;
-        inviteOrganisationId = 2L;
-    }
+    private long applicationId = 123L;
+    private long inviteOrganisationId = 456L;
 
     protected InvitedOrganisationTeamManagementService supplyServiceUnderTest() {
         return new InvitedOrganisationTeamManagementService();
@@ -57,7 +49,7 @@ public class InvitedOrganisationTeamManagementServiceTest extends BaseServiceUni
     public void createViewModel_populatorShouldBeCalledWithAppropriateParameters() throws Exception {
         UserResource userResource = newUserResource().build();
 
-        ApplicationTeamManagementViewModel expectedModel = new ApplicationTeamManagementViewModel(1L,
+        ApplicationTeamManagementViewModel expectedModel = new ApplicationTeamManagementViewModel(applicationId,
                 2L,
                 null,
                 3L,
@@ -107,7 +99,8 @@ public class InvitedOrganisationTeamManagementServiceTest extends BaseServiceUni
 
     @Test
     public void validateOrganisationAndApplicationIds_trueShouldBeReturnedWhenInviteOrganisationContainsInvitesForApplication() throws Exception {
-        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource().withApplication(1L).build(5);
+
+        List<ApplicationInviteResource> inviteResources = newApplicationInviteResource().withApplication(applicationId).build(5);
 
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResources).build();
 
