@@ -9,16 +9,18 @@ import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 
 /**
  * Serves as a service for invite retrieval / manipulation for an {@InviteOrganisation} without an existing {@Organisation}.
  */
 @Service
-public class InviteOrganisationTeamManagementService extends AbstractTeamManagementService {
+public class InvitedOrganisationTeamManagementService extends AbstractTeamManagementService {
 
     public ApplicationTeamManagementViewModel createViewModel(long applicationId, long inviteOrganisationId, UserResource loggedInUser) {
         return applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
@@ -30,15 +32,14 @@ public class InviteOrganisationTeamManagementService extends AbstractTeamManagem
                                                                     ApplicationTeamUpdateForm form) {
         ApplicationInviteResource invite = mapStagedInviteToInviteResource(form, applicationId, inviteOrganisationId);
 
-        return inviteRestService.saveInvites(Arrays.asList(invite)).toServiceResult();
+        return inviteRestService.saveInvites(singletonList(invite)).toServiceResult();
     }
 
+    @Override
     public boolean applicationAndOrganisationIdCombinationIsValid(Long applicationId, Long organisationInviteId) {
+
         InviteOrganisationResource organisation = inviteOrganisationRestService.getById(organisationInviteId).getSuccess();
-        if(organisation.getInviteResources().stream().anyMatch(applicationInviteResource -> applicationInviteResource.getApplication().equals(applicationId))) {
-            return true;
-        }
-        return false;
+        return simpleAnyMatch(organisation.getInviteResources(), invite -> invite.getApplication().equals(applicationId));
     }
 
     public List<Long> getInviteIds(long applicationId, long organisationId) {

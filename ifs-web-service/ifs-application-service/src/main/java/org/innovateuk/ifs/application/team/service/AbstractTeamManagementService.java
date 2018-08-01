@@ -26,10 +26,10 @@ public abstract class AbstractTeamManagementService {
     protected ApplicationService applicationService;
 
     @Autowired
-    protected ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
+    ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
 
     @Autowired
-    protected InviteOrganisationRestService inviteOrganisationRestService;
+    InviteOrganisationRestService inviteOrganisationRestService;
 
     public abstract boolean applicationAndOrganisationIdCombinationIsValid(Long applicationId, Long organisationId);
 
@@ -43,7 +43,7 @@ public abstract class AbstractTeamManagementService {
 
     public abstract List<Long> getInviteIds(long applicationId, long organisationId);
 
-    protected ApplicationInviteResource mapStagedInviteToInviteResource(ApplicationTeamUpdateForm applicationTeamUpdateForm,
+    ApplicationInviteResource mapStagedInviteToInviteResource(ApplicationTeamUpdateForm applicationTeamUpdateForm,
                                                                         long applicationId,
                                                                         Long inviteOrganisationId) {
         ApplicationInviteResource applicationInviteResource = new ApplicationInviteResource(

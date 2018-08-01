@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.team.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.team.service.OrganisationTeamManagementService;
+import org.innovateuk.ifs.application.team.service.ExistingOrganisationTeamManagementService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -14,12 +14,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-public class OrganisationTeamManagementControllerTest extends BaseControllerMockMVCTest<OrganisationTeamManagementController> {
+public class OrganisationTeamManagementControllerTest extends BaseControllerMockMVCTest<ExistingOrganisationTeamManagementController> {
     @Mock
-    private OrganisationTeamManagementService organisationTeamManagementService;
+    private ExistingOrganisationTeamManagementService organisationTeamManagementService;
 
-    protected OrganisationTeamManagementController supplyControllerUnderTest() {
-        return new OrganisationTeamManagementController();
+    protected ExistingOrganisationTeamManagementController supplyControllerUnderTest() {
+        return new ExistingOrganisationTeamManagementController();
     }
 
     @Test

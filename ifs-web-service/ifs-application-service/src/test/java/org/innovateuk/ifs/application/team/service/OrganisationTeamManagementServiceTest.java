@@ -34,7 +34,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<OrganisationTeamManagementService> {
+public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<ExistingOrganisationTeamManagementService> {
 
     private long applicationId;
     private long organisationId;
@@ -54,8 +54,8 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
     @Mock
     private QuestionRestService questionRestService;
 
-    protected OrganisationTeamManagementService supplyServiceUnderTest() {
-        return new OrganisationTeamManagementService();
+    protected ExistingOrganisationTeamManagementService supplyServiceUnderTest() {
+        return new ExistingOrganisationTeamManagementService();
     }
 
     @Before
