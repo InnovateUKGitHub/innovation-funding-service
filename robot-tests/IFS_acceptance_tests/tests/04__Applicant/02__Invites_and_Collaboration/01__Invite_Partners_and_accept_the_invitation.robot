@@ -181,7 +181,7 @@ Partner requests new verification email via password reset
     Given the user navigates to the page           ${LOGIN_URL}
     When the user clicks the forgot psw link
     And the user enters text to a text field       id=email    ${invite_email}
-    And the user clicks the button/link            css=button
+    And the user clicks the button/link            jQuery=#forgotten-password-cta
     Then the user should see the text in the page  If your email address is recognised and valid, you’ll receive a notification
 
 Complete account verification
