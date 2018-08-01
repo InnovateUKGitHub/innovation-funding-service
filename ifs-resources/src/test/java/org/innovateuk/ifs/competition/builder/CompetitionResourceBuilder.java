@@ -235,6 +235,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("useNewApplicantMenu", useNewApplicantMenu);
     }
 
+    public CompetitionResourceBuilder withGrantClaimMaximums(Set<Long>... grantClaimMaximums) {
+        return withArraySetFieldByReflection("grantClaimMaximums", grantClaimMaximums);
+    }
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);

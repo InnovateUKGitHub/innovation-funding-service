@@ -4,10 +4,15 @@ Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts o
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so...
 ...
 ...               INFUND-7060 As an assessor I can view my declaration of interest page so...
+...
+...               IFS-3941 Introduce date to DOI
 Suite Setup       The user logs-in in new browser    &{existing_assessor1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
+
+*** Variables ***
+${assessor_id}          ${user_ids['${test_mailbox_one}+jeremy.alufson@gmail.com']}
 
 *** Test Cases ***
 Back to the dashboard link
@@ -87,6 +92,17 @@ Successful save for the DOI form
     And the user clicks the button/link    jQuery=a:contains("Edit")
     And the user should see the correct inputs in the declaration form
 
+the user checks for the update DOI message
+    [Documentation]  IFS-3941
+    [Tags]
+    [Setup]  Save DOI current modified date
+    Given the user clicks the button/link   link = Dashboard
+    When the user updates the DOI modified date
+    And the user reloads the page
+    Then the user should see the element    jQuery = div li a:contains("your declaration of interest")
+    ${modified_date} =  Save DOI current modified date
+    [Teardown]  Return the DOI modified_on date to initial value   ${modified_date}
+
 *** Keywords ***
 the user correctly fills out the role, principle employer and accurate fields
     the user enters text to a text field    id=principalEmployer    University
@@ -122,3 +138,19 @@ the user should see the proper validation messages triggered
     the user should see a field and summary error    Please tell us if you have any other financial interests.
     the user should see a field and summary error    Please tell us if you have any appointments or directorships.
     the user should see a field and summary error    You must agree that your account is accurate.
+
+Save DOI current modified date
+    Connect to Database  @{database}
+    ${result} =  Query  SELECT DATE_FORMAT(`modified_on`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`affiliation` WHERE `user_id`='${assessor_id}';
+    ${result} =  get from list  ${result}  0
+    ${modified_on} =  get from list  ${result}  0
+    [Return]  ${modified_on}
+
+Return the DOI modified_on date to initial value
+    [Arguments]  ${modified_date}
+    Connect to Database    @{database}
+    Execute sql string     UPDATE `${database_name}`.`affiliation` SET `modified_on` = '${modified_date}' WHERE `user_id` = '${assessor_id}';
+
+the user updates the DOI modified date
+    Connect to Database    @{database}
+    Execute sql string     UPDATE `${database_name}`.`affiliation` SET `modified_on` = '2018-04-05 00:00:00' WHERE `user_id` = '${assessor_id}';
