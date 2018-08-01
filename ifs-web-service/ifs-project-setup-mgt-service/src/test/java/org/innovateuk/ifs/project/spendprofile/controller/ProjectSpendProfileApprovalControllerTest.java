@@ -13,7 +13,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileApprovalViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -44,7 +44,7 @@ public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMoc
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private UserService userService;
+    private UserRestService userRestService;
 
     @Mock
     private SpendProfileService spendProfileService;
@@ -66,7 +66,7 @@ public class ProjectSpendProfileApprovalControllerTest extends BaseControllerMoc
         when(applicationService.getById(applicationId)).thenReturn(application);
         when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummary));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-        when(userService.findById(userId)).thenReturn(user);
+        when(userRestService.retrieveUserById(userId)).thenReturn(restSuccess(user));
         when(spendProfileService.getSpendProfileStatusByProjectId(projectId)).thenReturn(ApprovalType.APPROVED);
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(Collections.emptyList());
 

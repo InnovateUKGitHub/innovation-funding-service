@@ -3,8 +3,7 @@ package org.innovateuk.ifs.admin.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.admin.form.InviteUserForm;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.service.InviteUserService;
+import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -12,6 +11,8 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -19,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUserController> {
 
     @Mock
-    private InviteUserService inviteUserServiceMock;
+    private InviteUserRestService inviteUserRestServiceMock;
 
     @Test
     public void inviteNewUser() throws Exception {
@@ -33,8 +34,8 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
     @Test
     public void saveUserInviteWhenSaveInviteFails() throws Exception {
 
-        when(inviteUserServiceMock.saveUserInvite(Mockito.any()))
-                .thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
+        when(inviteUserRestServiceMock.saveUserInvite(Mockito.any()))
+                .thenReturn(restFailure(CommonFailureKeys.USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/invite-user").
                 param("firstName", "First").
@@ -48,7 +49,7 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
     @Test
     public void saveUserInviteSuccess() throws Exception {
 
-        when(inviteUserServiceMock.saveUserInvite(Mockito.any())).thenReturn(ServiceResult.serviceSuccess());
+        when(inviteUserRestServiceMock.saveUserInvite(Mockito.any())).thenReturn(restSuccess());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/invite-user").
                 param("firstName", "First").
@@ -61,7 +62,7 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
 
     @Override
     protected InviteUserController supplyControllerUnderTest() {
-        return new InviteUserController();
+        return new InviteUserController(inviteUserRestServiceMock);
     }
 }
 

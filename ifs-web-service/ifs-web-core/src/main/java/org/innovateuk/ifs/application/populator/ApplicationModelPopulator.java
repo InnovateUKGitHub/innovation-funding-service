@@ -19,6 +19,7 @@ import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class ApplicationModelPopulator {
 
     @Autowired
     protected UserService userService;
+
+    @Autowired
+    protected UserRestService userRestService;
 
     @Autowired
     protected QuestionService questionService;
@@ -168,7 +172,7 @@ public class ApplicationModelPopulator {
 
         boolean userIsLeadApplicant = leadApplicantProcessRole.getUser().equals(user.getId());
 
-        UserResource leadApplicant = userIsLeadApplicant ? user : userService.findById(leadApplicantProcessRole.getUser());
+        UserResource leadApplicant = userIsLeadApplicant ? user : userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
 
         model.addAttribute("userIsLeadApplicant", userIsLeadApplicant);
         model.addAttribute("leadApplicant", leadApplicant);

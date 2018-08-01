@@ -4,8 +4,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.ManageInnovationLeadsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -17,11 +17,17 @@ import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 @Service
 public class ManageInnovationLeadsModelPopulator {
 
-    @Autowired
     private CompetitionRestService competitionRestService;
-
-    @Autowired
     private UserService userService;
+    private UserRestService userRestService;
+
+    public ManageInnovationLeadsModelPopulator(CompetitionRestService competitionRestService,
+                                               UserService userService,
+                                               UserRestService userRestService) {
+        this.competitionRestService = competitionRestService;
+        this.userService = userService;
+        this.userRestService = userRestService;
+    }
 
     public ManageInnovationLeadsViewModel populateModel(CompetitionResource competition) {
 
@@ -29,7 +35,7 @@ public class ManageInnovationLeadsModelPopulator {
         List<UserResource> innovationLeadsAssignedToCompetition = competitionRestService.findInnovationLeads(competition.getId()).getSuccess();
         availableInnovationLeads.removeAll(innovationLeadsAssignedToCompetition);
 
-        UserResource leadTechnologistAssignedToCompetition = userService.findById(competition.getLeadTechnologist());
+        UserResource leadTechnologistAssignedToCompetition = userRestService.retrieveUserById(competition.getLeadTechnologist()).getSuccess();
         availableInnovationLeads.remove(leadTechnologistAssignedToCompetition);
         innovationLeadsAssignedToCompetition.remove(leadTechnologistAssignedToCompetition);
 

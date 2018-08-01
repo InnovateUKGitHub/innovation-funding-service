@@ -32,10 +32,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.*;
 import org.mockito.Mock;
 
 import java.time.LocalDate;
@@ -100,6 +97,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     protected DefaultFinanceFormHandler defaultFinanceFormHandler;
     @Mock
     protected UserService userService;
+    @Mock
+    protected UserRestService userRestService;
     @Mock
     protected CompetitionRestService competitionRestService;
 
@@ -532,7 +531,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(3).getId())).thenReturn(processRole4);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(4).getId())).thenReturn(processRole11);
 
-        when(userService.findById(loggedInUser.getId())).thenReturn(loggedInUser);
+        when(userRestService.retrieveUserById(loggedInUser.getId())).thenReturn(restSuccess(loggedInUser));
 
         processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(settable
                 (processRole)));

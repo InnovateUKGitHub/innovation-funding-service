@@ -2,13 +2,12 @@ package org.innovateuk.ifs.admin.controller;
 
 import org.innovateuk.ifs.admin.form.InviteUserForm;
 import org.innovateuk.ifs.admin.form.validation.Primary;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
-import org.innovateuk.ifs.invite.service.InviteUserService;
+import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,8 +35,11 @@ public class InviteUserController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    @Autowired
-    private InviteUserService inviteUserService;
+    private InviteUserRestService inviteUserRestService;
+
+    public InviteUserController(InviteUserRestService inviteUserRestService) {
+        this.inviteUserRestService = inviteUserRestService;
+    }
 
     @GetMapping("/invite-user")
     public String inviteNewUser(Model model) {
@@ -62,7 +64,7 @@ public class InviteUserController {
 
             InviteUserResource inviteUserResource = constructInviteUserResource(form);
 
-            ServiceResult<Void> saveResult = inviteUserService.saveUserInvite(inviteUserResource);
+            RestResult<Void> saveResult = inviteUserRestService.saveUserInvite(inviteUserResource);
 
             return handleSaveUserInviteErrors(saveResult, validationHandler).
                     failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/pending");
@@ -70,7 +72,7 @@ public class InviteUserController {
         });
     }
 
-    private ValidationHandler handleSaveUserInviteErrors(ServiceResult<Void> saveResult, ValidationHandler validationHandler) {
+    private ValidationHandler handleSaveUserInviteErrors(RestResult<Void> saveResult, ValidationHandler validationHandler) {
         return validationHandler.addAnyErrors(saveResult, mappingErrorKeyToField(USER_ROLE_INVITE_INVALID_EMAIL, "emailAddress"), fieldErrorsToFieldErrors(), asGlobalErrors());
     }
 

@@ -27,15 +27,13 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 
     private static final Log LOG = LogFactory.getLog(ApplicationFundingDecisionServiceImpl.class);
 
-    @Autowired
     private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
-
-    @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    @Override
-    public ServiceResult<Void> sendFundingNotifications(FundingNotificationResource fundingNotificationResource) {
-        return applicationFundingDecisionRestService.sendApplicationFundingDecisions(fundingNotificationResource).toServiceResult();
+    public ApplicationFundingDecisionServiceImpl(ApplicationFundingDecisionRestService applicationFundingDecisionRestService,
+                                                 ApplicationSummaryRestService applicationSummaryRestService) {
+        this.applicationFundingDecisionRestService = applicationFundingDecisionRestService;
+        this.applicationSummaryRestService = applicationSummaryRestService;
     }
 
     @Override

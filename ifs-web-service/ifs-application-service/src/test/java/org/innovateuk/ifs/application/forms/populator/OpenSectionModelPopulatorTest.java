@@ -27,6 +27,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,6 +93,9 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private UserRestService userRestService;
 
     @Mock
     private InviteService inviteService;
@@ -164,7 +168,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
 
         when(userService.getLeadApplicantProcessRoleOrNull(application.getId())).thenReturn(leadApplicantProcessRole);
 
-        when(userService.findById(leadApplicantProcessRole.getUser())).thenReturn(user);
+        when(userRestService.retrieveUserById(leadApplicantProcessRole.getUser())).thenReturn(restSuccess(user));
 
         when(formInputRestService.getByCompetitionIdAndScope(competition.getId(), APPLICATION)).thenReturn(restSuccess(formInputs));
 

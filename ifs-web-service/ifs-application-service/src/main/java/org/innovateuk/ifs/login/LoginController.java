@@ -3,10 +3,12 @@ package org.innovateuk.ifs.login;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.login.form.ResetPasswordForm;
 import org.innovateuk.ifs.login.form.ResetPasswordRequestForm;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -44,6 +46,16 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    private UserRestService userRestService;
+
+    public LoginController(UserService userService,
+                           UserRestService userRestService) {
+        this.userService = userService;
+        this.userRestService = userRestService;
+
+    }
+
+
     @GetMapping("/" + LOGIN_BASE + "/" + RESET_PASSWORD)
     public String requestPasswordReset(ResetPasswordRequestForm resetPasswordRequestForm, Model model) {
         model.addAttribute("resetPasswordRequestForm", resetPasswordRequestForm);
@@ -75,7 +87,7 @@ public class LoginController {
         if (bindingResult.hasErrors()) {
             return LOGIN_BASE + "/" + RESET_PASSWORD + "-form";
         } else {
-            ServiceResult<Void> result = userService.resetPassword(hash, resetPasswordForm.getPassword());
+            RestResult<Void> result = userRestService.resetPassword(hash, resetPasswordForm.getPassword());
             if(result.isFailure()){
                 List<Error> errors = result.getFailure().getErrors();
                 for (Error error : errors) {

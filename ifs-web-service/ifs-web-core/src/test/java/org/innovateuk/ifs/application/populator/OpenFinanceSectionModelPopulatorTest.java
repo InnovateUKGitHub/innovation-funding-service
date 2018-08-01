@@ -242,7 +242,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
         ProcessRoleResource leadApplicantProcessRole = newProcessRoleResource().withUser(userResource).build();
 
         when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn(leadApplicantProcessRole);
-        when(userService.findById(leadApplicantProcessRole.getUser())).thenReturn(userResource);
+        when(userRestService.retrieveUserById(leadApplicantProcessRole.getUser())).thenReturn(restSuccess(userResource));
 
         when(formInputRestService.getByCompetitionIdAndScope(competitionResource.getId(), APPLICATION)).thenReturn(restSuccess(formInputs));
 

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -25,16 +26,19 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
     private CategoryRestService categoryRestService;
     private FinanceService financeService;
     private UserService userService;
+    private UserRestService userRestService;
 
     public ApplicationResearchCategoryModelPopulator(final ApplicantRestService applicantRestService,
                                                      final CategoryRestService categoryRestService,
                                                      final FinanceService financeService,
                                                      final QuestionRestService questionRestService,
-                                                     final UserService userService) {
+                                                     final UserService userService,
+                                                     final UserRestService userRestService) {
         super(applicantRestService, questionRestService);
         this.categoryRestService = categoryRestService;
         this.financeService = financeService;
         this.userService = userService;
+        this.userRestService = userRestService;
     }
 
     public ResearchCategoryViewModel populate(ApplicationResource applicationResource,
@@ -78,7 +82,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
 
     private String getLeadApplicantName(long applicationId) {
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        UserResource user = userService.findById(leadApplicantProcessRole.getUser());
+        UserResource user = userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
         return user.getName();
     }
 }

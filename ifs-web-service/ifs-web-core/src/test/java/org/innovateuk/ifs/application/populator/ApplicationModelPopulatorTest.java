@@ -65,7 +65,7 @@ public class ApplicationModelPopulatorTest {
     protected SectionService sectionService;
 
     @Mock
-    protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;;
+    protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Mock
     protected OrganisationService organisationService;
@@ -83,7 +83,7 @@ public class ApplicationModelPopulatorTest {
     public void testAddApplicationAndSections() {
         LocalDate startDate = LocalDate.now();
         ApplicationResource application = newApplicationResource()
-            .withStartDate(startDate).build();
+                .withStartDate(startDate).build();
         CompetitionResource competition = newCompetitionResource().build();
         Long userId = 1L;
         Long organisationId = 3L;
@@ -107,10 +107,10 @@ public class ApplicationModelPopulatorTest {
                 .withOrganisation(organisationId)
                 .build(2);
 
-	    Optional<Boolean> markAsCompleteEnabled = Optional.of(Boolean.FALSE);
+        Optional<Boolean> markAsCompleteEnabled = Optional.of(Boolean.FALSE);
 
         when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
-        when(userService.findById(leadApplicantId)).thenReturn(leadApplicant);
+        when(userRestService.retrieveUserById(leadApplicantId)).thenReturn(restSuccess(leadApplicant));
         when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
 
         applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
@@ -181,7 +181,7 @@ public class ApplicationModelPopulatorTest {
         when(organisationService.getOrganisationForUser(user.getId())).thenReturn(userOrganisation);
         when(financeViewHandlerProvider.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);
 
-        ProcessRoleResource processRole  = newProcessRoleResource().withOrganisation().withUser(user).build();
+        ProcessRoleResource processRole = newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
 
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competitionId, applicationId, user, model, form, organisationId);

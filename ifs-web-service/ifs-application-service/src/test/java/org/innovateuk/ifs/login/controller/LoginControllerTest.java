@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.eq;
@@ -33,7 +34,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
     @Override
     protected LoginController supplyControllerUnderTest() {
-        return new LoginController();
+        return new LoginController(userService, userRestServiceMock);
     }
 
     @Mock
@@ -117,7 +118,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
     public void testResetPasswordPost() throws Exception {
         String hash = UUID.randomUUID().toString();
         String password = "Passw0rd12";
-        when(userService.resetPassword(eq(hash), eq(password))).thenReturn(serviceSuccess());
+        when(userRestServiceMock.resetPassword(eq(hash), eq(password))).thenReturn(restSuccess());
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)
@@ -136,7 +137,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
         when(userRestServiceMock.checkPasswordResetHash(eq(hash))).thenReturn(restSuccess());
         List<Error> errors = new ArrayList<>();
         errors.add(new Error("INVALID_PASSWORD", HttpStatus.CONFLICT));
-        when(userService.resetPassword(eq(hash), eq(password))).thenReturn(ServiceResult.serviceFailure(errors));
+        when(userRestServiceMock.resetPassword(eq(hash), eq(password))).thenReturn(restFailure(errors));
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)
@@ -153,7 +154,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         String hash = UUID.randomUUID().toString();
         String password = "letm3In";
-        when(userService.resetPassword(eq(hash), eq(password))).thenReturn(serviceSuccess());
+        when(userRestServiceMock.resetPassword(eq(hash), eq(password))).thenReturn(restSuccess());
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)

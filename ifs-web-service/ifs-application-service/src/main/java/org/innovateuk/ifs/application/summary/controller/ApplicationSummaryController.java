@@ -11,6 +11,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +37,7 @@ public class ApplicationSummaryController {
 
     private ApplicationService applicationService;
     private UserService userService;
+    private UserRestService userRestService;
     private CompetitionRestService competitionRestService;
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
@@ -46,11 +48,13 @@ public class ApplicationSummaryController {
     @Autowired
     public ApplicationSummaryController(ApplicationService applicationService,
                                         UserService userService,
+                                        UserRestService userRestService,
                                         CompetitionRestService competitionRestService,
                                         InterviewAssignmentRestService interviewAssignmentRestService,
                                         ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator) {
         this.applicationService = applicationService;
         this.userService = userService;
+        this.userRestService = userRestService;
         this.competitionRestService = competitionRestService;
         this.interviewAssignmentRestService = interviewAssignmentRestService;
         this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;
@@ -81,7 +85,7 @@ public class ApplicationSummaryController {
         UserResource userForModel;
         if (isSupport) {
             ProcessRoleResource leadProcessRoleResource = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-            userForModel = userService.findById(leadProcessRoleResource.getUser());
+            userForModel = userRestService.retrieveUserById(leadProcessRoleResource.getUser()).getSuccess();
         } else {
             userForModel = user;
         }

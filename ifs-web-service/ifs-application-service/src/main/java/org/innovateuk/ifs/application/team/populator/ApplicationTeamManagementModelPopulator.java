@@ -13,6 +13,7 @@ import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,16 +42,19 @@ public class ApplicationTeamManagementModelPopulator {
 
     private QuestionRestService questionRestService;
 
+    private UserRestService userRestService;
+
     private UserService userService;
     
     @Autowired
     public ApplicationTeamManagementModelPopulator(InviteOrganisationRestService inviteOrganisationRestService,
-                                         ApplicationService applicationService,
-                                         QuestionRestService questionRestService,
-                                         UserService userService) {
+                                                   ApplicationService applicationService,
+                                                   QuestionRestService questionRestService,
+                                                   UserRestService userRestService, UserService userService) {
         this.inviteOrganisationRestService = inviteOrganisationRestService;
         this.applicationService = applicationService;
         this.questionRestService = questionRestService;
+        this.userRestService = userRestService;
         this.userService = userService;
     }
 
@@ -150,7 +154,7 @@ public class ApplicationTeamManagementModelPopulator {
 
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId());
-        return userService.findById(leadApplicantProcessRole.getUser());
+        return userRestService.retrieveUserById(leadApplicantProcessRole.getUser()).getSuccess();
     }
 
     private OrganisationResource getLeadOrganisation(long applicationId) {

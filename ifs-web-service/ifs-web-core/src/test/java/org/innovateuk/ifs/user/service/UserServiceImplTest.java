@@ -142,29 +142,4 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         assertFalse(service.existsAndHasRole(userId, COMP_ADMIN));
     }
-
-    @Test
-    public void agreeNewTermsAndConditions() {
-        long userId = 1L;
-
-        when(userRestService.agreeNewSiteTermsAndConditions(userId)).thenReturn(restSuccess());
-
-        assertTrue(service.agreeNewTermsAndConditions(userId).isSuccess());
-
-        verify(userRestService, only()).agreeNewSiteTermsAndConditions(userId);
-    }
-
-    @Test
-    public void agreeNewTermsAndConditions_userNotFound() {
-        long userId = 1L;
-
-        when(userRestService.agreeNewSiteTermsAndConditions(userId)).thenReturn(restFailure(forbiddenError()));
-
-        ServiceResult<Void> serviceResult = service.agreeNewTermsAndConditions(userId);
-
-        assertFalse(serviceResult.isSuccess());
-        assertTrue(serviceResult.getFailure().is(forbiddenError()));
-
-        verify(userRestService, only()).agreeNewSiteTermsAndConditions(userId);
-    }
 }

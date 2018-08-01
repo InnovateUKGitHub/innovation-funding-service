@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.service.TermsAndConditionsRestService;
 import org.innovateuk.ifs.content.form.NewSiteTermsAndConditionsForm;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
     private TermsAndConditionsRestService termsAndConditionsRestService;
 
     @Mock
-    private UserService userService;
+    private UserRestService userRestService;
 
     @Mock
     private CookieUtil cookieUtil;
@@ -70,7 +71,7 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
         long userId = 1L;
         String expectedRedirectUrl = "/application/99/summary";
 
-        when(userService.agreeNewTermsAndConditions(userId)).thenReturn(serviceSuccess());
+        when(userRestService.agreeNewSiteTermsAndConditions(userId)).thenReturn(restSuccess());
         when(cookieUtil.getCookieValue(isA(HttpServletRequest.class), eq("savedRequestUrl")))
                 .thenReturn(expectedRedirectUrl);
 
@@ -79,8 +80,8 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/application/99/summary"));
 
-        InOrder inOrder = inOrder(cookieUtil, userService);
-        inOrder.verify(userService).agreeNewTermsAndConditions(userId);
+        InOrder inOrder = inOrder(cookieUtil, userRestService);
+        inOrder.verify(userRestService).agreeNewSiteTermsAndConditions(userId);
         inOrder.verify(cookieUtil).getCookieValue(isA(HttpServletRequest.class), eq("savedRequestUrl"));
         inOrder.verify(cookieUtil).removeCookie(isA(HttpServletResponse.class), eq("savedRequestUrl"));
         inOrder.verifyNoMoreInteractions();
@@ -107,22 +108,22 @@ public class SiteTermsControllerTest extends BaseControllerMockMVCTest<SiteTerms
         assertEquals("In order to continue you must agree to the terms and conditions.", bindingResult.getFieldError
                 ("agree").getDefaultMessage());
 
-        verifyNoMoreInteractions(userService);
+        verifyNoMoreInteractions(userRestService);
     }
 
     @Test
     public void agreeNewTermsAndConditions_noRedirectUrlCookieRedirectsToDashboard() throws Exception {
         long userId = 1L;
 
-        when(userService.agreeNewTermsAndConditions(userId)).thenReturn(serviceSuccess());
+        when(userRestService.agreeNewSiteTermsAndConditions(userId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/info/new-terms-and-conditions")
                 .param("agree", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        InOrder inOrder = inOrder(cookieUtil, userService);
-        inOrder.verify(userService).agreeNewTermsAndConditions(userId);
+        InOrder inOrder = inOrder(cookieUtil, userRestService);
+        inOrder.verify(userRestService).agreeNewSiteTermsAndConditions(userId);
         inOrder.verify(cookieUtil).getCookieValue(isA(HttpServletRequest.class), eq("savedRequestUrl"));
         inOrder.verify(cookieUtil).removeCookie(isA(HttpServletResponse.class), eq("savedRequestUrl"));
         inOrder.verifyNoMoreInteractions();

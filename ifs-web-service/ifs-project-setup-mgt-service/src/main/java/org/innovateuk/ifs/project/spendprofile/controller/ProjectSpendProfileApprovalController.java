@@ -16,6 +16,8 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.spendprofile.form.ProjectSpendProfileApprovalForm;
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileApprovalViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -49,7 +51,7 @@ public class ProjectSpendProfileApprovalController {
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    private UserService userService;
+    private UserRestService userRestService;
 
     @Autowired
     private SpendProfileService spendProfileService;
@@ -94,7 +96,8 @@ public class ProjectSpendProfileApprovalController {
         ApplicationResource application = applicationService.getById(project.getApplication());
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        String leadTechnologist = competition.getLeadTechnologist() != null ? userService.findById(competition.getLeadTechnologist()).getName() : "";
+        UserResource userLeadTechnologist = userRestService.retrieveUserById(competition.getLeadTechnologist()).getSuccess();
+        String leadTechnologist = competition.getLeadTechnologist() != null ? userLeadTechnologist.getName() : "";
         ApprovalType approvalType = spendProfileService.getSpendProfileStatusByProjectId(projectId);
 
         List<OrganisationResource> organisationResources = projectService.getPartnerOrganisationsForProject(projectId);
