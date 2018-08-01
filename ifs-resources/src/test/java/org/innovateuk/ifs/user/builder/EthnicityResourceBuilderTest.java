@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.builder;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.junit.Test;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+@ZeroDowntime(description = "delete", reference = "IFS-646")
 public class EthnicityResourceBuilderTest {
 
     @Test
