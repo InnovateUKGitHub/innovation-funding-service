@@ -168,12 +168,12 @@
 
             <div th:if="${selectedOrganisation?.organisationAddress != null}">
                 <h3 class="govuk-heading-s">Registered Address</h3>
-                <div th:text="${selectedOrganisation?.organisationAddress?.addressLine1}"></div>
-                <div th:text="${selectedOrganisation?.organisationAddress?.addressLine2}"></div>
-                <div th:text="${selectedOrganisation?.organisationAddress?.addressLine3}"></div>
-                <div th:text="${selectedOrganisation?.organisationAddress?.town}"></div>
-                <div th:text="${selectedOrganisation?.organisationAddress?.county}"></div>
-                <div th:text="${selectedOrganisation?.organisationAddress?.postcode}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.addressLine1}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.addressLine2}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.addressLine3}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.town}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.county}"></div>
+                <div class="govuk-body govuk-!-margin-0" th:text="${selectedOrganisation?.organisationAddress?.postcode}"></div>
             </div>
 
             <div th:if="${confirmDetails == true
