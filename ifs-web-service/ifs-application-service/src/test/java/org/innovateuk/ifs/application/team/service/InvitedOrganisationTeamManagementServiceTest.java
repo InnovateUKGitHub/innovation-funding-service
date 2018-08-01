@@ -28,7 +28,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-public class InviteOrganisationTeamManagementServiceTest extends BaseServiceUnitTest<InvitedOrganisationTeamManagementService> {
+public class InvitedOrganisationTeamManagementServiceTest extends BaseServiceUnitTest<InvitedOrganisationTeamManagementService> {
 
     @Mock
     private ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
