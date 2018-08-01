@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.competitionsetup.projectdocument.controller;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupProjectDocumentRestService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.projectdocument.form.LandingPageForm;
@@ -52,7 +52,7 @@ public class CompetitionSetupProjectDocumentController {
     }
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
@@ -70,7 +70,7 @@ public class CompetitionSetupProjectDocumentController {
     }
 
     private Redirect doViewProjectDocument(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         Redirect redirect = new Redirect(false);
 
