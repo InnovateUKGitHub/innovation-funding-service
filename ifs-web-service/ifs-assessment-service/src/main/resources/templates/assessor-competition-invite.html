@@ -25,7 +25,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assess '${model.competitionName}'|,size='govuk-heading-xl'" />
                 <p class="govuk-body">You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
-                <section class="boxed">
+                <section class="boxed govuk-!-margin-bottom-6">
                     <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|${#temporals.format(model.acceptsDate, 'd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'd MMMM yyyy')}: Assessment period|">
                         21 March 2017 to 28 March 2017: Assessment period
                     </h2>
@@ -107,7 +107,7 @@
                                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
                                         </th:block>
                                     </label>
-                                    <textarea class="govuk-textarea"
+                                    <textarea class="govuk-textarea govuk-!-margin-bottom-0"
                                               maxlength="5000"
                                               data-max_words="100"
                                               data-maxwordslength="100"
@@ -116,7 +116,7 @@
                                               th:errorclass="govuk-textarea--error"
                                               rows="4"
                                               th:field="*{rejectComment}"></textarea>
-                                    <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
+                                    <div class="govuk-body textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
                                         <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
                                     </div>
                                 </div>
