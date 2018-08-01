@@ -10,6 +10,8 @@ import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.projectdocument.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.projectdocument.form.ProjectDocumentForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.file.resource.FileTypeResource;
+import org.innovateuk.ifs.file.service.FileTypeRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,8 +22,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -59,6 +64,9 @@ public class CompetitionSetupProjectDocumentController {
 
     @Autowired
     private CompetitionSetupProjectDocumentRestService competitionSetupProjectDocumentRestService;
+
+    @Autowired
+    private FileTypeRestService fileTypeRestService;
 
     @GetMapping("/landing-page")
     public String projectDocumentLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
@@ -144,6 +152,34 @@ public class CompetitionSetupProjectDocumentController {
         return doViewSaveProjectDocument(model, form);
     }
 
+    private ProjectDocumentForm createProjectDocumentForm(ProjectDocumentResource resource) {
+        ProjectDocumentForm form = new ProjectDocumentForm(resource.getId(), resource.getTitle(), resource.getGuidance(),
+                resource.isEditable(), resource.isEnabled());
+
+        populateFileTypes(form, resource);
+
+        return form;
+    }
+
+    private void populateFileTypes(ProjectDocumentForm form, ProjectDocumentResource resource) {
+
+        resource.getFileTypes().forEach(fileTypeId -> {
+            FileTypeResource fileTypeResource = fileTypeRestService.findOne(fileTypeId).getSuccess();
+            updateForm(form, fileTypeResource.getName());
+        });
+    }
+
+    private void updateForm(ProjectDocumentForm form, String fileTypeName) {
+        updateForm(form,"PDF", fileTypeName, form1 -> form1.setPdf(true));
+        updateForm(form,"Spreadsheet", fileTypeName, form1 -> form1.setSpreadsheet(true));
+    }
+
+    private void updateForm(ProjectDocumentForm form, String fileType, String fileTypeName, Consumer<ProjectDocumentForm> fieldToSet) {
+        if (fileType.equalsIgnoreCase(fileTypeName)) {
+            fieldToSet.accept(form);
+        }
+    }
+
     @PostMapping("/save")
     public String saveProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                       Model model,
@@ -172,17 +208,29 @@ public class CompetitionSetupProjectDocumentController {
 
     private ProjectDocumentResource createProjectDocumentResource(ProjectDocumentForm form, long competitionId) {
         ProjectDocumentResource projectDocumentResource = new ProjectDocumentResource(competitionId, form.getTitle(), form.getGuidance(),
-                form.isEditable(), form.isEnabled(), form.isPdf(), form.isSpreadsheet());
+                form.isEditable(), form.isEnabled(), populateFileTypes(form));
 
         if (form.getProjectDocumentId() != null) {
             projectDocumentResource.setId(form.getProjectDocumentId());
         }
+
         return projectDocumentResource;
     }
 
-    private ProjectDocumentForm createProjectDocumentForm(ProjectDocumentResource resource) {
-        return new ProjectDocumentForm(resource.getId(), resource.getTitle(), resource.getGuidance(),
-                resource.isEditable(), resource.isEnabled(), resource.isPdf(), resource.isSpreadsheet());
+    private List<Long> populateFileTypes(ProjectDocumentForm form) {
+
+        List<Long> fileTypes = new ArrayList<>();
+        populateFileType(fileTypes, "PDF", form.isPdf());
+        populateFileType(fileTypes, "Spreadsheet", form.isSpreadsheet());
+
+        return fileTypes;
+    }
+
+    private void populateFileType(List<Long> fileTypes, String fileType, boolean populate) {
+        if (populate) {
+            FileTypeResource fileTypeResource = fileTypeRestService.findByName(fileType).getSuccess();
+            fileTypes.add(fileTypeResource.getId());
+        }
     }
 
     @PostMapping("/{projectDocumentId}/delete")

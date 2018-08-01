@@ -43,15 +43,17 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     }
 
     private ServiceResult<Void> validateProjectDocument(ProjectDocumentResource projectDocumentResource) {
-        return isPdfOrSpreadSheet(projectDocumentResource) ? serviceSuccess() : serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
+        return projectDocumentResource.getFileTypes().size() > 0 ? serviceSuccess() : serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
     }
 
-    private boolean isPdfOrSpreadSheet(ProjectDocumentResource projectDocumentResource) {
+/*    private boolean isPdfOrSpreadSheet(ProjectDocumentResource projectDocumentResource) {
         return projectDocumentResource.isPdf() || projectDocumentResource.isSpreadsheet();
-    }
+    }*/
 
     private ServiceResult<Void> validateProjectDocument(List<ProjectDocumentResource> projectDocumentResources) {
-        return projectDocumentResources.stream().anyMatch(projectDocumentResource -> !isPdfOrSpreadSheet(projectDocumentResource)) ?
+        return projectDocumentResources
+                .stream()
+                .anyMatch(projectDocumentResource -> projectDocumentResource.getFileTypes() == null || projectDocumentResource.getFileTypes().size() <= 0) ?
                 serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE) : serviceSuccess();
     }
 

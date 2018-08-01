@@ -18,6 +18,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
 import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.file.domain.FileType;
+import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
@@ -25,6 +27,7 @@ import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +39,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -71,6 +75,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private PublicContentRepository publicContentRepository;
     @Autowired
     private MilestoneRepository milestoneRepository;
+    @Autowired
+    private FileTypeRepository fileTypeRepository;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
@@ -353,20 +359,22 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     private List<ProjectDocument> createDefaultProjectDocuments(Competition competition) {
 
+        FileType pdfFileType = fileTypeRepository.findByName("PDF");
+
         List<ProjectDocument> defaultProjectDocuments = new ArrayList<>();
-        defaultProjectDocuments.add(createCollaborationAgreement(competition));
-        defaultProjectDocuments.add(createExploitationPlan(competition));
+        defaultProjectDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
+        defaultProjectDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
 
         return defaultProjectDocuments;
     }
 
-    private ProjectDocument createCollaborationAgreement(Competition competition) {
+    private ProjectDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
         return new ProjectDocument(competition, "Collaboration agreement", "Enter guidance for Collaboration agreement",
-                false, true, true, false);
+                false, true, fileTypes);
     }
 
-    private ProjectDocument createExploitationPlan(Competition competition) {
+    private ProjectDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
         return new ProjectDocument(competition, "Exploitation plan", "Enter guidance for Exploitation plan",
-                false, true, true, false);
+                false, true, fileTypes);
     }
 }
