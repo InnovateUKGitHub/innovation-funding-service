@@ -61,7 +61,7 @@
                     <span class="govuk-hint">Select your organisation from the options below</span>
                 </th:block>
             </th:block>
-            <ul id="org-results" class="results-list panel" th:if="${organisationForm.organisationSearching}"
+            <ul id="org-results" class="govuk-list results-list panel" th:if="${organisationForm.organisationSearching}"
                 th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">
                     <h3>
