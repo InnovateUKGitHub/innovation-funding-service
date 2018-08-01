@@ -111,7 +111,7 @@ Funding information server-side validations
 Funding information client-side validations
     [Documentation]    INFUND-2985
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.govuk-button:contains("Generate code")
+    When the user clicks the button/link    id=generate-code
     Then the user should not see the error any more    Please generate a competition code.
     When the user enters text to a text field    id=funders[0].funder    FunderName
     Then the user should not see the error any more    Please enter a funder name.
