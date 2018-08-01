@@ -39,7 +39,7 @@
                     <ul>
                         <li th:each="pendingInvite : ${model.pendingInvites}" class="status-2-col">
                             <div class="task">
-                                <h3 class="govuk-heading-s"><a
+                                <h3 class="govuk-heading-s"><a class="govuk-link"
                                     th:href="@{/invite/competition/{hash}(hash=${pendingInvite.hash})}"
                                     th:text="${pendingInvite.displayLabel}">Technology inspired</a></h3>
                                     <p class="govuk-body govuk-!-margin-0">You have been asked to assess this competition. Please respond.</p>
