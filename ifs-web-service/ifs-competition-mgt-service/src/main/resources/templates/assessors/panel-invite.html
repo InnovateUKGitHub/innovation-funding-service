@@ -68,14 +68,14 @@
 
                 <form method="POST" th:action="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
 
-                    <div class="govuk-body govuk-grid-row sorting">
+                    <div class="govuk-grid-row sorting">
                         <div class="govuk-grid-column-one-half">
-                            <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
-                            <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">assessors</span>
+                            <span class="govuk-body govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.pagination.totalCount}">20</span>
+                            <span class="govuk-body govuk-!-font-size-19 govuk-!-font-weight-bold">assessors</span>
                         </div>
 
                         <div class="govuk-grid-column-one-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">
-                            <a th:href="@{/panel/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="govuk-button govuk-!-margin-top-4">Review and send invites</a>
+                            <a th:href="@{/panel/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="govuk-button govuk-!-margin-0">Review and send invites</a>
                         </div>
                     </div>
 

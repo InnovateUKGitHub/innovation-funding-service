@@ -67,14 +67,14 @@
                     class="uploaded-file govuk-link" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
                 </th:block>
 
-                <h2 class="govuk-heading-m">Exploitation plan</h2>
+                <h2 class="govuk-heading-m govuk-!-padding-top-7">Exploitation plan</h2>
                 <a th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
                  class="uploaded-file govuk-link"
                  th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
 
                 <th:block th:if="${model.isShowApproveRejectButtons()}">
                     <th:block th:if="${model.collaborationAgreementRequired}">
-                        <h2 class="govuk-heading-m">Review documents</h2>
+                        <h2 class="govuk-heading-m govuk-!-padding-top-7">Review documents</h2>
                         <p class="govuk-body">Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
                         <button id="accept-documents" data-js-modal="modal-accept-docs" class="govuk-button">Accept documents</button>
                         <button id="reject-documents" data-js-modal="modal-reject-docs" class="govuk-button button-warning">Reject documents</button>
