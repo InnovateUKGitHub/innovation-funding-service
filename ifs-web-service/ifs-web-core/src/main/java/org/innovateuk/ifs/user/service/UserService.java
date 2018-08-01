@@ -23,17 +23,11 @@ public interface UserService {
 
     List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource applicationResource);
 
-    Void verifyEmail(String hash);
-
     void resendEmailVerificationNotification(String email);
 
     Boolean userHasApplicationForCompetition(Long userId, Long competitionId);
 
-    UserResource retrieveUserById(Long id);
-
     void sendPasswordResetNotification(String email);
-
-    Void checkPasswordResetHash(String hash);
 
     Optional<UserResource> findUserByEmail(String email);
 
@@ -46,8 +40,6 @@ public interface UserService {
     ServiceResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Boolean allowMarketingEmails);
 
     ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails);
-
-    List<UserResource> findUserByType(Role type);
 
     List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
 

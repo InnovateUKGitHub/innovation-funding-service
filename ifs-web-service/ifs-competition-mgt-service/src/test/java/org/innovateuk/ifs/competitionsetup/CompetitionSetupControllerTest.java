@@ -18,6 +18,7 @@ import org.innovateuk.ifs.competitionsetup.fundinginformation.form.AdditionalInf
 import org.innovateuk.ifs.competitionsetup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.fixtures.CompetitionFundersFixture;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,6 +95,9 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     private UserService userService;
 
     @Mock
+    private UserRestService userRestService;
+
+    @Mock
     private CompetitionRestService competitionRestService;
 
     @Override
@@ -105,20 +109,20 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     public void setUp() {
         super.setUp();
 
-        when(userService.findUserByType(COMP_ADMIN))
+        when(userRestService.findByUserRole(COMP_ADMIN))
                 .thenReturn(
-                        newUserResource()
+                        restSuccess(newUserResource()
                                 .withFirstName("Comp")
                                 .withLastName("Admin")
-                                .build(1)
+                                .build(1))
                 );
 
-        when(userService.findUserByType(INNOVATION_LEAD))
+        when(userRestService.findByUserRole(INNOVATION_LEAD))
                 .thenReturn(
-                        newUserResource()
+                        restSuccess(newUserResource()
                                 .withFirstName("Comp")
                                 .withLastName("Technologist")
-                                .build(1)
+                                .build(1))
                 );
 
         List<InnovationSectorResource> innovationSectorResources = newInnovationSectorResource()
@@ -967,7 +971,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("assessorPay", "10")
                 .param("hasAssessmentPanel", "0")
                 .param("hasInterviewStage", "0")
-                .param("assessorFinanceView","OVERVIEW"))
+                .param("assessorFinanceView", "OVERVIEW"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors"));
 

@@ -105,7 +105,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
     public void testResetPasswordInvalidHash() throws Exception {
         String hash = UUID.randomUUID().toString();
         Error error = CommonErrors.notFoundError(TokenResource.class, hash);
-        when(userService.checkPasswordResetHash(hash)).thenThrow(new InvalidURLException(error.getErrorKey(), error.getArguments()));
+        when(userRestServiceMock.checkPasswordResetHash(hash)).thenThrow(new InvalidURLException(error.getErrorKey(), error.getArguments()));
 
         mockMvc.perform(get("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash))
                 .andExpect(status().isAlreadyReported())
@@ -170,7 +170,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
         String hash = UUID.randomUUID().toString();
         String password = "Passw0rd";
         Error error = CommonErrors.notFoundError(TokenResource.class, hash);
-        when(userService.checkPasswordResetHash(eq(hash))).thenThrow(new InvalidURLException(error.getErrorKey(), error.getArguments()));
+        when(userRestServiceMock.checkPasswordResetHash(eq(hash))).thenThrow(new InvalidURLException(error.getErrorKey(), error.getArguments()));
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)

@@ -77,21 +77,6 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void findUserByType() throws Exception {
-        UserResource userOne = new UserResource();
-        userOne.setId(1L);
-
-        UserResource userTwo = new UserResource();
-        userTwo.setId(2L);
-
-        List<UserResource> expected = new ArrayList<>(asList(userOne, userTwo));
-        when(userRestService.findByUserRole(COMP_ADMIN)).thenReturn(restSuccess(expected));
-
-        List<UserResource> found = service.findUserByType(COMP_ADMIN);
-        assertTrue(found.size() > 0);
-    }
-
-    @Test
     public void userHasApplicationForCompetition() throws Exception {
         Long userId = 1L;
         Long competitionId = 2L;

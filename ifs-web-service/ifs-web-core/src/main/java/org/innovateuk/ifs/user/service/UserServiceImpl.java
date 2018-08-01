@@ -100,16 +100,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResource> findUserByType(Role type) {
-        return userRestService.findByUserRole(type).getSuccess();
-    }
-
-    @Override
-    public Void verifyEmail(String hash) {
-        return userRestService.verifyEmail(hash).getSuccess();
-    }
-
-    @Override
     public void resendEmailVerificationNotification(String email) {
         try {
             userRestService.resendEmailVerificationNotification(email).getSuccess();
@@ -125,18 +115,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResource retrieveUserById(Long id) {
-        return userRestService.retrieveUserById(id).getSuccess();
-    }
-
-    @Override
     public void sendPasswordResetNotification(String email) {
         userRestService.sendPasswordResetNotification(email);
-    }
-
-    @Override
-    public Void checkPasswordResetHash(String hash) {
-        return userRestService.checkPasswordResetHash(hash).getSuccess();
     }
 
     @Override

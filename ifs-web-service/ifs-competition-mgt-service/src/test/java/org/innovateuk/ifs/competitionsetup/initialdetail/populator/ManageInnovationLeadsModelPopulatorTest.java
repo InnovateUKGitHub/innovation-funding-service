@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competitionsetup.initialdetail.viewmodel.ManageInnovat
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,9 +31,6 @@ public class ManageInnovationLeadsModelPopulatorTest {
 
     @Mock
     private CompetitionRestService competitionRestService;
-
-    @Mock
-    private UserService userService;
 
     @Mock
     private UserRestService userRestService;
@@ -99,7 +95,7 @@ public class ManageInnovationLeadsModelPopulatorTest {
                 .withInnovationAreaNames(Collections.EMPTY_SET)
                 .build();
 
-        when(userService.findUserByType(INNOVATION_LEAD)).thenReturn(availableInnovationLeads);
+        when(userRestService.findByUserRole(INNOVATION_LEAD)).thenReturn(restSuccess(availableInnovationLeads));
         when(competitionRestService.findInnovationLeads(competitionId)).thenReturn(restSuccess(innovationLeadsAssignedToCompetition));
         when(userRestService.retrieveUserById(competitionResource.getLeadTechnologist())).thenReturn(restSuccess(innLead4));
 

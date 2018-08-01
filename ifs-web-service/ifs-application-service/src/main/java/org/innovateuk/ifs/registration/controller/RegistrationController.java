@@ -20,6 +20,7 @@ import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,9 @@ public class RegistrationController {
     private Validator validator;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRestService userRestService;
 
     @Autowired
     private RegistrationCookieService registrationCookieService;
@@ -105,7 +109,7 @@ public class RegistrationController {
     @GetMapping("/verify-email/{hash}")
     public String verifyEmailAddress(@PathVariable("hash") final String hash,
                                      final HttpServletResponse response) {
-        userService.verifyEmail(hash);
+        userRestService.verifyEmail(hash);
         cookieFlashMessageFilter.setFlashMessage(response, "verificationSuccessful");
         return "redirect:/registration/verified";
     }

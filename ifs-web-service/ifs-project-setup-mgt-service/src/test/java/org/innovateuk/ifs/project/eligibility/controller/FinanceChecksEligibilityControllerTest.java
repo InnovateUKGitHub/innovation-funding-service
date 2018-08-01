@@ -167,7 +167,7 @@ public class FinanceChecksEligibilityControllerTest extends AbstractApplicationM
                         .withApplicants(asList(applicant))
                         .withSection(newSectionResource().withType(SectionType.FINANCE).build())
                         .withCurrentUser(loggedInUser).build());
-        when(userService.retrieveUserById(loggedInUser.getId())).thenReturn(loggedInUser);
+        when(userRestService.retrieveUserById(loggedInUser.getId())).thenReturn(restSuccess(loggedInUser));
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getByApplicationId(application.getId())).thenReturn(project);

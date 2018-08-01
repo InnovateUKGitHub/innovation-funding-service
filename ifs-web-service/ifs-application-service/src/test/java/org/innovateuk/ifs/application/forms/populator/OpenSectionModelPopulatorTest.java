@@ -151,7 +151,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTest {
                 .withSection(section).withCurrentUser(user).build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(userService.retrieveUserById(user.getId())).thenReturn(user);
+        when(userRestService.retrieveUserById(user.getId())).thenReturn(restSuccess(user));
 
         InviteOrganisationResource inviteOrg1 = new InviteOrganisationResource();
         inviteOrg1.setId(234L);

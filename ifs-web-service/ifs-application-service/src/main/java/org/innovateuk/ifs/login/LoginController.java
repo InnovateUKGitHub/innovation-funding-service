@@ -5,12 +5,10 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.login.form.ResetPasswordForm;
 import org.innovateuk.ifs.login.form.ResetPasswordRequestForm;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -43,9 +41,7 @@ public class LoginController {
 
     private static final Log LOG = LogFactory.getLog(LoginController.class);
 
-    @Autowired
     private UserService userService;
-
     private UserRestService userRestService;
 
     public LoginController(UserService userService,
@@ -76,13 +72,13 @@ public class LoginController {
 
     @GetMapping("/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}")
     public String resetPassword(@PathVariable("hash") String hash, @ModelAttribute(binding = false) ResetPasswordForm resetPasswordForm, Model model, HttpServletRequest request) {
-        userService.checkPasswordResetHash(hash);
+        userRestService.checkPasswordResetHash(hash);
         return LOGIN_BASE + "/" + RESET_PASSWORD_FORM;
     }
 
     @PostMapping("/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}")
     public String resetPasswordPost(@PathVariable("hash") String hash, @Valid @ModelAttribute ResetPasswordForm resetPasswordForm, BindingResult bindingResult) {
-        userService.checkPasswordResetHash(hash);
+        userRestService.checkPasswordResetHash(hash);
 
         if (bindingResult.hasErrors()) {
             return LOGIN_BASE + "/" + RESET_PASSWORD + "-form";

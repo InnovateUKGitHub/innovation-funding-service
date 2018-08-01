@@ -17,6 +17,7 @@ import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
@@ -85,6 +86,9 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private UserRestService userRestService;
 
     @Mock
     private OrganisationService organisationService;
@@ -200,7 +204,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     public void testVerifyEmailInvalid() throws Exception {
         final String hash = UUID.randomUUID().toString();
 
-        when(userService.verifyEmail(eq(hash))).thenThrow(new InvalidURLException(USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND.getErrorKey(), null));
+        when(userRestService.verifyEmail(eq(hash))).thenThrow(new InvalidURLException(USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND.getErrorKey(), null));
 
         mockMvc.perform(get("/registration/verify-email/" + hash))
                 .andExpect(status().isAlreadyReported())
@@ -210,7 +214,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     @Test
     public void testVerifyEmailExpired() throws Exception {
         final String hash = UUID.randomUUID().toString();
-        when(userService.verifyEmail(eq(hash))).thenThrow(new RegistrationTokenExpiredException(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED.getErrorKey(), null));
+        when(userRestService.verifyEmail(eq(hash))).thenThrow(new RegistrationTokenExpiredException(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED.getErrorKey(), null));
 
         mockMvc.perform(get("/registration/verify-email/" + hash))
                 .andExpect(status().isForbidden())
