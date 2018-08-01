@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.invite.transactional;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.repository.EthnicityRepository;
@@ -19,6 +20,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Service
 @Transactional(readOnly = true)
 
+@ZeroDowntime(description = "remove gender, ethnicity, disability", reference = "IFS-646")
 public class EthnicityServiceImpl implements EthnicityService{
     @Autowired
     private EthnicityRepository ethnicityRepository;

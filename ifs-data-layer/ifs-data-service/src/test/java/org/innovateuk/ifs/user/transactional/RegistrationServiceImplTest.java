@@ -28,12 +28,12 @@ import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.domain.Ethnicity;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -69,12 +69,8 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Disability.NO;
-import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -122,9 +118,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     private AddressMapper addressMapperMock;
 
     @Mock
-    private EthnicityMapper ethnicityMapperMock;
-
-    @Mock
     private UserRepository userRepositoryMock;
 
     @Mock
@@ -155,8 +148,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     @Test
     public void createUser() {
         Set<Role> roles = singleton(Role.ASSESSOR);
-        EthnicityResource ethnicityResource = newEthnicityResource().with(id(1L)).build();
-        Ethnicity ethnicity = newEthnicity().withId(1L).build();
         AddressResource addressResource = newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build();
         Address address = newAddress().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build();
 
@@ -164,9 +155,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
-                .withGender(NOT_STATED)
-                .withEthnicity(ethnicityResource)
-                .withDisability(NO)
                 .withPhoneNumber("01234 567890")
                 .withEmail("email@example.com")
                 .withPassword("Passw0rd123")
@@ -185,9 +173,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
-                .withGender(NOT_STATED)
-                .withEthnicity(ethnicity)
-                .withDisability(NO)
                 .withPhoneNumber("01234 567890")
                 .withEmailAddress("email@example.com")
                 .withRoles(roles)
@@ -208,9 +193,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals("First Last", user.getName());
             assertEquals("First", user.getFirstName());
             assertEquals("Last", user.getLastName());
-            assertEquals(NOT_STATED, user.getGender());
-            assertEquals(ethnicity, user.getEthnicity());
-            assertEquals(NO, user.getDisability());
             assertEquals("01234 567890", user.getPhoneNumber());
             assertEquals("email@example.com", user.getEmail());
 
@@ -255,9 +237,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withPhoneNumber("01234 567890").
                 withPassword("thepassword").
                 withTitle(Mr).
-                withDisability(Disability.YES).
-                withGender(Gender.MALE).
-                withEthnicity(2L).
                 build();
 
         Long organisationId = 123L;
@@ -267,7 +246,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
-        when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
         when(organisationRepositoryMock.findOne(organisationId)).thenReturn(selectedOrganisation);
         when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
@@ -286,9 +264,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals("01234 567890", user.getPhoneNumber());
             assertEquals(Mr, user.getTitle());
             assertEquals("new-uid", user.getUid());
-            assertEquals(Gender.MALE, user.getGender());
-            assertEquals(Disability.YES, user.getDisability());
-            assertEquals(Long.valueOf(2), user.getEthnicity().getId());
             assertEquals(1, user.getRoles().size());
             assertTrue(user.getRoles().contains(applicantRole));
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
@@ -635,16 +610,12 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withPhoneNumber("01234 567890").
                 withPassword("thepassword").
                 withTitle(Mr).
-                withDisability(Disability.YES).
-                withGender(Gender.MALE).
-                withEthnicity(2L).
                 withRolesGlobal(singletonList(roleResource)).
                 build();
 
         Long organisationId = 123L;
         Organisation selectedOrganisation = newOrganisation().withId(organisationId).build();
 
-        when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
         when(organisationRepositoryMock.findOne(organisationId)).thenReturn(selectedOrganisation);
         when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
@@ -663,9 +634,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals("01234 567890", user.getPhoneNumber());
             assertEquals(Mr, user.getTitle());
             assertEquals("new-uid", user.getUid());
-            assertEquals(Gender.MALE, user.getGender());
-            assertEquals(Disability.YES, user.getDisability());
-            assertEquals(Long.valueOf(2), user.getEthnicity().getId());
             assertEquals(1, user.getRoles().size());
             assertTrue(user.getRoles().contains(Role.COMP_ADMIN));
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());

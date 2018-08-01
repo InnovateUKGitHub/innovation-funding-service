@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.user.domain;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,6 +11,7 @@ import java.io.Serializable;
 /**
  * The ethnicity of a {@link User}.
  */
+@ZeroDowntime(description = "delete", reference = "IFS-646")
 @Entity
 public class Ethnicity implements Serializable {
 

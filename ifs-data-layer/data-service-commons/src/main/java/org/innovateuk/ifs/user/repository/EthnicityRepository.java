@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.repository;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.user.domain.Ethnicity;
 import org.springframework.data.repository.CrudRepository;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
+@ZeroDowntime(description = "delete", reference = "IFS-646")
 public interface EthnicityRepository extends CrudRepository<Ethnicity, Long> {
     List<Ethnicity> findByActiveTrueOrderByPriorityAsc();
 

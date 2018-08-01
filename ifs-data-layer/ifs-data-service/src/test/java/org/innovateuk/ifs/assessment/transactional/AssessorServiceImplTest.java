@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
@@ -72,12 +71,9 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Disability.NO;
-import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
@@ -129,8 +125,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     @Mock
     private AffiliationMapper affliationMapperMock;
 
-
-
     @InjectMocks
     private AssessorService assessorService = new AssessorServiceImpl();
 
@@ -149,9 +143,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
-                .withGender(NOT_STATED)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
-                .withDisability(NO)
                 .withPassword("Password123")
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -218,9 +209,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
-                .withGender(NOT_STATED)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
-                .withDisability(NO)
                 .withPassword("Password123")
                 .build();
 
@@ -247,9 +235,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
-                .withGender(NOT_STATED)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
-                .withDisability(NO)
                 .withPassword("Password123")
                 .build();
 
