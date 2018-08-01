@@ -56,7 +56,7 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
                 hasApplicationFinances,
                 useNewApplicantMenu,
                 researchCategoryName,
-                !isCompetitionOpen(applicationResource),
+                isApplicationSubmitted(applicationResource) || !isCompetitionOpen(applicationResource),
                 complete,
                 userIsLeadApplicant,
                 allReadonly,

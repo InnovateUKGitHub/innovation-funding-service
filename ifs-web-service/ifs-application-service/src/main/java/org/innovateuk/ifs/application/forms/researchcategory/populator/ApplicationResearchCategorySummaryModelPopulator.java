@@ -38,7 +38,7 @@ public class ApplicationResearchCategorySummaryModelPopulator extends AbstractLe
         return new ResearchCategorySummaryViewModel(applicationResource.getId(),
                 getResearchCategoryQuestion(applicationResource.getCompetition()),
                 researchCategoryName,
-                !isCompetitionOpen(applicationResource),
+                isApplicationSubmitted(applicationResource) || !isCompetitionOpen(applicationResource),
                 isComplete,
                 userIsLeadApplicant,
                 allReadOnly

@@ -1,33 +1,8 @@
+apply from: rootProject.file("gradle-support/java.gradle")
 
-apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
-apply plugin: 'jacoco'
-apply plugin: 'io.spring.dependency-management'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 findMainClass.enabled = false
-
-jacocoTestReport {
-    afterEvaluate {
-        classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it,
-                    exclude: ['**/*Mapper**'])
-        })
-    }
-
-}
-
-test {
-    beforeTest { desc ->
-        println "Executing test ${desc.className}.${desc.name}"
-    }
-
-    if (!['ifs-data-service', 'ifs-finance-data-service'].contains(project.name)) {
-        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
-    }
-}
 
 dependencies {
     if (project.hasProperty("cloud") && project.cloud == "development") {
@@ -42,7 +17,7 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-web"
-    compile('org.springframework.cloud:spring-cloud-starter-hystrix')
+    compile "org.springframework.cloud:spring-cloud-starter-hystrix"
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
     compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
 
@@ -63,36 +38,10 @@ bootRepackage {
 
 }
 
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
-processTestResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
 ext.springCloudVersion = 'Edgware.SR3'
-
 
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
-}
-
-
-repositories {
-    jcenter()
-}
-
-jar {
-    manifest.attributes provider: 'gradle'
-}
-
-compileJava {
-    options.compilerArgs += '-parameters'
 }
