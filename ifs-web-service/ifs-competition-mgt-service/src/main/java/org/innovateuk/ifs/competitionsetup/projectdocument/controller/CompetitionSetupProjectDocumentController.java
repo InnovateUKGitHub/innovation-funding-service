@@ -42,6 +42,15 @@ public class CompetitionSetupProjectDocumentController {
     private static final String FORM_ATTR_NAME = "form";
     private static final String LANDING_FORM_ATTR_NAME = "landingPageForm";
 
+    private class Redirect {
+        private boolean redirect;
+        private String url;
+
+        private Redirect(boolean redirect) {
+            this.redirect = redirect;
+        }
+    }
+
     @Autowired
     private CompetitionService competitionService;
 
@@ -54,27 +63,31 @@ public class CompetitionSetupProjectDocumentController {
     @GetMapping("/landing-page")
     public String projectDocumentLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
 
-        String redirect = doViewProjectDocument(model, competitionId);
+        Redirect redirect = doViewProjectDocument(model, competitionId);
 
-        return redirect != null ? redirect : "competition/setup";
+        return redirect.redirect ? redirect.url : "competition/setup";
 
     }
 
-    private String doViewProjectDocument(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
+    private Redirect doViewProjectDocument(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
+        Redirect redirect = new Redirect(false);
+
         if(competitionResource.isNonIfs()) {
-            return "redirect:/non-ifs-competition/setup/" + competitionId;
+            redirect.redirect = true;
+            redirect.url = "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
-            return "redirect:/competition/setup/" + competitionResource.getId();
+            redirect.redirect = true;
+            redirect.url = "redirect:/competition/setup/" + competitionResource.getId();
         }
 
         model.addAttribute("model", competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT));
         model.addAttribute(LANDING_FORM_ATTR_NAME, new LandingPageForm());
 
-        return null;
+        return redirect;
     }
 
     @PostMapping("/landing-page")
@@ -104,10 +117,10 @@ public class CompetitionSetupProjectDocumentController {
     public String viewAddProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                      Model model) {
 
-        String redirect = doViewProjectDocument(model, competitionId);
+        Redirect redirect = doViewProjectDocument(model, competitionId);
 
         ProjectDocumentForm form = new ProjectDocumentForm(true, true);
-        return redirect != null ? redirect : doViewSaveProjectDocument(model, form);
+        return redirect.redirect ? redirect.url : doViewSaveProjectDocument(model, form);
     }
 
     private String doViewSaveProjectDocument(Model model, ProjectDocumentForm form) {
@@ -120,8 +133,8 @@ public class CompetitionSetupProjectDocumentController {
                                           @PathVariable("projectDocumentId") long projectDocumentId,
                                          Model model) {
 
-        String redirect = doViewProjectDocument(model, competitionId);
-        return redirect != null ? redirect : doViewEditProjectDocument(model, projectDocumentId);
+        Redirect redirect = doViewProjectDocument(model, competitionId);
+        return redirect.redirect ? redirect.url : doViewEditProjectDocument(model, projectDocumentId);
     }
 
     private String doViewEditProjectDocument(Model model, long projectDocumentId) {
@@ -153,8 +166,8 @@ public class CompetitionSetupProjectDocumentController {
     }
 
     private String saveProjectDocumentFailureView(long competitionId, Model model, ProjectDocumentForm form) {
-        String redirect = doViewProjectDocument(model, competitionId);
-        return redirect != null ? redirect : doViewSaveProjectDocument(model, form);
+        Redirect redirect = doViewProjectDocument(model, competitionId);
+        return redirect.redirect ? redirect.url : doViewSaveProjectDocument(model, form);
     }
 
     private ProjectDocumentResource createProjectDocumentResource(ProjectDocumentForm form, long competitionId) {
