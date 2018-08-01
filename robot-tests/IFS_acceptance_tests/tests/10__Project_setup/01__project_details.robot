@@ -114,7 +114,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     Then the user should not see the element   link = Monitoring Officer
     And the user should not see the element    link = Bank details
     And the user should not see the element    link = Finance checks
-    And the user should not see the element    link= Spend profile
+    And the user should not see the element    link = Spend profile
     And the user should not see the element    link = Grant offer letter
 
 Non-lead partner can see the application overview
@@ -725,8 +725,8 @@ the competition admin should see the status of each project setup stage
     the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status             # GOL
 
 the user should see that Project details aren't completed
-    the user should see the element    jQuery=p:contains("These project details were supplied by the lead partner on behalf of the project.")
-    the user should see the element    jQuery=p:contains("Each partner must provide a finance contact and a project location.")
+    the user should see the element    jQuery = p:contains("These project details were supplied by the lead partner on behalf of the project.")
+    the user should see the element    jQuery = p:contains("Each partner must provide a finance contact and a project location.")
     the user should see the element    css = #project-details
     the user should see the element    jQuery = #project-address:contains("Not yet completed")
     the user should see the element    jQuery = #no-project-manager:contains("Not yet completed")
