@@ -29,27 +29,25 @@
             </ul>
             <div>
                 <div th:if="${model.showNotOpenYetMessage}" class="warning-alert">
-                    This competition has not yet opened.
+                    <p class="govuk-body">This competition has not yet opened.</p>
                 </div>
                 <div th:if="${model.showClosedMessage}" class="warning-alert">
-                    This competition is now closed.
+                    <p class="govuk-body">This competition is now closed.</p>
                 </div>
                 <div th:if="${model.showRegistrationClosedMessage}" class="warning-alert">
-                    Registration has now closed.
+                    <p class="govuk-body">Registration has now closed.</p>
                 </div>
                 <th:block>
-                    <p class="govuk-body">
-                        <a class="govuk-button govuk-button--disabled" aria-disabled="true"
-                           th:if="${model.disableApplyButton}"
-                           th:text="${model.applyButtonText}">
-                        </a>
-                        <a class="govuk-button"
-                           th:unless="${model.disableApplyButton}"
-                           th:href="${model.applyButtonUrl}"
-                           th:text="${model.applyButtonText}">
-                        </a>
-                    </p>
-                    <p class="govuk-!-margin-top-6" th:if="${model.showSignInText}">
+                    <a class="govuk-button govuk-button--disabled govuk-!-margin-top-6" aria-disabled="true"
+                       th:if="${model.disableApplyButton}"
+                       th:text="${model.applyButtonText}">
+                    </a>
+                    <a class="govuk-button govuk-!-margin-top-6"
+                       th:unless="${model.disableApplyButton}"
+                       th:href="${model.applyButtonUrl}"
+                       th:text="${model.applyButtonText}">
+                    </a>
+                    <p class="govuk-body govuk-!-margin-top-6" th:if="${model.showSignInText}">
                         <th:block th:unless="${model.userIsLoggedIn}">
                             Or <a th:href="@{/}" class="govuk-link">sign in</a> to continue an existing application.
                         </th:block>
@@ -61,7 +59,7 @@
             </div>
 
             <div id="competition-overview-tabs" class="tabs">
-                <ul>
+                <ul class="govuk-list">
                     <th:block th:each="sectionType : ${model.allSections}">
                         <li>
                             <a th:href="${'#' + sectionType.path}" th:text="${sectionType.text}" class="govuk-link"></a>

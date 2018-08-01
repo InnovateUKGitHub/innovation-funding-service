@@ -528,7 +528,7 @@ PM's Spend profile Summary page gets updated after submit
     [Documentation]    INFUND-3766
     [Tags]
     Given the user navigates to the page     ${external_spendprofile_summary}
-    Then the user should see the element     jQuery=.success-alert.govuk-!-margin-bottom-6 p:contains("All project spend profiles have been sent to Innovate UK.")
+    Then the user should see the element     jQuery=.success-alert p:contains("All project spend profiles have been sent to Innovate UK.")
     And the user should not see the element  link=Send project spend profile
 
 Status updates after spend profile submitted
@@ -561,7 +561,7 @@ Project Finance is able to see Spend Profile approval page
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     And the user clicks the button/link      css=#table-project-status tbody tr:nth-child(5) td.status.action:nth-child(6) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
-    And the user should see the element    jQuery=#content div.govuk-grid-row div.govuk-grid-column-one-third.alignright.govuk-!-margin-top-6 h2:contains("Spend profile")
+    And the user should see the element    jQuery=#main-content div.govuk-grid-row div.govuk-grid-column-one-third.alignright h2:contains("Spend profile")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been approved")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been rejected")
     And the user should see the text in the page  Innovation Lead
@@ -574,7 +574,7 @@ Project Finance is able to see Spend Profile approval page
     Then the element should be disabled    css=#accept-profile
     When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    css=#accept-profile
-    And the user should see the element    jQuery=#content .govuk-button.govuk-button.govuk-button-warning:contains("Reject")
+    And the user should see the element    jQuery=#main-content .button-warning:contains("Reject")
 
 Check if project details are editable
    [Documentation]    IFS-1577, IFS-1578, IFS-1579
@@ -587,12 +587,12 @@ Comp Admin is able to see Spend Profile approval page
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
-    Then the user should see the element    jQuery=#content div.govuk-grid-row div.govuk-grid-column-one-third.alignright.govuk-!-margin-top-6 h2:contains("Spend profile")
+    Then the user should see the element    jQuery=#main-content div.govuk-grid-row div.govuk-grid-column-one-third.alignright h2:contains("Spend profile")
     And the element should be disabled    css=#accept-profile
-    And the user should see the element    jQuery=#content .govuk-button-warning:contains("Reject")
+    And the user should see the element    jQuery=#main-content .button-warning:contains("Reject")
     And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page  Peter Freeman
-    When the user clicks the button/link    jQuery=#content .govuk-button-warning:contains("Reject")
+    When the user clicks the button/link    jQuery=#main-content .button-warning:contains("Reject")
     Then the user should see the text in the page    You should contact the Project Manager to explain why the spend profile is being returned.
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
@@ -637,12 +637,12 @@ Project Finance is able to Reject Spend Profile
     [Tags]
     [Setup]    Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
-    And the user should see the element      jQuery=#content .govuk-button.govuk-button.govuk-button-warning:contains("Reject")
-    When the user clicks the button/link     jQuery=#content .govuk-button.govuk-button.govuk-button-warning:contains("Reject")
+    And the user should see the element      jQuery=#main-content .button-warning:contains("Reject")
+    When the user clicks the button/link     jQuery=#main-content .button-warning:contains("Reject")
     Then the user should see the text in the page    You should contact the Project Manager to explain why the spend profile is being returned.
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
-    When the user clicks the button/link    jQuery=#content .govuk-button.govuk-button.govuk-button-warning:contains("Reject")
+    When the user clicks the button/link    jQuery=#main-content .button-warning:contains("Reject")
     And the user clicks the button/link    jQuery=.modal-reject-profile button:contains('Reject')
 
 Status updates to a cross for the internal user's table
@@ -680,7 +680,7 @@ Lead partner no longer has the 'submitted' view of the spend profiles
     Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     And the user clicks the button/link    link=Spend profile
-    Then the user should not see the element    jQuery=.success-alert.govuk-!-margin-bottom-6 p:contains("All project spend profiles have been sent to Innovate UK.")
+    Then the user should not see the element    jQuery=.success-alert p:contains("All project spend profiles have been sent to Innovate UK.")
     And the user should see the text in the page    This overview shows the spend profile status of each organisation in your project.
     And the user should see the element    jQuery=.govuk-button:contains("Review and send total project spend profile")
 

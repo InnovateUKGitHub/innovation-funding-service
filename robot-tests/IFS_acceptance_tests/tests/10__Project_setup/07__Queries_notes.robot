@@ -66,9 +66,9 @@ Queries section is linked to from the main finance check summary page
 Queries section contains finance contact name, email and telephone
     [Documentation]    INFUND-4840
     [Tags]
-    When the user should see the element    jQuery=#content p:nth-of-type(1):contains("Becky Mason")
-    And the user should see the element     jQuery=#content p:nth-of-type(1):contains("3578109078")
-    And the user should see the element     jQuery=#content p:nth-of-type(1):contains(${PublicSector_lead_applicant_credentials["email"]})
+    When the user should see the element    jQuery=#main-content p:nth-of-type(1):contains("Becky Mason")
+    And the user should see the element     jQuery=#main-content p:nth-of-type(1):contains("3578109078")
+    And the user should see the element     jQuery=#main-content p:nth-of-type(1):contains(${PublicSector_lead_applicant_credentials["email"]})
 
 Viability and eligibility sections both available
     [Documentation]    INFUND-4840

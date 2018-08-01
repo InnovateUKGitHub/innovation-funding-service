@@ -56,7 +56,7 @@ Competition dashboard ready to Open competition
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
     And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Digital manufacturing")
     And the user should see the element    link=View and update competition setup
-    And The user should not see the text in the element  css=#content p  Once you complete, this competition will be ready to open.
+    And The user should not see the text in the element  css=#main-content p  Once you complete, this competition will be ready to open.
     And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.govuk-button--disabled[aria-disabled="true"]:contains("Input and review funding decision")
@@ -100,11 +100,11 @@ the counts of the open competition should be correct
     Should Be Equal As Integers    ${INVITED_COUNT}    ${Invited}
     ${ACCEPTED_COUNT}=    Get text    css=ul:nth-child(3) > li:nth-child(2) > div > span
     Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${Accepted}
-    ${STARTED_COUNT}=    Get text    css=.govuk-!-margin-top-6 .govuk-grid-column-one-third:nth-child(1) .govuk-heading-l
+    ${STARTED_COUNT}=    Get text    css=.govuk-grid-column-one-third:nth-child(1) .govuk-heading-l
     Should Be Equal As Integers    ${Applications started}    ${STARTED_COUNT}
-    ${BEYOND_50)_COUNT}=    Get text    css=.govuk-!-margin-top-6 .govuk-grid-column-one-third:nth-child(2) .govuk-heading-l
+    ${BEYOND_50)_COUNT}=    Get text    css=.govuk-grid-column-one-third:nth-child(2) .govuk-heading-l
     Should Be Equal As Integers    ${Applications_Beyond_50}    ${BEYOND_50)_COUNT}
-    ${SUBMITTED_COUNT}=    Get text    css=.govuk-!-margin-top-6 .govuk-grid-column-one-third:nth-child(3) .govuk-heading-l
+    ${SUBMITTED_COUNT}=    Get text    css=.govuk-grid-column-one-third:nth-child(3) .govuk-heading-l
     Should Be Equal As Integers    ${SUBMITTED_COUNT}    ${Applications submitted}
     ${APPLICATIONS_PER_ASSESSOR}=    Get text    css=ul:nth-child(3) > li:nth-child(3) > div > span
     Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    3

@@ -16,7 +16,7 @@ Client-side validations
     ...    INFUND-5432
     [Tags]    HappyPath
     Given The user should see the element    jQuery=h2:contains("Complete your assessor account")
-    And The user should see the element      jQuery=.message-alert.govuk-!-margin-bottom-6 a:contains("your skills")    #this checks the alert message on the top od the page
+    And The user should see the element      jQuery=.message-alert a:contains("your skills")    #this checks the alert message on the top od the page
     When the user clicks the button/link     jQuery=a:contains("your skills")
     And the user should see the element      jQuery=h2:contains("Innovation areas")
     And the user enters multiple strings into a text field    id=skillAreas    w${SPACE}    101

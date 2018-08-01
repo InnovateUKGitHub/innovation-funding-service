@@ -45,7 +45,7 @@
 
                 <div th:if="${!model.currentCompetition.isOpen() and !model.currentApplication.isSubmitted()}">
                     <div class="warning-alert">
-                        Registration is now closed, you are no longer able to submit your application.
+                        <p class="govuk-body">Registration is now closed, you are no longer able to submit your application.</p>
                     </div>
                 </div>
                 <div th:if="${model.currentCompetition.isOpen() and model.currentApplication.isOpen()}" class="govuk-!-margin-top-9">

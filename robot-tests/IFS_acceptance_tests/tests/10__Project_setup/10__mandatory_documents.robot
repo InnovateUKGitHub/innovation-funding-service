@@ -139,7 +139,7 @@ Non-lead partner can view both documents
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user moves focus to the element  css=ul li:nth-child(6)
-    And the user should see the element   css=#content ul > li:nth-child(6) .msg-progress
+    And the user should see the element   css=#main-content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page
@@ -388,7 +388,7 @@ After rejection, non-lead partner cannot view both documents
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user moves focus to the element  css=ul li:nth-child(6)
-    And the user should see the element   css=#content ul > li:nth-child(6) .msg-progress
+    And the user should see the element   css=#main-content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user should not see an error in the page

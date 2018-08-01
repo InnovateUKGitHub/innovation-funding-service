@@ -16,7 +16,7 @@ Back to the dashboard link
     ...    INFUND-5432
     ...
     ...    INFUND-7060
-    Given The user should see the element    jQuery=.message-alert.govuk-!-margin-bottom-6 a:contains("your declaration of interest")    #this checks the alert message on the top of the page
+    Given The user should see the element    jQuery=.message-alert a:contains("your declaration of interest")    #this checks the alert message on the top of the page
     When the user clicks the button/link    jQuery=h2:contains("Your assessor details") + ul a:contains("your declaration of interest")
     And The user should see the text in the element    css=p:nth-child(4)    Not answered
     And The user should see the text in the element    css=p:nth-child(14)    Not answered

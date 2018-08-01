@@ -30,7 +30,7 @@
             </div>
         </th:block>
         <th:block th:if="${model.readonly}">
-            <dl class="readonly-data" th:unles="${model.organisationGrantClaimPercentage == null}">
+            <dl class="govuk-list readonly-data" th:unles="${model.organisationGrantClaimPercentage == null}">
                 <dt th:text="${question.name}">Your Funding level</dt>
                 <dd th:text="${model.organisationGrantClaimPercentage+'%'}">50%</dd>
             </dl>
@@ -78,7 +78,7 @@
         </th:block>
         <th:block th:if="${model.readonly}">
             <!--/* view  */-->
-            <dl class="readonly-data">
+            <dl class="govuk-list readonly-data">
                 <dt th:text="${formInput.description}">Size</dt>
                 <dd th:unless="${model.organisationFinanceSize == null}"
                     th:text="${model.organisationFinanceSize.description}">Micro or small: claim up to 70%</dd>
@@ -112,7 +112,7 @@
         </th:block>
         <th:block th:if="${model.readonly}">
             <!--/* view  */-->
-            <dl class="readonly-data">
+            <dl class="govuk-list readonly-data">
                 <dt th:text="${formInput.description}">Turnover (&pound;)</dt>
                 <dd>&pound;<th:block th:text="*{formInput[__${formInput.id}__] != null ? #numbers.formatInteger(formInput[__${formInput.id}__],0,'DEFAULT') : '0'}">100,000,000</th:block></dd>
             </dl>
@@ -146,7 +146,7 @@
         </th:block>
         <th:block th:if="${model.readonly}">
             <!--/* view */-->
-            <dl class="readonly-data">
+            <dl class="govuk-list readonly-data">
                 <dt th:text="${formInput.description}">Full time employees</dt>
                 <dd th:text="*{formInput[__${formInput.id}__]}">440</dd>
             </dl>
@@ -230,7 +230,7 @@
         </th:block>
         <th:block th:if="${model.readonly}">
             <!--/* view */-->
-            <dl class="readonly-data">
+            <dl class="govuk-list readonly-data">
                 <dt th:text="${formInput.description}">Full time employees</dt>
                 <dd th:text="*{formInput[__${formInput.id}__]}">440</dd>
             </dl>

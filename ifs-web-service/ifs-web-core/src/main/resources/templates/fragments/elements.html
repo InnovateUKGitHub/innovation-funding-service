@@ -74,8 +74,8 @@
 <!-- =========================== Element: Competition Closing soon? =========================== -->
 <th:block th:fragment="competition-closing-warning (competition) ">
     <th:block th:if="${competition.isClosingSoon()}">
-        <div class="warning-alert">
-            Please note that this competition will close shortly. You will not be able to submit after the competition closes and any edits you make will not be saved.
+        <p class="warning-alert">
+            <p class="govuk-body">Please note that this competition will close shortly. You will not be able to submit after the competition closes and any edits you make will not be saved.</p>
         </div>
     </th:block>
 </th:block>

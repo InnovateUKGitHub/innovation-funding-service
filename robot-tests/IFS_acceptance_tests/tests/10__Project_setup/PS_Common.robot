@@ -246,7 +246,7 @@ project lead submits project address
     [Arguments]  ${project_id}
     the user navigates to the page     ${server}/project-setup/project/${project_id}/details/project-address
     the user selects the radio button  addressType  address-use-org
-    the user clicks the button/link    css=#content > form > button  #Save project address
+    the user clicks the button/link    css=#main-content > form > button  #Save project address
 
 project lead submits project details
     [Arguments]  ${project_id}

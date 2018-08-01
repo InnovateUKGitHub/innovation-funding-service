@@ -154,22 +154,22 @@ Organisation client side validation when no
     [Documentation]    INFUND-6393
     [Tags]
     Given the user selects medium organisation size
-    When the user enters text to a text field           jQuery=label:contains("Turnover") + input  ${empty}
-    And the user moves focus to the element             jQuery=label:contains("Full time employees") + input
+    When the user enters text to a text field           jQuery=.govuk-hint:contains("Your turnover from the last financial year") + + input  ${empty}
+    And the user moves focus to the element             jQuery=.govuk-hint:contains("Number of full time employees at your organisation") + + input
     Then the user should see a field and summary error  This field cannot be left blank.
-    And the user enters text to a text field            jQuery=label:contains("Full time employees") + input  ${empty}
+    And the user enters text to a text field            jQuery=.govuk-hint:contains("Number of full time employees at your organisation") + + input  ${empty}
     When the user moves focus to the element            jQuery=button:contains("Mark as complete")
     Then the user should see a field and summary error  This field cannot be left blank.
-    When the user enters text to a text field           jQuery=label:contains("Turnover") + input  150
-    And the user enters text to a text field            jQuery=label:contains("employees") + input  0
+    When the user enters text to a text field           jQuery=.govuk-hint:contains("Your turnover from the last financial year") + + input  150
+    And the user enters text to a text field            jQuery=.govuk-hint:contains("Number of full time employees at your organisation") + + input  0
     And the user moves focus to the element             jQuery=button:contains("Mark as complete")
     Then the user should not see the element            css=.govuk-error-message
 
 Mark Organisation as complete when no
     [Documentation]    INFUND-6393
     [Tags]
-    Given the user enters text to a text field    jQuery=label:contains("employees") + input    42
-    And the user enters text to a text field      jQuery=label:contains("Turnover") + input    17506
+    Given the user enters text to a text field    jQuery=.govuk-hint:contains("employees") + input    42
+    And the user enters text to a text field      jQuery=.govuk-hint:contains("turnover") + input    17506
     And the user selects medium organisation size
     When the user clicks the button/link          jQuery=button:contains("Mark as complete")
     Then the user should see the element          jQuery=li:contains("Your organisation") > .task-status-complete
@@ -226,9 +226,9 @@ Organisation client side validation when yes
     When the user enters value to field                       Annual export    ${empty}
     Then the user should see a field and summary error        This field cannot be left blank.
     And the user enters value to field                        Research and development spend    2147483647
-    When the user enters text to a text field                 jQuery=label:contains("employees") + input    22.4
+    When the user enters text to a text field                 jQuery=.govuk-hint:contains("employees") + + input    22.4
     Then the user should see a field and summary error        This field can only accept whole numbers.
-    When the user enters text to a text field                 jQuery=label:contains("employees") + input    1
+    When the user enters text to a text field                 jQuery=.govuk-hint:contains("employees") + input    1
     Then the user should not see the element                  jQuery=span:contains("employees") + .govuk-error-message
 
 Mark Organisation as complete when yes
@@ -240,7 +240,7 @@ Mark Organisation as complete when yes
     Then the user enters text to a text field    css=input[name$="month"]    12
     And the user enters text to a text field     css=input[name$="year"]    2016
     And the user populates the project growth table
-    When the user enters text to a text field    jQuery=label:contains("employees") + input    4
+    When the user enters text to a text field    jQuery=.govuk-hint:contains("employees") + input    4
     And the user clicks the button/link          jQuery=button:contains("Save and return to finances")
     And the user clicks the button/link          link=Your organisation
     Then the user should see the element         jQuery=td:contains("Research and development spend") + td input[value="15000"]
@@ -267,7 +267,7 @@ Lead applicant can see all innovation areas
     And the user should see the element          jQuery=label[for^="innovationAreaChoice"]:contains("Marine transport")      # from sector Transport
     When the user selects the radio button       innovationAreaChoice  19  # Bio
     And the user clicks the button/link          css=button[name="save-innovation-area"]
-    Then the user should see the element         jQuery=label[for="researchArea"] + *:contains("Biosciences")
+    Then the user should see the element         jQuery=label[for="researchArea"] + + *:contains("Biosciences")
     [Teardown]  the user clicks the button/link  jQuery=button:contains("Save and return to application overview")
 
 Applicant can view and edit project growth table
@@ -320,7 +320,7 @@ Non-lead can mark Organisation as complete
     And the user enters text to a text field        css=input[name$="month"]    12
     And the user enters text to a text field        css=input[name$="year"]    2016
     Then the user populates the project growth table
-    And the user enters text to a text field        jQuery=label:contains("employees") + input    42
+    And the user enters text to a text field        jQuery=.govuk-hint:contains("employees") + input    42
     When the user clicks the button/link            jQuery=button:contains("Mark as complete")
     Then the user should see the element            jQuery=li:contains("Your organisation") > .task-status-complete
 
@@ -388,8 +388,8 @@ the user populates the project growth table
     the user enters value to field    Research and development spend    15000
 
 the user should view the project growth table
-    the user should see the text in the element    css=table.govuk-!-margin-bottom-6 tr:nth-of-type(1) th:nth-of-type(1)    Section
-    the user should see the text in the element    css=table.govuk-!-margin-bottom-6 tr:nth-of-type(1) th:nth-of-type(2)    Last financial year (£)
+    the user should see the text in the element    css=table.govuk-table tr:nth-of-type(1) th:nth-of-type(1)    Section
+    the user should see the text in the element    css=table.govuk-table tr:nth-of-type(1) th:nth-of-type(2)    Last financial year (£)
     the user should see the text in the element    css=tr:nth-child(1) td:nth-child(1) span    Annual turnover
     the user should see the element                css=td input[value="65000"]
     the user should see the text in the element    css=tr:nth-child(2) td:nth-child(1) span    Annual profits
@@ -417,7 +417,7 @@ the user can edit resubmit and read only of the organisation
     the user should see the element         jQuery=li:contains("Your organisation") > .task-status-complete
     the user clicks the button/link         link=Your organisation
     the user clicks the button/link         jQuery=button:contains("Edit")
-    the user enters text to a text field    jQuery=label:contains("employees") + input    2
+    the user enters text to a text field    jQuery=.govuk-hint:contains("employees") + input    2
     the user clicks the button/link         jQuery=button:contains("Mark as complete")
     the user should not see an error in the page
     the user should see the element         jQuery=li:contains("Your organisation") > .task-status-complete
@@ -469,6 +469,6 @@ the user fills in the Open-All Initial details
 the logged in user should not be able to apply in a competition he has not right to
     [Arguments]  ${email}  ${competition}
     log in as a different user       ${email}  ${short_password}
-    the user clicks the button/link  id=proposition-name
+    the user clicks the button/link  jQuery=a:contains("Innovation Funding Service")
     the user clicks the button/link in the paginated list  link=${competition}
     the user clicks the button/link  link=Start new application

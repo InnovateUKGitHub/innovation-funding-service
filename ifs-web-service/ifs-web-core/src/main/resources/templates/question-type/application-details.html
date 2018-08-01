@@ -3,7 +3,9 @@
 <th:block th:fragment="read-only(model)"  th:with="competition=${model.competition}">
 
     <th:block th:if="${model.complete and !model.applicationIsClosed}">
-        <div class="success-alert govuk-!-margin-bottom-6">Application details are marked as complete</div>
+        <div class="success-alert govuk-!-margin-bottom-6">
+            <p class="govuk-body">Application details are marked as complete</p>
+        </div>
     </th:block>
 
     <div class="govuk-grid-row">
