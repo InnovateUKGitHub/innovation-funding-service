@@ -5,12 +5,14 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.file.mapper.FileTypeMapper;
 import org.mapstruct.Mapper;
 
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
                 CompetitionMapper.class,
+                FileTypeMapper.class
         }
 )
 public abstract class ProjectDocumentMapper extends BaseMapper<ProjectDocument, ProjectDocumentResource, Long> {

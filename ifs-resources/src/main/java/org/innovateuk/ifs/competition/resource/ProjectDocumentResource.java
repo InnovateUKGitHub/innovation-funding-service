@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.competition.resource;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
+
+import java.util.List;
 
 public class ProjectDocumentResource {
 
@@ -18,20 +18,19 @@ public class ProjectDocumentResource {
 
     private boolean editable;
     private boolean enabled;
-    private boolean pdf;
-    private boolean spreadsheet;
 
-    public ProjectDocumentResource(Long competition, String title, String guidance, boolean editable, boolean enabled, boolean pdf, boolean spreadsheet) {
+    private List<Long> fileTypes;
+
+    public ProjectDocumentResource() {
+    }
+
+    public ProjectDocumentResource(Long competition, String title, String guidance, boolean editable, boolean enabled, List<Long> fileTypes) {
         this.competition = competition;
         this.title = title;
         this.guidance = guidance;
         this.editable = editable;
         this.enabled = enabled;
-        this.pdf = pdf;
-        this.spreadsheet = spreadsheet;
-    }
-
-    public ProjectDocumentResource() {
+        this.fileTypes = fileTypes;
     }
 
     public Long getId() {
@@ -82,53 +81,11 @@ public class ProjectDocumentResource {
         this.enabled = enabled;
     }
 
-    public boolean isPdf() {
-        return pdf;
+    public List<Long> getFileTypes() {
+        return fileTypes;
     }
 
-    public void setPdf(boolean pdf) {
-        this.pdf = pdf;
-    }
-
-    public boolean isSpreadsheet() {
-        return spreadsheet;
-    }
-
-    public void setSpreadsheet(boolean spreadsheet) {
-        this.spreadsheet = spreadsheet;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ProjectDocumentResource that = (ProjectDocumentResource) o;
-
-        return new EqualsBuilder()
-                .append(editable, that.editable)
-                .append(enabled, that.enabled)
-                .append(pdf, that.pdf)
-                .append(spreadsheet, that.spreadsheet)
-                .append(id, that.id)
-                .append(competition, that.competition)
-                .append(title, that.title)
-                .append(guidance, that.guidance)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(competition)
-                .append(title)
-                .append(guidance)
-                .append(editable)
-                .append(enabled)
-                .append(pdf)
-                .append(spreadsheet)
-                .toHashCode();
+    public void setFileTypes(List<Long> fileTypes) {
+        this.fileTypes = fileTypes;
     }
 }
