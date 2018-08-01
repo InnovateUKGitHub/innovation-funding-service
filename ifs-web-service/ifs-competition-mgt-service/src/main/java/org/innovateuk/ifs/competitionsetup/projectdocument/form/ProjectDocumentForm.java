@@ -33,14 +33,12 @@ public class ProjectDocumentForm extends BaseBindingResultTarget {
         this.enabled = enabled;
     }
 
-    public ProjectDocumentForm(Long projectDocumentId, String title, String guidance, boolean editable, boolean enabled, boolean pdf, boolean spreadsheet) {
+    public ProjectDocumentForm(Long projectDocumentId, String title, String guidance, boolean editable, boolean enabled) {
         this.projectDocumentId = projectDocumentId;
         this.title = title;
         this.guidance = guidance;
         this.editable = editable;
         this.enabled = enabled;
-        this.pdf = pdf;
-        this.spreadsheet = spreadsheet;
     }
 
     public Long getProjectDocumentId() {
