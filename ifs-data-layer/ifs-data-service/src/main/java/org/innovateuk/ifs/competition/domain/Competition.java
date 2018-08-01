@@ -755,6 +755,5 @@ public class Competition implements ProcessActivity {
                 question -> (EnumSet.of(APPLICATION_TEAM, RESEARCH_CATEGORY).contains(question.getQuestionSetupType()))
         );
     }
-
 }
 

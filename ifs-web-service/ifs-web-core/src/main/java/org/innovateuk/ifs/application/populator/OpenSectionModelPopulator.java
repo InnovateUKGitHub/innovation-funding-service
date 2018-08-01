@@ -24,6 +24,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.organisation.resource.OrganisationResource.normalOrgComparator;
+
 /**
  * Class for creating the model for the open section page.
  * These are rendered in the ApplicationFormController.applicationFormWithOpenSection method
@@ -102,9 +104,23 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
     }
 
     private void addOrganisationDetails(OpenSectionViewModel viewModel, ApplicantSectionResource applicantSection) {
-        final Comparator<OrganisationResource> compareById =
-                Comparator.comparingLong(OrganisationResource::getId);
-        final Supplier<TreeSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
+
+        OrganisationResource leadOrganisation = applicantSection.getApplicants().stream()
+                .filter(ApplicantResource::isLead)
+                .map(ApplicantResource::getOrganisation)
+                .findAny().orElse(null);
+
+        final Comparator<OrganisationResource> comparator;
+
+        if (leadOrganisation != null) {
+            Comparator<OrganisationResource> leadComparator = Comparator.comparing(organisationResource -> leadOrganisation.getId().equals(organisationResource.getId()), Comparator.reverseOrder());
+            comparator = leadComparator.thenComparing(normalOrgComparator);
+        } else {
+            comparator = normalOrgComparator;
+        }
+
+        final Supplier<TreeSet<OrganisationResource>> supplier = () -> new TreeSet<>(comparator);
+
         viewModel.setAcademicOrganisations(applicantSection.allOrganisations()
                 .filter(organisation -> organisation.getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId()))
                 .collect(Collectors.toCollection(supplier)));
@@ -121,10 +137,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         viewModel.setPendingOrganisationNames(pendingOrganisationNames);
 
-        viewModel.setLeadOrganisation(applicantSection.getApplicants().stream()
-                .filter(ApplicantResource::isLead)
-                .map(ApplicantResource::getOrganisation)
-                .findAny().orElse(null));
+        viewModel.setLeadOrganisation(leadOrganisation);
     }
 
     private void addCompletedDetails(OpenSectionViewModel openSectionViewModel, ApplicantSectionResource applicantSection) {
@@ -134,7 +147,6 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         List<SectionResource> financeSections = sectionService.getSectionsForCompetitionByType(applicantSection.getCompetition().getId(), SectionType.FINANCE);
         Optional<SectionResource> optionalFinanceSection = financeSections.stream().findAny();
         Optional<Long> optionalFinanceSectionId = optionalFinanceSection.map(SectionResource::getId);
-
 
         addSectionsMarkedAsComplete(openSectionViewModel, applicantSection);
         openSectionViewModel.setCompletedSectionsByOrganisation(completedSectionsByOrganisation);

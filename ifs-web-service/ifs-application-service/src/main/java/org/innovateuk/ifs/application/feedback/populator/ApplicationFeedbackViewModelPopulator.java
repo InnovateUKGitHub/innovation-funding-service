@@ -15,6 +15,7 @@ import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateReso
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
@@ -41,7 +42,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
     private OrganisationRestService organisationRestService;
     private OrganisationService organisationService;
     private ApplicationService applicationService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private UserService userService;
     private FinanceService financeService;
     private FileEntryRestService fileEntryRestService;
@@ -56,7 +57,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
 
     public ApplicationFeedbackViewModelPopulator(OrganisationRestService organisationRestService,
                                                  ApplicationService applicationService,
-                                                 CompetitionService competitionService,
+                                                 CompetitionRestService competitionRestService,
                                                  OrganisationService organisationService,
                                                  UserService userService,
                                                  FileEntryRestService fileEntryRestService,
@@ -73,7 +74,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
         super(sectionService, questionService);
         this.organisationRestService = organisationRestService;
         this.applicationService = applicationService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.organisationService = organisationService;
         this.userService = userService;
         this.fileEntryRestService = fileEntryRestService;
@@ -91,7 +92,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
     public ApplicationFeedbackViewModel populate(long applicationId, UserResource user, MultiValueMap<String, String> queryParams, String origin) {
 
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantUser.getOrganisationId());

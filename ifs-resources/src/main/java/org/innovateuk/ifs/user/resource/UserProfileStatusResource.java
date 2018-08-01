@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class UserProfileStatusResource {
 
-    private Long user; // added in so we can do a security check when fetching profile status
+    private long user; // added in so we can do a security check when fetching profile status
     private boolean skillsComplete;
     private boolean affiliationsComplete;
     private boolean agreementComplete;
@@ -16,14 +16,14 @@ public class UserProfileStatusResource {
     UserProfileStatusResource() {
     }
 
-    public UserProfileStatusResource(Long user, boolean skillsComplete, boolean affiliationsComplete, boolean agreementComplete) {
+    public UserProfileStatusResource(long user, boolean skillsComplete, boolean affiliationsComplete, boolean agreementComplete) {
         this.user = user;
         this.skillsComplete = skillsComplete;
         this.affiliationsComplete = affiliationsComplete;
         this.agreementComplete = agreementComplete;
     }
 
-    public Long getUser() {
+    public long getUser() {
         return user;
     }
 
@@ -37,22 +37,6 @@ public class UserProfileStatusResource {
 
     public boolean isAgreementComplete() {
         return agreementComplete;
-    }
-
-    public void setUser(Long user) {
-        this.user = user;
-    }
-
-    public void setSkillsComplete(boolean skillsComplete) {
-        this.skillsComplete = skillsComplete;
-    }
-
-    public void setAffiliationsComplete(boolean affiliationsComplete) {
-        this.affiliationsComplete = affiliationsComplete;
-    }
-
-    public void setAgreementComplete(boolean agreementComplete) {
-        this.agreementComplete = agreementComplete;
     }
 
     @Override
