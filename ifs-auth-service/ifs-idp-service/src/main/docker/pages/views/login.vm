@@ -28,7 +28,7 @@
 #end
 ##
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="no-js govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
   	<head>
         <meta charset="utf-8" />
     	<title>Sign in - Innovation Funding Service</title>
@@ -80,6 +80,9 @@
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=$trackingID" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       #end
       <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+      <div id="global-cookie-message">
+          <p class="govuk-body">GOV.UK uses cookies to make the site simpler. <a href="/info/cookies" class="govuk-link">Find out more about cookies</a>.</p>
+      </div>
       <header class="govuk-header" role="banner" data-module="header">
           <div class="govuk-header__container govuk-width-container">
               <div class="govuk-header__logo">
@@ -298,6 +301,7 @@
               </div>
           </div>
       </footer>
+        <script src="$resourcesDomain/js/vendor/govuk/govuk-cookies.js" type="text/javascript"></script>
         <script src="$resourcesDomain/js/dest/vendor.min.js" type="text/javascript"></script>
         <script type="text/javascript">
             if(typeof(IFS) == 'undefined'){

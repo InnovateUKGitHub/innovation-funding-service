@@ -30,6 +30,7 @@ var vendorJsFiles = [
   nodeModulesPath + 'jquery-ui-dist/jquery-ui.js',
 	govukFrontendPath + 'all.js',
   __dirname + '/js/vendor/govuk/application.js',
+  __dirname + '/js/vendor/govuk/govuk-cookies.js',
   __dirname + '/js/vendor/wysiwyg-editor/*.js',
   '!' + __dirname + '/js/vendor/wysiwyg-editor/hallo-src/*.js'
 ]
