@@ -56,8 +56,8 @@ Assement panel link is deactivated if the assessment panel is not set
     [Documentation]  IFS-786 INF-2637
     [Tags]  HappyPath
     Given The user clicks the button/link  link=${CLOSED_COMPETITION_NAME}
-    Then the user should see the element   jQuery=.govuk-button--disabled:contains("Manage assessment panel")
-    And the user should see the element    jQuery=.govuk-button--disabled:contains("Manage interview panel")
+    Then the user should see the element   jQuery=.disabled:contains("Manage assessment panel")
+    And the user should see the element    jQuery=.disabled:contains("Manage interview panel")
 
 Confirm changes button unavailable before sending invite
     [Documentation]  IFS-1125
@@ -184,7 +184,7 @@ Assign application link decativated if competition is in close state
     [Tags]
     [Setup]  Log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
-    Then the user should see the element  jQuery=.govuk-button--disabled:contains("Assign applications to panel")
+    Then the user should see the element  jQuery=.disabled:contains("Assign applications to panel")
 
 Assign application link activate if competition is in panel state
     [Documentation]   IFS-25
