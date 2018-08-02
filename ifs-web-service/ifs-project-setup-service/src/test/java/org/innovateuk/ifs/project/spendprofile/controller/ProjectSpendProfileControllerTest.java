@@ -680,7 +680,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
                 .withId(organisationId)
                 .withName("Org1")
-                .withOrganisationTypeName("BUSINESS")
+                .withOrganisationTypeName(OrganisationTypeEnum.BUSINESS.name())
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .build();
 
         List<ProjectUserResource> projectUsers = newProjectUserResource()

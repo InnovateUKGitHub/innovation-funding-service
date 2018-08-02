@@ -48,7 +48,7 @@ public class OrganisationDetailsViewModelPopulator {
         final ArrayList<OrganisationResource> organisationList = new ArrayList<>(organisations);
 
         return organisationList.stream()
-                .filter(o -> OrganisationTypeEnum.RESEARCH.getId().equals(o.getOrganisationType()))
+                .filter(o -> OrganisationTypeEnum.RESEARCH.getId() == o.getOrganisationType())
                 .collect(Collectors.toCollection(supplier));
     }
 

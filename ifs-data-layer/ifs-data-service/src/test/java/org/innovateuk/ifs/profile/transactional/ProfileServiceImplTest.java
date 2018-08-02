@@ -25,7 +25,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.time.ZonedDateTime.now;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
@@ -119,7 +119,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getProfileSkills_userDoesNotExist() throws Exception {
+    public void getProfileSkills_userDoesNotExist() {
         long userIdNotExists = 1L;
 
         ServiceResult<ProfileSkillsResource> response = service.getProfileSkills(userIdNotExists);
@@ -148,7 +148,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getProfileSkills_userDoesNotHaveProfileYet() throws Exception {
+    public void getProfileSkills_userDoesNotHaveProfileYet() {
         User existingUser = newUser()
                 .build();
 
@@ -219,7 +219,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileSkills_userDoesNotHaveProfileYet() throws Exception {
+    public void updateProfileSkills_userDoesNotHaveProfileYet() {
         long userId = 1L;
 
         Profile profile = newProfile()
@@ -253,13 +253,13 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
 
 
     @Test
-    public void getProfileAgreement() throws Exception {
+    public void getProfileAgreement() {
         Agreement currentAgreement = newAgreement()
                 .build();
 
         AgreementResource currentAgreementResource = newAgreementResource().build();
 
-        ZonedDateTime agreementSignedDate = ZonedDateTime.now();
+        ZonedDateTime agreementSignedDate = now();
 
         Profile profile = newProfile()
                 .withAgreement(currentAgreement)
@@ -292,7 +292,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getProfileAgreement_userDoesNotExist() throws Exception {
+    public void getProfileAgreement_userDoesNotExist() {
         long userIdNotExists = 1L;
 
         ServiceResult<ProfileAgreementResource> response = service.getProfileAgreement(userIdNotExists);
@@ -304,7 +304,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getProfileAgreement_noAgreement() throws Exception {
+    public void getProfileAgreement_noAgreement() {
         Agreement currentAgreement = newAgreement()
                 .build();
 
@@ -337,7 +337,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getProfileAgreement_noCurrentAgreement() throws Exception {
+    public void getProfileAgreement_noCurrentAgreement() {
         Agreement currentAgreement = newAgreement()
                 .build();
 
@@ -370,7 +370,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getProfileAgreement_userDoesNotHaveProfileYet() throws Exception {
+    public void getProfileAgreement_userDoesNotHaveProfileYet() {
         Agreement currentAgreement = newAgreement()
                 .build();
 
@@ -401,7 +401,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileAgreement() throws Exception {
+    public void updateProfileAgreement() {
         ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.of(2016, 10, 11, 12, 13, 14, 0, ZoneId.systemDefault());
 
         Profile profile = newProfile()
@@ -437,7 +437,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileAgreement_userDoesNotExist() throws Exception {
+    public void updateProfileAgreement_userDoesNotExist() {
         long userIdNotExists = 1L;
 
         ServiceResult<Void> result = service.updateProfileAgreement(userIdNotExists);
@@ -450,7 +450,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileAgreement_noAgreement() throws Exception {
+    public void updateProfileAgreement_noAgreement() {
         ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.of(2016, 10, 11, 12, 13, 14, 0, ZoneId.systemDefault());
 
         // Profile has no agreement or signed date
@@ -486,13 +486,13 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileAgreement_noCurrentAgreement() throws Exception {
+    public void updateProfileAgreement_noCurrentAgreement() {
         ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.of(2016, 10, 11, 12, 13, 14, 0, ZoneId.systemDefault());
 
         // Profile has a agreement and a signed date, but not the current one
         Profile initialProfile = newProfile()
                 .withAgreement(newAgreement().withId(1L).build())
-                .withAgreementSignedDate(ZonedDateTime.now())
+                .withAgreementSignedDate(now())
                 .build();
         User existingUser = newUser()
                 .withProfileId(initialProfile.getId())
@@ -525,12 +525,12 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileAgreement_agreementAlreadySigned() throws Exception {
+    public void updateProfileAgreement_agreementAlreadySigned() {
         Agreement currentAgreement = newAgreement()
                 .build();
         Profile profile = newProfile()
                 .withAgreement(currentAgreement)
-                .withAgreementSignedDate(ZonedDateTime.now())
+                .withAgreementSignedDate(now())
                 .build();
         User existingUser = newUser()
                 .withProfileId(profile.getId())
@@ -550,7 +550,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void updateProfileAgreement_userDoesNotHaveProfileYet() throws Exception {
+    public void updateProfileAgreement_userDoesNotHaveProfileYet() {
         ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.of(2016, 10, 11, 12, 13, 14, 0, ZoneId.systemDefault());
 
         User existingUser = newUser()
@@ -589,7 +589,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getUserProfileStatus() throws Exception {
+    public void getUserProfileStatus() {
         User user = newUser().build();
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
@@ -603,13 +603,13 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getUserProfileStatus_complete() throws Exception {
+    public void getUserProfileStatus_complete() {
         Profile profile = newProfile()
                 .withSkillsAreas("skills")
-                .withAgreementSignedDate(ZonedDateTime.now())
+                .withAgreementSignedDate(now())
                 .build();
         User user = newUser()
-                .withAffiliations(asList(newAffiliation().build()))
+                .withAffiliations( newAffiliation().withModifiedOn(now().minusYears(0)).build(1) )
                 .withProfileId(profile.getId())
                 .build();
 
@@ -634,7 +634,7 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getUserProfileStatus_skillsComplete() throws Exception {
+    public void getUserProfileStatus_skillsComplete() {
         Profile profile = newProfile()
                 .withSkillsAreas("skills")
                 .build();
@@ -663,9 +663,9 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
     }
 
     @Test
-    public void getUserProfileStatus_affiliationsComplete() throws Exception {
+    public void getUserProfileStatus_affiliationsComplete() {
         User user = newUser()
-                .withAffiliations(asList(newAffiliation().build()))
+                .withAffiliations( newAffiliation().withModifiedOn(now().minusYears(0)).build(1) )
                 .build();
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
@@ -687,10 +687,12 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
         verify(userRepositoryMock, only()).findOne(user.getId());
     }
 
+    // TODO test affiliations expired
+
     @Test
-    public void getUserProfileStatus_agreementComplete() throws Exception {
+    public void getUserProfileStatus_agreementComplete() {
         Profile profile = newProfile()
-                .withAgreementSignedDate(ZonedDateTime.now())
+                .withAgreementSignedDate(now())
                 .build();
         User user = newUser()
                 .withProfileId(profile.getId())
@@ -726,9 +728,9 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withBusinessType(ACADEMIC)
                 .withSkillsAreas("Skills")
                 .withCreatedBy(createdByUser)
-                .withCreatedOn(ZonedDateTime.now())
+                .withCreatedOn(now())
                 .withModifiedBy(createdByUser)
-                .withModifiedOn(ZonedDateTime.now())
+                .withModifiedOn(now())
                 .build();
         User existingUser = newUser()
                 .withProfileId(existingProfile.getId())
@@ -747,9 +749,9 @@ public class ProfileServiceImplTest extends BaseServiceUnitTest<ProfileServiceIm
                 .withEmail(existingUser.getEmail())
                 .withAddress(addressResource)
                 .withCreatedBy(createdByUser.getName())
-                .withCreatedOn(ZonedDateTime.now())
+                .withCreatedOn(now())
                 .withModifiedBy(createdByUser.getName())
-                .withModifiedOn(ZonedDateTime.now())
+                .withModifiedOn(now())
                 .build();
 
         UserProfileResource response = service.getUserProfile(existingUser.getId()).getSuccess();

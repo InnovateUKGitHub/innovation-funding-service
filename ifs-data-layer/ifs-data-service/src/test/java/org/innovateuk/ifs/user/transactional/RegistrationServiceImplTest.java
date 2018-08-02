@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.transactional;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
@@ -15,8 +14,6 @@ import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
-import org.innovateuk.ifs.notifications.resource.*;
-import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -35,23 +32,13 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static java.time.ZonedDateTime.now;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -64,7 +51,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder.newSiteTermsAndConditionsResource;
 import static org.innovateuk.ifs.invite.builder.RoleInviteBuilder.newRoleInvite;
-import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
@@ -72,7 +58,6 @@ import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBu
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
@@ -82,11 +67,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 /**
  * Tests around Registration Service
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({RegistrationServiceImpl.class, StandardPasswordEncoder.class})
 public class RegistrationServiceImplTest extends BaseServiceUnitTest<RegistrationServiceImpl> {
-
-    private static final String webBaseUrl = "http://ifs-local-dev";
 
     private UserResource userToEdit;
 
@@ -98,9 +79,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
     @Mock
     private TermsAndConditionsService termsAndConditionsServiceMock;
-
-    @Mock
-    private StandardPasswordEncoder standardPasswordEncoder;
 
     @Mock
     private ProfileRepository profileRepositoryMock;
@@ -127,23 +105,13 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     private OrganisationRepository organisationRepositoryMock;
 
     @Mock
-    private NotificationService notificationServiceMock;
-
-    @Mock
-    private SystemNotificationSource systemNotificationSourceMock;
-
-    @Mock
     private BaseUserService baseUserServiceMock;
 
     @Mock
     private RoleInviteRepository roleInviteRepositoryMock;
 
-    @Override
-    protected RegistrationServiceImpl supplyServiceUnderTest() {
-        final RegistrationServiceImpl service = new RegistrationServiceImpl();
-        ReflectionTestUtils.setField(service, "webBaseUrl", webBaseUrl);
-        return service;
-    }
+    @Mock
+    private RegistrationNotificationService registrationEmailServiceMock;
 
     @Test
     public void createUser() {
@@ -230,23 +198,21 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     @Test
     public void testCreateOrganisationUser() {
 
-        UserResource userToCreate = newUserResource().
+        UserResourceBuilder userBuilder = newUserResource().
                 withFirstName("First").
                 withLastName("Last").
                 withEmail("email@example.com").
                 withPhoneNumber("01234 567890").
                 withPassword("thepassword").
-                withTitle(Mr).
-                build();
+                withTitle(Mr);
 
-        Long organisationId = 123L;
+        UserResource userToCreate = userBuilder.build();
+
         SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
-        Organisation selectedOrganisation = newOrganisation().withId(organisationId).build();
-        Role applicantRole = Role.APPLICANT;
-
+        Organisation selectedOrganisation = newOrganisation().withId(123L).build();
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(selectedOrganisation);
+        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
@@ -265,35 +231,32 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Mr, user.getTitle());
             assertEquals("new-uid", user.getUid());
             assertEquals(1, user.getRoles().size());
-            assertTrue(user.getRoles().contains(applicantRole));
+            assertTrue(user.getRoles().contains(Role.APPLICANT));
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
             assertEquals(1, orgs.size());
             assertEquals(selectedOrganisation, orgs.get(0));
             assertEquals(expectedProfile.getId(), user.getProfileId());
-            assertEquals(new LinkedHashSet<>(asList(siteTermsAndConditions.getId())), user.getTermsAndConditionsIds());
+            assertEquals(new LinkedHashSet<>(singletonList(siteTermsAndConditions.getId())), user.getTermsAndConditionsIds());
 
             return true;
         });
 
         User savedUser = newUser().with(id(999L)).build();
 
+        UserResource savedUserResource = userBuilder.withId(savedUser.getId()).build();
+
         when(userRepositoryMock.save(expectedCreatedUser)).thenReturn(savedUser);
 
-        Token expectedToken = createLambdaMatcher(token -> {
-            assertEquals(TokenType.VERIFY_EMAIL_ADDRESS, token.getType());
-            assertEquals(User.class.getName(), token.getClassName());
-            assertEquals(savedUser.getId(), token.getClassPk());
-            assertFalse(token.getHash().isEmpty());
-            return true;
-        });
+        when(userMapperMock.mapToResource(savedUser)).thenReturn(savedUserResource);
+        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
+        when(registrationEmailServiceMock.sendUserVerificationEmail(savedUserResource, Optional.empty())).thenReturn(serviceSuccess());
 
-        when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate, organisationId)).thenReturn(serviceSuccess());
+        UserResource result = service.createOrganisationUser(123L, userToCreate).getSuccess();
+        assertEquals(savedUserResource, result);
 
-        UserResource result = service.createOrganisationUser(organisationId, userToCreate).getSuccess();
-
-        assertEquals(userToCreate, result);
+        verify(userMapperMock).mapToResource(savedUser);
+        verify(passwordPolicyValidatorMock).validatePassword("thepassword", userToCreate);
+        verify(registrationEmailServiceMock).sendUserVerificationEmail(savedUserResource, Optional.empty());
     }
 
     @Test
@@ -308,17 +271,16 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withTitle(Mr).
                 build();
 
-        Long organisationId = 123L;
         SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(null);
+        when(organisationRepositoryMock.findOne(123L)).thenReturn(null);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate, organisationId)).thenReturn(serviceSuccess());
+        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
-        ServiceResult<UserResource> result = service.createOrganisationUser(organisationId, userToCreate);
+        ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(Organisation.class, organisationId)));
+        assertTrue(result.getFailure().is(notFoundError(Organisation.class, 123L)));
     }
 
     @Test
@@ -333,18 +295,16 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withTitle(Mr).
                 build();
 
-        Long organisationId = 123L;
-
         SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
         Organisation selectedOrganisation = newOrganisation().build();
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(selectedOrganisation);
+        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate, organisationId)).thenReturn(serviceSuccess());
+        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
-        ServiceResult<UserResource> result = service.createOrganisationUser(organisationId, userToCreate);
+        ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
     }
@@ -354,88 +314,15 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         UserResource userToCreate = newUserResource().withPassword("thepassword").build();
         Organisation selectedOrganisation = newOrganisation().build();
-        Long organisationId = 123L;
 
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(selectedOrganisation);
+        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate, organisationId)).thenReturn(serviceFailure(badRequestError("bad password")));
+        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceFailure(badRequestError("bad password")));
 
-        ServiceResult<UserResource> result = service.createOrganisationUser(organisationId, userToCreate);
+        ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(Error.fieldError("password", null, "bad password")));
-    }
-
-    @Test
-    public void testSendUserVerificationEmail() {
-        final UserResource userResource = newUserResource()
-                .withId(1L)
-                .withFirstName("Sample")
-                .withLastName("User")
-                .withEmail("sample@me.com")
-                .build();
-
-        // mock the random number that will be used to create the hash
-        final double random = 0.6996293870272714;
-        PowerMockito.mockStatic(Math.class);
-        when(Math.random()).thenReturn(random);
-        when(Math.ceil(random * 1000)).thenReturn(700d);
-
-        final String hash = "1e627a59879066b44781ca584a23be742d3197dff291245150e62f3d4d3d303e1a87d34fc8a3a2e0";
-        ReflectionTestUtils.setField(service, "encoder", standardPasswordEncoder);
-        when(standardPasswordEncoder.encode("1==sample@me.com==700")).thenReturn(hash);
-
-        final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), userResource.getId(), hash, now(), JsonNodeFactory.instance.objectNode());
-        final String verificationLink = String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
-
-        final Map<String, Object> expectedNotificationArguments = asMap("verificationLink", verificationLink);
-
-        final NotificationSource from = systemNotificationSourceMock;
-        final NotificationTarget to = new UserNotificationTarget(userResource.getName(), userResource.getEmail());
-
-        final Notification notification = new Notification(from, singletonList(to), RegistrationServiceImpl.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
-        when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(token);
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
-
-        final ServiceResult<Void> result = service.sendUserVerificationEmail(userResource, empty());
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testResendUserVerificationEmail() {
-        final UserResource userResource = newUserResource()
-                .withId(1L)
-                .withFirstName("Sample")
-                .withLastName("User")
-                .withEmail("sample@me.com")
-                .build();
-
-        // mock the random number that will be used to create the hash
-        final double random = 0.6996293870272714;
-        PowerMockito.mockStatic(Math.class);
-        when(Math.random()).thenReturn(random);
-        when(Math.ceil(random * 1000)).thenReturn(700d);
-
-        final String hash = "1e627a59879066b44781ca584a23be742d3197dff291245150e62f3d4d3d303e1a87d34fc8a3a2e0";
-        ReflectionTestUtils.setField(service, "encoder", standardPasswordEncoder);
-        when(standardPasswordEncoder.encode("1==sample@me.com==700")).thenReturn(hash);
-
-        final Token existingToken = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), userResource.getId(), "existing-token", now(), JsonNodeFactory.instance.objectNode());
-        final Token newToken = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), userResource.getId(), hash, now(), JsonNodeFactory.instance.objectNode());
-        final String verificationLink = String.format("%s/registration/verify-email/%s", webBaseUrl, hash);
-
-        final Map<String, Object> expectedNotificationArguments = asMap("verificationLink", verificationLink);
-
-        final NotificationSource from = systemNotificationSourceMock;
-        final NotificationTarget to = new UserNotificationTarget(userResource.getName(), userResource.getEmail());
-
-        final Notification notification = new Notification(from, singletonList(to), RegistrationServiceImpl.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
-        when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L)).thenReturn(of(existingToken));
-        when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(newToken);
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
-
-        final ServiceResult<Void> result = service.resendUserVerificationEmail(userResource);
-        assertTrue(result.isSuccess());
     }
 
     @Test
@@ -613,10 +500,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withRolesGlobal(singletonList(roleResource)).
                 build();
 
-        Long organisationId = 123L;
-        Organisation selectedOrganisation = newOrganisation().withId(organisationId).build();
+        Organisation selectedOrganisation = newOrganisation().withId(123L).build();
 
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(selectedOrganisation);
+        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
@@ -658,11 +544,16 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate, organisationId)).thenReturn(serviceSuccess());
+        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
+        when(registrationEmailServiceMock.sendUserVerificationEmail(userToCreate, Optional.empty())).thenReturn(serviceSuccess());
 
-        UserResource result = service.createOrganisationUser(organisationId, userToCreate).getSuccess();
+        UserResource result = service.createOrganisationUser(123L, userToCreate).getSuccess();
 
         assertEquals(userToCreate, result);
+
+        verify(userMapperMock).mapToResource(savedUser);
+        verify(passwordPolicyValidatorMock).validatePassword("thepassword", userToCreate);
+        verify(registrationEmailServiceMock).sendUserVerificationEmail(userToCreate, Optional.empty());
     }
 
     private void setUpUsersForEditInternalUserSuccess() {
@@ -690,5 +581,10 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withCreatedOn(ZonedDateTime.now())
                 .withModifiedOn(ZonedDateTime.now())
                 .build();
+    }
+
+    @Override
+    protected RegistrationServiceImpl supplyServiceUnderTest() {
+        return new RegistrationServiceImpl();
     }
 }

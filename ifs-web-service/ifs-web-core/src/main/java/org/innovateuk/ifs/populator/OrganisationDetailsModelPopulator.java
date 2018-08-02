@@ -59,7 +59,7 @@ public class OrganisationDetailsModelPopulator {
     }
 
     private List<OrganisationResource> getAcademicOrganisations(final List<OrganisationResource> organisations) {
-        return simpleFilter(organisations, o -> OrganisationTypeEnum.RESEARCH.getId().equals(o.getOrganisationType()));
+        return simpleFilter(organisations, o -> OrganisationTypeEnum.RESEARCH.getId() == o.getOrganisationType());
     }
 
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {
