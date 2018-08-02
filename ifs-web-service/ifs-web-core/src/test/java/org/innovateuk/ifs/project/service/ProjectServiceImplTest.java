@@ -104,21 +104,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
-    public void testFindByUser() {
-        List<ProjectResource> projects = newProjectResource().build(3);
-
-        when(projectRestService.findByUserId(1L)).thenReturn(restSuccess(projects));
-
-        ServiceResult<List<ProjectResource>> result = service.findByUser(1L);
-
-        assertTrue(result.isSuccess());
-
-        assertEquals(result.getSuccess(), projects);
-
-        verify(projectRestService).findByUserId(1L);
-    }
-
-    @Test
     public void testGetLeadOrganisation() {
 
         OrganisationResource organisationResource = newOrganisationResource().build();
@@ -194,27 +179,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .thenReturn(restSuccess(newProjectUserResource().withUser(projectManagerId).build()));
 
         assertFalse(service.isProjectManager(loggedInUserId, projectId));
-    }
-
-    @Test
-    public void testGetPartnerOrganisation() {
-        PartnerOrganisationResource partnerOrg = new PartnerOrganisationResource();
-        when(projectRestService.getPartnerOrganisation(123L, 234L)).thenReturn(restSuccess(partnerOrg));
-        assertTrue(service.getPartnerOrganisation(123L, 234L).equals(partnerOrg));
-    }
-
-    @Test(expected = ObjectNotFoundException.class)
-    public void testGetPartnerOrganisationNotFound() {
-        when(projectRestService.getPartnerOrganisation(123L, 234L)).thenThrow(new ObjectNotFoundException());
-        service.getPartnerOrganisation(123L, 234L);
-    }
-
-    @Test
-    public void testCreateProjectFromApplication() {
-        Long applicationId = 2L;
-        ProjectResource projectResource = newProjectResource().build();
-        when(projectRestService.createProjectFromApplicationId(applicationId)).thenReturn(restSuccess(projectResource));
-        assertEquals(service.createProjectFromApplicationId(applicationId).getSuccess(), projectResource);
     }
 
     @Test

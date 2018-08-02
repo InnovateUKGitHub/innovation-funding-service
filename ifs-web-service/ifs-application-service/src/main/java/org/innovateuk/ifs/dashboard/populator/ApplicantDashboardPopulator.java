@@ -14,6 +14,7 @@ import org.innovateuk.ifs.dashboard.viewmodel.ProjectDashboardRowViewModel;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -38,28 +39,31 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Service
 public class ApplicantDashboardPopulator {
 
-    @Autowired
     private ApplicationRestService applicationRestService;
-
-    @Autowired
     private UserRestService userRestService;
-
-    @Autowired
-    private ProjectService projectService;
-
-    @Autowired
+    private ProjectRestService projectRestService;
     private CompetitionRestService competitionRestService;
-
-    @Autowired
     private QuestionRestService questionRestService;
-
-    @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
+
+    public ApplicantDashboardPopulator(ApplicationRestService applicationRestService,
+                                       UserRestService userRestService,
+                                       ProjectRestService projectRestService,
+                                       CompetitionRestService competitionRestService,
+                                       QuestionRestService questionRestService,
+                                       InterviewAssignmentRestService interviewAssignmentRestService) {
+        this.applicationRestService = applicationRestService;
+        this.userRestService = userRestService;
+        this.projectRestService = projectRestService;
+        this.competitionRestService = competitionRestService;
+        this.questionRestService = questionRestService;
+        this.interviewAssignmentRestService = interviewAssignmentRestService;
+    }
 
     public ApplicantDashboardViewModel populate(Long userId, String originQuery) {
         List<ProcessRoleResource> usersProcessRoles = getUserProcessRolesWithApplicationRole(userId);
         List<ApplicationResource> allApplications = getAllApplicationsAsApplicant(userId, usersProcessRoles);
-        List<ProjectResource> allProjects = projectService.findByUser(userId).getSuccess();
+        List<ProjectResource> allProjects = projectRestService.findByUserId(userId).getSuccess();
         Map<Long, CompetitionResource> competitionsById = getAllCompetitionsForUser(userId);
         List<ProjectResource> projectsInSetup = getNonWithdrawnProjects(allProjects);
 

@@ -7,11 +7,13 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.controller.BankDetailsController;
 import org.innovateuk.ifs.project.bankdetails.form.BankDetailsForm;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -26,6 +28,7 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.ADD_NE
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -41,6 +44,9 @@ public class BankDetailsControllerAddressValidationTest extends BaseControllerMo
 
     @Mock
     private ProjectService projectService;
+
+    @Mock
+    private ProjectRestService projectRestService;
 
     private BankDetailsForm form;
 
@@ -123,7 +129,7 @@ public class BankDetailsControllerAddressValidationTest extends BaseControllerMo
         OrganisationResource organisationResource = newOrganisationResource().build();
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
-        when(projectService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectRestService.getOrganisationByProjectAndUser(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectResource.getId(), organisationResource.getId())).thenReturn(restFailure(new Error(BANK_DETAILS_DONT_EXIST_FOR_GIVEN_PROJECT_AND_ORGANISATION)));
 
         return projectResource;

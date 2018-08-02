@@ -18,6 +18,7 @@ import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseFo
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
@@ -52,6 +53,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -111,6 +113,9 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     private ProjectService projectService;
 
     @Mock
+    private ProjectRestService projectRestService;
+
+    @Mock
     private ProjectFinanceService projectFinanceService;
 
     @Mock
@@ -137,6 +142,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(asList(financeContactProjectUser, financeContact2ProjectUser));
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(restSuccess(newPartnerOrganisationResource().build()));
 
         PostResource firstPost = new PostResource(null, financeTeamUser, "Question", singletonList(new AttachmentResource(23L, "file1.txt", "txt", 1L, null)), ZonedDateTime.now().plusMinutes(10L));
         PostResource firstResponse = new PostResource(null, financeContactUser, "Response", new ArrayList<>(), ZonedDateTime.now().plusMinutes(20L));

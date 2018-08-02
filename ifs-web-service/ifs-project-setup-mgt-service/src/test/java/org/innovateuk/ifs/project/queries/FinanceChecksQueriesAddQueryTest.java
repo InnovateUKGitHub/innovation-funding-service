@@ -19,6 +19,7 @@ import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQuery
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.threads.resource.QueryResource;
@@ -45,6 +46,7 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -65,6 +67,9 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
 
     @Mock
     private ProjectService projectService;
+
+    @Mock
+    private ProjectRestService projectRestService;
 
     @Mock
     private OrganisationService organisationService;
@@ -96,7 +101,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     public void setup() {
         super.setUp();
         setupCookieUtil(cookieUtil);
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(partnerOrg);
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(restSuccess(partnerOrg));
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
@@ -140,7 +145,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewNewQueryProjectAndOrgInconsistent() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility"))
                 .andExpect(status().isNotFound())
@@ -335,7 +340,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testDownloadAttachmentFailsProjectAndOrgInconsistent() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/attachment/1?query_section=Eligibility"))
                 .andExpect(status().isNotFound())
@@ -377,7 +382,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testCancelNewQueryFailsProjectAndOrgInconsistent() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/cancel?query_section=Eligibility"))
                 .andExpect(status().isNotFound())

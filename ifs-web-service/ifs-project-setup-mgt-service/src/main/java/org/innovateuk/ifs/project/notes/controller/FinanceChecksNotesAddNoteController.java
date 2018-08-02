@@ -16,6 +16,7 @@ import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesFormConstraints;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
@@ -66,6 +67,9 @@ public class FinanceChecksNotesAddNoteController {
     private ProjectService projectService;
 
     @Autowired
+    private ProjectRestService projectRestService;
+
+    @Autowired
     private CookieUtil cookieUtil;
 
     @Autowired
@@ -84,7 +88,7 @@ public class FinanceChecksNotesAddNoteController {
                               HttpServletRequest request,
                               HttpServletResponse response) {
 
-        projectService.getPartnerOrganisation(projectId, organisationId);
+        projectRestService.getPartnerOrganisation(projectId, organisationId);
         saveOriginCookie(response, projectId, organisationId, loggedInUser.getId());
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         model.addAttribute("model", populateNoteViewModel(projectId, organisationId, attachments));
@@ -188,7 +192,7 @@ public class FinanceChecksNotesAddNoteController {
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
                                                          HttpServletRequest request) {
-        projectService.getPartnerOrganisation(projectId, organisationId);
+        projectRestService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         if (attachments.contains(attachmentId)) {
             ByteArrayResource fileContent = financeCheckService.downloadFile(attachmentId);
@@ -233,7 +237,7 @@ public class FinanceChecksNotesAddNoteController {
                                 UserResource loggedInUser,
                                 HttpServletRequest request,
                                 HttpServletResponse response) {
-        projectService.getPartnerOrganisation(projectId, organisationId);
+        projectRestService.getPartnerOrganisation(projectId, organisationId);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         attachments.forEach(financeCheckService::deleteFile);
         deleteCookies(response, projectId, organisationId);

@@ -24,11 +24,7 @@ public interface ProjectService {
 
     ProjectResource getByApplicationId(Long applicationId);
 
-    ServiceResult<List<ProjectResource>> findByUser(Long userId);
-
     OrganisationResource getLeadOrganisation(Long projectId);
-
-    OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId);
 
     boolean isUserLeadPartner(Long projectId, Long userId);
 
@@ -41,10 +37,6 @@ public interface ProjectService {
     Optional<ProjectUserResource> getProjectManager(Long projectId);
 
     Boolean isProjectManager(Long userId, Long projectId);
-
-    PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId);
-
-    ServiceResult<ProjectResource> createProjectFromApplicationId(Long applicationId);
 
     boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId);
 

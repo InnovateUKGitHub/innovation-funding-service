@@ -12,6 +12,7 @@ import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -72,7 +73,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
     private ApplicationRestService applicationRestService;
 
     @Mock
-    private ProjectService projectService;
+    private ProjectRestService projectRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -110,7 +111,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(allApplications));
 
-        when(projectService.findByUser(loggedInUser.getId())).thenReturn(ServiceResult.serviceSuccess(newProjectResource()
+        when(projectRestService.findByUserId(loggedInUser.getId())).thenReturn(restSuccess(newProjectResource()
                 .withId(PROJECT_ID_IN_PROJECT, PROJECT_ID_IN_PROJECT_WITHDRAWN)
                 .withApplication(APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_PROJECT_WITHDRAWN)
                 .withProjectState(ProjectState.SETUP, ProjectState.WITHDRAWN)

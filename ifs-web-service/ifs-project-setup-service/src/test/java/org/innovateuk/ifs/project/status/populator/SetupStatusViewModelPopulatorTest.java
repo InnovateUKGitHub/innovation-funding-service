@@ -20,6 +20,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
@@ -63,6 +64,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private ProjectService projectService;
+
+    @Mock
+    private ProjectRestService projectRestService;
 
     @Mock
     private ApplicationService applicationService;
@@ -292,7 +296,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getById(project.getId())).thenReturn(project);
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(monitoringOfficerService.getMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerNotFoundResult);
-        when(projectService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
@@ -821,7 +825,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getById(project.getId())).thenReturn(project);
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(monitoringOfficerService.getMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerFoundResult);
-        when(projectService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
@@ -1316,7 +1320,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getById(project.getId())).thenReturn(project);
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(monitoringOfficerService.getMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerResult);
-        when(projectService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
                 withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())

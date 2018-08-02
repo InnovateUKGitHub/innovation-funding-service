@@ -19,6 +19,7 @@ import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
@@ -45,6 +46,7 @@ import java.util.*;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -102,6 +104,9 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     private ProjectService projectService;
 
     @Mock
+    private ProjectRestService projectRestService;
+
+    @Mock
     private ProjectFinanceService projectFinanceService;
 
     @Mock
@@ -118,7 +123,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         setupCookieUtil(cookieUtil);
         when(organisationService.getOrganisationForUser(financeTeamUser.getId())).thenReturn(innovateOrganisationResource);
         when(organisationService.getOrganisationForUser(financeContactUser.getId())).thenReturn(leadOrganisationResource);
-        when(projectService.getPartnerOrganisation(projectId, financeContactUser.getId())).thenReturn(partnerOrg);
+        when(projectRestService.getPartnerOrganisation(projectId, financeContactUser.getId())).thenReturn(restSuccess(partnerOrg));
 
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
@@ -208,7 +213,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testGetReadOnlyViewInvalidOrganisationId() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1L)).thenThrow(new ObjectNotFoundException());
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId + 1L)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1L) + "/note"))
                 .andExpect(view().name("404"))
@@ -235,7 +240,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testDownloadAttachmentFailsInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1L)).thenThrow(new ObjectNotFoundException());
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId + 1L)).thenThrow(new ObjectNotFoundException());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1L) + "/note/attachment/1"))
                 .andExpect(status().isNotFound())
@@ -333,7 +338,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         form.setComment("comment");
         formCookie = createFormCookie(form);
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment")
                 .cookie(formCookie))
@@ -550,7 +555,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testDownloadCommentAttachmentFailsInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment/attachment/1"))
                 .andExpect(status().isNotFound())
@@ -607,7 +612,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testCancelNewCommentInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment/cancel"))
@@ -655,7 +660,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewNewCommentWithAttachmentsInvalidOrganisation() throws Exception {
 
-        when(projectService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
+        when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId + 1)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + (applicantOrganisationId + 1) + "/note/"+ noteId +"/new-comment"))
                 .andExpect(status().isNotFound());
