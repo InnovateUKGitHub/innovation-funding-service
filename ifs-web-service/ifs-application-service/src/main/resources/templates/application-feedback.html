@@ -113,7 +113,7 @@
                 <section th:each="section : ${model.sections.values()}" th:unless="${section.name.equals('Finances')}">
                     <th:block th:if="${section.name.equals('Project details')}">
                         <ul class="govuk-list list-overview govuk-!-margin-top-6">
-                            <th:block th:each="question : ${model.sectionQuestions.get(section.id)}" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).APPLICATION_DETAILS}">
+                            <th:block th:each="question : ${model.sectionQuestions.get(section.id)}" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS}">
                                 <li class="section-status">
                                     <div class="govuk-grid-row">
                                         <div class="govuk-grid-column-two-thirds">
@@ -124,13 +124,13 @@
                                             </h3>
                                         </div>
                                         <div class="govuk-grid-column-one-third">
-                                            <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
+                                            <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">
                                                 <p th:unless="${model.scores.scopeAssessed}" class="govuk-body govuk-hint govuk-!-margin-0">No feedback provided</p>
                                                 <p class="govuk-body" th:if="${model.scores.scopeAssessed}">
                                                     In scope? <span th:text="${model.scores.inScope}">4</span>/<span th:text="${model.scores.totalScope}">5</span>
                                                 </p>
                                             </th:block>
-                                            <th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">
+                                            <th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">
                                                 <p class="govuk-hint govuk-!-margin-0">No feedback provided</p>
                                             </th:block>
                                         </div>
