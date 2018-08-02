@@ -18,7 +18,7 @@ In Assessment dashboard page
     And The user should see the text in the page    Digital manufacturing
     And the user should see the element             link=View and update competition setup
     #The following checks test if the correct buttons are disabled
-    And the user should see the element    jQuery=.govuk-button--disabled[aria-disabled="true"]:contains("Input and review funding decision")
+    And the user should see the element    jQuery=.disabled:contains("Input and review funding decision")
 
 Milestones for In Assessment competitions
     [Documentation]    INFUND-7561
@@ -32,13 +32,13 @@ Key statistics of the In Assessment competitions
 
 *** Keywords ***
 The key statistics counts should be correct
-    ${TOTAL_ASSIGNMENT}=    Get text    css=ul:nth-child(4) > li:nth-child(1) > div > span
+    ${TOTAL_ASSIGNMENT}=    Get text    jQuery=.govuk-grid-column-one-third:contains("Total assignments") .govuk-heading-l
     Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    16  # Total assignments
-    ${AWAITING}=    Get text    css=ul:nth-child(4) > li:nth-child(2) > div > span
+    ${AWAITING}=    Get text    jQuery=.govuk-grid-column-one-third:contains("Assignments awaiting response") .govuk-heading-l
     Should Be Equal As Integers    ${AWAITING}    7  # Assignments awaiting response
-    ${ACCEPTED}=    Get text    css=ul:nth-child(4) > li:nth-child(3) > div > span
+    ${ACCEPTED}=    Get text    jQuery=.govuk-grid-column-one-third:contains("Assignments accepted") .govuk-heading-l
     Should Be Equal As Integers    ${ACCEPTED}    6  # Assignments accepted
-    ${STARTED}=    Get text    css=.govuk-!-margin-top-6 > li:nth-child(1) > div > span
+    ${STARTED}=    Get text    jQuery=.govuk-grid-column-one-third:contains("Assessments started") .govuk-heading-l
     Should Be Equal As Integers    ${STARTED}    3  # Assessments started
-    ${SUBMITTED}=    Get text    css=.govuk-!-margin-top-6 > li:nth-child(2) > div > span
+    ${SUBMITTED}=    Get text    jQuery=.govuk-grid-column-one-third:contains("Assessments submitted") .govuk-heading-l
     Should Be Equal As Integers    ${SUBMITTED}    0  # Assessments submitted

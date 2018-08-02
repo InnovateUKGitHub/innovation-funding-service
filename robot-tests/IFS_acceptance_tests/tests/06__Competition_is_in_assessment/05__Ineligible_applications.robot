@@ -65,7 +65,7 @@ Clicking the ineligible button
 Cancel marking the application as ineligible
     [Documentation]  INFUND-7370 IFS-986
     [Tags]  HappyPath  InnovationLead
-    When the user clicks the button/link      jQuery=.govuk-button:contains("Cancel")
+    When the user clicks the button/link      jQuery=.button-clear:contains("Cancel")
     Then the user should not see the element  css=[aria-hidden="false"] [id="ineligibleReason"]
 
 Client side validation - mark an application as ineligible
