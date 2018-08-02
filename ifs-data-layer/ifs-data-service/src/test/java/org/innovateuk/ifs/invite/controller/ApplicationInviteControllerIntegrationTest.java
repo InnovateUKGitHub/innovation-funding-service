@@ -9,7 +9,6 @@ import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.controller.UserController;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -37,7 +36,6 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
     private Long leadApplicantProcessRole;
     private Long leadApplicantId;
     private ApplicationController applicationController;
-    private InviteOrganisationController inviteOrganisationController;
     private UserController userController;
 
     @Autowired
@@ -56,11 +54,6 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
     @Autowired
     protected void setApplicationController(ApplicationController controller) {
         this.applicationController = controller;
-    }
-
-    @Autowired
-    protected void setInviteOrganisationController(InviteOrganisationController controller) {
-        this.inviteOrganisationController = controller;
     }
 
     @Autowired
@@ -99,7 +92,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<UserResource> userResult = userController.findByEmail(testEmail);
         assertTrue(userResult.isSuccess());
         UserResource user = userResult.getSuccess();
-        RestResult<InviteResultsResource> inviteResults = controller.saveInvites(newInvites);
+        RestResult<Void> inviteResults = controller.saveInvites(newInvites);
         assertTrue(inviteResults.isSuccess());
 
         // Needed because test is run in one transaction
@@ -139,8 +132,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         List<ApplicationInviteResource> newInvites = createInviteResource(invitesResult, testName, testEmail, APPLICATION_ID);
         RestResult<UserResource> userResult = userController.findByEmail(testEmail);
         assertTrue(userResult.isSuccess());
-        UserResource user = userResult.getSuccess();
-        RestResult<InviteResultsResource> inviteResults = controller.saveInvites(newInvites);
+        RestResult<Void> inviteResults = controller.saveInvites(newInvites);
         assertTrue(inviteResults.isSuccess());
 
         // Needed because test is running in one transaction

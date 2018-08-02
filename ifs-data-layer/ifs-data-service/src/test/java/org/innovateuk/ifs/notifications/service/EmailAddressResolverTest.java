@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.notifications.service.senders.email;
+package org.innovateuk.ifs.notifications.service;
 
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.notifications.resource.UserNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.EmailAddressResolver;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -44,7 +43,7 @@ public class AbstractTeamManagementServiceTest extends BaseServiceUnitTest<Abstr
         }
 
         @Override
-        public ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId, long organisationId, ApplicationTeamUpdateForm form) {
+        public ServiceResult<Void> executeStagedInvite(long applicationId, long organisationId, ApplicationTeamUpdateForm form) {
             return null;
         }
 

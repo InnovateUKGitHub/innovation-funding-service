@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.notifications.service.senders.email;
+package org.innovateuk.ifs.notifications.service;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -8,36 +8,39 @@ import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.transactional.TransactionalHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.EMAILS_NOT_SENT_MULTIPLE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.EMAIL_NOTIFICATION_TEMPLATES_PATH;
-import static org.innovateuk.ifs.notifications.service.senders.email.EmailAddressResolver.fromNotificationSource;
-import static org.innovateuk.ifs.notifications.service.senders.email.EmailAddressResolver.fromNotificationTarget;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * A Notification Sender that can, given a Notification, construct an email from it and use the Email Service to send
  * the email to the given recipients
  */
 @Component
-public class EmailNotificationSender implements NotificationSender {
+@SuppressWarnings("unused")
+class EmailNotificationSender implements NotificationSender {
 
     @Autowired
     private EmailService emailService;
 
     @Autowired
     private NotificationTemplateRenderer renderer;
+
+    @Autowired
+    private TransactionalHelper transactionalHelper;
 
     @Override
     public NotificationMedium getNotificationMedium() {
@@ -47,40 +50,51 @@ public class EmailNotificationSender implements NotificationSender {
     @Override
     public ServiceResult<Notification> sendNotification(Notification notification) {
 
-        return handlingErrors(new Error(EMAILS_NOT_SENT_MULTIPLE), () -> {
+        return renderTemplates(notification).andOnSuccess(templates -> {
 
-            Map<NotificationTarget, EmailContent> templates = renderTemplates(notification).getSuccess();
+            List<ServiceResult<List<EmailAddress>>> results = simpleMap(templates, (target, content) ->
+                    sendEmailWithContent(notification, target, content));
 
-            List<ServiceResult<List<EmailAddress>>> results = new ArrayList<>();
-
-            for (Map.Entry<NotificationTarget, EmailContent> template : templates.entrySet()) {
-                results.add(sendEmailWithContent(notification, template.getKey(), template.getValue()));
-            }
-
-            return processAnyFailuresOrSucceed(results, serviceFailure(new Error(EMAILS_NOT_SENT_MULTIPLE)), serviceSuccess(notification));
+            return processAnyFailuresOrSucceed(results, failures -> {
+                Error error = new Error(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE, findStatusCode(failures));
+                return serviceFailure(error);
+            }, serviceSuccess(notification));
         });
     }
 
     @Override
-    public ServiceResult<Map<NotificationTarget, EmailContent>> renderTemplates(Notification notification) {
-        Map<NotificationTarget, EmailContent> contents = new HashMap<>();
+    @Transactional(Transactional.TxType.MANDATORY)
+    public ServiceResult<Notification> sendNotificationWithFlush(Notification notification) {
 
-        for (NotificationTarget recipient : notification.getTo()) {
-            String subject = getSubject(notification, recipient).getSuccess();
-            String plainTextBody = getPlainTextBody(notification, recipient).getSuccess();
-            String htmlBody = getHtmlBody(notification, recipient).getSuccess();
+        // flush any pending SQL updates to the database before proceeding to send the Notification, in case any SQL
+        // issues occur
+        transactionalHelper.flushWithNoCommit();
 
-            contents.put(recipient, new EmailContent(subject, plainTextBody, htmlBody));
-        }
-
-        return serviceSuccess(contents);
+        // then it's safe to go ahead and attempt to send out the Notification
+        return sendNotification(notification);
     }
 
-    @Override
-    public ServiceResult<List<EmailAddress>> sendEmailWithContent(Notification notification, NotificationTarget recipient, EmailContent emailContent) {
+    private ServiceResult<Map<NotificationTarget, EmailContent>> renderTemplates(Notification notification) {
+
+        Map<NotificationTarget, EmailContent> contents = new HashMap<>();
+
+        List<ServiceResult<Void>> results = simpleMap(notification.getTo(), recipient ->
+
+                find(getSubject(notification, recipient),
+                        getPlainTextBody(notification, recipient),
+                        getHtmlBody(notification, recipient)).andOnSuccessReturnVoid((subject, text, html) -> {
+
+                    contents.put(recipient, new EmailContent(subject, text, html));
+                })
+        );
+
+        return aggregate(results).andOnSuccessReturn(() -> contents);
+    }
+
+    private ServiceResult<List<EmailAddress>> sendEmailWithContent(Notification notification, NotificationTarget recipient, EmailContent emailContent) {
         return emailService.sendEmail(
-                fromNotificationSource(notification.getFrom()),
-                singletonList(fromNotificationTarget(recipient)),
+                EmailAddressResolver.fromNotificationSource(notification.getFrom()),
+                singletonList(EmailAddressResolver.fromNotificationTarget(recipient)),
                 emailContent.getSubject(),
                 emailContent.getPlainText(),
                 emailContent.getHtmlText());
