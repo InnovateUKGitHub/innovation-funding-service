@@ -1,12 +1,11 @@
-package org.innovateuk.ifs.invite.security;
+package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
-import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
+import org.innovateuk.ifs.invite.security.ApplicationInvitePermissionRules;
+import org.innovateuk.ifs.invite.security.InviteOrganisationPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.junit.Assert.assertTrue;
@@ -37,34 +35,6 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
     public void lookupPermissionRules() {
         invitePermissionRules = getMockPermissionRulesBean(ApplicationInvitePermissionRules.class);
         inviteOrganisationPermissionRules = getMockPermissionRulesBean(InviteOrganisationPermissionRules.class);
-    }
-
-    @Test
-    public void testInviteCollaborators() {
-        final int nInvites = 2;
-        final String baseUrl = "test";
-        final List<ApplicationInvite> invites = newApplicationInvite().build(nInvites);
-        classUnderTest.inviteCollaborators(baseUrl, invites);
-        verify(invitePermissionRules, times(nInvites))
-                .leadApplicantCanInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
-        verify(invitePermissionRules, times(nInvites))
-                .collaboratorCanInviteToApplicationForTheirOrganisation(any(ApplicationInvite.class), any
-                        (UserResource.class));
-    }
-
-    @Test
-    public void testInviteCollaboratorToApp() {
-        final String baseUrl = "test";
-        final ApplicationInvite invite = newApplicationInvite().build();
-        assertAccessDenied(
-                () -> classUnderTest.inviteCollaboratorToApplication(baseUrl, invite),
-                () -> {
-                    verify(invitePermissionRules)
-                            .leadApplicantCanInviteToTheApplication(eq(invite), any(UserResource.class));
-                    verify(invitePermissionRules)
-                            .collaboratorCanInviteToApplicationForTheirOrganisation(eq(invite), any(UserResource
-                                    .class));
-                });
     }
 
     @Test

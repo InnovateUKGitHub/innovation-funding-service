@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.notifications.service.senders.email;
+package org.innovateuk.ifs.notifications.service;
 
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.notifications.resource.NotificationSource;
@@ -7,7 +7,7 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 /**
  * A helper utility to resolve a set of Email Address details from given Notifications, for the "from" and "to" of the emails to be sent
  */
-public final class EmailAddressResolver {
+class EmailAddressResolver {
 
 	private EmailAddressResolver() {}
 	
