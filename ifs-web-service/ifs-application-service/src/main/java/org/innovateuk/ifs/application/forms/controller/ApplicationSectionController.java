@@ -240,8 +240,8 @@ public class ApplicationSectionController {
         }
     }
 
-    private boolean userIsResearch(Long userId) {
-        return organisationService.getOrganisationForUser(userId).getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
+    private boolean userIsResearch(long userId) {
+        return organisationService.getOrganisationForUser(userId).getOrganisationType() == OrganisationTypeEnum.RESEARCH.getId();
     }
 
     private boolean validateTermsAndConditionsAgreement(ApplicationForm form, BindingResult bindingResult) {

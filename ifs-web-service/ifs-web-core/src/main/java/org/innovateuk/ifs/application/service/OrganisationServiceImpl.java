@@ -39,17 +39,17 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public OrganisationResource getOrganisationById(Long organisationId) {
+    public OrganisationResource getOrganisationById(long organisationId) {
         return organisationRestService.getOrganisationById(organisationId).getSuccess();
     }
 
     @Override
-    public OrganisationResource getOrganisationForUser(Long userId) {
+    public OrganisationResource getOrganisationForUser(long userId) {
         return organisationRestService.getOrganisationByUserId(userId).getSuccess();
     }
 
     @Override
-    public OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId) {
+    public OrganisationResource getOrganisationByIdForAnonymousUserFlow(long organisationId) {
         return organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId).getSuccess();
     }
 
@@ -69,7 +69,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public Long getOrganisationType(Long userId, Long applicationId) {
+    public Long getOrganisationType(long userId, long applicationId) {
         final ProcessRoleResource processRoleResource = processRoleService.findProcessRole(userId, applicationId);
         if (processRoleResource != null && processRoleResource.getOrganisationId() != null) {
             final OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRoleResource.getOrganisationId()).getSuccess();
@@ -79,7 +79,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public Optional<OrganisationResource> getOrganisationForUser(Long userId, List<ProcessRoleResource> userApplicationRoles) {
+    public Optional<OrganisationResource> getOrganisationForUser(long userId, List<ProcessRoleResource> userApplicationRoles) {
         return userApplicationRoles.stream()
             .filter(uar -> uar.getUser().equals(userId))
             .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getOptionalSuccessObject())
@@ -109,7 +109,7 @@ public class OrganisationServiceImpl implements OrganisationService {
         ArrayList<OrganisationResource> organisationList = new ArrayList<>(organisations);
 
         return organisationList.stream()
-                .filter(o -> OrganisationTypeEnum.RESEARCH.getId().equals(o.getOrganisationType()))
+                .filter(o -> OrganisationTypeEnum.RESEARCH.getId() == o.getOrganisationType())
                 .collect(Collectors.toCollection(supplier));
     }
 

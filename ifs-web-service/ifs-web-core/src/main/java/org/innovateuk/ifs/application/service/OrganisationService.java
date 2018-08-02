@@ -14,11 +14,11 @@ import java.util.SortedSet;
  */
 public interface OrganisationService {
 
-    OrganisationResource getOrganisationById(Long organisationId);
+    OrganisationResource getOrganisationById(long organisationId);
 
-    OrganisationResource getOrganisationForUser(Long userId);
+    OrganisationResource getOrganisationForUser(long userId);
 
-    OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId);
+    OrganisationResource getOrganisationByIdForAnonymousUserFlow(long organisationId);
 
     OrganisationResource createOrMatch(OrganisationResource organisation);
 
@@ -28,9 +28,9 @@ public interface OrganisationService {
 
     OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);
 
-    Long getOrganisationType(Long userId, Long applicationId);
+    Long getOrganisationType(long userId, long applicationId);
 
-    Optional<OrganisationResource> getOrganisationForUser(Long userId, List<ProcessRoleResource> userApplicationRoles);
+    Optional<OrganisationResource> getOrganisationForUser(long userId, List<ProcessRoleResource> userApplicationRoles);
 
     SortedSet<OrganisationResource> getApplicationOrganisations(List<ProcessRoleResource> userApplicationRoles);
 
