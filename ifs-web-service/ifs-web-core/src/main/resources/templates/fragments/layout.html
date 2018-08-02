@@ -63,7 +63,7 @@
     <noscript th:if="${GoogleAnalyticsTrackingID}"><iframe th:src="'https://www.googletagmanager.com/ns.html?id='+${GoogleAnalyticsTrackingID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <th:block th:insert="fragments/elements :: skiplink-container" />
-    <!--<th:block th:insert="fragments/elements :: global-cookie-message" />-->
+    <th:block th:insert="fragments/elements :: global-cookie-message" />
     <th:block th:insert="fragments/elements :: global-alert-message" />
 
 </th:block>

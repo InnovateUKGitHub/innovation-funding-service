@@ -19,10 +19,10 @@
         </p>
 
         <div class="boxed">
-            <span>
+            <p class="govuk-body">
                 <th:block th:text="${messageForUser}">An unexpected error occurred.</th:block>
-                You can choose to <a th:href="@{/registration/resend-email-verification}" class="govuk-link">send a new verification link</a> by e-mail or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
-            </span>
+                You can choose to <a th:href="@{/registration/resend-email-verification}" class="govuk-link">send a new verification link</a> by e-mail or go back to the <a class="govuk-link" href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+            </p>
         </div>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
