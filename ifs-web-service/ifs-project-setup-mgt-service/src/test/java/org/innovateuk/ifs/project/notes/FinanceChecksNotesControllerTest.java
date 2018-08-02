@@ -26,6 +26,7 @@ import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -112,17 +113,20 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
     @Mock
     private FinanceCheckService financeCheckServiceMock;
 
+    @Mock
+    private OrganisationRestService organisationRestService;
+
     @Spy
     @InjectMocks
     @SuppressWarnings("unused")
-    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
+    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService, organisationRestService);
 
     @Before
     public void setup() {
         super.setUp();
         setupCookieUtil(cookieUtil);
-        when(organisationService.getOrganisationForUser(financeTeamUser.getId())).thenReturn(innovateOrganisationResource);
-        when(organisationService.getOrganisationForUser(financeContactUser.getId())).thenReturn(leadOrganisationResource);
+        when(organisationRestService.getOrganisationByUserId(financeTeamUser.getId())).thenReturn(restSuccess(innovateOrganisationResource));
+        when(organisationRestService.getOrganisationByUserId(financeContactUser.getId())).thenReturn(restSuccess(leadOrganisationResource));
         when(projectRestService.getPartnerOrganisation(projectId, financeContactUser.getId())).thenReturn(restSuccess(partnerOrg));
 
         // populate viewmodel

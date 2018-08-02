@@ -14,6 +14,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +57,9 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     private OrganisationService organisationService;
 
     @Mock
+    private OrganisationRestService organisationRestService;
+
+    @Mock
     private UserAuthenticationService userAuthenticationService;
 
     @Mock
@@ -92,7 +96,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 .withAddress(asList(addressResources))
                 .build();
         when(organisationService.getOrganisationById(6L)).thenReturn(organisation);
-        when(organisationService.getOrganisationForUser(user.getId())).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByUserId(user.getId())).thenReturn(restSuccess(organisation));
     }
 
     private OrganisationAddressResource organisationAddress(OrganisationAddressType addressType) {
@@ -184,6 +188,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
     @Test
     public void userProfileDetailsAreAddedToModelWhenViewingDetailsForm() throws Exception {
+        when(organisationRestService.getOrganisationByUserId(1L)).thenReturn(restSuccess(newOrganisationResource().build()));
         mockMvc.perform(get("/profile/edit"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("firstName", Matchers.equalTo(user.getFirstName()))))
@@ -251,7 +256,6 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     @Test
     public void whenSubmittingAValidFormTheUserProfileDetailsViewIsReturned() throws Exception {
 
-
         when(userService.updateDetails(eq(user.getId()), eq(user.getEmail()), eq(user.getFirstName()), eq(user.getLastName()), anyString(),
                 eq(user.getPhoneNumber()),
                 anyString(),
@@ -259,7 +263,9 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 anyString(),
                 anyBoolean()))
                 .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
-        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class), eq(true))).thenReturn(newUserResource().build());
+        UserResource newUser = newUserResource().build();
+        when(userAuthenticationService.getAuthenticatedUser(any(HttpServletRequest.class), eq(true))).thenReturn(newUser);
+        when(organisationRestService.getOrganisationByUserId(newUser.getId())).thenReturn(restSuccess(newOrganisationResource().build()));
         mockMvc.perform(post("/profile/edit")
                 .param("title", user.getTitle().name())
                 .param("firstName", user.getFirstName())

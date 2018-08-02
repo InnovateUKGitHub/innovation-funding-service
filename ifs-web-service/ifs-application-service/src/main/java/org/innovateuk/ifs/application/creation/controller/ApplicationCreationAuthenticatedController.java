@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,7 +49,7 @@ public class ApplicationCreationAuthenticatedController {
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private QuestionRestService questionRestService;
@@ -107,7 +108,7 @@ public class ApplicationCreationAuthenticatedController {
     public String showNotEligiblePage(Model model,
                                       @PathVariable(COMPETITION_ID) Long competitionId,
                                       UserResource userResource) {
-        OrganisationResource organisation = organisationService.getOrganisationForUser(userResource.getId());
+        OrganisationResource organisation = organisationRestService.getOrganisationByUserId(userResource.getId()).getSuccess();
 
         model.addAttribute("model", new AuthenticatedNotEligibleViewModel(organisation.getOrganisationTypeName(), competitionId));
         return "create-application/authenticated-not-eligible";
@@ -133,7 +134,7 @@ public class ApplicationCreationAuthenticatedController {
     }
 
     private boolean isAllowedToLeadApplication(Long userId, Long competitionId) {
-        OrganisationResource organisation = organisationService.getOrganisationForUser(userId);
+        OrganisationResource organisation = organisationRestService.getOrganisationByUserId(userId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         return competition.getLeadApplicantTypes().contains(organisation.getOrganisationType());

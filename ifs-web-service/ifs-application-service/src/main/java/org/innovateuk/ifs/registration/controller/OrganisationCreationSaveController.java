@@ -9,6 +9,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -41,7 +42,7 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGIST
 public class OrganisationCreationSaveController extends AbstractOrganisationCreationController {
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @GetMapping("/" + CONFIRM_ORGANISATION)
     public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
@@ -105,9 +106,9 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
     private OrganisationResource createOrRetrieveOrganisation(OrganisationResource organisationResource, HttpServletRequest request) {
         Optional<String> cookieHash = registrationCookieService.getInviteHashCookieValue(request);
         if(cookieHash.isPresent()) {
-            return organisationService.createAndLinkByInvite(organisationResource, cookieHash.get());
+            return organisationRestService.createAndLinkByInvite(organisationResource, cookieHash.get()).getSuccess();
         }
 
-        return organisationService.createOrMatch(organisationResource);
+        return organisationRestService.createOrMatch(organisationResource).getSuccess();
     }
 }

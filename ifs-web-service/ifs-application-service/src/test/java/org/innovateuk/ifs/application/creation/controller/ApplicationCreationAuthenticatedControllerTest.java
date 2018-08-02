@@ -11,6 +11,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +63,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     private ApplicationRestService applicationRestService;
 
     @Mock
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -84,11 +85,11 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
 
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
         when(applicationRestService.createApplication(anyLong(), anyLong(), anyString())).thenReturn(restSuccess(applicationResource));
-        when(organisationService.getOrganisationForUser(loggedInUser.getId())).thenReturn(newOrganisationResource()
+        when(organisationRestService.getOrganisationByUserId(loggedInUser.getId())).thenReturn(restSuccess(newOrganisationResource()
                 .withId(5L)
                 .withOrganisationType(RTO.getId())
                 .withOrganisationTypeName(RTO.name())
-                .withName(COMPANY_NAME).build());
+                .withName(COMPANY_NAME).build()));
         when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(newCompetitionResource().withLeadApplicantType(asList(2L, 3L)).build()));
     }
 

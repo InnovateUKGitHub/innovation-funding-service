@@ -37,21 +37,6 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public OrganisationResource getOrganisationForUser(Long userId) {
-        return organisationRestService.getOrganisationByUserId(userId).getSuccess();
-    }
-
-    @Override
-    public OrganisationResource createOrMatch(OrganisationResource organisation) {
-        return organisationRestService.createOrMatch(organisation).getSuccess();
-    }
-
-    @Override
-    public OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash) {
-        return organisationRestService.createAndLinkByInvite(organisation, inviteHash).getSuccess();
-    }
-
-    @Override
     public Long getOrganisationType(Long userId, Long applicationId) {
         final ProcessRoleResource processRoleResource = userRestService.findProcessRole(userId, applicationId).getSuccess();
         if (processRoleResource != null && processRoleResource.getOrganisationId() != null) {

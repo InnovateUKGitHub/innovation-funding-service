@@ -26,6 +26,7 @@ import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
@@ -121,21 +122,24 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Mock
     private FinanceCheckService financeCheckServiceMock;
 
+    @Mock
+    private OrganisationRestService organisationRestService;
+
     @Spy
     @InjectMocks
     @SuppressWarnings("unused")
-    private ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
+    private ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService, organisationRestService);
 
     @Before
     public void setup() {
         super.setUp();
         setupCookieUtil(cookieUtil);
         when(userRestService.retrieveUserById(financeTeamUser.getId())).thenReturn(restSuccess(financeTeamUser));
-        when(organisationService.getOrganisationForUser(financeTeamUser.getId())).thenReturn(innovateOrganisationResource);
+        when(organisationRestService.getOrganisationByUserId(financeTeamUser.getId())).thenReturn(restSuccess(innovateOrganisationResource));
         when(userRestService.retrieveUserById(financeContactUser.getId())).thenReturn(restSuccess(financeContactUser));
-        when(organisationService.getOrganisationForUser(financeContactUser.getId())).thenReturn(leadOrganisationResource);
+        when(organisationRestService.getOrganisationByUserId(financeContactUser.getId())).thenReturn(restSuccess(leadOrganisationResource));
         when(userRestService.retrieveUserById(financeContact2User.getId())).thenReturn(restSuccess(financeContact2User));
-        when(organisationService.getOrganisationForUser(financeContact2User.getId())).thenReturn(leadOrganisationResource);
+        when(organisationRestService.getOrganisationByUserId(financeContact2User.getId())).thenReturn(restSuccess(leadOrganisationResource));
 
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);

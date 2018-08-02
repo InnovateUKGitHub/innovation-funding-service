@@ -16,12 +16,6 @@ public interface OrganisationService {
 
     OrganisationResource getOrganisationById(Long organisationId);
 
-    OrganisationResource getOrganisationForUser(Long userId);
-
-    OrganisationResource createOrMatch(OrganisationResource organisation);
-
-    OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash);
-
     Long getOrganisationType(Long userId, Long applicationId);
 
     Optional<OrganisationResource> getOrganisationForUser(Long userId, List<ProcessRoleResource> userApplicationRoles);

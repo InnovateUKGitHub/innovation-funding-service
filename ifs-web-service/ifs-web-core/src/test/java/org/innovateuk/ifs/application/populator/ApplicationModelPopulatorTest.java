@@ -17,6 +17,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
@@ -66,6 +67,9 @@ public class ApplicationModelPopulatorTest {
 
     @Mock
     protected OrganisationService organisationService;
+
+    @Mock
+    protected OrganisationRestService organisationRestService;
 
     @Mock
     protected FinanceViewHandlerProvider financeViewHandlerProvider;
@@ -175,7 +179,7 @@ public class ApplicationModelPopulatorTest {
         when(questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(costsQuestions);
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
 
-        when(organisationService.getOrganisationForUser(user.getId())).thenReturn(userOrganisation);
+        when(organisationRestService.getOrganisationByUserId(user.getId())).thenReturn(restSuccess(userOrganisation));
         when(financeViewHandlerProvider.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);
 
         ProcessRoleResource processRole = newProcessRoleResource().withOrganisation().withUser(user).build();

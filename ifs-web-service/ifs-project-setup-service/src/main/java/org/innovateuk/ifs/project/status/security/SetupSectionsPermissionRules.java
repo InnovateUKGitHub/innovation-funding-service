@@ -19,6 +19,7 @@ import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +56,7 @@ public class SetupSectionsPermissionRules {
     private OtherDocumentsService otherDocumentsService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     private SetupSectionPartnerAccessorSupplier accessorSupplier = new SetupSectionPartnerAccessorSupplier();
 
@@ -201,7 +202,7 @@ public class SetupSectionsPermissionRules {
 
     @PermissionRule(value = "IS_NOT_FROM_OWN_ORGANISATION", description = "A lead partner cannot mark their own spend profiles as incomplete")
     public boolean userCannotMarkOwnSpendProfileIncomplete(OrganisationCompositeId organisationCompositeId, UserResource user) {
-        OrganisationResource organisation = organisationService.getOrganisationForUser(user.getId());
+        OrganisationResource organisation = organisationRestService.getOrganisationByUserId(user.getId()).getSuccess();
 
         return !organisation.getId().equals(organisationCompositeId.id());
     }

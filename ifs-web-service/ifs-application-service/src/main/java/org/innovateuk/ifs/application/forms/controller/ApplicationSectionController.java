@@ -25,6 +25,7 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
@@ -76,7 +77,7 @@ public class ApplicationSectionController {
     private QuestionService questionService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private ApplicationRedirectionService applicationRedirectionService;
@@ -248,7 +249,8 @@ public class ApplicationSectionController {
     }
 
     private boolean userIsResearch(Long userId) {
-        return organisationService.getOrganisationForUser(userId).getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
+        return organisationRestService.getOrganisationByUserId(userId).getSuccess().
+                getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
     }
 
     private boolean validateTermsAndConditionsAgreement(ApplicationForm form, BindingResult bindingResult) {

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.registration.model.InviteAndUserOrganisationDifferentM
 import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     private InviteRestService inviteRestService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private RegistrationService registrationService;
@@ -94,9 +95,9 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
         if (inviteOrganisation.getOrganisation() == null) {
             // No one has confirmed the InviteOrganisation, we can use the users Organisation.
             // Note that this makes the assumption that the user will have an organisation
-            return organisationService.getOrganisationForUser(loggedInUser.getId());
+            return organisationRestService.getOrganisationByUserId(loggedInUser.getId()).getSuccess();
         } else {
-            return organisationService.getOrganisationById(inviteOrganisation.getOrganisation());
+            return organisationRestService.getOrganisationById(inviteOrganisation.getOrganisation()).getSuccess();
         }
     }
 

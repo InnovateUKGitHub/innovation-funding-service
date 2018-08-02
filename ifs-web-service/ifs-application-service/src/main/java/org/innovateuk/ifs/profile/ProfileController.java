@@ -15,6 +15,7 @@ import org.innovateuk.ifs.profile.form.UserDetailsForm;
 import org.innovateuk.ifs.profile.viewmodel.UserDetailsViewModel;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -52,6 +53,9 @@ public class ProfileController {
     private OrganisationService organisationService;
 
     @Autowired
+    private OrganisationRestService organisationRestService;
+
+    @Autowired
     private EthnicityRestService ethnicityRestService;
 
     @Autowired
@@ -60,14 +64,14 @@ public class ProfileController {
     @GetMapping("/view")
     public String viewUserProfile(Model model,
                                   UserResource userResource) {
-        final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
+        final OrganisationResource organisationResource = organisationRestService.getOrganisationByUserId(userResource.getId()).getSuccess();
 
         model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccess()));
         return "profile/user-profile";
     }
 
     private void populateUserDetailsForm(Model model, UserResource userResource) {
-        final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
+        final OrganisationResource organisationResource = organisationRestService.getOrganisationByUserId(userResource.getId()).getSuccess();
         UserDetailsForm userDetailsForm = buildUserDetailsForm(userResource, organisationResource);
         setFormActionURL(userDetailsForm);
         model.addAttribute("userDetailsForm", userDetailsForm);

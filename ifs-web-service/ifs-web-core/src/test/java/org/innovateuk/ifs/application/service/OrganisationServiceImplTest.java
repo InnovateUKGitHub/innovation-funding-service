@@ -43,30 +43,6 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     }
 
     @Test
-    public void testCreateOrMatch() throws Exception {
-        OrganisationResource resourceToSave = new OrganisationResource();
-        OrganisationResource organisation = new OrganisationResource();
-        when(organisationRestService.createOrMatch(resourceToSave)).thenReturn(restSuccess(organisation));
-
-        OrganisationResource returnedOrganisation = service.createOrMatch(resourceToSave);
-
-        assertEquals(organisation, returnedOrganisation);
-    }
-
-    @Test
-    public void testCreateAndLinkByInvite() throws Exception {
-        String inviteHash = "123abc";
-
-        OrganisationResource resourceToSave = new OrganisationResource();
-        OrganisationResource organisation = new OrganisationResource();
-        when(organisationRestService.createAndLinkByInvite(resourceToSave, inviteHash)).thenReturn(restSuccess(organisation));
-
-        OrganisationResource returnedOrganisation = service.createAndLinkByInvite(resourceToSave, inviteHash);
-
-        assertEquals(organisation, returnedOrganisation);
-    }
-
-    @Test
     public void testGetOrganisationType() throws Exception {
         Long userId = 2L;
         Long applicationId = 3L;
