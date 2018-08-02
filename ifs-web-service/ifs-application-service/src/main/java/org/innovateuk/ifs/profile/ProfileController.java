@@ -40,14 +40,14 @@ import static org.innovateuk.ifs.util.ProfileUtil.getAddress;
 
 @Controller
 @RequestMapping("/profile")
-@SecuredBySpring(value="Controller", description = "TODO", securedType = ProfileController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProfileController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ProfileController {
     private static final Log LOG = LogFactory.getLog(ProfileController.class);
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private OrganisationService organisationService;
 
@@ -66,14 +66,14 @@ public class ProfileController {
         return "profile/user-profile";
     }
 
-    private void populateUserDetailsForm(Model model, UserResource userResource){
+    private void populateUserDetailsForm(Model model, UserResource userResource) {
         final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
         UserDetailsForm userDetailsForm = buildUserDetailsForm(userResource, organisationResource);
         setFormActionURL(userDetailsForm);
         model.addAttribute("userDetailsForm", userDetailsForm);
     }
-    
-	private UserDetailsForm buildUserDetailsForm(final UserResource user, final OrganisationResource organisation){
+
+    private UserDetailsForm buildUserDetailsForm(final UserResource user, final OrganisationResource organisation) {
         UserDetailsForm form = new UserDetailsForm();
         form.setEmail(user.getEmail());
         form.setFirstName(user.getFirstName());
@@ -81,26 +81,26 @@ public class ProfileController {
         form.setPhoneNumber(user.getPhoneNumber());
         form.setAllowMarketingEmails(user.getAllowMarketingEmails());
 
-        if(organisation == null) {
-        	LOG.warn("No organisation retrieved for user" + user.getId());
-			return form;
-		}
-		form.setOrganisationName(organisation.getName());
-		form.setCompanyHouseNumber(organisation.getCompanyHouseNumber());
-		
-		Optional<OrganisationAddressResource> organisationAddress = getAddress(organisation);
-		
-		if(organisationAddress.isPresent() && organisationAddress.get().getAddress() != null) {
-			AddressResource address = organisationAddress.get().getAddress();
-			
-			form.setAddressLine1(address.getAddressLine1());
-			form.setAddressLine2(address.getAddressLine2());
-			form.setAddressLine3(address.getAddressLine3());
-			form.setCounty(address.getCounty());
-			form.setPostcode(address.getPostcode());
-			form.setTown(address.getTown());
-		}
-		return form;
+        if (organisation == null) {
+            LOG.warn("No organisation retrieved for user" + user.getId());
+            return form;
+        }
+        form.setOrganisationName(organisation.getName());
+        form.setCompanyHouseNumber(organisation.getCompanyHouseNumber());
+
+        Optional<OrganisationAddressResource> organisationAddress = getAddress(organisation);
+
+        if (organisationAddress.isPresent() && organisationAddress.get().getAddress() != null) {
+            AddressResource address = organisationAddress.get().getAddress();
+
+            form.setAddressLine1(address.getAddressLine1());
+            form.setAddressLine2(address.getAddressLine2());
+            form.setAddressLine3(address.getAddressLine3());
+            form.setCounty(address.getCounty());
+            form.setPostcode(address.getPostcode());
+            form.setTown(address.getTown());
+        }
+        return form;
     }
 
     @PostMapping("/edit")
@@ -110,7 +110,7 @@ public class ProfileController {
                                     HttpServletRequest request) {
         String destination = "profile/edit-user-profile";
 
-        if(!bindingResult.hasErrors()) {
+        if (!bindingResult.hasErrors()) {
             ServiceResult<UserResource> updateProfileResult = updateUser(loggedInUser, userDetailsForm);
 
             if (updateProfileResult.isSuccess()) {
@@ -156,7 +156,7 @@ public class ProfileController {
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {
         errors.forEach(
-            error -> bindingResult.addError(new ObjectError(error.getErrorKey(), new String[] {error.getErrorKey()}, null, null))
+                error -> bindingResult.addError(new ObjectError(error.getErrorKey(), new String[]{error.getErrorKey()}, null, null))
         );
     }
 }

@@ -18,15 +18,9 @@ public interface OrganisationService {
 
     OrganisationResource getOrganisationForUser(Long userId);
 
-    OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId);
-
     OrganisationResource createOrMatch(OrganisationResource organisation);
 
     OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash);
-
-    OrganisationResource updateNameAndRegistration(OrganisationResource organisation);
-
-    OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);
 
     Long getOrganisationType(Long userId, Long applicationId);
 

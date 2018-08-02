@@ -18,6 +18,7 @@ import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewMod
 import org.innovateuk.ifs.project.bankdetails.viewmodel.ChangeBankDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,6 +47,9 @@ public class BankDetailsManagementController {
 
     @Autowired
     private OrganisationService organisationService;
+
+    @Autowired
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private ProjectService projectService;
@@ -156,7 +160,7 @@ public class BankDetailsManagementController {
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).failNowOrSucceedWith(
                     failureView, () -> {
                         OrganisationResource updatedOrganisationResource = buildOrganisationResource(organisationResource, form);
-                        organisationService.updateNameAndRegistration(updatedOrganisationResource);
+                        organisationRestService.updateNameAndRegistration(updatedOrganisationResource);
                         return "redirect:/project/" + projectId + "/organisation/" + organisationId + "/review-bank-details";
                     });
         });

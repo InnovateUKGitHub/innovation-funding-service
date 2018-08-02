@@ -23,20 +23,12 @@ import java.util.stream.Collectors;
 public class OrganisationServiceImpl implements OrganisationService {
 
     private OrganisationRestService organisationRestService;
-    private CompanyHouseRestService companyHouseRestService;
     private UserRestService userRestService;
 
     public OrganisationServiceImpl(OrganisationRestService organisationRestService,
-                                   CompanyHouseRestService companyHouseRestService,
                                    UserRestService userRestService) {
         this.organisationRestService = organisationRestService;
-        this.companyHouseRestService = companyHouseRestService;
         this.userRestService = userRestService;
-    }
-
-    @Override
-    public OrganisationSearchResult getCompanyHouseOrganisation(String organisationId) {
-        return companyHouseRestService.getOrganisationById(organisationId).getSuccess();
     }
 
     @Override
@@ -50,11 +42,6 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId) {
-        return organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId).getSuccess();
-    }
-
-    @Override
     public OrganisationResource createOrMatch(OrganisationResource organisation) {
         return organisationRestService.createOrMatch(organisation).getSuccess();
     }
@@ -62,11 +49,6 @@ public class OrganisationServiceImpl implements OrganisationService {
     @Override
     public OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash) {
         return organisationRestService.createAndLinkByInvite(organisation, inviteHash).getSuccess();
-    }
-
-    @Override
-    public OrganisationResource updateNameAndRegistration(OrganisationResource organisation){
-        return organisationRestService.updateNameAndRegistration(organisation).getSuccess();
     }
 
     @Override

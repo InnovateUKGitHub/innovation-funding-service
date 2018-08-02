@@ -101,12 +101,11 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     protected UserRestService userRestService;
     @Mock
     protected CompetitionRestService competitionRestService;
+    @Mock
+    protected OrganisationRestService organisationRestService;
 
     @Mock
     private OrganisationTypeRestService organisationTypeRestService;
-
-    @Mock
-    private OrganisationRestService organisationRestService;
 
     @Mock
     private FormInputResponseService formInputResponseService;
@@ -518,8 +517,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet
                 .first());
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn
-                (organisationSet.first());
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn
+                (restSuccess(organisationSet.first()));
         when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn
                 (OrganisationTypeEnum.BUSINESS.getId());
         when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn

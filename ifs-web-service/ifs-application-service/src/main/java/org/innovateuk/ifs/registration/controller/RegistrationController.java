@@ -20,6 +20,7 @@ import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -72,7 +73,7 @@ public class RegistrationController {
     private CookieUtil cookieUtil;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
     @Autowired
     private InviteRestService inviteRestService;
     @Autowired
@@ -150,7 +151,7 @@ public class RegistrationController {
     }
 
     private boolean processOrganisation(HttpServletRequest request, Model model) {
-        OrganisationResource organisation = getOrganisation(request);
+        OrganisationResource organisation = organisationRestService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request)).getSuccess();
         if (organisation != null) {
             addOrganisationNameToModel(model, organisation);
             return true;
@@ -186,7 +187,7 @@ public class RegistrationController {
     }
 
     private OrganisationResource getOrganisation(HttpServletRequest request) {
-        return organisationService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request));
+        return organisationRestService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request)).getSuccess();
     }
 
     @PostMapping("/register")

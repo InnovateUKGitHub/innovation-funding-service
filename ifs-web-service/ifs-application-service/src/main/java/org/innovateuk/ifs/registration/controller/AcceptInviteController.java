@@ -8,6 +8,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 public class AcceptInviteController extends AbstractAcceptInviteController {
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private InviteRestService inviteRestService;
@@ -85,7 +86,8 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                             if (loggedInAsNonInviteUser(invite, loggedInUser)) {
                                 return LOGGED_IN_WITH_ANOTHER_USER_VIEW;
                             }
-                            OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
+                            OrganisationResource organisation = organisationRestService.getOrganisationByIdForAnonymousUserFlow(
+                                    inviteOrganisation.getOrganisation()).getSuccess();
                             registrationCookieService.saveToOrganisationIdCookie(inviteOrganisation.getOrganisation(), response);
                             model.addAttribute("model",
                                     new ConfirmOrganisationInviteOrganisationViewModel(invite, organisation,

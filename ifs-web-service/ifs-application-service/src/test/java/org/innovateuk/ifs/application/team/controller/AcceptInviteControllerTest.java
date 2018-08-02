@@ -9,6 +9,7 @@ import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -113,7 +114,7 @@ public class AcceptInviteControllerTest extends AbstractApplicationMockMVCTest<A
                 .withInviteOrganisation(organisationId)
                 .build()));
         when(inviteRestService.getInviteOrganisationByHash(anyString())).thenReturn(restSuccess(newInviteOrganisationResource().withOrganisation(organisationId).build()));
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationId)).thenReturn(newOrganisationResource().withId(organisationId).build());
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId)).thenReturn(restSuccess(newOrganisationResource().withId(organisationId).build()));
         when(registrationCookieService.getInviteHashCookieValue(any())).thenReturn(Optional.of(INVITE_HASH));
 
         MvcResult result = mockMvc.perform(get(String.format("/accept-invite/confirm-invited-organisation")))

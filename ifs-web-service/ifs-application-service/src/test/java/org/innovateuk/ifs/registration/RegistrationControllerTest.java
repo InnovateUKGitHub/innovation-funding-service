@@ -17,6 +17,7 @@ import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -42,8 +43,9 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.CookieTestUtil.encryptor;
 import static org.innovateuk.ifs.CookieTestUtil.setupCookieUtil;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -91,7 +93,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     private UserRestService userRestService;
 
     @Mock
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     private Cookie inviteHashCookie;
     private Cookie usedInviteHashCookie;
@@ -130,7 +132,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     @Test
     public void onGetRequestRegistrationViewIsReturned() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
 
         mockMvc.perform(get("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -143,7 +145,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     @Test
     public void onGetRequestRegistrationViewIsReturnedWithInviteEmail() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
 
         mockMvc.perform(get("/registration/register")
                 .cookie(inviteHashCookie, organisationCookie)
@@ -158,7 +160,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     public void onGetRequestRegistrationViewIsReturnedWithUsedInviteEmail() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(ACCEPTED_INVITE_HASH));
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
 
         mockMvc.perform(get("/registration/register")
                 .cookie(usedInviteHashCookie, organisationCookie)
@@ -170,6 +172,8 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
     @Test
     public void missingOrganisationGetParameterChangesViewWhenViewingForm() throws Exception {
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restFailure(notFoundError(OrganisationResource.class, 1L)));
+
         mockMvc.perform(get("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
         )
@@ -223,7 +227,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
     @Test
     public void organisationGetParameterOfANonExistentOrganisationChangesViewWhenViewingForm() throws Exception {
-
         mockMvc.perform(get("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .cookie(organisationCookie)
@@ -257,7 +260,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
         String email = "alreadyexistingemail@test.test";
 
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
         when(userService.findUserByEmail(email)).thenReturn(Optional.of(new UserResource()));
 
         mockMvc.perform(post("/registration/register")
@@ -273,7 +276,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     @Test
     public void emptyFormInputsShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
@@ -300,7 +303,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     @Test
     public void invalidEmailFormatShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -316,7 +319,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     public void invalidCharactersInEmailShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -334,7 +337,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     public void incorrectPasswordSizeShouldReturnError() throws Exception {
         logoutCurrentUser();
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
@@ -352,7 +355,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     public void tooWeakPasswordSizeShouldReturnError() throws Exception {
         logoutCurrentUser();
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
 
         String testEmailAddress = "tester@tester.com";
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.empty());
@@ -383,7 +386,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     public void uncheckedTermsAndConditionsCheckboxShouldReturnError() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -412,8 +415,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .withGender(Gender.FEMALE)
                 .build();
 
-
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
         when(userService.createLeadApplicantForOrganisationWithCompetitionId(eq(userResource.getFirstName()),
                 eq(userResource.getLastName()),
                 eq(userResource.getPassword()),
@@ -465,7 +467,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .withEthnicity(2L)
                 .build();
 
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
         when(userService.createLeadApplicantForOrganisationWithCompetitionId(eq(userResource.getFirstName()),
                 eq(userResource.getLastName()),
                 eq(userResource.getPassword()),
@@ -502,12 +504,12 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     @Test
     public void correctOrganisationNameIsAddedToModel() throws Exception {
         logoutCurrentUser();
+        Long organisationId = 4L;
 
-        OrganisationResource organisation = newOrganisationResource().withId(4L).withName("uniqueOrganisationName").build();
-
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(4L)).thenReturn(organisation);
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId).withName("uniqueOrganisationName").build();
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId)).thenReturn(restSuccess(organisation));
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(INVITE_HASH));
-        when(registrationCookieService.getOrganisationIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(4L));
+        when(registrationCookieService.getOrganisationIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(organisationId));
 
         organisationCookie = new Cookie("organisationId", encryptor.encrypt("4"));
 
@@ -556,7 +558,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
         Error error = new Error("errorname", BAD_REQUEST);
 
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
         when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
                 userResource.getLastName(),
                 userResource.getPassword(),
