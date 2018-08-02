@@ -37,7 +37,7 @@ Summary:All the sections are present
     And the user clicks the button/link    link=Intelligent Building
     And the user clicks the button/link    jQuery=.govuk-button:contains("Review and complete your assessment")
     Then the user should see the element    jQuery=h2:contains("Review assessment")
-    And the user should see the element    jQuery=span:contains("Do you believe that this application is suitable for funding?")
+    And the user should see the element    jQuery=legend:contains("Do you believe that this application is suitable for funding?")
     And the user should see the element    id=form-input-feedback
     And the user should see the element    id=form-input-comments
 

@@ -153,11 +153,11 @@ Scope: Guidance
     ...    INFUND-6281
     [Tags]    HappyPath
     When the user clicks the button/link          css=details summary
-    Then the user should see the element          css=#details-content-0
+    Then the user should see the element          css=div[id^="details-content-"]
     And The user should see the text in the page  One or more of the above requirements have not been satisfied.
     And The user should see the text in the page  Does it meet the scope of the competition as defined in the competition brief?
     And the user clicks the button/link           css=details summary
-    And The user should not see the element       css=#details-content-0
+    And The user should not see the element       css=div[id^="details-content-"]
 
 Economic Benefit: validations
     [Documentation]  IFS-508
@@ -192,7 +192,7 @@ Economic Benefit: Autosave
 
 Economic Benefit: Guidance
     [Documentation]    INFUND-6281
-    When The user clicks the button/link           css=.summary
+    When The user clicks the button/link           css=.govuk-details__summary-text
     Then the user should see the text in the page  The project is damaging to other stakeholders with no realistic mitigation or balance described.
     And The user should see the text in the page   The project has no outside benefits or is potentially damaging to other stakeholders. No mitigation or exploitation is suggested.
     And The user should see the text in the page   Some positive outside benefits are described but the methods to exploit these are not obvious. Or the project is likely to have a negative impact but some mitigation or a balance against the internal benefits is proposed.
