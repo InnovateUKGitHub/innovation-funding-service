@@ -47,13 +47,6 @@ View the list of assessors
     When The user clicks the button/link  jQuery=a:contains("Manage assessors")
     Then the assessor list is correct before changes
 
-Assessor link goes to the assessor profile
-    [Documentation]  IFS-319
-    [Tags]
-    Given the user clicks the button/link  link=Paul Plum
-    Then the user should see the element   jQuery=h1:contains("Assessor profile") ~ p:contains("Paul Plum")
-    [Teardown]    the user clicks the button/link  link=Back
-
 Filter assessors
     [Documentation]    IFS-399
     [Tags]
