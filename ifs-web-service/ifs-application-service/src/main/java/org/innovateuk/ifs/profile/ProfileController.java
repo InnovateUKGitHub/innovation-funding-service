@@ -12,7 +12,7 @@ import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.profile.form.UserDetailsForm;
-import org.innovateuk.ifs.profile.viewmodel.UserDetailsViewModel;
+import org.innovateuk.ifs.profile.populator.UserProfilePopulator;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -57,12 +57,14 @@ public class ProfileController {
     @Autowired
     private UserAuthenticationService userAuthenticationService;
 
+    @Autowired
+    private UserProfilePopulator userProfilePopulator;
+
     @GetMapping("/view")
     public String viewUserProfile(Model model,
                                   UserResource userResource) {
-        final OrganisationResource organisationResource = organisationService.getPrimaryForUser(userResource.getId());
 
-        model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccess()));
+        model.addAttribute("model", userProfilePopulator.populate(userResource));
         return "profile/user-profile";
     }
 

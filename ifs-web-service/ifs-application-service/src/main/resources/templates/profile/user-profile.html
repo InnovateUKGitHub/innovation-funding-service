@@ -16,23 +16,6 @@
     <hr/>
 
     <h2 class="heading-medium no-margin-bottom">Your details <small class="list-indent"><a href="/profile/edit"> Edit your details</a></small></h2>
-    <h3 class="heading-small">Your organisation</h3>
-    <p th:text="${model.organisationName}" />
-
-    <h3 class="heading-small">Organisation type</h3>
-    <p th:text="${model.organisationTypeName}" />
-
-    <h3 class="heading-small">Registration number</h3>
-    <p th:text="${model.registrationNumber}" />
-
-    <h3 class="heading-small">Address</h3>
-    <div th:text="${model.addressLine1}" />
-    <div th:text="${model.addressLine2}" />
-    <div th:text="${model.addressLine3}" />
-    <div th:text="${model.town}" />
-    <div th:text="${model.county}" />
-    <div th:text="${model.postcode}" />
-
     <h3 class="heading-small">Your name</h3>
     <p>
         <th:block th:text="${model.name}" />
@@ -44,6 +27,28 @@
     <h3 class="heading-small">Email preferences</h3>
     <p th:if="${model.allowMarketingEmails}">You have asked for updates on Innovate UK competitions by email.</p>
     <p th:unless="${model.allowMarketingEmails}">You have asked that we do not keep you updated on Innovate UK competitions by email.</p>
+
+    <th:block th:unless="${model.organisations.isEmpty()}">
+        <h2 class="heading-medium no-margin-bottom">Your organisation details</h2>
+        <div class="table-overflow">
+            <table>
+                <thead>
+                <tr>
+                    <th class="width-small">Organisation name</th>
+                    <th>Organisation type</th>
+                    <th>Registration number</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="organisation : ${model.organisations}">
+                    <td th:text="${organisation.name}"></td>
+                    <td th:text="${organisation.type}"></td>
+                    <td th:text="${organisation.registrationNumber}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
