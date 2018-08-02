@@ -30,13 +30,13 @@
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('addressForm.selectedPostcodeIndex')}" th:text="${err}" />
                 </th:block>
                 <select id="addressForm.selectedPostcodeIndex"
-                        class="govuk-select"
+                        class="govuk-select govuk-!-width-one-half"
                         th:field="*{addressForm.selectedPostcodeIndex}">
                     <option th:value="${status.index}"
                             th:each="address,status : ${form.addressForm.postcodeOptions}"
                             th:text="${address.combinedString}"></option>
                 </select>
-                <button type="submit" class="govuk-button" name="select-address">Use selected address</button>
+                <button type="submit" class="govuk-button govuk-!-margin-0" name="select-address">Use selected address</button>
             </div>
             <button type="submit" class="button-clear" name="manual-address">Enter address manually</button>
         </fieldset>
