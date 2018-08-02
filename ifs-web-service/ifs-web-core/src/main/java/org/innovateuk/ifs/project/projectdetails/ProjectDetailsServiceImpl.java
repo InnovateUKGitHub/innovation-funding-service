@@ -61,7 +61,7 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     }
 
     @Override
-    public ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource) {
+    public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteProjectResource) {
         return projectDetailsRestService.inviteFinanceContact (projectId, inviteProjectResource).toServiceResult();
     }
 

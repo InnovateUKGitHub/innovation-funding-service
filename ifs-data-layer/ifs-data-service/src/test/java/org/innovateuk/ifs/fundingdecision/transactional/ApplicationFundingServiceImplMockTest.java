@@ -177,14 +177,14 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         leadApplicantProcessRoles.forEach(processRole ->
                 when(processRoleRepositoryMock.findByApplicationIdAndRole(processRole.getApplicationId(), processRole.getRole())).thenReturn(singletonList(processRole))
         );
-        when(notificationServiceMock.sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
         when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
         when(competitionServiceMock.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         assertTrue(result.isSuccess());
 
-        verify(notificationServiceMock).sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL));
+        verify(notificationServiceMock).sendNotificationWithFlush(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL));
         verifyNoMoreInteractions(notificationServiceMock);
 
         verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application1.getId()), any(ZonedDateTime.class));
@@ -242,14 +242,14 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 when(processRoleRepositoryMock.findByApplicationIdAndRole(processRole.getApplicationId(), processRole.getRole())).thenReturn(singletonList(processRole))
         );
 
-        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
         when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
         when(competitionServiceMock.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
         assertTrue(result.isSuccess());
 
-        verify(notificationServiceMock).sendNotification(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL));
+        verify(notificationServiceMock).sendNotificationWithFlush(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL));
         verifyNoMoreInteractions(notificationServiceMock);
 
         verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application1.getId()), any(ZonedDateTime.class));

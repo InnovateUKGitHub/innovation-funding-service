@@ -38,12 +38,12 @@ public class UserSurveyServiceImpl implements UserSurveyService {
 
     @Override
     public ServiceResult<Void> sendApplicantDiversitySurvey(User user) {
-        return notificationService.sendNotification(surveyNotification(user, DIVERSITY_SURVEY_APPLICANT), EMAIL);
+        return notificationService.sendNotificationWithFlush(surveyNotification(user, DIVERSITY_SURVEY_APPLICANT), EMAIL);
     }
 
     @Override
     public ServiceResult<Void> sendAssessorDiversitySurvey(User user) {
-        return notificationService.sendNotification(surveyNotification(user, DIVERSITY_SURVEY_ASSESSOR), EMAIL);
+        return notificationService.sendNotificationWithFlush(surveyNotification(user, DIVERSITY_SURVEY_ASSESSOR), EMAIL);
     }
 
     private Notification surveyNotification(User user, UserSurveyNotificationType notificationType) {

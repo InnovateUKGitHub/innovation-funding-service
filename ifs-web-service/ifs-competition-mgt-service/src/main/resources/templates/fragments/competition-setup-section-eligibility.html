@@ -1,4 +1,3 @@
-
 <!-- =================== Comp setup section - Eligibility (3) ============================== -->
 <th:block th:fragment="section-content">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
@@ -83,6 +82,69 @@
                         <label th:for="${'lead-applicant-type-' + leadApplicantType.id}" th:text="${leadApplicantType.name}"></label>
                      </div>
                 </fieldset>
+            </div>
+
+            <div class="form-group" th:classappend="${#fields.hasErrors('overrideFundingRules')} ? 'form-group-error'">
+                <fieldset class="inline">
+                    <legend id="overrideFundingRules">
+                        <span class="form-label-bold">Override funding rules</span>
+                        <span class="hint">Do you want to override the standard <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules" target="_blank">funding rules</a> and manually set the percentage that business can apply for?</span>
+                        <th:block th:if="${#fields.hasErrors('overrideFundingRules')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('overrideFundingRules')}" th:text="${err}"></span>
+                        </th:block>
+                    </legend>
+                    <div class="multiple-choice" data-target="funding-level" data-target-clear-form="true">
+                        <input type="radio"
+                               id="comp-overrideFundingRules-yes"
+                               th:field="*{overrideFundingRules}"
+                               value="true"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.eligibilityform.overrideFundingRules.required}"/>
+                        <label for="comp-overrideFundingRules-yes">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="multiple-choice">
+                        <input type="radio"
+                               id="comp-overrideFundingRules-no"
+                               th:field="*{overrideFundingRules}"
+                               value="false"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.eligibilityform.overrideFundingRules.required}"/>
+                        <label for="comp-overrideFundingRules-no">
+                            No
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div id="funding-level" class="form-group panel">
+                <div class="form-group"
+                     th:classappend="${#fields.hasErrors('fundingLevelPercentage')} ? 'form-group-error'">
+                    <fieldset class="inline">
+                        <legend id="fundingLevels">
+                            <span class="form-label-bold">Set funding level</span>
+                            <th:block th:if="${#fields.hasErrors('fundingLevelPercentage')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('fundingLevelPercentage')}" th:text="${err}"></span>
+                            </th:block>
+                        </legend>
+                        <select class="form-control width-large"
+                                name="fundingLevelPercentage"
+                                id="fundingLevelPercentage"
+                                required="required"
+                                th:attr="data-required-errormessage=#{validation.eligibilityform.fundingLevel.required}">
+                            <option value=""
+                                    disabled="disabled"
+                                    th:selected="${competitionSetupForm.fundingLevelPercentage == null}">Please select &hellip;</option>
+                            <option th:each="fundingLevel : ${model.fundingLevels}"
+                                    th:text="${fundingLevel.textValue}"
+                                    th:value="${fundingLevel.percentage}"
+                                    th:selected="${competitionSetupForm.fundingLevelPercentage == fundingLevel.percentage}">
+                                Funding level
+                            </option>
+                        </select>
+                    </fieldset>
+                </div>
             </div>
 
             <div class="form-group"
@@ -170,6 +232,14 @@
 
                 <dt>Lead applicant</dt>
                 <dd th:text="${model.leadApplicantTypesText}"></dd>
+
+                <dt>Override funding rules</dt>
+                <dd th:text="${#bools.isTrue(competitionSetupForm.overrideFundingRules) ? 'Yes' : 'No'}"></dd>
+
+                <th:block th:if="${competitionSetupForm.overrideFundingRules}">
+                    <dt>Set funding level</dt>
+                    <dd th:text="${competitionSetupForm.fundingLevelPercentage + '%'}"></dd>
+                </th:block>
 
                 <th:block th:if="${!#arrays.isEmpty(model.researchParticipationAmounts)}">
                     <dt>Research participation</dt>
