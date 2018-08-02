@@ -723,7 +723,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("singleOrCollaborative", "collaborative")
                 .param("leadApplicantTypes", "1", "2", "3")
                 .param("researchParticipationAmountId", "1")
-                .param("resubmission", "yes"))
+                .param("resubmission", "yes")
+                .param("overrideFundingRules", "false"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
 
@@ -748,7 +749,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("singleOrCollaborative", "collaborative")
                 .param("leadApplicantTypes", "1")
                 .param("researchParticipationAmountId", "1")
-                .param("resubmission", "yes"))
+                .param("resubmission", "yes")
+                .param("overrideFundingRules", "false"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"))
                 .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "streamName"));
@@ -811,7 +813,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("researchCategoryId", "1", "2", "3")
                 .param("singleOrCollaborative", "collaborative")
                 .param("leadApplicantTypes", "1", "2", "3")
-                .param("resubmission", "no"))
+                .param("resubmission", "no")
+                .param("overrideFundingRules", "false"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
 
