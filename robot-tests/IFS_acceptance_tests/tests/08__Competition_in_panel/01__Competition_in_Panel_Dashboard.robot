@@ -17,7 +17,7 @@ In Panel Dashboard
     When the user clicks the button/link      link=${FUNDERS_PANEL_COMPETITION_NAME}
     Then the user should not see the element  link=View and update competition setup
     And the user should see the element       jQuery=a:contains("Input and review funding decision")
-    And the user should see the element       jQuery=.govuk-button--disabled:contains("Invite assessors to assess the competition")
+    And the user should see the element       jQuery=.disabled:contains("Invite assessors to assess the competition")
     And the user should see the element       jQuery=a:contains("Manage assessments")
 
 Milestones for In Panel Competitions
