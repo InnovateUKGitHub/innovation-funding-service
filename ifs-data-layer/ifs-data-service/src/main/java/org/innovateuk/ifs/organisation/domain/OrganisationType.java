@@ -24,7 +24,10 @@ public class OrganisationType {
     @OneToMany(mappedBy="organisationType")
     private List<GrantClaimMaximum> grantClaimMaximums;
 
-    private Boolean visibleInSetup;
+    private boolean visibleInSetup;
+
+    public OrganisationType() {
+    }
 
     public OrganisationType(String name, String description, OrganisationType parentOrganisationType) {
         this.name = name;
@@ -32,24 +35,12 @@ public class OrganisationType {
         this.parentOrganisationType = parentOrganisationType;
     }
 
-    public OrganisationType() {
-    	// no-arg constructor
-    }
-
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
@@ -64,24 +55,13 @@ public class OrganisationType {
         return parentOrganisationType;
     }
 
-    public void setParentOrganisationType(OrganisationType parentOrganisationType) {
-        this.parentOrganisationType = parentOrganisationType;
-    }
 
     public List<GrantClaimMaximum> getGrantClaimMaximums() {
         return grantClaimMaximums;
     }
 
-    public void setGrantClaimMaximums(List<GrantClaimMaximum> grantClaimMaximums) {
-        this.grantClaimMaximums = grantClaimMaximums;
-    }
-
-    public Boolean getVisibleInSetup() {
+    public boolean getVisibleInSetup() {
         return visibleInSetup;
-    }
-
-    public void setVisibleInSetup(Boolean visibleInSetup) {
-        this.visibleInSetup = visibleInSetup;
     }
 
     @Override

@@ -27,7 +27,7 @@ public class FinanceViewHandlerProvider implements FinanceHandlerProvider {
     private JESFinanceFormHandler jesFinanceFormHandler;
 
     public FinanceFormHandler getFinanceFormHandler(long organisationType) {
-        if(RESEARCH.getId().longValue() == organisationType) {
+        if(RESEARCH.getId() == organisationType) {
             return jesFinanceFormHandler;
         } else {
             return defaultFinanceFormHandler;
@@ -35,7 +35,7 @@ public class FinanceViewHandlerProvider implements FinanceHandlerProvider {
     }
 
     public FinanceFormHandler getProjectFinanceFormHandler(long organisationType) {
-        if(RESEARCH.getId().longValue() == organisationType) {
+        if(RESEARCH.getId() == organisationType) {
             return jesFinanceFormHandler;
         } else {
             return projectFinanceFormHandler;
@@ -43,7 +43,7 @@ public class FinanceViewHandlerProvider implements FinanceHandlerProvider {
     }
 
     public FinanceModelManager getFinanceModelManager(long organisationType) {
-        if(RESEARCH.getId().longValue() == organisationType) {
+        if(RESEARCH.getId() == organisationType) {
             return getJESFinanceModelManager();
         } else {
             return getDefaultFinanceModelManager();
@@ -51,7 +51,7 @@ public class FinanceViewHandlerProvider implements FinanceHandlerProvider {
     }
 
     public FinanceModelManager getProjectFinanceModelManager(long organisationType) {
-        if(RESEARCH.getId().longValue() == organisationType) {
+        if(RESEARCH.getId() == organisationType) {
             return getJESProjectFinanceModelManager();
         } else {
             return getDefaultProjectFinanceModelManager();

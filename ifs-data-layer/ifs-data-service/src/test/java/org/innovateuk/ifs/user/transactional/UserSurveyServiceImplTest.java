@@ -43,12 +43,12 @@ public class UserSurveyServiceImplTest extends BaseServiceUnitTest<UserSurveySer
                 .withEmailAddress("tom@poly.io")
                 .build();
 
-        when(notificationServiceMock.sendNotification(expectedNotification(user, DIVERSITY_SURVEY_APPLICANT), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(expectedNotification(user, DIVERSITY_SURVEY_APPLICANT), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
 
         service.sendApplicantDiversitySurvey(user).getSuccess();
 
         InOrder inOrder = inOrder(notificationServiceMock);
-        inOrder.verify(notificationServiceMock).sendNotification(expectedNotification(user, DIVERSITY_SURVEY_APPLICANT), eq(NotificationMedium.EMAIL));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(expectedNotification(user, DIVERSITY_SURVEY_APPLICANT), eq(NotificationMedium.EMAIL));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -60,12 +60,12 @@ public class UserSurveyServiceImplTest extends BaseServiceUnitTest<UserSurveySer
                 .withEmailAddress("tom@poly.io")
                 .build();
 
-        when(notificationServiceMock.sendNotification(expectedNotification(user, DIVERSITY_SURVEY_ASSESSOR), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(expectedNotification(user, DIVERSITY_SURVEY_ASSESSOR), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
 
         service.sendAssessorDiversitySurvey(user).getSuccess();
 
         InOrder inOrder = inOrder(notificationServiceMock);
-        inOrder.verify(notificationServiceMock).sendNotification(expectedNotification(user, DIVERSITY_SURVEY_ASSESSOR), eq(NotificationMedium.EMAIL));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(expectedNotification(user, DIVERSITY_SURVEY_ASSESSOR), eq(NotificationMedium.EMAIL));
         inOrder.verifyNoMoreInteractions();
     }
 

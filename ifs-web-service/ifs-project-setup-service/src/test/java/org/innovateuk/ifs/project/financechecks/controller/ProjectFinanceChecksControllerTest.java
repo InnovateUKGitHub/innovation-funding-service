@@ -193,7 +193,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
                 .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(statusResource)).build();
         ProjectResource project = newProjectResource().withId(projectId).withName(projectName).build();
-        OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).build();
+        OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
@@ -230,7 +230,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
                 .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withFinanceChecksStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(statusResource)).build();
         ProjectResource project = newProjectResource().withId(projectId).withName(projectName).build();
-        OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).build();
+        OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);

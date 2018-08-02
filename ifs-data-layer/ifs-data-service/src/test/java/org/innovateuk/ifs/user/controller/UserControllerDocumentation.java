@@ -19,8 +19,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.UserDocs.*;
@@ -65,7 +63,6 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         final UserResource userResource = newUserResource().build();
 
         when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/sendEmailVerificationNotification/{emailAddress}/", emailAddress))
                 .andDo(document("user/{method-name}",
@@ -81,7 +78,6 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         final UserResource userResource = newUserResource().build();
         when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, empty())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
@@ -118,8 +114,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         final Long competitionId = 8888L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createOrganisationUser(organisationId, userResource)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, of(competitionId))).thenReturn(serviceSuccess());
+        when(registrationServiceMock.createOrganisationUserWithCompetitionContext(organisationId, competitionId, userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)

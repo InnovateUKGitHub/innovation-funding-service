@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FinanceUtil {
 
-    public boolean isUsingJesFinances(Long organisationType) {
-        return OrganisationTypeEnum.RESEARCH.getId().equals(organisationType);
+    public boolean isUsingJesFinances(long organisationType) {
+        return OrganisationTypeEnum.RESEARCH.getId() == organisationType;
     }
 }

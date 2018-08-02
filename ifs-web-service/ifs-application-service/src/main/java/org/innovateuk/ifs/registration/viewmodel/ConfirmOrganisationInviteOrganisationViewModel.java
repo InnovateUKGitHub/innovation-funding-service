@@ -13,7 +13,7 @@ public class ConfirmOrganisationInviteOrganisationViewModel {
     private String organisationType;
     private String registrationName;
     private String registrationNumber;
-    private Long organisationTypeId;
+    private long organisationTypeId;
     private String emailLeadApplicant;
     private AddressResource organisationAddress;
     private String registerUrl;

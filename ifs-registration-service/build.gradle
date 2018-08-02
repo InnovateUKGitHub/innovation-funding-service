@@ -1,3 +1,5 @@
+def targetBuild = hasProperty('profile') ? profile : 'docker';
+apply from: targetBuild + "-build.gradle";
 apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 
@@ -62,6 +64,7 @@ osStageLocal.tag = registrationServiceVersion
 createContainer.hostName="registration-svc"
 createContainer.containerName="registration-svc"
 createContainer.containerId="registration-svc"
+createContainer.env = [ "SHIBBOLETH_API_KEYS=${shibbolethApiKey}" ]
 
 
 def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false

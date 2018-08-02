@@ -1,0 +1,3 @@
+---
+alpine_glibc_shim_key_url: '{{alpine_glibc_shim_key_mirror}}/{{alpine_glibc_shim_key}}'
+

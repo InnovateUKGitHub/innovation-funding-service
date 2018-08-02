@@ -210,13 +210,13 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         Long result = service.create(queryToCreate).getSuccess();
 
         assertEquals(result, Long.valueOf(1L));
 
-        verify(notificationServiceMock).sendNotification(notification, EMAIL);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
     }
 
     @Test
@@ -348,7 +348,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
 
         assertEquals(false, service.create(queryToCreate).isSuccess());
     }
@@ -494,11 +494,11 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         assertTrue(service.addPost(post, queryId).isSuccess());
 
-        verify(notificationServiceMock).sendNotification(notification, EMAIL);
+        verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
     }
 
     @Test
@@ -677,7 +677,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findById(22L)).thenReturn(Optional.of(projectFinance));
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
 
         assertTrue(service.addPost(post, queryId).isFailure());
     }

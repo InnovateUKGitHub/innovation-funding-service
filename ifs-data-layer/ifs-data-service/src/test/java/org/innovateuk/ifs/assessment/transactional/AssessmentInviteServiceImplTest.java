@@ -27,12 +27,9 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -54,7 +51,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -90,6 +86,7 @@ import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newReject
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
@@ -151,7 +148,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     private SystemNotificationSource systemNotificationSourceMock;
 
     @Mock
-    private NotificationSender notificationSenderMock;
+    private NotificationService notificationServiceMock;
 
     @Mock
     private InnovationAreaRepository innovationAreaRepositoryMock;
@@ -224,7 +221,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getAllInvitesToSend() throws Exception {
+    public void getAllInvitesToSend() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
 
@@ -282,7 +279,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getAllInvitesToResend() throws Exception {
+    public void getAllInvitesToResend() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
         List<Long> inviteIds = asList(1L, 2L);
@@ -341,7 +338,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getInviteToSend() throws Exception {
+    public void getInviteToSend() {
         String email = "john@email.com";
         String name = "John Barnes";
 
@@ -389,7 +386,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getInviteToSend_notCreated() throws Exception {
+    public void getInviteToSend_notCreated() {
         String email = "john@email.com";
         String name = "John Barnes";
 
@@ -437,7 +434,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getInvite() throws Exception {
+    public void getInvite() {
         ServiceResult<CompetitionInviteResource> inviteServiceResult = service.getInvite(INVITE_HASH);
 
         assertTrue(inviteServiceResult.isSuccess());
@@ -452,7 +449,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getInvite_hashNotExists() throws Exception {
+    public void getInvite_hashNotExists() {
         when(assessmentInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(null);
 
         ServiceResult<CompetitionInviteResource> inviteServiceResult = service.getInvite("inviteHashNotExists");
@@ -466,7 +463,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getInvite_afterAccepted() throws Exception {
+    public void getInvite_afterAccepted() {
         service.openInvite(INVITE_HASH);
         ServiceResult<Void> acceptResult = service.acceptInvite(INVITE_HASH, userResource);
         assertTrue(acceptResult.isSuccess());
@@ -483,7 +480,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getInvite_afterRejected() throws Exception {
+    public void getInvite_afterRejected() {
         RejectionReasonResource rejectionReason = RejectionReasonResourceBuilder.newRejectionReasonResource()
                 .withId(1L)
                 .build();
@@ -504,7 +501,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void openInvite() throws Exception {
+    public void openInvite() {
         ServiceResult<CompetitionInviteResource> inviteServiceResult = service.openInvite(INVITE_HASH);
 
         assertTrue(inviteServiceResult.isSuccess());
@@ -520,7 +517,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void openInvite_hashNotExists() throws Exception {
+    public void openInvite_hashNotExists() {
         when(assessmentInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(null);
 
         ServiceResult<CompetitionInviteResource> inviteServiceResult = service.openInvite("inviteHashNotExists");
@@ -534,7 +531,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void openInvite_inviteExpired() throws Exception {
+    public void openInvite_inviteExpired() {
         AssessmentInvite assessmentInvite = setUpCompetitionInvite(newCompetition()
                 .withName("my competition")
                 .withAssessorAcceptsDate(now().minusDays(1))
@@ -553,7 +550,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void openInvite_afterAccepted() throws Exception {
+    public void openInvite_afterAccepted() {
         service.openInvite(INVITE_HASH);
         ServiceResult<Void> acceptResult = service.acceptInvite(INVITE_HASH, userResource);
         assertTrue(acceptResult.isSuccess());
@@ -570,7 +567,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void openInvite_afterRejected() throws Exception {
+    public void openInvite_afterRejected() {
         RejectionReasonResource rejectionReason = RejectionReasonResourceBuilder.newRejectionReasonResource()
                 .withId(1L)
                 .build();
@@ -873,7 +870,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void sendAllInvites() throws Exception {
+    public void sendAllInvites() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
 
@@ -931,30 +928,30 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
         when(userRepositoryMock.findByEmail(emails.get(0))).thenReturn(Optional.empty());
         when(userRepositoryMock.findByEmail(emails.get(1))).thenReturn(Optional.empty());
-        when(notificationSenderMock.sendNotification(notifications.get(0))).thenReturn(serviceSuccess(notifications.get(0)));
-        when(notificationSenderMock.sendNotification(notifications.get(1))).thenReturn(serviceSuccess(notifications.get(1)));
+        when(notificationServiceMock.sendNotificationWithFlush(notifications.get(0), EMAIL)).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(notifications.get(1), EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = service.sendAllInvites(competition.getId(), assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(competitionRepositoryMock,
-                                  assessmentInviteRepositoryMock, userRepositoryMock, assessmentParticipantRepositoryMock, notificationSenderMock);
+                                  assessmentInviteRepositoryMock, userRepositoryMock, assessmentParticipantRepositoryMock, notificationServiceMock);
         inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
         inOrder.verify(assessmentParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(0)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(0));
-        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(0), EMAIL);
 
         inOrder.verify(assessmentParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(1)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(1));
-        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(1), EMAIL);
 
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void resendInvites() throws Exception {
+    public void resendInvites() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
         List<Long> inviteIds = asList(1L, 2L);
@@ -1021,23 +1018,23 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
         when(assessmentParticipantRepositoryMock.getByInviteHash(invites.get(0).getHash())).thenReturn(assessmentParticipants.get(0));
         when(assessmentParticipantRepositoryMock.getByInviteHash(invites.get(1).getHash())).thenReturn(assessmentParticipants.get(1));
-        when(notificationSenderMock.sendNotification(notifications.get(0))).thenReturn(serviceSuccess(notifications.get(0)));
-        when(notificationSenderMock.sendNotification(notifications.get(1))).thenReturn(serviceSuccess(notifications.get(1)));
+        when(notificationServiceMock.sendNotificationWithFlush(notifications.get(0), EMAIL)).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(notifications.get(1), EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = service.resendInvites(inviteIds, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentParticipantRepositoryMock, notificationSenderMock);
+        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentParticipantRepositoryMock, notificationServiceMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByIdIn(inviteIds);
         inOrder.verify(assessmentParticipantRepositoryMock).getByInviteHash(invites.get(0).getHash());
-        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(0), EMAIL);
         inOrder.verify(assessmentParticipantRepositoryMock).getByInviteHash(invites.get(1).getHash());
-        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(1), EMAIL);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void sendAllInvites_existingUsersGetAssessorRole() throws Exception {
+    public void sendAllInvites_existingUsersGetAssessorRole() {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
 
@@ -1069,7 +1066,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
         when(userRepositoryMock.findByEmail(emails.get(0))).thenReturn(Optional.of(existingUsers.get(0)));
         when(userRepositoryMock.findByEmail(emails.get(1))).thenReturn(Optional.of(existingUsers.get(1)));
-        when(notificationSenderMock.sendNotification(isA(Notification.class))).thenAnswer(ServiceResult::serviceSuccess);
+        when(notificationServiceMock.sendNotificationWithFlush(isA(Notification.class), eq(EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = service.sendAllInvites(competition.getId(), assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
@@ -1078,23 +1075,23 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         assertTrue(existingUsers.get(1).hasRole(Role.ASSESSOR));
 
         InOrder inOrder = inOrder(competitionRepositoryMock,
-                                  assessmentInviteRepositoryMock, userRepositoryMock, assessmentParticipantRepositoryMock, notificationSenderMock);
+                                  assessmentInviteRepositoryMock, userRepositoryMock, assessmentParticipantRepositoryMock, notificationServiceMock);
         inOrder.verify(competitionRepositoryMock).findById(competition.getId());
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
         inOrder.verify(assessmentParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(0)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(0));
-        inOrder.verify(notificationSenderMock).sendNotification(isA(Notification.class));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(isA(Notification.class), eq(EMAIL));
 
         inOrder.verify(assessmentParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(1)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(1));
-        inOrder.verify(notificationSenderMock).sendNotification(isA(Notification.class));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(isA(Notification.class), eq(EMAIL));
 
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void resendInvite() throws Exception {
+    public void resendInvite() {
         String email = "john@email.com";
         String name = "John Barnes";
 
@@ -1117,18 +1114,18 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         when(assessmentParticipantRepositoryMock.getByInviteId(invite.getId())).thenReturn(competitionParticipant);
         when(assessmentInviteRepositoryMock.findById(invite.getId())).thenReturn(Optional.of(invite));
-        when(notificationSenderMock.sendNotification(notification)).thenReturn(serviceSuccess(notification));
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = service.resendInvite(invite.getId(), assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentParticipantRepositoryMock, notificationSenderMock);
-        inOrder.verify(notificationSenderMock).sendNotification(notification);
+        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentParticipantRepositoryMock, notificationServiceMock);
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void checkExistingUser_hashNotExists() throws Exception {
+    public void checkExistingUser_hashNotExists() {
         when(assessmentInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(null);
 
         ServiceResult<Boolean> result = service.checkUserExistsForInvite("hash");
@@ -1142,7 +1139,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void checkExistingUser_userExistsOnInvite() throws Exception {
+    public void checkExistingUser_userExistsOnInvite() {
         User user = newUser().build();
 
         AssessmentInvite assessmentInvite = newAssessmentInvite()
@@ -1161,7 +1158,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void checkExistingUser_userExistsForEmail() throws Exception {
+    public void checkExistingUser_userExistsForEmail() {
         User user = newUser().build();
 
         AssessmentInvite assessmentInvite = newAssessmentInvite()
@@ -1180,7 +1177,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void checkExistingUser_userDoesNotExist() throws Exception {
+    public void checkExistingUser_userDoesNotExist() {
         AssessmentInvite assessmentInvite = newAssessmentInvite()
                 .withEmail("test@test.com")
                 .build();
@@ -1197,7 +1194,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getAvailableAssessors() throws Exception {
+    public void getAvailableAssessors() {
         long competitionId = 1L;
         int page = 1;
         int pageSize = 1;
@@ -1209,7 +1206,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource()
                 .withId(4L, 8L)
                 .withName("Jeremy Alufson", "Felix Wilson")
-                .withCompliant(TRUE)
+                .withCompliant(true)
                 .withEmail("worth.email.test+assessor1@gmail.com", "felix.wilson@gmail.com")
                 .withBusinessType(BUSINESS, ACADEMIC)
                 .withInnovationAreas(innovationAreaResources)
@@ -1243,6 +1240,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                         .withOrganisation("Hive IT")
                         .withPosition("Software Developer")
                         .withExists(true)
+                        .withModifiedOn(now())
                         .build(1))
                 .withProfileId(profile.get(0).getId(), profile.get(1).getId())
                 .build(2);
@@ -1275,7 +1273,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getAvailableAssessors_empty() throws Exception {
+    public void getAvailableAssessors_empty() {
         long competitionId = 1L;
         int page = 0;
         int pageSize = 20;
@@ -1301,7 +1299,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getAvailableAssessors_noInnovationArea() throws Exception {
+    public void getAvailableAssessors_noInnovationArea() {
         long competitionId = 1L;
         int page = 0;
         int pageSize = 20;
@@ -1325,7 +1323,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getAvailableAssessors_all() throws Exception {
+    public void getAvailableAssessors_all() {
         long competitionId = 1L;
 
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
@@ -1340,7 +1338,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         List<AvailableAssessorResource> expectedAssessors = newAvailableAssessorResource()
                 .withId(expectedAssessorIds.get(0), expectedAssessorIds.get(1))
                 .withName("Jeremy Alufson", "Felix Wilson")
-                .withCompliant(TRUE)
+                .withCompliant(true)
                 .withEmail("worth.email.test+assessor1@gmail.com", "felix.wilson@gmail.com")
                 .withBusinessType(BUSINESS, ACADEMIC)
                 .withInnovationAreas(innovationAreaResources)
@@ -1382,7 +1380,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getCreatedInvites() throws Exception {
+    public void getCreatedInvites() {
         long competitionId = 1L;
 
         InnovationArea innovationArea = newInnovationArea().build();
@@ -1502,7 +1500,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getInviteStatistics() throws Exception {
+    public void getInviteStatistics() {
         long competitionId = 1L;
         CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource()
                 .withAccepted(1)
@@ -1575,7 +1573,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void inviteUsers_existing() throws Exception {
+    public void inviteUsers_existing() {
         List<User> existingUsers = newUser()
                 .withEmailAddress("fred.smith@abc.com", "joe.brown@abc.com")
                 .withFirstName("fred", "joe")
@@ -1755,7 +1753,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void inviteNewUsers() throws Exception {
+    public void inviteNewUsers() {
         Competition competition = newCompetition().build();
 
         InnovationArea innovationArea = newInnovationArea()
@@ -1824,7 +1822,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void inviteNewUsers_alreadyExists() throws Exception {
+    public void inviteNewUsers_alreadyExists() {
         Competition competition = newCompetition().build();
 
         InnovationArea innovationArea = newInnovationArea()
@@ -1897,7 +1895,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void inviteNewUsers_competitionNotFound() throws Exception {
+    public void inviteNewUsers_competitionNotFound() {
         long competitionId = 5L;
 
         InnovationArea innovationArea = newInnovationArea()
@@ -1929,7 +1927,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void inviteNewUsers_categoryNotFound() throws Exception {
+    public void inviteNewUsers_categoryNotFound() {
         Competition competition = newCompetition()
                 .withId(1L)
                 .build();
@@ -2037,7 +2035,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void deleteAllInvites() throws Exception {
+    public void deleteAllInvites() {
         long competitionId = 1L;
 
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(newCompetition().build()));
@@ -2048,7 +2046,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void deleteAllInvites_noCompetition() throws Exception {
+    public void deleteAllInvites_noCompetition() {
         long competitionId = 1L;
 
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.empty());
@@ -2199,7 +2197,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getInvitationOverview_allFilters() throws Exception {
+    public void getInvitationOverview_allFilters() {
         long competitionId = 1L;
         Pageable pageable = new PageRequest(0, 5);
         Long innovationArea = 2L;
@@ -2280,7 +2278,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getInvitationOverview_noFilters() throws Exception {
+    public void getInvitationOverview_noFilters() {
         long competitionId = 1L;
         Pageable pageable = new PageRequest(0, 5);
         List<AssessmentParticipant> expectedParticipants = newAssessmentParticipant()
@@ -2345,7 +2343,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     }
 
     @Test
-    public void getAssessorsNotAcceptedInviteIds() throws Exception {
+    public void getAssessorsNotAcceptedInviteIds() {
         long competitionId = 1L;
 
         List<AssessmentInvite> invites = newAssessmentInvite()

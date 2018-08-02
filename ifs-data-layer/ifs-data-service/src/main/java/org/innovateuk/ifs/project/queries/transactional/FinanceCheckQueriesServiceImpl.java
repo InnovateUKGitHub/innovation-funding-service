@@ -143,8 +143,8 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
         notificationArguments.put("applicationId", project.getApplication().getId());
         notificationArguments.put("applicationName", application.getName());
 
-        Notification notification = new Notification(from, Collections.singletonList(pmTarget), Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, notificationArguments);
-        return notificationService.sendNotification(notification, NotificationMedium.EMAIL);
+        Notification notification = new Notification(from, singletonList(pmTarget), Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, notificationArguments);
+        return notificationService.sendNotificationWithFlush(notification, NotificationMedium.EMAIL);
 
     }
 
@@ -161,6 +161,6 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
         notificationArguments.put("applicationId", project.getApplication().getId());
 
         Notification notification = new Notification(from, singletonList(pmTarget), FinanceCheckQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, notificationArguments);
-        return notificationService.sendNotification(notification, EMAIL);
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 }

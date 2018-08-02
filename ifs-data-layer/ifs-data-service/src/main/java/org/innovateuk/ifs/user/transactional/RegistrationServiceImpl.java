@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.user.transactional;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -10,18 +8,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
-import org.innovateuk.ifs.token.domain.Token;
-import org.innovateuk.ifs.token.repository.TokenRepository;
-import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
@@ -30,16 +20,11 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.method.P;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static java.lang.String.format;
-import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -47,12 +32,10 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
  * A service around Registration and general user-creation operations
@@ -60,35 +43,11 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Service
 public class RegistrationServiceImpl extends BaseTransactionalService implements RegistrationService {
 
-    final JsonNodeFactory factory = JsonNodeFactory.instance;
-
-    private StandardPasswordEncoder encoder = new StandardPasswordEncoder(UUID.randomUUID().toString());
-
-    public enum ServiceFailures {
-        UNABLE_TO_CREATE_USER
-    }
-
-    enum Notifications {
-        VERIFY_EMAIL_ADDRESS
-    }
-
     @Autowired
     private IdentityProviderService idpService;
 
     @Autowired
-    private TokenRepository tokenRepository;
-
-    @Autowired
     private ProfileRepository profileRepository;
-
-    @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
-
-    @Autowired
-    private BaseUserService baseUserService;
 
     @Autowired
     private UserMapper userMapper;
@@ -111,14 +70,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private TermsAndConditionsService termsAndConditionsService;
 
-    @Value("${ifs.web.baseURL}")
-    private String webBaseUrl;
-
-    private RandomNumberGenerator randomNumberGenerator = new RandomNumberGenerator();
+    @Autowired
+    private RegistrationNotificationService registrationEmailService;
 
     @Override
     @Transactional
-    public ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userRegistrationResource) {
+    public ServiceResult<UserResource> createUser(UserRegistrationResource userRegistrationResource) {
         final UserResource userResource = userRegistrationResource.toUserResource();
 
         return validateUser(userResource).
@@ -131,35 +88,42 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
-        User newUser = assembleUserFromResource(userResource);
-        return validateUserWithOrganisation(userResource, organisationId).
-                andOnSuccess(
-                        () -> addUserToOrganisation(newUser, organisationId)).
-                andOnSuccess(
-                        user -> userResource.getRoles().isEmpty() ? addRoleToUser(user, APPLICANT) : serviceSuccess(user)).
-                andOnSuccess(
-                        userWithRole -> userWithRole.hasRole(Role.APPLICANT) ?
-                                agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole)).
-                andOnSuccess(
-                        () -> createUserWithUid(newUser, userResource.getPassword(), null)
-                );
+        return createOrganisationUser(organisationId, Optional.empty(), userResource);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<UserResource> createOrganisationUserWithCompetitionContext(long organisationId, long competitionId, UserResource userResource) {
+        return createOrganisationUser(organisationId, Optional.of(competitionId), userResource);
+    }
+
+    private ServiceResult<UserResource> createOrganisationUser(long organisationId, Optional<Long> competitionId, UserResource userResource) {
+        return validateUser(userResource).
+                andOnSuccessReturn(validUser -> assembleUserFromResource(validUser)).
+                andOnSuccess(newUser -> addUserToOrganisation(newUser, organisationId)).
+                andOnSuccess(newUserWithOrganisation -> addApplicantRoleToUserIfNoRolesAssigned(userResource, newUserWithOrganisation)).
+                andOnSuccess(newUserWithOrganisationAndRole -> markLatestSiteTermsAndConditionsAgreedToIfApplicant(newUserWithOrganisationAndRole)).
+                andOnSuccess(newUserWithOrganisationAndRole -> createUserWithUid(newUserWithOrganisationAndRole, userResource.getPassword(), null)).
+                andOnSuccess(createdUser -> sendUserVerificationEmail(competitionId, createdUser));
+    }
+
+    private ServiceResult<UserResource> sendUserVerificationEmail(Optional<Long> competitionId, UserResource createdUser) {
+
+        return registrationEmailService.sendUserVerificationEmail(createdUser, competitionId).
+                andOnSuccessReturn(() -> createdUser);
+    }
+
+    private ServiceResult<User> markLatestSiteTermsAndConditionsAgreedToIfApplicant(User userWithRole) {
+        return userWithRole.hasRole(Role.APPLICANT) ?
+                agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole);
+    }
+
+    private ServiceResult<User> addApplicantRoleToUserIfNoRolesAssigned(UserResource userResource, User user) {
+        return userResource.getRoles().isEmpty() ? addRoleToUser(user, APPLICANT) : serviceSuccess(user);
     }
 
     private ServiceResult<UserResource> validateUser(UserResource userResource) {
         return passwordPolicyValidator.validatePassword(userResource.getPassword(), userResource)
-                .handleSuccessOrFailure(
-                        failure -> serviceFailure(
-                                simpleMap(
-                                        failure.getErrors(),
-                                        error -> fieldError("password", error.getFieldRejectedValue(), error.getErrorKey())
-                                )
-                        ),
-                        success -> serviceSuccess(userResource)
-                );
-    }
-
-    private ServiceResult<UserResource> validateUserWithOrganisation(UserResource userResource, Long organisationId) {
-        return passwordPolicyValidator.validatePassword(userResource.getPassword(), userResource, organisationId)
                 .handleSuccessOrFailure(
                         failure -> serviceFailure(
                                 simpleMap(
@@ -284,46 +248,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> sendUserVerificationEmail(final UserResource user, final Optional<Long> competitionId) {
-        final Token token = createEmailVerificationToken(user, competitionId);
-        final Notification notification = getEmailVerificationNotification(user, token);
-        return notificationService.sendNotification(notification, EMAIL);
-    }
-
-    @Override
-    @Transactional
     public ServiceResult<Void> resendUserVerificationEmail(final UserResource user) {
-        final Token token = refreshEmailVerificationToken(user);
-        final Notification notification = getEmailVerificationNotification(user, token);
-        return notificationService.sendNotification(notification, EMAIL);
-    }
-
-    private Notification getEmailVerificationNotification(final UserResource user, final Token token) {
-        final List<NotificationTarget> to = singletonList(new UserNotificationTarget(user.getName(), user.getEmail()));
-        return new Notification(systemNotificationSource, to, Notifications.VERIFY_EMAIL_ADDRESS, asMap("verificationLink", format("%s/registration/verify-email/%s", webBaseUrl, token.getHash())));
-    }
-
-    private Token createEmailVerificationToken(final UserResource user, final Optional<Long> competitionId) {
-        final String emailVerificationHash = getEmailVerificationHash(user);
-
-        final ObjectNode extraInfo = factory.objectNode();
-        competitionId.ifPresent(aLong -> extraInfo.put("competitionId", aLong));
-        final Token token = new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId(), emailVerificationHash, now(), extraInfo);
-        return tokenRepository.save(token);
-    }
-
-    private Token refreshEmailVerificationToken(final UserResource user) {
-        final String emailVerificationHash = getEmailVerificationHash(user);
-        final Token token = tokenRepository.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), user.getId()).get();
-        token.setHash(emailVerificationHash);
-        token.setUpdated(now());
-        return tokenRepository.save(token);
-    }
-
-    private String getEmailVerificationHash(final UserResource user) {
-        final int random = randomNumberGenerator.generateRandomNumber(); // random number from 1 to 1000
-        final String hash = format("%s==%s==%s", user.getId(), user.getEmail(), random);
-        return encoder.encode(hash);
+        return registrationEmailService.resendUserVerificationEmail(user);
     }
 
     @Override
@@ -392,14 +318,14 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return validateInternalUserRole(userRoleType)
                 .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findById(userToEdit.getId()).orElse(null), notFoundError(User.class)))
                 .andOnSuccess(user -> getInternalRoleResources(userRoleType)
-                    .andOnSuccess(roleResources -> {
-                        Set<Role> roleList = new HashSet<>(roleResources);
-                        user.setFirstName(userToEdit.getFirstName());
-                        user.setLastName(userToEdit.getLastName());
-                        user.setRoles(roleList);
-                        userRepository.save(user);
-                        return serviceSuccess();
-                    })
+                        .andOnSuccess(roleResources -> {
+                            Set<Role> roleList = new HashSet<>(roleResources);
+                            user.setFirstName(userToEdit.getFirstName());
+                            user.setLastName(userToEdit.getLastName());
+                            user.setRoles(roleList);
+                            userRepository.save(user);
+                            return serviceSuccess();
+                        })
                 );
     }
 
@@ -407,11 +333,5 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
         return Role.internalRoles().contains(userRoleType) ?
                 serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
-    }
-
-    static class RandomNumberGenerator {
-        public int generateRandomNumber() {
-            return (int) Math.ceil(Math.random() * 1000);
-        }
     }
 }

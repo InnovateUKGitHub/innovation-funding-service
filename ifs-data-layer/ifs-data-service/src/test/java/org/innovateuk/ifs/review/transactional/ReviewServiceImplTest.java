@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.review.domain.ReviewRejectOutcome;
@@ -42,8 +42,10 @@ import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.review.builder.ReviewBuilder.newReview;
 import static org.innovateuk.ifs.review.builder.ReviewParticipantBuilder.newReviewParticipant;
 import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeBuilder.newReviewRejectOutcome;
@@ -68,7 +70,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
     @Mock
     private ReviewParticipantRepository reviewParticipantRepositoryMock;
     @Mock
-    private NotificationSender notificationSenderMock;
+    private NotificationService notificationServiceMock;
     @Mock
     private ApplicationRepository applicationRepositoryMock;
     @Mock
@@ -195,6 +197,8 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
                 .findByTargetCompetitionIdAndActivityState(competitionId, CREATED))
                 .thenReturn(asList(review));
 
+        when(reviewWorkflowHandlerMock.notifyInvitation(isA(Review.class))).thenReturn(true);
+
         Notification expectedNotification = createLambdaMatcher(n -> {
             Map<String, Object> globalArguments = n.getGlobalArguments();
             assertEquals(assessor.getEmail(), n.getTo().get(0).getEmailAddress());
@@ -205,15 +209,13 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
             assertEquals(globalArguments.get("ifsUrl"), webBaseUrl);
         });
 
-        when(notificationSenderMock.sendNotification(expectedNotification)).thenReturn(ServiceResult.serviceSuccess(expectedNotification));
-
+        when(notificationServiceMock.sendNotificationWithFlush(expectedNotification, eq(EMAIL))).thenReturn(serviceSuccess());
 
         service.createAndNotifyReviews(competitionId).getSuccess();
 
-
         InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock,
                 reviewRepositoryMock, reviewRepositoryMock,
-                reviewRepositoryMock, reviewWorkflowHandlerMock, notificationSenderMock, processRoleRepositoryMock);
+                reviewRepositoryMock, reviewWorkflowHandlerMock, notificationServiceMock, processRoleRepositoryMock);
         inOrder.verify(reviewParticipantRepositoryMock)
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));
         inOrder.verify(applicationRepositoryMock)
@@ -226,8 +228,8 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
                 .findByTargetCompetitionIdAndActivityState(competitionId, CREATED);
         inOrder.verify(reviewWorkflowHandlerMock)
                 .notifyInvitation(review);
-        inOrder.verify(notificationSenderMock)
-                .sendNotification(isA(Notification.class));
+        inOrder.verify(notificationServiceMock)
+                .sendNotificationWithFlush(isA(Notification.class), eq(EMAIL));
         inOrder.verifyNoMoreInteractions();
     }
 

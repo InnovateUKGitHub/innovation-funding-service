@@ -1,0 +1,21 @@
+- name: add add-apt-repostory
+  apt: pkg=python-software-properties state=present update_cache=yes
+  when: ansible_distribution_release == "precise"
+
+- name: add webupd8 ppa
+  apt_repository: repo='ppa:webupd8team/java'
+
+- name: apt update
+  raw: apt-get update
+
+- name: auto accept oracle jdk license
+  shell: echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+  sudo: yes
+
+- name: install java8
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+      - oracle-java8-installer
+      - ca-certificates

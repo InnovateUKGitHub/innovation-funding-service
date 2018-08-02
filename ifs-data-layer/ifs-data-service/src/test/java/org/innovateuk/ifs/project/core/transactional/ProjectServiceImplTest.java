@@ -5,6 +5,8 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
@@ -43,6 +45,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,6 +137,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private Long userId = 7L;
 
     private Application application;
+    private List<ApplicationFinance> applicationFinances;
     private Organisation organisation;
     private User user;
     private User u;
@@ -167,6 +171,13 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withUser(user).
                 build();
 
+        ApplicationFinance applicationFinance = ApplicationFinanceBuilder.newApplicationFinance()
+                .withApplication(application)
+                .withOrganisation(organisation)
+                .withWorkPostcode("UB7 8QF")
+                .build();
+        applicationFinances = singletonList(applicationFinance);
+
         application = newApplication().
                 withId(applicationId).
                 withProcessRoles(leadApplicantProcessRole).
@@ -174,6 +185,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
                 withFundingDecision(FundingDecisionStatus.FUNDED).
+                withApplicationFinancesList(applicationFinances).
                 build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
@@ -535,9 +547,12 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
             List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
             assertEquals(1, partnerOrganisations.size());
-            assertEquals(project, partnerOrganisations.get(0).getProject());
-            assertEquals(organisation, partnerOrganisations.get(0).getOrganisation());
-            assertTrue(partnerOrganisations.get(0).isLeadOrganisation());
+
+            PartnerOrganisation partnerOrganisation = partnerOrganisations.get(0);
+            assertEquals(project, partnerOrganisation.getProject());
+            assertEquals(organisation, partnerOrganisation.getOrganisation());
+            assertEquals("UB7 8QF", partnerOrganisation.getPostcode());
+            assertTrue(partnerOrganisation.isLeadOrganisation());
         });
     }
 

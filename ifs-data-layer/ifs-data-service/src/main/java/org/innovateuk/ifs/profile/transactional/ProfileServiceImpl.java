@@ -195,7 +195,7 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
                 new UserProfileStatusResource(
                         user.getId(),
                         profile != null && profile.getSkillsAreas() != null,
-                        user.getAffiliations() != null && !user.getAffiliations().isEmpty(),
+                        Profile.isAffiliationsComplete(user),
                         profile != null && profile.getAgreementSignedDate() != null
                 )
         );

@@ -180,7 +180,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     }
 
     private List<OrganisationResource> getAcademicOrganisations(final List<OrganisationResource> organisations) {
-        return simpleFilter(organisations, o -> OrganisationTypeEnum.RESEARCH.getId().equals(o.getOrganisationType()));
+        return simpleFilter(organisations, o -> OrganisationTypeEnum.RESEARCH.getId() == o.getOrganisationType());
     }
 
     private OrganisationResource getUserOrganisation(UserResource user, Long applicationId) {
