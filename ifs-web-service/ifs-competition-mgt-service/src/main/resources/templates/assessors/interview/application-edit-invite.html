@@ -92,7 +92,7 @@
                     </table>
                 </div>
 
-                <div class="form-group govuk-!-margin-bottom-6 govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
+                <div class="govuk-form-group govuk-!-margin-bottom-6 govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('*{subject}')} ? 'govuk-form-group--error'">
                     <label class="govuk-label" th:for="${#ids.next('subject')}">
                         Email subject
                     </label>
@@ -110,7 +110,7 @@
                 <h3 class="govuk-heading-s">Message</h3>
                 <p th:utext="${model.content}" class="govuk-hint" style="white-space: pre-wrap">Read-only email content</p>
 
-                <div class="form-group govuk-!-margin-top-6">
+                <div class="govuk-form-group govuk-!-margin-top-6">
                     <label class="govuk-label" for="message">Additional text</label>
                     <div class="textarea-wrapped">
                         <textarea id="message"

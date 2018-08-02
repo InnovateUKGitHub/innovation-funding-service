@@ -52,7 +52,7 @@ IFS.competitionManagement.repeater = (function () {
           break
         case 'innovationArea':
           inst.closest('[id^="innovation-row"]').remove()
-          IFS.competitionManagement.repeater.reindexRows('.form-group[id^="innovation-row"]')
+          IFS.competitionManagement.repeater.reindexRows('.govuk-form-group[id^="innovation-row"]')
           IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
           IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
           IFS.competitionManagement.initialDetails.rebindInnovationAreas()
@@ -68,7 +68,7 @@ IFS.competitionManagement.repeater = (function () {
       }
     },
     addInnovationAreaRow: function () {
-      var rows = jQuery('.form-group[id^="innovation-row"]')
+      var rows = jQuery('.govuk-form-group[id^="innovation-row"]')
 
       var count = rows.length
       var idCount = parseInt(rows.last().prop('id').split('innovation-row-')[1], 10) + 1
