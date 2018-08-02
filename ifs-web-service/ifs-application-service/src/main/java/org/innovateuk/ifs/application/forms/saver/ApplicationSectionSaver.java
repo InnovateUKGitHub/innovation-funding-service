@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.application.forms.saver;
 
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
-import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -13,7 +12,7 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
@@ -44,13 +42,13 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Autowired
-    private UserRestService userRestService;
+    private ProcessRoleService processRoleService;
 
     @Autowired
     private SectionService sectionService;
 
     @Autowired
-    private QuestionRestService questionRestService;
+    private QuestionService questionService;
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -70,7 +68,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
                                                   HttpServletResponse response, Boolean validFinanceTerms) {
 
         Long applicationId = application.getId();
-        ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
+        ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
         SectionResource selectedSection = sectionService.getById(sectionId);
         Map<String, String[]> params = request.getParameterMap();
         boolean ignoreEmpty = !isMarkSectionRequest(params);
@@ -82,9 +80,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         }
 
         if (!isMarkSectionAsIncompleteRequest(params)) {
-            List<QuestionResource> questions = selectedSection.getQuestions().stream()
-                    .map(questionId -> questionRestService.findById(questionId).getSuccess())
-                    .collect(Collectors.toList());
+            List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
             errors.addAll(saveQuestionResponses(request, questions, userId, processRole.getId(), applicationId, ignoreEmpty));
 
             Long organisationType = organisationService.getOrganisationType(userId, applicationId);

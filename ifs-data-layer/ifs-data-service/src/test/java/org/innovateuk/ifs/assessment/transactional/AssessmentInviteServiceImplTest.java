@@ -27,12 +27,9 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -89,6 +86,7 @@ import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newReject
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
@@ -150,7 +148,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     private SystemNotificationSource systemNotificationSourceMock;
 
     @Mock
-    private NotificationSender notificationSenderMock;
+    private NotificationService notificationServiceMock;
 
     @Mock
     private InnovationAreaRepository innovationAreaRepositoryMock;
@@ -930,24 +928,24 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
         when(userRepositoryMock.findByEmail(emails.get(0))).thenReturn(Optional.empty());
         when(userRepositoryMock.findByEmail(emails.get(1))).thenReturn(Optional.empty());
-        when(notificationSenderMock.sendNotification(notifications.get(0))).thenReturn(serviceSuccess(notifications.get(0)));
-        when(notificationSenderMock.sendNotification(notifications.get(1))).thenReturn(serviceSuccess(notifications.get(1)));
+        when(notificationServiceMock.sendNotificationWithFlush(notifications.get(0), EMAIL)).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(notifications.get(1), EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = service.sendAllInvites(competition.getId(), assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(competitionRepositoryMock,
-                                  assessmentInviteRepositoryMock, userRepositoryMock, assessmentParticipantRepositoryMock, notificationSenderMock);
+                                  assessmentInviteRepositoryMock, userRepositoryMock, assessmentParticipantRepositoryMock, notificationServiceMock);
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
         inOrder.verify(assessmentParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(0)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(0));
-        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(0), EMAIL);
 
         inOrder.verify(assessmentParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(1)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(1));
-        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(1), EMAIL);
 
         inOrder.verifyNoMoreInteractions();
     }
@@ -1020,18 +1018,18 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
         when(assessmentParticipantRepositoryMock.getByInviteHash(invites.get(0).getHash())).thenReturn(assessmentParticipants.get(0));
         when(assessmentParticipantRepositoryMock.getByInviteHash(invites.get(1).getHash())).thenReturn(assessmentParticipants.get(1));
-        when(notificationSenderMock.sendNotification(notifications.get(0))).thenReturn(serviceSuccess(notifications.get(0)));
-        when(notificationSenderMock.sendNotification(notifications.get(1))).thenReturn(serviceSuccess(notifications.get(1)));
+        when(notificationServiceMock.sendNotificationWithFlush(notifications.get(0), EMAIL)).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotificationWithFlush(notifications.get(1), EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = service.resendInvites(inviteIds, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentParticipantRepositoryMock, notificationSenderMock);
+        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentParticipantRepositoryMock, notificationServiceMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByIdIn(inviteIds);
         inOrder.verify(assessmentParticipantRepositoryMock).getByInviteHash(invites.get(0).getHash());
-        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(0), EMAIL);
         inOrder.verify(assessmentParticipantRepositoryMock).getByInviteHash(invites.get(1).getHash());
-        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notifications.get(1), EMAIL);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -1068,7 +1066,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
         when(userRepositoryMock.findByEmail(emails.get(0))).thenReturn(Optional.of(existingUsers.get(0)));
         when(userRepositoryMock.findByEmail(emails.get(1))).thenReturn(Optional.of(existingUsers.get(1)));
-        when(notificationSenderMock.sendNotification(isA(Notification.class))).thenAnswer(ServiceResult::serviceSuccess);
+        when(notificationServiceMock.sendNotificationWithFlush(isA(Notification.class), eq(EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = service.sendAllInvites(competition.getId(), assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
@@ -1077,17 +1075,17 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         assertTrue(existingUsers.get(1).hasRole(Role.ASSESSOR));
 
         InOrder inOrder = inOrder(competitionRepositoryMock,
-                                  assessmentInviteRepositoryMock, userRepositoryMock, assessmentParticipantRepositoryMock, notificationSenderMock);
+                                  assessmentInviteRepositoryMock, userRepositoryMock, assessmentParticipantRepositoryMock, notificationServiceMock);
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
         inOrder.verify(assessmentParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(0)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(0));
-        inOrder.verify(notificationSenderMock).sendNotification(isA(Notification.class));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(isA(Notification.class), eq(EMAIL));
 
         inOrder.verify(assessmentParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(1)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(1));
-        inOrder.verify(notificationSenderMock).sendNotification(isA(Notification.class));
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(isA(Notification.class), eq(EMAIL));
 
         inOrder.verifyNoMoreInteractions();
     }
@@ -1116,13 +1114,13 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         when(assessmentParticipantRepositoryMock.getByInviteId(invite.getId())).thenReturn(competitionParticipant);
         when(assessmentInviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
-        when(notificationSenderMock.sendNotification(notification)).thenReturn(serviceSuccess(notification));
+        when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = service.resendInvite(invite.getId(), assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentParticipantRepositoryMock, notificationSenderMock);
-        inOrder.verify(notificationSenderMock).sendNotification(notification);
+        InOrder inOrder = inOrder(assessmentInviteRepositoryMock, assessmentParticipantRepositoryMock, notificationServiceMock);
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL);
         inOrder.verifyNoMoreInteractions();
     }
 

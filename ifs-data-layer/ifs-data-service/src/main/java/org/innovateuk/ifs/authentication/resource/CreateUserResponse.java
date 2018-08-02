@@ -10,6 +10,18 @@ public class CreateUserResponse {
     private String created;
     private String modified;
 
+    // for JSON marshalling
+    @SuppressWarnings("unused")
+    CreateUserResponse() {
+    }
+
+    public CreateUserResponse(String uuid, String email, String created, String modified) {
+        this.uuid = uuid;
+        this.email = email;
+        this.created = created;
+        this.modified = modified;
+    }
+
     public String getUuid() {
         return uuid;
     }

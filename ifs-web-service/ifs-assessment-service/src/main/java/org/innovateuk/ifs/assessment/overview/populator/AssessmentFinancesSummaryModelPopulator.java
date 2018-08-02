@@ -3,8 +3,7 @@ package org.innovateuk.ifs.assessment.overview.populator;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
-import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
@@ -23,7 +22,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -36,7 +35,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
 
     private CompetitionRestService competitionRestService;
     private AssessmentService assessmentService;
-    private UserRestService userRestService;
+    private ProcessRoleService processRoleService;
     private FileEntryRestService fileEntryRestService;
     private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
@@ -45,20 +44,20 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
 
     public AssessmentFinancesSummaryModelPopulator(CompetitionRestService competitionRestService,
                                                    AssessmentService assessmentService,
-                                                   UserRestService userRestService,
+                                                   ProcessRoleService processRoleService,
                                                    FileEntryRestService fileEntryRestService,
                                                    ApplicationFinanceRestService applicationFinanceRestService,
                                                    FinanceService financeService,
                                                    SectionService sectionService,
                                                    OrganisationService organisationService,
                                                    FormInputRestService formInputRestService,
-                                                   QuestionRestService questionRestService) {
-        super(sectionService, formInputRestService, questionRestService);
+                                                   QuestionService questionService) {
+        super(sectionService, formInputRestService, questionService);
         this.organisationService = organisationService;
         this.sectionService = sectionService;
         this.competitionRestService = competitionRestService;
         this.assessmentService = assessmentService;
-        this.userRestService = userRestService;
+        this.processRoleService = processRoleService;
         this.fileEntryRestService = fileEntryRestService;
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.financeService = financeService;
@@ -76,7 +75,7 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
     }
 
     private void addApplicationAndOrganisationDetails(Model model, long applicationId, AssessorFinanceView financeVew) {
-        List<ProcessRoleResource> userApplicationRoles = userRestService.findProcessRole(applicationId).getSuccess();
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         addOrganisationDetails(model, userApplicationRoles, financeVew);
     }
 

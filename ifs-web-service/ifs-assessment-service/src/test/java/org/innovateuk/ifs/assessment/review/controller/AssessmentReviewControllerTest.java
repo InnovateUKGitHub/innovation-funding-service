@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewModelPopulator;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewViewModel;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;

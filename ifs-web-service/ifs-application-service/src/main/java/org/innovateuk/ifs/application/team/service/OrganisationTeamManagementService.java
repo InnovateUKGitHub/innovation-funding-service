@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -34,7 +33,7 @@ public class OrganisationTeamManagementService extends AbstractTeamManagementSer
                 applicationId, organisationId, loggedInUser.getId());
     }
 
-    public ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId,
+    public ServiceResult<Void> executeStagedInvite(long applicationId,
                                                                        long organisationId,
                                                                        ApplicationTeamUpdateForm form) {
         ApplicationInviteResource invite = mapStagedInviteToInviteResource(form, applicationId, organisationId);
