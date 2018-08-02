@@ -53,7 +53,7 @@ public class PublicContentStatusDeterminerTest {
 
         ZonedDateTime midday = ZonedDateTime.of(LocalDate.now(), LocalTime.NOON, TimeZoneUtil.UK_TIME_ZONE);
 
-        ZonedDateTime inTwoWeeks = midday.plusDays(14L);
+        ZonedDateTime inTwoWeeks = midday.plusDays(14L).minusHours(1);
         ZonedDateTime yesterday = midday.minusDays(1L);
 
         PublicContentItemResource publicContentItemResource = newPublicContentItemResource()
