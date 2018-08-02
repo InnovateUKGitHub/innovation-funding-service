@@ -327,8 +327,8 @@ the user checks for Key Statistics for submitted application
     Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${Application_in_comp}
 
 the user checks for Key Statistics for assigned to interview panel
-    ${Assigned_applications} =  Get Text  css = div:nth-child(2) > div > span    #Assigned to interview panel
-    ${Application_sent} =  Get Text  css = div:nth-child(7) > div>:nth-child(1)  #Application assigned
+    ${Assigned_applications} =  Get Text  jQuery = .govuk-grid-column-one-quarter:contains("Assigned to interview panel") .govuk-heading-l   #Assigned to interview panel
+    ${Application_sent} =  Get Text  jQuery = .govuk-grid-column-one-half span:nth-child(1)  #Application assigned
     Should Be Equal As Integers    ${Assigned_applications}   ${Application_sent}
 
 the user checks for the key statistics for invite assessors

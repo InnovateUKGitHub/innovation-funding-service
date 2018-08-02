@@ -129,7 +129,7 @@ The user can select the profile link
 Innovation sector and area are correct
     [Documentation]    INFUND-6389
     [Tags]
-    Given the user should see the element  jQuery=.heading-secondary:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
+    Given the user should see the element  jQuery=.govuk-caption-l:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation sector")
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation area")
     And the user should see the element    jQuery=.standard-definition-list dd:contains("Materials and manufacturing")

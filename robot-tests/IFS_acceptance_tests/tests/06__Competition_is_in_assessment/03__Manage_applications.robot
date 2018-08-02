@@ -171,7 +171,7 @@ Review the application
 View the available assessors
     [Documentation]    INFUND-7233
     [Tags]
-    Then the user should see the element  jQuery=.column-two-thirds:contains("Assessors")
+    Then the user should see the element  jQuery=.govuk-table__header:contains("Assessor")
     And the user clicks the button/link   link=21 to 40
     And the available assessors information is correct
 
