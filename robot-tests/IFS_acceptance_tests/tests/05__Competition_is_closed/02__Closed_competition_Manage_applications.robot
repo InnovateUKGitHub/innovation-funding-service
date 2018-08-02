@@ -28,7 +28,7 @@ Filtering the Assessors in the Allocate Applications page
     Given The user clicks the button/link                     link=${CLOSED_COMPETITION_NAME}
     And the user clicks the button/Link                       link=Manage assessments
     And the user clicks the button/link                       link=Allocate applications
-    When the user clicks the button/Link                      jQuery=tr:contains(Neural Industries) .govuk-!-margin-0
+    When the user clicks the button/Link                      jQuery=td:contains("Neural Industries") ~ td a
     And the user should see the element                       jQuery=h3:contains("Innovation area") ~ span:contains("Smart infrastructure")
     Then the user should see the element                      jQuery=tr:nth-child(1) td:contains("Benjamin Nixon")    #this check verfies that the list of assessors in alphabetical order
     When the user selects the option from the drop-down menu  Materials, process and manufacturing design technologies    id=filterInnovationArea
@@ -42,7 +42,7 @@ Filtering the Assessors in the Allocate Applications page
 Filtering Assessors in the Assign assessors page
     [Documentation]    INFUND-8062
     [Tags]
-    Given the user clicks the button/Link                     jQuery=tr:contains(Benjamin) .govuk-!-margin-0
+    Given the user clicks the button/Link                     jQuery=tr:contains("Ben") button
     When the user selects the option from the drop-down menu  Materials, process and manufacturing design technologies    id=filterInnovationArea
     And the user clicks the button/link                       jQuery=button:contains(Filter)
     Then the user should see the element                      jQuery=td:contains("Paige Godfrey")
