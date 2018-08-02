@@ -166,6 +166,20 @@ public class ExistingOrganisationTeamManagementServiceTest extends BaseServiceUn
     }
 
     @Test
+    public void validateOrganisationAndApplicationIds_whenInviteOrganisationExistsTrueShouldBeReturned() throws Exception {
+
+        when(inviteOrganisationRestServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)).
+                thenReturn(restSuccess(newInviteOrganisationResource().build()));
+
+        boolean result = service.applicationAndOrganisationIdCombinationIsValid(applicationId, organisationId);
+
+        assertTrue(result);
+
+        verify(inviteOrganisationRestServiceMock).getByOrganisationIdWithInvitesForApplication(organisationId, applicationId);
+        verify(processRoleServiceMock, never()).findProcessRolesByApplicationId(applicationId);
+    }
+
+    @Test
     public void getInviteIds_foundIdsShouldBeMappedToReturnedList() throws Exception {
 
         List<ApplicationInviteResource> inviteResources = newApplicationInviteResource().withId(1L,2L,3L,4L,5L).withApplication(2L).build(5);
