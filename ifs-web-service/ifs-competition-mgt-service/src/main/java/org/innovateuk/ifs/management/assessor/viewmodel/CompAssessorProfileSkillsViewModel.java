@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * View model for the Assessors skills view.
  */
-public class AssessorProfileSkillsViewModel {
+public class CompAssessorProfileSkillsViewModel {
 
     private CompetitionResource competition;
     private long assessorId;
@@ -22,7 +22,7 @@ public class AssessorProfileSkillsViewModel {
     private String skillAreas;
     private String originQuery;
 
-    public AssessorProfileSkillsViewModel(
+    public CompAssessorProfileSkillsViewModel(
             CompetitionResource competition,
             long assessorId,
             String name,

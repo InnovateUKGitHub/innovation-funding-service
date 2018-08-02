@@ -49,6 +49,7 @@ ext.serverContext = '/management'
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
+    compile project(':ifs-web-service:ifs-assessment-commons')
 
     compile 'org.apache.commons:commons-collections4:4.1'
 

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.profile.viewmodel;
+package org.innovateuk.ifs.viewmodel;
 
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.profile.viewmodel;
+package org.innovateuk.ifs.viewmodel;
 
 import java.util.List;
 import java.util.Map;

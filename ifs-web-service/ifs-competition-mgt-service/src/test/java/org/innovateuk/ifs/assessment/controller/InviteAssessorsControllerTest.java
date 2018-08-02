@@ -103,7 +103,7 @@ public class InviteAssessorsControllerTest extends BaseControllerMockMVCTest<Inv
 
     @Spy
     @InjectMocks
-    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
+    private CompAssessorProfileSkillsModelPopulator compAssessorProfileSkillsModelPopulator;
 
     @Mock
     private CookieUtil cookieUtil;

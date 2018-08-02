@@ -6,8 +6,8 @@ import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.assessor.populator.AssessorProfileSkillsModelPopulator;
-import org.innovateuk.ifs.assessor.profile.viewmodel.AssessorProfileSkillsViewModel;
+import org.innovateuk.ifs.management.assessor.populator.CompAssessorProfileSkillsModelPopulator;
+import org.innovateuk.ifs.management.assessor.viewmodel.CompAssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Before;
@@ -33,10 +33,10 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AssessorProfileSkillsModelPopulatorTest {
+public class CompAssessorProfileSkillsModelPopulatorTest {
 
     @InjectMocks
-    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
+    private CompAssessorProfileSkillsModelPopulator compAssessorProfileSkillsModelPopulator;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -89,8 +89,8 @@ public class AssessorProfileSkillsModelPopulatorTest {
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(expectedCompetition));
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(assessorProfileResource));
 
-        AssessorProfileSkillsViewModel viewModel =
-                assessorProfileSkillsModelPopulator.populateModel(assessorId, competitionId, null);
+        CompAssessorProfileSkillsViewModel viewModel =
+                compAssessorProfileSkillsModelPopulator.populateModel(assessorId, competitionId, null);
 
         InOrder inOrder = inOrder(competitionRestService, assessorRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competitionId);

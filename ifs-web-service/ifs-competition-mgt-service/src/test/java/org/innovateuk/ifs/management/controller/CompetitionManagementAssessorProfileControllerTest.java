@@ -9,10 +9,10 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController;
-import org.innovateuk.ifs.management.assessor.populator.AssessorProfileDeclarationModelPopulator;
-import org.innovateuk.ifs.management.assessor.populator.AssessorProfileSkillsModelPopulator;
-import org.innovateuk.ifs.assessor.profile.viewmodel.AssessorProfileDeclarationViewModel;
-import org.innovateuk.ifs.assessor.profile.viewmodel.AssessorProfileSkillsViewModel;
+import org.innovateuk.ifs.management.assessor.populator.CompAssessorProfileDeclarationModelPopulator;
+import org.innovateuk.ifs.management.assessor.populator.CompAssessorProfileSkillsModelPopulator;
+import org.innovateuk.ifs.management.assessor.viewmodel.CompAssessorProfileDeclarationViewModel;
+import org.innovateuk.ifs.management.assessor.viewmodel.CompAssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -54,11 +54,11 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
     @Spy
     @InjectMocks
-    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
+    private CompAssessorProfileSkillsModelPopulator compAssessorProfileSkillsModelPopulator;
 
     @Spy
     @InjectMocks
-    private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
+    private CompAssessorProfileDeclarationModelPopulator compAssessorProfileDeclarationModelPopulator;
 
     @Mock
     private AssessorRestService assessorRestService;
@@ -117,7 +117,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                 .andExpect(model().attributeExists("model"))
                 .andReturn();
 
-        AssessorProfileSkillsViewModel model = (AssessorProfileSkillsViewModel) result.getModelAndView().getModel().get("model");
+        CompAssessorProfileSkillsViewModel model = (CompAssessorProfileSkillsViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals("Test Tester", model.getName());
         assertEquals("012345", model.getPhone());
@@ -147,7 +147,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                 .andExpect(model().attributeExists("model"))
                 .andReturn();
 
-        AssessorProfileDeclarationViewModel model = (AssessorProfileDeclarationViewModel) result.getModelAndView().getModel().get("model");
+        CompAssessorProfileDeclarationViewModel model = (CompAssessorProfileDeclarationViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals("Test Tester", model.getName());
         assertEquals("012345", model.getPhone());

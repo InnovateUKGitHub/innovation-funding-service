@@ -40,6 +40,15 @@
                 <dd th:text="${model.assessorProfileDetailsViewModel.email}" />
             </dl>
 
+            <div class="form-footer">
+                <div class="form-footer__actions"><a th:href="@{/profile/details/edit}">Edit</a></div>
+                <div class="form-footer__info">
+                    <span class="textarea-footer"></span>
+                    <span class="update-label">Created by IFS Web System User on </span>
+                    <span class="update-details">13 September 2017</span>
+                </div>
+            </div>
+
             <!--<div class="grid-row extra-margin">-->
                 <!--<div class="column-half">-->
                     <!--<a th:href="@{/assessor/dashboard}" class="button">Return to assessor dashboard</a>-->
@@ -49,7 +58,7 @@
                 <!--</div>-->
             <!--</div>-->
 
-            <ul class="inline-nav">
+            <ul class="inline-nav extra-margin">
                 <li class="selected">
                     <a th:href="@{/profile/details/skills}">Skills</a>
                 </li>

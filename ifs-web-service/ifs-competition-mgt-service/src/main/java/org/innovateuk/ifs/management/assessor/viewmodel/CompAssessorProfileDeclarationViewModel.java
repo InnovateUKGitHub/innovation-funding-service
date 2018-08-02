@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Holder of model attributes for the Declaration of Interest view.
  */
-public class AssessorProfileDeclarationViewModel {
+public class CompAssessorProfileDeclarationViewModel {
 
     private CompetitionResource competition;
     private long assessorId;
@@ -29,7 +29,7 @@ public class AssessorProfileDeclarationViewModel {
     private List<AffiliationResource> familyAffiliations = new ArrayList<>();
     private String familyFinancialInterests;
 
-    public AssessorProfileDeclarationViewModel(
+    public CompAssessorProfileDeclarationViewModel(
             CompetitionResource competition,
             long assessorId,
             String name,

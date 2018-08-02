@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.assessment.profile.populator;
+package org.innovateuk.ifs.populator;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDeclarationViewModel;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
 import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
-import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileDeclarationViewModel;
-import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileDetailsViewModel;
 import org.innovateuk.ifs.profile.populator.AssessorProfileDeclarationBasePopulator;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationType;
@@ -25,9 +26,9 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
         this.affiliationRestService = affiliationRestService;
     }
 
-    public AssessorProfileDeclarationViewModel populateModel(UserResource user) {
+    public AssessorProfileDeclarationViewModel populateModel(UserResource user, AddressResource addressResource) {
 
-        AssessorProfileDetailsViewModel assessorProfileDetailsViewModel = assessorProfileDetailsModelPopulator.populateModel(user);
+        AssessorProfileDetailsViewModel assessorProfileDetailsViewModel = assessorProfileDetailsModelPopulator.populateModel(user, addressResource);
 
         Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(affiliationRestService.getUserAffiliations(user.getId()).getSuccess().getAffiliationResourceList());
 

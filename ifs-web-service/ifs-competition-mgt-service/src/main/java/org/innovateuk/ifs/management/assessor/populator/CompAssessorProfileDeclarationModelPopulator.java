@@ -7,7 +7,7 @@ import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.profile.populator.AssessorProfileDeclarationBasePopulator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.assessor.viewmodel.AssessorProfileDeclarationViewModel;
+import org.innovateuk.ifs.management.assessor.viewmodel.CompAssessorProfileDeclarationViewModel;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -22,21 +22,21 @@ import java.util.Optional;
  * Build the model for Assessors' Profile declaration view.
  */
 @Component
-public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDeclarationBasePopulator {
+public class CompAssessorProfileDeclarationModelPopulator extends AssessorProfileDeclarationBasePopulator {
 
     private AffiliationRestService affiliationRestService;
     private CompetitionRestService competitionRestService;
     private AssessorRestService assessorRestService;
 
-    public AssessorProfileDeclarationModelPopulator(AffiliationRestService affiliationRestService,
-                                                    CompetitionRestService competitionRestService,
-                                                    AssessorRestService assessorRestService) {
+    public CompAssessorProfileDeclarationModelPopulator(AffiliationRestService affiliationRestService,
+                                                        CompetitionRestService competitionRestService,
+                                                        AssessorRestService assessorRestService) {
         this.affiliationRestService = affiliationRestService;
         this.competitionRestService = competitionRestService;
         this.assessorRestService = assessorRestService;
     }
 
-    public AssessorProfileDeclarationViewModel populateModel(long assessorId, long competitionId, String originQuery) {
+    public CompAssessorProfileDeclarationViewModel populateModel(long assessorId, long competitionId, String originQuery) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccess();
@@ -48,7 +48,7 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
 
         Optional<AffiliationResource> principalEmployer = getPrincipalEmployer(affiliations);
 
-        return new AssessorProfileDeclarationViewModel(
+        return new CompAssessorProfileDeclarationViewModel(
                 competition,
                 assessorId,
                 user.getName(),

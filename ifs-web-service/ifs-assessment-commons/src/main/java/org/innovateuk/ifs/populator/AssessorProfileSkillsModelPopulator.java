@@ -1,7 +1,8 @@
-package org.innovateuk.ifs.assessment.profile.populator;
+package org.innovateuk.ifs.populator;
 
-import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileDetailsViewModel;
-import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileSkillsViewModel;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
+import org.innovateuk.ifs.viewmodel.AssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
@@ -26,9 +27,9 @@ public class AssessorProfileSkillsModelPopulator {
         this.profileRestService = profileRestService;
     }
 
-    public AssessorProfileSkillsViewModel populateModel(UserResource user) {
+    public AssessorProfileSkillsViewModel populateModel(UserResource user, AddressResource addressResource) {
 
-        AssessorProfileDetailsViewModel assessorProfileDetailsViewModel = assessorProfileDetailsModelPopulator.populateModel(user);
+        AssessorProfileDetailsViewModel assessorProfileDetailsViewModel = assessorProfileDetailsModelPopulator.populateModel(user, addressResource);
 
         ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(user.getId()).getSuccess();
 

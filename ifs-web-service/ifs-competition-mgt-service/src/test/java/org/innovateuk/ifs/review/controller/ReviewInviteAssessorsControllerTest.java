@@ -13,7 +13,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.assessor.form.InviteNewAssessorsRowForm;
-import org.innovateuk.ifs.management.assessor.populator.AssessorProfileSkillsModelPopulator;
+import org.innovateuk.ifs.management.assessor.populator.CompAssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsAcceptedViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.assessor.viewmodel.InvitedAssessorRowViewModel;
@@ -99,7 +99,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
 
     @Spy
     @InjectMocks
-    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
+    private CompAssessorProfileSkillsModelPopulator compAssessorProfileSkillsModelPopulator;
 
     @Spy
     @InjectMocks

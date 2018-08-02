@@ -48,6 +48,7 @@ ext.serverContext = '/assessment'
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
+    compile project(':ifs-web-service:ifs-assessment-commons')
 
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')

@@ -1,8 +1,13 @@
 package org.innovateuk.ifs.management.assessor.controller;
 
+import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.management.assessor.populator.AssessorProfileDeclarationModelPopulator;
-import org.innovateuk.ifs.management.assessor.populator.AssessorProfileSkillsModelPopulator;
+import org.innovateuk.ifs.populator.AssessorProfileDeclarationModelPopulator;
+import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,15 +33,18 @@ public class CompetitionManagementAssessorProfileController {
 
     private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
     private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
+    private AssessorRestService assessorRestService;
 
     public CompetitionManagementAssessorProfileController() {
     }
 
     @Autowired
     public CompetitionManagementAssessorProfileController(AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator,
-                                                          AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator) {
+                                                          AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator,
+                                                          AssessorRestService assessorRestService) {
         this.assessorProfileSkillsModelPopulator = assessorProfileSkillsModelPopulator;
         this.assessorProfileDeclarationModelPopulator = assessorProfileDeclarationModelPopulator;
+        this.assessorRestService = assessorRestService;
     }
 
     public enum AssessorProfileOrigin {
@@ -89,7 +97,12 @@ public class CompetitionManagementAssessorProfileController {
 
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.valueOf(origin), queryParams);
 
-        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(assessorId, competitionId, originQuery));
+        AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccess();
+
+        ProfileResource profile = assessorProfile.getProfile();
+
+//        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(assessorId, competitionId, originQuery));
+        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(assessorProfile.getUser(), profile.getAddress()));
         model.addAttribute("backUrl", buildBackUrl(origin, competitionId, applicationId, assessorId, queryParams));
 
         return "assessors/profile-skills";
@@ -105,7 +118,11 @@ public class CompetitionManagementAssessorProfileController {
 
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.valueOf(origin), queryParams);
 
-        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(assessorId, competitionId, originQuery));
+        AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccess();
+
+        ProfileResource profile = assessorProfile.getProfile();
+        //        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(assessorId, competitionId, originQuery));
+        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(assessorProfile.getUser(), profile.getAddress()));
         model.addAttribute("backUrl", buildBackUrl(origin, competitionId, applicationId, assessorId, queryParams));
 
         return "assessors/profile-declaration";

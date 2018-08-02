@@ -38,3 +38,6 @@ include 'ifs-auth-service:ifs-sp-service'
 include 'ifs-auth-service:ifs-idp-service'
 include 'ifs-registration-service'
 include 'robot-tests'
+include 'ifs-web-service:ifs-assessment-commons'
+findProject(':ifs-web-service:ifs-assessment-commons')?.name = 'ifs-assessment-commons'
+

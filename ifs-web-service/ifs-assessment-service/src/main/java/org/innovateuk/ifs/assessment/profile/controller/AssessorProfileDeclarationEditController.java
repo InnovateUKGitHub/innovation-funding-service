@@ -5,10 +5,10 @@ import org.innovateuk.ifs.assessment.profile.form.AssessorProfileAppointmentForm
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileDeclarationForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileFamilyAffiliationForm;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDeclarationFormPopulator;
-import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDeclarationModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.populator.AssessorProfileDeclarationModelPopulator;
 import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.AffiliationResourceBuilder;

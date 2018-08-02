@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.assessment.profile.populator;
+package org.innovateuk.ifs.populator;
 
-import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileBaseSkillsViewModel;
+import org.innovateuk.ifs.viewmodel.AssessorProfileBaseSkillsViewModel;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
 
@@ -17,7 +17,7 @@ public abstract class AssessorProfileBaseSkillsModelPopulator<T extends Assessor
 
     public abstract T populateModel(ProfileSkillsResource profileSkillsResource);
 
-    Map<String, List<String>> getInnovationAreasSectorMap(ProfileSkillsResource profileSkillsResource) {
+    public Map<String, List<String>> getInnovationAreasSectorMap(ProfileSkillsResource profileSkillsResource) {
         return profileSkillsResource.getInnovationAreas().stream()
                 .collect(groupingBy(InnovationAreaResource::getSectorName, LinkedHashMap::new,
                         mapping(InnovationAreaResource::getName, toList())));
