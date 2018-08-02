@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.saver;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -34,19 +35,16 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
 
     @Autowired
     private UserRestService userRestService;
-
     @Autowired
     private ApplicationService applicationService;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private QuestionService questionService;
-
+    @Autowired
+    private QuestionRestService questionRestService;
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-
     @Autowired
     private ApplicationQuestionApplicationDetailsSaver detailsSaver;
 
@@ -58,7 +56,8 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
                                                   HttpServletResponse response,
                                                   Optional<Boolean> markAsCompleteRequest) {
         final ApplicationResource application = applicationService.getById(applicationId);
-        final List<QuestionResource> questionList = singletonList(questionService.getById(questionId));
+
+        final List<QuestionResource> questionList = singletonList(questionRestService.findById(questionId).getSuccess());
         final Map<String, String[]> params = request.getParameterMap();
         final ValidationMessages errors = new ValidationMessages();
         final boolean ignoreEmpty = !params.containsKey(MARK_AS_COMPLETE);

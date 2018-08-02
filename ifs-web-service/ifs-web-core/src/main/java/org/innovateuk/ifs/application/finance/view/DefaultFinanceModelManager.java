@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -42,7 +42,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     private static final Log LOG = LogFactory.getLog(DefaultFinanceModelManager.class);
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Autowired
     private FinanceService financeService;
@@ -176,7 +176,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             model.addAttribute("costCategory", costCategory);
         }
         model.addAttribute("type", costType.getType());
-        model.addAttribute("question", questionService.getById(questionId));
+        model.addAttribute("question", questionRestService.findById(questionId).getSuccess());
         model.addAttribute("cost", costItem);
     }
 }

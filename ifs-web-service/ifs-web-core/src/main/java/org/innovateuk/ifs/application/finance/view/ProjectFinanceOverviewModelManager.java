@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.finance.view;
 
 import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceOverviewViewModel;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
@@ -29,10 +30,10 @@ public class ProjectFinanceOverviewModelManager extends AbstractFinanceModelPopu
 
     @Autowired
     public ProjectFinanceOverviewModelManager(SectionService sectionService,
-                                              QuestionService questionService,
+                                              QuestionRestService questionRestService,
                                               FormInputRestService formInputRestService,
                                               ProjectFinanceService financeService) {
-        super(sectionService, formInputRestService, questionService);
+        super(sectionService, formInputRestService, questionRestService);
         this.financeService = financeService;
         this.sectionService = sectionService;
         this.formInputRestService = formInputRestService;

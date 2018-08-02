@@ -32,7 +32,7 @@ public class SectionServiceImpl implements SectionService {
     private FormInputRestService formInputRestService;
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Override
     public List<ValidationMessages> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
@@ -125,7 +125,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public void removeSectionsQuestionsWithType(SectionResource section, FormInputType type) {
-        List<QuestionResource> questions = questionService.findByCompetition(section.getCompetition());
+        List<QuestionResource> questions = questionRestService.findByCompetition(section.getCompetition()).getSuccess();
         List<SectionResource> sections = this.getAllByCompetitionId(section.getCompetition());
         List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(section.getCompetition(), APPLICATION).getSuccess();
         filterByIdList(section.getChildSections(), sections).stream()

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -45,6 +46,9 @@ public class ApplicationModelPopulator {
 
     @Autowired
     protected QuestionService questionService;
+
+    @Autowired
+    protected QuestionRestService questionRestService;
 
     @Autowired
     protected ProcessRoleService processRoleService;
@@ -196,7 +200,7 @@ public class ApplicationModelPopulator {
             Optional<Long> optionalOrganisationId = Optional.ofNullable(organisationId);
             applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
 
-            List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
+            List<QuestionResource> costsQuestions = questionRestService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST).getSuccess();
             // NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.
             if(!form.isAdminMode() || optionalOrganisationId.isPresent()) {
                 Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);

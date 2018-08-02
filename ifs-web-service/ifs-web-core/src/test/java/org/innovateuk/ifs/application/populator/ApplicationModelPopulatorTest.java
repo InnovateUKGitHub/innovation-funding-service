@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -58,6 +59,9 @@ public class ApplicationModelPopulatorTest {
 
     @Mock
     protected QuestionService questionService;
+
+    @Mock
+    protected QuestionRestService questionRestService;
 
     @Mock
     protected SectionService sectionService;
@@ -176,7 +180,7 @@ public class ApplicationModelPopulatorTest {
         FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
 
         when(sectionService.getFinanceSection(competitionId)).thenReturn(financeSection);
-        when(questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(costsQuestions);
+        when(questionRestService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(restSuccess(costsQuestions));
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
 
         when(organisationRestService.getOrganisationByUserId(user.getId())).thenReturn(restSuccess(userOrganisation));

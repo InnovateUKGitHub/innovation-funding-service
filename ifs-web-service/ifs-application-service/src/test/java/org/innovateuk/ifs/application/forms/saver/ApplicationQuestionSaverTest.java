@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.saver;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -57,6 +58,9 @@ public class ApplicationQuestionSaverTest {
     private QuestionService questionService;
 
     @Mock
+    private QuestionRestService questionRestService;
+
+    @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Mock
@@ -85,7 +89,7 @@ public class ApplicationQuestionSaverTest {
 
         when(userRestService.findProcessRole(userId, applicationId)).thenReturn(restSuccess(newProcessRoleResource().withId(processRoleId).build()));
         when(applicationService.getById(applicationId)).thenReturn(application);
-        when(questionService.getById(questionId)).thenReturn(newQuestionResource().withId(questionId).build());
+        when(questionRestService.findById(questionId)).thenReturn(restSuccess(newQuestionResource().withId(questionId).build()));
         when(userService.isLeadApplicant(userId, application)).thenReturn(Boolean.FALSE);
     }
 
@@ -105,6 +109,7 @@ public class ApplicationQuestionSaverTest {
     @Test
     public void saveApplicationForm_MarkQuestionAsCompleteAndErrors() {
         when(request.getParameterMap()).thenReturn(asMap(MARK_AS_COMPLETE, new String[]{}));
+        when(questionRestService.findById(anyLong())).thenReturn(restSuccess(newQuestionResource().build()));
 
         ValidationMessages messages = new ValidationMessages();
         messages.addError(new Error("Random One", HttpStatus.BAD_REQUEST));
@@ -123,6 +128,7 @@ public class ApplicationQuestionSaverTest {
     @Test
     public void saveApplicationForm_MarkQuestionAsCompleteWithOverridingAndErrors() {
         when(request.getParameterMap()).thenReturn(asMap());
+        when(questionRestService.findById(anyLong())).thenReturn(restSuccess(newQuestionResource().build()));
 
         ValidationMessages messages = new ValidationMessages();
         messages.addError(new Error("Random One", HttpStatus.BAD_REQUEST));

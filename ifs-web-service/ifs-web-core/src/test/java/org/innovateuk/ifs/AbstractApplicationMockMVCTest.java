@@ -301,8 +301,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(sectionService.getSectionsForCompetitionByType(1L, SectionType.FUNDING_FINANCES)).thenReturn(Arrays
                 .asList(sectionResource10));
 
-        when(questionService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(Arrays.asList
-                (q21Resource, q22Resource, q23Resource));
+        when(questionRestService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(restSuccess(Arrays.asList
+                (q21Resource, q22Resource, q23Resource)));
         when(questionService.getQuestionByCompetitionIdAndFormInputType(1L, FormInputType.APPLICATION_DETAILS))
                 .thenReturn(ServiceResult.serviceSuccess(q01Resource));
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(1L, RESEARCH_CATEGORY)).thenReturn
@@ -314,7 +314,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
             if (sectionQuestions != null) {
                 Map<Long, QuestionResource> questionsMap =
                         sectionQuestions.stream().collect(
-                                toMap(identity(), q -> questionService.getById(q)));
+                                toMap(identity(), q -> questionRestService.findById(q).getSuccess()));
                 questionList.addAll(questionsMap.values());
                 questionResources.putAll(questionsMap);
 
@@ -327,7 +327,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         sectionResource7.setQuestionGroup(true);
 
         questionResources.forEach((id, question) -> {
-            when(questionService.getById(id)).thenReturn(question);
+            when(questionRestService.findById(id)).thenReturn(restSuccess(question));
         });
 
         when(questionService.getPreviousQuestionBySection(any())).thenReturn(Optional.empty());
@@ -355,7 +355,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         when(sectionService.filterParentSections(anyList())).thenReturn(sectionResources);
         competitionResources = singletonList(competitionResource);
-        when(questionService.findByCompetition(competitionResource.getId())).thenReturn(questionList);
+        when(questionRestService.findByCompetition(competitionResource.getId())).thenReturn(restSuccess(questionList));
         when(competitionRestService.getAll()).thenReturn(restSuccess(competitionResources));
         when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
 
@@ -604,7 +604,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
                 withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
                 build();
-        when(questionService.getById(questionResource.getId())).thenReturn(questionResource);
+        when(questionRestService.findById(questionResource.getId())).thenReturn(restSuccess(questionResource));
         when(formInputRestService.getByQuestionIdAndScope(questionResource.getId(), APPLICATION)).thenReturn
                 (restSuccess(formInputs));
         return questionResource;
@@ -619,7 +619,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
                 withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
                 build();
-        when(questionService.getById(questionResource.getId())).thenReturn(questionResource);
+        when(questionRestService.findById(questionResource.getId())).thenReturn(restSuccess(questionResource));
         when(formInputRestService.getByQuestionIdAndScope(questionResource.getId(), APPLICATION)).thenReturn
                 (restSuccess(formInputs));
         return questionResource;

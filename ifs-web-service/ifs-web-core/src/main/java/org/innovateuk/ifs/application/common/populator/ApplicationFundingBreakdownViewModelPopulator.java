@@ -46,12 +46,12 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                                                          CompetitionRestService competitionRestService,
                                                          ApplicationService applicationService,
                                                          SectionService sectionService,
-                                                         QuestionService questionService,
+                                                         QuestionRestService questionRestService,
                                                          FormInputRestService formInputRestService,
                                                          UserService userService,
                                                          OrganisationService organisationService,
                                                          InviteService inviteService) {
-        super(sectionService, formInputRestService, questionService);
+        super(sectionService, formInputRestService, questionRestService);
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
         this.organisationRestService = organisationRestService;

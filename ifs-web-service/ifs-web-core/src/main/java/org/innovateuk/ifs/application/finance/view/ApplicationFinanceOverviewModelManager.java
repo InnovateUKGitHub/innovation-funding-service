@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.finance.view;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceOverviewViewModel;
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
@@ -31,11 +31,11 @@ public class ApplicationFinanceOverviewModelManager extends AbstractFinanceModel
             ApplicationFinanceRestService applicationFinanceRestService,
             SectionService sectionService,
             FinanceService financeService,
-            QuestionService questionService,
+            QuestionRestService questionRestService,
             FileEntryRestService fileEntryRestService,
             FormInputRestService formInputRestService
     ) {
-        super(sectionService, formInputRestService, questionService);
+        super(sectionService, formInputRestService, questionRestService);
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
         this.financeService = financeService;

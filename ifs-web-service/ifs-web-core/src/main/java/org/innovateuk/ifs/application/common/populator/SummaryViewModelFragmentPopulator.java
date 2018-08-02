@@ -24,7 +24,6 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
@@ -47,6 +46,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
     private CompetitionRestService competitionRestService;
     private SectionService sectionService;
     private QuestionService questionService;
+    private QuestionRestService questionRestService;
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
     private UserRestService userRestService;
     private OrganisationService organisationService;
@@ -65,6 +65,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
                                              CompetitionRestService competitionRestService,
                                              SectionService sectionService,
                                              QuestionService questionService,
+                                             QuestionRestService questionRestService,
                                              AssessorFormInputResponseRestService assessorFormInputResponseRestService,
                                              UserRestService userRestService,
                                              OrganisationService organisationService,
@@ -78,7 +79,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
                                              ApplicantRestService applicantRestService,
                                              FormInputViewModelGenerator formInputViewModelGenerator,
                                              UserService userService) {
-        super(sectionService, questionService);
+        super(sectionService, questionService, questionRestService);
         this.applicationService = applicationService;
         this.competitionRestService = competitionRestService;
         this.sectionService = sectionService;

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
@@ -48,7 +50,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     private SectionService sectionService;
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -80,7 +82,9 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
         }
 
         if (!isMarkSectionAsIncompleteRequest(params)) {
-            List<QuestionResource> questions = simpleMap(selectedSection.getQuestions(), questionService::getById);
+            List<QuestionResource> questions = selectedSection.getQuestions().stream()
+                    .map(questionId -> questionRestService.findById(questionId).getSuccess())
+                    .collect(Collectors.toList());
             errors.addAll(saveQuestionResponses(request, questions, userId, processRole.getId(), applicationId, ignoreEmpty));
 
             Long organisationType = organisationService.getOrganisationType(userId, applicationId);

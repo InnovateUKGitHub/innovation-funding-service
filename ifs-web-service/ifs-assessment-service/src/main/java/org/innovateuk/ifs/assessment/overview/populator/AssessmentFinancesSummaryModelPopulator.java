@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
@@ -51,8 +52,8 @@ public class AssessmentFinancesSummaryModelPopulator extends AbstractFinanceMode
                                                    SectionService sectionService,
                                                    OrganisationService organisationService,
                                                    FormInputRestService formInputRestService,
-                                                   QuestionService questionService) {
-        super(sectionService, formInputRestService, questionService);
+                                                   QuestionRestService questionRestService) {
+        super(sectionService, formInputRestService, questionRestService);
         this.organisationService = organisationService;
         this.sectionService = sectionService;
         this.competitionRestService = competitionRestService;

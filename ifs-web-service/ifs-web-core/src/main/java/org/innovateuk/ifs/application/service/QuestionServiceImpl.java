@@ -68,12 +68,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     private boolean isApplicationTeamQuestion(Long questionId) {
-        return getById(questionId).getQuestionSetupType() == APPLICATION_TEAM;
-    }
-
-    @Override
-    public List<QuestionResource> findByCompetition(Long competitionId) {
-        return questionRestService.findByCompetition(competitionId).getSuccess();
+        return questionRestService.findById(questionId).getSuccess().getQuestionSetupType() == APPLICATION_TEAM;
     }
 
     @Override
@@ -107,11 +102,6 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
         return questionStatusRestService.getMarkedAsComplete(applicationId, organisationId);
-    }
-
-    @Override
-    public QuestionResource getById(Long questionId) {
-        return questionRestService.findById(questionId).getSuccess();
     }
 
     @Override
@@ -160,21 +150,6 @@ public class QuestionServiceImpl implements QuestionService {
 
     public List<QuestionStatusResource> findQuestionStatusesByQuestionAndApplicationId(Long questionId, Long applicationId) {
         return questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId).getSuccess();
-    }
-
-    @Override
-    public List<QuestionResource> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
-        return questionRestService.getQuestionsBySectionIdAndType(sectionId, type).getSuccess();
-    }
-
-    @Override
-    public QuestionResource save(QuestionResource questionResource) {
-        return questionRestService.save(questionResource).getSuccess();
-    }
-
-    @Override
-    public List<QuestionResource> getQuestionsByAssessment(long assessmentId) {
-        return questionRestService.getQuestionsByAssessment(assessmentId).getSuccess();
     }
 
     @Override

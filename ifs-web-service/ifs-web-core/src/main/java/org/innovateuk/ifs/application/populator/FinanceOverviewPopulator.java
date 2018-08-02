@@ -4,7 +4,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -30,7 +30,7 @@ public class FinanceOverviewPopulator {
     private SectionService sectionService;
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionRestService questionRestService;
 
     @Autowired
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
@@ -46,7 +46,7 @@ public class FinanceOverviewPopulator {
 
         if(hasFinanceSection) {
             Long organisationType = applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType();
-            List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSections.get(0).getId(), QuestionType.COST);
+            List<QuestionResource> costsQuestions = questionRestService.getQuestionsBySectionIdAndType(financeSections.get(0).getId(), QuestionType.COST).getSuccess();
 
             applicationFinanceOverviewModelManager.addFinanceDetails(model, applicantSection.getCompetition().getId(), applicantSection.getApplication().getId());
             if(!form.isAdminMode() && applicantSection.getCompetition().isOpen()) {
