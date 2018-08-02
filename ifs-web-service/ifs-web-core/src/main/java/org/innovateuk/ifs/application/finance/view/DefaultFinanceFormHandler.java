@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -113,7 +114,6 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
         }
     }
 
-    // TODO DW - INFUND-1555 - handle rest results
     private void storeFinancePosition(HttpServletRequest request, @NotNull Long applicationFinanceId, Long competitionId, Long userId) {
         List<String> financePositionKeys = simpleFilter(request.getParameterMap().keySet(), k -> k.contains("financePosition-"));
         if (!financePositionKeys.isEmpty()) {
@@ -140,18 +140,25 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler<DefaultFin
         String fieldNameReplaced = fieldName.replace("financePosition-", "");
         switch (fieldNameReplaced) {
             case "organisationSize":
-                Long newValue = Long.valueOf(value);
-                Long oldValue = applicationFinance.getOrganisationSize();
+                OrganisationSize newValue = OrganisationSize.findById(Long.valueOf(value));
+                OrganisationSize oldValue = applicationFinance.getOrganisationSize();
                 handleOrganisationSizeChange(applicationFinance, competitionId, userId, oldValue, newValue);
                 applicationFinance.setOrganisationSize(newValue);
+                break;
+            case "projectLocation":
+                applicationFinance.setWorkPostcode(value);
                 break;
             default:
                 LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
         }
     }
 
-    private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId, Long oldValue, Long newValue) {
-        if(null != oldValue && !oldValue.equals(newValue)) {
+    private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance,
+                                              Long competitionId,
+                                              Long userId,
+                                              OrganisationSize oldValue,
+                                              OrganisationSize newValue) {
+        if (null != oldValue  && oldValue != newValue) {
             fundingLevelResetHandler.resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
         }
     }

@@ -3,25 +3,21 @@ package org.innovateuk.ifs.management.funding.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController;
-import org.innovateuk.ifs.management.navigation.NavigationOrigin;
-import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.management.funding.populator.CompetitionManagementFundingDecisionModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
@@ -29,11 +25,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
  * Handles the Competition Management Funding decision views and submission of funding decision.
@@ -45,19 +41,21 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 public class CompetitionManagementFundingDecisionController extends CompetitionManagementCookieController<FundingDecisionSelectionCookie> {
 
     private static final Log log = LogFactory.getLog(CompetitionManagementFundingDecisionController.class);
-    private static final int PAGE_SIZE = 20;
 
     private ApplicationSummaryRestService applicationSummaryRestService;
     private ApplicationFundingDecisionService applicationFundingDecisionService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
+    private CompetitionManagementFundingDecisionModelPopulator competitionManagementFundingDecisionModelPopulator;
 
     @Autowired
     public CompetitionManagementFundingDecisionController(ApplicationSummaryRestService applicationSummaryRestService,
                                                           ApplicationFundingDecisionService applicationFundingDecisionService,
-                                                          CompetitionService competitionService) {
+                                                          CompetitionRestService competitionRestService,
+                                                          CompetitionManagementFundingDecisionModelPopulator competitionManagementFundingDecisionModelPopulator) {
         this.applicationSummaryRestService = applicationSummaryRestService;
         this.applicationFundingDecisionService = applicationFundingDecisionService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
+        this.competitionManagementFundingDecisionModelPopulator = competitionManagementFundingDecisionModelPopulator;
     }
 
     public CompetitionManagementFundingDecisionController() {
@@ -86,9 +84,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        if (bindingResult.hasErrors()) {
-            return "redirect:/competition/" + competitionId + "/funding";
-        }
+        redirectIfErrorsOrCompNotInCorrectState(competitionId, bindingResult);
 
         FundingDecisionSelectionCookie selectionCookieForm = getSelectionFormFromCookie(request, competitionId).orElse(new FundingDecisionSelectionCookie());
 
@@ -108,8 +104,9 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         selectionCookieForm.setFundingDecisionFilterForm(filterForm);
 
         saveFormToCookie(response, competitionId, selectionCookieForm);
+        model.addAttribute("model", competitionManagementFundingDecisionModelPopulator.populate(competitionId, paginationForm, filterForm, selectionForm));
 
-        return populateSubmittedModel(model, competitionId, paginationForm, filterForm, selectionForm);
+        return "comp-mgt-funders-panel";
     }
 
     @PostMapping
@@ -122,9 +119,8 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                BindingResult bindingResult,
                                HttpServletRequest request,
                                HttpServletResponse response) {
-        if (bindingResult.hasErrors()) {
-            return "redirect:/competition/" + competitionId + "/funding";
-        }
+
+        redirectIfErrorsOrCompNotInCorrectState(competitionId, bindingResult);
 
         FundingDecisionSelectionCookie selectionForm = getSelectionFormFromCookie(request, competitionId)
                 .orElse(new FundingDecisionSelectionCookie(fundingDecisionSelectionForm));
@@ -232,18 +228,6 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
         return updatedSelectionForm;
     }
 
-    private MultiValueMap<String, String> mapFormFilterParametersToMultiValueMap(FundingDecisionFilterForm fundingDecisionFilterForm) {
-        MultiValueMap<String, String> filterMap = new LinkedMultiValueMap<>();
-        if(fundingDecisionFilterForm.getFundingFilter().isPresent()) {
-            filterMap.set("fundingFilter", fundingDecisionFilterForm.getFundingFilter().get().name());
-        }
-        if(fundingDecisionFilterForm.getStringFilter().isPresent()) {
-            filterMap.set("stringFilter", fundingDecisionFilterForm.getStringFilter().get());
-        }
-
-        return filterMap;
-    }
-
     private String fundersPanelCompetition(Model model,
                                            long competitionId,
                                            FundingDecisionSelectionCookie selectionCookie,
@@ -265,59 +249,28 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
             }
         }
 
-        return populateSubmittedModel(model, competitionId, fundingDecisionPaginationForm, fundingDecisionFilterForm, selectionForm);
-    }
+        model.addAttribute("model", competitionManagementFundingDecisionModelPopulator.populate(competitionId, fundingDecisionPaginationForm, fundingDecisionFilterForm, selectionForm));
 
-    private ApplicationSummaryPageResource getApplicationsByFilters(long competitionId,
-                                                                    FundingDecisionPaginationForm paginationForm,
-                                                                    FundingDecisionFilterForm fundingDecisionFilterForm) {
-        return applicationSummaryRestService.getSubmittedApplications(
-                competitionId,
-                "id",
-                paginationForm.getPage(),
-                PAGE_SIZE,
-                fundingDecisionFilterForm.getStringFilter(),
-                fundingDecisionFilterForm.getFundingFilter())
-                .getSuccess();
-    }
-
-    private String populateSubmittedModel(Model model,
-                                          long competitionId,
-                                          FundingDecisionPaginationForm paginationForm,
-                                          FundingDecisionFilterForm fundingDecisionFilterForm,
-                                          FundingDecisionSelectionForm fundingDecisionSelectionForm) {
-
-        CompetitionResource competition = getCompetitionIfExist(competitionId);
-
-        ApplicationSummaryPageResource results = getApplicationsByFilters(competition.getId(), paginationForm, fundingDecisionFilterForm);
-        String originQuery = buildOriginQueryString(NavigationOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
-
-        CompetitionSummaryResource competitionSummary = applicationSummaryRestService
-                .getCompetitionSummary(competition.getId())
-                .getSuccess();
-
-        List<Long> submittableApplicationIds = getAllApplicationIdsByFilters(competition.getId(), fundingDecisionFilterForm);
-        boolean selectionLimitWarning = limitIsExceeded(submittableApplicationIds.size());
-        boolean selectAllDisabled =  submittableApplicationIds.isEmpty();
-
-        model.addAttribute("pagination", new Pagination(results, originQuery));
-        model.addAttribute("results", results);
-        model.addAttribute("selectionForm", fundingDecisionSelectionForm);
-        model.addAttribute("competitionSummary", competitionSummary);
-        model.addAttribute("originQuery", originQuery);
-        model.addAttribute("selectAllDisabled", selectAllDisabled);
-        model.addAttribute("selectionLimitWarning", selectionLimitWarning);
-
-        switch (competitionSummary.getCompetitionStatus()) {
-            case FUNDERS_PANEL:
-            case ASSESSOR_FEEDBACK:
-                return "comp-mgt-funders-panel";
-            default:
-                return "redirect:/login";
-        }
+        return "comp-mgt-funders-panel";
     }
 
     private CompetitionResource getCompetitionIfExist(long competitionId) {
-        return competitionService.getById(competitionId);
+        return competitionRestService.getCompetitionById(competitionId).getSuccess();
+    }
+
+    private String redirectIfErrorsOrCompNotInCorrectState(long competitionId, BindingResult bindingResult) {
+
+        CompetitionResource competition = getCompetitionIfExist(competitionId);
+        List<CompetitionStatus> acceptedCompStates = Arrays.asList(CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.FUNDERS_PANEL);
+
+        if (!acceptedCompStates.contains(competition.getCompetitionStatus())) {
+            return "redirect:/";
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "redirect:/competition/" + competition.getId() + "/funding";
+        }
+
+        return null;
     }
 }

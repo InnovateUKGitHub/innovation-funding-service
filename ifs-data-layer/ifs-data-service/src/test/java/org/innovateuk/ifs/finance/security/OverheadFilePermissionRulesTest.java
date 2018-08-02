@@ -21,8 +21,8 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
@@ -57,7 +57,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
             final Long organisationId = 2L;
             final Application application = newApplication().with(id(applicationId)).build();
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
-            final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisationSize(organisation).build();
+            final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
             overheads = newApplicationFinanceRow().withOwningFinance(applicationFinance).build();
 
             leadApplicant = newUserResource().build();

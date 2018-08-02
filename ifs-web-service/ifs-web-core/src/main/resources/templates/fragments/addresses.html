@@ -18,11 +18,11 @@
                 <div th:if='${form.addressForm.postcodeInput != ""} and ${#lists.isEmpty(form.addressForm.postcodeOptions)}'>No results were found</div>
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.postcodeOptions}')} ? 'form-group-error'" id="select-address-block" th:unless="${#lists.isEmpty(form.addressForm.postcodeOptions)}">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{addressForm.selectedPostcodeIndex}')} ? 'form-group-error'" id="select-address-block" th:unless="${#lists.isEmpty(form.addressForm.postcodeOptions)}">
                 <label class="form-label" for="addressForm.selectedPostcodeIndex">
                     <span class="form-label-bold">Select your address</span>
-                    <th:block th:if="${#fields.hasErrors('*{addressForm.postcodeOptions}')}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcodeOptions')}" th:text="${err}" />
+                    <th:block th:if="${#fields.hasErrors('*{addressForm.selectedPostcodeIndex}')}">
+                          <span class="error-message"  th:each="err : ${#fields.errors('addressForm.selectedPostcodeIndex')}" th:text="${err}" />
                     </th:block>
                 </label>
                 <select id="addressForm.selectedPostcodeIndex" class="form-control" th:field="*{addressForm.selectedPostcodeIndex}">
@@ -130,7 +130,7 @@
 <th:block th:fragment="organisation-details-minimal">
     <fieldset>
         <legend class="visuallyhidden" th:text="${selectedOrganisation.name} + ''">? Organisation</legend>
-        <div class="form-block">
+        <div class="form-group">
             <h3 class="heading-small">Organisation name</h3>
             <p th:text="${selectedOrganisation.name}"></p>
         </div>
@@ -140,7 +140,7 @@
 <th:block th:fragment="organisation-details">
     <fieldset>
         <legend class="visuallyhidden" th:text="${organisationType.name} + ''">? Organisation</legend>
-        <div class="form-block">
+        <div class="form-group">
             <th:block th:if="${showOrgType}">
                 <h3 class="heading-small">Organisation type</h3>
                 <p th:text="${organisationType.name}">Business</p>
@@ -183,7 +183,7 @@
 
 <th:block th:fragment="business-details">
     <fieldset>
-        <div class="form-block">
+        <div class="form-group">
             <h3 class="heading-small">Organisation name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
 

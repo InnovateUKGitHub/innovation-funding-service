@@ -4,13 +4,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
@@ -19,7 +20,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.util.SecurityRuleUtil;
@@ -44,7 +44,7 @@ import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.RedirectUtils.redirectToCompetitionManagementService;
+import static org.innovateuk.ifs.util.RedirectUtils.buildRedirect;
 
 /**
  * This controller will handle all requests that are related to project details.
@@ -59,7 +59,7 @@ public class ProjectDetailsController {
     private ProjectService projectService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private ProjectDetailsService projectDetailsService;
@@ -91,7 +91,7 @@ public class ProjectDetailsController {
 
         List<OrganisationResource> organisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
 
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         boolean locationPerPartnerRequired = competitionResource.isLocationPerPartner();
         boolean isIfsAdministrator = SecurityRuleUtil.isIFSAdmin(loggedInUser);
@@ -129,8 +129,8 @@ public class ProjectDetailsController {
                                 )
                         );
 
-        return redirectToCompetitionManagementService(request,
-                "competition/" + competitionId + "/applications/previous");
+        return buildRedirect(request,
+                "management/competition/" + competitionId + "/applications/previous");
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
@@ -178,7 +178,7 @@ public class ProjectDetailsController {
     private String doViewEditProjectDuration(long competitionId, long projectId, Model model, ProjectDurationForm form) {
 
         ProjectResource project = projectService.getById(projectId);
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         model.addAttribute("model", new ProjectDetailsViewModel(project,
                 competitionId,

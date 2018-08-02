@@ -2,21 +2,22 @@ package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
+import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
+import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -67,6 +68,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     private Competition copyTemplatePropertiesToCompetition(Competition template, Competition competition) {
         competition.setSections(new ArrayList<>(template.getSections()));
+        competition.setGrantClaimMaximums(new ArrayList<>(template.getGrantClaimMaximums()));
         competition.setFullApplicationFinance(template.isFullApplicationFinance());
         competition.setTermsAndConditions(template.getTermsAndConditions());
         competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());

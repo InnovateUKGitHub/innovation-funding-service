@@ -5,10 +5,10 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -139,7 +139,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
 
-        if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -168,7 +168,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
-        if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -196,7 +196,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
 
-        if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;

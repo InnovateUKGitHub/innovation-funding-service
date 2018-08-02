@@ -28,7 +28,7 @@ public class OrganisationApplicationFinanceOverviewImpl implements OrganisationF
     private FileEntryRestService fileEntryService;
 
     public OrganisationApplicationFinanceOverviewImpl() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public OrganisationApplicationFinanceOverviewImpl(FinanceService financeService, FileEntryRestService fileEntryRestService, Long applicationId) {
@@ -42,34 +42,33 @@ public class OrganisationApplicationFinanceOverviewImpl implements OrganisationF
         applicationFinances = financeService.getApplicationFinanceTotals(applicationId);
     }
 
-    public Map<Long, BaseFinanceResource> getFinancesByOrganisation(){
+    public Map<Long, BaseFinanceResource> getFinancesByOrganisation() {
         return applicationFinances
                 .stream()
                 .collect(Collectors.toMap(ApplicationFinanceResource::getOrganisation, f -> f));
     }
 
-    public Map<Long, Pair<BaseFinanceResource, FileEntryResource>> getAcademicOrganisationFileEntries(){
+    public Map<Long, Pair<BaseFinanceResource, FileEntryResource>> getAcademicOrganisationFileEntries() {
         ArrayList<BaseFinanceResource> applicationFinance = new ArrayList<>(this.getFinancesByOrganisation().values());
         Map<Long, Pair<BaseFinanceResource, FileEntryResource>> files = applicationFinance.stream()
-                .filter(o -> ((ApplicationFinanceResource)o).getFinanceFileEntry() != null)
-                .collect(HashMap::new, (m,v)->m.put(v.getOrganisation(), Pair.of(v, getFileEntry(v))), HashMap::putAll);
+                .filter(o -> ((ApplicationFinanceResource) o).getFinanceFileEntry() != null)
+                .collect(HashMap::new, (m, v) -> m.put(v.getOrganisation(), Pair.of(v, getFileEntry(v))), HashMap::putAll);
         return files;
     }
 
-    public FileEntryResource getFileEntry(BaseFinanceResource orgFinance){
-        if(((ApplicationFinanceResource)orgFinance).getFinanceFileEntry() != null && ((ApplicationFinanceResource)orgFinance).getFinanceFileEntry() > 0L){
-            RestResult<FileEntryResource> result = fileEntryService.findOne(((ApplicationFinanceResource)orgFinance).getFinanceFileEntry());
-            if(result.isSuccess()){
+    public FileEntryResource getFileEntry(BaseFinanceResource orgFinance) {
+        if (((ApplicationFinanceResource) orgFinance).getFinanceFileEntry() != null && ((ApplicationFinanceResource) orgFinance).getFinanceFileEntry() > 0L) {
+            RestResult<FileEntryResource> result = fileEntryService.findOne(((ApplicationFinanceResource) orgFinance).getFinanceFileEntry());
+            if (result.isSuccess()) {
                 return result.getSuccess();
             }
         }
         return null;
     }
 
-
     public Map<FinanceRowType, BigDecimal> getTotalPerType() {
         Map<FinanceRowType, BigDecimal> totalPerType = new EnumMap<>(FinanceRowType.class);
-        for(FinanceRowType costType : FinanceRowType.values()) {
+        for (FinanceRowType costType : FinanceRowType.values()) {
             BigDecimal typeTotal = applicationFinances.stream()
                     .filter(o -> o.getFinanceOrganisationDetails(costType) != null)
                     .map(o -> o.getFinanceOrganisationDetails(costType).getTotal())

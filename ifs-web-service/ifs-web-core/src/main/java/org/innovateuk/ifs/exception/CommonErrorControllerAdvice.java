@@ -174,6 +174,13 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
         return createErrorModelAndViewWithStatus(e, req, emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ResponseStatus(value= HttpStatus.SERVICE_UNAVAILABLE)    //503
+    @ExceptionHandler(value = {ServiceUnavailableException.class})
+    public ModelAndView defaultErrorHandler(HttpServletRequest req, ServiceUnavailableException e) {
+        LOG.debug("ErrorController  defaultErrorHandler", e);
+        return createErrorModelAndViewWithStatusAndView(e, req, emptyList(), HttpStatus.SERVICE_UNAVAILABLE, "content/service-problems");
+    }
+
     @ResponseStatus(value= HttpStatus.FORBIDDEN)  // 403
     @ExceptionHandler(value = FileAwaitingVirusScanException.class)
     public ModelAndView fileAwaitingScanning(HttpServletRequest req, FileAwaitingVirusScanException e) {

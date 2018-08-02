@@ -2,9 +2,9 @@ package org.innovateuk.ifs.application.forms.saver;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,10 +22,9 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
     @Autowired
     private SectionService sectionService;
 
-    //TODO: IFS-673 - this function is calling the data layer 3 times, could be done in one call
-    public void handleMarkAcademicFinancesAsNotRequired(Long organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
+    public void handleMarkAcademicFinancesAsNotRequired(long organisationType, SectionResource selectedSection, long applicationId, long competitionId, long processRoleId) {
         if (SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType())
-                && OrganisationTypeEnum.RESEARCH.getId().equals(organisationType)) {
+                && OrganisationTypeEnum.RESEARCH.getId() == organisationType) {
             SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
             SectionResource fundingSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
             sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
@@ -41,7 +40,7 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
         }
     }
 
-    public void handleRequestFundingRequests(Map<String, String[]> params, Long applicationId, Long competitionId, Long processRoleId) {
+    public void handleRequestFundingRequests(Map<String, String[]> params, long applicationId, long competitionId, long processRoleId) {
         if (isNotRequestingFundingRequest(params)) {
             setRequestingFunding(NOT_REQUESTING_FUNDING, applicationId, competitionId, processRoleId);
         } else {
@@ -49,7 +48,7 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
         }
     }
 
-    private void setRequestingFunding(String requestingFunding, Long applicationId, Long competitionId, Long processRoleId) {
+    private void setRequestingFunding(String requestingFunding, long applicationId, long competitionId, long processRoleId) {
         SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
         SectionResource fundingSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
         if (REQUESTING_FUNDING.equals(requestingFunding)) {

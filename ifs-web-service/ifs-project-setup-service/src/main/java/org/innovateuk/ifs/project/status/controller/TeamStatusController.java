@@ -2,16 +2,16 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatusViewModel;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.StatusService;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_STARTED;
-import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 
 /**
  * This controller will handle display of project activity status for all partners
@@ -47,7 +44,7 @@ public class TeamStatusController {
     private ApplicationService applicationService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_STATUS')")
     @GetMapping
@@ -62,7 +59,7 @@ public class TeamStatusController {
     private void populateProjectTeamStatuses(ProjectTeamStatusResource teamStatus, final Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
-        CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
 
         boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
 

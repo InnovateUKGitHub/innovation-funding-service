@@ -3,8 +3,8 @@ package org.innovateuk.ifs.organisation.transactional;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -19,13 +19,13 @@ import java.util.Set;
 public interface OrganisationService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<Set<OrganisationResource>> findByApplicationId(Long applicationId);
+    ServiceResult<Set<OrganisationResource>> findByApplicationId(long applicationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<OrganisationResource> findById(Long organisationId);
+    ServiceResult<OrganisationResource> findById(long organisationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<OrganisationResource> getPrimaryForUser(Long userId);
+    ServiceResult<OrganisationResource> getPrimaryForUser(long userId);
 
     @PreAuthorize("hasPermission(#organisation, 'CREATE')")
     ServiceResult<OrganisationResource> create(@P("organisation") OrganisationResource organisation);
@@ -34,14 +34,14 @@ public interface OrganisationService {
     ServiceResult<OrganisationResource> update(@P("organisation") OrganisationResource organisationResource);
 
     @PreAuthorize("hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationResource', 'UPDATE')")
-    ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final Long organisationId, final String organisationName, final String registrationNumber);
+    ServiceResult<OrganisationResource> updateOrganisationNameAndRegistration(final long organisationId, final String organisationName, final String registrationNumber);
 
     @PreAuthorize("hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationResource', 'UPDATE')")
-    ServiceResult<OrganisationResource> addAddress(@P("organisationId") Long organisationId, OrganisationAddressType addressType, AddressResource addressResource);
+    ServiceResult<OrganisationResource> addAddress(@P("organisationId") long organisationId, OrganisationAddressType addressType, AddressResource addressResource);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<OrganisationSearchResult>> searchAcademic(String organisationName, int maxItems);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<OrganisationSearchResult> getSearchOrganisation(@P("organisationId") Long searchOrganisationId);
+    ServiceResult<OrganisationSearchResult> getSearchOrganisation(@P("organisationId") long searchOrganisationId);
 }

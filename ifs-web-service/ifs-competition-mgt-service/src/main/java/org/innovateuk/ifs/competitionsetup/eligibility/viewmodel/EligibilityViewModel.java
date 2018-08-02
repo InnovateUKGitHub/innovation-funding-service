@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmoun
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.finance.resource.FundingLevel;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class EligibilityViewModel extends CompetitionSetupViewModel {
     private CollaborationLevel[] collaborationLevels;
     private List<OrganisationTypeResource> leadApplicantTypes;
     private String leadApplicantTypesText;
+    private FundingLevel[] fundingLevels;
     private List<ResearchCategoryResource> researchCategories;
     private String researchCategoriesFormatted;
 
@@ -24,6 +26,7 @@ public class EligibilityViewModel extends CompetitionSetupViewModel {
             CollaborationLevel[] collaborationLevels,
             List<OrganisationTypeResource> leadApplicantTypes,
             String leadApplicantTypesText,
+            FundingLevel[] fundingLevels,
             List<ResearchCategoryResource> researchCategories,
             String researchCategoriesFormatted
     ) {
@@ -32,6 +35,7 @@ public class EligibilityViewModel extends CompetitionSetupViewModel {
         this.collaborationLevels = collaborationLevels;
         this.leadApplicantTypes = leadApplicantTypes;
         this.leadApplicantTypesText = leadApplicantTypesText;
+        this.fundingLevels = fundingLevels;
         this.researchCategories = researchCategories;
         this.researchCategoriesFormatted = researchCategoriesFormatted;
     }
@@ -50,6 +54,10 @@ public class EligibilityViewModel extends CompetitionSetupViewModel {
 
     public String getLeadApplicantTypesText() {
         return leadApplicantTypesText;
+    }
+
+    public FundingLevel[] getFundingLevels() {
+        return fundingLevels;
     }
 
     public List<ResearchCategoryResource> getResearchCategories() {

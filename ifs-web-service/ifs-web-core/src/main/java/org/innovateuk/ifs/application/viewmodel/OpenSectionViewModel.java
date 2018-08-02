@@ -19,6 +19,7 @@ public class OpenSectionViewModel extends BaseSectionViewModel {
     private Map<Long, Set<Long>> completedSectionsByOrganisation;
     private Set<Long> sectionsMarkedAsComplete;
     private Boolean allQuestionsCompleted;
+    private boolean yourFinancesCompleteForAllOrganisations;
     private Long eachCollaboratorFinanceSectionId;
 
     private Integer completedQuestionsPercentage;
@@ -89,6 +90,14 @@ public class OpenSectionViewModel extends BaseSectionViewModel {
 
     public void setEachCollaboratorFinanceSectionId(Long eachCollaboratorFinanceSectionId) {
         this.eachCollaboratorFinanceSectionId = eachCollaboratorFinanceSectionId;
+    }
+
+    public void setYourFinancesCompleteForAllOrganisations(boolean yourFinancesCompleteForAllOrganisations) {
+        this.yourFinancesCompleteForAllOrganisations = yourFinancesCompleteForAllOrganisations;
+    }
+
+    public boolean getYourFinancesCompleteForAllOrganisations() {
+        return yourFinancesCompleteForAllOrganisations;
     }
 
     public Integer getCompletedQuestionsPercentage() {

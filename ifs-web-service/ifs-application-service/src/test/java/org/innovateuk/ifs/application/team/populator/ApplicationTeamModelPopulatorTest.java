@@ -42,7 +42,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
@@ -52,9 +52,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
@@ -114,13 +112,15 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTeamViewModel expectedViewModel = new ApplicationTeamViewModel(
                 applicationResource.getId(),
+                1L,
                 "Application name",
                 expectedOrganisations,
                 true,
                 false,
                 false,
                 false,
-                true
+                true,
+                false
         );
 
         when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
@@ -175,8 +175,10 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTeamViewModel expectedViewModel = new ApplicationTeamViewModel(
                 applicationResource.getId(),
+                1L,
                 "Application name",
                 expectedOrganisations,
+                false,
                 false,
                 false,
                 false,
@@ -236,8 +238,10 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTeamViewModel expectedViewModel = new ApplicationTeamViewModel(
                 applicationResource.getId(),
+                1L,
                 "Application name",
                 expectedOrganisations,
+                false,
                 false,
                 false,
                 false,
@@ -297,14 +301,17 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTeamViewModel expectedViewModel = new ApplicationTeamViewModel(
                 applicationResource.getId(),
+                1L,
                 "Application name",
                 expectedOrganisations,
                 true,
                 false,
                 false,
                 false,
-                true
+                true,
+                false
         );
+
         when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), questionId)).thenReturn(applicantQuestion);
 
         ApplicationTeamViewModel applicationTeamViewModel = applicationTeamModelPopulator.populateModel
@@ -323,7 +330,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
     }
 
     @Test
-    public void getApplicationTeam_leadApplicantHasOptionToBeginTheApplication() throws Exception {
+    public void getApplicationTeam_leadApplicantHasOptionToBeginTheApplication() {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap, CREATED);
         Map<String, UserResource> usersMap = setupUserResources();
@@ -417,17 +424,20 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
 
         ApplicationTeamViewModel expectedViewModel = new ApplicationTeamViewModel(
                 applicationResource.getId(),
+                1L,
                 "Application name",
                 expectedOrganisations,
                 true,
                 false,
                 false,
                 false,
-                true
+                true,
+                false
         );
+
         expectedViewModel.setSummary(true);
 
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competition.getId(), APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), APPLICATION_TEAM))
                 .thenReturn(restSuccess(question));
         when(applicantRestService.getQuestion(leadApplicant.getId(), applicationResource.getId(), question.getId())).thenReturn(applicantQuestion);
 
@@ -437,7 +447,7 @@ public class ApplicationTeamModelPopulatorTest extends BaseUnitTest {
         assertEquals(expectedViewModel, applicationTeamViewModel);
 
         InOrder inOrder = inOrder(questionRestService, applicationService, userService, applicantRestService, inviteRestService);
-        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndCompetitionSetupQuestionType(competition.getId(), APPLICATION_TEAM);
+        inOrder.verify(questionRestService).getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(), APPLICATION_TEAM);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource.getId());
         inOrder.verify(userService).findById(leadApplicant.getId());

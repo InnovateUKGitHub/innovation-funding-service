@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.publiccontent.modelpopulator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.publiccontent.viewmodel.AbstractPublicContentGroupViewModel;
 import org.junit.Test;
@@ -15,12 +15,13 @@ import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.publiccontent.builder.ContentGroupResourceBuilder.newContentGroupResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -33,7 +34,7 @@ public class AbstractViewModelPopulatorTest {
     private static final PublicContentSectionType TEST_TYPE = PublicContentSectionType.ELIGIBILITY;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @InjectMocks
     private AbstractPublicContentGroupViewModelPopulator target = new AbstractPublicContentGroupViewModelPopulator() {
@@ -64,7 +65,7 @@ public class AbstractViewModelPopulatorTest {
                 .withContentSections(asList(contentSection)).build();
         boolean readOnly = true;
         CompetitionResource competitionResource = newCompetitionResource().build();
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
 
 
         AbstractPublicContentGroupViewModel model = (AbstractPublicContentGroupViewModel) target.populate(contentResource, readOnly);

@@ -18,6 +18,8 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...               IFS-942 Information message when application has reached 100% complete
 ...
 ...               IFS-753 Missing functionality on Mark as complete option in Application summary
+...
+...               IFS-3603 - IFS-3746 GDS - Satisfaction survey
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
                   #TODO IFS-3416 This ticket is in the testing backlog and covers the ${openDate} not found issue
@@ -43,7 +45,6 @@ Submit button disabled when application is incomplete
     When the user clicks the button/link               jQuery=button:contains("Mark as complete")
     Then the user should see the element               jQuery=h1:contains("Application details")
     And the user should see a field and summary error  Please enter a future date
-    And the user should see a field and summary error  Please select a research category
     And the user should see a field and summary error  Please tell us if this application is a resubmission or not
 
 Applicant has read only view on review and submit page
@@ -51,7 +52,7 @@ Applicant has read only view on review and submit page
     [Tags]    HappyPath
     Given the user navigates to the page                  ${DASHBOARD_URL}
     And the user clicks the button/link                   link=${application_bus_name}
-    When the applicant completes the application details  ${application_bus_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    When the applicant completes the application details  ${application_bus_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the user clicks the button/link                   link=Your finances
     And the user marks the finances as complete           ${application_bus_name}  labour costs  n/a  no
     And the user clicks the button/link                   link=Review and submit
@@ -79,8 +80,25 @@ Submit flow business lead (complete application)
     And the applicant clicks Yes in the submit modal
     Then the user should be redirected to the correct page  submit
     And the user should see the text in the page            Application submitted
-    And The user should see the element                     link=Finished
     # TODO add check here once IFS-270 done
+
+Satisfaction survey:validations
+    #The survey needs to be set to enabled in gradle.properties
+    [Documentation]  IFS-3603
+    [Tags]  survey
+    Given the user clicks the button/link                 link = Finished
+    When the user clicks the button/link                  css = .button[type="submit"]  #Send feedback
+    Then the user should see a field and summary error    Please select a level of satisfaction.
+    And the user should see a field and summary error     This field cannot be left blank.
+
+Applicant submit satisfaction survey after submitting application
+    #The survey needs to be set to enabled in gradle.properties
+    [Documentation]  IFS-3603
+    [Tags]  survey
+    Given the user selects the radio button      satisfaction  5
+    When the user enters text to a text field    name = comments  Very satisfied
+    Then the user clicks the button/link         css = .button[type="submit"]  #Send feedback
+    When the user clicks the button/link         jQuery = h1:contains("Dashboard")
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
@@ -111,8 +129,9 @@ RTO lead has read only view after submission
     [Setup]  log in as a different user  ${submit_rto_email}  ${correct_password}
     Given the user navigates to the page                   ${DASHBOARD_URL}
     And the user clicks the button/link                    link=${application_rto_name}
-    When the applicant completes the application details   ${application_rto_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    When the applicant completes the application details   ${application_rto_name}  ${tomorrowday}  ${month}  ${nextyear}
     Then the user clicks the button/link                   link=Your finances
+    And the user enters the project location
     When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  css=.extra-margin-bottom [aria-expanded="false"]
     Then the user clicks the button/link                   jQuery=button:contains("Not requesting funding")
     And the user puts zero project costs
@@ -173,7 +192,7 @@ the applicant accepts the terms and conditions
 the applicant marks the first section as complete
     the user navigates to the page    ${DASHBOARD_URL}
     the user clicks the button/link    link=${application_name}
-    the applicant completes the application details  ${application_name}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant completes the application details  ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
 
 the applicant clicks the submit and then clicks the "close button" in the modal
     Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")

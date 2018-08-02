@@ -7,14 +7,14 @@ import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.CostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryGroup;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategoryGroup;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -69,7 +69,9 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
 
     private CostCategoryType getOrCreateSupportingCostCategoryType(List<? extends CostCategoryGenerator> summaryPerCategory) {
         // Get the generators for the CostCategories we may need to generate
-        List<CostCategoryGenerator> costCategoryGenerators = simpleFilter(summaryPerCategory, (costCategoryGenerator) -> costCategoryGenerator.isIncludedInSpendProfile());
+        List<CostCategoryGenerator> costCategoryGenerators = simpleFilter(summaryPerCategory,
+                                                                          CostCategoryGenerator::isIncludedInSpendProfile
+        );
         // Get all of the CostCategoryTypes so we can find out if there is already a logical grouping of CostCategories that fulfils our needs
         List<CostCategoryType> existingCostCategoryTypes = costCategoryTypeRepository.findAll();
         Optional<CostCategoryType> existingCostCategoryTypeWithMatchingCategories = simpleFindFirst(existingCostCategoryTypes, costCategoryType -> {
@@ -117,8 +119,17 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
      * @param ccg
      * @return
      */
-    boolean areEqual(CostCategory cc, CostCategoryGenerator ccg) {
-        return ccg.getLabel() == cc.getLabel() && ccg.getName() == cc.getName();
+    private boolean areEqual(CostCategory cc, CostCategoryGenerator ccg) {
+        if(ccg == null
+                || ccg.getLabel() == null
+                || ccg.getName() == null
+                || cc == null
+                || cc.getName() == null
+                || ccg.getLabel() == null) {
+            return false;
+        }
+
+        return ccg.getLabel().equals(cc.getLabel()) && ccg.getName().equals(cc.getName());
     }
 
 }

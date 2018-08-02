@@ -3,11 +3,12 @@ package org.innovateuk.ifs.application.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationProcess;
-import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import java.math.BigDecimal;
@@ -72,6 +73,10 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
 
     public ApplicationBuilder withName(String... names) {
         return withArray((name, application) -> application.setName(name), names);
+    }
+
+    public ApplicationBuilder withApplicationFinancesList(List<ApplicationFinance>... applicationFinancesLists) {
+        return withArray((applicationFinancesList, application) -> application.setApplicationFinances(applicationFinancesList), applicationFinancesLists);
     }
 
     public ApplicationBuilder withFundingDecision(FundingDecisionStatus... fundingDecisionStatus) {

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.nonifs.saver;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -9,9 +8,9 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.core.form.GenericMilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneOrEmptyRowForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneRowForm;
-import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +32,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -53,9 +52,6 @@ public class NonIfsDetailsFormSaverTest {
 
     @InjectMocks
     private NonIfsDetailsFormSaver target;
-
-    @Mock
-    private CompetitionService competitionService;
 
     @Mock
     private CompetitionSetupRestService competitionSetupRestService;

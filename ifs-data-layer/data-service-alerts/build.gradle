@@ -1,11 +1,16 @@
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/mapstruct.gradle")
 apply from: rootProject.file("gradle-support/asciidoc.gradle")
-
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/openshift-util.gradle")
-
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
+apply from: rootProject.file("gradle-support/zipkin-support.gradle")
+
+apply plugin: 'idea'
+
+group 'innovateuk'
+version project.version
+
 
 def apply(profiles) {
     profiles.each { profile ->
@@ -36,6 +41,7 @@ tagDockerLocal.tag = alertServiceVersion
 osStageLocal.tag = alertServiceVersion
 
 ext.dockerDir = "$project.parent.projectDir/docker/"
+ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
 buildDocker.dependsOn prepareDockerInput
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"

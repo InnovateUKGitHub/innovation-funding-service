@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import static java.util.Optional.empty;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 
 /**
@@ -76,8 +75,6 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
                 withPassword("Passw0rd").
                 build()).
                 getSuccess();
-
-        registrationService.sendUserVerificationEmail(created, empty());
 
         return created;
     }

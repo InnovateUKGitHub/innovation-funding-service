@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.project.bankdetails.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 public class BankDetailsResourceBuilder extends BaseBuilder<BankDetailsResource, BankDetailsResourceBuilder> {
     private BankDetailsResourceBuilder(List<BiConsumer<Integer, BankDetailsResource>> multiActions) {

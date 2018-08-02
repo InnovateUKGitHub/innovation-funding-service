@@ -20,24 +20,29 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
+import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
+import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.model.*;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.util.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -62,6 +67,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
@@ -108,7 +114,25 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
-    private EmailService projectEmailService;
+    private NotificationService notificationService;
+
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private CostRepository costRepository;
+
+    @Autowired
+    private SpendProfileRepository spendProfileRepository;
+
+    @Autowired
+    private GrantOfferLetterIndustrialFinanceTablePopulator grantOfferLetterIndustrialFinanceTablePopulator;
+
+    @Autowired
+    private GrantOfferLetterAcademicFinanceTablePopulator grantOfferLetterAcademicFinanceTablePopulator;
+
+    @Autowired
+    private GrantOfferLetterFinanceTotalsTablePopulator grantOfferLetterFinanceTotalsTablePopulator;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -231,6 +255,12 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+
+        Map<Organisation, List<Cost>> financesForOrgs = getFinances(project);
+        GrantOfferLetterIndustrialFinanceTable industrialFinanceTable = grantOfferLetterIndustrialFinanceTablePopulator.createTable(financesForOrgs);
+        GrantOfferLetterAcademicFinanceTable academicFinanceTable = grantOfferLetterAcademicFinanceTablePopulator.createTable(financesForOrgs);
+        GrantOfferLetterFinanceTotalsTable totalsFinanceTable = grantOfferLetterFinanceTotalsTablePopulator.createTable(financesForOrgs, project.getId());
+
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
@@ -247,7 +277,28 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)) : "");
         templateReplacements.put("ProjectLength", project.getDurationInMonths());
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
+
+        // add finances tables
+        templateReplacements.put("industrialFinanceTable", industrialFinanceTable);
+        templateReplacements.put("academicFinanceTable", academicFinanceTable);
+        templateReplacements.put("financeTotalsTable", totalsFinanceTable);
+
         return templateReplacements;
+    }
+
+    private Map<Organisation, List<Cost>> getFinances(Project project) {
+        Map<Organisation, List<Cost>> orgFinances = new HashMap<>();
+
+        project.getOrganisations()
+                .forEach(org -> {
+                    SpendProfile orgSpendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), org.getId()).get();
+                    CostGroup orgCostGroup = orgSpendProfile.getSpendProfileFigures();
+                    List<Cost> costs = costRepository.findByCostGroupId(orgCostGroup.getId());
+
+                    orgFinances.put(org, costs);
+                });
+
+        return orgFinances;
     }
 
     private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource) {
@@ -456,12 +507,14 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             notificationArguments.put("applicationId", project.getApplication().getId());
             notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
 
-            ServiceResult<Void> notificationResult = projectEmailService.sendEmail(singletonList(pmTarget), notificationArguments, NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER);
+            return sendGrantOfferLetterSuccess(project).andOnSuccess(() -> {
+                Notification notification = new Notification(systemNotificationSource,
+                                                             singletonList(pmTarget),
+                                                             NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER,
+                                                             notificationArguments);
 
-            if (notificationResult != null && !notificationResult.isSuccess()) {
-                return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
-            }
-            return sendGrantOfferLetterSuccess(project);
+                return notificationService.sendNotificationWithFlush(notification, EMAIL);
+            });
         });
     }
 
@@ -515,8 +568,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
         }
 
-        notifyProjectIsLive(project.getId()).getSuccess();
-        return serviceSuccess();
+        return notifyProjectIsLive(project.getId());
     }
 
     private ServiceResult<Void> approveGOL(Project project) {
@@ -591,8 +643,8 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         notificationArguments.put("applicationId", project.getApplication().getId());
         notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
 
-        ServiceResult<Void> sendEmailResult = projectEmailService.sendEmail(notificationTargets, notificationArguments, NotificationsGol.PROJECT_LIVE);
+        Notification notification = new Notification(systemNotificationSource, notificationTargets, NotificationsGol.PROJECT_LIVE, notificationArguments);
 
-        return processAnyFailuresOrSucceed(sendEmailResult);
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 }

@@ -3,10 +3,13 @@ package org.innovateuk.ifs.application.forms.controller;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -15,7 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +46,7 @@ public class ApplicationSubmitController {
     private ProcessRoleService processRoleService;
     private ApplicationService applicationService;
     private ApplicationRestService applicationRestService;
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
     private ApplicationModelPopulator applicationModelPopulator;
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
@@ -52,14 +58,14 @@ public class ApplicationSubmitController {
                                        ProcessRoleService processRoleService,
                                        ApplicationService applicationService,
                                        ApplicationRestService applicationRestService,
-                                       CompetitionService competitionService,
+                                       CompetitionRestService competitionRestService,
                                        ApplicationModelPopulator applicationModelPopulator,
                                        CookieFlashMessageFilter cookieFlashMessageFilter) {
         this.questionService = questionService;
         this.processRoleService = processRoleService;
         this.applicationService = applicationService;
         this.applicationRestService = applicationRestService;
-        this.competitionService = competitionService;
+        this.competitionRestService = competitionRestService;
         this.applicationModelPopulator = applicationModelPopulator;
         this.cookieFlashMessageFilter = cookieFlashMessageFilter;
     }
@@ -102,7 +108,7 @@ public class ApplicationSubmitController {
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                            UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         applicationModelPopulator.addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.empty());
         return "application-confirm-submit";
@@ -122,7 +128,7 @@ public class ApplicationSubmitController {
         }
 
         applicationRestService.updateApplicationState(applicationId, SUBMITTED).getSuccess();
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
 
         return "application-submitted";
@@ -139,7 +145,7 @@ public class ApplicationSubmitController {
             return "redirect:/application/" + applicationId;
         }
 
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
         return "application-track";
     }

@@ -1,14 +1,16 @@
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/java.gradle")
+
+group 'innovateuk'
+version project.version
+
+apply plugin: 'idea'
 
 ext {
     javaLanguageLevel = 1.8
 }
 
-bootRepackage.enabled=false
-
-
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.boot:spring-boot-starter-security:1.5.11.RELEASE"
     compile project(':ifs-commons')
     compile project(':ifs-error-util')
 }

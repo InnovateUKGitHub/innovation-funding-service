@@ -42,6 +42,7 @@ IFS.core.loadOrder = {
       IFS.core.unsavedChanges.init()
       IFS.core.mirrorElements.init()
       IFS.core.debug.init()
+      IFS.core.sortingErrors.init()
     }
   },
   commonStateManaged: {

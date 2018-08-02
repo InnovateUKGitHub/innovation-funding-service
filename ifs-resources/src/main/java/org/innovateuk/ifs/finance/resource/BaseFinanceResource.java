@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.finance.resource;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
@@ -16,7 +18,8 @@ public abstract class BaseFinanceResource {
     protected Long id;
     protected Long organisation;
     protected Long target;
-    protected Long organisationSize;
+    protected OrganisationSize organisationSize;
+    protected String workPostcode;
     protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
@@ -25,6 +28,7 @@ public abstract class BaseFinanceResource {
             this.organisation = originalFinance.getOrganisation();
             this.target = originalFinance.getTarget();
             this.organisationSize = originalFinance.getOrganisationSize();
+            this.workPostcode = originalFinance.getWorkPostcode();
         }
     }
 
@@ -32,11 +36,16 @@ public abstract class BaseFinanceResource {
     	// no-arg constructor
     }
 
-    public BaseFinanceResource(Long id, Long organisation, Long target, Long organisationSize) {
+    public BaseFinanceResource(long id,
+                               long organisation,
+                               long target,
+                               OrganisationSize organisationSize,
+                               String workPostcode) {
         this.id = id;
         this.organisation = organisation;
         this.target = target;
         this.organisationSize = organisationSize;
+        this.workPostcode = workPostcode;
     }
 
     public Long getId() {
@@ -63,12 +72,30 @@ public abstract class BaseFinanceResource {
         this.target = target;
     }
 
-    public Long getOrganisationSize() {
+
+    @ZeroDowntime(reference = "IFS-3818", description = "To support instances of older REST clients before " +
+            "the OrganisationSize enum was introduced")
+    @JsonProperty("organisationSize")
+    public Long getOrganisationSizeId() {
+        return organisationSize == null ? null : organisationSize.getId();
+    }
+
+    @JsonProperty("organisationSizeValue")
+    public OrganisationSize getOrganisationSize() {
         return organisationSize;
     }
 
-    public void setOrganisationSize(Long organisationSize) {
+    @JsonProperty("organisationSizeValue")
+    public void setOrganisationSize(OrganisationSize organisationSize) {
         this.organisationSize = organisationSize;
+    }
+
+    public String getWorkPostcode() {
+        return workPostcode;
+    }
+
+    public void setWorkPostcode(String workPostcode) {
+        this.workPostcode = workPostcode;
     }
 
     public Map<FinanceRowType, FinanceRowCostCategory> getFinanceOrganisationDetails() {

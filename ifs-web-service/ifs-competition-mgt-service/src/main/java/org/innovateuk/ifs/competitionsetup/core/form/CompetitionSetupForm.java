@@ -8,6 +8,7 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 public abstract class CompetitionSetupForm extends BaseBindingResultTarget {
 
     private boolean markAsCompleteAction = true;
+    private boolean isAutoSaveAction;
 
     public void setMarkAsCompleteAction(boolean markAsCompleteAction) {
         this.markAsCompleteAction = markAsCompleteAction;
@@ -15,5 +16,13 @@ public abstract class CompetitionSetupForm extends BaseBindingResultTarget {
 
     public boolean isMarkAsCompleteAction() {
         return markAsCompleteAction;
+    }
+
+    public boolean isAutoSaveAction() {
+        return isAutoSaveAction;
+    }
+
+    public void setAutoSaveAction(boolean autoSaveAction) {
+        isAutoSaveAction = autoSaveAction;
     }
 }

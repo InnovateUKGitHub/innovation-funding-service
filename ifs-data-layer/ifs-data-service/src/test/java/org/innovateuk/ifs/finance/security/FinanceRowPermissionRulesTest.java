@@ -9,8 +9,8 @@ import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -25,9 +25,9 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
@@ -43,7 +43,6 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
     private UserResource collaborator;
     private UserResource compAdmin;
     private UserResource projectFinance;
-    private UserResource assessor;
     private UserResource otherLeadApplicant;
 
     private UserResource projectUserResource;
@@ -70,7 +69,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             final Long organisationId = 2L;
             final Application application = newApplication().with(id(applicationId)).build();
             final Organisation organisation = newOrganisation().with(id(organisationId)).build();
-            final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisationSize(organisation).build();
+            final ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).withOrganisation(organisation).build();
             cost = newApplicationFinanceRow().withOwningFinance(applicationFinance).build();
             costItem = new AcademicCost(cost.getId(), "", ZERO, "");
 
@@ -87,7 +86,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             final long otherOrganisationId = 4l;
             final Organisation otherOrganisation = newOrganisation().with(id(otherOrganisationId)).build();
             final Application otherApplication = newApplication().with(id(otherApplicationId)).build();
-            final ApplicationFinance otherApplicationFinance = newApplicationFinance().withOrganisationSize(otherOrganisation).withApplication(otherApplication).build();
+            final ApplicationFinance otherApplicationFinance = newApplicationFinance().withOrganisation(otherOrganisation).withApplication(otherApplication).build();
             otherCost = newApplicationFinanceRow().withOwningFinance(otherApplicationFinance).build();
             otherLeadApplicant = newUserResource().build();
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(),  Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());

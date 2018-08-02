@@ -7,16 +7,19 @@ import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CategoryFormatter;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupViewModel;
-import org.innovateuk.ifs.competitionsetup.eligibility.viewmodel.EligibilityViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.eligibility.viewmodel.EligibilityViewModel;
+import org.innovateuk.ifs.finance.resource.FundingLevel;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -27,14 +30,17 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 @Service
 public class EligibilityModelPopulator implements CompetitionSetupSectionModelPopulator {
 
-    @Autowired
     private CategoryRestService categoryRestService;
-
-    @Autowired
     private CategoryFormatter categoryFormatter;
-
-    @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
+
+    public EligibilityModelPopulator(CategoryRestService categoryRestService,
+                                     CategoryFormatter categoryFormatter,
+                                     OrganisationTypeRestService organisationTypeRestService) {
+        this.categoryRestService = categoryRestService;
+        this.categoryFormatter = categoryFormatter;
+        this.organisationTypeRestService = organisationTypeRestService;
+    }
 
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
@@ -71,6 +77,7 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
                 CollaborationLevel.values(),
                 leadApplicantTypes,
                 leadApplicantTypesText,
+                FundingLevel.values(),
                 researchCategories,
                 researchCategoriesFormatted
         );

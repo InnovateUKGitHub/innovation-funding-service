@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.team.service.AbstractTeamManagementService
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -30,7 +29,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_TEAM;
+import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
@@ -73,7 +72,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    @Ignore  // TODO: IFS-2598 - For now we will redirect to the team page when the organisation is invalid. To be resolved under IFS-2598.
+    @Ignore("This test is ignored due to the bug described in IFS-2598. The offending code is likely to be rewritten/removed as part of the person-to-org decoupling work IFS-3513, but if it is not then this bug should be fixed and test reinstated.")
     public void getUpdateOrganisation_shouldReturnNotFoundWhenOrganisationIsInvalid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(false);
 
@@ -141,7 +140,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     public void inviteApplicant_shouldReturnSuccessViewWhenOrganisationIsValid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
-        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess(new InviteResultsResource()));
+        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
                 .param("executeStagedInvite", "true"))
@@ -156,7 +155,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
 
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
-        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess(new InviteResultsResource()));
+        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
                 .param("executeStagedInvite", "true")
@@ -182,7 +181,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
 
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
-        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess(new InviteResultsResource()));
+        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
                 .param("executeStagedInvite", "true")
@@ -230,7 +229,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
         setupApplicationResource();
 
         QuestionResource applicationTeamQuestion = new QuestionResource();
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}",
@@ -248,7 +247,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
         when(testTeamManagementService.removeInvite(3L)).thenReturn(serviceSuccess());
 
         setupApplicationResource();
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restFailure(notFoundError(QuestionResource.class, COMPETITION_ID, APPLICATION_TEAM)));
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
@@ -270,7 +269,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    @Ignore  // TODO: IFS-2598 - For now we will redirect to the team page when the organisation is invalid. To be resolved under IFS-2598.
+    @Ignore
     public void confirmDeleteInviteOrganisation_shouldReturnNotFoundWhenOrganisationIsInvalid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(false);
 
@@ -291,7 +290,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
 
         setupApplicationResource();
         QuestionResource applicationTeamQuestion = new QuestionResource();
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restSuccess(applicationTeamQuestion));
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}",
@@ -310,7 +309,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
         when(testTeamManagementService.removeInvite(anyLong())).thenReturn(serviceSuccess());
 
         setupApplicationResource();
-        when(questionRestService.getQuestionByCompetitionIdAndCompetitionSetupQuestionType(COMPETITION_ID, APPLICATION_TEAM))
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(COMPETITION_ID, APPLICATION_TEAM))
                 .thenReturn(restFailure(notFoundError(QuestionResource.class, COMPETITION_ID, APPLICATION_TEAM)));
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
@@ -344,7 +343,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
         }
 
         @Override
-        public ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId, long organisationId, ApplicationTeamUpdateForm form) {
+        public ServiceResult<Void> executeStagedInvite(long applicationId, long organisationId, ApplicationTeamUpdateForm form) {
             return null;
         }
 

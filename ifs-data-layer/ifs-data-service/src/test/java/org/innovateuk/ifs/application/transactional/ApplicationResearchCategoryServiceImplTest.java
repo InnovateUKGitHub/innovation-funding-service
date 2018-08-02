@@ -4,14 +4,14 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.finance.transactional.FinanceService;
-import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.user.transactional.UsersRolesService;
@@ -21,9 +21,9 @@ import org.mockito.Mock;
 import java.util.Collections;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -70,7 +70,7 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
         Application expectedApplication = newApplication().withId(applicationId).withResearchCategory(researchCategory).build();
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
-        when(researchCategoryRepositoryMock.findById(researchCategoryId)).thenReturn(researchCategory);
+        when(researchCategoryRepositoryMock.findOne(researchCategoryId)).thenReturn(researchCategory);
 
         ServiceResult<ApplicationResource> result = service.setResearchCategory(applicationId, researchCategoryId);
 
@@ -96,7 +96,7 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
         Application expectedApplication = newApplication().withId(applicationId).withResearchCategory(researchCategory).build();
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
-        when(researchCategoryRepositoryMock.findById(researchCategoryId)).thenReturn(researchCategory);
+        when(researchCategoryRepositoryMock.findOne(researchCategoryId)).thenReturn(researchCategory);
         when(questionServiceMock.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(financeQuestion));
         when(usersRolesServiceMock.getAssignableProcessRolesByApplicationId(applicationId)).thenReturn(ServiceResult.serviceSuccess(Collections.EMPTY_LIST));
         when(financeServiceMock.financeDetails(applicationId)).thenReturn(ServiceResult.serviceSuccess(Collections.EMPTY_LIST));

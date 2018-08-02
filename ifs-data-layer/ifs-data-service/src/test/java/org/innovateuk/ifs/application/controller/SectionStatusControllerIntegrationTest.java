@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.transactional.QuestionStatusService;
 import org.innovateuk.ifs.application.transactional.SectionStatusService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuritySetter;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
@@ -55,9 +55,6 @@ public class SectionStatusControllerIntegrationTest extends BaseControllerIntegr
     private Long collaboratorOneOrganisationId;
     private Long sectionIdYourProjectCostsFinances;
     private Long fundingSection;
-
-
-
 
     @Before
     public void setUp() throws Exception {

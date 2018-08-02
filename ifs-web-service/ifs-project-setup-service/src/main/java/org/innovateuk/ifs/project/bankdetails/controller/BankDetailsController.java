@@ -6,15 +6,15 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.bankdetails.form.BankDetailsForm;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
-import org.innovateuk.ifs.project.bankdetails.form.BankDetailsForm;
-import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsViewModel;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -89,6 +89,8 @@ public class BankDetailsController extends AddressLookupBaseController {
                                     ValidationHandler validationHandler,
                                     @P("projectId")@PathVariable("projectId") final Long projectId,
                                     UserResource loggedInUser) {
+
+        form.getAddressForm().setTriedToSave(true);
 
         final Supplier<String> failureView = () -> bankDetails(model, projectId, loggedInUser, form);
 

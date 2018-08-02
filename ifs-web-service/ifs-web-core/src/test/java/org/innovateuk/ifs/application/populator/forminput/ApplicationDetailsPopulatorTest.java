@@ -21,14 +21,14 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuil
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionStatusResourceBuilder.newApplicantQuestionStatusResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -76,9 +76,9 @@ public class ApplicationDetailsPopulatorTest {
         assertThat(viewModel.getApplication(), equalTo(question.getApplication()));
         assertThat(viewModel.getApplicantSection(), equalTo(null));
         assertThat(viewModel.getInnovationAreaText(), equalTo("Change your innovation area"));
-        assertThat(viewModel.getResearchCategoryText(), equalTo("Change your research category"));
+//        assertThat(viewModel.getResearchCategoryText(), equalTo("Change your research category"));
         assertThat(viewModel.getSelectedInnovationAreaName(), equalTo(INNOVATION_AREA_NAME));
-        assertThat(viewModel.getSelectedResearchCategoryName(), equalTo(RESEARCH_CATEGORY_NAME));
+//        assertThat(viewModel.getSelectedResearchCategoryName(), equalTo(RESEARCH_CATEGORY_NAME));
         assertThat(viewModel.getAssignButtonsViewModel(), equalTo(assignButtonsViewModel));
     }
 }

@@ -3,23 +3,22 @@ package org.innovateuk.ifs.competitionsetup.application.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.application.form.GuidanceRowForm;
-import org.innovateuk.ifs.competitionsetup.application.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.application.form.*;
+import org.innovateuk.ifs.competitionsetup.core.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.core.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.CompetitionSetupSubsectionViewModel;
-import org.innovateuk.ifs.competitionsetup.core.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.core.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.core.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,7 +62,7 @@ public class CompetitionSetupApplicationController {
     private CompetitionSetupService competitionSetupService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -104,7 +103,7 @@ public class CompetitionSetupApplicationController {
 
     @GetMapping("/landing-page")
     public String applicationProcessLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
@@ -125,7 +124,7 @@ public class CompetitionSetupApplicationController {
                                                   @ModelAttribute(COMPETITION_SETUP_FORM_KEY) LandingPageForm form,
                                                   BindingResult bindingResult,
                                                   ValidationHandler validationHandler) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
@@ -145,7 +144,7 @@ public class CompetitionSetupApplicationController {
     @GetMapping("/question/finance")
     public String seeApplicationFinances(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                          Model model) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
@@ -162,7 +161,7 @@ public class CompetitionSetupApplicationController {
     @GetMapping("/question/finance/edit")
     public String editApplicationFinances(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                           Model model) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
@@ -198,7 +197,7 @@ public class CompetitionSetupApplicationController {
     }
 
     private String handleFinanceSaving(long competitionId, Model model, FinanceForm form, ValidationHandler validationHandler) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
@@ -215,7 +214,7 @@ public class CompetitionSetupApplicationController {
     public String seeQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                          @PathVariable("questionId") Long questionId,
                                          Model model) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
@@ -232,7 +231,7 @@ public class CompetitionSetupApplicationController {
     public String editQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                           @PathVariable("questionId") Long questionId,
                                           Model model) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
@@ -252,7 +251,7 @@ public class CompetitionSetupApplicationController {
 
         validateRadioButtons(competitionSetupForm, bindingResult);
 
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
@@ -273,7 +272,7 @@ public class CompetitionSetupApplicationController {
                                                Model model) {
         validateScopeGuidanceRows(competitionSetupForm, bindingResult);
 
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
@@ -293,7 +292,7 @@ public class CompetitionSetupApplicationController {
     @GetMapping(value = "/detail")
     public String viewApplicationDetails(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                          Model model) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
@@ -309,7 +308,7 @@ public class CompetitionSetupApplicationController {
     @GetMapping(value = "/detail/edit")
     public String getEditApplicationDetails(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                             Model model) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
@@ -332,7 +331,7 @@ public class CompetitionSetupApplicationController {
                                            ValidationHandler validationHandler,
                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                            Model model) {
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
@@ -395,10 +394,10 @@ public class CompetitionSetupApplicationController {
     private String getQuestionPage(Model model, CompetitionResource competitionResource, Long questionId, boolean isEditable, CompetitionSetupForm form) {
         ServiceResult<String> view = competitionSetupQuestionService.getQuestion(questionId).andOnSuccessReturn(
                 questionResource -> {
-                    CompetitionSetupQuestionType type = questionResource.getType();
+                    QuestionSetupType type = questionResource.getType();
                     CompetitionSetupSubsection setupSubsection;
 
-                    if (type.equals(CompetitionSetupQuestionType.ASSESSED_QUESTION)) {
+                    if (type.equals(QuestionSetupType.ASSESSED_QUESTION)) {
                         setupSubsection = CompetitionSetupSubsection.QUESTIONS;
                     } else {
                         setupSubsection = CompetitionSetupSubsection.PROJECT_DETAILS;

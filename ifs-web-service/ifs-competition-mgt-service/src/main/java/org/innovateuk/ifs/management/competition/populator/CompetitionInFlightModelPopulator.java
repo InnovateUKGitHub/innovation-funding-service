@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.management.competition.populator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.competition.viewmodel.CompetitionInFlightViewModel;
@@ -30,7 +30,7 @@ public class CompetitionInFlightModelPopulator {
     private AssessmentRestService assessmentRestService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
@@ -39,7 +39,8 @@ public class CompetitionInFlightModelPopulator {
     private MilestoneRestService milestoneRestService;
 
     public CompetitionInFlightViewModel populateModel(Long competitionId, UserResource user) {
-        return populateModel(competitionService.getById(competitionId), user);
+        CompetitionResource competititon = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        return populateModel(competititon, user);
     }
 
     public CompetitionInFlightViewModel populateModel(CompetitionResource competition, UserResource user) {
