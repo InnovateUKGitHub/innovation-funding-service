@@ -26,7 +26,6 @@ public class FileTypeServiceImpl extends BaseTransactionalService implements Fil
     @Autowired
     private FileTypeMapper fileTypeMapper;
 
-
     @Override
     @Transactional
     public ServiceResult<FileTypeResource> findOne(long id) {

@@ -46,17 +46,6 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
         return projectDocumentResource.getFileTypes().size() > 0 ? serviceSuccess() : serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
     }
 
-/*    private boolean isPdfOrSpreadSheet(ProjectDocumentResource projectDocumentResource) {
-        return projectDocumentResource.isPdf() || projectDocumentResource.isSpreadsheet();
-    }*/
-
-    private ServiceResult<Void> validateProjectDocument(List<ProjectDocumentResource> projectDocumentResources) {
-        return projectDocumentResources
-                .stream()
-                .anyMatch(projectDocumentResource -> projectDocumentResource.getFileTypes() == null || projectDocumentResource.getFileTypes().size() <= 0) ?
-                serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE) : serviceSuccess();
-    }
-
     @Override
     @Transactional
     public ServiceResult<List<ProjectDocumentResource>> saveAll(List<ProjectDocumentResource> projectDocumentResources) {
@@ -69,6 +58,13 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
             projectDocuments = (List<ProjectDocument>) projectDocumentRepository.save(projectDocuments);
             return serviceSuccess(simpleMap(projectDocuments, projectDocument -> projectDocumentMapper.mapToResource(projectDocument)));
         });
+    }
+
+    private ServiceResult<Void> validateProjectDocument(List<ProjectDocumentResource> projectDocumentResources) {
+        return projectDocumentResources
+                .stream()
+                .anyMatch(projectDocumentResource -> projectDocumentResource.getFileTypes() == null || projectDocumentResource.getFileTypes().size() <= 0) ?
+                serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE) : serviceSuccess();
     }
 
     @Override

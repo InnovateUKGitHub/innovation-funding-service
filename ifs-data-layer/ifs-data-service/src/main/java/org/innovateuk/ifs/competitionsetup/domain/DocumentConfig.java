@@ -46,8 +46,6 @@ public class DocumentConfig {
         this.id = id;
     }
 
-
-
     public List<FileType> getFileTypes() {
         return fileTypes;
     }

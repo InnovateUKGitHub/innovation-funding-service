@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -74,7 +73,6 @@ public class CompetitionSetupProjectDocumentController {
         Redirect redirect = doViewProjectDocument(model, competitionId);
 
         return redirect.redirect ? redirect.url : "competition/setup";
-
     }
 
     private Redirect doViewProjectDocument(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
