@@ -142,7 +142,7 @@ Summary: Contains the correct values when viewed
     And the user should see the element       jQuery=h2:contains("A nice new Heading")
     And the user should see the element       jQuery=a:contains("${valid_pdf}")
     And the user should see the element       jQuery=.govuk-button:contains("Return to public content")
-    When the user clicks the button/link      jQuery=.govuk-button-secondary:contains("Edit")
+    When the user clicks the button/link      jQuery=.button-secondary:contains("Edit")
     And the user enters text to a text field  jQuery=.editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
     When the user clicks the button/link      jQuery=button:contains("Save and review")
     Then the user clicks the button/link      jQuery=.govuk-button:contains("Return to public content")
@@ -185,7 +185,7 @@ Eligibility: Contains the correct values when viewed, Edit sections
     Then the user should see the element      jQuery=h2:contains("Nationality Eligibility Heading")
     And the user should see the element       jQuery=a:contains("${valid_pdf}")
     And the user should see the element       jQuery=.govuk-button:contains("Return to public content")
-    When the user clicks the button/link      jQuery=.govuk-button-secondary:contains("Edit")
+    When the user clicks the button/link      jQuery=.button-secondary:contains("Edit")
     And the user enters text to a text field  css=.contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments rule of 267567£$*90 take these responses into consideration before making decisions, Local authorities can decide to meet needs that do not meet the eligibility criteria, Where they decide to do this, the same steps must be taken as would be if the person did have eligible needs (for example, the preparation of a care and support plan).
     And The user enters text to a text field  css=.contentGroup:nth-of-type(2) .editor   One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support This is to be achieved through regulations to be made under a power in clause 13 of the Care Bill. These will set a minimum threshold.
     Then the user clicks the button/link      jQuery=button:contains("+ add new section")
@@ -267,7 +267,7 @@ How to apply: Contains the correct values when viewed, Edit sections
     Then the user should see the element      jQuery=h2:contains("The application process")
     And the user should see the element       jQuery=a:contains("${valid_pdf}")
     And the user should see the element       jQuery=.govuk-button:contains("Return to public content")
-    When the user clicks the button/link      jQuery=.govuk-button-secondary:contains("Edit")
+    When the user clicks the button/link      jQuery=.button-secondary:contains("Edit")
     And the user enters text to a text field  css=.contentGroup:nth-of-type(1) .editor   External independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance. Government departments & Some departments, like the Ministry of Defence, cover the whole UK. Others don’t – the Department for Work and Pensions doesn't cover Northern Ireland. This is because some aspects of government are devolved to Scotland, Wales and Northern Ireland. Other public bodiesThese have varying degrees of independence but are directly accountable to ministers. There are 4 types of non-departmental public bodies (NDPBs).Executive NDPBs do work for the government in specific areas
     And the user moves focus to the element   css=#contentGroup-row-1 >div.govuk-form-group.textarea-wrapped >div.editor
     And The user enters text to a text field  css=.contentGroup:nth-of-type(2) .editor  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765.
@@ -367,7 +367,7 @@ The user is able to make the competition public
     Then the user selects the radio button               publishSetting  public
     And the user clicks the button/link                  jQuery=.govuk-button:contains("Publish and review")
     And the user clicks the button/link                  jQuery=.govuk-button:contains("Return to public content")
-    Then the user should see the element                 jQuery=.govuk-button-secondary:contains("Return to setup overview")
+    Then the user should see the element                 jQuery=.button-secondary:contains("Return to setup overview")
     [Teardown]  the user logs out if they are logged in
 
 Guest user can filter competitions by Keywords
@@ -383,10 +383,10 @@ Guest user can see the updated Summary information
     [Tags]
     Given the user clicks the button/link                  link=Public content competition
     And the user clicks the button/link                    link=Summary
-    Then the user should see the element                   jQuery=.govuk-grid-column-one-third:contains("Description") ~ .column-two-thirds:contains("This is a Summary description")
-    And the user should see the element                    jQuery=.govuk-grid-column-one-third:contains("Funding type") ~ .column-two-thirds:contains("Loan")
-    And the user should see the element                    jQuery=.govuk-grid-column-one-third:contains("Project size") ~ .column-two-thirds:contains("10 millions")
-    And the user should see the element                    jQuery=.govuk-grid-column-one-third:contains("A nice new Heading") ~ .column-two-thirds:contains("Ut enim ad minim veniam,")
+    Then the user should see the element                   jQuery=.govuk-grid-column-one-third:contains("Description") ~ .govuk-grid-column-two-thirds:contains("This is a Summary description")
+    And the user should see the element                    jQuery=.govuk-grid-column-one-third:contains("Funding type") ~ .govuk-grid-column-two-thirds:contains("Loan")
+    And the user should see the element                    jQuery=.govuk-grid-column-one-third:contains("Project size") ~ .govuk-grid-column-two-thirds:contains("10 millions")
+    And the user should see the element                    jQuery=.govuk-grid-column-one-third:contains("A nice new Heading") ~ .govuk-grid-column-two-thirds:contains("Ut enim ad minim veniam,")
     Then guest user downloads the file                     ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
     [Teardown]  Remove the file from the operating system  summary.pdf
 
@@ -394,9 +394,9 @@ Guest user can see the updated Eligibility information
     [Documentation]  INFUND-7487
     [Tags]
     Given the user clicks the button/link  link=Eligibility
-    Then the user should see the element   jQuery=.govuk-grid-column-one-third:contains("Nationality Eligibility Heading") ~ .column-two-thirds:contains("changing government policies")
-    Then the user should see the element   jQuery=.govuk-grid-column-one-third:contains("Minimum Eligibility Threshold") ~ .column-two-thirds:contains("new changes we are introducing")
-    Then the user should see the element   jQuery=.govuk-grid-column-one-third:contains("Draft Care and Support - Eligibility Criteria") ~ .column-two-thirds:contains("basic personal care activities")
+    Then the user should see the element   jQuery=.govuk-grid-column-one-third:contains("Nationality Eligibility Heading") ~ .govuk-grid-column-two-thirds:contains("changing government policies")
+    Then the user should see the element   jQuery=.govuk-grid-column-one-third:contains("Minimum Eligibility Threshold") ~ .govuk-grid-column-two-thirds:contains("new changes we are introducing")
+    Then the user should see the element   jQuery=.govuk-grid-column-one-third:contains("Draft Care and Support - Eligibility Criteria") ~ .govuk-grid-column-two-thirds:contains("basic personal care activities")
 
 Guest user downloads Eligibility files
     [Documentation]  INFUND-7487
@@ -412,8 +412,8 @@ The guest user can see updated scope information
     [Documentation]    INFUND-7488
     [Tags]
     Given the user clicks the button/link                  link=Scope
-    Then the user should see the element                   jQuery=.govuk-grid-column-one-third:contains("Heading 1") ~ .column-two-thirds:contains("Content 1")
-    And the user should see the element                    jQuery=.govuk-grid-column-one-third:contains("Heading 2") ~ .column-two-thirds:contains("Content 2")
+    Then the user should see the element                   jQuery=.govuk-grid-column-one-third:contains("Heading 1") ~ .govuk-grid-column-two-thirds:contains("Content 1")
+    And the user should see the element                    jQuery=.govuk-grid-column-one-third:contains("Heading 2") ~ .govuk-grid-column-two-thirds:contains("Content 2")
     And guest user downloads the file                      ${server}/competition/${competitionId}/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
     [Teardown]  Remove the file from the operating system  scope.pdf
 
@@ -430,11 +430,11 @@ Guest user can see the updated How-to-apply information
     [Documentation]  INFUND-7490
     [Tags]
     Given the user clicks the button/link  link=How to apply
-    Then the user should see the element   jQuery=.govuk-grid-column-one-third:contains("The application process") ~ .column-two-thirds:contains("independent experts assess the quality your application")
-    And the user should see the element    jQuery=.govuk-grid-column-one-third:contains("Application questions") ~ .column-two-thirds:contains("contact the competition helpline on 0700 123 98765")
-    And the user should see the element    jQuery=.govuk-grid-column-one-third:contains("Application Rules -- Competition Procedures") ~ .column-two-thirds:contains("additional funding rules for Competition frameworks")
-    And the user should see the element    jQuery=.govuk-grid-column-one-third:contains("Competition Officers Contact") ~ .column-two-thirds:contains("can access an up-to-date list of areas")
-    And the user should see the element    jQuery=.govuk-grid-column-one-third:contains("Confidentiality and Conflicts") ~ .column-two-thirds:contains("confident that awarding an increase to your funding")
+    Then the user should see the element   jQuery=.govuk-grid-column-one-third:contains("The application process") ~ .govuk-grid-column-two-thirds:contains("independent experts assess the quality your application")
+    And the user should see the element    jQuery=.govuk-grid-column-one-third:contains("Application questions") ~ .govuk-grid-column-two-thirds:contains("contact the competition helpline on 0700 123 98765")
+    And the user should see the element    jQuery=.govuk-grid-column-one-third:contains("Application Rules -- Competition Procedures") ~ .govuk-grid-column-two-thirds:contains("additional funding rules for Competition frameworks")
+    And the user should see the element    jQuery=.govuk-grid-column-one-third:contains("Competition Officers Contact") ~ .govuk-grid-column-two-thirds:contains("can access an up-to-date list of areas")
+    And the user should see the element    jQuery=.govuk-grid-column-one-third:contains("Confidentiality and Conflicts") ~ .govuk-grid-column-two-thirds:contains("confident that awarding an increase to your funding")
 
 *** Keywords ***
 Custom suite setup
