@@ -38,6 +38,11 @@ IFS.core.autoSave = (function () {
     },
     fieldChanged: function (element) {
       var field = jQuery(element)
+
+      if (field.is('input[type="file"]')) {
+        return
+      }
+
       // per field we handle the request on a promise base, this means that ajax calls should be per field sequental
       // this means we can still have async as two fields can still be processed at the same time
       // http://www.jefferydurand.com/jquery/sequential/javascript/ajax/2015/04/13/jquery-sequential-ajax-promise-deferred.html
