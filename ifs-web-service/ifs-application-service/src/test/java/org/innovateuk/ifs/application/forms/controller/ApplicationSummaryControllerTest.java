@@ -175,6 +175,9 @@ public class ApplicationSummaryControllerTest extends AbstractApplicationMockMVC
         when(researchCategorySummaryModelPopulator.populate(app, loggedInUser.getId(), true)).thenReturn
                 (researchCategorySummaryViewModel);
 
+        when(applicationRestService.isApplicationReadyForSubmit(app.getId())).thenReturn(restSuccess(true));
+        when(applicationRestService.showApplicationTeam(app.getId(), loggedInUser.getId())).thenReturn(restSuccess(true));
+
         ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
                 true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
 

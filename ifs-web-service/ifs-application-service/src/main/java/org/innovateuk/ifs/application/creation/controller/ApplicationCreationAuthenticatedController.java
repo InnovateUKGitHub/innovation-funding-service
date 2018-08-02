@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.creation.controller;
 import org.innovateuk.ifs.application.creation.form.ApplicationCreationAuthenticatedForm;
 import org.innovateuk.ifs.application.creation.viewmodel.AuthenticatedNotEligibleViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
@@ -42,7 +42,7 @@ public class ApplicationCreationAuthenticatedController {
     public static final String FORM_NAME = "form";
 
     @Autowired
-    private ApplicationService applicationService;
+    private ApplicationRestService applicationRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -114,7 +114,7 @@ public class ApplicationCreationAuthenticatedController {
     }
 
     private String createApplicationAndShowInvitees(UserResource user, Long competitionId) {
-        ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), "");
+        ApplicationResource application = applicationRestService.createApplication(competitionId, user.getId(), "").getSuccess();
         if (application != null) {
             return questionRestService
                     .getQuestionByCompetitionIdAndQuestionSetupType(competitionId, APPLICATION_TEAM)

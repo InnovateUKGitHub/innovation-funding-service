@@ -43,6 +43,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelPopulator {
 
     private ApplicationService applicationService;
+    private ApplicationRestService applicationRestService;
     private CompetitionRestService competitionRestService;
     private SectionService sectionService;
     private QuestionService questionService;
@@ -143,7 +144,7 @@ public class SummaryViewModelFragmentPopulator extends AbstractApplicationModelP
         );
         form.setFormInput(values);
 
-        boolean showApplicationTeamLink = applicationService.showApplicationTeam(application.getId(), user.getId());
+        boolean showApplicationTeamLink = applicationRestService.showApplicationTeam(application.getId(), user.getId()).getSuccess();
 
         return new SummaryViewModel(
                 application,

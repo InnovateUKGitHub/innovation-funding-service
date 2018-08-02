@@ -38,16 +38,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public ApplicationResource createApplication(Long competitionId, Long userId, String applicationName) {
-        return applicationRestService.createApplication(competitionId, userId, applicationName).getSuccess();
-    }
-
-    @Override
-    public Boolean isApplicationReadyForSubmit(Long applicationId) {
-        return applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccess();
-    }
-
-    @Override
     public ServiceResult<Void> save(ApplicationResource application) {
         return applicationRestService.saveApplication(application).toServiceResult();
     }
@@ -66,10 +56,5 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason) {
         return applicationRestService.markAsIneligible(applicationId, reason).toServiceResult();
-    }
-
-    @Override
-    public Boolean showApplicationTeam(Long applicationId, Long userId) {
-        return applicationRestService.showApplicationTeam(applicationId, userId).getSuccess();
     }
 }
