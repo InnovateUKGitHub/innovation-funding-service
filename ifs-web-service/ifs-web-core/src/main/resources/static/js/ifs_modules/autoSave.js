@@ -9,7 +9,7 @@ IFS.core.autoSave = (function () {
 
   return {
     settings: {
-      inputs: '[data-autosave] input:not([type="button"],[readonly="readonly"],[type="hidden"],[data-autosave-disabled])',
+      inputs: '[data-autosave] input:not([type="button"],[type="file"],[readonly="readonly"],[type="hidden"],[data-autosave-disabled])',
       select: '[data-autosave] select:not([readonly="readonly"],[data-autosave-disabled])',
       textareas: '[data-autosave] textarea:not([readonly="readonly"],[data-autosave-disabled])',
       typeTimeout: 500,
@@ -38,10 +38,6 @@ IFS.core.autoSave = (function () {
     },
     fieldChanged: function (element) {
       var field = jQuery(element)
-
-      if (field.is('input[type="file"]')) {
-        return
-      }
 
       // per field we handle the request on a promise base, this means that ajax calls should be per field sequental
       // this means we can still have async as two fields can still be processed at the same time
