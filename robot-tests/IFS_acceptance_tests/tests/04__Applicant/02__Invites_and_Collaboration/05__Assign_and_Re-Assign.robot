@@ -165,7 +165,7 @@ Collaborator can see that Research area is not selected
     [Tags]
     Given the user navigates to Your-finances page  Assign test
     When the user clicks the button/link  link=Your funding
-    Then The user should see the element  jQuery=.list li:contains("the lead applicant must select a research category")
+    Then The user should see the element  jQuery=.govuk-list li:contains("the lead applicant must select a research category")
 
 Lead selects Research category
     [Documentation]  INFUND-6823

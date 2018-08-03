@@ -149,10 +149,9 @@
                     <p class="govuk-body govuk-!-margin-top-6">Once you update the organisation, your changes will take effect. Invites will be sent to all new applicants.</p>
                     <p class="govuk-body" th:if="${model.userLeadApplicant}">You should not remove members of your team without discussing this action with them first. Members who are removed may not receive a notification from Innovate UK.</p>
 
-                    <p class="govuk-body govuk-!-margin-top-6">
-                        <a
-                            th:href="@{${model.backUrl}}" class="button-secondary">Return to application team page</a>
-                    </p>
+                    <div class="govuk-!-margin-top-6">
+                        <a th:href="@{${model.backUrl}}" class="button-secondary">Return to application team page</a>
+                    </div>
                 </form>
 
                 <th:block th:insert="fragments/layout :: main-content-end" />
