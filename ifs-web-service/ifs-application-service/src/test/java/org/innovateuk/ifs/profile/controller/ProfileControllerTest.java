@@ -1,16 +1,12 @@
-package org.innovateuk.ifs.profile;
+package org.innovateuk.ifs.profile.controller;
 
 import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.address.resource.AddressTypeResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.profile.populator.UserProfilePopulator;
+import org.innovateuk.ifs.profile.viewmodel.UserProfileViewModel;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -18,23 +14,15 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mrs;
 import static org.innovateuk.ifs.user.resource.Title.Ms;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -50,20 +38,15 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     }
 
     @Mock
-    private EthnicityRestService ethnicityRestService;
-
-    @Mock
-    private OrganisationService organisationService;
-
-    @Mock
-    private UserAuthenticationService userAuthenticationService;
+    private UserProfilePopulator userProfilePopulator;
 
     @Mock
     private UserService userService;
 
-    private UserResource user;
+    @Mock
+    private UserAuthenticationService userAuthenticationService;
 
-    private OrganisationResource organisation;
+    private UserResource user;
 
     @Before
     public void setUp() {
@@ -80,106 +63,19 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 .withEthnicity(2L)
                 .build();
         setLoggedInUser(user);
-
-        when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(newEthnicityResource().build(4)));
-    }
-
-    @SuppressWarnings("unchecked")
-    private void setupOrganisation(OrganisationAddressResource...addressResources) {
-        organisation = newOrganisationResource()
-                .withName("orgname")
-                .withCompanyHouseNumber("companyhousenumber")
-                .withAddress(asList(addressResources))
-                .build();
-        when(organisationService.getOrganisationById(6L)).thenReturn(organisation);
-        when(organisationService.getPrimaryForUser(user.getId())).thenReturn(organisation);
-    }
-
-    private OrganisationAddressResource organisationAddress(OrganisationAddressType addressType) {
-        AddressTypeResource addressTypeResource = newAddressTypeResource().withId((long)addressType.getOrdinal()).withName(addressType.name()).build();
-        return newOrganisationAddressResource()
-                .withAddressType(addressTypeResource)
-                .withAddress(newAddressResource()
-                        .withAddressLine1("line1" + addressType.name())
-                        .withAddressLine2("line2" + addressType.name())
-                        .withAddressLine3("line3" + addressType.name())
-                        .withTown("town" + addressType.name())
-                        .withCounty("county" + addressType.name())
-                        .withPostcode("postcode" + addressType.name())
-                        .build())
-                .build();
     }
 
     @Test
-    public void userProfileDetailsAndOrganisationDetailsAreAddedToModelWhenViewingDetails() throws Exception {
-
-        OrganisationAddressResource operatingOrgAddress = organisationAddress(OPERATING);
-        setupOrganisation(operatingOrgAddress);
-
-        ResultActions result = mockMvc.perform(get("/profile/view"))
+    public void viewProfile() throws Exception {
+        UserProfileViewModel expected = mock(UserProfileViewModel.class);
+        when(userProfilePopulator.populate(user)).thenReturn(expected);
+        MvcResult result = mockMvc.perform(get("/profile/view"))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(model().attribute("model", Matchers.hasProperty("name", Matchers.equalTo(user.getTitle() + " " +
-                        user.getFirstName() + " " +
-                        user.getLastName()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("phoneNumber", Matchers.equalTo(user.getPhoneNumber()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("emailAddress", Matchers.equalTo(user.getEmail()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("organisationName", Matchers.equalTo(organisation.getName()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("registrationNumber", Matchers.equalTo(organisation.getCompanyHouseNumber()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("gender", Matchers.equalTo(user.getGender().getDisplayName()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("disability", Matchers.equalTo(user.getDisability().getDisplayName()))));
+                .andReturn();
 
-        verifyOrganisationAddress(result, operatingOrgAddress, "model");
-    }
+        UserProfileViewModel model = (UserProfileViewModel) result.getModelAndView().getModel().get("model");
 
-    @Test
-    public void operationAddressForOrganisationIsFavouredWhenRegisteredAddressIsAlsoPresent() throws Exception {
-
-        OrganisationAddressResource registeredOrgAddress = organisationAddress(REGISTERED);
-        OrganisationAddressResource operatingOrgAddress = organisationAddress(OPERATING);
-        setupOrganisation(registeredOrgAddress, operatingOrgAddress);
-
-        ResultActions result = mockMvc.perform(get("/profile/view"))
-                .andExpect(status().is2xxSuccessful());
-
-        verifyOrganisationAddress(result, operatingOrgAddress, "model");
-    }
-
-    @Test
-    public void registeredAddressIsUsedWhenOperatingAddressIsAbsent() throws Exception {
-
-        OrganisationAddressResource registeredOrgAddress = organisationAddress(REGISTERED);
-        setupOrganisation(registeredOrgAddress);
-
-        ResultActions result = mockMvc.perform(get("/profile/view"))
-                .andExpect(status().is2xxSuccessful());
-
-
-        verifyOrganisationAddress(result, registeredOrgAddress, "model");
-    }
-
-    @Test
-    public void nullValuesUsedWhenNoAddressPresent() throws Exception {
-
-        setupOrganisation();
-
-        mockMvc.perform(get("/profile/view"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(model().attribute("model", Matchers.hasProperty("addressLine1", Matchers.isEmptyOrNullString())))
-                .andExpect(model().attribute("model", Matchers.hasProperty("addressLine2", Matchers.isEmptyOrNullString())))
-                .andExpect(model().attribute("model", Matchers.hasProperty("addressLine3", Matchers.isEmptyOrNullString())))
-                .andExpect(model().attribute("model", Matchers.hasProperty("town", Matchers.isEmptyOrNullString())))
-                .andExpect(model().attribute("model", Matchers.hasProperty("county", Matchers.isEmptyOrNullString())))
-                .andExpect(model().attribute("model", Matchers.hasProperty("postcode", Matchers.isEmptyOrNullString())));
-    }
-
-    private void verifyOrganisationAddress(ResultActions result, OrganisationAddressResource registeredOrgAddress, String modelName) throws Exception {
-        result
-                .andExpect(model().attribute(modelName, Matchers.hasProperty("addressLine1", Matchers.equalTo(registeredOrgAddress.getAddress().getAddressLine1()))))
-                .andExpect(model().attribute(modelName, Matchers.hasProperty("addressLine2", Matchers.equalTo(registeredOrgAddress.getAddress().getAddressLine2()))))
-                .andExpect(model().attribute(modelName, Matchers.hasProperty("addressLine3", Matchers.equalTo(registeredOrgAddress.getAddress().getAddressLine3()))))
-                .andExpect(model().attribute(modelName, Matchers.hasProperty("town", Matchers.equalTo(registeredOrgAddress.getAddress().getTown()))))
-                .andExpect(model().attribute(modelName, Matchers.hasProperty("county", Matchers.equalTo(registeredOrgAddress.getAddress().getCounty()))))
-                .andExpect(model().attribute(modelName, Matchers.hasProperty("postcode", Matchers.equalTo(registeredOrgAddress.getAddress().getPostcode()))));
+        assertEquals(expected, model);
     }
 
     @Test
@@ -250,7 +146,6 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
 
     @Test
     public void whenSubmittingAValidFormTheUserProfileDetailsViewIsReturned() throws Exception {
-
 
         when(userService.updateDetails(eq(user.getId()), eq(user.getEmail()), eq(user.getFirstName()), eq(user.getLastName()), anyString(),
                 eq(user.getPhoneNumber()),

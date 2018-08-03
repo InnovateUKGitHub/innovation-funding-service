@@ -19,7 +19,6 @@ public class UserProfilePopulator {
     @Autowired
     private OrganisationRestService organisationRestService;
 
-
     public UserProfileViewModel populate(UserResource user) {
         List<OrganisationResource> organisations = organisationRestService.getAllByUserId(user.getId()).getSuccess();
         Set<OrganisationProfileViewModel> organisationViewModels = simpleMapSet(organisations, this::toOrganisationViewModel);
