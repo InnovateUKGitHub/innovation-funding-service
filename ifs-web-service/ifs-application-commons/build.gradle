@@ -1,0 +1,56 @@
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
+apply from: rootProject.file("gradle-support/zipkin-support.gradle")
+
+apply plugin: 'idea'
+
+buildscript {
+
+    ext['thymeleaf.version'] = '3.0.9.RELEASE'
+
+    ext {
+        thymeleafVersion = ext['thymeleaf.version']
+    }
+
+    repositories {
+        jcenter()
+    }
+}
+
+group 'innovateuk'
+version project.version
+
+
+bootJar.enabled=false
+jar.enabled=true
+
+configurations {
+    testArtifacts
+}
+task testJar (type: Jar) {
+    baseName = "${project.name}-test"
+    from sourceSets.test.output
+}
+artifacts {
+    testArtifacts testJar
+}
+
+dependencies {
+
+    compile project(":ifs-resources")
+    compile project(":ifs-security")
+    compile project(':ifs-rest-api-service')
+    compile project(":ifs-rest-util")
+    compile project(':ifs-web-service:ifs-web-core')
+
+    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+
+    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testCompile "net.sf.opencsv:opencsv:2.3"
+    testCompile group: 'com.jayway.awaitility', name: 'awaitility', version: '1.7.0'
+
+}
+
+jar.dependsOn ":ifs-web-service:gulp_default"

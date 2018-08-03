@@ -13,8 +13,8 @@ import org.innovateuk.ifs.project.consortiumoverview.viewmodel.ProjectConsortium
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.status.StatusService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -35,12 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 public class TeamStatusControllerTest extends BaseControllerMockMVCTest<TeamStatusController> {
-
-//    @Before
-//    public void setUp() {
-//        super.setUp();
-//        setupInvites();
-//    }
 
     @Mock
     private StatusService statusService;
