@@ -392,7 +392,7 @@ Comp Admin can accept the signed grant offer letter
     When the user clicks the button/link  css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a
     Then the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     And the user should see the element   css=label[for="acceptGOL"]
-    And the user should see the element   css=#submit-button.govuk-button--disabled
+    And the user should see the element   css=#submit-button.disabled
     When the user selects the radio button  approvalType  rejectGOL
     Then the user should see the element  css=#submit-button
 
