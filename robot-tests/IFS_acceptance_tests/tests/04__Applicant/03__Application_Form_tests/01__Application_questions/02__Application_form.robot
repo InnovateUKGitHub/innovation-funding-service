@@ -77,8 +77,8 @@ Word count works
 Guidance of the questions
     [Documentation]    INFUND-190
     [Tags]
-    When the user clicks the button/link    css=.summary
-    Then the user should see the element    css=#details-content-0 p
+    When the user clicks the button/link    css=.govuk-details__summary
+    Then the user should see the element    css=.govuk-details__text p
 
 Marking a question as complete
     [Documentation]    INFUND-210,

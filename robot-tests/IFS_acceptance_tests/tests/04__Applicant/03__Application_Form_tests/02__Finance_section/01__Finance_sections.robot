@@ -72,8 +72,8 @@ Guidance in the your project costs
     [Setup]  Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link   link=Your project costs
     When the user clicks the button/link    jQuery=button:contains("Labour")
-    And the user clicks the button/link     css=#collapsible-0 summary
-    Then the user should see the element    css=#details-content-0 p
+    And the user clicks the button/link     css=.govuk-details summary
+    Then the user should see the element    css=.govuk-details__text p
     And the user should see the element     css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 Working days per year should be 232
@@ -97,7 +97,7 @@ Non-academic partner finance section
     [Tags]    HappyPath
     [Setup]  Log in as a different user     &{collaborator1_credentials}
     Given the user navigates to Your-finances page  ${applicationName}
-    And The user should see the element      JQuery=span.summary:contains("Not requesting funding")
+    And The user should see the element      JQuery=.govuk-details__summary:contains("Not requesting funding")
     and the user should see the element     link=Your project costs
     and the user should see the element     link=Your organisation
     When the user clicks the button/link    link=Your funding
@@ -206,8 +206,8 @@ the user navigates to another page
 
 the user should see the funding guidance
     [Documentation]    INFUND-7093
-    the user should see the element           css=#details-content-0 p
+    the user should see the element           css=.govuk-details__text p
 
 the user should not see the funding guidance
     [Documentation]    INFUND-7093
-    the user should not see the element           css=#details-content-0 p
+    the user should not see the element           css=.govuk-details__text p
