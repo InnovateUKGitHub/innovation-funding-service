@@ -9,13 +9,15 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessor.controller.CompetitionManagementAssessorProfileController;
-import org.innovateuk.ifs.management.assessor.populator.CompAssessorProfileDeclarationModelPopulator;
-import org.innovateuk.ifs.management.assessor.populator.CompAssessorProfileSkillsModelPopulator;
-import org.innovateuk.ifs.management.assessor.viewmodel.CompAssessorProfileDeclarationViewModel;
-import org.innovateuk.ifs.management.assessor.viewmodel.CompAssessorProfileSkillsViewModel;
+import org.innovateuk.ifs.populator.AssessorProfileDeclarationModelPopulator;
+import org.innovateuk.ifs.populator.AssessorProfileDetailsModelPopulator;
+import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDeclarationViewModel;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
+import org.innovateuk.ifs.viewmodel.AssessorProfileSkillsViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,11 +56,15 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
     @Spy
     @InjectMocks
-    private CompAssessorProfileSkillsModelPopulator compAssessorProfileSkillsModelPopulator;
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
 
     @Spy
     @InjectMocks
-    private CompAssessorProfileDeclarationModelPopulator compAssessorProfileDeclarationModelPopulator;
+    private AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
 
     @Mock
     private AssessorRestService assessorRestService;
@@ -117,15 +123,16 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                 .andExpect(model().attributeExists("model"))
                 .andReturn();
 
-        CompAssessorProfileSkillsViewModel model = (CompAssessorProfileSkillsViewModel) result.getModelAndView().getModel().get("model");
+        AssessorProfileSkillsViewModel model = (AssessorProfileSkillsViewModel) result.getModelAndView().getModel().get("model");
+        AssessorProfileDetailsViewModel assessorDetails = model.getAssessorProfileDetailsViewModel();
 
-        assertEquals("Test Tester", model.getName());
-        assertEquals("012345", model.getPhone());
+        assertEquals("Test Tester", assessorDetails.getName());
+        assertEquals("012345", assessorDetails.getPhoneNumber());
         assertEquals("A Skill", model.getSkillAreas());
-        assertEquals(ACADEMIC.getDisplayName(), model.getBusinessType());
-        assertEquals("test@test.com", model.getEmail());
-        assertEquals(2, model.getInnovationSectors().size());
-        assertEquals(expectedAddress, model.getAddress());
+        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType());
+        assertEquals("test@test.com", assessorDetails.getEmail());
+        assertEquals(2, model.getInnovationAreas().size());
+        assertEquals(expectedAddress, assessorDetails.getAddress());
 
         verify(assessorRestService, only()).getAssessorProfile(assessorId);
     }
@@ -147,13 +154,14 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                 .andExpect(model().attributeExists("model"))
                 .andReturn();
 
-        CompAssessorProfileDeclarationViewModel model = (CompAssessorProfileDeclarationViewModel) result.getModelAndView().getModel().get("model");
+        AssessorProfileDeclarationViewModel model = (AssessorProfileDeclarationViewModel) result.getModelAndView().getModel().get("model");
+        AssessorProfileDetailsViewModel assessorDetails = model.getAssessorProfileDetailsViewModel();
 
-        assertEquals("Test Tester", model.getName());
-        assertEquals("012345", model.getPhone());
-        assertEquals(ACADEMIC.getDisplayName(), model.getBusinessType());
-        assertEquals("test@test.com", model.getEmail());
-        assertEquals(expectedAddress, model.getAddress());
+        assertEquals("Test Tester", assessorDetails.getName());
+        assertEquals("012345", assessorDetails.getPhoneNumber());
+        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType());
+        assertEquals("test@test.com", assessorDetails.getEmail());
+        assertEquals(expectedAddress, assessorDetails.getAddress());
         assertEquals(expectedAppointments, model.getAppointments());
         assertEquals(expectedFamilyAffiliations, model.getFamilyAffiliations());
         assertEquals(expectedFamilyFinancialInterests, model.getFamilyFinancialInterests());

@@ -48,7 +48,7 @@ public class AssessorProfileController {
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(loggedInUser.getId()).getSuccess();
         ProfileResource profile = assessorProfile.getProfile();
 
-        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(loggedInUser, profile, null, null));
+        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(loggedInUser, profile, null, null, false));
         return "profile/skills";
     }
 

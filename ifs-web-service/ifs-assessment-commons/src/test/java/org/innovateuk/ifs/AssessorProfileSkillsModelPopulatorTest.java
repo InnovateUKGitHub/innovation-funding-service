@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.model;
+package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
@@ -6,10 +6,10 @@ import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.assessor.populator.CompAssessorProfileSkillsModelPopulator;
-import org.innovateuk.ifs.management.assessor.viewmodel.CompAssessorProfileSkillsViewModel;
-import org.innovateuk.ifs.management.competition.viewmodel.InnovationSectorViewModel;
+import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
+import org.innovateuk.ifs.viewmodel.AssessorProfileSkillsViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,10 +33,10 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CompAssessorProfileSkillsModelPopulatorTest {
+public class AssessorProfileSkillsModelPopulatorTest {
 
     @InjectMocks
-    private CompAssessorProfileSkillsModelPopulator compAssessorProfileSkillsModelPopulator;
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -89,8 +89,9 @@ public class CompAssessorProfileSkillsModelPopulatorTest {
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(expectedCompetition));
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(assessorProfileResource));
 
-        CompAssessorProfileSkillsViewModel viewModel =
-                compAssessorProfileSkillsModelPopulator.populateModel(assessorId, competitionId, null);
+        AssessorProfileSkillsViewModel viewModel =
+                assessorProfileSkillsModelPopulator.populateModel(assessorProfileResource.getUser(), assessorProfileResource.getProfile(), null, null);
+        AssessorProfileDetailsViewModel assessorDetails = viewModel.getAssessorProfileDetailsViewModel();
 
         InOrder inOrder = inOrder(competitionRestService, assessorRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competitionId);
@@ -98,23 +99,12 @@ public class CompAssessorProfileSkillsModelPopulatorTest {
         inOrder.verifyNoMoreInteractions();
 
         assertEquals(expectedCompetition, viewModel.getCompetition());
-        assertEquals(expectedFirstName + " " + expectedLastName, viewModel.getName());
-        assertEquals(expectedEmail, viewModel.getEmail());
-        assertEquals(expectedPhone, viewModel.getPhone());
+        assertEquals(expectedFirstName + " " + expectedLastName, assessorDetails.getName());
+        assertEquals(expectedEmail, assessorDetails.getEmail());
+        assertEquals(expectedPhone, assessorDetails.getPhoneNumber());
         assertEquals(expectedSkills, viewModel.getSkillAreas());
-        assertEquals(expectedAddress, viewModel.getAddress());
-        assertEquals(expectedBusinessType.getDisplayName(), viewModel.getBusinessType());
-        assertEquals(2, viewModel.getInnovationSectors().size());
-
-        InnovationSectorViewModel sector1 = viewModel.getInnovationSectors().get(0);
-        assertEquals("sector 1", sector1.getName());
-        assertEquals(2, sector1.getChildren().size());
-        assertEquals(expectedInnovationAreas.get(0), sector1.getChildren().get(0));
-        assertEquals(expectedInnovationAreas.get(2), sector1.getChildren().get(1));
-
-        InnovationSectorViewModel sector2 = viewModel.getInnovationSectors().get(1);
-        assertEquals("sector 2", sector2.getName());
-        assertEquals(1, sector2.getChildren().size());
-        assertEquals(expectedInnovationAreas.get(1), sector2.getChildren().get(0));
+        assertEquals(expectedAddress, assessorDetails.getAddress());
+        assertEquals(expectedBusinessType.getDisplayName(), assessorDetails.getBusinessType());
+        assertEquals(2, viewModel.getInnovationAreas().size());
     }
 }

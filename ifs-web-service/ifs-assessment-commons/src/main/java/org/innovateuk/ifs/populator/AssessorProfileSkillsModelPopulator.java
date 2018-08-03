@@ -32,7 +32,7 @@ public class AssessorProfileSkillsModelPopulator {
         this.competitionRestService = competitionRestService;
     }
 
-    public AssessorProfileSkillsViewModel populateModel(UserResource user, ProfileResource profile, Optional<Long> competitionId, String originQuery) {
+    public AssessorProfileSkillsViewModel populateModel(UserResource user, ProfileResource profile, Optional<Long> competitionId, String originQuery, boolean isUserCompAdmin) {
 
         CompetitionResource competition =
                 Optional.ofNullable(competitionId).isPresent() ? competitionRestService.getCompetitionById(competitionId.get()).getSuccess() : null;
@@ -44,7 +44,8 @@ public class AssessorProfileSkillsModelPopulator {
                 assessorProfileDetailsViewModel,
                 getInnovationAreasSectorMap(profile.getInnovationAreas()),
                 profile.getSkillsAreas(),
-                originQuery
+                originQuery,
+                isUserCompAdmin
         );
     }
 

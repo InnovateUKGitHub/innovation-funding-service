@@ -40,7 +40,7 @@
                 <dd th:text="${model.assessorProfileDetailsViewModel.email}" />
             </dl>
 
-            <div class="form-footer">
+            <div class="form-footer" th:if="${model.isUserCompAdmin}">
                 <div class="form-footer__actions"><a th:href="@{/profile/details/edit}">Edit</a></div>
                 <div class="form-footer__info">
                     <span class="textarea-footer"></span>
@@ -48,15 +48,6 @@
                     <span class="update-details">13 September 2017</span>
                 </div>
             </div>
-
-            <!--<div class="grid-row extra-margin">-->
-                <!--<div class="column-half">-->
-                    <!--<a th:href="@{/assessor/dashboard}" class="button">Return to assessor dashboard</a>-->
-                <!--</div>-->
-                <!--<div class="column-half alignright">-->
-                    <!--<a th:href="@{/profile/details/edit}" class="button-secondary">Edit</a>-->
-                <!--</div>-->
-            <!--</div>-->
 
             <ul class="inline-nav extra-margin">
                 <li class="selected">
@@ -87,7 +78,8 @@
             <h3 class="heading-medium">Skill areas</h3>
             <p th:if="${model.skillAreas}" th:text="${model.skillAreas}">skillAreas</p>
 
-            <div class="form-footer">
+
+            <div class="form-footer" th:if="${model.isUserCompAdmin}">
                 <div class="form-footer__actions"><a th:href="@{/profile/skills/edit}">Edit</a></div>
                 <div class="form-footer__info">
                     <span class="textarea-footer"></span>
