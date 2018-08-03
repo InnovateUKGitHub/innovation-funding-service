@@ -22,14 +22,14 @@
 
         <th:block th:if="${model.searchStringPresent}">
             <p class="govuk-body">
-                <span th:text="${model.applicationCount}" class="govuk-heading-xl" />
+                <span th:text="${model.applicationCount}" class="govuk-!-font-size-48 govuk-!-font-weight-bold" />
                 <strong>applications</strong>
                 matching the number
                 <strong th:text="${model.searchString}" />
             </p>
         </th:block>
 
-        <th:block th:insert="fragments/dashboard-application-search :: application-search(applications=${model.applications}, count=${model.applicationCount}, pagination=${model.applicationPagination})" />
+        <th:block th:insert="fragments/dashboard-application-search :: application-search(applications=${model.applications}, count=${model.applicationCount}, pagination=${model.applicationPagination}, isSupport=${model.support})" />
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

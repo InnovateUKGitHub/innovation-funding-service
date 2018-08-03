@@ -148,8 +148,8 @@ Complete the org size section
     ${orgSizeReadonly}=  Run Keyword And Return Status    Element Should Be Visible   jQuery=button:contains("Edit")
     Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery=button:contains("Edit")
     the user selects the radio button    financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
-    the user enters text to a text field    jQuery=.govuk-hint:contains("turnover") + + input    150
-    the user enters text to a text field    jQuery=.govuk-hint:contains("employees") + + input    0
+    the user enters text to a text field    jQuery=.govuk-hint:contains("turnover") + input    150
+    the user enters text to a text field    jQuery=.govuk-hint:contains("employees") + input    0
     the user moves focus to the element    jQuery=button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    jQuery=button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    link=Your finances
