@@ -128,7 +128,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Spy
     @InjectMocks
     @SuppressWarnings("unused")
-    private ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService, organisationRestService);
+    private ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
 
     @Before
     public void setup() {

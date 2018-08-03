@@ -25,11 +25,11 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     private CompanyHouseRestService companyHouseRestService;
 
     @Mock
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     @Override
     protected OrganisationService supplyServiceUnderTest() {
-        return new OrganisationServiceImpl(organisationRestService, companyHouseRestService, processRoleService);
+        return new OrganisationServiceImpl(organisationRestService, companyHouseRestService, userRestService);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         processRole.setOrganisationId(organisationId);
         OrganisationResource organisation = new OrganisationResource();
         organisation.setOrganisationType(organisationType);
-        when(processRoleService.findProcessRole(userId, applicationId)).thenReturn(processRole);
+        when(userRestService.findProcessRole(userId, applicationId)).thenReturn(restSuccess(processRole));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
         Long returnedOrganisationType = service.getOrganisationType(userId, applicationId);

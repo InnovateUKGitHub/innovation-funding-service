@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.application.sectionupdater;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -36,9 +35,6 @@ public class FinanceSectionUpdater extends AbstractSectionUpdater implements Com
 
     @Autowired
     private SectionService sectionService;
-
-    @Autowired
-    private QuestionService questionService;
 
     @Autowired
     private QuestionRestService questionRestService;

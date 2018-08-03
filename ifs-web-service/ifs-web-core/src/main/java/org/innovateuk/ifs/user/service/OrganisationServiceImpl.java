@@ -21,14 +21,14 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     private OrganisationRestService organisationRestService;
     private CompanyHouseRestService companyHouseRestService;
-    private ProcessRoleService processRoleService;
+    private UserRestService userRestService;
 
     public OrganisationServiceImpl(OrganisationRestService organisationRestService,
                                    CompanyHouseRestService companyHouseRestService,
-                                   ProcessRoleService processRoleService) {
+                                   UserRestService userRestService) {
         this.organisationRestService = organisationRestService;
         this.companyHouseRestService = companyHouseRestService;
-        this.processRoleService = processRoleService;
+        this.userRestService = userRestService;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     @Override
     public Long getOrganisationType(long userId, long applicationId) {
-        final ProcessRoleResource processRoleResource = processRoleService.findProcessRole(userId, applicationId);
+        final ProcessRoleResource processRoleResource = userRestService.findProcessRole(userId, applicationId).getSuccess();
         if (processRoleResource != null && processRoleResource.getOrganisationId() != null) {
             final OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRoleResource.getOrganisationId()).getSuccess();
             return organisationResource.getOrganisationType();

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -77,6 +78,9 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
     @Mock
     protected QuestionService questionService;
+
+    @Mock
+    protected QuestionRestService questionRestService;
 
     @Mock
     protected ProcessRoleService processRoleService;
@@ -249,7 +253,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         Map<Long, List<QuestionResource>> currentSectionQuestions = new HashMap<>();
         currentSectionQuestions.put(currentSection.getId(), sectionQuestions);
 
-        when(questionService.findByCompetition(competitionId)).thenReturn(sectionQuestions);
+        when(questionRestService.findByCompetition(competitionId)).thenReturn(restSuccess(sectionQuestions));
         when(formInputRestService.getByQuestionIdAndScope(sectionQuestions.get(0).getId(), APPLICATION)).thenReturn(restSuccess(responses));
 
         target.addSectionDetails(model, Optional.of(currentSection));

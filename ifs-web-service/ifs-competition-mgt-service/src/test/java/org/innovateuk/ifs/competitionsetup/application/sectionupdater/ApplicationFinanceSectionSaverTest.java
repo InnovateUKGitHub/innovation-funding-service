@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.application.sectionupdater;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
@@ -46,9 +45,6 @@ public class ApplicationFinanceSectionSaverTest {
 
     @Mock
     private SectionService sectionService;
-
-    @Mock
-    private QuestionService questionService;
 
     @Mock
     private QuestionRestService questionRestService;

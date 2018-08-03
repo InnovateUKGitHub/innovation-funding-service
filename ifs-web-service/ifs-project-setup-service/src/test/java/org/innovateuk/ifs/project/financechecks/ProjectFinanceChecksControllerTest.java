@@ -138,7 +138,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
     @Spy
     @InjectMocks
     @SuppressWarnings("unused")
-    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService, organisationRestService);
+    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator(organisationService);
 
     @Before
     public void setUp() {
