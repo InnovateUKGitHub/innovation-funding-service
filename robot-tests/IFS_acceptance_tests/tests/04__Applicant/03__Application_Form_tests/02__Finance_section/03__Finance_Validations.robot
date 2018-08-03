@@ -15,7 +15,7 @@ Mark as complete Your funding with only one input should not be possible
     When the user clicks the button/link      link = Your funding
     And the user enters text to a text field  css = [name^="finance-grantclaimpercentage"]  70
     And the user moves focus to the element   css = [data-target="other-funding-table"] label
-    Then the user should see the element      jQuery = .govuk-button--disabled:contains("Mark as complete")
+    Then the user should see the element      jQuery = #mark-all-as-complete.disabled:contains("Mark as complete")
 
 Other funding client side
     [Documentation]    INFUND-2214
