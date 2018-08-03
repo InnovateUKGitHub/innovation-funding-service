@@ -138,10 +138,10 @@ Query section is disabled before finance contacts have been selected
     [Documentation]    IFS-236
     [Tags]    HappyPath
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationEggsId}/eligibility
-    And the user clicks the button/link    jQuery=.govuk-button:contains("Queries")
+    And the user clicks the button/link    jQuery=.button-secondary:contains("Queries")
     Then the user should see the element    jQuery=.govuk-button:contains("Post a new query")[disabled]
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
-    And the user clicks the button/link    jQuery=.govuk-button:contains("Queries")
+    And the user clicks the button/link    jQuery=.button-secondary:contains("Queries")
     Then the user should see the element    jQuery=.govuk-button:contains("Post a new query")[disabled]
     [Teardown]    finance contacts are selected and bank details are approved
 
