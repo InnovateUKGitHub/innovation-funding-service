@@ -26,7 +26,7 @@
                        placeholder="0"
                        th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
                                 data-max-errormessage=#{validation.field.percentage.max.value.or.lower('%max%')}"
-                        />&percnt;
+                /><span class="govuk-body">&percnt;</span>
             </div>
         </th:block>
         <th:block th:if="${model.readonly}">
@@ -1751,8 +1751,8 @@
                 th:attr="data-repeatable-row=${costIdentifier}"
                 class="govuk-table__row">
                 <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'govuk-form-group--error'">
-                    <label th:for="|formInput[cost-${costIdentifier}-fundingSource]|">
-                        <span class="govuk-visually-hidden">Source of funding</span>
+                    <label th:for="|formInput[cost-${costIdentifier}-fundingSource]|" class="govuk-visually-hidden">
+                        Source of funding
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
                     </label>
                     <input type="text"
@@ -1766,8 +1766,8 @@
                            th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}" />
                 </td>
                 <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'govuk-form-group--error'">
-                    <label th:for="|formInput[cost-${costIdentifier}-securedDate]|">
-                        <span class="govuk-visually-hidden">Date secured</span>
+                    <label th:for="|formInput[cost-${costIdentifier}-securedDate]|" class="govuk-visually-hidden">
+                        Date secured
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
                     </label>
                     <input type="text"
@@ -1784,8 +1784,8 @@
                 </td>
 
                 <td class="govuk-table__cell govuk-form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'govuk-form-group--error' : ''">
-                    <label th:for="|formInput[cost-${costIdentifier}-fundingAmount]|">
-                        <span class="govuk-visually-hidden">Funding amount (&pound;)</span>
+                    <label th:for="|formInput[cost-${costIdentifier}-fundingAmount]|" class="govuk-visually-hidden">
+                        Funding amount (&pound;)
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
                     </label>
                     <input class="govuk-input govuk-input--width-10"
