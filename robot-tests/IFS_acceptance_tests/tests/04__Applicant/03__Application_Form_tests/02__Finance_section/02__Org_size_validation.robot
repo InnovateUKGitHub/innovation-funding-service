@@ -132,8 +132,8 @@ Custom Suite Setup
 The user marks their organisation as
     [Arguments]    ${org_size}
     the user selects the radio button    financePosition-organisationSize  ${org_size}
-    the user enters text to a text field    jQuery=.govuk-hint:contains("turnover") + + input    150
-    the user enters text to a text field    jQuery=.govuk-hint:contains("employees") + + input    0
+    the user enters text to a text field    jQuery=.govuk-hint:contains("turnover") + input    150
+    the user enters text to a text field    jQuery=.govuk-hint:contains("employees") + input    0
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
     the user should not see the element  css=.govuk-error-message
     the user should see the text in the page    Please complete your project finances.
