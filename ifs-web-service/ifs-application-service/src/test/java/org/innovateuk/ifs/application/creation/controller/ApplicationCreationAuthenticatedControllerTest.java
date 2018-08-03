@@ -201,7 +201,9 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
 
     @Test
     public void testGetCreateNewApplicationNotEligible() throws Exception {
+        when(organisationRestService.getOrganisationByUserId(1L)).thenReturn(restSuccess(newOrganisationResource().build()));
         when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(newCompetitionResource().withLeadApplicantType(asList(1L)).build()));
+
         mockMvc.perform(get("/application/create-authenticated/1")
                 .param("createNewApplication", "0"))
                 .andExpect(status().is3xxRedirection())

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.*;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -18,9 +18,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -67,10 +64,12 @@ public class ApplicationModelPopulatorTest {
 
     @Mock
     protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
-    ;
 
     @Mock
     protected OrganisationService organisationService;
+
+    @Mock
+    protected OrganisationRestService organisationRestService;
 
     @Mock
     protected FinanceViewHandlerProvider financeViewHandlerProvider;
@@ -180,7 +179,7 @@ public class ApplicationModelPopulatorTest {
         when(questionRestService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(restSuccess(costsQuestions));
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
 
-        when(organisationService.getOrganisationForUser(user.getId())).thenReturn(userOrganisation);
+        when(organisationRestService.getOrganisationByUserId(user.getId())).thenReturn(restSuccess(userOrganisation));
         when(financeViewHandlerProvider.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);
 
         ProcessRoleResource processRole = newProcessRoleResource().withOrganisation().withUser(user).build();

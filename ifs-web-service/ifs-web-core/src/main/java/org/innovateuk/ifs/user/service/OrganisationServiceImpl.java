@@ -42,11 +42,6 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public OrganisationResource getOrganisationForUser(long userId) {
-        return organisationRestService.getOrganisationByUserId(userId).getSuccess();
-    }
-
-    @Override
     public OrganisationResource getOrganisationByIdForAnonymousUserFlow(long organisationId) {
         return organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId).getSuccess();
     }

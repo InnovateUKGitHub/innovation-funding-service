@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.registration.model;
 
 import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static java.util.Optional.of;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -24,7 +26,7 @@ public class InviteAndUserOrganisationDifferentModelPopulatorTest extends BaseUn
     private InviteAndUserOrganisationDifferentModelPopulator populator;
 
     @Mock
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private UserService userService;
@@ -49,7 +51,7 @@ public class InviteAndUserOrganisationDifferentModelPopulatorTest extends BaseUn
                 build();
         UserResource user = newUserResource().withEmail(inviteEmail).build();
         when(userService.findUserByEmail(inviteEmail)).thenReturn(of(user));
-        when(organisationService.getOrganisationForUser(user.getId())).thenReturn(inviteesExistingOrganisation);
+        when(organisationRestService.getOrganisationByUserId(user.getId())).thenReturn(restSuccess(inviteesExistingOrganisation));
 
         // Method under test
         InviteAndUserOrganisationDifferentViewModel model = populator.populateModel(invite);

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.registration.model;
 
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class InviteAndUserOrganisationDifferentModelPopulator {
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private UserService userService;
@@ -22,7 +23,7 @@ public class InviteAndUserOrganisationDifferentModelPopulator {
     public InviteAndUserOrganisationDifferentViewModel populateModel(ApplicationInviteResource invite) {
         String inviteOrganisationName = invite.getInviteOrganisationNameConfirmedSafe();
         UserResource user = userService.findUserByEmail(invite.getEmail()).get();
-        OrganisationResource userOrganisation = organisationService.getOrganisationForUser(user.getId());
+        OrganisationResource userOrganisation = organisationRestService.getOrganisationByUserId(user.getId()).getSuccess();
         String leadApplicantName = invite.getLeadApplicant();
         String leadApplicantEmail = invite.getLeadApplicantEmail();
         return new InviteAndUserOrganisationDifferentViewModel(inviteOrganisationName, userOrganisation.getName(), leadApplicantName, leadApplicantEmail);

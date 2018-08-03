@@ -16,8 +16,6 @@ public interface OrganisationService {
 
     OrganisationResource getOrganisationById(long organisationId);
 
-    OrganisationResource getOrganisationForUser(long userId);
-
     OrganisationResource getOrganisationByIdForAnonymousUserFlow(long organisationId);
 
     OrganisationResource createOrMatch(OrganisationResource organisation);

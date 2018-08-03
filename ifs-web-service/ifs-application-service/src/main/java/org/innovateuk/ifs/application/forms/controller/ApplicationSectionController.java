@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
@@ -76,7 +77,7 @@ public class ApplicationSectionController {
     private QuestionService questionService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private ApplicationRedirectionService applicationRedirectionService;
@@ -247,7 +248,7 @@ public class ApplicationSectionController {
     }
 
     private boolean userIsResearch(long userId) {
-        return organisationService.getOrganisationForUser(userId).getOrganisationType() == OrganisationTypeEnum.RESEARCH.getId();
+        return organisationRestService.getOrganisationByUserId(userId).getSuccess().getOrganisationType() == OrganisationTypeEnum.RESEARCH.getId();
     }
 
     private boolean validateTermsAndConditionsAgreement(ApplicationForm form, BindingResult bindingResult) {

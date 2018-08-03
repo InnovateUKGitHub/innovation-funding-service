@@ -4,6 +4,7 @@ import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,11 +23,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class ThreadViewModelPopulator {
 
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
-    public ThreadViewModelPopulator(OrganisationService organisationService) {
-        this.organisationService = organisationService;
+    public ThreadViewModelPopulator(OrganisationRestService organisationRestService) {
+        this.organisationRestService = organisationRestService;
     }
 
     /**
@@ -109,7 +110,7 @@ public class ThreadViewModelPopulator {
             if (user.isInternalUser()) {
                 return user.getName() + " - Innovate UK (Finance team)";
             } else {
-                return user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName();
+                return user.getName() + " - " + organisationRestService.getOrganisationByUserId(user.getId()).getSuccess().getName();
             }
         };
     }
@@ -123,7 +124,7 @@ public class ThreadViewModelPopulator {
             if (user.isInternalUser()) {
                 return "Innovate UK - Finance team";
             } else {
-                return user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName();
+                return user.getName() + " - " + organisationRestService.getOrganisationByUserId(user.getId()).getSuccess().getName();
             }
         };
     }
