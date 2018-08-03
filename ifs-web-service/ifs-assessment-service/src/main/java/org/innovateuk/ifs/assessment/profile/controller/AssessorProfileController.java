@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.assessment.profile.controller;
 
+import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.populator.AssessorProfileDeclarationModelPopulator;
 import org.innovateuk.ifs.populator.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Optional;
 
 /**
  * Controller to manage the Assessor Profile pages
@@ -24,21 +29,26 @@ public class AssessorProfileController {
     private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
     private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
     private ProfileRestService profileRestService;
+    private AssessorRestService assessorRestService;
 
     public AssessorProfileController(AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator,
                                      AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator,
-                                     ProfileRestService profileRestService) {
+                                     ProfileRestService profileRestService,
+                                     AssessorRestService assessorRestService) {
         this.assessorProfileSkillsModelPopulator = assessorProfileSkillsModelPopulator;
         this.assessorProfileDeclarationModelPopulator = assessorProfileDeclarationModelPopulator;
         this.profileRestService = profileRestService;
+        this.assessorRestService = assessorRestService;
     }
 
     @GetMapping("/skills")
     public String skills(Model model,
                          UserResource loggedInUser) {
 
-        UserProfileResource userProfileResource = profileRestService.getUserProfile(loggedInUser.getId()).getSuccess();
-        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(loggedInUser, userProfileResource.getAddress()));
+        AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(loggedInUser.getId()).getSuccess();
+        ProfileResource profile = assessorProfile.getProfile();
+
+        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(loggedInUser, profile, null, null));
         return "profile/skills";
     }
 
@@ -46,8 +56,10 @@ public class AssessorProfileController {
     public String profileDeclaration(Model model,
                                      UserResource loggedInUser) {
 
-        UserProfileResource userProfileResource = profileRestService.getUserProfile(loggedInUser.getId()).getSuccess();
-        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(loggedInUser, userProfileResource.getAddress()));
+        AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(loggedInUser.getId()).getSuccess();
+        ProfileResource profile = assessorProfile.getProfile();
+
+        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(loggedInUser, profile, null, null));
         return "profile/declaration-of-interest";
     }
 

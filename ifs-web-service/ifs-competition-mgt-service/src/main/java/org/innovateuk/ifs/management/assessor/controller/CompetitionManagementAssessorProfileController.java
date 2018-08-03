@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Optional;
+
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -98,11 +100,9 @@ public class CompetitionManagementAssessorProfileController {
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.valueOf(origin), queryParams);
 
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccess();
-
         ProfileResource profile = assessorProfile.getProfile();
 
-//        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(assessorId, competitionId, originQuery));
-        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(assessorProfile.getUser(), profile.getAddress()));
+        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(assessorProfile.getUser(), profile, Optional.of(competitionId), originQuery));
         model.addAttribute("backUrl", buildBackUrl(origin, competitionId, applicationId, assessorId, queryParams));
 
         return "assessors/profile-skills";
@@ -119,10 +119,9 @@ public class CompetitionManagementAssessorProfileController {
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.valueOf(origin), queryParams);
 
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccess();
-
         ProfileResource profile = assessorProfile.getProfile();
-        //        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(assessorId, competitionId, originQuery));
-        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(assessorProfile.getUser(), profile.getAddress()));
+
+        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(assessorProfile.getUser(), profile, Optional.of(competitionId), originQuery));
         model.addAttribute("backUrl", buildBackUrl(origin, competitionId, applicationId, assessorId, queryParams));
 
         return "assessors/profile-declaration";

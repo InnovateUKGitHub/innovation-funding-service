@@ -1,42 +1,39 @@
 package org.innovateuk.ifs.viewmodel;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.user.resource.*;
 
 public class AssessorProfileDetailsViewModel {
 
+    private long assessorId;
     private Title title;
-    private String firstName;
-    private String lastName;
-    private Gender gender;
+    private String name;
     private AddressResource address;
     private String phoneNumber;
     private String email;
+    private BusinessType businessType;
 
-    public AssessorProfileDetailsViewModel(UserResource user, AddressResource addressResource) {
+    public AssessorProfileDetailsViewModel(UserResource user, ProfileResource profile) {
+        this.assessorId = user.getId();
         this.title = user.getTitle();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.gender = user.getGender();
-        this.address = addressResource;
+        this.name = user.getName();
+        this.address = profile.getAddress();
         this.phoneNumber = user.getPhoneNumber();
         this.email = user.getEmail();
+        this.businessType = profile.getBusinessType();
+    }
+
+    public long getAssessorId() {
+        return assessorId;
     }
 
     public Title getTitle() {
         return title;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public Gender getGender() {
-        return gender;
+    public String getName() {
+        return name;
     }
 
     public AddressResource getAddress() {
@@ -49,5 +46,9 @@ public class AssessorProfileDetailsViewModel {
 
     public String getEmail() {
         return email;
+    }
+
+    public BusinessType getBusinessType() {
+        return businessType;
     }
 }

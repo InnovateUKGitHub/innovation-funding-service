@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 
 public class AssessorProfileDeclarationViewModel {
 
+    private CompetitionResource competition;
     private AssessorProfileDetailsViewModel assessorProfileDetailsViewModel;
     private boolean completed;
     private String principalEmployer;
@@ -16,8 +18,10 @@ public class AssessorProfileDeclarationViewModel {
     private String financialInterests;
     private List<AffiliationResource> familyAffiliations = new ArrayList<>();
     private String familyFinancialInterests;
+    private String originQuery;
 
-    public AssessorProfileDeclarationViewModel(AssessorProfileDetailsViewModel assessorProfileDetailsViewModel,
+    public AssessorProfileDeclarationViewModel(CompetitionResource competition,
+                                               AssessorProfileDetailsViewModel assessorProfileDetailsViewModel,
                                                boolean completed,
                                                String principalEmployer,
                                                String role,
@@ -25,7 +29,9 @@ public class AssessorProfileDeclarationViewModel {
                                                List<AffiliationResource> appointments,
                                                String financialInterests,
                                                List<AffiliationResource> familyAffiliations,
-                                               String familyFinancialInterests) {
+                                               String familyFinancialInterests,
+                                               String originQuery) {
+        this.competition = competition;
         this.assessorProfileDetailsViewModel = assessorProfileDetailsViewModel;
         this.completed = completed;
         this.principalEmployer = principalEmployer;
@@ -35,6 +41,11 @@ public class AssessorProfileDeclarationViewModel {
         this.financialInterests = financialInterests;
         this.familyAffiliations = familyAffiliations;
         this.familyFinancialInterests = familyFinancialInterests;
+        this.originQuery = originQuery;
+    }
+
+    public CompetitionResource getCompetition() {
+        return competition;
     }
 
     public AssessorProfileDetailsViewModel getAssessorProfileDetailsViewModel() {
@@ -71,5 +82,9 @@ public class AssessorProfileDeclarationViewModel {
 
     public String getFamilyFinancialInterests() {
         return familyFinancialInterests;
+    }
+
+    public String getOriginQuery() {
+        return originQuery;
     }
 }

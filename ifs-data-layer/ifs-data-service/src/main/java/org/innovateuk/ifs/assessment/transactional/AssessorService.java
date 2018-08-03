@@ -15,7 +15,7 @@ public interface AssessorService {
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'assessor')")
     @SecuredBySpring(
             value = "READ",
             securedType = ProfileResource.class,

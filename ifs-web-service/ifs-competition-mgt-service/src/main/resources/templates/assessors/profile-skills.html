@@ -15,58 +15,58 @@
     <h2 class="heading-medium">Assessor details</h2>
 
     <h3 class="heading-small">Name</h3>
-    <p th:text="${model.name}">John Smith</p>
+    <p th:text="${model.assessorProfileDetailsViewModel.name}">John Smith</p>
 
-    <h3 class="heading-small" th:if="${model.address}">Address</h3>
-    <p th:if="${model.address}">
-        <th:block th:if="${model.address.addressLine1}">
-            <th:block th:text="${model.address.addressLine1}">Street address 1</th:block><br />
+    <h3 class="heading-small" th:if="${model.assessorProfileDetailsViewModel.address}">Address</h3>
+    <p th:if="${model.assessorProfileDetailsViewModel.address}">
+        <th:block th:if="${model.assessorProfileDetailsViewModel.address.addressLine1}">
+            <th:block th:text="${model.assessorProfileDetailsViewModel.address.addressLine1}">Street address 1</th:block><br />
         </th:block>
-        <th:block th:if="${model.address.addressLine2}">
-            <th:block th:text="${model.address.addressLine2}">Street address 2</th:block><br />
+        <th:block th:if="${model.assessorProfileDetailsViewModel.address.addressLine2}">
+            <th:block th:text="${model.assessorProfileDetailsViewModel.address.addressLine2}">Street address 2</th:block><br />
         </th:block>
-        <th:block th:if="${model.address.addressLine3}">
-            <th:block th:text="${model.address.addressLine3}">Street address 3</th:block><br />
+        <th:block th:if="${model.assessorProfileDetailsViewModel.address.addressLine3}">
+            <th:block th:text="${model.assessorProfileDetailsViewModel.address.addressLine3}">Street address 3</th:block><br />
         </th:block>
-        <th:block th:if="${model.address.town}">
-            <th:block th:text="${model.address.town}">Town</th:block><br />
+        <th:block th:if="${model.assessorProfileDetailsViewModel.address.town}">
+            <th:block th:text="${model.assessorProfileDetailsViewModel.address.town}">Town</th:block><br />
         </th:block>
-        <th:block th:if="${model.address.county}">
-            <th:block th:text="${model.address.county}">County</th:block><br />
+        <th:block th:if="${model.assessorProfileDetailsViewModel.address.county}">
+            <th:block th:text="${model.assessorProfileDetailsViewModel.address.county}">County</th:block><br />
         </th:block>
-        <th:block th:if="${model.address.postcode}" th:text="${model.address.postcode}">Post code</th:block>
+        <th:block th:if="${model.assessorProfileDetailsViewModel.address.postcode}" th:text="${model.assessorProfileDetailsViewModel.address.postcode}">Post code</th:block>
     </p>
 
-    <h3 class="heading-small" th:if="${model.phone}">Phone number</h3>
-    <p th:if="${model.phone}" th:text="${model.phone}">01234 567891</p>
+    <h3 class="heading-small" th:if="${model.assessorProfileDetailsViewModel.phoneNumber}">Phone number</h3>
+    <p th:if="${model.assessorProfileDetailsViewModel.phoneNumber}" th:text="${model.assessorProfileDetailsViewModel.phoneNumber}">01234 567891</p>
 
     <h3 class="heading-small">Email address</h3>
-    <p><a th:href="|mailto:${model.email}|" th:text="${model.email}">j.s@assessor.com</a></p>
+    <p><a th:href="|mailto:${model.assessorProfileDetailsViewModel.email}|" th:text="${model.assessorProfileDetailsViewModel.email}">j.s@assessor.com</a></p>
 
-    <h3 class="heading-small" th:if="${model.businessType}">Assessor type</h3>
-    <p th:if="${model.businessType}" th:text="${model.businessType}">business</p>
+    <h3 class="heading-small" th:if="${model.assessorProfileDetailsViewModel.businessType}">Assessor type</h3>
+    <p th:if="${model.assessorProfileDetailsViewModel.businessType}" th:text="${model.assessorProfileDetailsViewModel.businessType}">business</p>
 
     <ul class="inline-nav">
         <li class="selected">
-            <a th:href="@{/competition/{cid}/assessors/profile/{assessorId}/skills(cid=${model.competition.id},assessorId=${model.assessorId})} + ${model.originQuery}">Skills</a>
+            <a th:href="@{/competition/{cid}/assessors/profile/{assessorId}/skills(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}">Skills</a>
         </li>
         <li class="not-selected">
-            <a th:href="@{/competition/{cid}/assessors/profile/{assessorId}/declaration(cid=${model.competition.id},assessorId=${model.assessorId})} + ${model.originQuery}">DOI</a>
+            <a th:href="@{/competition/{cid}/assessors/profile/{assessorId}/declaration(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}">DOI</a>
         </li>
     </ul>
 
     <h3 class="heading-medium">Innovation areas</h3>
 
     <div class="extra-margin">
-        <table th:each="innovationSector : ${model.innovationSectors}" >
+        <table th:each="innovationSector : ${model.innovationAreas}">
             <thead>
             <tr>
-                <th scope="col" th:text="${innovationSector.name}">materials and manufacturing</th>
+                <th scope="col" th:text="${innovationSector.key}">materials and manufacturing</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="innovationArea : ${innovationSector.children}">
-                <td th:text="${innovationArea.name}">digital sciences</td>
+            <tr th:each="innovationArea : ${innovationSector.value}">
+                <td th:text="${innovationArea}">digital sciences</td>
             </tr>
             </tbody>
         </table>

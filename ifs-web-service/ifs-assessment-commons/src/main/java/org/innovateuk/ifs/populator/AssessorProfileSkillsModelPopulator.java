@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.populator;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
 import org.innovateuk.ifs.viewmodel.AssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
@@ -12,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.*;
 
@@ -19,30 +24,38 @@ import static java.util.stream.Collectors.*;
 public class AssessorProfileSkillsModelPopulator {
 
     private AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator;
-    private ProfileRestService profileRestService;
+    private CompetitionRestService competitionRestService;
 
     public AssessorProfileSkillsModelPopulator(AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator,
-                                               ProfileRestService profileRestService) {
+                                               CompetitionRestService competitionRestService) {
         this.assessorProfileDetailsModelPopulator = assessorProfileDetailsModelPopulator;
-        this.profileRestService = profileRestService;
+        this.competitionRestService = competitionRestService;
     }
 
-    public AssessorProfileSkillsViewModel populateModel(UserResource user, AddressResource addressResource) {
+    public AssessorProfileSkillsViewModel populateModel(UserResource user, ProfileResource profile, Optional<Long> competitionId, String originQuery) {
 
-        AssessorProfileDetailsViewModel assessorProfileDetailsViewModel = assessorProfileDetailsModelPopulator.populateModel(user, addressResource);
+        CompetitionResource competition =
+                Optional.ofNullable(competitionId).isPresent() ? competitionRestService.getCompetitionById(competitionId.get()).getSuccess() : null;
 
-        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(user.getId()).getSuccess();
+        AssessorProfileDetailsViewModel assessorProfileDetailsViewModel = getAssessorProfileDetails(user, profile);
 
         return new AssessorProfileSkillsViewModel(
+                competition,
                 assessorProfileDetailsViewModel,
-                getInnovationAreasSectorMap(profileSkillsResource),
-                profileSkillsResource.getSkillsAreas()
+                getInnovationAreasSectorMap(profile.getInnovationAreas()),
+                profile.getSkillsAreas(),
+                originQuery
         );
     }
 
-    Map<String, List<String>> getInnovationAreasSectorMap(ProfileSkillsResource profileSkillsResource) {
-        return profileSkillsResource.getInnovationAreas().stream()
+    private Map<String, List<String>> getInnovationAreasSectorMap(List<InnovationAreaResource> innovationAreas) {
+        return innovationAreas.stream()
                 .collect(groupingBy(InnovationAreaResource::getSectorName, LinkedHashMap::new,
                         mapping(InnovationAreaResource::getName, toList())));
     }
+
+    private AssessorProfileDetailsViewModel getAssessorProfileDetails(UserResource user, ProfileResource profile) {
+        return assessorProfileDetailsModelPopulator.populateModel(user, profile);
+    }
+
 }
