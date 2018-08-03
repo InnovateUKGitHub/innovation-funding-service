@@ -54,11 +54,11 @@
             </div>
             <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <th:block th:if="${organisationForm.research}">
-                    <span class="govuk-hint">Choose your organisation:</span>
+                    <p class="govuk-body govuk-hint">Choose your organisation:</p>
                 </th:block>
                 <th:block th:unless="${organisationForm.research}">
                     <h2 class="govuk-heading-m govuk-!-margin-0">Companies House search results</h2>
-                    <span class="govuk-hint">Select your organisation from the options below</span>
+                    <p class="govuk-body govuk-hint">Select your organisation from the options below</p>
                 </th:block>
             </th:block>
             <ul id="org-results" class="govuk-list results-list panel" th:if="${organisationForm.organisationSearching}"
