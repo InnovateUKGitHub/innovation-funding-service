@@ -545,7 +545,7 @@ IFS.core.formValidation = (function () {
       var enabled = !d.is('[readonly]') || !m.is('[readonly]') || !y.is('[readonly]')
       var required = (d.attr('required') && m.attr('required') && y.attr('required'))
       var empty = ((d.val().length === 0) && (m.val().length === 0) && (y.val().length === 0))
-      var errorSummary = jQuery('.error-summary')
+      var errorSummary = jQuery('.govuk-error-summary')
 
       // don't show the validation messages for numbers in dates but we do check it as part of the date check
       allFields.attr({
@@ -764,7 +764,6 @@ IFS.core.formValidation = (function () {
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
-
       var formGroup = field.closest('.govuk-form-group')
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
@@ -779,14 +778,13 @@ IFS.core.formValidation = (function () {
         var errorEl = formGroup.find('.govuk-error-message:contains("' + message + '")')
         if (errorEl.length === 0) {
           if (visuallyhidden === false) { field.addClass('govuk-input--error') }
-          formGroup.find('legend,label').first().after('<span class="govuk-error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
+          formGroup.find('legend,label').first().after('<span class="govuk-error-message' + (visuallyhidden ? ' govuk-visually-hidden' : '') + '">' + message + '</span>')
         }
       }
 
       if (formGroupRowValidated) {
         if (visuallyhidden === false) { formGroupRowValidated.addClass('govuk-form-group--error') }
       }
-
       if (formGroupRow.length) {
         if (s.html5validationMode) { field[0].setCustomValidity(message) }
         if (visuallyhidden === false) { formGroupRow.addClass('govuk-form-group--error') }
@@ -794,7 +792,7 @@ IFS.core.formValidation = (function () {
         var linkedErrorEl = formGroupRow.find('[data-errorfield="' + name + '"]:contains("' + message + '")')
         if (linkedErrorEl.length === 0) {
           if (visuallyhidden === false) { field.addClass('govuk-input--error') }
-          formGroupRow.find('legend,label,[scope="row"]').first().append('<span data-errorfield="' + name + '" class="govuk-error-message' + (visuallyhidden ? ' visuallyhidden' : '') + '">' + message + '</span>')
+          formGroupRow.find('legend,label,[scope="row"]').first().append('<span data-errorfield="' + name + '" class="govuk-error-message' + (visuallyhidden ? ' govuk-visually-hidden' : '') + '">' + message + '</span>')
         }
       }
 
@@ -978,7 +976,7 @@ IFS.core.formValidation = (function () {
     },
     initFocusActions: function () {
       // If there is an error summary, set focus to the summary
-      var errorSummary = jQuery('.error-summary')
+      var errorSummary = jQuery('.govuk-error-summary')
       if (errorSummary.length) {
         errorSummary.focus()
       } else {
