@@ -23,7 +23,7 @@
             </th:block>
 
             <p th:if="${model.userLeadApplicant}">You are able to invite and remove contributors. Only the lead organisation and lead applicant cannot be removed.</p>
-            <p th:if="${model.userLeadApplicant and model.leadOrganisation}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
+            <p th:if="${model.userLeadApplicant and model.leadOrganisation}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovateuk.ukri.org">support@innovateuk.ukri.org</a>.</p>
             <p th:unless="${model.userLeadApplicant}">You are able to invite contributors from your own organisation.</p>
 
             <h2 class="heading-medium" th:text="${model.leadOrganisation} ? ${model.organisationName} + ', Lead organisation' : ${model.organisationName}">Empire Ltd, Lead organisation</h2>
