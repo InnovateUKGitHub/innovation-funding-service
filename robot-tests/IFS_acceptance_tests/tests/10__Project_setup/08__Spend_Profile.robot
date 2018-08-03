@@ -213,7 +213,7 @@ Lead Partner can see Spend profile summary
 Lead partner can edit his spend profile with invalid values and see the error messages
     [Documentation]  INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148 INFUND-6146
     [Tags]
-    When the user clicks the button/link       jQuery=.govuk-button:contains("Edit spend profile")
+    When the user clicks the button/link       jQuery=.button-secondary:contains("Edit spend profile")
     Then the user should see the element       jQuery=th:contains("Labour") + td input
     When the user enters text to a text field  jQuery=th:contains("Labour") + td input   520
     And the user moves focus to the element    jQuery=th:contains("Overheads") + td input
@@ -222,9 +222,9 @@ Lead partner can edit his spend profile with invalid values and see the error me
     And the user should see the element        jQuery=th:contains("Labour") ~ .fix-right.cell-error input[data-calculation-rawvalue="3495"]
     # Project costs for financial year are instantly reflecting the financial values INFUND-3971, INFUND-6148
     And the user should see the element        jQuery=.govuk-main-wrapper table tr:nth-child(1) td:nth-child(2):contains("£56,289")
-    When the user clicks the button/link       jQuery=.govuk-button:contains("Save and return to spend profile overview")
+    When the user clicks the button/link       jQuery=.button-secondary:contains("Save and return to spend profile overview")
     Then the user should see the element       jQuery=.govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
-    When the user clicks the button/link       jQuery=.govuk-button:contains("Edit spend profile")
+    When the user clicks the button/link       jQuery=.button-secondary:contains("Edit spend profile")
     Then the user enters text to a text field  jQuery=th:contains("Labour") + td input  10
     And the user should not see the element   jQuery=.govuk-form-group--error th:contains("Labour")
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  -55
@@ -233,7 +233,7 @@ Lead partner can edit his spend profile with invalid values and see the error me
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  35.25
     And the user moves focus to the element    jQuery=th:contains("Overheads") ~ td:nth-child(5)
     Then the user should see the element       jQuery=.govuk-error-summary__list li:contains("This field can only accept whole numbers")
-    When the user clicks the button/link       jQuery=.govuk-button:contains("Save and return to spend profile overview")
+    When the user clicks the button/link       jQuery=.button-secondary:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  0
     And the user moves focus to the element    css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
@@ -243,7 +243,7 @@ Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
     [Tags]    HappyPath
     Given the user navigates to the page       ${external_spendprofile_summary}/review
-    When the user clicks the button/link       jQuery=.govuk-button:contains("Edit spend profile")
+    When the user clicks the button/link       jQuery=.button-secondary:contains("Edit spend profile")
     And the user should see the element        css=table [type="number"]    # checking here that the table is not read-only
     Then the user should see the element       jQuery=th:contains("Labour") + td input
     When the user enters text to a text field  jQuery=th:contains("Labour") + td input  14
@@ -253,7 +253,7 @@ Lead partner can edit his spend profile with valid values
     And the user moves focus to the element    jQuery=th:contains("Subcontracting") ~ td:nth-child(7) input
     Then the user should see the element       jQuery=th:contains("Subcontracting") ~ td.fix-right input[data-calculation-rawvalue="90000"]
     And the user should not see the element    jQuery=.govuk-error-summary:contains("Unable to save spend profile")
-    When the user clicks the button/link       jQuery=.govuk-button:contains("Save and return to spend profile overview")
+    When the user clicks the button/link       jQuery=.button-secondary:contains("Save and return to spend profile overview")
     Then the user should not see the element   jQuery=.govuk-error-summary:contains("Your total costs are higher than the eligible project costs.")
 
 Project Manager can see Spend Profile in Progress
@@ -381,12 +381,12 @@ Academic partner can see the alternative academic view of the spend profile
 Academic partner spend profile server side validations
     [Documentation]    INFUND-5846
     [Tags]
-    Given the user clicks the button/link            jQuery=.govuk-button:contains("Edit spend profile")
+    Given the user clicks the button/link            jQuery=.button-secondary:contains("Edit spend profile")
     When the user enters text to a text field        css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    -1    # Directly incurredStaff
     And the user enters text to a text field         css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    3306  # Travel and subsistence
     And the user moves focus to the element          css=.spend-profile-table tbody .form-group-row:nth-child(7) td:nth-of-type(6) input
     Then the user should see the text in the page    Your total costs are higher than your eligible costs.
-    When the user clicks the button/link              jQuery=.govuk-button:contains("Save and return to spend profile overview")
+    When the user clicks the button/link              jQuery=.button-secondary:contains("Save and return to spend profile overview")
     Then the user should see the text in the page     This field should be 0 or higher.
 
 Academic partner spend profile client side validations
@@ -409,8 +409,8 @@ Academic partner spend profile client side validations
 Academic partner edits spend profile and this updates on the table
     [Documentation]    INFUND-5846
     [Tags]
-    When the user clicks the button/link    jQuery=.govuk-button:contains("Save and return to spend profile overview")
-    Then the user should see the element    jQuery=.govuk-button:contains("Edit spend profile")
+    When the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to spend profile overview")
+    Then the user should see the element    jQuery=.button-secondary:contains("Edit spend profile")
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    1
 
@@ -510,7 +510,7 @@ Partner can receive edit rights to his SP
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
     Then the user should see the element    css=li.require-action:nth-child(5)
     When the user clicks the button/link    link=Spend profile
-    Then the user should see the element    jQuery=.govuk-button:contains("Edit spend profile")
+    Then the user should see the element    jQuery=.button-secondary:contains("Edit spend profile")
     When the user clicks the button/link    link=Submit to lead partner
     And the user clicks the button/link     jQuery=button.govuk-button:contains("Submit")
 
@@ -694,8 +694,8 @@ Lead partner can edit own spend profile and mark as complete
     [Documentation]    INFUND-6977, INFUNF-7409
     When the user clicks the button/link    link=${Katz_name}
     And the user should see the text in the page    Your spend profile is marked as complete
-    And the user clicks the button/link    jQuery=.govuk-button:contains("Edit spend profile")
-    And the user clicks the button/link    jQuery=.govuk-button:contains("Save and return to spend profile overview")
+    And the user clicks the button/link    jQuery=.button-secondary:contains("Edit spend profile")
+    And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to spend profile overview")
     And the user clicks the button/link    css=[name="mark-as-complete"]
 
 Industrial partner receives edit rights and can submit their spend profile

@@ -42,7 +42,7 @@ Queries section is linked from eligibility and this selects eligibility on the q
     [Tags]  HappyPath
     Given Logging in and Error Checking   &{internal_finance_credentials}
     When the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/eligibility
-    And the user clicks the button/link   jQuery=.govuk-button:contains("Queries")
+    And the user clicks the button/link   jQuery=.button-secondary:contains("Queries")
     Then the user should see the element  jQuery=h2:contains("Queries")
     When the user clicks the button/link  jQuery=.govuk-button:contains("Post a new query")
     Then the user should see the dropdown option selected  Eligibility  section
@@ -52,7 +52,7 @@ Queries section is linked from viability and this selects viability on the query
     [Tags]
     [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Given the user clicks the button/link    jQuery=table.table-progress th:contains("Lead") + td a
-    When the user clicks the button/link     jQuery=.govuk-button:contains("Queries")
+    When the user clicks the button/link     jQuery=.button-secondary:contains("Queries")
     And the user clicks the button/link      jQuery=.govuk-button:contains("Post a new query")
     Then the user should see the dropdown option selected    Viability    section
 
@@ -101,8 +101,8 @@ Post new query server side validations
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link     jQuery=.govuk-button:contains("Post query")
-    Then the user should see the element     jQuery=label[for="queryTitle"] .govuk-error-message:contains(This field cannot be left blank.)
-    And the user should see the element      jQuery=label[for="query"] .govuk-error-message:contains(This field cannot be left blank.)
+    Then the user should see the element     jQuery=label[for="queryTitle"] + .govuk-error-message:contains(This field cannot be left blank.)
+    And the user should see the element      jQuery=label[for="query"] + .govuk-error-message:contains(This field cannot be left blank.)
     And the user should see a summary error  This field cannot be left blank.
 
 Post new query client side validations
@@ -110,9 +110,9 @@ Post new query client side validations
     [Tags]
     When the user moves focus to the element    link=Sign out
     And the user enters text to a text field    id=queryTitle    an eligibility query's title
-    Then the user should not see the element    jQuery=label[for="queryTitle"] .govuk-error-message:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="queryTitle"] + .govuk-error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some query text
-    Then the user should not see the element    jQuery=label[for="query] .govuk-error-message:contains(This field cannot be left blank.)
+    Then the user should not see the element    jQuery=label[for="query] + .govuk-error-message:contains(This field cannot be left blank.)
 
 Word count validations
     [Documentation]    INFUND-4840
@@ -336,7 +336,7 @@ Link to notes from viability section
     Given log in as a different user      &{internal_finance_credentials}
     When the user navigates to the page   ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     And the user clicks the button/link   css=table.table-progress tr:nth-child(1) td:nth-child(2)
-    And the user clicks the button/link   jQuery=.govuk-button:contains("Notes")
+    And the user clicks the button/link   jQuery=.button-secondary:contains("Notes")
     Then the user should see the element  jQuery=h2:contains("Review notes")
     And the user should see the element   jQuery=.govuk-button:contains("Create a new note")
 
@@ -344,7 +344,7 @@ Link to notes from eligibility section
     [Documentation]    INFUND-4845
     [Tags]
     Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check/organisation/${Dreambit_Id}/eligibility
-    And the user clicks the button/link   jQuery=.govuk-button:contains("Notes")
+    And the user clicks the button/link   jQuery=.button-secondary:contains("Notes")
     Then the user should see the element  jQuery=.govuk-button:contains("Create a new note")
 
 Link to notes from main finance checks summary page
@@ -396,8 +396,8 @@ Create new note server side validations
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    jQuery=.govuk-button:contains("Save note")
-    Then the user should see the element   jQuery=label[for="noteTitle"] .govuk-error-message:contains(This field cannot be left blank.)
-    And the user should see the element    jQuery=label[for="note"] .govuk-error-message:contains(This field cannot be left blank.)
+    Then the user should see the element   jQuery=label[for="noteTitle"] + .govuk-error-message:contains(This field cannot be left blank.)
+    And the user should see the element    jQuery=label[for="note"] + .govuk-error-message:contains(This field cannot be left blank.)
 
 Create new note client side validations
     [Documentation]    INFUND-4845
@@ -509,7 +509,7 @@ Note comments server side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=.govuk-button:contains("Save comment")
-    Then the user should see the element    jQuery=label[for="comment"] .govuk-error-message:contains("This field cannot be left blank.")
+    Then the user should see the element    jQuery=label[for="comment"] + .govuk-error-message:contains("This field cannot be left blank.")
 
 Note comments client side validations
     [Documentation]    INFUND-7756
