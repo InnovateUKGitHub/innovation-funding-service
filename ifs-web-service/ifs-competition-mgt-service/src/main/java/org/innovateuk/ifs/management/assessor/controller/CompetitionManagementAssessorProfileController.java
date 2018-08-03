@@ -122,10 +122,10 @@ public class CompetitionManagementAssessorProfileController {
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccess();
         ProfileResource profile = assessorProfile.getProfile();
 
-        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(assessorProfile.getUser(), profile, Optional.of(competitionId), originQuery));
+        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(assessorProfile.getUser(), profile, Optional.of(competitionId), originQuery, true));
         model.addAttribute("backUrl", buildBackUrl(origin, competitionId, applicationId, assessorId, queryParams));
 
-        return "assessors/profile-declaration";
+        return "profile/declaration-of-interest";
     }
 
     private String buildBackUrl(String origin, Long competitionId, Long applicationId, Long assessorId, MultiValueMap<String, String> queryParams) {

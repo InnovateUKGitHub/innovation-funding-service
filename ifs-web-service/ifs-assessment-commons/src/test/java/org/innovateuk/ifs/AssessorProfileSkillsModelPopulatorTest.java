@@ -90,7 +90,7 @@ public class AssessorProfileSkillsModelPopulatorTest {
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(assessorProfileResource));
 
         AssessorProfileSkillsViewModel viewModel =
-                assessorProfileSkillsModelPopulator.populateModel(assessorProfileResource.getUser(), assessorProfileResource.getProfile(), null, null);
+                assessorProfileSkillsModelPopulator.populateModel(assessorProfileResource.getUser(), assessorProfileResource.getProfile(), null, null, false);
         AssessorProfileDetailsViewModel assessorDetails = viewModel.getAssessorProfileDetailsViewModel();
 
         InOrder inOrder = inOrder(competitionRestService, assessorRestService);

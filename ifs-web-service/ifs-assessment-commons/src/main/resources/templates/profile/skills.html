@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.compAdminUser} ? 'Assessor profile' : 'Your details'" />
     </head>
 
     <body>
@@ -9,12 +9,16 @@
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',size='heading-xlarge'" />
-            <p>These details will be used for all accounts linked to your email address.</p>
+            <th:block th:if="${!model.compAdminUser}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
+            <th:block th:unless="${!model.compAdminUser}" th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" />
+
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.compAdminUser} ? 'Assessor profile' : 'Your details',size='heading-xlarge'" />
+
+            <p th:if="${!model.compAdminUser}">These details will be used for all accounts linked to your email address.</p>
+            <h2 th:unless="${!model.compAdminUser}" class="heading-medium">Assessor details</h2>
 
             <dl>
-                <dt>Your name</dt>
+                <dt>Name</dt>
                 <dd>
                     <th:block th:text="${model.assessorProfileDetailsViewModel.name}" />
                 </dd>
@@ -40,7 +44,7 @@
                 <dd th:text="${model.assessorProfileDetailsViewModel.email}" />
             </dl>
 
-            <div class="form-footer" th:if="${model.isUserCompAdmin}">
+            <div class="form-footer" th:if="${!model.compAdminUser}">
                 <div class="form-footer__actions"><a th:href="@{/profile/details/edit}">Edit</a></div>
                 <div class="form-footer__info">
                     <span class="textarea-footer"></span>
@@ -51,10 +55,12 @@
 
             <ul class="inline-nav extra-margin">
                 <li class="selected">
-                    <a th:href="@{/profile/details/skills}">Skills</a>
+                    <a th:if="${!model.compAdminUser}" th:href="@{/profile/details/skills}">Skills</a>
+                    <a th:unless="${!model.compAdminUser}" th:href="@{/competition/{cid}/assessors/profile/{assessorId}/skills(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}">Skills</a>
                 </li>
                 <li class="not-selected">
-                    <a th:href="@{/profile/details/declaration}">DOI</a>
+                    <a th:if="${!model.compAdminUser}" th:href="@{/profile/details/declaration}">DOI</a>
+                    <a th:unless="${!model.compAdminUser}" th:href="@{/competition/{cid}/assessors/profile/{assessorId}/declaration(cid=${model.competition.id},assessorId=${model.assessorProfileDetailsViewModel.assessorId})} + ${model.originQuery}">DOI</a>
                 </li>
             </ul>
 
@@ -79,7 +85,7 @@
             <p th:if="${model.skillAreas}" th:text="${model.skillAreas}">skillAreas</p>
 
 
-            <div class="form-footer" th:if="${model.isUserCompAdmin}">
+            <div class="form-footer" th:if="${!model.compAdminUser}">
                 <div class="form-footer__actions"><a th:href="@{/profile/skills/edit}">Edit</a></div>
                 <div class="form-footer__info">
                     <span class="textarea-footer"></span>

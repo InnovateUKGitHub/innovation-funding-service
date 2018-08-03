@@ -59,7 +59,7 @@ public class AssessorProfileController {
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(loggedInUser.getId()).getSuccess();
         ProfileResource profile = assessorProfile.getProfile();
 
-        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(loggedInUser, profile, null, null));
+        model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(loggedInUser, profile, null, null, false));
         return "profile/declaration-of-interest";
     }
 

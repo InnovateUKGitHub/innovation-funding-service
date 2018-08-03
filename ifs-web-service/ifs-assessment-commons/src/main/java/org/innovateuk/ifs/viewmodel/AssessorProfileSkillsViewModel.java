@@ -12,20 +12,20 @@ public class AssessorProfileSkillsViewModel {
     private Map<String, List<String>> innovationAreas;
     private String skillAreas;
     private String originQuery;
-    private boolean isUserCompAdmin;
+    private boolean compAdminUser;
 
     public AssessorProfileSkillsViewModel(CompetitionResource competition,
                                           AssessorProfileDetailsViewModel assessorProfileDetailsViewModel,
                                           Map<String, List<String>> innovationAreas,
                                           String skillAreas,
                                           String originQuery,
-                                          boolean isUserCompAdmin) {
+                                          boolean compAdminUser) {
         this.competition = competition;
         this.assessorProfileDetailsViewModel = assessorProfileDetailsViewModel;
         this.innovationAreas = innovationAreas;
         this.skillAreas = skillAreas;
         this.originQuery = originQuery;
-        this.isUserCompAdmin = isUserCompAdmin;
+        this.compAdminUser = compAdminUser;
     }
 
     public CompetitionResource getCompetition() {
@@ -48,7 +48,7 @@ public class AssessorProfileSkillsViewModel {
         return originQuery;
     }
 
-    public boolean isUserCompAdmin() {
-        return isUserCompAdmin;
+    public boolean isCompAdminUser() {
+        return compAdminUser;
     }
 }

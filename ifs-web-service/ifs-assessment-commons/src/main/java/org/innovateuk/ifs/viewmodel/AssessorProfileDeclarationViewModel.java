@@ -19,6 +19,7 @@ public class AssessorProfileDeclarationViewModel {
     private List<AffiliationResource> familyAffiliations = new ArrayList<>();
     private String familyFinancialInterests;
     private String originQuery;
+    private boolean compAdminUser;
 
     public AssessorProfileDeclarationViewModel(CompetitionResource competition,
                                                AssessorProfileDetailsViewModel assessorProfileDetailsViewModel,
@@ -30,7 +31,8 @@ public class AssessorProfileDeclarationViewModel {
                                                String financialInterests,
                                                List<AffiliationResource> familyAffiliations,
                                                String familyFinancialInterests,
-                                               String originQuery) {
+                                               String originQuery,
+                                               boolean compAdminUser) {
         this.competition = competition;
         this.assessorProfileDetailsViewModel = assessorProfileDetailsViewModel;
         this.completed = completed;
@@ -42,6 +44,7 @@ public class AssessorProfileDeclarationViewModel {
         this.familyAffiliations = familyAffiliations;
         this.familyFinancialInterests = familyFinancialInterests;
         this.originQuery = originQuery;
+        this.compAdminUser = compAdminUser;
     }
 
     public CompetitionResource getCompetition() {
@@ -86,5 +89,9 @@ public class AssessorProfileDeclarationViewModel {
 
     public String getOriginQuery() {
         return originQuery;
+    }
+
+    public boolean isCompAdminUser() {
+        return compAdminUser;
     }
 }

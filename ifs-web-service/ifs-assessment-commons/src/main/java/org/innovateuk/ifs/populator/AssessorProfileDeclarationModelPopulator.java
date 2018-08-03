@@ -32,7 +32,7 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
         this.competitionRestService = competitionRestService;
     }
 
-    public AssessorProfileDeclarationViewModel populateModel(UserResource user, ProfileResource profile, Optional<Long> competitionId, String originQuery) {
+    public AssessorProfileDeclarationViewModel populateModel(UserResource user, ProfileResource profile, Optional<Long> competitionId, String originQuery, boolean compAdminUser) {
 
         CompetitionResource competition =
                 Optional.ofNullable(competitionId).isPresent() ? competitionRestService.getCompetitionById(competitionId.get()).getSuccess() : null;
@@ -54,7 +54,8 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
                 getFinancialInterests(affiliations),
                 getFamilyAffiliations(affiliations),
                 getFamilyFinancialInterests(affiliations),
-                originQuery
+                originQuery,
+                compAdminUser
         );
     }
 
