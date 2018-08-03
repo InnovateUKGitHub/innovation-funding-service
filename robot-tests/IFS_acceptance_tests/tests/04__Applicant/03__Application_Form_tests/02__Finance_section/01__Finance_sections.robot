@@ -122,7 +122,7 @@ Academic partner can upload file for field J-es PDF
     # Note the Jes form is already uploaded
     Then the user should see the element     css=a.uploaded-file
     When The user clicks the button/link       jQuery=button:contains("Remove")
-    then the user should see the element       css=label[class="button-secondary"]
+    then the user should see the element       jQuery=label.button-secondary
     and the user uploads the file  css=.upload-section input  ${valid_pdf}
     and the user should see the text in the page    ${valid_pdf}
 
