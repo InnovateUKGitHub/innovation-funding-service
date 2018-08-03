@@ -145,4 +145,4 @@ the assessor shouldn't be able to accept the rejected competition
 
 The assessor is unable to see the invitation
     the user should see the element   jQuery=h1:contains("This invitation is now closed")
-    The user should see the element   jQuery=span:contains("You have already accepted or rejected this invitation.")
+    The user should see the element   jQuery=p:contains("You have already accepted or rejected this invitation.")

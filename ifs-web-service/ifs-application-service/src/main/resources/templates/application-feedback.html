@@ -19,7 +19,7 @@
                 </th:block>
                 <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${model.projectWithdrawn})" />
 
-                <div class="govuk-grid-row">
+                <div class="govuk-grid-row govuk-!-margin-top-6">
                     <div class="govuk-grid-column-one-half">
                         <h3 class="govuk-heading-s">Project title</h3>
                         <p class="govuk-body" th:text="${model.application.name}">Machine learning in robots</p>
@@ -107,8 +107,8 @@
                     </th:block>
                 </th:block>
 
-                <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application details</h2>
-                <p class="govuk-hint">Assessors do not provide scores on these sections of the application.</p>
+                <h2 class="govuk-heading-m govuk-!-margin-bottom-0 govuk-!-margin-top-6">Application details</h2>
+                <p class="govuk-body govuk-hint">Assessors do not provide scores on these sections of the application.</p>
 
                 <section th:each="section : ${model.sections.values()}" th:unless="${section.name.equals('Finances')}">
                     <th:block th:if="${section.name.equals('Project details')}">
@@ -141,8 +141,8 @@
                     </th:block>
 
                     <th:block th:if="${!section.name.equals('Project details')}">
-                        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Application questions</h2>
-                        <p class="govuk-hint">Each question has been assessed by several independent assessors. They have given a score and feedback for each.</p>
+                        <h2 class="govuk-heading-m govuk-!-margin-bottom-0 govuk-!-margin-top-9">Application questions</h2>
+                        <p class="govuk-body govuk-hint">Each question has been assessed by several independent assessors. They have given a score and feedback for each.</p>
 
                         <ul class="govuk-list list-overview">
                             <li class="section-status" th:each="question : ${model.sectionQuestions.get(section.id)}">
@@ -162,7 +162,7 @@
                         </ul>
                         <div class="govuk-grid-row govuk-!-margin-top-6">
                             <div class="govuk-grid-column-two-thirds">
-
+                                &nbsp;
                             </div>
                             <div class="govuk-grid-column-one-third">
                                 <p class="govuk-body">Average overall: <strong class="heading-" th:text="|${model.scores.averagePercentage}%|">70%</strong></p>
@@ -172,7 +172,7 @@
                 </section>
 
                 <th:block th:if="${model.interviewFeedbackViewModel != null && model.interviewFeedbackViewModel.hasFeedback()}">
-                    <h2 class="govuk-heading-m">Additional feedback</h2>
+                    <h2 class="govuk-heading-m govuk-!-margin-top-6">Additional feedback</h2>
                     <div class="govuk-form-group download">
                         <h3 class="govuk-heading-s govuk-!-margin-0">Additional Innovate UK feedback</h3>
                         <a target="_blank" href=""
@@ -182,7 +182,7 @@
                 </th:block>
 
                 <section th:if="${model.hasFinanceSection}">
-                    <h2 class="govuk-heading-m">Finance</h2>
+                    <h2 class="govuk-heading-m govuk-!-margin-top-6">Finance</h2>
                     <div class="collapsible">
                         <h3 class="govuk-heading-s">Finances summary</h3>
                         <div class="question">
@@ -194,7 +194,7 @@
                 </section>
 
                 <div th:if="!${#lists.isEmpty(model.feedback)}">
-                    <h2 class="govuk-heading-m">Assessor feedback</h2>
+                    <h2 class="govuk-heading-m govuk-!-margin-top-9">Assessor feedback</h2>
                     <ul class="govuk-list boxed-list">
                         <li th:each="item, iterStat : ${model.feedback}">
                             <h3 class="govuk-heading-s" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
