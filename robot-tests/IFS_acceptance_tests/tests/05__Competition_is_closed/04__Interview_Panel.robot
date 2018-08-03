@@ -223,7 +223,7 @@ Applicant can remove the uploaded response
     And the user should see the element      jQuery = .message-alert p:contains("As the lead applicant you can respond to feedback. This response will be noted by the interview panel.")  #checking banner message befor uploading file.
     When the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link=testing_5MB.pdf
     Then the user should see the element     jQuery = .message-alert p:contains("Your response has been uploaded. This response will be noted by the interview panel.")  #checking banner message after uploading file.
-    When the user clicks the button/link     css = .govuk-button-secondary  #remove
+    When the user clicks the button/link     css = .button-secondary  #remove
     Then the user should see the element     jQuery = p:contains("No file currently uploaded") ~ label:contains("+ Upload")
     And the compAdmin checks the status for response uploaded applicantion
     And the user should see the element      jQuery = td:contains("${computer_vision_application}") ~ td:contains("Awaiting response")
@@ -240,7 +240,7 @@ CompAdmin can access the Allocate applications to assessors screen
     And the user should see the element      jQuery = h1:contains("${CLOSED_COMPETITION}: Machine learning for transport infrastructure")
     When the user clicks the button/link     link = Allocate
     Then the user should see the element     jQuery = h1:contains(" Allocate applications to ${assessor_joel}")
-    ${applications_Assiged}=  Get text       css = div:nth-child(6) div span:nth-child(1)
+    ${applications_Assiged}=  Get text       css = .column-one span:nth-child(1)
     And the user should see the element      link = Applications (${applications_Assiged})
     And the user should see the element      jQuery = td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
 
@@ -272,7 +272,7 @@ Assessor marks appplications as successful and releases competition feedback
     Given log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the page       ${SERVER}/management/competition/18/funding
     Then the user marks applications as successful and send funding decision email
-    And the user clicks the button/link       css = button.govuk-button.govuk-button-large  #Release feedback
+    And the user clicks the button/link       css = button[type="submit"]  #Release feedback
 
 Applicant can still see their feedback once the comp feedback has been released
     [Documentation]  IFS-3542
@@ -395,7 +395,7 @@ the user marks applications as successful and send funding decision email
     the user clicks the button/link       link = Competition
     the user clicks the button/link       link = Manage funding notifications
     the user selects the checkbox         select-all-1
-    the user clicks the button/link       css = button.govuk-button.govuk-button-notification   #Assessor clicks 'Write and send emails'
+    the user clicks the button/link       css = button.govuk-button.button-notification   #Assessor clicks 'Write and send emails'
     the user clicks the button/link       css = .govuk-button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link       css = button[name="send-emails"]
     the user clicks the button/link       link = Competition

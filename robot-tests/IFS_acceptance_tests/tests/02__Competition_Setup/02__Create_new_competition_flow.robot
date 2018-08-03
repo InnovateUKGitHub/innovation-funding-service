@@ -232,7 +232,7 @@ Funding information: calculations
     [Tags]    HappyPath
     [Setup]    the user clicks the button/link  link=${competitionTitle}
     Given the user clicks the button/link    link=Funding information
-    And the user clicks the button/link    jQuery=.govuk-button:contains("Generate code")
+    And the user clicks the button/link    id=generate-code
     And the user enters text to a text field    id=funders[0].funder    FunderName
     And the user enters text to a text field    id=funders[0].funderBudget    20000
     And the user enters text to a text field    id=pafNumber    2016
@@ -400,8 +400,8 @@ Application: Application details validations
     # TODO IFS-3188
 
     When the user selects the radio button     useResubmissionQuestion  true
-    Then the user should see the element       jQuery=[for="minProjectDuration"] .govuk-error-message:contains("This field cannot be left blank.")
-    And the user should see the element        jQuery=[for="maxProjectDuration"] .govuk-error-message:contains("This field cannot be left blank.")
+    Then the user should see the element       jQuery=label[for="minProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
+    And the user should see the element        jQuery=label[for="maxProjectDuration"] + .govuk-error-message:contains("This field cannot be left blank")
     When the user clicks the button/link       css=button[type="submit"]
     Then the user should see the element       css=.govuk-error-summary__list
 
@@ -741,7 +741,7 @@ the total should be correct
     [Arguments]    ${Total}
     mouse out    css=input
     Focus    jQuery=button:contains("Done")
-    Wait Until Element Contains Without Screenshots    css=p.govuk-body  ${Total}
+    Wait Until Element Contains Without Screenshots    css=.govuk-heading-s  ${Total}
 
 the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10
