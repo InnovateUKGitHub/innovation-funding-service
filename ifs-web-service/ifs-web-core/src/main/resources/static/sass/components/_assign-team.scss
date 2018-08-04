@@ -11,6 +11,11 @@
     .secondary-notification {
       padding-right: 1em;
     }
+
+    .assign-button {
+      position: relative;
+      top: -3px;
+    }
   }
 
   .assign-button-container {
@@ -23,6 +28,19 @@
     .action-required,
     .secondary-notification {
       padding-right: 0;
+    }
+
+    .assign-button {
+      color: $govuk-link-colour;
+      .secondary-notification {
+        color: $govuk-link-colour;
+      }
+      &:hover {
+        color: $govuk-link-hover-colour;
+        .secondary-notification {
+          color: $govuk-link-hover-colour;
+        }
+      }
     }
   }
 
@@ -55,6 +73,11 @@
 
     button {
       @extend .button-clear;
+
+      &:hover {
+        text-decoration: underline;
+        color: $govuk-link-hover-colour;
+      }
 
       &[aria-expanded] {
         > ::after {
@@ -94,6 +117,11 @@
         margin: 0 5px 0 0;
         border: none;
         text-align: left;
+
+        &:hover {
+          color: $govuk-link-hover-colour !important;
+          text-decoration: underline !important;
+        }
       }
     }
 

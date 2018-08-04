@@ -94,7 +94,13 @@
 
       button{
         .secondary-notification {
-          color: $govuk-link-colour;
+          color: $govuk-link-colour !important;
+        }
+
+        &:hover {
+          .secondary-notification {
+            color: $govuk-link-hover-colour !important;
+          }
         }
       }
     }
