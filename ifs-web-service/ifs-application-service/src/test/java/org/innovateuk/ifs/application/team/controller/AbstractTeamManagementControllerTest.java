@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.team.service.AbstractTeamManagementService
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -141,7 +140,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
     public void inviteApplicant_shouldReturnSuccessViewWhenOrganisationIsValid() throws Exception {
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
-        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess(new InviteResultsResource()));
+        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
                 .param("executeStagedInvite", "true"))
@@ -156,7 +155,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
 
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
-        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess(new InviteResultsResource()));
+        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
                 .param("executeStagedInvite", "true")
@@ -182,7 +181,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
 
         when(testTeamManagementService.applicationAndOrganisationIdCombinationIsValid(same(testApplicationId), same(testOrganisationId))).thenReturn(true);
         when(testTeamManagementService.createViewModel(anyLong(), anyLong(), any())).thenReturn(createAViewModel());
-        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess(new InviteResultsResource()));
+        when(testTeamManagementService.executeStagedInvite(anyLong(), anyLong(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/team/update/invited/{organisationId}", testApplicationId, testOrganisationId)
                 .param("executeStagedInvite", "true")
@@ -344,7 +343,7 @@ public class AbstractTeamManagementControllerTest extends BaseControllerMockMVCT
         }
 
         @Override
-        public ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId, long organisationId, ApplicationTeamUpdateForm form) {
+        public ServiceResult<Void> executeStagedInvite(long applicationId, long organisationId, ApplicationTeamUpdateForm form) {
             return null;
         }
 

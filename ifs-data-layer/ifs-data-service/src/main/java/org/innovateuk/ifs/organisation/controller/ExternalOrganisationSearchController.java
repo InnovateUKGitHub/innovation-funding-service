@@ -32,14 +32,14 @@ public class ExternalOrganisationSearchController {
 
 
     @GetMapping("/searchOrganisations/{organisationType}")
-    public RestResult<List<OrganisationSearchResult>> searchOrganisations(@PathVariable("organisationType") final Long organisationTypeId,
+    public RestResult<List<OrganisationSearchResult>> searchOrganisations(@PathVariable("organisationType") final long organisationTypeId,
                                                                           @RequestParam("organisationSearchText") final String organisationSearchText) {
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(organisationTypeId);
 
         switch (organisationType){
             case BUSINESS:
             case RTO:
-            case PUBLICSECTOR_OR_CHARITY:
+            case PUBLIC_SECTOR_OR_CHARITY:
                 return companyHouseService.searchOrganisations(organisationSearchText).toGetResponse();
             case RESEARCH:
                 return organisationService.searchAcademic(organisationSearchText, SEARCH_ITEMS_MAX).toGetResponse();
@@ -51,12 +51,12 @@ public class ExternalOrganisationSearchController {
     }
 
     @GetMapping("/getOrganisation/{organisationType}/{organisationSearchId}")
-    public RestResult<OrganisationSearchResult> searchOrganisation(@PathVariable("organisationType") final Long organisationTypeId, @PathVariable("organisationSearchId") final String organisationSearchId) {
+    public RestResult<OrganisationSearchResult> searchOrganisation(@PathVariable("organisationType") final long organisationTypeId, @PathVariable("organisationSearchId") final String organisationSearchId) {
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(organisationTypeId);
         switch (organisationType){
             case BUSINESS:
             case RTO:
-            case PUBLICSECTOR_OR_CHARITY:
+            case PUBLIC_SECTOR_OR_CHARITY:
                 return companyHouseService.getOrganisationById(organisationSearchId).toGetResponse();
             case RESEARCH:
                 return organisationService.getSearchOrganisation(Long.valueOf(organisationSearchId)).toGetResponse();

@@ -31,6 +31,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
@@ -100,6 +101,8 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @Autowired
     private UserOrganisationMapper userOrganisationMapper;
 
+    private Supplier<String> randomHashSupplier = () -> UUID.randomUUID().toString();
+
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
         return find(userRepository.findByEmail(email), notFoundError(User.class, email)).andOnSuccessReturn(userMapper::mapToResource);
@@ -148,7 +151,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
             notificationArguments.put("passwordResetLink", getPasswordResetLink(hash));
 
             Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
-            return notificationService.sendNotification(notification, EMAIL);
+            return notificationService.sendNotificationWithFlush(notification, EMAIL);
         } else if (userIsExternalNotOnlyAssessor(user) &&
                 userNotYetVerified(user)) {
             return registrationService.resendUserVerificationEmail(user);
@@ -180,7 +183,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     private String getRandomHash() {
-        return UUID.randomUUID().toString();
+        return randomHashSupplier.get();
     }
 
     private String getPasswordResetLink(String hash) {
