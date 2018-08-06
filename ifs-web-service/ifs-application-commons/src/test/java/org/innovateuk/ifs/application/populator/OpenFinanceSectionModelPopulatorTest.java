@@ -24,6 +24,7 @@ import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -92,6 +93,9 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private FormInputRestService formInputRestService;
+
+    @Mock
+    private FormInputResponseService formInputResponseService;
 
     @Mock
     private FormInputResponseRestService formInputResponseRestService;
