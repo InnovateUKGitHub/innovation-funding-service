@@ -20,8 +20,8 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -43,7 +43,6 @@ import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.util.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -68,6 +67,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
@@ -108,7 +108,10 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
-    private EmailService projectEmailService;
+    private NotificationService notificationService;
+
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
 
     @Autowired
     private CostRepository costRepository;
@@ -498,12 +501,14 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             notificationArguments.put("applicationId", project.getApplication().getId());
             notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
 
-            ServiceResult<Void> notificationResult = projectEmailService.sendEmail(singletonList(pmTarget), notificationArguments, NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER);
+            return sendGrantOfferLetterSuccess(project).andOnSuccess(() -> {
+                Notification notification = new Notification(systemNotificationSource,
+                                                             singletonList(pmTarget),
+                                                             NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER,
+                                                             notificationArguments);
 
-            if (notificationResult != null && !notificationResult.isSuccess()) {
-                return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
-            }
-            return sendGrantOfferLetterSuccess(project);
+                return notificationService.sendNotificationWithFlush(notification, EMAIL);
+            });
         });
     }
 
@@ -557,8 +562,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
         }
 
-        notifyProjectIsLive(project.getId()).getSuccess();
-        return serviceSuccess();
+        return notifyProjectIsLive(project.getId());
     }
 
     private ServiceResult<Void> approveGOL(Project project) {
@@ -633,8 +637,8 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         notificationArguments.put("applicationId", project.getApplication().getId());
         notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
 
-        ServiceResult<Void> sendEmailResult = projectEmailService.sendEmail(notificationTargets, notificationArguments, NotificationsGol.PROJECT_LIVE);
+        Notification notification = new Notification(systemNotificationSource, notificationTargets, NotificationsGol.PROJECT_LIVE, notificationArguments);
 
-        return processAnyFailuresOrSucceed(sendEmailResult);
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 }

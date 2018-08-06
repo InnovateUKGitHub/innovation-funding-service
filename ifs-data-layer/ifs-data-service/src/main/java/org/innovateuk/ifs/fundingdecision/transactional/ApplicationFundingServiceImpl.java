@@ -97,7 +97,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                 success -> {
 
                     Notification fundingNotification = createFundingDecisionNotification(applications, fundingNotificationResource, aggregatedFundingTargets.getSuccess(), APPLICATION_FUNDING);
-                    ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundingNotification, EMAIL);
+                    ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotificationWithFlush(fundingNotification, EMAIL);
 
                     ServiceResult<Void> setEmailDateTimeResult = fundedEmailSendResult.andOnSuccess(() ->
                             aggregate(simpleMap(

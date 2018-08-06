@@ -54,6 +54,6 @@ public abstract class BaseGrantOfferLetterTablePopulator {
     }
 
     protected Boolean isAcademic(OrganisationType type) {
-        return OrganisationTypeEnum.RESEARCH.getId().equals(type.getId());
+        return OrganisationTypeEnum.RESEARCH.getId() == type.getId();
     }
 }

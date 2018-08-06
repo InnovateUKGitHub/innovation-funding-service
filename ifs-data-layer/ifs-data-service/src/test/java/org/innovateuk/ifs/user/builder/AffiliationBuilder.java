@@ -5,6 +5,7 @@ import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.AffiliationType;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -64,5 +65,9 @@ public class AffiliationBuilder extends BaseBuilder<Affiliation, AffiliationBuil
 
     public AffiliationBuilder withDescription(String... descriptions) {
         return withArray((description, affiliationResource) -> setField("description", description, affiliationResource), descriptions);
+    }
+
+    public AffiliationBuilder withModifiedOn(ZonedDateTime... values) {
+        return withArraySetFieldByReflection("modifiedOn", values);
     }
 }

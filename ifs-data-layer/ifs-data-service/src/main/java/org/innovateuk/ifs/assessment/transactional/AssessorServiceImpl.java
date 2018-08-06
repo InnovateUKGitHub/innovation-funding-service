@@ -12,13 +12,9 @@ import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHa
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
@@ -45,6 +41,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_NOTIFY_FAILED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -82,7 +79,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     private AffiliationMapper affiliationMapper;
 
     @Autowired
-    private NotificationSender notificationSender;
+    private NotificationService notificationService;
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
@@ -97,7 +94,6 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     @Transactional
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
 
-        // TODO: Handle failures gracefully and hand them back to the webservice
         return retrieveInvite(inviteHash).andOnSuccess(inviteResource -> {
             userRegistrationResource.setEmail(inviteResource.getEmail());
             userRegistrationResource.setRoles(singletonList(Role.ASSESSOR));
@@ -142,7 +138,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
             return processAnyFailuresOrSucceed(simpleMap(assessments, this::attemptNotifyAssessorTransition))
                     .andOnSuccess(() -> assessments.stream()
                             .collect(Collectors.groupingBy(assessment -> assessment.getParticipant().getUser()))
-                            .forEach((user, userAssessments) -> sendNotification(user, competition))
+                            .forEach((user, userAssessments) -> sendNotificationToAssessor(user, competition))
                     );
         });
     }
@@ -155,7 +151,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> sendNotification(User user, Competition competition) {
+    private ServiceResult<Void> sendNotificationToAssessor(User user, Competition competition) {
         NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
         Notification notification = new Notification(
@@ -170,9 +166,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", webBaseUrl + WEB_CONTEXT, competition.getId()))
         );
 
-        EmailContent content = notificationSender.renderTemplates(notification).getSuccess().get(recipient);
-
-        return notificationSender.sendEmailWithContent(notification, recipient, content).andOnSuccessReturnVoid();
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private ServiceResult<Profile> getProfile(Long profileId) {

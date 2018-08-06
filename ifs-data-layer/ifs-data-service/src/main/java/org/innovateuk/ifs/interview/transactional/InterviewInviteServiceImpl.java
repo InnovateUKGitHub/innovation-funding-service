@@ -22,12 +22,9 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.invite.transactional.InviteService;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +49,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer.PREVIEW_TEMPLATES_PATH;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -86,7 +84,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     private InterviewParticipantMapper interviewParticipantMapper;
 
     @Autowired
-    private NotificationSender notificationSender;
+    private NotificationService notificationService;
 
     @Autowired
     private NotificationTemplateRenderer renderer;
@@ -335,7 +333,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
                         "message", customTextHtml
                 ));
 
-        return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private ServiceResult<InterviewInvite> getByEmailAndCompetition(String email, long competitionId) {
