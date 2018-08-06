@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.projectdocument.form;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import java.util.Set;
@@ -20,6 +22,26 @@ public class LandingPageForm extends BaseBindingResultTarget {
     }
 
     public LandingPageForm() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LandingPageForm that = (LandingPageForm) o;
+
+        return new EqualsBuilder()
+                .append(enabledIds, that.enabledIds)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(enabledIds)
+                .toHashCode();
     }
 }
 

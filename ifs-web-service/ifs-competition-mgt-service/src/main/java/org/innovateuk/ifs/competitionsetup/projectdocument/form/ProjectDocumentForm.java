@@ -1,4 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.projectdocument.form;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
@@ -101,6 +103,40 @@ public class ProjectDocumentForm extends BaseBindingResultTarget {
 
     public void setAcceptedFileTypesId(String acceptedFileTypesId) {
         this.acceptedFileTypesId = acceptedFileTypesId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectDocumentForm that = (ProjectDocumentForm) o;
+
+        return new EqualsBuilder()
+                .append(editable, that.editable)
+                .append(enabled, that.enabled)
+                .append(pdf, that.pdf)
+                .append(spreadsheet, that.spreadsheet)
+                .append(projectDocumentId, that.projectDocumentId)
+                .append(title, that.title)
+                .append(guidance, that.guidance)
+                .append(acceptedFileTypesId, that.acceptedFileTypesId)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(projectDocumentId)
+                .append(title)
+                .append(guidance)
+                .append(editable)
+                .append(enabled)
+                .append(pdf)
+                .append(spreadsheet)
+                .append(acceptedFileTypesId)
+                .toHashCode();
     }
 }
 
