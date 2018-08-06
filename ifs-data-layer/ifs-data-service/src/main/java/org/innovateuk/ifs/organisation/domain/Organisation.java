@@ -20,6 +20,7 @@ public class Organisation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
     private String companyHouseNumber; // might start with zero, so use a string.
 
