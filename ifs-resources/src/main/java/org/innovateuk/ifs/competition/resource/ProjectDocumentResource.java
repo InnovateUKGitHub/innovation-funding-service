@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competition.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.List;
@@ -87,5 +89,37 @@ public class ProjectDocumentResource {
 
     public void setFileTypes(List<Long> fileTypes) {
         this.fileTypes = fileTypes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectDocumentResource that = (ProjectDocumentResource) o;
+
+        return new EqualsBuilder()
+                .append(editable, that.editable)
+                .append(enabled, that.enabled)
+                .append(id, that.id)
+                .append(competition, that.competition)
+                .append(title, that.title)
+                .append(guidance, that.guidance)
+                .append(fileTypes, that.fileTypes)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(competition)
+                .append(title)
+                .append(guidance)
+                .append(editable)
+                .append(enabled)
+                .append(fileTypes)
+                .toHashCode();
     }
 }

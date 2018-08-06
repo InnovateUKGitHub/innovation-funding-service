@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
-import org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -31,6 +30,14 @@ public class ProjectDocumentResourceBuilder extends BaseBuilder<ProjectDocumentR
         return new ProjectDocumentResource();
     }
 
+    public ProjectDocumentResourceBuilder withId(Long... ids) {
+        return withArray((id, projectDocumentResource) -> setField("id", id, projectDocumentResource), ids);
+    }
+
+    public ProjectDocumentResourceBuilder withCompetition(Long... competitionIds) {
+        return withArray((competitionId, projectDocumentResource) -> setField("competition", competitionId, projectDocumentResource), competitionIds);
+    }
+
     public ProjectDocumentResourceBuilder withTitle(String... titles) {
         return withArray((title, projectDocumentResource) -> setField("title", title, projectDocumentResource), titles);
     }
@@ -39,8 +46,17 @@ public class ProjectDocumentResourceBuilder extends BaseBuilder<ProjectDocumentR
         return withArray((guidance, projectDocumentResource) -> setField("guidance", guidance, projectDocumentResource), guidances);
     }
 
-    public ProjectDocumentResourceBuilder withPdf(Boolean... pdfs) {
-        return withArray((pdf, projectDocumentResource) -> setField("pdf", pdf, projectDocumentResource), pdfs);
+    public ProjectDocumentResourceBuilder withEditable(Boolean... editableFlags) {
+        return withArray((editable, projectDocumentResource) -> setField("editable", editable, projectDocumentResource), editableFlags);
+    }
+
+    public ProjectDocumentResourceBuilder withEnabled(Boolean... enabledFlags) {
+        return withArray((enabled, projectDocumentResource) -> setField("enabled", enabled, projectDocumentResource), enabledFlags);
+    }
+
+
+    public ProjectDocumentResourceBuilder withFileType(List<Long>... fileTypesLists) {
+        return withArray((fileTypes, projectDocumentResource) -> setField("fileTypes", fileTypes, projectDocumentResource), fileTypesLists);
     }
 }
 
