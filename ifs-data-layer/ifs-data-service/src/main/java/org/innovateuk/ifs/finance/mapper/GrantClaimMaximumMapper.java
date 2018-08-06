@@ -27,6 +27,9 @@ public abstract class GrantClaimMaximumMapper extends BaseMapper<GrantClaimMaxim
     @Autowired
     private GrantClaimMaximumRepository grantClaimMaximumRepository;
 
+    @Mappings({
+            @Mapping(source = "organisationType.id", target = "organisationType"),
+    })
     public abstract GrantClaimMaximum mapToDomain(GrantClaimMaximumResource grantClaimMaximumResource);
 
     public abstract GrantClaimMaximumResource mapToResource(GrantClaimMaximum grantClaimMaximum);
