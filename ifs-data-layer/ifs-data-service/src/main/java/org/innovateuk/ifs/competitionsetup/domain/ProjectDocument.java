@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.domain;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileType;
 

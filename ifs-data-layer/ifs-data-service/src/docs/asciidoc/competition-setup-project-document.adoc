@@ -10,7 +10,6 @@ include::{snippets}/competition/setup/project-document/save/response-fields.adoc
 ==== Curl Example
 include::{snippets}/competition/setup/project-document/save/curl-request.adoc[]
 
-
 === Save a list of Project Documents
 ==== Request
 include::{snippets}/competition/setup/project-document/save-all/http-request.adoc[]

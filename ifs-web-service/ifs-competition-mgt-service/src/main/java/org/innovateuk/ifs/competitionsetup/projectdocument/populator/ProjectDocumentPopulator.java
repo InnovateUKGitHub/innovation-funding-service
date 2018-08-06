@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competitionsetup.projectdocument.viewmodel.ProjectDocu
 import org.springframework.stereotype.Service;
 
 /**
- * populates the model for the documents competition setup section.
+ * Populates the model for Project Documents section
  */
 @Service
 public class ProjectDocumentPopulator implements CompetitionSetupSectionModelPopulator {
