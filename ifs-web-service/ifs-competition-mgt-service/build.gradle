@@ -1,4 +1,4 @@
-apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/spring-boot.gradle")
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
@@ -49,6 +49,7 @@ ext.serverContext = '/management'
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
+    compile project(':ifs-web-service:ifs-application-commons')
 
     compile 'org.apache.commons:commons-collections4:4.1'
 
@@ -56,11 +57,9 @@ dependencies {
     testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
     testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+    testCompile project (path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
 
     testCompile "net.sf.opencsv:opencsv:2.3"
-
-    testCompile 'org.assertj:assertj-core:3.9.0'
-
 }
 
 processResources {

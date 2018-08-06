@@ -9,8 +9,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.util.Optional;
-
 /**
  * Transactional service around User operations
  */
@@ -19,12 +17,11 @@ public interface RegistrationService {
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userResource);
 
-    // TODO rename
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createUser(UserResource user);
 
-    @PreAuthorize("hasPermission(#user, 'VERIFY')")
-    ServiceResult<Void> sendUserVerificationEmail(@P("user") final UserResource user, final Optional<Long> competitionId, final Optional<Long> organisationId);
+    @PreAuthorize("hasPermission(#user, 'CREATE')")
+    ServiceResult<UserResource> createUserWithCompetitionContext(long competitionId, @P("user") UserResource userResource);
 
     @PreAuthorize("hasPermission(#user, 'VERIFY')")
     ServiceResult<Void> resendUserVerificationEmail(@P("user") final UserResource user);

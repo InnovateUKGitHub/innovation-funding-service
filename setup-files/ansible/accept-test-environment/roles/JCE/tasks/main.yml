@@ -1,0 +1,19 @@
+- name: copy local_policy.jar to limited
+  copy:
+    src: files/local_policy.jar
+    dest: /usr/lib/jvm/java-8-oracle/jre/lib/security/policy/limited/local_policy.jar
+
+- name: copy US_export_policy.jar to limited
+  copy:
+    src: files/US_export_policy.jar
+    dest: /usr/lib/jvm/java-8-oracle/jre/lib/security/policy/limited/US_export_policy.jar
+    
+- name: copy local_policy to unlimited
+  copy:
+    src: files/local_policy.jar
+    dest: /usr/lib/jvm/java-8-oracle/jre/lib/security/policy/unlimited/local_policy.jar
+
+- name: copy US_export_policy to unlimited
+  copy:
+    src: files/US_export_policy.jar
+    dest: /usr/lib/jvm/java-8-oracle/jre/lib/security/policy/unlimited/US_export_policy.jar

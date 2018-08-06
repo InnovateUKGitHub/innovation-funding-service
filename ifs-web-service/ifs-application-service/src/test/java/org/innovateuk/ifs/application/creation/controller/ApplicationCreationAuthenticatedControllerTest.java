@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.application.creation.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -14,12 +12,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ApplicationCreationAuthenticatedControllerTest extends BaseControllerMockMVCTest<ApplicationCreationAuthenticatedController> {
-
-    @Mock
-    private OrganisationService organisationService;
-
-    @Mock
-    private CompetitionRestService competitionRestService;
 
     @Mock
     private UserService userService;
