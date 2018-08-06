@@ -16,7 +16,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Upcoming competition '${model.competitionName}'|,size='govuk-heading-xl'" />
                 <p class="govuk-body" th:text="|You have agreed to be an assessor for the upcoming competition '${model.competitionName}'|">You have agreed to be an assessor for the upcoming competition 'My Competition'</p>
 
-                <section class="boxed" th:with="dateFormat=${model.assessmentPeriodDateFrom.year!=model.assessmentPeriodDateTo.year} ? 'd MMMM yyyy' : 'd MMMM'">
+                <section class="boxed govuk-!-margin-bottom-6" th:with="dateFormat=${model.assessmentPeriodDateFrom.year!=model.assessmentPeriodDateTo.year} ? 'd MMMM yyyy' : 'd MMMM'">
                     <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,dateFormat)}: Assessment period|"></h2>
                     <p class="govuk-body">Assessment period for reading, scoring, providing written comments and submitting to our online
                         service. Each assessor could receive up to 10 applications to assess. This depends on the
