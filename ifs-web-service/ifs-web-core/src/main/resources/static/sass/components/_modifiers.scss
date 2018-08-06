@@ -52,7 +52,8 @@ table {
     width: 20px;
   }
 
-  .govuk-radios__item{
+  .govuk-radios__item,
+  .govuk-checkboxes__item{
     margin-left: 3px;
 
     // The invisible label causes alignment issues with checkboxes within tables, restricting width and height cures this issue
