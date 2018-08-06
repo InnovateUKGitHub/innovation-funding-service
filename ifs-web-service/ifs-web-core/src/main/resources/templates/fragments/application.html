@@ -138,7 +138,7 @@
 
                 <div>
                     <th:block ifs:global="${applicationFinanceSummaryViewModel}"
-                              th:replace="finance/finance-summary :: application_finances_summary (isApplicant = ${isApplicant || isApplicant == null})"></th:block>
+                              th:replace="finance/finance-summary :: application_finances_summary (isApplicant = ${isApplicant || isApplicant == null}, supportUserAndSummaryPage=${supportUserAndSummaryPage})"></th:block>
                     <th:block ifs:global="${applicationResearchParticipationViewModel}"
                               th:replace="finance/finance-summary :: research_participation_alert"
                               th:if="${(currentApplication.isOpen() and isApplicant)}"></th:block>

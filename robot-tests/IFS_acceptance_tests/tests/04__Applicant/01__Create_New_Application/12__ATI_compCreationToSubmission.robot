@@ -27,6 +27,7 @@ Comp Admin creates an ATI competition
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${business_type_id}  1  # 1 means 30%
+    And user fills in funding overide
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user marks the application as done     yes  ${compType_Programme}
     And the user fills in the CS Assessors
@@ -52,6 +53,7 @@ Applicant submits his application
     Then the lead applicant fills all the questions and marks as complete(Programme)
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
     And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
+    And the user checks the override value is applied
     Then the applicant submits the application
 
 Moving ATI Competition to Project Setup
@@ -93,3 +95,21 @@ Requesting the ID of this Competition
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${ATIapplicationTitle}
     Set suite variable    ${ProjectID}
+
+User fills in funding overide
+    the user clicks the button/link   link = Eligibility
+    the user clicks the button/link   css = .button[type=submit]
+    the user clicks the button twice  css = label[for="comp-overrideFundingRules-yes"]
+    the user selects the option from the drop-down menu  100%  id = fundingLevelPercentage
+    the user clicks the button/link   jQuery = button:contains("Done")
+    the user should see the element   jQuery = dt:contains("Set funding level") ~ dd:contains("100%")
+    the user clicks the button/link   link = Competition setup
+
+the user checks the override value is applied
+    the user clicks the button/link     link = Your finances
+    the user clicks the button/link     link = Your funding
+    the user clicks the button/link     css = button[type=submit]
+    the user should see the element     jQuery = .form-label:contains("maximum 100%")
+    then the user selects the checkbox  agree-terms-page
+    the user clicks the button/link     css = button[name=mark_section_as_complete]
+    the user clicks the button/link     link = Application overview

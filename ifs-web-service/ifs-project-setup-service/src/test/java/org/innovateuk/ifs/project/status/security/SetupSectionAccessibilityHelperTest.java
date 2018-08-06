@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.project.sections.SectionAccess;
+import org.innovateuk.ifs.sections.SectionAccess;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.InjectMocks;

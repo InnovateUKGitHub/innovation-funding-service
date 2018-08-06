@@ -177,7 +177,7 @@
                 <div class="collapsible">
                     <h3>Finances summary</h3>
                     <div class="question">
-                        <div ifs:global="${model.applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true)"></div>
+                        <div ifs:global="${model.applicationFinanceSummaryViewModel}" th:replace="finance/finance-summary :: application_finances_summary (isApplicant = true, supportUserAndSummaryPage = false)"></div>
                         <h2 class="heading-medium">Funding breakdown</h2>
                         <th:block ifs:global="${model.applicationFundingBreakdownViewModel}" th:insert="finance/finance-summary :: financial_summary_table" />
                     </div>
