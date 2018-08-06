@@ -53,7 +53,7 @@
                                         </div>
                                     </th>
                                     <th:block th:with="organisationFinance=${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
-                                        <td class="govuk-table__cell govuk-table__cell--numeric bold">
+                                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">
                                             &pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.total, 0, 'DEFAULT')}" />
                                         </td>
                                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${organisationFinance.grantClaimPercentage}+'%'"/>
@@ -70,7 +70,7 @@
                                 </tr>
                                 <tr class="govuk-table__row">
                                     <th class="govuk-table__header" scope="row">Total</th>
-                                    <td class="numeric bold">
+                                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold">
                                         &pound;<th:block th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" />
                                     </td>
                                     <td class="govuk-table__cell"></td>
