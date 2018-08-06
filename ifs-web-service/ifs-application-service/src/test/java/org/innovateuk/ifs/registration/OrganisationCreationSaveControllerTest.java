@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.registration;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;

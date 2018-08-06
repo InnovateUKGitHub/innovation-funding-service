@@ -8,7 +8,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Interface for CRUD operations on {@link UserResource} related data.

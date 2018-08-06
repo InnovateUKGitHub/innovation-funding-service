@@ -1,25 +1,25 @@
 package org.innovateuk.ifs.application.overview.populator;
 
-import org.innovateuk.ifs.application.populator.section.FinanceOverviewSectionPopulator;
-import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewAssignableViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewSectionViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewUserViewModel;
 import org.innovateuk.ifs.application.overview.viewmodel.ApplicationOverviewViewModel;
 import org.innovateuk.ifs.application.populator.ApplicationCompletedModelPopulator;
+import org.innovateuk.ifs.application.populator.section.FinanceOverviewSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.stereotype.Component;
 

@@ -24,7 +24,6 @@ import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.Form;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
-import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -32,7 +31,10 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.*;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,9 +85,6 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
     private SectionService sectionService;
 
     @Mock
-    private ProcessRoleService processRoleService;
-
-    @Mock
     private OrganisationService organisationService;
 
     @Mock
@@ -93,9 +92,6 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
 
     @Mock
     private FormInputRestService formInputRestService;
-
-    @Mock
-    private FormInputResponseService formInputResponseService;
 
     @Mock
     private FormInputResponseRestService formInputResponseRestService;

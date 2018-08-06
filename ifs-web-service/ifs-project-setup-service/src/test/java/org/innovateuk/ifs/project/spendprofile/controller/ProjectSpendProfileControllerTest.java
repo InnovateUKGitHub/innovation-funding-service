@@ -29,7 +29,6 @@ import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Spy;

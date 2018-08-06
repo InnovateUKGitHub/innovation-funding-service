@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
@@ -11,9 +10,9 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,7 +43,6 @@ import static org.innovateuk.ifs.commons.error.ValidationMessages.collectValidat
 public class ApplicationSubmitController {
 
     private QuestionService questionService;
-    private ProcessRoleService processRoleService;
     private UserRestService userRestService;
     private ApplicationService applicationService;
     private ApplicationRestService applicationRestService;
@@ -57,7 +55,6 @@ public class ApplicationSubmitController {
 
     @Autowired
     public ApplicationSubmitController(QuestionService questionService,
-                                       ProcessRoleService processRoleService,
                                        UserRestService userRestService,
                                        ApplicationService applicationService,
                                        ApplicationRestService applicationRestService,
@@ -65,7 +62,6 @@ public class ApplicationSubmitController {
                                        ApplicationModelPopulator applicationModelPopulator,
                                        CookieFlashMessageFilter cookieFlashMessageFilter) {
         this.questionService = questionService;
-        this.processRoleService = processRoleService;
         this.userRestService = userRestService;
         this.applicationService = applicationService;
         this.applicationRestService = applicationRestService;

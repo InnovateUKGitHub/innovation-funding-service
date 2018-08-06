@@ -12,14 +12,11 @@ import org.innovateuk.ifs.dashboard.viewmodel.InProgressDashboardRowViewModel;
 import org.innovateuk.ifs.dashboard.viewmodel.PreviousDashboardRowViewModel;
 import org.innovateuk.ifs.dashboard.viewmodel.ProjectDashboardRowViewModel;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
-import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.populator.section.FinanceOverviewSectionPopulator;
-import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.viewmodel.ApplicationCompletedViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.springframework.stereotype.Component;
 

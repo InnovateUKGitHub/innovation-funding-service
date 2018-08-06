@@ -33,8 +33,6 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
     @Mock
     private SectionRestService sectionRestService;
     @Mock
-    private QuestionService questionService;
-    @Mock
     private QuestionRestService questionRestService;
     @Mock
     private FormInputRestService formInputRestService;

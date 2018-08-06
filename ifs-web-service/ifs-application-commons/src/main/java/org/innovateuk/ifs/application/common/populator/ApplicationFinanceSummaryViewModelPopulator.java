@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanc
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -32,7 +31,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component

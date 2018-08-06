@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.registration.controller;
 
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.service.InviteRestService;
