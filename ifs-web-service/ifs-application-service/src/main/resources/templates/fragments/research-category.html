@@ -9,7 +9,7 @@
           novalidate="novalidate">
 
         <div class="question">
-            <div class="form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'form-group-error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('researchCategory')} ? 'govuk-form-group--error'">
                 <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.hasApplicationFinances and !model.complete}">
                     <h2 class="govuk-heading-s govuk-!-margin-0">What type of research are you undertaking in this project?</h2>
                     <p class="govuk-body">The type of research affects the level of funding a business can receive under UK state aid rules.

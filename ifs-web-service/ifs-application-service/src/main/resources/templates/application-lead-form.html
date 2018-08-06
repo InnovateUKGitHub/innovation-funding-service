@@ -11,29 +11,28 @@
 <th:block th:insert="fragments/layout :: global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="currentApplication=${model.application},linkTitle=${backTitle},linkUrl=${backURL}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}"
-             class="govuk-error-summary"
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
              aria-labelledby="error-summary-title"
              role="alert"
              tabindex="-1"
              data-module="error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">
-                There is a problem on this page.
-            </h2>
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this
+                page.</h2>
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                     <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
-                        <th:block th:if="${err.global || err.fieldName == 'formInput[cost]'}" th:text="${err.message}">
-                            Non-field specific message
+                        <th:block th:if="${err.global || err.fieldName == 'formInput[cost]'}" th:text="${err.message}">Non-field
+                            specific message
                         </th:block>
                         <th:block th:unless="${err.global || err.fieldName == 'formInput[cost]'}">
-                            <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">
-                                The error message
+                            <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error
+                                message
                             </th:block>
                             <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|"
                                th:text="${err.message}">The error message</a>
@@ -51,50 +50,44 @@
                       th:with="pageTitle=${model.title},subTitle=${model.application.name},size='govuk-heading-xl'"/>
         </th:block>
 
-
         <!--/* Application Form for a Question. */-->
         <th:block th:if="${model.isQuestion()}">
             <th:block th:with="question=${model.applicantResource.question}">
-                <th:block
-                    th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS}">
+                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS}">
                     <th:block th:each="formInputViewModel : ${model.formInputViewModels}">
-                        <th:block
-                            th:insert="fragments/application-details :: application_details(${formInputViewModel})"/>
+                        <th:block th:insert="fragments/application-details :: application_details(${formInputViewModel})" />
                     </th:block>
                 </th:block>
-                <th:block
-                    th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
-                    <th:block
-                        th:insert="fragments/application-team :: application_team(${applicationTeamModel},${question})"/>
+                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_TEAM}">
+                    <th:block th:insert="fragments/application-team :: application_team(${applicationTeamModel},${question})" />
                 </th:block>
-                <th:block
-                    th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY}">
-                    <th:block th:insert="fragments/research-category :: research_category(${researchCategoryModel})"/>
+                <th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).RESEARCH_CATEGORY}">
+                    <th:block th:insert="fragments/research-category :: research_category(${researchCategoryModel})" />
                 </th:block>
             </th:block>
         </th:block>
 
         <!--/* Application Form for a Section. */-->
         <th:block th:if="${model.isSection()}">
-            <!--/* To disable submission on pressing return (INFUND-6892) */-->
-            <th:block th:unless="${model.allReadOnly}">
-                <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">
-                    Save the form
-                </button>
-            </th:block>
-            <p class="hint govuk-body-l" th:if="${model.section.description}"
-               th:text="${model.section.description}"/>
-            <th:block
-                th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (${model})"/>
-            <input type="hidden" id="application_id" th:value="${model.application.id}"/>
-            <input type="hidden" id="competition_id" th:value="${model.competition.id}"/>
-            <input type="hidden" id="cacheTest" value=""/>
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
+                  data-autosave="application" enctype="multipart/form-data"
+                  th:with="appIsClosed=${model.applicationIsClosed}, readonly=${model.applicationIsReadOnly}"
+                  novalidate="novalidate">
+                <!--/* To disable submission on pressing return (INFUND-6892) */-->
+                <th:block th:unless="${model.allReadOnly}">
+                    <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
+                </th:block>
+                <p class="hint govuk-body-l" th:if="${model.section.description}" th:text="${model.section.description}"/>
+                <th:block th:include="finance/your-finances-sub-sections :: ${model.section.type.nameLower} (${model})"/>
+                <input type="hidden" id="application_id" th:value="${model.application.id}"/>
+                <input type="hidden" id="competition_id" th:value="${model.competition.id}"/>
+                <input type="hidden" id="cacheTest" value=""/>
+            </form>
         </th:block>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
-
 <th:block th:insert="fragments/layout :: footer"/>
 <th:block th:insert="fragments/layout :: body-end"/>
 <th:block th:insert="fragments/service-layout :: body-end"/>
