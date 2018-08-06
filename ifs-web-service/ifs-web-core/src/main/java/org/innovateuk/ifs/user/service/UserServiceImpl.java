@@ -9,7 +9,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +45,7 @@ public class UserServiceImpl implements UserService {
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRoleName()
-                .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().equals(userId));
+                .equals(Role.LEADAPPLICANT.getName()) && uar.getUser().equals(userId));
 
     }
 
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public ProcessRoleResource getLeadApplicantProcessRoleOrNull(Long applicationId) {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(applicationId);
         for(final ProcessRoleResource processRole : userApplicationRoles){
-            if(processRole.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())){
+            if(processRole.getRoleName().equals(Role.LEADAPPLICANT.getName())){
                 return processRole;
             }
         }

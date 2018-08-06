@@ -139,7 +139,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
 
-        if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -168,7 +168,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
-        if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -196,7 +196,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
 
-        if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
+        if (OrganisationTypeEnum.RESEARCH.getId() == organisationForm.getOrganisationTypeId()) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
         } else {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;

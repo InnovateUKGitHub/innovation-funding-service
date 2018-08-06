@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.saver.ApplicationSectionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
@@ -12,7 +11,7 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -20,13 +19,14 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -130,7 +130,7 @@ public class ApplicationSectionController {
 
         ApplicationResource application = applicationService.getById(applicationId);
 
-        ProcessRoleResource applicantUser = processRoleService.getByApplicationId(application.getId()).stream().filter(pr -> pr.getOrganisationId().equals(applicantOrganisationId) && Arrays.asList(UserApplicationRole.LEAD_APPLICANT.getRoleName(), UserApplicationRole.COLLABORATOR.getRoleName()).contains(pr.getRoleName())).findFirst().orElseThrow(() -> new ObjectNotFoundException());
+        ProcessRoleResource applicantUser = processRoleService.getByApplicationId(application.getId()).stream().filter(pr -> pr.getOrganisationId().equals(applicantOrganisationId) && Arrays.asList(Role.LEADAPPLICANT.getName(), Role.COLLABORATOR.getName()).contains(pr.getRoleName())).findFirst().orElseThrow(() -> new ObjectNotFoundException());
 
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantUser.getUser(), applicationId, sectionId);
         populateSection(model, form, bindingResult, applicantSection, true, Optional.of(applicantOrganisationId), true);
@@ -240,8 +240,8 @@ public class ApplicationSectionController {
         }
     }
 
-    private boolean userIsResearch(Long userId) {
-        return organisationService.getOrganisationForUser(userId).getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
+    private boolean userIsResearch(long userId) {
+        return organisationService.getOrganisationForUser(userId).getOrganisationType() == OrganisationTypeEnum.RESEARCH.getId();
     }
 
     private boolean validateTermsAndConditionsAgreement(ApplicationForm form, BindingResult bindingResult) {

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.researchcategory.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryFormPopulator;
 import org.innovateuk.ifs.application.forms.researchcategory.populator.ApplicationResearchCategoryModelPopulator;
-import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationQuestionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
