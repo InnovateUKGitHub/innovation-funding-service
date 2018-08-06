@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.file.domain.FileType;
 
 import javax.persistence.*;
@@ -84,6 +86,36 @@ public class DocumentConfig {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DocumentConfig that = (DocumentConfig) o;
+
+        return new EqualsBuilder()
+                .append(editable, that.editable)
+                .append(enabled, that.enabled)
+                .append(id, that.id)
+                .append(fileTypes, that.fileTypes)
+                .append(title, that.title)
+                .append(guidance, that.guidance)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(fileTypes)
+                .append(title)
+                .append(guidance)
+                .append(editable)
+                .append(enabled)
+                .toHashCode();
     }
 }
 

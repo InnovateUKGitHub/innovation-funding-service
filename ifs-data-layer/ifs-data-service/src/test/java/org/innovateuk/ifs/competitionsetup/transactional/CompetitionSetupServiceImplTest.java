@@ -5,20 +5,26 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
+import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
+import org.innovateuk.ifs.file.domain.FileType;
+import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
@@ -29,13 +35,16 @@ import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -63,6 +72,12 @@ public class CompetitionSetupServiceImplTest {
     private CompetitionSetupServiceImpl service;
     @Mock
     private CompetitionRepository competitionRepository;
+    @Mock
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+    @Mock
+    private FileTypeRepository fileTypeRepository;
+    @Mock
+    private PublicContentService publicContentService;
     @Mock
     private FormInputRepository formInputRepository;
     @Mock
@@ -469,5 +484,56 @@ public class CompetitionSetupServiceImplTest {
 
         verify(competitionRepository).findOne(competition.getId());
         verifyNoMoreInteractions(competitionRepository);
+    }
+
+    @Test
+    public void create() {
+        Competition savedCompetition = newCompetition().build();
+
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
+
+        GrantTermsAndConditions grantTermsAndConditions = new GrantTermsAndConditions();
+        FileType pdfFileType = new FileType();
+        when(grantTermsAndConditionsRepository.findOneByTemplate(GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME)).thenReturn(grantTermsAndConditions);
+        when(fileTypeRepository.findByName("PDF")).thenReturn(pdfFileType);
+        when(competitionRepository.save(any(Competition.class))).thenReturn(savedCompetition);
+        when(publicContentService.initialiseByCompetitionId(savedCompetition.getId())).thenReturn(serviceSuccess());
+        when(competitionMapperMock.mapToResource(savedCompetition)).thenReturn(competitionResource);
+
+        ServiceResult<CompetitionResource> result = service.create();
+
+        assertTrue(result.isSuccess());
+
+        // Build the expected competition that would be saved in DB and verify that the same competition was passed to the repository's save method
+        Competition expectedCompetitionToBeSaved = getExpectedCompetitionToBeSaved(grantTermsAndConditions, pdfFileType);
+        verify(competitionRepository).save(expectedCompetitionToBeSaved);
+    }
+
+    private Competition getExpectedCompetitionToBeSaved(GrantTermsAndConditions defaultTermsAndConditions, FileType pdfFileType) {
+        Competition expectedCompetitionToBeSaved = new Competition();
+        expectedCompetitionToBeSaved.setSetupComplete(false);
+        expectedCompetitionToBeSaved.setTermsAndConditions(defaultTermsAndConditions);
+        expectedCompetitionToBeSaved.setProjectDocuments(createDefaultProjectDocuments(expectedCompetitionToBeSaved, pdfFileType));
+
+        return expectedCompetitionToBeSaved;
+    }
+
+    private List<ProjectDocument> createDefaultProjectDocuments(Competition competition, FileType pdfFileType) {
+
+        List<ProjectDocument> defaultProjectDocuments = new ArrayList<>();
+        defaultProjectDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
+        defaultProjectDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
+
+        return defaultProjectDocuments;
+    }
+
+    private ProjectDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
+        return new ProjectDocument(competition, "Collaboration agreement", "Enter guidance for Collaboration agreement",
+                false, true, fileTypes);
+    }
+
+    private ProjectDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
+        return new ProjectDocument(competition, "Exploitation plan", "Enter guidance for Exploitation plan",
+                false, true, fileTypes);
     }
 }
