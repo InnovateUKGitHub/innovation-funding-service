@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
-import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
@@ -15,8 +14,8 @@ public interface AssessorService {
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource);
 
-    @PreAuthorize("hasPermission(#assessorId, 'READ_PROFILE')")
-    ServiceResult<AssessorProfileResource> getAssessorProfile(long assessorId);
+    @PreAuthorize("hasPermission(#assessorId, 'org.innovateuk.ifs.assessment.resource.AssessorProfileResource', 'READ_PROFILE')")
+    ServiceResult<AssessorProfileResource> getAssessorProfile(Long assessorId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(

@@ -17,13 +17,6 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
     }
 
     @Test
-    public void getAssessorProfile() {
-        Long assessorId = 1L;
-
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessorProfile(assessorId), COMP_ADMIN, PROJECT_FINANCE, ASSESSOR);
-    }
-
-    @Test
     public void notifyAssessorsByCompetition() throws Exception {
         long competitionId = 1L;
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAssessorsByCompetition(competitionId), COMP_ADMIN, PROJECT_FINANCE);

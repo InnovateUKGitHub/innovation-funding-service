@@ -115,7 +115,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     @Override
-    public ServiceResult<AssessorProfileResource> getAssessorProfile(long assessorId) {
+    public ServiceResult<AssessorProfileResource> getAssessorProfile(Long assessorId) {
         return getAssessor(assessorId)
                 .andOnSuccess(user -> getProfile(user.getProfileId())
                         .andOnSuccessReturn(

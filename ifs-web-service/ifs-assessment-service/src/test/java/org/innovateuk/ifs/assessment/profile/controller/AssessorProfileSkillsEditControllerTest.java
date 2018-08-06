@@ -5,13 +5,15 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileSkillsForm;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditSkillsModelPopulator;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileEditSkillsViewModel;
-import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileSkillsViewModel;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.ProfileSkillsEditResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
+import org.innovateuk.ifs.viewmodel.AssessorProfileSkillsViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,6 +30,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
+import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
@@ -56,33 +59,6 @@ public class AssessorProfileSkillsEditControllerTest extends BaseControllerMockM
     @Override
     protected AssessorProfileSkillsEditController supplyControllerUnderTest() {
         return new AssessorProfileSkillsEditController();
-    }
-
-    @Test
-    public void getReadonlySkills() throws Exception {
-        BusinessType businessType = BUSINESS;
-        String skillAreas = "skill1 skill2 skill3";
-
-        List<InnovationAreaResource> innovationAreaResources = CollectionFunctions.combineLists(
-                setUpInnovationAreasForSector("Emerging and enabling",
-                        "Data", "Cyber Security"),
-                setUpInnovationAreasForSector("Health and life sciences",
-                        "Biosciences", "Independent living and wellbeing"));
-        UserResource userResource = setUpProfileSkills(businessType, skillAreas, innovationAreaResources);
-
-        Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
-        expectedInnovationAreas.put("Emerging and enabling", asList("Data", "Cyber Security"));
-        expectedInnovationAreas.put("Health and life sciences", asList("Biosciences", "Independent living and wellbeing"));
-
-        AssessorProfileSkillsViewModel expectedModel = new AssessorProfileSkillsViewModel(expectedInnovationAreas,
-                skillAreas, businessType);
-
-        mockMvc.perform(get("/profile/skills"))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedModel))
-                .andExpect(view().name("profile/skills"));
-
-        verify(profileRestService, only()).getProfileSkills(userResource.getId());
     }
 
     @Test

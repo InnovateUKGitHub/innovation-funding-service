@@ -129,7 +129,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
         assertEquals("Test Tester", assessorDetails.getName());
         assertEquals("012345", assessorDetails.getPhoneNumber());
         assertEquals("A Skill", model.getSkillAreas());
-        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType());
+        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType().getDisplayName());
         assertEquals("test@test.com", assessorDetails.getEmail());
         assertEquals(2, model.getInnovationAreas().size());
         assertEquals(expectedAddress, assessorDetails.getAddress());
@@ -159,7 +159,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
         assertEquals("Test Tester", assessorDetails.getName());
         assertEquals("012345", assessorDetails.getPhoneNumber());
-        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType());
+        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType().getDisplayName());
         assertEquals("test@test.com", assessorDetails.getEmail());
         assertEquals(expectedAddress, assessorDetails.getAddress());
         assertEquals(expectedAppointments, model.getAppointments());
@@ -191,7 +191,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                 .param("param2", "def&ghi")
                 .param("applicationId", "2"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessors/profile-skills"))
+                .andExpect(view().name("profile/skills"))
                 .andExpect(model().attribute("backUrl", expectedBackUrl));
     }
 
@@ -212,7 +212,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
         mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId)
                 .param("origin", "ASSESSOR_FIND"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessors/profile-skills"))
+                .andExpect(view().name("profile/skills"))
                 .andExpect(model().attribute("backUrl", expectedBackUrl));
     }
 
@@ -233,7 +233,7 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
         mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId)
                 .param("origin", "ASSESSOR_FIND"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessors/profile-skills"))
+                .andExpect(view().name("profile/skills"))
                 .andExpect(model().attribute("backUrl", expectedBackUrl));
     }
 

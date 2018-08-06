@@ -11,7 +11,7 @@
 <main tabindex="-1" id="content">
 
     <th:block th:if="${!model.compAdminUser}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
-    <th:block th:unless="${!model.compAdminUser}" th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" />
+    <th:block th:unless="${!model.compAdminUser}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}}" />
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.compAdminUser} ? 'Assessor profile' : 'Your details',size='heading-xlarge'" />
 

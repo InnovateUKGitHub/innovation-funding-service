@@ -106,7 +106,6 @@ public class CompetitionManagementAssessorProfileController {
         model.addAttribute("backUrl", buildBackUrl(origin, competitionId, applicationId, assessorId, queryParams));
 
         return "profile/skills";
-//        return "assessors/profile-skills";
     }
 
     @GetMapping("/profile/{assessorId}/declaration")

@@ -3,9 +3,9 @@ package org.innovateuk.ifs.assessment.profile.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileEditDetailsForm;
-import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditDetailsModelPopulator;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
+import org.innovateuk.ifs.populator.AssessorProfileDetailsModelPopulator;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
@@ -58,19 +58,6 @@ public class AssessorProfileDetailsEditControllerTest extends BaseControllerMock
     @Override
     protected AssessorProfileDetailsEditController supplyControllerUnderTest() {
         return new AssessorProfileDetailsEditController();
-    }
-
-    @Test
-    public void getDetails() throws Exception {
-        UserResource user = buildTestUser();
-        setLoggedInUser(user);
-
-        when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(singletonList(buildTestEthnicity())));
-        when(profileRestService.getUserProfile(user.getId())).thenReturn(restSuccess(buildTestUserProfile()));
-
-        mockMvc.perform(get("/profile/details"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("profile/details"));
     }
 
     @Test

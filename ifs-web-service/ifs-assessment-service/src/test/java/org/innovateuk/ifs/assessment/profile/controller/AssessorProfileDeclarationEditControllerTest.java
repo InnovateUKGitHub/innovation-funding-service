@@ -6,12 +6,14 @@ import org.innovateuk.ifs.assessment.profile.form.AssessorProfileAppointmentForm
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileDeclarationForm;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileFamilyAffiliationForm;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDeclarationFormPopulator;
-import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDeclarationModelPopulator;
-import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileDeclarationViewModel;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
+import org.innovateuk.ifs.populator.AssessorProfileDeclarationModelPopulator;
 import org.innovateuk.ifs.user.resource.AffiliationListResource;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDeclarationViewModel;
+import org.innovateuk.ifs.viewmodel.AssessorProfileDetailsViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +35,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
@@ -78,113 +81,6 @@ public class AssessorProfileDeclarationEditControllerTest extends BaseController
     @Override
     protected AssessorProfileDeclarationEditController supplyControllerUnderTest() {
         return new AssessorProfileDeclarationEditController();
-    }
-
-    @Test
-    public void getDeclaration() throws Exception {
-        UserResource user = newUserResource().build();
-        setLoggedInUser(user);
-
-        String expectedPrincipalEmployer = "Big Name Corporation";
-        String expectedRole = "Financial Accountant";
-        String expectedProfessionalAffiliations = "Professional affiliations...";
-        String expectedFinancialInterests = "Other financial interests...";
-        String expectedFamilyFinancialInterests = "Other family financial interests...";
-
-        List<AffiliationResource> expectedAppointments = newAffiliationResource()
-                .withAffiliationType(PERSONAL)
-                .withOrganisation("Org 1", "Org 2")
-                .withPosition("Pos 1", "Post 2")
-                .withExists(TRUE)
-                .build(2);
-        List<AffiliationResource> expectedFamilyAffiliations = newAffiliationResource()
-                .withAffiliationType(FAMILY)
-                .withRelation("Relation 1", "Relation 2")
-                .withOrganisation("Org 1", "Org 2")
-                .withExists(TRUE)
-                .build(2);
-        AffiliationResource principalEmployer = newAffiliationResource()
-                .withAffiliationType(EMPLOYER)
-                .withExists(TRUE)
-                .withOrganisation(expectedPrincipalEmployer)
-                .withPosition(expectedRole)
-                .build();
-        AffiliationResource professionalAffiliations = newAffiliationResource()
-                .withAffiliationType(PROFESSIONAL)
-                .withExists(TRUE)
-                .withDescription(expectedProfessionalAffiliations)
-                .build();
-        AffiliationResource financialInterests = newAffiliationResource()
-                .withAffiliationType(PERSONAL_FINANCIAL)
-                .withExists(TRUE)
-                .withDescription(expectedFinancialInterests)
-                .build();
-        AffiliationResource familyFinancialInterests = newAffiliationResource()
-                .withAffiliationType(FAMILY_FINANCIAL)
-                .withExists(TRUE)
-                .withDescription(expectedFamilyFinancialInterests)
-                .build();
-
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(
-                true,
-                expectedPrincipalEmployer,
-                expectedRole,
-                expectedProfessionalAffiliations,
-                expectedAppointments,
-                expectedFinancialInterests,
-                expectedFamilyAffiliations,
-                expectedFamilyFinancialInterests
-        );
-
-        when(affiliationRestService.getUserAffiliations(user.getId()))
-                .thenReturn(restSuccess(new AffiliationListResource(combineLists(
-                combineLists(
-                        expectedAppointments,
-                        expectedFamilyAffiliations
-                ),
-                principalEmployer,
-                professionalAffiliations,
-                financialInterests,
-                familyFinancialInterests
-                )
-                )));
-
-        mockMvc.perform(get("/profile/declaration"))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("profile/declaration-of-interest"));
-
-        verify(affiliationRestService).getUserAffiliations(user.getId());
-    }
-
-    @Test
-    public void getDeclaration_notCompleted() throws Exception {
-        UserResource user = newUserResource().build();
-        setLoggedInUser(user);
-
-        AssessorProfileDeclarationViewModel expectedViewModel = new AssessorProfileDeclarationViewModel(
-                false,
-                null,
-                null,
-                null,
-                emptyList(),
-                null,
-                emptyList(),
-                null
-        );
-
-        AffiliationListResource affiliationListResource = newAffiliationListResource()
-                .withAffiliationList(emptyList())
-                .build();
-
-        when(affiliationRestService.getUserAffiliations(user.getId())).thenReturn(restSuccess(affiliationListResource));
-
-        mockMvc.perform(get("/profile/declaration"))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("profile/declaration-of-interest"));
-
-        verify(affiliationRestService).getUserAffiliations(user.getId());
     }
 
     @Test
