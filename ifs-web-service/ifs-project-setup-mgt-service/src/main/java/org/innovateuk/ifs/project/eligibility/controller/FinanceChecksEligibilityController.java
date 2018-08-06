@@ -43,6 +43,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -82,7 +83,7 @@ public class FinanceChecksEligibilityController {
     private FinanceCheckService financeCheckService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private OpenProjectFinanceSectionModelPopulator openFinanceSectionModel;
@@ -133,7 +134,7 @@ public class FinanceChecksEligibilityController {
                                   UserResource user) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
@@ -154,7 +155,7 @@ public class FinanceChecksEligibilityController {
 
         boolean eligibilityApproved = eligibility.getEligibility() == EligibilityState.APPROVED;
 
-        OrganisationResource organisationResource = organisationService.getOrganisationById(organisation.getId());
+        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisation.getId()).getSuccess();
 
         FileDetailsViewModel jesFileDetailsViewModel = null;
         boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationType());
@@ -194,7 +195,7 @@ public class FinanceChecksEligibilityController {
                              @PathVariable("organisationId") Long organisationId,
                              @PathVariable(QUESTION_ID) final Long questionId,
                              UserResource user) {
-        Long organisationType = organisationService.getOrganisationById(organisationId).getOrganisationType();
+        Long organisationType = organisationRestService.getOrganisationById(organisationId).getSuccess().getOrganisationType();
 
         FinanceRowItem costItem = addCost(organisationType, organisationId, projectId, questionId);
         FinanceRowType costType = costItem.getCostType();
@@ -228,7 +229,7 @@ public class FinanceChecksEligibilityController {
                                            HttpServletRequest request) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         Long organisationType = organisationResource.getOrganisationType();
 
         ValidationMessages saveApplicationErrors = saveProjectFinanceSection(applicationResource.getCompetition(), projectId, organisationType, organisationResource.getId(), request);
@@ -291,7 +292,7 @@ public class FinanceChecksEligibilityController {
                                      UserResource user) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicationResource.getCompetition());
@@ -318,7 +319,7 @@ public class FinanceChecksEligibilityController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicationResource.getCompetition());
@@ -333,7 +334,7 @@ public class FinanceChecksEligibilityController {
     @GetMapping("/changes")
     public String viewExternalEligibilityChanges(@P("projectId")@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, Model model, UserResource loggedInUser){
         ProjectResource project = projectService.getById(projectId);
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
     }
 

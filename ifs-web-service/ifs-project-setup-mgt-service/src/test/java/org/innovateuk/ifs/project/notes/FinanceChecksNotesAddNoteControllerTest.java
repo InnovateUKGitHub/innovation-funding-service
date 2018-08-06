@@ -4,6 +4,7 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -45,6 +46,7 @@ import java.util.Optional;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.CookieTestUtil.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -85,7 +87,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     private ProjectRestService projectRestService;
 
     @Mock
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private ProjectFinanceService projectFinanceService;
@@ -101,7 +103,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         setupCookieUtil(cookieUtil);
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
-        when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
+        when(organisationRestService.getOrganisationById(applicantOrganisationId)).thenReturn(restSuccess(leadOrganisationResource));
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(singletonList(projectUser));
         when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(restSuccess(partnerOrg));

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewMod
 import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.*;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -19,9 +19,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -60,6 +57,9 @@ public class ApplicationModelPopulator {
 
     @Autowired
     protected OrganisationService organisationService;
+
+    @Autowired
+    protected OrganisationRestService organisationRestService;
 
     @Autowired
     protected FinanceViewHandlerProvider financeViewHandlerProvider;
@@ -212,7 +212,7 @@ public class ApplicationModelPopulator {
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getUser().equals(userId) && uar.getOrganisationId() != null)
-                .map(uar -> organisationService.getOrganisationById(uar.getOrganisationId()))
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
     }
 

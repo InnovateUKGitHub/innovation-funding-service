@@ -55,6 +55,7 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -100,9 +101,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     @Mock
     private ProjectService projectService;
-
-    @Mock
-    private OrganisationService organisationService;
 
     @Mock
     private PartnerOrganisationRestService partnerOrganisationRestService;
@@ -162,7 +160,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
-        when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         List<PartnerOrganisationResource> partnerOrganisationResourceList = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource().build(3);
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResourceList));
@@ -223,7 +221,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
-        when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
         List<PartnerOrganisationResource> partnerOrganisationResourceList = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource().build(3);
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResourceList));
 
@@ -360,7 +358,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
-        when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
         List<PartnerOrganisationResource> partnerOrganisationResourceList = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource().build(3);
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResourceList));
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
@@ -717,7 +715,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
         when(projectDetailsService.inviteFinanceContact(projectId, existingInvites.get(1))).thenReturn(serviceSuccess());
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(leadOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(leadOrganisation));
         when(projectDetailsService.saveProjectInvite(any())).thenReturn(serviceSuccess());
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
@@ -747,7 +745,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
-        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
 
         mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -771,7 +769,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
-        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(organisationAddressRestService.findByOrganisationIdAndAddressId(organisationResource.getId(), project.getAddress().getId())).thenReturn(restSuccess(organisationAddressResource));
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/project-address", project.getId())).
@@ -1065,7 +1063,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectManagerProjectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
-        when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
         List<PartnerOrganisationResource> partnerOrganisationResourceList = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource().build(3);
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResourceList));
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);

@@ -14,18 +14,6 @@ import java.util.SortedSet;
  */
 public interface OrganisationService {
 
-    OrganisationResource getOrganisationById(long organisationId);
-
-    OrganisationResource getOrganisationByIdForAnonymousUserFlow(long organisationId);
-
-    OrganisationResource createOrMatch(OrganisationResource organisation);
-
-    OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash);
-
-    OrganisationResource updateNameAndRegistration(OrganisationResource organisation);
-
-    OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);
-
     Long getOrganisationType(long userId, long applicationId);
 
     Optional<OrganisationResource> getOrganisationForUser(long userId, List<ProcessRoleResource> userApplicationRoles);

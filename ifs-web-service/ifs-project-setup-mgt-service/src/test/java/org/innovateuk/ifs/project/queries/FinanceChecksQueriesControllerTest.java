@@ -108,9 +108,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     private UserRestService userRestService;
 
     @Mock
-    private OrganisationService organisationService;
-
-    @Mock
     private ProjectService projectService;
 
     @Mock
@@ -143,7 +140,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
-        when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
+        when(organisationRestService.getOrganisationById(applicantOrganisationId)).thenReturn(restSuccess(leadOrganisationResource));
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(asList(financeContactProjectUser, financeContact2ProjectUser));
         when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(restSuccess(newPartnerOrganisationResource().build()));

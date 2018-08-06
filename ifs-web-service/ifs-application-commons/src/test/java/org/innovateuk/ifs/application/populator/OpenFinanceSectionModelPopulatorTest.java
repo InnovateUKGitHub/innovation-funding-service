@@ -158,7 +158,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).withRole(LEADAPPLICANT).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
-        when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
+        when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(newOrganisationResource().withId(processRole.getOrganisationId()).build()));
         when(userRestService.retrieveUserById(user.getId())).thenReturn(restSuccess(user));
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRole).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build();
         ApplicantSectionResource applicantSection = newApplicantSectionResource().withApplication(application).withCompetition(competition).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(section).withCurrentUser(user).build();
@@ -203,7 +203,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTest {
 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).withRole(LEADAPPLICANT).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
-        when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
+        when(organisationRestService.getOrganisationById(anyLong())).thenReturn(restSuccess(newOrganisationResource().withId(processRole.getOrganisationId()).build()));
         when(userRestService.retrieveUserById(user.getId())).thenReturn(restSuccess(user));
 
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRole).withOrganisation(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build()).build();

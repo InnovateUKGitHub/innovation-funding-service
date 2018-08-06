@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.viability.controller;
 
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -49,7 +50,7 @@ public class FinanceChecksViabilityController {
     private ProjectService projectService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private OrganisationDetailsRestService organisationDetailsService;
@@ -132,7 +133,7 @@ public class FinanceChecksViabilityController {
     private FinanceChecksViabilityViewModel getViewModel(Long projectId, Long organisationId) {
 
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         if(viability.getViability().isNotApplicable()){
             throw new ObjectNotFoundException(VIABILITY_CHECKS_NOT_APPLICABLE.getErrorKey(), singletonList(organisation.getName()));

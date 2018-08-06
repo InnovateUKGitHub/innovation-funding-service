@@ -29,74 +29,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
 
     @Override
     protected OrganisationService supplyServiceUnderTest() {
-        return new OrganisationServiceImpl(organisationRestService, companyHouseRestService, userRestService);
-    }
-
-    @Test
-    public void testGetOrganisationById() throws Exception {
-        Long organisationId = 3L;
-        OrganisationResource organisation = new OrganisationResource();
-        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
-
-        OrganisationResource returnedOrganisation = service.getOrganisationById(organisationId);
-
-        assertEquals(organisation, returnedOrganisation);
-    }
-
-    @Test
-    public void testGetOrganisationByIdForAnonymousUserFlow() throws Exception {
-        Long organisationId = 3L;
-        OrganisationResource organisation = new OrganisationResource();
-        when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId)).thenReturn(restSuccess(organisation));
-
-        OrganisationResource returnedOrganisation = service.getOrganisationByIdForAnonymousUserFlow(organisationId);
-
-        assertEquals(organisation, returnedOrganisation);
-    }
-
-    @Test
-    public void testGetCompanyHouseOrganisation() throws Exception {
-        String organisationSearch = "Empire";
-        OrganisationSearchResult organisation = new OrganisationSearchResult();
-        when(companyHouseRestService.getOrganisationById(organisationSearch)).thenReturn(restSuccess(organisation));
-
-        OrganisationSearchResult returnedOrganisation = service.getCompanyHouseOrganisation(organisationSearch);
-
-        assertEquals(organisation, returnedOrganisation);
-    }
-
-    @Test
-    public void testCreateOrMatch() throws Exception {
-        OrganisationResource resourceToSave = new OrganisationResource();
-        OrganisationResource organisation = new OrganisationResource();
-        when(organisationRestService.createOrMatch(resourceToSave)).thenReturn(restSuccess(organisation));
-
-        OrganisationResource returnedOrganisation = service.createOrMatch(resourceToSave);
-
-        assertEquals(organisation, returnedOrganisation);
-    }
-
-    @Test
-    public void testCreateAndLinkByInvite() throws Exception {
-        String inviteHash = "123abc";
-
-        OrganisationResource resourceToSave = new OrganisationResource();
-        OrganisationResource organisation = new OrganisationResource();
-        when(organisationRestService.createAndLinkByInvite(resourceToSave, inviteHash)).thenReturn(restSuccess(organisation));
-
-        OrganisationResource returnedOrganisation = service.createAndLinkByInvite(resourceToSave, inviteHash);
-
-        assertEquals(organisation, returnedOrganisation);
-    }
-
-    @Test
-    public void testUpdateNameAndRegistration() throws Exception {
-        OrganisationResource organisation = newOrganisationResource().withName("Vitruvius Stonework").withCompanyHouseNumber("60674010").build();
-        OrganisationResource updatedOrganisation = newOrganisationResource().withId(organisation.getId()).withName("Vitruvius Stonework Limited").withCompanyHouseNumber("60674010").build();
-        when(organisationRestService.updateNameAndRegistration(updatedOrganisation)).thenReturn(restSuccess(updatedOrganisation));
-        OrganisationResource returnedOrganisationResource = service.updateNameAndRegistration(updatedOrganisation);
-        assertEquals(returnedOrganisationResource.getCompanyHouseNumber(), updatedOrganisation.getCompanyHouseNumber());
-        assertEquals(returnedOrganisationResource.getName(), updatedOrganisation.getName());
+        return new OrganisationServiceImpl(organisationRestService, userRestService);
     }
 
     @Test

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -65,7 +66,7 @@ public class ProjectDetailsController {
     private ProjectDetailsService projectDetailsService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private ProjectRestService projectRestService;
@@ -136,7 +137,7 @@ public class ProjectDetailsController {
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
         return  projectRoles.stream()
                 .filter(uar -> uar.getRole() == PARTNER.getId())
-                .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccess())
                 .collect(Collectors.toList());
     }
 

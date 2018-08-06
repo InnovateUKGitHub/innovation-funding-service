@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.form.Form;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -29,10 +30,7 @@ import java.util.Map;
 public class JESProjectFinanceModelManager implements FinanceModelManager {
 
     @Autowired
-    ProcessRoleService processRoleService;
-
-    @Autowired
-    OrganisationService organisationService;
+    OrganisationRestService organisationRestService;
 
     @Autowired
     FinanceService financeService;
@@ -47,7 +45,7 @@ public class JESProjectFinanceModelManager implements FinanceModelManager {
         if (applicationFinanceResource != null) {
 
             ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
-            OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisationId());
+            OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRole.getOrganisationId()).getSuccess();
 
             Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
             AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
@@ -76,7 +74,7 @@ public class JESProjectFinanceModelManager implements FinanceModelManager {
         if (applicationFinanceResource != null) {
 
             ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
-            OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisationId());
+            OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRole.getOrganisationId()).getSuccess();
 
             Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
             AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);

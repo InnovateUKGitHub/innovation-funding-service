@@ -158,7 +158,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(leadOrganisationResource);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(leadOrganisationResource));
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
 
         PostResource firstPost = new PostResource(null, financeTeamUser, "Question", singletonList(new AttachmentResource(23L, "file1.txt", "txt", 1L, null)), ZonedDateTime.now().plusMinutes(10L));
@@ -180,7 +180,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     public void testViewFinanceChecksLandingPage() throws Exception {
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
@@ -207,7 +207,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         setLoggedInUser(financeContactUser);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(financeContactUser.getId()).withOrganisation(organisationId).withRole(PARTNER).build(1));
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
@@ -288,7 +288,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
@@ -346,7 +346,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     public void testViewNewResponse() throws Exception {
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
@@ -394,7 +394,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     public void testSaveNewResponseNoFieldsSet() throws Exception {
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
@@ -425,7 +425,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         String tooLong = StringUtils.leftPad("a", 4001, 'a');
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
@@ -457,7 +457,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         String tooManyWords = StringUtils.leftPad("a ", 802, "a ");
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
@@ -493,7 +493,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(fileEntry);
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
@@ -562,7 +562,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         FileEntryResource fileEntryResource = new FileEntryResource(1L, "name", "mediaType", 2L);
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
@@ -597,7 +597,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     public void testRemoveAttachment() throws Exception {
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
@@ -632,7 +632,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Test
     public void testRemoveAttachmentDoesNotRemoveAttachmentNotInCookie() throws Exception {
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
@@ -669,7 +669,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     public void testSaveNewResponseQueryCannotRespondToQuery() throws Exception {
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));

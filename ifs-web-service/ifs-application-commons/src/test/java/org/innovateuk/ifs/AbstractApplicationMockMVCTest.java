@@ -515,8 +515,8 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(applicationService.getById(applications.get(3).getId())).thenReturn(applications.get(3));
         when(applicationService.getById(applications.get(4).getId())).thenReturn(applications.get(4));
 
-        when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet
-                .first());
+        when(organisationRestService.getOrganisationById(organisationSet.first().getId())).thenReturn(restSuccess(organisationSet
+                .first()));
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn
                 (restSuccess(organisationSet.first()));
         when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -59,7 +60,7 @@ public class ProjectSpendProfileController {
     private StatusService statusService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private SpendProfileService spendProfileService;
@@ -282,7 +283,7 @@ public class ProjectSpendProfileController {
                                                                     final UserResource loggedInUser) {
         SpendProfileSummaryModel summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths());
 
-        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationType());
         Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());

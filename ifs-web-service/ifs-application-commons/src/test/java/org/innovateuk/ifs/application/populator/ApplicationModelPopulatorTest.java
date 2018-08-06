@@ -110,7 +110,7 @@ public class ApplicationModelPopulatorTest {
 
         Optional<Boolean> markAsCompleteEnabled = Optional.of(Boolean.FALSE);
 
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
         when(userRestService.retrieveUserById(leadApplicantId)).thenReturn(restSuccess(leadApplicant));
         when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(userApplicationRoles));
 

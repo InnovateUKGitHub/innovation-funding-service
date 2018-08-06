@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.notes.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
@@ -62,7 +63,7 @@ public class FinanceChecksNotesController {
     private static final String FORM_ATTR = "form";
     private static final String NOTES_VIEW = "project/financecheck/notes";
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
     @Autowired
     private ProjectService projectService;
     @Autowired
@@ -302,7 +303,7 @@ public class FinanceChecksNotesController {
 
         ProjectResource project = projectService.getById(projectId);
 
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
 

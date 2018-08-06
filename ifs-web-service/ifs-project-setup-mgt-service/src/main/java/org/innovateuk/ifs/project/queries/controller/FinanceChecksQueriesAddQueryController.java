@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.queries.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.innovateuk.ifs.user.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -62,7 +62,7 @@ public class FinanceChecksQueriesAddQueryController {
     private static final String UNKNOWN_FIELD = "Unknown";
     private static final String NEW_QUERY_VIEW = "project/financecheck/new-query";
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
     @Autowired
     private ProjectService projectService;
     @Autowired
@@ -237,7 +237,7 @@ public class FinanceChecksQueriesAddQueryController {
 
     private FinanceChecksQueriesAddQueryViewModel populateQueriesViewModel(Long projectId, Long organisationId, String querySection, List<Long> attachmentFileIds) {
         ProjectResource project = projectService.getById(projectId);
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);

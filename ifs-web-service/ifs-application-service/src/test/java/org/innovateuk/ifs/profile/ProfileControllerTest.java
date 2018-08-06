@@ -95,7 +95,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 .withCompanyHouseNumber("companyhousenumber")
                 .withAddress(asList(addressResources))
                 .build();
-        when(organisationService.getOrganisationById(6L)).thenReturn(organisation);
+        when(organisationRestService.getOrganisationById(6L)).thenReturn(restSuccess(organisation));
         when(organisationRestService.getOrganisationByUserId(user.getId())).thenReturn(restSuccess(organisation));
     }
 

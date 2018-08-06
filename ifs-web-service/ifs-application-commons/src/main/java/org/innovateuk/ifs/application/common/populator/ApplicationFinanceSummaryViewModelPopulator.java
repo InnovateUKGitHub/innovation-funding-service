@@ -43,7 +43,6 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     private OrganisationRestService organisationRestService;
     private ApplicationService applicationService;
     private SectionService sectionService;
-    private OrganisationService organisationService;
     private UserRestService userRestService;
     private UserService userService;
     private CompetitionRestService competitionRestService;
@@ -53,7 +52,6 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                                                        FinanceService financeService,
                                                        FileEntryRestService fileEntryRestService,
                                                        OrganisationRestService organisationRestService,
-                                                       OrganisationService organisationService,
                                                        UserRestService userRestService,
                                                        UserService userService,
                                                        CompetitionRestService competitionRestService) {
@@ -62,7 +60,6 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         this.financeService = financeService;
         this.fileEntryRestService = fileEntryRestService;
         this.organisationRestService = organisationRestService;
-        this.organisationService = organisationService;
         this.userRestService = userRestService;
         this.userService = userService;
         this.competitionRestService = competitionRestService;
@@ -89,7 +86,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
 
         ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantUser.getOrganisationId());
+        OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(leadApplicantUser.getOrganisationId()).getSuccess();
 
         Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, leadOrganisation);
 
@@ -187,7 +184,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
         if (!user.isInternalUser() && !user.hasAnyRoles(Role.ASSESSOR, Role.INTERVIEW_ASSESSOR)) {
             ProcessRoleResource userProcessRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-            userOrganisation = organisationService.getOrganisationById(userProcessRole.getOrganisationId());
+            userOrganisation = organisationRestService.getOrganisationById(userProcessRole.getOrganisationId()).getSuccess();
         }
 
         return userOrganisation;

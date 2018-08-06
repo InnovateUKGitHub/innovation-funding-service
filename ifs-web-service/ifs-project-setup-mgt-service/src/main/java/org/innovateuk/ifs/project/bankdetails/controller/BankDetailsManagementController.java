@@ -46,9 +46,6 @@ public class BankDetailsManagementController {
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private OrganisationService organisationService;
-
-    @Autowired
     private OrganisationRestService organisationRestService;
 
     @Autowired
@@ -79,7 +76,7 @@ public class BankDetailsManagementController {
             @P("projectId")@PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
             UserResource loggedInUser) {
-        final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        final OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId()).getSuccess();
         return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, new ApproveBankDetailsForm());
@@ -96,7 +93,7 @@ public class BankDetailsManagementController {
             @PathVariable("organisationId") Long organisationId,
             UserResource loggedInUser) {
 
-        final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        final OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
                 projectId, organisationResource.getId()).getSuccess();
@@ -128,7 +125,7 @@ public class BankDetailsManagementController {
             @PathVariable("organisationId") Long organisationId,
             UserResource loggedInUser,
             @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ChangeBankDetailsForm form) {
-        final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        final OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
                 projectId, organisationResource.getId()).getSuccess();
@@ -146,7 +143,7 @@ public class BankDetailsManagementController {
             @Valid @ModelAttribute(FORM_ATTR_NAME) ChangeBankDetailsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler) {
-        final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        final OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource existingBankDetails = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
                 projectId, organisationResource.getId()).getSuccess();

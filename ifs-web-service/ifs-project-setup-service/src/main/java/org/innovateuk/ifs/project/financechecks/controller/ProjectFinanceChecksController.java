@@ -51,6 +51,7 @@ import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -119,7 +120,7 @@ public class ProjectFinanceChecksController {
     private FinanceCheckService financeCheckService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -358,7 +359,7 @@ public class ProjectFinanceChecksController {
         ProjectResource project = projectService.getById(projectId);
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ApplicationResource application = applicationService.getById(project.getApplication());
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -373,7 +374,7 @@ public class ProjectFinanceChecksController {
     public String viewExternalEligibilityChanges(@P("projectId")@PathVariable("projectId") final Long projectId, Model model, UserResource loggedInUser) {
         Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
     }
 
@@ -382,7 +383,7 @@ public class ProjectFinanceChecksController {
         Long projectId = compositeId.getProjectId();
         Long organisationId = compositeId.getOrganisationId();
         ProjectResource projectResource = projectService.getById(projectId);
-        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         Map<Long, String> attachmentLinks =
                 simpleToMap(attachments, identity(), id -> financeCheckService.getAttachmentInfo(id).getName());

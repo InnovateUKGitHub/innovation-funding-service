@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.CookieTestUtil;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -72,7 +73,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     private ProjectRestService projectRestService;
 
     @Mock
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private FinanceCheckService financeCheckServiceMock;
@@ -104,7 +105,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         when(projectRestService.getPartnerOrganisation(projectId, applicantOrganisationId)).thenReturn(restSuccess(partnerOrg));
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
-        when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
+        when(organisationRestService.getOrganisationById(applicantOrganisationId)).thenReturn(restSuccess(leadOrganisationResource));
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(Arrays.asList(projectUser));
     }

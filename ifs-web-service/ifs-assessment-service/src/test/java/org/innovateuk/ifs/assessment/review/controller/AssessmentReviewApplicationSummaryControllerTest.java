@@ -236,7 +236,7 @@ public class AssessmentReviewApplicationSummaryControllerTest extends AbstractAp
                 .build(2);
 
         when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(processRoles));
-        when(organisationService.getOrganisationById(otherOrganisation.getId())).thenReturn(otherOrganisation);
+        when(organisationRestService.getOrganisationById(otherOrganisation.getId())).thenReturn(restSuccess(otherOrganisation));
         when(assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(processRoles.get(3).getApplicationId())).thenReturn(restSuccess(responses));
         when(assessmentRestService.getByUserAndApplication(user.getId(), application.getId())).thenReturn(restSuccess(assessment));
         when(formInputRestService.getById(responses.get(0).getFormInput())).thenReturn(restSuccess(formInputs.get(0)));

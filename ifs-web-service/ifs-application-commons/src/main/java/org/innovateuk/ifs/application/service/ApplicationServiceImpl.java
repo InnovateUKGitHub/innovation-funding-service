@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     private UserService userService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OrganisationRestService organisationRestService;
 
     @Override
     public ApplicationResource getById(Long applicationId) {
@@ -46,7 +47,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public OrganisationResource getLeadOrganisation(Long applicationId) {
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        return organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisationId());
+        return organisationRestService.getOrganisationById(leadApplicantProcessRole.getOrganisationId()).getSuccess();
     }
 
     @Override

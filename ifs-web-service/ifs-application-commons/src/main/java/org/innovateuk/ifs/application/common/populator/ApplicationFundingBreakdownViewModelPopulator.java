@@ -38,7 +38,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
     private ApplicationService applicationService;
     private SectionService sectionService;
     private UserService userService;
-    private OrganisationService organisationService;
     private InviteService inviteService;
 
     public ApplicationFundingBreakdownViewModelPopulator(FinanceService financeService,
@@ -50,7 +49,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
                                                          QuestionRestService questionRestService,
                                                          FormInputRestService formInputRestService,
                                                          UserService userService,
-                                                         OrganisationService organisationService,
                                                          InviteService inviteService) {
         super(sectionService, formInputRestService, questionRestService);
         this.financeService = financeService;
@@ -60,7 +58,6 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         this.applicationService = applicationService;
         this.sectionService = sectionService;
         this.userService = userService;
-        this.organisationService = organisationService;
         this.inviteService = inviteService;
     }
 
@@ -70,7 +67,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         ProcessRoleResource leadApplicantUser = userService.getLeadApplicantProcessRoleOrNull(applicationId);
-        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantUser.getOrganisationId());
+        OrganisationResource leadOrganisation = organisationRestService.getOrganisationById(leadApplicantUser.getOrganisationId()).getSuccess();
 
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
                 financeService,

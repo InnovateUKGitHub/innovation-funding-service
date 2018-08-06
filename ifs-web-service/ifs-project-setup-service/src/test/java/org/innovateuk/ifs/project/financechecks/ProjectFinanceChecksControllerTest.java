@@ -172,7 +172,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getByApplicationId(application.getId())).thenReturn(project);
-        when(organisationService.getOrganisationById(industrialOrganisation.getId())).thenReturn(industrialOrganisation);
+        when(organisationRestService.getOrganisationById(industrialOrganisation.getId())).thenReturn(restSuccess(industrialOrganisation));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
         when(financeViewHandlerProvider.getProjectFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultProjectFinanceModelManager);
@@ -202,7 +202,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(any())).thenReturn(ServiceResult.serviceSuccess(emptyList()));
@@ -239,7 +239,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(sampleQuery())));

@@ -61,9 +61,6 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     private BankDetailsReviewModelPopulator bankDetailsReviewModelPopulator;
 
     @Mock
-    private OrganisationService organisationService;
-
-    @Mock
     private OrganisationRestService organisationRestService;
 
     @Mock
@@ -135,7 +132,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void canViewBankDetailsWhenBankDetailsSubmitted() throws Exception {
-        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
@@ -152,7 +149,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void canViewBankDetailsWhenBankDetailsReSubmitted() throws Exception {
-        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
@@ -174,7 +171,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void canViewBankDetailsChangeForm() throws Exception {
-        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
@@ -192,7 +189,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void canUpdateAccountDetails() throws Exception {
-        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
@@ -220,7 +217,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void canUpdateBankAddress() throws Exception {
-        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
@@ -248,7 +245,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void canUpdateOrganisationDetails() throws Exception {
-        when(organisationService.getOrganisationById(organisationResource.getId())).thenReturn(organisationResource);
+        when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(restSuccess(bankDetailsResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);

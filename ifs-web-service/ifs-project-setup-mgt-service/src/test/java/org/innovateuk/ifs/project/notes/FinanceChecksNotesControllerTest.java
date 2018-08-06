@@ -131,7 +131,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
-        when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
+        when(organisationRestService.getOrganisationById(applicantOrganisationId)).thenReturn(restSuccess(leadOrganisationResource));
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(singletonList(projectUser));
 
