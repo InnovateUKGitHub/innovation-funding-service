@@ -83,11 +83,13 @@ public class CompetitionSetupProjectDocumentController {
         if(competitionResource.isNonIfs()) {
             redirect.redirect = true;
             redirect.url = "redirect:/non-ifs-competition/setup/" + competitionId;
+            return redirect;
         }
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             redirect.redirect = true;
             redirect.url = "redirect:/competition/setup/" + competitionResource.getId();
+            return redirect;
         }
 
         model.addAttribute("model", competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT));

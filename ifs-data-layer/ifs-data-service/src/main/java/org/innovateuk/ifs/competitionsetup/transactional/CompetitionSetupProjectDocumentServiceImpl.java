@@ -43,7 +43,7 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     }
 
     private ServiceResult<Void> validateProjectDocument(ProjectDocumentResource projectDocumentResource) {
-        return projectDocumentResource.getFileTypes().size() > 0 ? serviceSuccess() : serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
+        return projectDocumentResource.getFileTypes() != null && projectDocumentResource.getFileTypes().size() > 0 ? serviceSuccess() : serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
     }
 
     @Override
