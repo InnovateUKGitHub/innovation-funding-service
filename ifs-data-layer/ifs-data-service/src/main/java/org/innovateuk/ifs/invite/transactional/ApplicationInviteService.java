@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -18,17 +17,11 @@ import java.util.Optional;
 
 public interface ApplicationInviteService {
 
-    @PreFilter(filterTarget = "invites", value = "hasPermission(filterObject, 'SEND')")
-    List<ServiceResult<Void>> inviteCollaborators(String baseUrl, @P("invites") List<ApplicationInvite> invites);
-
-    @PreAuthorize("hasPermission(#invite, 'SEND')")
-    ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, @P("invite") ApplicationInvite invite);
-
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationInvite> findOneByHash(String hash);
 
     @PreAuthorize("hasPermission(#inviteOrganisationResource, 'CREATE_APPLICATION_INVITES')")
-    ServiceResult<InviteResultsResource> createApplicationInvites(@P("inviteOrganisationResource") final InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId);
+    ServiceResult<Void> createApplicationInvites(@P("inviteOrganisationResource") final InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ORGANISATION_ON_HASH",
@@ -40,7 +33,7 @@ public interface ApplicationInviteService {
     ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);
 
     @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE')")
-    ServiceResult<InviteResultsResource> saveInvites(@P("inviteResources") List<ApplicationInviteResource> inviteResources);
+    ServiceResult<Void> saveInvites(@P("inviteResources") List<ApplicationInviteResource> inviteResources);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",

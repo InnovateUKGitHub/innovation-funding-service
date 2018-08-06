@@ -44,7 +44,7 @@ public class SilEmailService implements EmailService {
         } else {
             LOG.error("toEmails is null");
         }
-        ServiceResult<List<EmailAddress>> listServiceResult = endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).andOnSuccessReturn(successfullySent -> to);
+        ServiceResult<List<EmailAddress>> emailsSentResult = endpoint.sendEmail(new SilEmailMessage(fromEmail, toEmails, subject, plainTextBody, htmlBody)).andOnSuccessReturn(successfullySent -> to);
         // TODO improve the logging and change the logging levels to INFO and control whether they are output on a environmental basis
         if (toEmails != null) {
             for (SilEmailAddress silEmailAddress : toEmails) {
@@ -53,6 +53,6 @@ public class SilEmailService implements EmailService {
         } else {
             LOG.error("toEmails is null");
         }
-        return  listServiceResult;
+        return emailsSentResult;
     }
 }

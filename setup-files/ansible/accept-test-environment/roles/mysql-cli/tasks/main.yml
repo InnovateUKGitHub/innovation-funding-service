@@ -1,0 +1,12 @@
+---
+- name: install mysql client
+  become: true
+  become_method: sudo
+  apt: name=mysql-client state=present
+  when: mysql_client_install_client
+
+- name: install mysql client development libraries
+  become: true
+  become_method: sudo
+  apt: name=libmysqlclient-dev state=present
+  when: mysql_client_install_libraries

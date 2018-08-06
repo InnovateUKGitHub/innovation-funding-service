@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackView
 import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
-import org.innovateuk.ifs.application.populator.AbstractApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.section.FinanceOverviewSectionPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
@@ -26,6 +26,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
@@ -37,7 +38,7 @@ import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 
 @Component
-public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationModelPopulator {
+public class ApplicationFeedbackViewModelPopulator extends FinanceOverviewSectionPopulator.AbstractApplicationModelPopulator {
 
     private OrganisationRestService organisationRestService;
     private OrganisationService organisationService;

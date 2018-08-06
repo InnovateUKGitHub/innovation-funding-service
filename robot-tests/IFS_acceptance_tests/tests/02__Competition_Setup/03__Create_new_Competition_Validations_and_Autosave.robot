@@ -132,12 +132,20 @@ Eligibility server-side validations
     [Documentation]    INFUND-2986
     [Tags]    HappyPath
     [Setup]    The user navigates to the Validation competition
-    Given The user clicks the button/link    link=Eligibility
-    When the user clicks the button/link    jQuery=button:contains("Done")
-    Then the user should see the text in the page    Please select at least one research category
-    And the user should see the text in the page    Please select a collaboration level
-    And the user should see the text in the page    Please select a lead applicant type
-    And the user should see the text in the page    Please select a resubmission option
+    Given The user clicks the button/link  link = Eligibility
+    When the user clicks the button/link   jQuery = button:contains("Done")
+    Then The user should see a field and summary error   Please select at least one research category
+    And The user should see a field and summary error    Please select a collaboration level
+    And The user should see a field and summary error    Please select a lead applicant type
+    And The user should see a field and summary error    Please select a resubmission option
+    And The user should see a field and summary error    Please select an override funding rules option.
+
+Eligibility funding level validation
+    [Documentation]
+    [Tags]  IFS-3622
+    Given the user clicks the button twice              css = label[for="comp-overrideFundingRules-yes"]
+    When the user clicks the button/link                jQuery = button:contains("Done")
+    Then The user should see a field and summary error  Please select a funding level.
 
 Eligibility client-side validations
     [Documentation]    INFUND-2986 INFUND-2988 INFUND-3888
@@ -151,6 +159,8 @@ Eligibility client-side validations
     And the user moves focus and waits for autosave
     And the user selects the option from the drop-down menu    50%    name=researchParticipationAmountId
     And the user moves focus and waits for autosave
+    And the user clicks the button twice     css=label[for="comp-overrideFundingRules-no"]
+    And the user moves focus and waits for autosave
     Then the user should not see the text in the page    Please select a collaboration level
     And the user should not see the text in the page    Please select a lead applicant type
     And the user should not see the text in the page    Please select at least one research category
@@ -159,6 +169,7 @@ Eligibility client-side validations
     And the user selects the radio button    resubmission    no
     And the user moves focus and waits for autosave
     And the user should not see the text in the page    Please select a resubmission option
+    And the user cannot see a validation error in the page
 
 Eligibility Autosave
     [Documentation]  INFUND-4582

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.service.InviteService;
+import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
