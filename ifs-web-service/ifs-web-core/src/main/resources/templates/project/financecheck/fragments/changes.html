@@ -50,7 +50,7 @@
             <td class="govuk-table__cell"></td>
             <td class="govuk-table__cell" th:text="${changePair.changed.labourDays}" colspan="2"></td>
         </tr>
-        <tr class="change-row">
+        <tr class="govuk-table__row change-row">
             <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(changePair.changed.getTotal(workingDays),0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
@@ -76,7 +76,7 @@
             <td class="govuk-table__cell" th:text="${changePair.submitted.labourDays}"></td>
             <td class="govuk-table__cell" colspan="2"></td>
         </tr>
-        <tr class="change-row">
+        <tr class="govuk-table__row change-row">
             <td class="govuk-table__cell--numeric" colspan="6" th:text="|-${#numbers.formatInteger(changePair.submitted.getTotal(workingDays),0, 'DEFAULT')}|"></td>
         </tr>
     </th:block>
@@ -124,7 +124,7 @@
             <td class="govuk-table__cell"></td>
             <td class="govuk-table__cell" th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr class="change-row">
+        <tr class="govuk-table__row change-row">
             <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(changePair.changed.total,0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
@@ -156,6 +156,7 @@
 <th:block th:fragment="capital_usage">
     <th:block th:if="${typeOfChange == 'Change'}">
         <tr th:class="${changePair.submitted.description != changePair.changed.description} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <td class="govuk-table__cell" rowspan="7" th:text="${typeOfChange}"></td>
             <td class="govuk-table__cell" rowspan="7" th:text="${rowTypeName}"></td>
             <th class="govuk-table__header" scope="row">Item description</th>
             <td class="govuk-table__cell" th:text="${changePair.submitted.description}"></td>
@@ -187,6 +188,7 @@
             <td class="govuk-table__cell" th:text="${changePair.changed.utilisation}" colspan="2"></td>
         </tr>
         <tr th:class="${changePair.submitted.getTotal() != changePair.changed.getTotal()} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <th class="govuk-table__header" scope="row">Net cost</th>
             <td class="govuk-table__cell" th:text="${changePair.submitted.getTotal()}"></td>
             <td class="govuk-table__cell" th:text="${changePair.changed.getTotal()}" colspan="2"></td>
         </tr>
@@ -198,479 +200,479 @@
     <th:block th:if="${typeOfChange == 'New'}">
         <tr class="govuk-table__row">
             <td class="govuk-table__cell" rowspan="7" th:text="${typeOfChange}"></td>
-            <td rowspan="7" th:text="${rowTypeName}"></td>
-            <th scope="row">Item description</th>
+            <td class="govuk-table__cell" rowspan="7" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Item description</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.description}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.description}" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">New or existing</th>
+            <th class="govuk-table__header" scope="row">New or existing</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.existing}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.existing}" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Depreciation period</th>
+            <th class="govuk-table__header" scope="row">Depreciation period</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.deprecation}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.deprecation}" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Net present value</th>
+            <th class="govuk-table__header" scope="row">Net present value</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.npv}" colspan="2"></td>
+            <td class="govuk-table__cell"th:text="${changePair.changed.npv}" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Residual value</th>
+            <th class="govuk-table__header" scope="row">Residual value</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.residualValue}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.residualValue}" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Utilisation</th>
+            <th class="govuk-table__header" scope="row">Utilisation</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.utilisation}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.utilisation}" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Net cost</th>
+            <th class="govuk-table__header" scope="row">Net cost</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.getTotal()}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.getTotal()}" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="${#numbers.formatInteger(changePair.changed.total,0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(changePair.changed.total,0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr class="govuk-table__row">
-            <td rowspan="7" th:text="${typeOfChange}"></td>
-            <td rowspan="7" th:text="${rowTypeName}"></td>
-            <th scope="row">Item description</th>
-            <td th:text="${changePair.submitted.description}"></td>
-            <td colspan="2"></td>
+            <td class="govuk-table__cell" rowspan="7" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="7" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Item description</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.description}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">New or existing</th>
-            <td th:text="${changePair.submitted.existing}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">New or existing</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.existing}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Depreciation period</th>
-            <td th:text="${changePair.submitted.deprecation}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Depreciation period</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.deprecation}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Net present value</th>
-            <td th:text="${changePair.submitted.npv}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Net present value</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.npv}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Residual value</th>
-            <td th:text="${changePair.submitted.residualValue}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Residual value</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.residualValue}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Utilisation</th>
-            <td th:text="${changePair.submitted.utilisation}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Utilisation</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.utilisation}"></td>
+            <td class="govuk-table__cell"colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Net cost</th>
-            <td th:text="${changePair.submitted.getTotal()}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Net cost</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.getTotal()}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="|-${#numbers.formatInteger(changePair.submitted.total,0, 'DEFAULT')}|" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="|-${#numbers.formatInteger(changePair.submitted.total,0, 'DEFAULT')}|" colspan="6"></td>
         </tr>
     </th:block>
 </th:block>
 
 <th:block th:fragment="subcontracting">
     <th:block th:if="${typeOfChange == 'Change'}">
-        <tr th:class="${changePair.submitted.name != changePair.changed.name} ? 'item-changed' : ''">
-            <td rowspan="4" th:text="${typeOfChange}"></td>
-            <td rowspan="4" th:text="${rowTypeName}"></td>
-            <th scope="row">Subcontractor name</th>
-            <td th:text="${changePair.submitted.name}"></td>
-            <td th:text="${changePair.changed.name}" colspan="2"></td>
+        <tr th:class="${changePair.submitted.name != changePair.changed.name} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <td class="govuk-table__cell" rowspan="4" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="4" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Subcontractor name</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.name}"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.name}" colspan="2"></td>
         </tr>
-        <tr th:class="${changePair.submitted.country != changePair.changed.country} ? 'item-changed' : ''">
-            <th scope="row">Country</th>
-            <td th:text="${changePair.submitted.country}"></td>
-            <td th:text="${changePair.changed.country}" colspan="2"></td>
+        <tr th:class="${changePair.submitted.country != changePair.changed.country} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <th class="govuk-table__header" scope="row">Country</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.country}"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.country}" colspan="2"></td>
         </tr>
-        <tr th:class="${changePair.submitted.role != changePair.changed.role} ? 'item-changed' : ''">
-            <th scope="row">Role</th>
-            <td th:text="${changePair.submitted.role}"></td>
-            <td th:text="${changePair.changed.role}" colspan="2"></td>
+        <tr th:class="${changePair.submitted.role != changePair.changed.role} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <th class="govuk-table__header" scope="row">Role</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.role}"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.role}" colspan="2"></td>
         </tr>
-        <tr th:class="${changePair.submitted.cost != changePair.changed.cost} ? 'item-changed' : ''">
-            <th scope="row">Cost</th>
-            <td th:text="${changePair.submitted.cost}"></td>
-            <td th:text="${changePair.changed.cost}" colspan="2"></td>
+        <tr th:class="${changePair.submitted.cost != changePair.changed.cost} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <th class="govuk-table__header" scope="row">Cost</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.cost}"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
         <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
-            <td th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'New'}">
         <tr class="govuk-table__row">
-            <td rowspan="4" th:text="${typeOfChange}"></td>
-            <td rowspan="4" th:text="${rowTypeName}"></td>
-            <th scope="row">Subcontractor name</th>
+            <td class="govuk-table__cell" rowspan="4" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="4" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__cell" scope="row">Subcontractor name</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.name}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.name}" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Country</th>
+            <th class="govuk-table__header" scope="row">Country</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.country}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.country}" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Role</th>
+            <th class="govuk-table__cell" scope="row">Role</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.role}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.role}" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Cost</th>
+            <th class="govuk-table__header" scope="row">Cost</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.cost}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="${#numbers.formatInteger(changePair.changed.total,0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(changePair.changed.total,0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr class="govuk-table__row">
-            <td rowspan="4" th:text="${typeOfChange}"></td>
-            <td rowspan="4" th:text="${rowTypeName}"></td>
-            <th scope="row">Subcontractor name</th>
-            <td th:text="${changePair.submitted.name}"></td>
-            <td colspan="2"></td>
+            <td class="govuk-table__cell" rowspan="4" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="4" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Subcontractor name</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.name}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Country</th>
-            <td th:text="${changePair.submitted.country}"></td>
+            <th class="govuk-table__header" scope="row">Country</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.country}"></td>
             <td class="govuk-table__cell"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Role</th>
-            <td th:text="${changePair.submitted.role}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Role</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.role}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Cost</th>
-            <td th:text="${changePair.submitted.cost}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Cost</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.cost}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="|-${#numbers.formatInteger(changePair.submitted.total,0, 'DEFAULT')}|" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="|-${#numbers.formatInteger(changePair.submitted.total,0, 'DEFAULT')}|" colspan="6"></td>
         </tr>
     </th:block>
 </th:block>
 
 <th:block th:fragment="travel">
     <th:block th:if="${typeOfChange == 'Change'}">
-        <tr th:class="${changePair.submitted.item != changePair.changed.item} ? 'item-changed' : ''">
-            <td rowspan="3" th:text="${typeOfChange}"></td>
-            <td rowspan="3" th:text="${rowTypeName}"></td>
-            <th scope="row">Purpose of journey</th>
-            <td th:text="${changePair.submitted.item}"></td>
-            <td th:text="${changePair.changed.item}" colspan="2"></td>
+        <tr th:class="${changePair.submitted.item != changePair.changed.item} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <td class="govuk-table__cell" rowspan="3" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="3" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Purpose of journey</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.item}"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.item}" colspan="2"></td>
         </tr>
-        <tr th:class="${changePair.submitted.quantity != changePair.changed.quantity} ? 'item-changed' : ''">
-            <th scope="row">Number of times</th>
-            <td th:text="${changePair.submitted.quantity}"></td>
-            <td th:text="${changePair.changed.quantity}" colspan="2"></td>
+        <tr th:class="${changePair.submitted.quantity != changePair.changed.quantity} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <th class="govuk-table__header" scope="row">Number of times</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.quantity}"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.quantity}" colspan="2"></td>
         </tr>
-        <tr th:class="${changePair.submitted.cost != changePair.changed.cost} ? 'item-changed' : ''">
-            <th scope="row">Cost each</th>
-            <td th:text="${changePair.submitted.cost}"></td>
-            <td th:text="${changePair.changed.cost}" colspan="2"></td>
+        <tr th:class="${changePair.submitted.cost != changePair.changed.cost} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <th class="govuk-table__header" scope="row">Cost each</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.cost}"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
-            <td th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'New'}">
         <tr class="govuk-table__row">
-            <td rowspan="3" th:text="${typeOfChange}"></td>
-            <td rowspan="3" th:text="${rowTypeName}"></td>
-            <th scope="row">Purpose of journey</th>
+            <td class="govuk-table__cell" rowspan="3" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="3" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__cell" scope="row">Purpose of journey</th>
             <td class="govuk-table__cell"></td>
             <td th:text="${changePair.changed.item}" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Number of times</th>
+            <th class="govuk-table__header" scope="row">Number of times</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.quantity}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.quantity}" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Cost each</th>
+            <th class="govuk-table__cell" scope="row">Cost each</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.cost}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="${#numbers.formatInteger(changePair.changed.total,0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(changePair.changed.total,0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr class="govuk-table__row">
-            <td rowspan="3" th:text="${typeOfChange}"></td>
-            <td rowspan="3" th:text="${rowTypeName}"></td>
-            <th scope="row">Purpose of journey</th>
-            <td th:text="${changePair.submitted.item}"></td>
-            <td colspan="2"></td>
+            <td class="govuk-table__cell" rowspan="3" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="3" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Purpose of journey</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.item}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Number of times</th>
-            <td th:text="${changePair.submitted.quantity}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Number of times</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.quantity}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Cost each</th>
-            <td th:text="${changePair.submitted.cost}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__cell" scope="row">Cost each</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.cost}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="|-${#numbers.formatInteger(changePair.submitted.total,0, 'DEFAULT')}|" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="|-${#numbers.formatInteger(changePair.submitted.total,0, 'DEFAULT')}|" colspan="6"></td>
         </tr>
     </th:block>
 </th:block>
 
 <th:block th:fragment="other_costs">
     <th:block th:if="${typeOfChange == 'Change'}">
-        <tr th:class="${changePair.submitted.description != changePair.changed.description} ? 'item-changed' : ''">
-            <td rowspan="2" th:text="${typeOfChange}"></td>
-            <td rowspan="2" th:text="${rowTypeName}"></td>
-            <th scope="row">Description and justification of cost</th>
-            <td th:text="${changePair.submitted.description}"></td>
-            <td th:text="${changePair.changed.description}" colspan="2"></td>
+        <tr th:class="${changePair.submitted.description != changePair.changed.description} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <td class="govuk-table__cell" rowspan="2" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="2" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Description and justification of cost</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.description}"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.description}" colspan="2"></td>
         </tr>
-        <tr th:class="${changePair.submitted.cost != changePair.changed.cost} ? 'item-changed' : ''">
-            <th scope="row">Total</th>
-            <td th:text="${changePair.submitted.cost}"></td>
-            <td th:text="${changePair.changed.cost}" colspan="2"></td>
+        <tr th:class="${changePair.submitted.cost != changePair.changed.cost} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <th class="govuk-table__header" scope="row">Total</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.cost}"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
-            <td th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
     <th:block th:if="${typeOfChange == 'New'}">
         <tr class="govuk-table__row">
-            <td rowspan="2" th:text="${typeOfChange}"></td>
-            <td rowspan="2" th:text="${rowTypeName}"></td>
-            <th scope="row">Description and justification of cost</th>
+            <td class="govuk-table__cell" rowspan="2" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="2" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Description and justification of cost</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.description}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.description}" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Total</th>
+            <th class="govuk-table__header" scope="row">Total</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.cost}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="${#numbers.formatInteger(changePair.changed.total,0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(changePair.changed.total,0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr class="govuk-table__row">
-            <td rowspan="2" th:text="${typeOfChange}"></td>
-            <td rowspan="2" th:text="${rowTypeName}"></td>
-            <th scope="row">Description and justification of cost</th>
-            <td th:text="${changePair.submitted.description}"></td>
-            <td colspan="2"></td>
+            <td class="govuk-table__cell" rowspan="2" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="2" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Description and justification of cost</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.description}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row">Total</th>
-            <td th:text="${changePair.submitted.cost}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Total</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.cost}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="|-${#numbers.formatInteger(changePair.submitted.total,0, 'DEFAULT')}|" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="|-${#numbers.formatInteger(changePair.submitted.total,0, 'DEFAULT')}|" colspan="6"></td>
         </tr>
     </th:block>
 </th:block>
 
 <th:block th:fragment="overheads">
     <th:block th:if="${typeOfChange == 'Change'}">
-        <tr th:class="${changePair.submitted.rateType.name != changePair.changed.rateType.name} ? 'item-changed' : ''">
-            <td rowspan="2" th:text="${typeOfChange}"></td>
-            <td rowspan="2" th:text="${rowTypeName}"></td>
+        <tr th:class="${changePair.submitted.rateType.name != changePair.changed.rateType.name} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <td class="govuk-table__cell" rowspan="2" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="2" th:text="${rowTypeName}"></td>
 
-            <th scope="row">Rate Type</th>
-            <td th:text="${changePair.submitted.rateType.label}"></td>
-            <td th:text="${changePair.changed.rateType.label}" colspan="2" th:class="${changePair.submitted.rateType.name != changePair.changed.rateType.name} ? 'item-changed' : ''"></td>
+            <th class="govuk-table__header" scope="row">Rate Type</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.rateType.label}"></td>
+            <td th:text="${changePair.changed.rateType.label}" colspan="2" th:class="${changePair.submitted.rateType.name != changePair.changed.rateType.name} ? 'govuk-table\_\_cell item-changed' : 'govuk-table\_\_cell'"></td>
         </tr>
 
-        <tr th:class="${changePair.submitted.rate != changePair.changed.rate} ? 'item-changed' : ''">
-            <th scope="row">Amount</th>
-            <td th:text="${changePair.submitted.rate}"></td>
-            <td th:text="${changePair.changed.rate}" colspan="2" th:class="${changePair.submitted.rate!= changePair.changed.rate} ? 'item-changed' : ''"></td>
+        <tr th:class="${changePair.submitted.rate != changePair.changed.rate} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <th class="govuk-table__header" scope="row">Amount</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.rate}"></td>
+            <td th:text="${changePair.changed.rate}" colspan="2" th:class="${changePair.submitted.rate!= changePair.changed.rate} ? 'govuk-table\_\_cell item-changed' : 'govuk-table\_\_cell'"></td>
         </tr>
-        <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
-            <td th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'New'}">
         <tr class="govuk-table__row">
-            <td rowspan="2" th:text="${typeOfChange}"></td>
-            <td rowspan="2" th:text="${rowTypeName}"></td>
+            <td class="govuk-table__cell" rowspan="2" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="2" th:text="${rowTypeName}"></td>
 
-            <th scope="row">Rate Type</th>
+            <th class="govuk-table__header" scope="row">Rate Type</th>
             <td class="govuk-table__cell"></td>
-            <td colspan="2" th:text="${changePair.changed.rateType.label}"></td>
+            <td class="govuk-table__cell" colspan="2" th:text="${changePair.changed.rateType.label}"></td>
         </tr>
 
         <tr class="govuk-table__row">
-            <th scope="row">Amount</th>
+            <th class="govuk-table__header" scope="row">Amount</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.rate}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.rate}" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="${#numbers.formatInteger(changePair.changed.rate,0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(changePair.changed.rate,0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr class="govuk-table__row">
-            <td rowspan="2" th:text="${typeOfChange}"></td>
-            <td rowspan="2" th:text="${rowTypeName}"></td>
+            <td class="govuk-table__cell" rowspan="2" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="2" th:text="${rowTypeName}"></td>
 
-            <th scope="row">Rate Type</th>
-            <td th:text="${changePair.submitted.rateType.label}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Rate Type</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.rateType.label}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
 
         <tr class="govuk-table__row">
-            <th scope="row">Amount</th>
-            <td th:text="${changePair.submitted.rate}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Amount</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.rate}"></td>
+            <td class="govuk-table__cell"colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="|-${#numbers.formatInteger(changePair.submitted.rate,0, 'DEFAULT')}|" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="|-${#numbers.formatInteger(changePair.submitted.rate,0, 'DEFAULT')}|" colspan="6"></td>
         </tr>
     </th:block>
 </th:block>
 
 <th:block th:fragment="other_funding">
     <th:block th:if="${typeOfChange == 'Change'}">
-        <tr th:class="${changePair.submitted.fundingSource.equals(changePair.changed.fundingSource)} ? '' : 'item-changed'">
-            <td rowspan="3" th:text="${typeOfChange}"></td>
-            <td rowspan="3" th:text="${rowTypeName}"></td>
+        <tr th:class="${changePair.submitted.fundingSource.equals(changePair.changed.fundingSource)} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <td class="govuk-table__cell" rowspan="3" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="3" th:text="${rowTypeName}"></td>
 
-            <th scope="row">Funding Source</th>
-            <td th:text="${changePair.submitted.fundingSource}"></td>
-            <td th:text="${changePair.changed.fundingSource}" colspan="2" th:class="${changePair.submitted.fundingSource.equals(changePair.changed.fundingSource)} ? '' : 'item-changed'"></td>
+            <th class="govuk-table__header" scope="row">Funding Source</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.fundingSource}"></td>
+            <td th:text="${changePair.changed.fundingSource}" colspan="2" th:class="${changePair.submitted.fundingSource.equals(changePair.changed.fundingSource)} ? 'govuk-table\_\_cell' : 'govuk-table\_\_cell item-changed'"></td>
         </tr>
 
-        <tr th:class="${changePair.submitted.securedDate.equals(changePair.changed.securedDate)} ? '' : 'item-changed'">
-            <th scope="row">Secured Date</th>
-            <td th:text="${changePair.submitted.securedDate}"></td>
-            <td th:text="${changePair.changed.securedDate}" colspan="2" th:class="${changePair.submitted.securedDate.equals(changePair.changed.securedDate)} ? '' : 'item-changed'"></td>
+        <tr th:class="${changePair.submitted.securedDate.equals(changePair.changed.securedDate)} ? 'govuk-table\_\_row' : 'govuk-table\_\_row item-changed'">
+            <th class="govuk-table__header" scope="row">Secured Date</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.securedDate}"></td>
+            <td th:text="${changePair.changed.securedDate}" colspan="2" th:class="${changePair.submitted.securedDate.equals(changePair.changed.securedDate)} ? 'govuk-table\_\_cell' : 'govuk-table\_\_cell item-changed'"></td>
         </tr>
 
-        <tr th:class="${changePair.submitted.fundingAmount != changePair.changed.fundingAmount} ? 'item-changed' : ''">
-            <th scope="row">Amount</th>
-            <td th:text="${changePair.submitted.fundingAmount}"></td>
-            <td th:text="${changePair.changed.fundingAmount}" colspan="2" th:class="${changePair.submitted.fundingAmount!= changePair.changed.fundingAmount} ? 'item-changed' : ''"></td>
+        <tr th:class="${changePair.submitted.fundingAmount != changePair.changed.fundingAmount} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <th class="govuk-table__header" scope="row">Amount</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.fundingAmount}"></td>
+            <td th:text="${changePair.changed.fundingAmount}" colspan="2" th:class="${changePair.submitted.fundingAmount!= changePair.changed.fundingAmount} ? 'govuk-table\_\_cell item-changed' : 'govuk-table\_\_cell'"></td>
         </tr>
 
-        <tr class="change-row" th:with="difference=${changePair.changed.fundingAmount.subtract(changePair.submitted.fundingAmount)}">
-            <td th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row" th:with="difference=${changePair.changed.fundingAmount.subtract(changePair.submitted.fundingAmount)}">
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'New'}">
         <tr class="govuk-table__row">
-            <td rowspan="3" th:text="${typeOfChange}"></td>
-            <td rowspan="3" th:text="${rowTypeName}"></td>
-            <th scope="row">Funding Source</th>
+            <td class="govuk-table__cell" rowspan="3" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="3" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Funding Source</th>
             <td class="govuk-table__cell"></td>
-            <td colspan="2" th:text="${changePair.changed.fundingSource}"></td>
+            <td class="govuk-table__cell" colspan="2" th:text="${changePair.changed.fundingSource}"></td>
         </tr>
 
         <tr class="govuk-table__row">
-            <th scope="row">Secured Date</th>
+            <th class="govuk-table__header" scope="row">Secured Date</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.securedDate}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.securedDate}" colspan="2"></td>
         </tr>
 
         <tr class="govuk-table__row">
-            <th scope="row">Amount</th>
+            <th class="govuk-table__header" scope="row">Amount</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.fundingAmount}" colspan="2"></td>
+            <td class="govuk-table__cell" th:text="${changePair.changed.fundingAmount}" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="${#numbers.formatInteger(changePair.changed.fundingAmount,0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(changePair.changed.fundingAmount,0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr class="govuk-table__row">
-            <td rowspan="3" th:text="${typeOfChange}"></td>
-            <td rowspan="3" th:text="${rowTypeName}"></td>
-            <th scope="row">Funding Source</th>
-            <td th:text="${changePair.submitted.fundingSource}"></td>
-            <td colspan="2"></td>
+            <td class="govuk-table__cell" rowspan="3" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="3" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Funding Source</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.fundingSource}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
 
         <tr class="govuk-table__row">
-            <th scope="row">Secured Date</th>
-            <td th:text="${changePair.submitted.securedDate}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Secured Date</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.securedDate}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
 
         <tr class="govuk-table__row">
-            <th scope="row">Amount</th>
-            <td th:text="${changePair.submitted.fundingAmount}"></td>
-            <td colspan="2"></td>
+            <th class="govuk-table__header" scope="row">Amount</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.fundingAmount}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="|-${#numbers.formatInteger(changePair.submitted.fundingAmount,0, 'DEFAULT')}|" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="|-${#numbers.formatInteger(changePair.submitted.fundingAmount,0, 'DEFAULT')}|" colspan="6"></td>
         </tr>
     </th:block>
 </th:block>
 
 <th:block th:fragment="finance">
     <th:block th:if="${typeOfChange == 'Change'}">
-        <tr th:class="${changePair.submitted.grantClaimPercentage != changePair.changed.grantClaimPercentage} ? 'item-changed' : ''">
-            <td rowspan="1" th:text="${typeOfChange}"></td>
-            <td rowspan="1" th:text="${rowTypeName}"></td>
-            <th scope="row">Funding level</th>
-            <td th:text="${changePair.submitted.grantClaimPercentage + '%'}"></td>
-            <td th:text="${changePair.changed.grantClaimPercentage + '%'}" colspan="2" th:class="${changePair.submitted.grantClaimPercentage!= changePair.changed.grantClaimPercentage} ? 'item-changed' : ''"></td>
+        <tr th:class="${changePair.submitted.grantClaimPercentage != changePair.changed.grantClaimPercentage} ? 'govuk-table\_\_row item-changed' : 'govuk-table\_\_row'">
+            <td class="govuk-table__cell" rowspan="1" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="1" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Funding level</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.grantClaimPercentage + '%'}"></td>
+            <td th:text="${changePair.changed.grantClaimPercentage + '%'}" colspan="2" th:class="${changePair.submitted.grantClaimPercentage!= changePair.changed.grantClaimPercentage} ? 'govuk-table\_\_cell item-changed' : 'govuk-table\_\_cell'"></td>
         </tr>
 
-        <tr class="change-row" th:with="difference=${changePair.changed.grantClaimPercentage - changePair.submitted.grantClaimPercentage}">
-            <td th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row" th:with="difference=${changePair.changed.grantClaimPercentage - changePair.submitted.grantClaimPercentage}">
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(difference, 0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'New'}">
         <tr class="govuk-table__row">
-            <td rowspan="1" th:text="${typeOfChange}"></td>
-            <td rowspan="1" th:text="${rowTypeName}"></td>
-            <th scope="row">Funding level</th>
+            <td class="govuk-table__cell" rowspan="1" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="1" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Funding level</th>
             <td class="govuk-table__cell"></td>
-            <td th:text="${changePair.changed.grantClaimPercentage + '%'}" colspan="2"></td>
+            <td class="govuk-table__cell"th:text="${changePair.changed.grantClaimPercentage + '%'}" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="${#numbers.formatInteger(changePair.changed.grantClaimPercentage,0, 'DEFAULT')}" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="${#numbers.formatInteger(changePair.changed.grantClaimPercentage,0, 'DEFAULT')}" colspan="6"></td>
         </tr>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr class="govuk-table__row">
-            <td rowspan="1" th:text="${typeOfChange}"></td>
-            <td rowspan="1" th:text="${rowTypeName}"></td>
-            <th scope="row">Funding level</th>
-            <td th:text="${changePair.submitted.grantClaimPercentage + '%'}"></td>
-            <td colspan="2"></td>
+            <td class="govuk-table__cell" rowspan="1" th:text="${typeOfChange}"></td>
+            <td class="govuk-table__cell" rowspan="1" th:text="${rowTypeName}"></td>
+            <th class="govuk-table__header" scope="row">Funding level</th>
+            <td class="govuk-table__cell" th:text="${changePair.submitted.grantClaimPercentage + '%'}"></td>
+            <td class="govuk-table__cell" colspan="2"></td>
         </tr>
-        <tr class="change-row">
-            <td th:text="|-${#numbers.formatInteger(changePair.submitted.grantClaimPercentage,0, 'DEFAULT')}|" colspan="6" class="numeric"></td>
+        <tr class="govuk-table__row change-row">
+            <td class="govuk-table__cell--numeric" th:text="|-${#numbers.formatInteger(changePair.submitted.grantClaimPercentage,0, 'DEFAULT')}|" colspan="6"></td>
         </tr>
     </th:block>
 </th:block>

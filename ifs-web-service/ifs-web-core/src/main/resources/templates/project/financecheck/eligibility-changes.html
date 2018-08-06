@@ -50,8 +50,7 @@
                     <tr class="govuk-table__row">
                         <th:block th:each="rowType : ${sectionDiffs.keySet()}">
                             <th th:unless="${#strings.isEmpty(rowType.name)}" scope="col" class="govuk-table__header govuk-table__header--numeric">
-                                <th:block th:text="${rowType.name}" /> (&pound;)
-                            </th>
+                                <th:block th:text="${rowType.name}" /> (&pound;)</th>
                         </th:block>
                     </tr>
                     </thead>
