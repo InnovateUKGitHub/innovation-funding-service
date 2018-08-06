@@ -109,7 +109,7 @@ the user checks the override value is applied
     the user clicks the button/link     link = Your finances
     the user clicks the button/link     link = Your funding
     the user clicks the button/link     css = button[type=submit]
-    the user should see the element     jQuery = .form-label:contains("maximum 100%")
+    the user should see the element     jQuery = .govuk-label:contains("maximum 100%")
     then the user selects the checkbox  agree-terms-page
     the user clicks the button/link     css = button[name=mark_section_as_complete]
     the user clicks the button/link     link = Application overview

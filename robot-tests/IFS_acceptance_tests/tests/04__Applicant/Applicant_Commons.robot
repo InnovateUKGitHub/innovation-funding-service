@@ -76,7 +76,6 @@ the user selects research category from funding
     the user clicks the button/link   link=research category
     the user clicks the button twice  jQuery=label:contains("${res_category}")
     the user clicks the button/link   id=application-question-complete
-    the user clicks the button/link   link=Application overview
     the user should see the element   jQuery=li:contains("Research category") > .task-status-complete
 
 the user marks the finances as complete

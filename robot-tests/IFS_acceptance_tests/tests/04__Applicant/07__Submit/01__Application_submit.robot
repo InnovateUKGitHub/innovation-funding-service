@@ -87,7 +87,7 @@ Satisfaction survey:validations
     [Documentation]  IFS-3603
     [Tags]  survey
     Given the user clicks the button/link                 link = Finished
-    When the user clicks the button/link                  css = .govuk-button[type="submit"]  #Send feedback
+    When the user clicks the button/link                  css = button[type="submit"]  #Send feedback
     Then the user should see a field and summary error    Please select a level of satisfaction.
     And the user should see a field and summary error     This field cannot be left blank.
 
@@ -97,7 +97,7 @@ Applicant submit satisfaction survey after submitting application
     [Tags]  survey
     Given the user selects the radio button      satisfaction  5
     When the user enters text to a text field    name = comments  Very satisfied
-    Then the user clicks the button/link         css = .govuk-button[type="submit"]  #Send feedback
+    Then the user clicks the button/link         css = button[type="submit"]  #Send feedback
     When the user clicks the button/link         jQuery = h1:contains("Dashboard")
 
 The applicant should get a confirmation email
@@ -132,7 +132,7 @@ RTO lead has read only view after submission
     When the applicant completes the application details   ${application_rto_name}  ${tomorrowday}  ${month}  ${nextyear}
     Then the user clicks the button/link                   link=Your finances
     And the user enters the project location
-    When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  css=.govuk-!-margin-bottom-6 [aria-expanded="false"]
+    When Run Keyword And Ignore Error Without Screenshots  the user clicks the button/link  css=.govuk-details__summary[aria-expanded="false"]
     Then the user clicks the button/link                   jQuery=button:contains("Not requesting funding")
     And the user puts zero project costs
     When the user clicks the button/link     link=Return to application overview

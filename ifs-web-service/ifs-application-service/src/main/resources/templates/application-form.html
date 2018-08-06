@@ -27,7 +27,8 @@
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                     <li th:each="err : ${#fields.detailedErrors('${form.*}')}"
-                        th:if="${err.code.equals(T(org.innovateuk.ifs.application.forms.saver.AbstractApplicationSaver).MARKED_AS_COMPLETE_KEY)}">
+                        th:if="${err.code.equals(T(org.innovateuk.ifs.application.forms.saver.AbstractApplicationSaver).MARKED_AS_COMPLETE_KEY)}"
+                        class="list-header">
                         <th:block th:text="${err.message}">Non-field specific message</th:block>
                     </li>
                     <li th:each="err : ${#fields.detailedErrors('${form.*}')}"
