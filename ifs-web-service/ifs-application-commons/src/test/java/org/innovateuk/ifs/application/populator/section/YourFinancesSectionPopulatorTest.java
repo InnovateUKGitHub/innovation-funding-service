@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for {@link YourFinancesSectionPopulator}
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class YourFinancesSectionPopulatorTest {
 
     @InjectMocks
