@@ -19,8 +19,11 @@ import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
 import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
+import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
@@ -29,7 +32,6 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
-import org.innovateuk.ifs.project.core.transactional.ProjectServiceImpl;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
@@ -37,11 +39,9 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
-import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.util.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -56,7 +56,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -64,6 +63,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -75,9 +75,10 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail
  */
 @Service
 public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implements ProjectDetailsService {
-    private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
-    public static final String WEB_CONTEXT = "/project-setup";
+    private static final Log LOG = LogFactory.getLog(ProjectDetailsServiceImpl.class);
+
+    private static final String WEB_CONTEXT = "/project-setup";
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -98,7 +99,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private AddressTypeRepository addressTypeRepository;
 
     @Autowired
-    private EmailService projectEmailService;
+    private NotificationService notificationService;
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
@@ -107,16 +108,16 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
-    private ProjectInviteRepository projectInviteRepository;
+    private InviteProjectMapper inviteProjectMapper;
 
     @Autowired
-    private InviteProjectMapper inviteProjectMapper;
+    private ProjectInviteRepository projectInviteRepository;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
 
     @Autowired
-    private StatusService statusService;
+    private SystemNotificationSource systemNotificationSource;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -242,11 +243,10 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Override
     @Transactional
     public ServiceResult<Void> updateProjectDuration(long projectId, long durationInMonths) {
-        return validateProjectDuration(durationInMonths).
-                andOnSuccess(() -> getProject(projectId)).
-                andOnSuccess(project -> validateIfProjectDurationCanBeChanged(project).
-                            andOnSuccessReturnVoid(() -> project.setDurationInMonths(durationInMonths))
-                            );
+        return getProject(projectId).andOnSuccess(project ->
+            validateProjectDuration(durationInMonths).
+            andOnSuccess(() -> validateIfProjectDurationCanBeChanged(project)).
+            andOnSuccessReturnVoid(() -> project.setDurationInMonths(durationInMonths)));
     }
 
     private ServiceResult<Void> validateProjectDuration(long durationInMonths) {
@@ -395,7 +395,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
         AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
         List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(organisation.getId(), addressType);
-        existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
+        organisationAddressRepository.delete(existingOrgAddresses);
         OrganisationAddress organisationAddress = new OrganisationAddress(organisation, newAddress, addressType);
         organisationAddressRepository.save(organisationAddress);
     }
@@ -420,12 +420,12 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
 
         ProjectInvite projectInvite = inviteProjectMapper.mapToDomain(projectResource);
-        ServiceResult<Void> inviteContactEmailSendResult = projectEmailService.sendEmail(singletonList(createInviteContactNotificationTarget(projectInvite)), createGlobalArgsForInviteContactEmail(projectId, projectResource), kindOfNotification);
-        inviteContactEmailSendResult.handleSuccessOrFailure(
-                failure -> handleInviteError(projectInvite, failure),
-                success -> handleInviteSuccess(projectInvite)
-        );
-        return inviteContactEmailSendResult;
+        projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
+        projectInviteRepository.save(projectInvite);
+
+        Notification notification = new Notification(systemNotificationSource, createInviteContactNotificationTarget(projectInvite), kindOfNotification, createGlobalArgsForInviteContactEmail(projectId, projectResource));
+
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private NotificationTarget createInviteContactNotificationTarget(ProjectInvite projectInvite) {
@@ -449,16 +449,5 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     private String getInviteUrl(String baseUrl, InviteProjectResource inviteResource) {
         return String.format("%s/accept-invite/%s", baseUrl, inviteResource.getHash());
-    }
-
-    private ServiceResult<Boolean> handleInviteError(ProjectInvite i, ServiceFailure failure) {
-        LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
-        List<Error> errors = failure.getErrors();
-        return serviceFailure(errors);
-    }
-
-    private boolean handleInviteSuccess(ProjectInvite projectInvite) {
-        projectInviteRepository.save(projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
-        return true;
     }
 }

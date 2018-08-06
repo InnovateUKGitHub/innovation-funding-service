@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.saver;
 
-import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -58,7 +58,7 @@ public class ApplicationSectionFinanceSaverTest {
 
     @Test
     public void handleMarkAcademicFinancesAsNotRequired() {
-        saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.PUBLICSECTOR_OR_CHARITY.getId(), newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build(), 3L, competitionId, 7L);
+        saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.PUBLIC_SECTOR_OR_CHARITY.getId(), newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build(), 3L, competitionId, 7L);
         saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.RESEARCH.getId(), newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build(), 3L, competitionId, 7L);
 
         saver.handleMarkAcademicFinancesAsNotRequired(OrganisationTypeEnum.RESEARCH.getId(), newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build(), 3L, competitionId, 7L);

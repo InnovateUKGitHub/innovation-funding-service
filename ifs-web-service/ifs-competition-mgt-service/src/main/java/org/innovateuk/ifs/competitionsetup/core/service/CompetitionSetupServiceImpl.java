@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ELIGIBILITY;
 
 @Service
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
@@ -167,7 +168,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
             throw new IllegalArgumentException();
         }
 
-        return saver.autoSaveSectionField(competitionResource, populator.populateForm(competitionResource), fieldName, value, objectId);
+        CompetitionSetupForm setupForm = populator.populateForm(competitionResource);
+        setupForm.setAutoSaveAction(true);
+        return saver.autoSaveSectionField(competitionResource, setupForm, fieldName, value, objectId);
     }
 
     @Override
@@ -335,7 +338,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
         requiredSections.add(CompetitionSetupSection.TERMS_AND_CONDITIONS);
         requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
-        requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
+        requiredSections.add(ELIGIBILITY);
         requiredSections.add(CompetitionSetupSection.MILESTONES);
         requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
         requiredSections.add(CompetitionSetupSection.CONTENT);
