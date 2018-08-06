@@ -34,14 +34,14 @@
                     </h2>
                 </legend>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{satisfaction}')} ? 'govuk-form-group--error'">
-                    <fieldset>
+                    <fieldset class="govuk-fieldset">
                         <legend id="satisfaction">
-                            <span class="visuallyhidden">Please select your satisfaction</span>
+                            <span class="govuk-visually-hidden">Please select your satisfaction</span>
                             <th:block th:if="${#fields.hasErrors('*{satisfaction}')}">
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('satisfaction')}" th:text="${err}"></span>
                             </th:block>
                         </legend>
-                        <div class="govuk-radios govuk-radios--inline">
+                        <div class="govuk-radios">
                             <div class="govuk-radios__item" th:each="satisfaction : ${form.getSatisfactionList()}">
                                 <input type="radio"
                                        class="govuk-radios__input"
