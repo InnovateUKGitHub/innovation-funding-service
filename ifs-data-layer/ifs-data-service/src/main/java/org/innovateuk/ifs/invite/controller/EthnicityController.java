@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Exposes CRUD operations through a REST API to manage {@link org.innovateuk.ifs.user.domain.Ethnicity} related data.
  */
-@ZeroDowntime(description = "delete this controller", reference = "IFS-646")
+@ZeroDowntime(description = "delete this controller", reference = "IFS-4105")
 @RestController
 @RequestMapping("/ethnicity")
 public class EthnicityController {

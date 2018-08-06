@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Service
 @Transactional(readOnly = true)
 
-@ZeroDowntime(description = "remove gender, ethnicity, disability", reference = "IFS-646")
+@ZeroDowntime(description = "remove gender, ethnicity, disability", reference = "IFS-4105")
 public class EthnicityServiceImpl implements EthnicityService{
     @Autowired
     private EthnicityRepository ethnicityRepository;

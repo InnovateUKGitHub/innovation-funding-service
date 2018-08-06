@@ -11,7 +11,7 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-@ZeroDowntime(description = "delete", reference = "IFS-646")
+@ZeroDowntime(description = "delete", reference = "IFS-4105")
 public interface EthnicityRepository extends CrudRepository<Ethnicity, Long> {
     List<Ethnicity> findByActiveTrueOrderByPriorityAsc();
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@ZeroDowntime(description = "delete", reference = "IFS-646")
+@ZeroDowntime(description = "delete", reference = "IFS-4105")
 public class EthnicityResourceBuilderTest {
 
     @Test

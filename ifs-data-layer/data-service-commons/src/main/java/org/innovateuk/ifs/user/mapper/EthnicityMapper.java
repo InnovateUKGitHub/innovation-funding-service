@@ -11,7 +11,7 @@ import org.mapstruct.NullValueMappingStrategy;
 /**
  * Maps between domain and resource DTO for {@link Ethnicity}.
  */
-@ZeroDowntime(description = "delete", reference = "IFS-646")
+@ZeroDowntime(description = "delete", reference = "IFS-4105")
 @Mapper(
     config =  GlobalMapperConfig.class,
     uses = {

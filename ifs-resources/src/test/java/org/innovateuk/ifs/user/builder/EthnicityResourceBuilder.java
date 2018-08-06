@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 /**
  * Builder for {@link org.innovateuk.ifs.user.resource.EthnicityResource}.
  */
-@ZeroDowntime(description = "delete", reference = "IFS-646")
+@ZeroDowntime(description = "delete", reference = "IFS-4105")
 public class EthnicityResourceBuilder extends BaseBuilder<EthnicityResource, EthnicityResourceBuilder> {
 
     private EthnicityResourceBuilder(List<BiConsumer<Integer, EthnicityResource>> newActions) {

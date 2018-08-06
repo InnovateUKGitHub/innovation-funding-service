@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.ZeroDowntime;
 /**
  * DTO for Ethnicity choices.
  */
-@ZeroDowntime(description = "delete", reference = "IFS-646")
+@ZeroDowntime(description = "delete", reference = "IFS-4105")
 public class EthnicityResource {
 
     private Long id;

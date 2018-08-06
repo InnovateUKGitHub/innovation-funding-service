@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Transactional and secured service providing operations around {@link org.innovateuk.ifs.user.domain.Ethnicity} data.
  */
-@ZeroDowntime(description = "delete", reference = "IFS-646")
+@ZeroDowntime(description = "delete", reference = "IFS-4105")
 public interface EthnicityService {
 
     @NotSecured(value = "Anyone can view all active ethnicities", mustBeSecuredByOtherServices = false)

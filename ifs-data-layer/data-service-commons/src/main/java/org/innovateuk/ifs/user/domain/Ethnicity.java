@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  * The ethnicity of a {@link User}.
  */
-@ZeroDowntime(description = "delete", reference = "IFS-646")
+@ZeroDowntime(description = "delete", reference = "IFS-4105")
 @Entity
 public class Ethnicity implements Serializable {
 
