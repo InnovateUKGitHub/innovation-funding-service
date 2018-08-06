@@ -280,7 +280,7 @@ IFS Admin user can review Lead partner's finance changes page before the revisio
     And the categories are verified for Section changes    1   0     0      0    0      0       0        0
     And the user should see the text in the element   css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
     And the user should see the text in the element    css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
-    And the user clicks the button/link     jQuery=.govuk-button-secondary:contains("Return to eligibility")
+    And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
 
 IFS Admin user can review partner's finances before the revisions made
     [Documentation]    INFUND-4837, IFS-603
@@ -357,7 +357,7 @@ Checking the approve viability checkbox enables RAG selection but not confirm vi
     [Tags]
     When the user selects the checkbox    project-viable
     Then the user should see the element    id=rag-rating
-    And the user should see the element    jQuery=.govuk-button.govuk-button--disabled:contains("Confirm viability")
+    And the user should see the element    jQuery=.disabled:contains("Confirm viability")
 
 RAG choices update on the finance checks page
     [Documentation]    INFUND-4822, INFUND-4856
@@ -366,14 +366,14 @@ RAG choices update on the finance checks page
     And the rag rating updates on the finance check page for lead for viability   Amber
     And the rag rating updates on the finance check page for lead for viability   Red
     When the user selects the option from the drop-down menu    --    id=rag-rating
-    Then the user should see the element    jQuery=.govuk-button.govuk-button--disabled:contains("Confirm viability")
+    Then the user should see the element    jQuery=.disabled:contains("Confirm viability")
     [Teardown]    the user selects the option from the drop-down menu    Green    id=rag-rating
 
 Credit report information saves when leaving the page
     [Documentation]    INFUND-4829
     [Tags]
     When the user selects the checkbox    creditReportConfirmed
-    And the user clicks the button/link    jQuery=.govuk-button-secondary:contains("Save and return to finance checks")
+    And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
     And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
     Then checkbox should be selected    creditReportConfirmed
 
@@ -385,14 +385,14 @@ Clicking cancel on the viability modal
     Then the user should see the element    id=rag-rating
     And the user should see the element     css=[name="creditReportConfirmed"]:checked ~ label
     And the user should see the element     css=[name="confirmViabilityChecked"]:checked ~ label
-    And the user should see the element    jQuery=.govuk-button-secondary:contains("Save and return to finance checks")
+    And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")
 
 Confirming viability should show credit report info on a readonly page
     [Documentation]    INFUND-4829, INFUND-4830
     [Tags]
     When the user clicks the button/link    jQuery=.govuk-button:contains("Confirm viability")
     And the user clicks the button/link    name=confirm-viability    # Clicking the confirm button on the modal
-    Then the user should see the element    jQuery=.govuk-button-secondary:contains("Return to finance checks")
+    Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    confirmViabilityChecked
     And the user should see the text in the page    A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
@@ -418,7 +418,7 @@ Checking the approve viability checkbox enables RAG selection but not confirm vi
     [Tags]
     When the user selects the checkbox    project-viable
     Then the user should see the element    id=rag-rating
-    And the user should see the element    jQuery=.govuk-button.govuk-button--disabled:contains("Confirm viability")
+    And the user should see the element    jQuery=.disabled:contains("Confirm viability")
 
 RAG choices update on the finance checks page for partner
     [Documentation]    INFUND-4822, INFUND-4856
@@ -427,14 +427,14 @@ RAG choices update on the finance checks page for partner
     And the rag rating updates on the finance check page for partner for viability      Amber
     And the rag rating updates on the finance check page for partner for viability      Red
     When the user selects the option from the drop-down menu    --    id=rag-rating
-    Then the user should see the element    jQuery=.govuk-button.govuk-button--disabled:contains("Confirm viability")
+    Then the user should see the element    jQuery=.disabled:contains("Confirm viability")
     [Teardown]    the user selects the option from the drop-down menu    Green    id=rag-rating
 
 Credit report information saves when leaving the page for partner
     [Documentation]    INFUND-4829
     [Tags]
     When the user selects the checkbox    creditReportConfirmed
-    And the user clicks the button/link    jQuery=.govuk-button-secondary:contains("Save and return to finance checks")
+    And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
     And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
     Then checkbox should be selected    creditReportConfirmed
 
@@ -446,14 +446,14 @@ Clicking cancel on the viability modal for partner
     Then the user should see the element    id=rag-rating
     And the user should see the element    css=[name="creditReportConfirmed"]:checked ~ label
     And the user should see the element    css=[name="confirmViabilityChecked"]:checked ~ label
-    And the user should see the element    jQuery=.govuk-button-secondary:contains("Save and return to finance checks")
+    And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")
 
 Confirming viability should show credit report info on a readonly page for partner
     [Documentation]    INFUND-4829, INFUND-4830
     [Tags]
     When the user clicks the button/link    jQuery=.govuk-button:contains("Confirm viability")
     And the user clicks the button/link    name=confirm-viability    # Clicking the confirm button on the modal
-    Then the user should see the element    jQuery=.govuk-button-secondary:contains("Return to finance checks")
+    Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
     And the user should see the text in the page  The partner's finance viability has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    confirmViabilityChecked
@@ -578,7 +578,7 @@ Project Finance user can edit and save Lead Partner's calculate overheads option
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     css=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
     And the user clicks the button/link     css=.govuk-button[name="save-eligibility"]
-    And the user clicks the button/link    jQuery=.govuk-button-secondary:contains("Return to finance checks")
+    And the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
 
 Project Finance user can enter overhead values for Lead Partner manually
     [Documentation]     INFUND-7577
@@ -596,7 +596,7 @@ Checking the approve eligibility checkbox enables RAG selection but not Approve 
     [Tags]
     When the user selects the checkbox    project-eligible
     Then the user should see the element    id=rag-rating
-    And the user should see the element    jQuery=.govuk-button.govuk-button--disabled:contains("Approve eligible costs")
+    And the user should see the element    jQuery=.disabled:contains("Approve eligible costs")
 
 RAG choices update on the finance checks page for eligibility
     [Documentation]    INFUND-4839, INFUND-4823
@@ -605,7 +605,7 @@ RAG choices update on the finance checks page for eligibility
     And the rag rating updates on the finance check page for lead for eligibility    Amber
     And the rag rating updates on the finance check page for lead for eligibility    Red
     When the user selects the option from the drop-down menu    --    id=rag-rating
-    Then the user should see the element    jQuery=.govuk-button.govuk-button--disabled:contains("Approve eligible costs")
+    Then the user should see the element    jQuery=.disabled:contains("Approve eligible costs")
 
 Clicking cancel on the eligibility modal
     [Documentation]    INFUND-4839
@@ -615,14 +615,14 @@ Clicking cancel on the eligibility modal
     And the user clicks the button/link    css=.button-clear.js-close    # Clicking the cancel link on the modal
     Then the user should see the element    id=rag-rating
     And the user should see the element    css=[id="project-eligible"]:checked ~ label
-    And the user should see the element    jQuery=.govuk-button-secondary:contains("Return to finance checks")
+    And the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
 
 Confirming eligibility should show info on a readonly page
     [Documentation]    INFUND-4839, INFUND-7574
     [Tags]
     When the user clicks the button/link    jQuery=.govuk-button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
-    Then the user should see the element    jQuery=a.govuk-button-secondary:contains("Return to finance checks")
+    Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
     And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
@@ -630,7 +630,7 @@ Confirming eligibility should show info on a readonly page
 Confirming eligibility should update on the finance checks page
     [Documentation]    INFUND-4823
     [Tags]
-    When the user clicks the button/link    jQuery=.govuk-button-secondary:contains("Return to finance checks")
+    When the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
 
 Proj Finance is able to see the Finances amended
@@ -748,7 +748,7 @@ Checking the approve eligibility checkbox enables RAG selection but not confirm 
     [Tags]
     When the user selects the checkbox    project-eligible
     Then the user should see the element    id=rag-rating
-    And the user should see the element    jQuery=.govuk-button.govuk-button--disabled:contains("Approve eligible costs")
+    And the user should see the element    jQuery=.disabled:contains("Approve eligible costs")
 
 RAG choices update on the finance checks page for eligibility for partner
     [Documentation]    INFUND-4839, INFUND-4823
@@ -757,7 +757,7 @@ RAG choices update on the finance checks page for eligibility for partner
     And the rag rating updates on the finance check page for partner for eligibility    Amber
     And the rag rating updates on the finance check page for partner for eligibility    Red
     When the user selects the option from the drop-down menu    --    id=rag-rating
-    Then the user should see the element    jQuery=.govuk-button.govuk-button--disabled:contains("Approve eligible costs")
+    Then the user should see the element    jQuery=.disabled:contains("Approve eligible costs")
 
 Clicking cancel on the eligibility modal for partner
     [Documentation]    INFUND-4839
@@ -767,14 +767,14 @@ Clicking cancel on the eligibility modal for partner
     And the user clicks the button/link    jQuery=.button-clear.js-close    # Clicking the cancel link on the modal
     Then the user should see the element    id=rag-rating
     And the user should see the element    css=[id="project-eligible"]:checked ~ label
-    And the user should see the element    jQuery=.govuk-button-secondary:contains("Return to finance checks")
+    And the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
 
 Confirming eligibility should show info on a readonly page for partner
     [Documentation]    INFUND-4839, INFUND-7574
     [Tags]
     When the user clicks the button/link    jQuery=.govuk-button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
-    Then the user should see the element    jQuery=.govuk-button-secondary:contains("Return to finance checks")
+    Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
     And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
@@ -785,7 +785,7 @@ Confirming partner eligibility should update on the finance checks page
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Approved")
     And The user should see the element    css=.generate-spend-profile-main-button
-    And the user should see the element    xpath=//*[@class='button generate-spend-profile-main-button' and @disabled='disabled']
+    And the user should see the element    jQuery=button[disabled="disabled"]:contains("Generate spend profile")
 
 Project finance user can see updated finance overview after partner changes to eligibility
     [Documentation]    INFUND-5508
@@ -932,7 +932,7 @@ Project finance user can view Lead partner's changes for Labour
     And the revised cost is verified for the specified section             Change  Labour  2  52,000
     And the user should see the text in the element                         css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
     And the user should see the text in the element                         css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   -23,119
-    And the user clicks the button/link                                     jQuery=.govuk-button-secondary:contains("Return to eligibility")
+    And the user clicks the button/link                                     jQuery=.button-secondary:contains("Return to eligibility")
 
 Project finance user can view Partner's changes to finances
     [Documentation]    INFUND-4837
@@ -1166,34 +1166,34 @@ project finance approves Viability for
 the rag rating updates on the finance check page for lead for viability
    [Arguments]    ${rag_rating}
    When the user selects the option from the drop-down menu    ${rag_rating}    id=rag-rating
-   And the user clicks the button/link    jQuery=.govuk-button-secondary:contains("Save and return to finance checks")
+   And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
    Then the user should see the text in the element    css=table.table-progress tr:nth-child(1) td:nth-child(3)    ${rag_rating}
    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")
-   And the user should see the element    jQuery=.govuk-button:contains("Confirm viability"):not(.govuk-button--disabled)    # Checking here both that the button exists and that it isn't disabled
+   And the user should see the element    jQuery=.govuk-button:contains("Confirm viability"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
 
 the rag rating updates on the finance check page for partner for viability
    [Arguments]    ${rag_rating}
    When the user selects the option from the drop-down menu    ${rag_rating}    id=rag-rating
-   And the user clicks the button/link    jQuery=.govuk-button-secondary:contains("Save and return to finance checks")
+   And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
    Then the user should see the text in the element    css=table.table-progress tr:nth-child(3) td:nth-child(3)    ${rag_rating}
    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
-   And the user should see the element    jQuery=.govuk-button:contains("Confirm viability"):not(.govuk-button--disabled)    # Checking here both that the button exists and that it isn't disabled
+   And the user should see the element    jQuery=.govuk-button:contains("Confirm viability"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
 
 the rag rating updates on the finance check page for lead for eligibility
    [Arguments]    ${rag_rating}
    When the user selects the option from the drop-down menu    ${rag_rating}    id=rag-rating
-   And the user clicks the button/link    jQuery=.govuk-button-secondary:contains("Return to finance checks")
+   And the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
    Then the user should see the text in the element    css=table.table-progress tr:nth-child(1) td:nth-child(5)    ${rag_rating}
    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
-   And the user should see the element    jQuery=.govuk-button:contains("Approve eligible costs"):not(.govuk-button--disabled)    # Checking here both that the button exists and that it isn't disabled
+   And the user should see the element    jQuery=.govuk-button:contains("Approve eligible costs"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
 
 the rag rating updates on the finance check page for partner for eligibility
    [Arguments]    ${rag_rating}
    When the user selects the option from the drop-down menu    ${rag_rating}    id=rag-rating
-   And the user clicks the button/link    jQuery=.govuk-button-secondary:contains("Return to finance checks")
+   And the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
    Then the user should see the text in the element    css=table.table-progress tr:nth-child(3) td:nth-child(5)    ${rag_rating}
    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
-   And the user should see the element    jQuery=.govuk-button:contains("Approve eligible costs"):not(.govuk-button--disabled)    # Checking here both that the button exists and that it isn't disabled
+   And the user should see the element    jQuery=.govuk-button:contains("Approve eligible costs"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
 
 verify total costs of project
     [Arguments]    ${total_costs}
