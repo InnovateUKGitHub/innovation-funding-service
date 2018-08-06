@@ -12,9 +12,9 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.*;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests the CompetitionSetupFinanceServiceImpl with mocked repository.
+ * Tests the CompetitionSetupProjectDocumentServiceImpl with mocked repository.
  */
 public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceUnitTest<CompetitionSetupProjectDocumentServiceImpl> {
 
@@ -32,7 +32,7 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
     private ProjectDocumentMapper projectDocumentMapperMock;
 
     @Mock
-    protected ProjectDocumentRepository projectDocumentRepositoryMock;
+    private ProjectDocumentRepository projectDocumentRepositoryMock;
 
     @Override
     protected CompetitionSetupProjectDocumentServiceImpl supplyServiceUnderTest() {
@@ -55,7 +55,7 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
     public void save() {
 
         ProjectDocumentResource projectDocumentResource = ProjectDocumentResourceBuilder.newProjectDocumentResource()
-                .withPdf(true)
+                .withFileType(singletonList(1L))
                 .build();
         ProjectDocument projectDocument = new ProjectDocument();
 
@@ -74,7 +74,7 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
     @Test
     public void saveAllWhenNoFileTypeSelected() {
         List<ProjectDocumentResource> projectDocumentResources = ProjectDocumentResourceBuilder.newProjectDocumentResource()
-                .withPdf(true, false)
+                .withFileType(singletonList(1L), emptyList())
                 .build(2);
 
         ServiceResult<List<ProjectDocumentResource>> result = service.saveAll(projectDocumentResources);
@@ -89,7 +89,7 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
     public void saveAll() {
 
         List<ProjectDocumentResource> projectDocumentResources = ProjectDocumentResourceBuilder.newProjectDocumentResource()
-                .withPdf(true)
+                .withFileType(singletonList(1L))
                 .build(2);
         ProjectDocument projectDocument1 = new ProjectDocument();
         ProjectDocument projectDocument2 = new ProjectDocument();
