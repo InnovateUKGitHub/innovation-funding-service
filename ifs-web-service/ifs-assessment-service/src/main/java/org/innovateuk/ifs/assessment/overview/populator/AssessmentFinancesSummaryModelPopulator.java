@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.overview.populator;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.AbstractFinanceModelPopulator;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
-import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
