@@ -155,7 +155,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
 
         Cookie[] cookies = mockMvc.perform(post("/organisation/create/find-organisation")
                 .param("organisationSearchName", "BusinessName")
-                .param("not-in-company-house", ""))
+                .param("not-in-companies-house", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/organisation/create/find-organisation"))
                 .andReturn().getResponse().getCookies();
@@ -269,7 +269,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSearchOrganisation_findBusinessSearchCompanyHouse() throws Exception {
+    public void testSearchOrganisation_findBusinessSearchCompaniesHouse() throws Exception {
         OrganisationCreationForm organisationFormCookieValue = new OrganisationCreationForm();
         organisationFormCookieValue.setOrganisationSearching(true);
 
@@ -286,7 +286,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testFindBusinessSearchCompanyHouseInvalid() throws Exception {
+    public void testFindBusinessSearchCompaniesHouseInvalid() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
 
         mockMvc.perform(post("/organisation/create/find-organisation")
@@ -297,7 +297,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSaveOrganisationtest_findBusinessConfirmCompanyDetailsInvalid() throws Exception {
+    public void testSaveOrganisationtest_findBusinessConfirmCompaniesDetailsInvalid() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
@@ -313,7 +313,7 @@ public class OrganisationCreationSearchControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSaveOrganisation_successfulSaveShouldRedirectToConfirmCompanyDetailsPage() throws Exception {
+    public void testSaveOrganisation_successfulSaveShouldRedirectToConfirmCompaniesDetailsPage() throws Exception {
         when(registrationCookieService.getOrganisationTypeCookieValue(any())).thenReturn(Optional.of(organisationTypeForm));
         when(registrationCookieService.getOrganisationCreationCookieValue(any())).thenReturn(Optional.of(organisationForm));
 
