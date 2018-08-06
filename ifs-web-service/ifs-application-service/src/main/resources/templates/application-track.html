@@ -19,7 +19,7 @@
 
         <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
             <h2 class="govuk-panel__title">Application submitted</h2>
-            <div class="govuk-panel__body">
+            <div class="govuk-panel__body govuk-!-font-size-19">
                 Application number: <span th:text="${currentApplication.id}" /><br/>
                 Your application for the competition '<span th:text="${currentCompetition.name}" />' was submitted
                 <th:block th:if="${currentApplication.submittedDate}">
