@@ -11,7 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * Resource object to store the address details, from the company, from the company house api.
+ * Resource object to store the address details, from the company, from the companies house api.
  */
 @Entity
 public class Address {

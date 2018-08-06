@@ -8,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 
 /**
- * Resource object to store the address details, from the company, from the company house api.
+ * Resource object to store the address details, from the company, from the companies house api.
  */
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint( columnNames = { "organisation_id", "address_id" } ) } )

@@ -26,7 +26,7 @@ Non registered users non companies house route
     And the user clicks the button/link            jQuery=.button:contains("Create account")
     And the user selects the radio button          organisationTypeId    radio-1
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
-    When the user clicks the Not on company house link
+    When the user clicks the Not on companies house link
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
     Then The user should see the text in the page  Your details
 
@@ -69,7 +69,7 @@ the new application should be visible in the dashboard page
     the user should see the text in the page  ${test_title}
     the user should see the text in the page  Application number:
 
-the user clicks the Not on company house link
+the user clicks the Not on companies house link
     the user clicks the button/link    jQuery=summary:contains("Enter details manually")
     the user clicks the button/link       name=manual-address
     The user enters text to a text field  id=addressForm.selectedPostcode.addressLine1    street

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 
 import javax.validation.Valid;
 /**
- * Resource object to store the company details, from the company house api.
+ * Resource object to store the company details, from the companies house api.
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class CompanyHouseBusiness{

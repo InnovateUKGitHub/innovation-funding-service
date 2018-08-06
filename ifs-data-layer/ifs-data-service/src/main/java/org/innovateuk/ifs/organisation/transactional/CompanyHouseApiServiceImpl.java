@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * This class communicates with the Companies House API.
  * This is used to get information abouts companies.
  *
- * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Company House API site</a>
+ * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Companies House API site</a>
  */
 @Service
 @ConditionalOnProperty(name = "ifs.data.companies-house.lookup.enabled", havingValue = "", matchIfMissing = true)

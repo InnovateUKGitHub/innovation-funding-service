@@ -14,7 +14,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.organisationSearchResultListType;
 
 /**
- * Class to expose methods to communicate with the company house api.
+ * Class to expose methods to communicate with the companies house api.
  */
 @Service
 public class CompanyHouseRestServiceImpl extends BaseRestService implements CompanyHouseRestService {

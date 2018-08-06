@@ -30,7 +30,7 @@ Accept invitation as academic
     [Documentation]    INFUND-1166, INFUND-917, INFUND-2450, INFUND-2256
     [Tags]    HappyPath    Email    SmokeTest
 #    The search results are specific to Research Organisation type
-    Given the research user finds org in company house
+    Given the research user finds org in companies house
     And the invited user fills the create account form  Steven  Gerrard
     And If the user goes to the previous page he should redirect to the login page
     And the user reads his email and clicks the link    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account  1
