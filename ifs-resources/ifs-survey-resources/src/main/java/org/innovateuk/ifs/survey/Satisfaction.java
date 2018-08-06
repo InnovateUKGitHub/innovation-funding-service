@@ -5,7 +5,7 @@ import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.stream.Stream;
 
-public enum Satisfaction implements IdentifiableEnum<Satisfaction> {
+public enum Satisfaction implements IdentifiableEnum {
 
     VERY_SATISFIED(5, "Very satisfied"),
     SATISFIED(4, "Satisfied"),

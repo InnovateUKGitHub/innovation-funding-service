@@ -75,12 +75,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail
 @Service
 public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implements ProjectDetailsService {
 
-    private static final Log LOG = LogFactory.getLog(ProjectDetailsServiceImpl.class);
-
     private static final String WEB_CONTEXT = "/project-setup";
-
-    @Autowired
-    private ProjectRepository projectRepository;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -89,13 +84,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private AddressMapper addressMapper;
 
     @Autowired
-    private OrganisationRepository organisationRepository;
-
-    @Autowired
     private OrganisationAddressRepository organisationAddressRepository;
-
-    @Autowired
-    private AddressTypeRepository addressTypeRepository;
 
     @Autowired
     private NotificationService notificationService;

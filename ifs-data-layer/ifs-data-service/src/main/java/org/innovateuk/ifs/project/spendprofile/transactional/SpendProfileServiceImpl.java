@@ -108,8 +108,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Autowired
     private ProjectService projectService;
     @Autowired
-    private OrganisationRepository organisationRepository;
-    @Autowired
     private SpendProfileRepository spendProfileRepository;
     @Autowired
     private CostCategoryTypeRepository costCategoryTypeRepository;

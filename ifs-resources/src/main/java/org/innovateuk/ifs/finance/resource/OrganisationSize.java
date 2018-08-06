@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 /**
  * Reference data that describes the different organisation sizes businesses can apply as.
  */
-public enum OrganisationSize implements IdentifiableEnum<OrganisationSize> {
+public enum OrganisationSize implements IdentifiableEnum {
 
     SMALL(1, "Micro or small"),
     MEDIUM(2, "Medium"),
