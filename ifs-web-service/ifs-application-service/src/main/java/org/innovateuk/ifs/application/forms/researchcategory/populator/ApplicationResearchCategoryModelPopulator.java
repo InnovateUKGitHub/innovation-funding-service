@@ -7,6 +7,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResearchCategoryLinkResource;
+import org.innovateuk.ifs.competition.service.CompetitionResearchCategoryRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -22,16 +24,19 @@ import java.util.Optional;
 public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyModelPopulator {
 
     private CategoryRestService categoryRestService;
+    private CompetitionResearchCategoryRestService competitionResearchCategoryRestService;
     private FinanceService financeService;
     private UserService userService;
 
     public ApplicationResearchCategoryModelPopulator(final ApplicantRestService applicantRestService,
                                                      final CategoryRestService categoryRestService,
+                                                     final CompetitionResearchCategoryRestService competitionResearchCategoryRestService,
                                                      final FinanceService financeService,
                                                      final QuestionRestService questionRestService,
                                                      final UserService userService) {
         super(applicantRestService, questionRestService);
         this.categoryRestService = categoryRestService;
+        this.competitionResearchCategoryRestService = competitionResearchCategoryRestService;
         this.financeService = financeService;
         this.userService = userService;
     }
@@ -41,7 +46,11 @@ public class ApplicationResearchCategoryModelPopulator extends AbstractLeadOnlyM
                                               Long questionId,
                                               boolean useNewApplicantMenu) {
         boolean hasApplicationFinances = hasApplicationFinances(applicationResource);
+
+        // TODO change getResearchCategories
         List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
+        List<CompetitionResearchCategoryLinkResource> researchCategoriesNew = competitionResearchCategoryRestService.findByCompetition(
+                applicationResource.getCompetition()).getSuccess();
         boolean userIsLeadApplicant = userService.isLeadApplicant(loggedInUserId, applicationResource);
         boolean complete = isComplete(applicationResource, loggedInUserId);
         boolean allReadonly = !userIsLeadApplicant || complete;
