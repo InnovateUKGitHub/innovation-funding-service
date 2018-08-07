@@ -22,7 +22,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private Long competitionId;
     private boolean monitoringOfficerAssigned;
     private boolean leadPartner;
-    private boolean hasCompanyHouse;
+    private boolean hasCompaniesHouse;
     private boolean projectComplete;
     private String monitoringOfficerName;
     private Long organisationId;
@@ -53,7 +53,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.competitionName = competition.getName();
         this.competitionId = competition.getId();
         this.leadPartner = leadPartner;
-        this.hasCompanyHouse = organisation.getCompaniesHouseNumber() != null && !organisation.getCompaniesHouseNumber().isEmpty();
+        this.hasCompaniesHouse = organisation.getCompaniesHouseNumber() != null && !organisation.getCompaniesHouseNumber().isEmpty();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
         this.organisationId = organisation.getId();
@@ -164,8 +164,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return competitionId;
     }
 
-    public boolean isHasCompanyHouse() {
-        return hasCompanyHouse;
+    public boolean isHasCompaniesHouse() {
+        return hasCompaniesHouse;
     }
 
     public boolean isProjectComplete() {

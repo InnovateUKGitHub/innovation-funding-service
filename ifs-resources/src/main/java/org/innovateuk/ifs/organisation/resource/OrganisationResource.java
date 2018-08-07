@@ -41,6 +41,7 @@ public class OrganisationResource {
     }
 
     @ZeroDowntime(description = "remove", reference = "IFS-3195")
+    @Deprecated
     public String getCompanyHouseNumber() {
         return getCompaniesHouseNumber();
     }
@@ -49,8 +50,8 @@ public class OrganisationResource {
         return companiesHouseNumber;
     }
 
-    public void setCompaniesHouseNumber(String companyHouseNumber) {
-        this.companiesHouseNumber = companyHouseNumber;
+    public void setCompaniesHouseNumber(String companiesHouseNumber) {
+        this.companiesHouseNumber = companiesHouseNumber;
     }
 
     public List<Long> getProcessRoles() {
