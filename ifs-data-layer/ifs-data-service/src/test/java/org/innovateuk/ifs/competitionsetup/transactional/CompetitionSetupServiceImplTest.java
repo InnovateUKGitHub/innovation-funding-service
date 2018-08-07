@@ -16,7 +16,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionFunderService;
-import org.innovateuk.ifs.competitionsetup.domain.ProjectDocument;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -32,6 +31,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -39,11 +39,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -487,7 +485,7 @@ public class CompetitionSetupServiceImplTest {
 
     @Test
     public void create() {
-        Competition savedCompetition = newCompetition().build();
+        Competition competition = newCompetition().build();
 
         CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
 
@@ -495,44 +493,21 @@ public class CompetitionSetupServiceImplTest {
         FileType pdfFileType = new FileType();
         when(grantTermsAndConditionsRepository.findOneByTemplate(GrantTermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME)).thenReturn(grantTermsAndConditions);
         when(fileTypeRepository.findByName("PDF")).thenReturn(pdfFileType);
-        when(competitionRepository.save(any(Competition.class))).thenReturn(savedCompetition);
-        when(publicContentService.initialiseByCompetitionId(savedCompetition.getId())).thenReturn(serviceSuccess());
-        when(competitionMapperMock.mapToResource(savedCompetition)).thenReturn(competitionResource);
+        when(competitionRepository.save(any(Competition.class))).thenReturn(competition);
+        when(publicContentService.initialiseByCompetitionId(competition.getId())).thenReturn(serviceSuccess());
+        when(competitionMapperMock.mapToResource(competition)).thenReturn(competitionResource);
 
         ServiceResult<CompetitionResource> result = service.create();
 
         assertTrue(result.isSuccess());
 
-        // Build the expected competition that would be saved in DB and verify that the same competition was passed to the repository's save method
-        Competition expectedCompetitionToBeSaved = getExpectedCompetitionToBeSaved(grantTermsAndConditions, pdfFileType);
-        verify(competitionRepository).save(expectedCompetitionToBeSaved);
-    }
-
-    private Competition getExpectedCompetitionToBeSaved(GrantTermsAndConditions defaultTermsAndConditions, FileType pdfFileType) {
-        Competition expectedCompetitionToBeSaved = new Competition();
-        expectedCompetitionToBeSaved.setSetupComplete(false);
-        expectedCompetitionToBeSaved.setTermsAndConditions(defaultTermsAndConditions);
-        expectedCompetitionToBeSaved.setProjectDocuments(createDefaultProjectDocuments(expectedCompetitionToBeSaved, pdfFileType));
-
-        return expectedCompetitionToBeSaved;
-    }
-
-    private List<ProjectDocument> createDefaultProjectDocuments(Competition competition, FileType pdfFileType) {
-
-        List<ProjectDocument> defaultProjectDocuments = new ArrayList<>();
-        defaultProjectDocuments.add(createCollaborationAgreement(competition, singletonList(pdfFileType)));
-        defaultProjectDocuments.add(createExploitationPlan(competition, singletonList(pdfFileType)));
-
-        return defaultProjectDocuments;
-    }
-
-    private ProjectDocument createCollaborationAgreement(Competition competition, List<FileType> fileTypes) {
-        return new ProjectDocument(competition, "Collaboration agreement", "Enter guidance for Collaboration agreement",
-                false, true, fileTypes);
-    }
-
-    private ProjectDocument createExploitationPlan(Competition competition, List<FileType> fileTypes) {
-        return new ProjectDocument(competition, "Exploitation plan", "Enter guidance for Exploitation plan",
-                false, true, fileTypes);
+        ArgumentCaptor<Competition> captor = ArgumentCaptor.forClass(Competition.class);
+        verify(competitionRepository).save(captor.capture());
+        Competition savedCompetition = captor.getValue();
+        assertEquals(false, savedCompetition.getSetupComplete());
+        assertEquals(grantTermsAndConditions, savedCompetition.getTermsAndConditions());
+        assertEquals(2, savedCompetition.getProjectDocuments().size());
+        assertEquals("Collaboration agreement", savedCompetition.getProjectDocuments().get(0).getTitle());
+        assertEquals("Exploitation plan", savedCompetition.getProjectDocuments().get(1).getTitle());
     }
 }

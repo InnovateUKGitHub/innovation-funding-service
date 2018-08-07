@@ -89,10 +89,13 @@ public class CompetitionSetupProjectDocumentServiceImplTest extends BaseServiceU
     public void saveAll() {
 
         List<ProjectDocumentResource> projectDocumentResources = ProjectDocumentResourceBuilder.newProjectDocumentResource()
+                .withId(1L, 2L)
                 .withFileType(singletonList(1L))
                 .build(2);
         ProjectDocument projectDocument1 = new ProjectDocument();
+        projectDocument1.setId(1L);
         ProjectDocument projectDocument2 = new ProjectDocument();
+        projectDocument2.setId(2L);
         List<ProjectDocument> projectDocuments = new ArrayList<>();
         projectDocuments.add(projectDocument1);
         projectDocuments.add(projectDocument2);
