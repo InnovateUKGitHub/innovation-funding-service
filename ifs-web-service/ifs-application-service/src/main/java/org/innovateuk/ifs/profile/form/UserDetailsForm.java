@@ -43,7 +43,7 @@ public class UserDetailsForm {
     private String actionUrl;
     
     private String organisationName;
-    private String companyHouseNumber;
+    private String companiesHouseNumber;
     private String addressLine1;
     private String addressLine2;
     private String addressLine3;
@@ -103,12 +103,12 @@ public class UserDetailsForm {
 		this.organisationName = organisationName;
 	}
 
-	public String getCompanyHouseNumber() {
-		return companyHouseNumber;
+	public String getCompaniesHouseNumber() {
+		return companiesHouseNumber;
 	}
 
-	public void setCompanyHouseNumber(String companyHouseNumber) {
-		this.companyHouseNumber = companyHouseNumber;
+	public void setCompaniesHouseNumber(String companiesHouseNumber) {
+		this.companiesHouseNumber = companiesHouseNumber;
 	}
 
 	public String getAddressLine1() {

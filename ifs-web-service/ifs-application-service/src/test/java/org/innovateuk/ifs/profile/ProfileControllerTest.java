@@ -75,7 +75,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     private void setupOrganisation(OrganisationAddressResource...addressResources) {
         organisation = newOrganisationResource()
                 .withName("orgname")
-                .withCompaniesHouseNumber("companyhousenumber")
+                .withCompaniesHouseNumber("companieshousenumber")
                 .withAddress(asList(addressResources))
                 .build();
         when(organisationService.getOrganisationById(6L)).thenReturn(organisation);

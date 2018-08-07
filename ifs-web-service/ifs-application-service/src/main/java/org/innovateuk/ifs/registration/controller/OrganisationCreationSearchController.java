@@ -112,8 +112,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
     }
 
     @PostMapping(value = "/" + FIND_ORGANISATION + "/**", params = MANUAL_ADDRESS)
-    public String manualAddressWithCompanyHouse(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
-                                                HttpServletRequest request, HttpServletResponse response) {
+    public String manualAddressWithCompaniesHouse(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm,
+                                                  HttpServletRequest request, HttpServletResponse response) {
         OrganisationCreationForm organisationFromCookie = registrationCookieService.getOrganisationCreationCookieValue(request).get();
         organisationFromCookie.setAddressForm(new AddressForm());
         organisationFromCookie.getAddressForm().setManualAddress(true);

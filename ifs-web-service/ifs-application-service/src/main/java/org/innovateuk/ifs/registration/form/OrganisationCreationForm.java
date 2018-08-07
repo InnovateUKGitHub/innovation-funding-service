@@ -40,8 +40,8 @@ public class OrganisationCreationForm implements Serializable {
         this.organisationSearchResults = new ArrayList<>();
     }
 
-    public OrganisationCreationForm(List<OrganisationSearchResult> companyHouseList) {
-        this.organisationSearchResults = companyHouseList;
+    public OrganisationCreationForm(List<OrganisationSearchResult> companiesHouseList) {
+        this.organisationSearchResults = companiesHouseList;
     }
 
     public boolean isManualEntry() {
