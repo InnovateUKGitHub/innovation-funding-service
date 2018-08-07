@@ -2,7 +2,7 @@
 @import "govuk-frontend/tools/all";
 @import "govuk-frontend/helpers/all";
 
-
+$button-shadow-size: $govuk-border-width-form-element;
 // Button styling and overrides
 
 table {
@@ -55,13 +55,27 @@ table {
 }
 
 .button-clear {
-  @extend .govuk-button;
+  @include govuk-font($size: 19, $line-height: 19px);
+  @include govuk-focusable;
   @include box-shadow(none);
+  @include box-sizing(border-box);
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: top;
+  cursor: pointer;
+  -webkit-appearance: none;
   background-color: transparent;
   color: govuk-colour("blue");
   text-decoration: underline;
-  padding-left: 0;
-  padding-right: 0;
+  padding: 9px 0 6px;
+  border: none;
+
+  // Fix unwanted button padding in Firefox
+  &::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+  }
 
   &:hover,
   &:focus {
@@ -83,12 +97,17 @@ table {
     }
   }
 
-  &:link {
-    background-color: transparent;
+  &:link,
+  &:visited {
     color: govuk-colour("blue");
     text-decoration: underline;
-    padding-left: 0;
-    padding-right: 0;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      color: #000;
+      text-decoration: none;
+    }
   }
 
   @include is-ie8() {
