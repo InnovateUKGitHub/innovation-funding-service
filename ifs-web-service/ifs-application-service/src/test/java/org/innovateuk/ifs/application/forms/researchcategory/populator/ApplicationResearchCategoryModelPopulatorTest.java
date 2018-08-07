@@ -9,7 +9,9 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResearchCategoryLinkResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionResearchCategoryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -28,6 +30,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResearchCategoryLinkResourceBuilder.newCompetitionResearchCategoryLinkResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
@@ -59,6 +62,9 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
     @Mock
     private UserService userService;
 
+    @Mock
+    private CompetitionResearchCategoryRestService competitionResearchCategoryRestService;
+
     @Test
     public void populateWithApplicationFinances() {
         long loggedInUserId = 1L;
@@ -81,7 +87,10 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 .withLastName("Smith")
                 .build();
 
+        List<CompetitionResearchCategoryLinkResource> competitionResearchCategoryLinkList = newCompetitionResearchCategoryLinkResource().build(2);
+
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
+        when(competitionResearchCategoryRestService.findByCompetition(applicationResource.getCompetition())).thenReturn(restSuccess(competitionResearchCategoryLinkList));
         when(financeService.getApplicationFinanceDetails(applicationResource.getId())).thenReturn
                 (applicationFinanceResource);
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(applicationResource.getCompetition(),
@@ -138,7 +147,10 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 .withLastName("Smith")
                 .build();
 
+        List<CompetitionResearchCategoryLinkResource> competitionResearchCategoryLinkList = newCompetitionResearchCategoryLinkResource().build(2);
+
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
+        when(competitionResearchCategoryRestService.findByCompetition(applicationResource.getCompetition())).thenReturn(restSuccess(competitionResearchCategoryLinkList));
         when(financeService.getApplicationFinanceDetails(applicationResource.getId())).thenReturn
                 (applicationFinanceResource);
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(applicationResource.getCompetition(),
