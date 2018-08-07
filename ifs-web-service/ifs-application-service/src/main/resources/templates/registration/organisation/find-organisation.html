@@ -12,9 +12,9 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
     <th:block th:unless="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkUrl='/organisation/create/new-account-organisation-type',currentApplication=${currentApplication}" />
+    <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkUrl='/organisation/create/lead-organisation-type'" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkUrl='/organisation/create/lead-organisation-type'" />
 
         <th:block th:with="orgTitle=${organisationType.name}">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${orgTitle},subTitle='Create your account',size='govuk-heading-xl'" />
