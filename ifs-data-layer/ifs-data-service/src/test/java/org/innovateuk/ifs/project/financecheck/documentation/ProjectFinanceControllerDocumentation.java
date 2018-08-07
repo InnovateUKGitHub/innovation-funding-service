@@ -206,12 +206,12 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         OrganisationResource industrialOrganisation = newOrganisationResource().
                 withName("Industrial Org").
-                withCompanyHouseNumber("123456789").
+                withCompaniesHouseNumber("123456789").
                 build();
 
         OrganisationResource academicOrganisation = newOrganisationResource().
                 withName("Academic Org").
-                withCompanyHouseNumber("987654321").
+                withCompaniesHouseNumber("987654321").
                 build();
 
         ProjectResource project = newProjectResource().build();

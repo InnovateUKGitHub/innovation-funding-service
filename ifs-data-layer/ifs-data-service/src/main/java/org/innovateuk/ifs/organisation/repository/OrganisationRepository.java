@@ -17,7 +17,7 @@ public interface OrganisationRepository extends PagingAndSortingRepository<Organ
     List<Organisation> findByUsers(User user);
     List<Organisation> findByUsersId(Long userId);
     List<Organisation> findByNameOrderById(String name);
-    List<Organisation> findByCompanyHouseNumberOrderById(String companiesHouseNumber);
+    List<Organisation> findByCompaniesHouseNumberOrderById(String companiesHouseNumber);
 
     List<Organisation> findAll(Iterable<Long> ids);
 }

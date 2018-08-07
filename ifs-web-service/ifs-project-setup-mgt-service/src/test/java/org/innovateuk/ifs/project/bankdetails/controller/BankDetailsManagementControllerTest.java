@@ -71,12 +71,12 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     @Before
     public void setUp(){
         super.setUp();
-        organisationResource = newOrganisationResource().withName("Vitruvius Stonework Limited").withCompanyHouseNumber("60674010").build();
-        updatedOrganisationResource = newOrganisationResource().withId(organisationResource.getId()).withName("Vitruvius Stonework").withCompanyHouseNumber("60674010").build();
+        organisationResource = newOrganisationResource().withName("Vitruvius Stonework Limited").withCompaniesHouseNumber("60674010").build();
+        updatedOrganisationResource = newOrganisationResource().withId(organisationResource.getId()).withName("Vitruvius Stonework").withCompaniesHouseNumber("60674010").build();
         OrganisationAddressResource organisationAddressResource = newOrganisationAddressResource().withOrganisation(organisationResource.getId()).withAddress(newAddressResource().withAddressLine1("Montrose House 1").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build()).build();
         project = newProjectResource().build();
 
-        bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withOrganisation(organisationResource.getId()).withOrganiationAddress(organisationAddressResource).withAccountNumber("51406795").withSortCode("404745").withCompanyName(organisationResource.getName()).withRegistrationNumber(organisationResource.getCompanyHouseNumber()).build();
+        bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withOrganisation(organisationResource.getId()).withOrganiationAddress(organisationAddressResource).withAccountNumber("51406795").withSortCode("404745").withCompanyName(organisationResource.getName()).withRegistrationNumber(organisationResource.getCompaniesHouseNumber()).build();
 
         AddressTypeResource addressTypeResource = new AddressTypeResource(BANK_DETAILS.getOrdinal(), BANK_DETAILS.name());
 
@@ -112,7 +112,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
                 financeContact.getPhoneNumber(),
                 organisation.getId(),
                 organisation.getName(),
-                organisation.getCompanyHouseNumber(),
+                organisation.getCompaniesHouseNumber(),
                 bankDetails.getAccountNumber(),
                 bankDetails.getSortCode(),
                 bankDetails.getOrganisationAddress().getAddress().getAsSingleLine(),

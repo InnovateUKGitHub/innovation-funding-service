@@ -3,7 +3,7 @@ package org.innovateuk.ifs.user.service;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
+import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.stereotype.Service;
@@ -20,20 +20,20 @@ import java.util.stream.Collectors;
 public class OrganisationServiceImpl implements OrganisationService {
 
     private OrganisationRestService organisationRestService;
-    private CompanyHouseRestService companyHouseRestService;
+    private CompaniesHouseRestService companiesHouseRestService;
     private ProcessRoleService processRoleService;
 
     public OrganisationServiceImpl(OrganisationRestService organisationRestService,
-                                   CompanyHouseRestService companyHouseRestService,
+                                   CompaniesHouseRestService companiesHouseRestService,
                                    ProcessRoleService processRoleService) {
         this.organisationRestService = organisationRestService;
-        this.companyHouseRestService = companyHouseRestService;
+        this.companiesHouseRestService = companiesHouseRestService;
         this.processRoleService = processRoleService;
     }
 
     @Override
-    public OrganisationSearchResult getCompanyHouseOrganisation(String organisationId) {
-        return companyHouseRestService.getOrganisationById(organisationId).getSuccess();
+    public OrganisationSearchResult getCompaniesHouseOrganisation(String organisationId) {
+        return companiesHouseRestService.getOrganisationById(organisationId).getSuccess();
     }
 
     @Override

@@ -48,8 +48,8 @@ public class OrganisationBuilder extends BaseBuilder<Organisation, OrganisationB
         return withArraySetFieldByReflection("name", names);
     }
 
-    public OrganisationBuilder withCompanyHouseNumber(String... numbers) {
-        return withArraySetFieldByReflection("companyHouseNumber", numbers);
+    public OrganisationBuilder withCompaniesHouseNumber(String... numbers) {
+        return withArraySetFieldByReflection("companiesHouseNumber", numbers);
     }
 
     public OrganisationBuilder withOrganisationType(OrganisationType... organisationTypes) {

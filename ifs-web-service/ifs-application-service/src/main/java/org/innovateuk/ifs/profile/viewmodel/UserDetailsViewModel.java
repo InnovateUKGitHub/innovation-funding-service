@@ -36,7 +36,7 @@ public class UserDetailsViewModel {
         if(organisation != null) {
             this.organisationName = organisation.getName();
             this.organisationTypeName = organisation.getOrganisationTypeName();
-            this.registrationNumber = organisation.getCompanyHouseNumber();
+            this.registrationNumber = organisation.getCompaniesHouseNumber();
             Optional<OrganisationAddressResource> organisationAddress = getAddress(organisation);
 
             if (organisationAddress.isPresent() && organisationAddress.get().getAddress() != null) {

@@ -64,12 +64,12 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
         OrganisationResource organisation = new OrganisationResource();
         organisation.setId(organisationId);
         organisation.setName("Vitruvius Stonework Limited");
-        organisation.setCompanyHouseNumber("60674010");
+        organisation.setCompaniesHouseNumber("60674010");
 
 
         String organisationNameEncoded = UriUtils.encode(organisation.getName(), "UTF-8");
 
-        setupPostWithRestResultExpectations(organisationsUrl + "/updateNameAndRegistration/" + organisationId + "?name=" + organisationNameEncoded + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class, null, organisation, OK);
+        setupPostWithRestResultExpectations(organisationsUrl + "/updateNameAndRegistration/" + organisationId + "?name=" + organisationNameEncoded + "&registration=" + organisation.getCompaniesHouseNumber(), OrganisationResource.class, null, organisation, OK);
         OrganisationResource receivedResource = service.updateNameAndRegistration(organisation).getSuccess();
 
         Assert.assertEquals(organisation, receivedResource);

@@ -17,8 +17,8 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.org
  * Class to expose methods to communicate with the companies house api.
  */
 @Service
-public class CompanyHouseRestServiceImpl extends BaseRestService implements CompanyHouseRestService {
-    private static final Log log = LogFactory.getLog(CompanyHouseRestServiceImpl.class);
+public class CompaniesHouseRestServiceImpl extends BaseRestService implements CompaniesHouseRestService {
+    private static final Log log = LogFactory.getLog(CompaniesHouseRestServiceImpl.class);
 
     private String companyHouseRestUrl = "/companyhouse";
 

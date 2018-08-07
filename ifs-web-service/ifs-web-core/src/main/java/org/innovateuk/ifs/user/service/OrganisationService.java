@@ -26,7 +26,7 @@ public interface OrganisationService {
 
     OrganisationResource updateNameAndRegistration(OrganisationResource organisation);
 
-    OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);
+    OrganisationSearchResult getCompaniesHouseOrganisation(String organisationId);
 
     Long getOrganisationType(long userId, long applicationId);
 

@@ -129,7 +129,7 @@ public class BankDetailsControllerTest extends BaseControllerMockMVCTest<BankDet
         organisationResource.setAddresses(Collections.singletonList(organisationAddressResource));
         organisationResource.setName("Acme Corporation");
         organisationResource.setOrganisationTypeName("Business");
-        organisationResource.setCompanyHouseNumber("00123");
+        organisationResource.setCompaniesHouseNumber("00123");
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
         ProjectResource projectResource = newProjectResource().withApplication(applicationResource).withAddress(addressResource).build();

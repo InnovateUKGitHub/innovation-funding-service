@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
+import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -22,18 +22,18 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     private OrganisationRestService organisationRestService;
 
     @Mock
-    private CompanyHouseRestService companyHouseRestService;
+    private CompaniesHouseRestService companiesHouseRestService;
 
     @Mock
     private ProcessRoleService processRoleService;
 
     @Override
     protected OrganisationService supplyServiceUnderTest() {
-        return new OrganisationServiceImpl(organisationRestService, companyHouseRestService, processRoleService);
+        return new OrganisationServiceImpl(organisationRestService, companiesHouseRestService, processRoleService);
     }
 
     @Test
-    public void testGetOrganisationById() throws Exception {
+    public void testGetOrganisationById() {
         Long organisationId = 3L;
         OrganisationResource organisation = new OrganisationResource();
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
@@ -44,7 +44,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     }
 
     @Test
-    public void testGetOrganisationByIdForAnonymousUserFlow() throws Exception {
+    public void testGetOrganisationByIdForAnonymousUserFlow() {
         Long organisationId = 3L;
         OrganisationResource organisation = new OrganisationResource();
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId)).thenReturn(restSuccess(organisation));
@@ -55,18 +55,18 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     }
 
     @Test
-    public void testGetCompanyHouseOrganisation() throws Exception {
+    public void testGetCompaniesHouseOrganisation() {
         String organisationSearch = "Empire";
         OrganisationSearchResult organisation = new OrganisationSearchResult();
-        when(companyHouseRestService.getOrganisationById(organisationSearch)).thenReturn(restSuccess(organisation));
+        when(companiesHouseRestService.getOrganisationById(organisationSearch)).thenReturn(restSuccess(organisation));
 
-        OrganisationSearchResult returnedOrganisation = service.getCompanyHouseOrganisation(organisationSearch);
+        OrganisationSearchResult returnedOrganisation = service.getCompaniesHouseOrganisation(organisationSearch);
 
         assertEquals(organisation, returnedOrganisation);
     }
 
     @Test
-    public void testCreateOrMatch() throws Exception {
+    public void testCreateOrMatch() {
         OrganisationResource resourceToSave = new OrganisationResource();
         OrganisationResource organisation = new OrganisationResource();
         when(organisationRestService.createOrMatch(resourceToSave)).thenReturn(restSuccess(organisation));
@@ -77,7 +77,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     }
 
     @Test
-    public void testCreateAndLinkByInvite() throws Exception {
+    public void testCreateAndLinkByInvite() {
         String inviteHash = "123abc";
 
         OrganisationResource resourceToSave = new OrganisationResource();
@@ -90,17 +90,17 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     }
 
     @Test
-    public void testUpdateNameAndRegistration() throws Exception {
-        OrganisationResource organisation = newOrganisationResource().withName("Vitruvius Stonework").withCompanyHouseNumber("60674010").build();
-        OrganisationResource updatedOrganisation = newOrganisationResource().withId(organisation.getId()).withName("Vitruvius Stonework Limited").withCompanyHouseNumber("60674010").build();
+    public void testUpdateNameAndRegistration() {
+        OrganisationResource organisation = newOrganisationResource().withName("Vitruvius Stonework").withCompaniesHouseNumber("60674010").build();
+        OrganisationResource updatedOrganisation = newOrganisationResource().withId(organisation.getId()).withName("Vitruvius Stonework Limited").withCompaniesHouseNumber("60674010").build();
         when(organisationRestService.updateNameAndRegistration(updatedOrganisation)).thenReturn(restSuccess(updatedOrganisation));
         OrganisationResource returnedOrganisationResource = service.updateNameAndRegistration(updatedOrganisation);
-        assertEquals(returnedOrganisationResource.getCompanyHouseNumber(), updatedOrganisation.getCompanyHouseNumber());
+        assertEquals(returnedOrganisationResource.getCompaniesHouseNumber(), updatedOrganisation.getCompaniesHouseNumber());
         assertEquals(returnedOrganisationResource.getName(), updatedOrganisation.getName());
     }
 
     @Test
-    public void testGetOrganisationType() throws Exception {
+    public void testGetOrganisationType() {
         Long userId = 2L;
         Long applicationId = 3L;
         Long organisationId = 4L;
@@ -118,7 +118,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     }
 
     @Test
-    public void testGetOrganisationForUser() throws Exception {
+    public void testGetOrganisationForUser() {
         Long userId = 2L;
         Long organisationId = 4L;
         ProcessRoleResource roleWithUser = new ProcessRoleResource();

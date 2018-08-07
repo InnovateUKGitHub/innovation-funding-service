@@ -169,7 +169,7 @@ public class BankDetailsManagementController {
 
     private OrganisationResource buildOrganisationResource(final OrganisationResource organisationResource, ChangeBankDetailsForm form){
         organisationResource.setName(form.getOrganisationName());
-        organisationResource.setCompanyHouseNumber(form.getRegistrationNumber());
+        organisationResource.setCompaniesHouseNumber(form.getRegistrationNumber());
         return organisationResource;
     }
 
@@ -194,7 +194,7 @@ public class BankDetailsManagementController {
         bankDetailsResource.setProject(projectId);
         bankDetailsResource.setOrganisation(organisation.getId());
         bankDetailsResource.setCompanyName(organisation.getName());
-        bankDetailsResource.setRegistrationNumber(organisation.getCompanyHouseNumber());
+        bankDetailsResource.setRegistrationNumber(organisation.getCompaniesHouseNumber());
         bankDetailsResource.setOrganisationAddress(organisationAddressResource);
 
         return bankDetailsResource;

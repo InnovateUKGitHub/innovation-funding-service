@@ -121,7 +121,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
         return find(organisation(organisationId)).andOnSuccess(organisation -> {
             if (organisationName.length() <= MAX_CHARACTER_DB_LENGTH) {
                 organisation.setName(decodeOrganisationName(organisationName));
-                organisation.setCompanyHouseNumber(registrationNumber);
+                organisation.setCompaniesHouseNumber(registrationNumber);
                 return serviceSuccess(organisationMapper.mapToResource(organisation));
             }
             return serviceFailure(BANK_DETAILS_COMPANY_NAME_TOO_LONG);

@@ -88,7 +88,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
     private void setupOrganisation(OrganisationAddressResource...addressResources) {
         organisation = newOrganisationResource()
                 .withName("orgname")
-                .withCompanyHouseNumber("companyhousenumber")
+                .withCompaniesHouseNumber("companyhousenumber")
                 .withAddress(asList(addressResources))
                 .build();
         when(organisationService.getOrganisationById(6L)).thenReturn(organisation);
@@ -124,7 +124,7 @@ public class ProfileControllerTest extends BaseControllerMockMVCTest<ProfileCont
                 .andExpect(model().attribute("model", Matchers.hasProperty("phoneNumber", Matchers.equalTo(user.getPhoneNumber()))))
                 .andExpect(model().attribute("model", Matchers.hasProperty("emailAddress", Matchers.equalTo(user.getEmail()))))
                 .andExpect(model().attribute("model", Matchers.hasProperty("organisationName", Matchers.equalTo(organisation.getName()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("registrationNumber", Matchers.equalTo(organisation.getCompanyHouseNumber()))))
+                .andExpect(model().attribute("model", Matchers.hasProperty("registrationNumber", Matchers.equalTo(organisation.getCompaniesHouseNumber()))))
                 .andExpect(model().attribute("model", Matchers.hasProperty("gender", Matchers.equalTo(user.getGender().getDisplayName()))))
                 .andExpect(model().attribute("model", Matchers.hasProperty("disability", Matchers.equalTo(user.getDisability().getDisplayName()))));
 

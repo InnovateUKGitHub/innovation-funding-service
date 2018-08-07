@@ -2,6 +2,7 @@ package org.innovateuk.ifs.organisation.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,7 +13,7 @@ import static java.util.Comparator.comparingLong;
 public class OrganisationResource {
     private Long id;
     private String name;
-    private String companyHouseNumber;
+    private String companiesHouseNumber;
     private List<Long> processRoles = new ArrayList<>();
     private List<Long> applicationFinances = new ArrayList<>();
     private List<OrganisationAddressResource> addresses = new ArrayList<>();
@@ -39,12 +40,17 @@ public class OrganisationResource {
         this.name = name;
     }
 
+    @ZeroDowntime(description = "remove", reference = "IFS-3195")
     public String getCompanyHouseNumber() {
-        return companyHouseNumber;
+        return getCompaniesHouseNumber();
     }
 
-    public void setCompanyHouseNumber(String companyHouseNumber) {
-        this.companyHouseNumber = companyHouseNumber;
+    public String getCompaniesHouseNumber() {
+        return companiesHouseNumber;
+    }
+
+    public void setCompaniesHouseNumber(String companyHouseNumber) {
+        this.companiesHouseNumber = companyHouseNumber;
     }
 
     public List<Long> getProcessRoles() {

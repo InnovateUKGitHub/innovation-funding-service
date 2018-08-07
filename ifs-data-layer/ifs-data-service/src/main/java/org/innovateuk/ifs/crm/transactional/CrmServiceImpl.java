@@ -62,7 +62,7 @@ public class CrmServiceImpl implements CrmService {
 
         SilOrganisation silOrganisation = new SilOrganisation();
         silOrganisation.setName(organisation.getName());
-        silOrganisation.setRegistrationNumber(organisation.getCompanyHouseNumber());
+        silOrganisation.setRegistrationNumber(organisation.getCompaniesHouseNumber());
         silOrganisation.setSrcSysOrgId(String.valueOf(organisation.getId()));
 
         SilAddress silRegisteredAddress = silRegisteredAddress(organisation);

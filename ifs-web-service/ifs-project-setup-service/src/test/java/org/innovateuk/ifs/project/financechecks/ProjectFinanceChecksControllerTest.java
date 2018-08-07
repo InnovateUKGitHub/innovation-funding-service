@@ -157,7 +157,7 @@ public class ProjectFinanceChecksControllerTest extends AbstractApplicationMockM
         industrialOrganisation = newOrganisationResource()
                 .withId(2L)
                 .withName("Industrial Org")
-                .withCompanyHouseNumber("123456789")
+                .withCompaniesHouseNumber("123456789")
                 .withOrganisationTypeName(OrganisationTypeEnum.BUSINESS.name())
                 .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
                 .build();

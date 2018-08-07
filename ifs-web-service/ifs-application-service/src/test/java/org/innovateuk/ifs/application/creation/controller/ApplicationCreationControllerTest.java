@@ -27,7 +27,6 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -66,7 +65,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
         applicationResource = newApplicationResource().withId(6L).withName("some application").build();
         OrganisationSearchResult organisationSearchResult = new OrganisationSearchResult(COMPANY_ID, COMPANY_NAME);
         organisationResource = newOrganisationResource().withId(5L).withName(COMPANY_NAME).build();
-        when(organisationService.getCompanyHouseOrganisation(COMPANY_ID)).thenReturn(organisationSearchResult);
+        when(organisationService.getCompaniesHouseOrganisation(COMPANY_ID)).thenReturn(organisationSearchResult);
     }
 
     @Test

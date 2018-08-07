@@ -86,7 +86,7 @@ public class ProfileController {
 			return form;
 		}
 		form.setOrganisationName(organisation.getName());
-		form.setCompanyHouseNumber(organisation.getCompanyHouseNumber());
+		form.setCompanyHouseNumber(organisation.getCompaniesHouseNumber());
 		
 		Optional<OrganisationAddressResource> organisationAddress = getAddress(organisation);
 		

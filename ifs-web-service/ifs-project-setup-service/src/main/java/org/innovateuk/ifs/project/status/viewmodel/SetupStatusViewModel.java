@@ -53,7 +53,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.competitionName = competition.getName();
         this.competitionId = competition.getId();
         this.leadPartner = leadPartner;
-        this.hasCompanyHouse = organisation.getCompanyHouseNumber() != null && !organisation.getCompanyHouseNumber().isEmpty();
+        this.hasCompanyHouse = organisation.getCompaniesHouseNumber() != null && !organisation.getCompaniesHouseNumber().isEmpty();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
         this.organisationId = organisation.getId();

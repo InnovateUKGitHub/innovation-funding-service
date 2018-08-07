@@ -237,7 +237,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         bankDetailsResource.setOrganisation(organisation.getId());
         bankDetailsResource.setCompanyName(organisation.getName());
         bankDetailsResource.setOrganisationTypeName(organisation.getOrganisationTypeName());
-        bankDetailsResource.setRegistrationNumber(organisation.getCompanyHouseNumber());
+        bankDetailsResource.setRegistrationNumber(organisation.getCompaniesHouseNumber());
         bankDetailsResource.setOrganisationAddress(organisationAddressResource);
         return bankDetailsResource;
     }
