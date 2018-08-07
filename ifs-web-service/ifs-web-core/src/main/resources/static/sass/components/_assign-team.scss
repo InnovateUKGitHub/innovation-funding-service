@@ -32,11 +32,14 @@
 
     .assign-button {
       color: $govuk-link-colour;
+
       .secondary-notification {
         color: $govuk-link-colour;
       }
+
       &:hover {
         color: $govuk-link-hover-colour;
+
         .secondary-notification {
           color: $govuk-link-hover-colour;
         }
