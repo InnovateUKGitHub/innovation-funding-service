@@ -140,6 +140,10 @@ button {
 .textarea-wrapped {
   [contenteditable="true"] {
     padding-top: 50px;
+
+    &:focus {
+      outline: 3px solid $govuk-focus-colour;
+    }
   }
 }
 
