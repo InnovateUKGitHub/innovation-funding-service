@@ -16,7 +16,6 @@ import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.transactional.UserTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.*;
@@ -30,6 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
@@ -91,13 +91,12 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     private RegistrationService registrationService;
 
     @Autowired
-    private EthnicityMapper ethnicityMapper;
-
-    @Autowired
     private UserOrganisationRepository userOrganisationRepository;
 
     @Autowired
     private UserOrganisationMapper userOrganisationMapper;
+
+    private Supplier<String> randomHashSupplier = () -> UUID.randomUUID().toString();
 
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
@@ -147,7 +146,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
             notificationArguments.put("passwordResetLink", getPasswordResetLink(hash));
 
             Notification notification = new Notification(from, singletonList(to), Notifications.RESET_PASSWORD, notificationArguments);
-            return notificationService.sendNotification(notification, EMAIL);
+            return notificationService.sendNotificationWithFlush(notification, EMAIL);
         } else if (userIsExternalNotOnlyAssessor(user) &&
                 userNotYetVerified(user)) {
             return registrationService.resendUserVerificationEmail(user);
@@ -179,7 +178,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     private String getRandomHash() {
-        return UUID.randomUUID().toString();
+        return randomHashSupplier.get();
     }
 
     private String getPasswordResetLink(String hash) {
@@ -197,9 +196,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         existingUser.setTitle(updatedUserResource.getTitle());
         existingUser.setLastName(updatedUserResource.getLastName());
         existingUser.setFirstName(updatedUserResource.getFirstName());
-        existingUser.setGender(updatedUserResource.getGender());
-        existingUser.setDisability(updatedUserResource.getDisability());
-        existingUser.setEthnicity(ethnicityMapper.mapIdToDomain(updatedUserResource.getEthnicity()));
         existingUser.setAllowMarketingEmails(updatedUserResource.getAllowMarketingEmails());
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }

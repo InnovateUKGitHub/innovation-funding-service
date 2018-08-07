@@ -2,9 +2,10 @@ package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.user.domain.Affiliation;
-import org.innovateuk.ifs.user.domain.Ethnicity;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.Title;
+import org.innovateuk.ifs.user.resource.UserStatus;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -52,18 +53,6 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
 
     public UserBuilder withLastName(String... lastNames) {
         return withArray((lastName, user) -> setField("lastName", lastName, user), lastNames);
-    }
-
-    public UserBuilder withDisability(Disability... disabilities) {
-        return withArray((disability, user) -> setField("disability", disability, user), disabilities);
-    }
-
-    public UserBuilder withEthnicity(Ethnicity... ethnicities) {
-        return withArray((ethnicity, user) -> setField("ethnicity", ethnicity, user), ethnicities);
-    }
-
-    public UserBuilder withGender(Gender... genders) {
-        return withArray((gender, user) -> setField("gender", gender, user), genders);
     }
 
     public UserBuilder withImageUrl(String... imageUrls) {

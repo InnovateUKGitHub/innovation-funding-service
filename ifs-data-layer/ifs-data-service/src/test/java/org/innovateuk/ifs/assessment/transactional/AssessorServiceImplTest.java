@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
@@ -25,7 +24,7 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
@@ -53,7 +52,6 @@ import java.util.stream.Stream;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -70,14 +68,12 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Disability.NO;
-import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
@@ -124,12 +120,10 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     private SystemNotificationSource systemNotificationSourceMock;
 
     @Mock
-    private NotificationSender notificationSenderMock;
+    private NotificationService notificationServiceMock;
 
     @Mock
-    private AffiliationMapper affliationMapperMock;
-
-
+    private AffiliationMapper affiliationMapperMock;
 
     @InjectMocks
     private AssessorService assessorService = new AssessorServiceImpl();
@@ -149,9 +143,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
-                .withGender(NOT_STATED)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
-                .withDisability(NO)
                 .withPassword("Password123")
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -218,9 +209,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
-                .withGender(NOT_STATED)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
-                .withDisability(NO)
                 .withPassword("Password123")
                 .build();
 
@@ -247,9 +235,6 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
-                .withGender(NOT_STATED)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
-                .withDisability(NO)
                 .withPassword("Password123")
                 .build();
 
@@ -301,11 +286,12 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         assertEquals(expectedAssessorProfileResource, actualAssessorProfileResource);
 
-        InOrder inOrder = inOrder(userRepositoryMock, profileRepositoryMock, userMapperMock, assessorProfileMapperMock);
+        InOrder inOrder = inOrder(userRepositoryMock, profileRepositoryMock, userMapperMock, assessorProfileMapperMock, affiliationMapperMock);
         inOrder.verify(userRepositoryMock).findByIdAndRoles(assessorId, Role.ASSESSOR);
         inOrder.verify(profileRepositoryMock).findOne(profileId);
         inOrder.verify(userMapperMock).mapToResource(user.get());
         inOrder.verify(assessorProfileMapperMock).mapToResource(profile);
+        inOrder.verify(affiliationMapperMock).mapToResource(user.get().getAffiliations());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -376,26 +362,19 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
 
-        when(notificationSenderMock.renderTemplates(expectedNotification1))
-                .thenReturn(serviceSuccess(asMap(recipients.get(0), emailContents.get(0))));
-        when(notificationSenderMock.renderTemplates(expectedNotification2))
-                .thenReturn(serviceSuccess(asMap(recipients.get(1), emailContents.get(1))));
-        when(notificationSenderMock.sendEmailWithContent(expectedNotification1, recipients.get(0), emailContents.get(0)))
-                .thenReturn(serviceSuccess(emptyList()));
-        when(notificationSenderMock.sendEmailWithContent(expectedNotification2, recipients.get(1), emailContents.get(1)))
-                .thenReturn(serviceSuccess(emptyList()));
+        List<Notification> notifications = asList(expectedNotification1, expectedNotification2);
+
+        notifications.forEach(notification -> when(notificationServiceMock.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess()));
 
         ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationServiceMock);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
         inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
-        inOrder.verify(notificationSenderMock).renderTemplates(expectedNotification1);
-        inOrder.verify(notificationSenderMock).sendEmailWithContent(expectedNotification1, recipients.get(0), emailContents.get(0));
-        inOrder.verify(notificationSenderMock).renderTemplates(expectedNotification2);
-        inOrder.verify(notificationSenderMock).sendEmailWithContent(expectedNotification2, recipients.get(1), emailContents.get(1));
+        notifications.forEach(notification -> inOrder.verify(notificationServiceMock).sendNotificationWithFlush(notification, EMAIL));
+
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
@@ -448,20 +427,17 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
 
-        when(notificationSenderMock.renderTemplates(expectedNotification))
-                .thenReturn(serviceSuccess(asMap(recipient, emailContent)));
-        when(notificationSenderMock.sendEmailWithContent(expectedNotification, recipient, emailContent))
-                .thenReturn(serviceSuccess(emptyList()));
+        when(notificationServiceMock.sendNotificationWithFlush(expectedNotification, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationServiceMock);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
         inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
-        inOrder.verify(notificationSenderMock).renderTemplates(expectedNotification);
-        inOrder.verify(notificationSenderMock).sendEmailWithContent(expectedNotification, recipient, emailContent);
+        inOrder.verify(notificationServiceMock).sendNotificationWithFlush(expectedNotification, EMAIL);
+
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
@@ -477,7 +453,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
 
         verify(competitionRepositoryMock).findOne(competitionId);
-        verifyNoMoreInteractions(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
+        verifyNoMoreInteractions(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationServiceMock);
 
         assertTrue(serviceResult.isFailure());
         assertEquals(1, serviceResult.getErrors().size());
@@ -504,7 +480,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationServiceMock);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
         inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
@@ -536,7 +512,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> serviceResult = assessorService.notifyAssessorsByCompetition(competitionId);
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSenderMock);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationServiceMock);
         inOrder.verify(competitionRepositoryMock).findOne(competitionId);
         inOrder.verify(assessmentRepositoryMock).findByActivityStateAndTargetCompetitionId(AssessmentState.CREATED, competitionId);
         inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));

@@ -9,7 +9,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +45,7 @@ public class UserServiceImpl implements UserService {
     public Boolean isLeadApplicant(Long userId, ApplicationResource application) {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
         return userApplicationRoles.stream().anyMatch(uar -> uar.getRoleName()
-                .equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()) && uar.getUser().equals(userId));
+                .equals(Role.LEADAPPLICANT.getName()) && uar.getUser().equals(userId));
 
     }
 
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public ProcessRoleResource getLeadApplicantProcessRoleOrNull(Long applicationId) {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(applicationId);
         for(final ProcessRoleResource processRole : userApplicationRoles){
-            if(processRole.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())){
+            if(processRole.getRoleName().equals(Role.LEADAPPLICANT.getName())){
                 return processRole;
             }
         }
@@ -87,15 +86,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ServiceResult<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Boolean allowMarketingEmails) {
-        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, null, null, null, organisationId, allowMarketingEmails).toServiceResult();
+        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId, allowMarketingEmails).toServiceResult();
     }
 
     @Override
     public ServiceResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email,
                                                                                            String title, String phoneNumber,
-                                                                                           String gender, Long ethnicity, String disability,
                                                                                            Long organisationId, Long competitionId, Boolean allowMarketingEmails) {
-        return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, gender, ethnicity, disability, organisationId, competitionId, allowMarketingEmails).toServiceResult();
+        return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, competitionId, allowMarketingEmails).toServiceResult();
     }
 
     @Override
@@ -104,8 +102,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails) {
-        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, gender, ethnicity, disability, allowMarketingEmails).toServiceResult();
+    public ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, boolean allowMarketingEmails) {
+        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, allowMarketingEmails).toServiceResult();
     }
 
     @Override
