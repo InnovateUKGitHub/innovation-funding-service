@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResearchCategoryLinkResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
@@ -23,6 +24,10 @@ public class CompetitionResearchCategoryLinkResourceBuilder extends
 
     public CompetitionResearchCategoryLinkResourceBuilder withCompetition(CompetitionResource... competitions) {
         return withArraySetFieldByReflection("competition", competitions);
+    }
+
+    public CompetitionResearchCategoryLinkResourceBuilder withCategory(ResearchCategoryResource... category) {
+        return withArraySetFieldByReflection("category", category);
     }
 
     @Override

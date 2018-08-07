@@ -30,7 +30,7 @@ public class CompetitionResearchCategoryControllerTest extends BaseControllerMoc
         when(competitionResearchCategoryService.findByCompetition(competitionId))
                 .thenReturn(serviceSuccess(newCompetitionResearchCategoryLinkResource().build(3)));
 
-        mockMvc.perform(get("/category-research-category/{id}", competitionId))
+        mockMvc.perform(get("/competition-research-category/{id}", competitionId))
                 .andExpect(status().isOk());
 
         verify(competitionResearchCategoryService, only()).findByCompetition(competitionId);

@@ -38,10 +38,10 @@ public class CompetitionResearchCategoryControllerDocumentation extends BaseCont
         when(competitionResearchCategoryService.findByCompetition(competitionId))
                 .thenReturn(serviceSuccess(newCompetitionResearchCategoryLinkResource().build(3)));
 
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/category-research-category/{id}", competitionId))
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/competition-research-category/{id}", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document(
-                        "category-research-category/{method-name}",
+                        "competition-research-category/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the competition we want the chosen research categories from")
                         ),

@@ -14,12 +14,13 @@ import static org.junit.Assert.assertNotNull;
 
 public class CompetitionResearchCategoryRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionResearchCategoryRestServiceImpl> {
 
-    private static String url = "/category-research-category";
+    private static String url = "/competition-research-category";
 
     @Test
     public void findByCompetition() {
         Long competitionId = 1L;
         List<CompetitionResearchCategoryLinkResource> expectedResponse = newCompetitionResearchCategoryLinkResource().build(4);
+
         setupGetWithRestResultExpectations(url + "/" + competitionId, competitionResearchCategoryLinkList(), expectedResponse, HttpStatus.OK);
         List<CompetitionResearchCategoryLinkResource> response = service.findByCompetition(competitionId).getSuccess();
 
