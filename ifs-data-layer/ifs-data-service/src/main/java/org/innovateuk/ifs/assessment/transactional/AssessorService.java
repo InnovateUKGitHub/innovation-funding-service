@@ -15,7 +15,7 @@ public interface AssessorService {
     ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource);
 
     @PreAuthorize("hasPermission(#assessorId, 'org.innovateuk.ifs.assessment.resource.AssessorProfileResource', 'READ_PROFILE')")
-    ServiceResult<AssessorProfileResource> getAssessorProfile(Long assessorId);
+    ServiceResult<AssessorProfileResource> getAssessorProfile(long assessorId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(

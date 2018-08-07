@@ -15,26 +15,19 @@ import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 @PermissionRules
 public class AssessorPermissionRules extends BasePermissionRules {
 
-    private Long assessorId;
+    @PermissionRule(value = "READ_PROFILE", description = "Assessor can read their own profile")
+    public boolean assessorCanReadTheirOwnProfile(AssessorProfileResource assessorProfileResource, UserResource loggedInUser) {
 
-
-    @PermissionRule(value = "READ_PROFILE", description = "Comp admin can read any assessor profile"
-            + "assessor can read their own profile")
-    public boolean userCanReadAssessorProfile(AssessorProfileResource assessorProfileResource, UserResource loggedInUser) {
-
-        if (assessorProfileResource.getUser() != null) {
-            assessorId = assessorProfileResource.getUser().getId();
+        if (assessorProfileResource.getUser() == null) {
+            return false;
         }
 
-        return assessorCanReadOwnProfile(assessorId, loggedInUser) ||
-                userIsCompAdmin(loggedInUser);
+        return loggedInUser.getId().equals(assessorProfileResource.getUser().getId());
     }
 
-    private boolean assessorCanReadOwnProfile(Long assessorId, UserResource loggedInUser) {
-        return loggedInUser.getId().equals(assessorId);
-    }
-
-    private boolean userIsCompAdmin(UserResource loggedInUser) {
+    @PermissionRule(value = "READ_PROFILE", description = "Comp admin can read any assessor profile")
+    public boolean compAdminCanReadAssessorProfile(AssessorProfileResource assessorProfileResource, UserResource loggedInUser) {
         return loggedInUser.hasAnyRoles(COMP_ADMIN, PROJECT_MANAGER);
     }
+
 }

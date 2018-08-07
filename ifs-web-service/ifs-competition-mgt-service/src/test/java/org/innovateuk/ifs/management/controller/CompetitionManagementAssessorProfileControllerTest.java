@@ -76,17 +76,6 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
     private AffiliationRestService affiliationRestService;
 
     private CompetitionResource competition;
-    private String expectedPrincipalEmployer;
-    private String expectedRole;
-    private String expectedProfessionalAffiliations;
-    private String expectedFinancialInterests;
-    private String expectedFamilyFinancialInterests;
-    private List<AffiliationResource> expectedFamilyAffiliations;
-    private List<AffiliationResource> expectedAppointments;
-    private AffiliationResource principalEmployer;
-    private AffiliationResource professionalAffiliations;
-    private AffiliationResource financialInterests;
-    private AffiliationResource familyFinancialInterests;
 
     @Override
     protected CompetitionManagementAssessorProfileController supplyControllerUnderTest() {
@@ -118,21 +107,10 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
 
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
 
-        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId))
+        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/skills", competition.getId(), assessorId))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andReturn();
-
-        AssessorProfileSkillsViewModel model = (AssessorProfileSkillsViewModel) result.getModelAndView().getModel().get("model");
-        AssessorProfileDetailsViewModel assessorDetails = model.getAssessorProfileDetailsViewModel();
-
-        assertEquals("Test Tester", assessorDetails.getName());
-        assertEquals("012345", assessorDetails.getPhoneNumber());
-        assertEquals("A Skill", model.getSkillAreas());
-        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType().getDisplayName());
-        assertEquals("test@test.com", assessorDetails.getEmail());
-        assertEquals(2, model.getInnovationAreas().size());
-        assertEquals(expectedAddress, assessorDetails.getAddress());
+                .andExpect(view().name("profile/skills"));
 
         verify(assessorRestService, only()).getAssessorProfile(assessorId);
     }
@@ -141,34 +119,16 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
     public void assessorProfileDeclaration() throws Exception {
         long assessorId = 1L;
 
-        setupAffiliations();
-
         AddressResource expectedAddress = getExpectedAddress();
         List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
         AssessorProfileResource expectedProfile = getAssessorProfile(expectedAddress, expectedInnovationAreas);
 
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
 
-        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/declaration", competition.getId(), assessorId))
+        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/declaration", competition.getId(), assessorId))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andReturn();
-
-        AssessorProfileDeclarationViewModel model = (AssessorProfileDeclarationViewModel) result.getModelAndView().getModel().get("model");
-        AssessorProfileDetailsViewModel assessorDetails = model.getAssessorProfileDetailsViewModel();
-
-        assertEquals("Test Tester", assessorDetails.getName());
-        assertEquals("012345", assessorDetails.getPhoneNumber());
-        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType().getDisplayName());
-        assertEquals("test@test.com", assessorDetails.getEmail());
-        assertEquals(expectedAddress, assessorDetails.getAddress());
-        assertEquals(expectedAppointments, model.getAppointments());
-        assertEquals(expectedFamilyAffiliations, model.getFamilyAffiliations());
-        assertEquals(expectedFamilyFinancialInterests, model.getFamilyFinancialInterests());
-        assertEquals(expectedFinancialInterests, model.getFinancialInterests());
-        assertEquals(expectedPrincipalEmployer, model.getPrincipalEmployer());
-        assertEquals(expectedProfessionalAffiliations, model.getProfessionalAffiliations());
-        assertEquals(expectedRole, model.getRole());
+                .andExpect(view().name("profile/declaration-of-interest"));
 
         verify(assessorRestService).getAssessorProfile(assessorId);
         verify(affiliationRestService).getUserAffiliations(anyLong());
@@ -273,62 +233,6 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                                 .build()
                 )
                 .build();
-    }
-
-    private void setupAffiliations() {
-
-         expectedPrincipalEmployer = "Big Name Corporation";
-         expectedRole = "Financial Accountant";
-         expectedProfessionalAffiliations = "Professional affiliations...";
-         expectedFinancialInterests = "Other financial interests...";
-         expectedFamilyFinancialInterests = "Other family financial interests...";
-
-        expectedAppointments = newAffiliationResource()
-                .withAffiliationType(PERSONAL)
-                .withOrganisation("Org 1", "Org 2")
-                .withPosition("Pos 1", "Post 2")
-                .withExists(TRUE)
-                .build(2);
-        expectedFamilyAffiliations = newAffiliationResource()
-                .withAffiliationType(FAMILY)
-                .withRelation("Relation 1", "Relation 2")
-                .withOrganisation("Org 1", "Org 2")
-                .withExists(TRUE)
-                .build(2);
-        principalEmployer = newAffiliationResource()
-                .withAffiliationType(EMPLOYER)
-                .withExists(TRUE)
-                .withOrganisation(expectedPrincipalEmployer)
-                .withPosition(expectedRole)
-                .build();
-        professionalAffiliations = newAffiliationResource()
-                .withAffiliationType(PROFESSIONAL)
-                .withExists(TRUE)
-                .withDescription(expectedProfessionalAffiliations)
-                .build();
-        financialInterests = newAffiliationResource()
-                .withAffiliationType(PERSONAL_FINANCIAL)
-                .withExists(TRUE)
-                .withDescription(expectedFinancialInterests)
-                .build();
-        familyFinancialInterests = newAffiliationResource()
-                .withAffiliationType(FAMILY_FINANCIAL)
-                .withExists(TRUE)
-                .withDescription(expectedFamilyFinancialInterests)
-                .build();
-
-        when(affiliationRestService.getUserAffiliations(anyLong()))
-                .thenReturn(restSuccess(new AffiliationListResource(combineLists(
-                        combineLists(
-                                expectedAppointments,
-                                expectedFamilyAffiliations
-                        ),
-                        principalEmployer,
-                        professionalAffiliations,
-                        financialInterests,
-                        familyFinancialInterests
-                )
-                )));
     }
 
 }

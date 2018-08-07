@@ -41,7 +41,11 @@ public class AssessorLookupStrategy {
         UserResource userResource = userMapper.mapToResource(userRepository.findOne(assessorId));
         ProfileResource profileResource = assessorProfileMapper.mapToResource(profileRepository.findOne(assessorId));
 
-         return new AssessorProfileResource(userResource, profileResource);
+        if (userResource == null || profileResource == null){
+            return null;
+        }
+
+        return new AssessorProfileResource(userResource, profileResource);
     }
 
 }

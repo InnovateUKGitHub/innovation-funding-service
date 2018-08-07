@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
+import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -18,6 +19,7 @@ public class AssessorPermissionRulesTest extends BasePermissionRulesTest<Assesso
     private UserResource assessorUser;
     private UserResource otherUser;
     private UserResource adminUser;
+    private AssessorProfileResource assessorProfileResource;
 
     @Override
     protected AssessorPermissionRules supplyPermissionRulesUnderTest() {
@@ -34,30 +36,29 @@ public class AssessorPermissionRulesTest extends BasePermissionRulesTest<Assesso
         adminUser = newUserResource()
                 .withRoleGlobal(Role.COMP_ADMIN)
                 .build();
+
+        assessorProfileResource = newAssessorProfileResource()
+                .withUser(assessorUser)
+                .withProfile(newProfileResource().build())
+                .build();
     }
 
     @Test
     public void assessorsCanReadTheirOwnProfile() {
-        AssessorProfileResource assessorProfileResource = newAssessorProfileResource()
-                .withUser(assessorUser)
-                .build();
-        assertTrue(rules.userCanReadAssessorProfile(assessorProfileResource, assessorUser));
+        assertTrue(rules.assessorCanReadTheirOwnProfile(assessorProfileResource, assessorUser));
+        assertFalse(rules.compAdminCanReadAssessorProfile(assessorProfileResource, assessorUser));
     }
 
     @Test
     public void usersCannotReadOthersProfiles() {
-        AssessorProfileResource assessorProfileResource = newAssessorProfileResource()
-                .withUser(assessorUser)
-                .build();
-        assertFalse(rules.userCanReadAssessorProfile(assessorProfileResource, otherUser));
+        assertFalse(rules.assessorCanReadTheirOwnProfile(assessorProfileResource, otherUser));
+        assertFalse(rules.compAdminCanReadAssessorProfile(assessorProfileResource, otherUser));
     }
 
     @Test
     public void compAdminUsersCanReadAllProfiles() {
-        AssessorProfileResource assessorProfileResource = newAssessorProfileResource()
-                .withUser(assessorUser)
-                .build();
-        assertTrue(rules.userCanReadAssessorProfile(assessorProfileResource, adminUser));
+        assertTrue(rules.compAdminCanReadAssessorProfile(assessorProfileResource, adminUser));
+        assertFalse(rules.assessorCanReadTheirOwnProfile(assessorProfileResource, adminUser));
     }
 
 }
