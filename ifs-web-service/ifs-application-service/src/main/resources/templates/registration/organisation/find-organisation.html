@@ -45,12 +45,12 @@
                 <th:block th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{organisationSearchName}')}" th:text="${err}" />
                 </th:block>
-                <input class="govuk-input"
+                <input class="govuk-input govuk-!-width-one-half"
                        th:field="*{organisationSearchName}"
                        th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'govuk-input--error'"
                        type="text"
                        value="" />
-                <button type="submit" id="org-search" name="search-organisation" class="govuk-button">Search</button>
+                <button type="submit" id="org-search" name="search-organisation" class="govuk-button govuk-!-margin-0">Search</button>
             </div>
             <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <th:block th:if="${organisationForm.research}">
@@ -64,7 +64,7 @@
             <ul id="org-results" class="govuk-list results-list panel" th:if="${organisationForm.organisationSearching}"
                 th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">
-                    <h3>
+                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
                         <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}"
                            title="View organisation"
                            th:text="${organisation.name}"

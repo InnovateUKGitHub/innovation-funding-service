@@ -26,13 +26,13 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',size='govuk-heading-xl'" />
         <form th:action="${userDetailsForm.getActionUrl()}" method="post" th:object="${userDetailsForm}" novalidate="novalidate">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
-                    <label class="govuk-hint" for="firstName">
+                    <label class="govuk-label govuk-label--s" for="firstName">
                         First name
                     </label>
                     <th:block th:if="${#fields.hasErrors('firstName')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input"
+                    <input class="govuk-input govuk-!-width-one-half"
                            id="firstName"
                            th:errorclass="fgovuk-input--error"
                            type="text"
@@ -47,13 +47,13 @@
                                     data-pattern-errormessage=#{validation.standard.firstname.invalid}" />
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'govuk-form-group--error'">
-                    <label class="govuk-hint" for="lastName">
+                    <label class="govuk-label govuk-label--s" for="lastName">
                         Last name
                     </label>
                     <th:block th:if="${#fields.hasErrors('lastName')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input"
+                    <input class="govuk-input govuk-!-width-one-half"
                            id="lastName"
                            th:errorclass="govuk-input--error"
                            type="text"
@@ -68,14 +68,14 @@
                                     data-pattern-errormessage=#{validation.standard.lastname.invalid}" />
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
-                    <label class="govuk-hint" for="phoneNumber">
+                    <label class="govuk-label govuk-label--s" for="phoneNumber">
                         Phone number
                     </label>
                     <span class="govuk-hint">We may use this to contact you about the application</span>
                     <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                     </th:block>
-                    <input class="govuk-input"
+                    <input class="govuk-input govuk-!-width-one-half"
                            id="phoneNumber"
                            type="tel"
                            th:errorclass="govuk-input--error"
@@ -84,8 +84,9 @@
                            th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
                 </div>
                 <div class="govuk-form-group">
-                    <div class="govuk-heading-s">Email</div>
-                    <span class="govuk-hint">Your email address cannot be changed in the system</span><br /><strong class="govuk-hint" th:text="*{email}" />
+                    <div class="govuk-heading-s govuk-!-margin-0">Email</div>
+                    <span class="govuk-hint  govuk-!-margin-0">Your email address cannot be changed in the system</span>
+                    <strong class="govuk-hint" th:text="*{email}" />
                 </div>
                 <p class="govuk-body">To change your email address please contact Innovate UK by emailing <a href="mailto:support@innovateuk.gov.uk" class="govuk-link">support@innovateuk.gov.uk</a></p>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('allowMarketingEmails')} ? 'govuk-form-group--error'">
