@@ -43,14 +43,14 @@
 
                 <form th:action="@{/profile/skills/edit}" method="post" th:object="${form}" class="govuk-!-margin-top-6" novalidate="novalidate">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" th:for="skillAreas">Skill areas</label>
+                        <label class="govuk-label govuk-label--s" th:for="skillAreas">Skill areas</label>
                         <th:block th:if="${#fields.hasErrors('skillAreas')}">
                             <span class="govuk-error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}"></span>
                         </th:block>
-                        <p class="govuk-hint">
+                        <span class="govuk-hint">
                             Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.<br />
                             For example; Solar Power, Genetics, Recycling
-                        </p>
+                        </span>
                         <div class="textarea-wrapped word-count">
                             <textarea
                                 class="govuk-textarea"
