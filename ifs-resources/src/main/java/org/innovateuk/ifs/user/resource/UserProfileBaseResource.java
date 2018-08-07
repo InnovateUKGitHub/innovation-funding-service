@@ -39,15 +39,6 @@ public abstract class UserProfileBaseResource {
     @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
-    @NotNull(message = "validation.standard.gender.selectionrequired")
-    private Gender gender;
-
-    @NotNull(message = "validation.standard.disability.selectionrequired")
-    private Disability disability;
-
-    @NotNull(message = "validation.standard.ethnicity.selectionrequired")
-    private EthnicityResource ethnicity;
-
     @NotNull(message = "{validation.standard.address.required}")
     @Valid
     private AddressResource address;
@@ -86,30 +77,6 @@ public abstract class UserProfileBaseResource {
         this.phoneNumber = phoneNumber;
     }
 
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public Disability getDisability() {
-        return disability;
-    }
-
-    public void setDisability(Disability disability) {
-        this.disability = disability;
-    }
-
-    public EthnicityResource getEthnicity() {
-        return ethnicity;
-    }
-
-    public void setEthnicity(EthnicityResource ethnicity) {
-        this.ethnicity = ethnicity;
-    }
-
     public AddressResource getAddress() {
         return address;
     }
@@ -139,9 +106,6 @@ public abstract class UserProfileBaseResource {
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
                 .append(phoneNumber, that.phoneNumber)
-                .append(gender, that.gender)
-                .append(disability, that.disability)
-                .append(ethnicity, that.ethnicity)
                 .append(address, that.address)
                 .append(email, that.email)
                 .isEquals();
@@ -154,9 +118,6 @@ public abstract class UserProfileBaseResource {
                 .append(firstName)
                 .append(lastName)
                 .append(phoneNumber)
-                .append(gender)
-                .append(disability)
-                .append(ethnicity)
                 .append(address)
                 .append(email)
                 .toHashCode();
