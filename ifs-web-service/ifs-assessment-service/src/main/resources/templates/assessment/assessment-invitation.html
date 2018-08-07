@@ -78,7 +78,7 @@
                                            class="govuk-label govuk-radios__label">Accept, I am able to assess this application</label>
                                 </div>
                                 <div class="panel js-hidden" id="accept-application">
-                                    <p class="govuk-body">You will still have the option to reject after accepting and viewing the full application</p>
+                                    <p class="govuk-body govuk-!-margin-0">You will still have the option to reject after accepting and viewing the full application</p>
                                 </div>
                                 <label class="govuk-radios__item" data-target="reject-application">
                                     <input id="rejectAssessment"
@@ -115,7 +115,7 @@
                                     </select>
                                 </div>
 
-                                <div class="govuk-form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'govuk-form-group--error'">
+                                <div class="govuk-form-group textarea-wrapped word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'govuk-form-group--error'">
                                     <label class="govuk-label" th:for="${#ids.next('rejectComment')}">
                                         Use this space to provide more information
                                     </label>
