@@ -11,13 +11,11 @@ import org.innovateuk.ifs.exception.InviteAlreadyAcceptedException;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -75,8 +73,6 @@ public class RegistrationController {
     private OrganisationRestService organisationRestService;
     @Autowired
     private InviteRestService inviteRestService;
-    @Autowired
-    private EthnicityRestService ethnicityRestService;
 
     @Autowired
     protected CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -145,10 +141,6 @@ public class RegistrationController {
         return destination;
     }
 
-    private List<EthnicityResource> getEthnicityOptions() {
-        return ethnicityRestService.findAllActive().getSuccess();
-    }
-
     private boolean processOrganisation(HttpServletRequest request, Model model) {
         OrganisationResource organisation = organisationRestService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request)).getSuccess();
         if (organisation != null) {
@@ -162,7 +154,6 @@ public class RegistrationController {
         setOrganisationIdCookie(request, response);
         setInviteeEmailAddress(registrationForm, request, model);
         model.addAttribute("registrationForm", registrationForm);
-        model.addAttribute("ethnicityOptions", getEthnicityOptions());
     }
 
     /**
@@ -295,9 +286,6 @@ public class RegistrationController {
                 registrationForm.getEmail(),
                 registrationForm.getTitle(),
                 registrationForm.getPhoneNumber(),
-                registrationForm.getGender(),
-                Long.parseLong(registrationForm.getEthnicity()),
-                registrationForm.getDisability(),
                 organisationId,
                 competitionId,
                 registrationForm.getAllowMarketingEmails());

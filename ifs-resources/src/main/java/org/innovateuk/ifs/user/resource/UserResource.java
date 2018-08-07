@@ -35,9 +35,6 @@ public class UserResource {
     private String password;
     private UserStatus status;
     private List<Role> roles = new ArrayList<>();
-    private Gender gender;
-    private Disability disability;
-    private Long ethnicity;
     private Long profileId;
     private boolean allowMarketingEmails;
     private Set<Long> termsAndConditionsIds;
@@ -184,30 +181,6 @@ public class UserResource {
         return !disjoint(roles, newHashSet(testRoles));
     }
 
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public Disability getDisability() {
-        return disability;
-    }
-
-    public void setDisability(Disability disability) {
-        this.disability = disability;
-    }
-
-    public Long getEthnicity() {
-        return ethnicity;
-    }
-
-    public void setEthnicity(Long ethnicity) {
-        this.ethnicity = ethnicity;
-    }
-
     public Long getProfileId() {
         return profileId;
     }
@@ -307,9 +280,6 @@ public class UserResource {
                 .append(password, that.password)
                 .append(status, that.status)
                 .append(roles, that.roles)
-                .append(gender, that.gender)
-                .append(disability, that.disability)
-                .append(ethnicity, that.ethnicity)
                 .append(profileId, that.profileId)
                 .append(termsAndConditionsIds, that.termsAndConditionsIds)
                 .append(createdOn, that.createdOn)
@@ -334,9 +304,6 @@ public class UserResource {
                 .append(password)
                 .append(status)
                 .append(roles)
-                .append(gender)
-                .append(disability)
-                .append(ethnicity)
                 .append(profileId)
                 .append(allowMarketingEmails)
                 .append(termsAndConditionsIds)

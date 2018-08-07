@@ -71,15 +71,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ServiceResult<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Boolean allowMarketingEmails) {
-        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, null, null, null, organisationId, allowMarketingEmails).toServiceResult();
+        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId, allowMarketingEmails).toServiceResult();
     }
 
     @Override
     public ServiceResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email,
                                                                                            String title, String phoneNumber,
-                                                                                           String gender, Long ethnicity, String disability,
                                                                                            Long organisationId, Long competitionId, Boolean allowMarketingEmails) {
-        return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, gender, ethnicity, disability, organisationId, competitionId, allowMarketingEmails).toServiceResult();
+        return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, competitionId, allowMarketingEmails).toServiceResult();
     }
 
     @Override
@@ -88,8 +87,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails) {
-        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, gender, ethnicity, disability, allowMarketingEmails).toServiceResult();
+    public ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, boolean allowMarketingEmails) {
+        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, allowMarketingEmails).toServiceResult();
     }
 
     @Override
