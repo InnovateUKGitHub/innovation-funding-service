@@ -47,7 +47,7 @@
                     <h3 class="govuk-heading-m govuk-!-margin-0">Principal employer and role</h3>
 
                     <div class="govuk-form-group govuk-!-margin-top-6" th:classappend="${#fields.hasErrors('principalEmployer')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" th:for="${#ids.next('principalEmployer')}">
+                        <label class="govuk-label govuk-label--s" th:for="${#ids.next('principalEmployer')}">
                             Prinicipal employer
                             <th:block th:if="${#fields.hasErrors('principalEmployer')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('principalEmployer')}" th:text="${err}"></span>
@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('role')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label" th:for="${#ids.next('role')}">
+                        <label class="govuk-label govuk-label--s" th:for="${#ids.next('role')}">
                             Role
                             <th:block th:if="${#fields.hasErrors('role')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
@@ -71,7 +71,7 @@
                     </div>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label"  th:for="${#ids.next('professionalAffiliations')}">
+                        <label class="govuk-label govuk-label--s"  th:for="${#ids.next('professionalAffiliations')}">
                             List any bodies you are currently a member of as part of your profession.
                             <th:block th:if="${#fields.hasErrors('professionalAffiliations')}">
                                 <span class="govuk-error-message"  th:each="err : ${#fields.errors('professionalAffiliations')}" th:text="${err}"></span>

@@ -514,6 +514,11 @@ td {
       color: $govuk-secondary-text-colour;
       background: transparent;
     }
+
+    &:hover {
+      color: $govuk-link-hover-colour;
+      text-decoration: underline;
+    }
   }
 
   .autosave-info {
