@@ -21,10 +21,10 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${#strings.isEmpty(competitionSetupForm.question.shortTitle)} ? #{ifs.application.question.no_heading} : ${competitionSetupForm.question.shortTitle},subTitle=${competitionName},size='govuk-heading-xl'" />
 
-        <p class="govuk-!-margin-top-6" th:unless="${model.general.state.preventEdit}">
+        <p class="govuk-body govuk-!-margin-top-6" th:unless="${model.general.state.preventEdit}">
             You can edit this question for the applicant as well as the guidance for assessors. </p>
 
-        <p class="govuk-!-margin-top-6" th:if="${model.general.state.preventEdit}">
+        <p class="govuk-body govuk-!-margin-top-6" th:if="${model.general.state.preventEdit}">
             You are no longer able to make changes to this page.</p>
 
         <form th:if="${model.editable}"
