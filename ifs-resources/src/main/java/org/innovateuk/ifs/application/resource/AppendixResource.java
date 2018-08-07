@@ -38,7 +38,7 @@ public class AppendixResource extends FileEntryResource {
 
     @JsonIgnore
     public String getDownloadURL() {
-        return applicationId + "/forminput/" + formInputId + "/download";
+        return applicationId + "/forminput/" + formInputId + "/download/" + getName();
     }
 
     @JsonIgnore

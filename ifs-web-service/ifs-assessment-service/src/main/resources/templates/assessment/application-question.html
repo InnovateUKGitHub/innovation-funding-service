@@ -46,7 +46,7 @@
                     (filename=${model.appendixDetails.filename},
                     filesizeKbytes=${model.appendixDetails.filesizeKbytes},
                     fileDescription=${model.appendixFileDescription}+':',
-                    downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.appendixDetails.formInputId})})" />
+                    downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download/{fileName}(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.appendixDetails.formInputId},fileName=${model.appendixDetails.filename})})" />
                 </div>
 
                 <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">

@@ -82,10 +82,11 @@ public class AssessmentOverviewController {
         return "assessment/application-detailed-finances";
     }
 
-    @GetMapping("/application/{applicationId}/formInput/{formInputId}/download")
+    @GetMapping("/application/{applicationId}/formInput/{formInputId}/download/**")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix(
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("formInputId") Long formInputId,
+            @PathVariable(value = "fileName", required = false) final String fileName,
             UserResource loggedInUser) {
         ProcessRoleResource processRole = processRoleService.findProcessRolesByApplicationId(applicationId).stream()
                 .filter(role -> loggedInUser.getId().equals(role.getUser()))

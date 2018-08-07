@@ -91,7 +91,7 @@
          formInput=${model.formInput},
          question=${model.question},
          filename=${model.filename},
-         downloadUrl=${isCompManagementDownload} ? @{${model.application.id + '/forminput/' + formInput.id + '/download'}} : @{${'/application/' + model.application.id + '/form/question/' + question.id + '/forminput/' + formInput.id + '/download'}},
+         downloadUrl=${isCompManagementDownload} ? @{${model.application.id + '/forminput/' + formInput.id + '/download/' + model.filename}} : @{${'/application/' + model.application.id + '/form/question/' + question.id + '/forminput/' + formInput.id + '/download/' + model.filename}},
          viewmode=${model.viewmode},
          mayRemove=${model.mayRemove},
          inputField='formInput['+${formInput.id}+']',

@@ -46,11 +46,12 @@ public class ApplicationDownloadController {
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
     }
 
-    @GetMapping(QUESTION_URL + "{" + QUESTION_ID + "}/forminput/{formInputId}/download")
+    @GetMapping(QUESTION_URL + "{" + QUESTION_ID + "}/forminput/{formInputId}/download/**")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable(APPLICATION_ID) final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
+            @PathVariable(value = "fileName", required = false) final String fileName,
             UserResource user) {
         ProcessRoleResource processRole = processRoleService.findProcessRolesByApplicationId(applicationId).stream()
                 .filter(role -> user.getId().equals(role.getUser()))

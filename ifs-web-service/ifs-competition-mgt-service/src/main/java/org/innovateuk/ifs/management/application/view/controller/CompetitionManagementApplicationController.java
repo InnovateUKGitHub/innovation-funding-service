@@ -155,10 +155,11 @@ public class CompetitionManagementApplicationController {
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
-    @GetMapping("/{applicationId}/forminput/{formInputId}/download")
+    @GetMapping("/{applicationId}/forminput/{formInputId}/download/**")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
+            @PathVariable(value = "fileName", required = false) final String fileName,
             UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
         if (isInternalUser(user)) {
