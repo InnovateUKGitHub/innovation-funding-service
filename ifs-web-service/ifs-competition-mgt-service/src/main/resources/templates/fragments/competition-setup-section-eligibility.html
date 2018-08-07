@@ -104,7 +104,7 @@
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="overrideFundingRules">
                         <h2 class="govuk-fieldset__heading">Override funding rules</h2>
                     </legend>
-                    <span class="govuk-hint">Do you want to override the standard <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules" target="_blank">funding rules</a> and manually set the percentage that business can apply for?</span>
+                    <span class="govuk-hint">Do you want to override the standard <a class="govuk-link" href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules" target="_blank">funding rules</a> and manually set the percentage that business can apply for?</span>
                     <th:block th:if="${#fields.hasErrors('overrideFundingRules')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('overrideFundingRules')}" th:text="${err}"></span>
                     </th:block>
@@ -288,7 +288,7 @@
         </th:block>
 
     </form>
-    <ul class="pagination">
+    <ul class="govuk-list pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='additional')}">
                 <span class="pagination-label">Previous</span>
