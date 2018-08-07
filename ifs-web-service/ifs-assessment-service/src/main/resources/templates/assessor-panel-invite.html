@@ -25,7 +25,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assessment panel for '${model.competitionName}'|,size='govuk-heading-xl'" />
                 <p class="govuk-body">You are invited to the assessment panel for the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
-                <section class="boxed">
+                <section class="boxed govuk-!-margin-bottom-6">
                     <h2 class="govuk-heading-m govuk-!-margin-0" th:text="|${#temporals.format(model.panelDate, 'd MMMM yyyy')}: assessment panel|">
                         21 March 2017: assessment panel
                     </h2>
