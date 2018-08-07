@@ -18,7 +18,7 @@
     <th:block th:unless="${model.readOnly}">
         <p class="govuk-body">This information is used for search results and the opening section of the competition page.</p>
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('shortDescription')} ? 'govuk-form-group--error'">
-            <label class="govuk-label" for="shortDescription">
+            <label class="govuk-label govuk-label--s" for="shortDescription">
                 Short description
             </label>
             <span class="govuk-hint">Appears at the top of the competition page.</span>
@@ -35,14 +35,14 @@
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
         </div>
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectFundingRange')} ? 'govuk-form-group--error'">
-            <label class="govuk-label" for="projectFundingRange">
+            <label class="govuk-label govuk-label--s" for="projectFundingRange">
                 Project funding range
             </label>
             <span class="govuk-hint">Appears against the competition search result.</span>
             <th:block th:if="${#fields.hasErrors('projectFundingRange')}">
                 <span class="govuk-error-message" th:each="err : ${#fields.errors('projectFundingRange')}" th:text="${err}" />
             </th:block>
-            <input class="govuk-input"
+            <input class="govuk-input govuk-!-width-one-half"
                    id="projectFundingRange"
                    type="text"
                    th:errorclass="govuk-input--error"
@@ -52,7 +52,7 @@
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
         </div>
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('eligibilitySummary')} ? 'govuk-form-group--error'">
-            <label class="govuk-label" for="eligibilitySummary">
+            <label class="govuk-label govuk-label--s" for="eligibilitySummary">
                 Eligibility summary
             </label>
             <span class="govuk-hint">Appears against the competition search result.</span>
@@ -70,7 +70,7 @@
             </div>
         </div>
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('keywords')} ? 'govuk-form-group--error'">
-            <label class="govuk-label" for="keywords">
+            <label class="govuk-label govuk-label--s" for="keywords">
                 Keywords
             </label>
             <span class="govuk-hint"> Keywords help competitions appear in search results but are not visible to applicants. Separate keywords with commas.</span>
@@ -171,7 +171,7 @@
         <div>
             <div class="contentGroup">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('description')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" for="description">
+                    <label class="govuk-label govuk-label--s" for="description">
                         Competition description
                     </label>
                     <th:block th:if="${#fields.hasErrors('description')}">
@@ -220,13 +220,13 @@
                     </fieldset>
                 </div>
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('projectSize')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label" for="projectSize">
+                    <label class="govuk-label govuk-label--s" for="projectSize">
                         Project size
                     </label>
                     <th:block th:if="${#fields.hasErrors('projectSize')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('projectSize')}" th:text="${err}" />
                     </th:block>
-                    <input class="govuk-input"
+                    <input class="govuk-input govuk-!-width-one-half"
                            id="projectSize"
                            type="text"
                            th:field="${form.projectSize}"
@@ -299,7 +299,7 @@
                         <div class="date-group">
                             <div class="day">
                                 <label class="govuk-label" th:for="dates[__${index}__].day">Day</label>
-                                <input class="fgovuk-input govuk-input--width-2"
+                                <input class="govuk-input govuk-input--width-2"
                                        placeholder="DD"
                                        th:errorclass="govuk-input--error"
                                        type="number"
@@ -345,7 +345,7 @@
 
                 </div>
                 <div class="govuk-form-group textarea-wrapped" th:classappend="${#fields.hasErrors('dates[__${index}__].content')}? 'govuk-form-group--error':''">
-                    <label class="govuk-label" th:for="dates[__${index}__].content">
+                    <label class="govuk-label govuk-label--s" th:for="dates[__${index}__].content">
                         Content
                     </label>
                     <th:block th:if="${#fields.hasErrors('dates[__${index}__].content')}">
@@ -411,13 +411,13 @@
         <div class="contentGroup" th:id="${'contentGroup-row-'+index}">
             <input type="hidden" th:field="*{contentGroups[__${index}__].id}" />
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].heading')}? 'govuk-form-group--error':''">
-                <label class="govuk-label" th:for="contentGroups[__${index}__].heading">
+                <label class="govuk-label govuk-label--s" th:for="contentGroups[__${index}__].heading">
                     Heading
                 </label>
                 <th:block th:if="${#fields.hasErrors('contentGroups[__${index}__].heading')}">
                     <span class="govuk-error-message" th:text="#{validation.publiccontent.contentgroup.heading.required}"></span>
                 </th:block>
-                <input class="govuk-input"
+                <input class="govuk-input govuk-!-width-one-half"
                        type="text"
                        required="required"
                        th:id="contentGroups[__${index}__].heading"
@@ -426,7 +426,7 @@
                        th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.heading.required}" />
             </div>
             <div class="govuk-form-group textarea-wrapped" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].content')}? 'govuk-form-group--error':''">
-                <label class="govuk-label" th:for="contentGroups[__${index}__].content">
+                <label class="govuk-label govuk-label--s" th:for="contentGroups[__${index}__].content">
                     Content
                 </label>
                 <th:block th:if="${#fields.hasErrors('contentGroups[__${index}__].content')}">
