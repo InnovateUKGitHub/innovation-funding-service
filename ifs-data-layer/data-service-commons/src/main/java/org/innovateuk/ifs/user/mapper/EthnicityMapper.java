@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.mapper;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.user.domain.Ethnicity;
@@ -10,6 +11,7 @@ import org.mapstruct.NullValueMappingStrategy;
 /**
  * Maps between domain and resource DTO for {@link Ethnicity}.
  */
+@ZeroDowntime(description = "delete", reference = "IFS-4105")
 @Mapper(
     config =  GlobalMapperConfig.class,
     uses = {

@@ -70,9 +70,6 @@ public class AssessorProfileDetailsEditController {
             UserProfileResource profileDetails = new UserProfileResource();
             profileDetails.setFirstName(form.getFirstName());
             profileDetails.setLastName(form.getLastName());
-            profileDetails.setEthnicity(form.getEthnicity());
-            profileDetails.setGender(form.getGender());
-            profileDetails.setDisability(form.getDisability());
             profileDetails.setPhoneNumber(form.getPhoneNumber());
             profileDetails.setAddress(form.getAddressForm());
             profileDetails.setEmail(loggedInUser.getEmail());
