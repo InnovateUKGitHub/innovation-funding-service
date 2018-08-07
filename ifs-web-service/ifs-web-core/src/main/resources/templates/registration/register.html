@@ -29,13 +29,13 @@
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="firstName">
+                <label class="govuk-label govuk-label--s" for="firstName">
                     First name
                 </label>
                 <th:block th:if="${#fields.hasErrors('firstName')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input"
+                <input class="govuk-input govuk-!-width-one-half"
                        id="firstName"
                        th:errorclass="govuk-input--error"
                        type="text"
@@ -51,13 +51,13 @@
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="lastName">
+                <label class="govuk-label govuk-label--s" for="lastName">
                     Last name
                 </label>
                 <th:block th:if="${#fields.hasErrors('lastName')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input"
+                <input class="govuk-input govuk-!-width-one-half"
                        th:errorclass="govuk-input--error"
                        id="lastName"
                        type="text"
@@ -72,14 +72,14 @@
                                 data-pattern-errormessage=#{validation.standard.lastname.invalid}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="phoneNumber">
+                <label class="govuk-label govuk-label--s" for="phoneNumber">
                     Phone number
                 </label>
                 <span class="govuk-hint">We may use this to contact you about the application.</span>
                 <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input"
+                <input class="govuk-input govuk-!-width-one-half"
                        id="phoneNumber"
                        th:errorclass="govuk-input--error"
                        type="tel"
@@ -88,7 +88,7 @@
                        th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email') and invitee == null} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="email">
+                <label class="govuk-label govuk-label--s" for="email">
                     Email
                 </label>
                 <th:block th:if="${invitee}">
