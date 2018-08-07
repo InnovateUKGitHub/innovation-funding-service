@@ -4,10 +4,10 @@ import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.application.forms.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.service.InviteService;
+import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
+import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -48,7 +48,7 @@ public class OrganisationDetailsViewModelPopulator {
         final ArrayList<OrganisationResource> organisationList = new ArrayList<>(organisations);
 
         return organisationList.stream()
-                .filter(o -> OrganisationTypeEnum.RESEARCH.getId().equals(o.getOrganisationType()))
+                .filter(o -> OrganisationTypeEnum.RESEARCH.getId() == o.getOrganisationType())
                 .collect(Collectors.toCollection(supplier));
     }
 
@@ -58,15 +58,15 @@ public class OrganisationDetailsViewModelPopulator {
         final Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
 
         return applicantResource.getApplicants().stream()
-                .filter(applicant -> applicant.getProcessRole().getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
-                        || applicant.getProcessRole().getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
+                .filter(applicant -> applicant.getProcessRole().getRoleName().equals(Role.LEADAPPLICANT.getName())
+                        || applicant.getProcessRole().getRoleName().equals(Role.COLLABORATOR.getName()))
                 .map(ApplicantResource::getOrganisation)
                 .collect(Collectors.toCollection(supplier));
     }
 
     private <R extends AbstractApplicantResource> Optional<OrganisationResource> getApplicationLeadOrganisation(R applicantResource) {
         return applicantResource.getApplicants().stream()
-                .filter(applicant -> applicant.getProcessRole().getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
+                .filter(applicant -> applicant.getProcessRole().getRoleName().equals(Role.LEADAPPLICANT.getName()))
                 .map(ApplicantResource::getOrganisation)
                 .findFirst();
     }

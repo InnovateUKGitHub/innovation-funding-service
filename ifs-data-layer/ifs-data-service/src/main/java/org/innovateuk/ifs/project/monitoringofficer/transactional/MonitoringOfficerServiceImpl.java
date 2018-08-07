@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.project.monitoringofficer.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -13,7 +16,6 @@ import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerRe
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.util.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,12 +26,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE;
-import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -45,7 +47,10 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
 
     @Autowired
-    private  EmailService projectEmailService;
+    private NotificationService notificationService;
+
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -135,19 +140,28 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
     public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
 
         Project project = projectRepository.findOne(monitoringOfficer.getProject());
+
         User projectManager = getExistingProjectManager(project).get().getUser();
 
         NotificationTarget moTarget = createMonitoringOfficerNotificationTarget(monitoringOfficer);
         NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
 
-        ServiceResult<Void> moAssignedEmailSendResult = projectEmailService.sendEmail(singletonList(moTarget),
-                createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager),
-                MonitoringOfficerServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED);
-        ServiceResult<Void> pmAssignedEmailSendResult = projectEmailService.sendEmail(singletonList(pmTarget),
-                createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager),
-                MonitoringOfficerServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER);
+        Notification moNotification = new Notification(systemNotificationSource,
+                                                       moTarget,
+                                                       Notifications.MONITORING_OFFICER_ASSIGNED,
+                                                       createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer,
+                                                                                                         project,
+                                                                                                         projectManager));
 
-        return processAnyFailuresOrSucceed(asList(moAssignedEmailSendResult, pmAssignedEmailSendResult));
+        Notification pmNotification = new Notification(systemNotificationSource,
+                                                       pmTarget,
+                                                       Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER,
+                                                       createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer,
+                                                                                                         project,
+                                                                                                         projectManager));
+
+        return notificationService.sendNotificationWithFlush(moNotification, EMAIL).andOnSuccess(() ->
+               notificationService.sendNotificationWithFlush(pmNotification, EMAIL));
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {
