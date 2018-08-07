@@ -64,7 +64,7 @@
             <ul id="org-results" class="govuk-list results-list panel" th:if="${organisationForm.organisationSearching}"
                 th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                 <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">
-                    <h3>
+                    <h3 class="govuk-!-font-size-19 govuk-!-margin-0 govuk-!-font-weight-regular">
                         <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}"
                            title="View organisation"
                            th:text="${organisation.name}"
