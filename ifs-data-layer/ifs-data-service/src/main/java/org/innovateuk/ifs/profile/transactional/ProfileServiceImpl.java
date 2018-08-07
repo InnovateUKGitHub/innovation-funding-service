@@ -9,7 +9,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AgreementMapper;
-import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +41,6 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
 
     @Autowired
     private AddressMapper addressMapper;
-
-    @Autowired
-    private EthnicityMapper ethnicityMapper;
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
@@ -161,9 +157,6 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
         user.setTitle(profileDetails.getTitle());
         user.setFirstName(profileDetails.getFirstName());
         user.setLastName(profileDetails.getLastName());
-        user.setGender(profileDetails.getGender());
-        user.setDisability(profileDetails.getDisability());
-        user.setEthnicity(ethnicityMapper.mapIdToDomain(profileDetails.getEthnicity().getId()));
         user.setPhoneNumber(profileDetails.getPhoneNumber());
     }
 
@@ -174,9 +167,6 @@ public class ProfileServiceImpl extends BaseTransactionalService implements Prof
         profile.setTitle(user.getTitle());
         profile.setFirstName(user.getFirstName());
         profile.setLastName(user.getLastName());
-        profile.setGender(user.getGender());
-        profile.setDisability(user.getDisability());
-        profile.setEthnicity(ethnicityMapper.mapToResource(user.getEthnicity()));
         profile.setEmail(user.getEmail());
         profile.setPhoneNumber(user.getPhoneNumber());
 
