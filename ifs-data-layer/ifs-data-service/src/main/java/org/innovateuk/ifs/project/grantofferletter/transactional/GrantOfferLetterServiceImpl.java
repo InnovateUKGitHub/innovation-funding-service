@@ -382,12 +382,12 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
-        return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup)
-                .andOnSuccess(project ->
-                        validateRemoveGrantOfferLetter(project).andOnSuccess(() ->
-                                getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
-                                        fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-                                                removeGrantOfferLetterFileFromProject(project)))));
+        return getProject(projectId).
+                andOnSuccess(project -> validateProjectIsInSetup(project).
+                        andOnSuccess(() -> validateRemoveGrantOfferLetter(project)).
+                        andOnSuccess(() -> removeGrantOfferLetterFileFromProject(project)).
+                        andOnSuccess(fileEntry -> fileService.deleteFileIgnoreNotFound(fileEntry.getId())).
+                        andOnSuccessReturnVoid());
     }
 
     private ServiceResult<Void> validateRemoveGrantOfferLetter(Project project) {
@@ -396,46 +396,42 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                         serviceSuccess() : serviceFailure(GRANT_OFFER_LETTER_CANNOT_BE_REMOVED));
     }
 
-    private ServiceResult<FileEntry> getGrantOfferLetterFileEntry(Project project) {
-        if (project.getGrantOfferLetter() == null) {
-            return serviceFailure(notFoundError(FileEntry.class));
-        } else {
-            return serviceSuccess(project.getGrantOfferLetter());
-        }
-    }
+    private ServiceResult<FileEntry> removeGrantOfferLetterFileFromProject(Project project) {
 
-    private void removeGrantOfferLetterFileFromProject(Project project) {
-        validateProjectIsInSetup(project).andOnSuccess(() ->
-                project.setGrantOfferLetter(null));
+        return validateProjectIsInSetup(project).andOnSuccessReturn(() -> {
+            FileEntry fileEntry = project.getGrantOfferLetter();
+            project.setGrantOfferLetter(null);
+            return fileEntry;
+        });
+
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId) {
-        return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup)
-                .andOnSuccess(project -> getCurrentlyLoggedInUser().andOnSuccess(user -> {
-
-                        if (!golWorkflowHandler.removeSignedGrantOfferLetter(project, user)) {
-                            return serviceFailure(GRANT_OFFER_LETTER_CANNOT_BE_REMOVED);
-                        }
-
-                        return getSignedGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
-                                fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-                                        removeSignedGrantOfferLetterFileFromProject(project)));
-                }));
+        return getProject(projectId).
+                andOnSuccess(this::validateProjectIsInSetup).
+                andOnSuccess(project -> getCurrentlyLoggedInUser().
+                andOnSuccess(user -> removeSignedGrantOfferLetterIfAllowed(project, user).
+                andOnSuccessReturnVoid()));
     }
 
-    private ServiceResult<FileEntry> getSignedGrantOfferLetterFileEntry(Project project) {
-        if (project.getSignedGrantOfferLetter() == null) {
-            return serviceFailure(notFoundError(FileEntry.class));
-        } else {
-            return serviceSuccess(project.getSignedGrantOfferLetter());
+    private ServiceResult<FileEntry> removeSignedGrantOfferLetterIfAllowed(Project project, User user) {
+
+        if (!golWorkflowHandler.removeSignedGrantOfferLetter(project, user)) {
+            return serviceFailure(GRANT_OFFER_LETTER_CANNOT_BE_REMOVED);
         }
+
+        return removeSignedGrantOfferLetterFileFromProject(project).
+               andOnSuccess(fileEntry -> fileService.deleteFileIgnoreNotFound(fileEntry.getId()));
     }
 
-    private void removeSignedGrantOfferLetterFileFromProject(Project project) {
-        validateProjectIsInSetup(project).andOnSuccess(() ->
-                project.setSignedGrantOfferLetter(null));
+    private ServiceResult<FileEntry> removeSignedGrantOfferLetterFileFromProject(Project project) {
+        return validateProjectIsInSetup(project).andOnSuccessReturn(() -> {
+            FileEntry fileEntry = project.getSignedGrantOfferLetter();
+            project.setSignedGrantOfferLetter(null);
+            return fileEntry;
+        });
     }
 
     @Override
