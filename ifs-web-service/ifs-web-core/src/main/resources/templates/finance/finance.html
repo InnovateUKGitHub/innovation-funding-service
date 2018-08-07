@@ -171,7 +171,7 @@
                     <label class="govuk-label" th:for="${formInput.id}+'.MMYYYY.month'">
                         Month
                     </label>
-                    <input class="govuk-input govuk-input--width-3"
+                    <input class="govuk-input govuk-input--width-2"
                            th:disabled="${model.readonly}"
                            th:id="${formInput.id}+'.MMYYYY.month'"
                            th:name="'formInput['+${formInput.id}+'].MMYYYY.month'"
@@ -187,7 +187,7 @@
                     <label class="govuk-label" th:for="${formInput.id}+'.MMYYYY.year'">
                         Year
                     </label>
-                    <input class="govuk-input govuk-input--width-3"
+                    <input class="govuk-input govuk-input--width-4"
                            th:disabled="${model.readonly}"
                            th:id="${formInput.id}+'.MMYYYY.year'"
                            th:name="'formInput['+${formInput.id}+'].MMYYYY.year'"
