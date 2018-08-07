@@ -5,7 +5,7 @@
 <!-- ======== Assessment - pagination ======= -->
 <div th:fragment="assessment-pagination">
     <nav class="pagination" th:unless="${#strings.isEmpty(navigation.previousUrl) and #strings.isEmpty(navigation.nextUrl)}">
-        <ul>
+        <ul class="govuk-list govuk-!-padding-1">
             <li class="prev" th:unless="${#strings.isEmpty(navigation.previousUrl)}">
                 <a th:href="@{${navigation.previousUrl}}" class="govuk-link" rel="prev" title="Navigate to previous part">
                     <span class="pagination-label">Previous</span>
