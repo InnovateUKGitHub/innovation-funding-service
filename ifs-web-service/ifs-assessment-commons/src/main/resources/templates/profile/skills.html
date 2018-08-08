@@ -48,7 +48,7 @@
             </dl>
 
             <div class="form-footer" th:if="${!model.compAdminUser}">
-                <div class="form-footer__actions"><a th:href="@{/profile/details/edit}">Edit</a></div>
+                <div id="editDetails" class="form-footer__actions"><a th:href="@{/profile/details/edit}">Edit</a></div>
                 <div class="form-footer__info">
                     <span class="textarea-footer"></span>
                     <span class="update-label">Created by IFS Web System User on </span>
@@ -89,7 +89,7 @@
 
 
             <div class="form-footer" th:if="${!model.compAdminUser}">
-                <div class="form-footer__actions"><a th:href="@{/profile/skills/edit}">Edit</a></div>
+                <div id="editSkills" class="form-footer__actions"><a th:href="@{/profile/skills/edit}">Edit</a></div>
                 <div class="form-footer__info">
                     <span class="textarea-footer"></span>
                     <span class="update-label">Created by IFS Web System User on </span>
