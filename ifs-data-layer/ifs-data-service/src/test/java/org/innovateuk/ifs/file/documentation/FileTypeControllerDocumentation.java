@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.file.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.file.builder.FileTypeResourceBuilder;
 import org.innovateuk.ifs.file.controller.FileTypeController;
 import org.innovateuk.ifs.file.resource.FileTypeResource;
 import org.innovateuk.ifs.file.service.FileTypeService;
@@ -36,7 +37,10 @@ public class FileTypeControllerDocumentation extends BaseControllerMockMVCTest<F
 
         long fileTypeId = 1L;
 
-        FileTypeResource fileTypeResource = new FileTypeResource();
+        FileTypeResource fileTypeResource = FileTypeResourceBuilder.newFileTypeResource()
+                .withName("Spreadsheet")
+                .withExtension("xls, xlsx")
+                .build();
 
         when(fileTypeServiceMock.findOne(fileTypeId)).thenReturn(serviceSuccess(fileTypeResource));
 
@@ -57,9 +61,12 @@ public class FileTypeControllerDocumentation extends BaseControllerMockMVCTest<F
     @Test
     public void findByName() throws Exception {
 
-        String name = "name";
+        String name = "Spreadsheet";
 
-        FileTypeResource fileTypeResource = new FileTypeResource();
+        FileTypeResource fileTypeResource = FileTypeResourceBuilder.newFileTypeResource()
+                .withName("Spreadsheet")
+                .withExtension("xls, xlsx")
+                .build();
 
         when(fileTypeServiceMock.findByName(name)).thenReturn(serviceSuccess(fileTypeResource));
 

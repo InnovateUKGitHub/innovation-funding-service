@@ -13,7 +13,8 @@ public class ProjectDocument extends DocumentConfig {
     @JoinColumn(name = "competitionId", referencedColumnName = "id")
     public Competition competition;
 
-    public ProjectDocument(Competition competition, String title, String guidance, boolean editable, boolean enabled, List<FileType> fileTypes) {
+    public ProjectDocument(Competition competition, String title, String guidance,
+                           boolean editable, boolean enabled, List<FileType> fileTypes) {
         super(title, guidance, editable, enabled, fileTypes);
         this.competition = competition;
     }

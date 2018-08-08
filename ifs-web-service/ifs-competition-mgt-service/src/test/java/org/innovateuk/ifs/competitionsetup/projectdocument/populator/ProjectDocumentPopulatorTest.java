@@ -35,7 +35,7 @@ public class ProjectDocumentPopulatorTest {
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competitionResource) {
-        return new GeneralSetupViewModel(Boolean.FALSE, competitionResource, CompetitionSetupSection.PROJECT_DOCUMENT, CompetitionSetupSection.values(), Boolean.TRUE);
+        return new GeneralSetupViewModel(false, competitionResource, CompetitionSetupSection.PROJECT_DOCUMENT, CompetitionSetupSection.values(), true);
     }
 }
 
