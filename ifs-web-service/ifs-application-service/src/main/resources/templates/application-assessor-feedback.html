@@ -19,10 +19,10 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.question.shortName},subTitle=${applicationName},size='govuk-heading-xl'" />
         </th:block>
 
-        <h2 class="govuk-heading-m govuk-!-margin-0" th:unless="${model.question.name == 'Project summary'} or ${model.question.name == 'Public description'}"
+        <h2 class="govuk-heading-m" th:unless="${model.question.name == 'Project summary'} or ${model.question.name == 'Public description'}"
             th:text="(${model.question.questionNumber} ? ${model.question.questionNumber} + '. ' : ' ') + ${model.question.name} ">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h2>
 
-        <h3 class="govuk-heading-m">Your answer:</h3>
+        <h3 class="govuk-heading-m govuk-!-margin-top-6">Your answer:</h3>
         <th:block th:each="item : ${model.responses}">
             <th:block th:unless="${item.fileEntry}">
                 <div th:text="${item.value}" data-md-to-html="" class="govuk-body wysiwyg-styles"></div>
