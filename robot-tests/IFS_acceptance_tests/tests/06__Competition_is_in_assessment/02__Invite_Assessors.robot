@@ -118,17 +118,17 @@ Next/Previous pagination on Find tab
 Assessor link goes to the assessor profile
     [Documentation]    INFUND-6669  IFS-3943
     [Tags]
-    Given the user clicks the button/link  jQuery=a:contains("41 to")
-    Given the user clicks the button/link  jQuery=a:contains("61 to")
-    When the user clicks the button/link   link=Will Smith
-    Then the user should see the element   jQuery=h3:contains("Email address") + p:contains("${invitedAssessor}")
-    And the user should see the element    jQuery=h3:contains("Assessor type") + p:contains("Business")
-    And the user should see the element    jQuery=h3:contains("Phone") + p:contains("28572565937")
-    And the user should see the element    jQuery=h3:contains("Innovation areas") ~ div th:contains("Health and life sciences")
-    And the user should see the element    jQuery=h3:contains("Skill areas") ~ p:contains("Solar energy research")
-    When the user clicks the button/link   link=DOI
-    Then the user should see the element   jQuery=h3:contains("Declaration of interest") ~ h2:contains("Principal employer and role")
-    [Teardown]  The user clicks the button/link  link=Back
+    Given the user clicks the button/link  jQuery = a:contains("41 to")
+    Given the user clicks the button/link  jQuery = a:contains("61 to")
+    When the user clicks the button/link   link = Will Smith
+    Then the user should see the element   jQuery = h3:contains("Email address") + p:contains("${invitedAssessor}")
+    And the user should see the element    jQuery = h3:contains("Assessor type") + p:contains("Business")
+    And the user should see the element    jQuery = h3:contains("Phone") + p:contains("28572565937")
+    And the user should see the element    jQuery = h3:contains("Innovation areas") ~ div th:contains("Health and life sciences")
+    And the user should see the element    jQuery = h3:contains("Skill areas") ~ p:contains("Solar energy research")
+    When the user clicks the button/link   link = DOI
+    Then the user should see the element   jQuery = h3:contains("Declaration of interest") ~ h2:contains("Principal employer and role")
+    [Teardown]  The user clicks the button/link  link = Back
 
 Innovation sector and area are correct
     [Documentation]    INFUND-6389
