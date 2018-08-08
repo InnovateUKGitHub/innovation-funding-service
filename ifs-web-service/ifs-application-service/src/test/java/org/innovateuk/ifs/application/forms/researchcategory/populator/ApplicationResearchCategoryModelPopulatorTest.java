@@ -69,12 +69,20 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         long loggedInUserId = 1L;
 
         CompetitionResource competitionResource = newCompetitionResource().build();
-        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource()
-                .build(3);
+
+        ResearchCategoryResource researchCategoryOne = newResearchCategoryResource().withName("one").build();
+        CompetitionResearchCategoryLinkResource competitionResearchCategoryLinkOne = newCompetitionResearchCategoryLinkResource()
+                .withCompetition(competitionResource).withCategory(researchCategoryOne).build();
+
+        ResearchCategoryResource researchCategoryTwo = newResearchCategoryResource().withName("two").build();
+        CompetitionResearchCategoryLinkResource competitionResearchCategoryLinkTwo = newCompetitionResearchCategoryLinkResource()
+                .withCompetition(competitionResource).withCategory(researchCategoryTwo).build();
+
+
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competitionResource.getId())
                 .withCompetitionName(competitionResource.getName())
-                .withResearchCategory(researchCategories.get(0)).build();
+                .withResearchCategory(researchCategoryOne).build();
         List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication
                 (applicationResource.getId()).withOrganisationSize(SMALL).build(3);
         QuestionResource questionResource = newQuestionResource().build();
@@ -86,9 +94,8 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 .withLastName("Smith")
                 .build();
 
-        List<CompetitionResearchCategoryLinkResource> competitionResearchCategoryLinkList = newCompetitionResearchCategoryLinkResource().build(2);
-
-        when(competitionResearchCategoryRestService.findByCompetition(applicationResource.getCompetition())).thenReturn(restSuccess(competitionResearchCategoryLinkList));
+        when(competitionResearchCategoryRestService.findByCompetition(applicationResource.getCompetition()))
+                .thenReturn(restSuccess(asList(competitionResearchCategoryLinkOne, competitionResearchCategoryLinkTwo)));
         when(financeService.getApplicationFinanceDetails(applicationResource.getId())).thenReturn
                 (applicationFinanceResource);
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(applicationResource.getCompetition(),
@@ -110,10 +117,10 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 questionResource.getId(), true);
 
         assertEquals(competitionResource.getName(), researchCategoryViewModel.getCurrentCompetitionName());
-        assertEquals(researchCategories, researchCategoryViewModel.getAvailableResearchCategories());
+        assertEquals(asList(researchCategoryOne, researchCategoryTwo), researchCategoryViewModel.getAvailableResearchCategories());
         assertTrue(researchCategoryViewModel.getHasApplicationFinances());
         assertTrue(researchCategoryViewModel.isUseNewApplicantMenu());
-        assertEquals(researchCategories.get(0).getName(), researchCategoryViewModel.getResearchCategory());
+        assertEquals(researchCategoryOne.getName(), researchCategoryViewModel.getResearchCategory());
         assertEquals(questionResource.getId(), researchCategoryViewModel.getQuestionId());
         assertEquals(applicationResource.getId(), researchCategoryViewModel.getApplicationId());
         assertTrue(researchCategoryViewModel.isClosed());
@@ -129,11 +136,15 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
         long loggedInUserId = 1L;
 
         CompetitionResource competitionResource = newCompetitionResource().build();
-        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
+        ResearchCategoryResource researchCategory = newResearchCategoryResource().withName("one").build();
+        CompetitionResearchCategoryLinkResource competitionResearchCategoryLink = newCompetitionResearchCategoryLinkResource()
+                .withCompetition(competitionResource).withCategory(researchCategory).build();
+
+
         ApplicationResource applicationResource = newApplicationResource()
                 .withCompetition(competitionResource.getId())
                 .withCompetitionName(competitionResource.getName())
-                .withResearchCategory(researchCategories.get(0)).build();
+                .withResearchCategory(researchCategory).build();
         List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication
                 (applicationResource.getId()).build(3);
         QuestionResource questionResource = newQuestionResource().build();
@@ -145,9 +156,9 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 .withLastName("Smith")
                 .build();
 
-        List<CompetitionResearchCategoryLinkResource> competitionResearchCategoryLinkList = newCompetitionResearchCategoryLinkResource().build(2);
 
-        when(competitionResearchCategoryRestService.findByCompetition(applicationResource.getCompetition())).thenReturn(restSuccess(competitionResearchCategoryLinkList));
+        when(competitionResearchCategoryRestService.findByCompetition(applicationResource.getCompetition()))
+                .thenReturn(restSuccess(asList(competitionResearchCategoryLink)));
         when(financeService.getApplicationFinanceDetails(applicationResource.getId())).thenReturn
                 (applicationFinanceResource);
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(applicationResource.getCompetition(),
@@ -169,10 +180,10 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 questionResource.getId(), true);
 
         assertEquals(competitionResource.getName(), researchCategoryViewModel.getCurrentCompetitionName());
-        assertEquals(researchCategories, researchCategoryViewModel.getAvailableResearchCategories());
+        assertEquals(asList(researchCategory), researchCategoryViewModel.getAvailableResearchCategories());
         assertFalse(researchCategoryViewModel.getHasApplicationFinances());
         assertTrue(researchCategoryViewModel.isUseNewApplicantMenu());
-        assertEquals(researchCategories.get(0).getName(), researchCategoryViewModel.getResearchCategory());
+        assertEquals(researchCategory.getName(), researchCategoryViewModel.getResearchCategory());
         assertEquals(questionResource.getId(), researchCategoryViewModel.getQuestionId());
         assertEquals(applicationResource.getId(), researchCategoryViewModel.getApplicationId());
         assertTrue(researchCategoryViewModel.isClosed());

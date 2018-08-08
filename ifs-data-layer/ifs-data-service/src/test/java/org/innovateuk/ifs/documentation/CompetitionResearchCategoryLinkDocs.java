@@ -10,9 +10,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class CompetitionResearchCategoryLinkDocs {
 
     public static final FieldDescriptor[] competitionResearchCategoryLinkResourceFields = {
-            fieldWithPath("id").description("Id of the competitionResearchCategoryLinkResource"),
-            fieldWithPath("competition").description("The competition the research categories belong to"),
-            fieldWithPath("category").description("The research category object"),
-            fieldWithPath("classname").description("The type of class for the category"),
+            fieldWithPath("[].id").description("Id of the competitionResearchCategoryLinkResource"),
+            fieldWithPath("[].category").description("The research category object"),
+            fieldWithPath("[].className").description("The type of class for the category"),
+            fieldWithPath("[].entity").description("The competition the research categories belong to")
     };
 }
