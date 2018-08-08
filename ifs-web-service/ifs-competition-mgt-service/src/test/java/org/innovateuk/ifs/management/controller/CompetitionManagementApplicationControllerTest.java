@@ -757,7 +757,7 @@ public class CompetitionManagementApplicationControllerTest extends AbstractAppl
                 FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
                 when(formInputResponseRestService.getFileDetails(formInputId, applications.get(0).getId(), processRoleId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
 
-                mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/forminput/" + formInputId + "/download"))
+                mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/forminput/" + formInputId + "/download/file1.csv"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentType(("text/csv")))
                         .andExpect(header().string("Content-Type", "text/csv"))
