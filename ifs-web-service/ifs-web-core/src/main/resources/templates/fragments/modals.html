@@ -525,7 +525,7 @@
             <p class="govuk-body">They will be resent an email inviting them to join the project.</p>
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" data-single-submit="">
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div>
                 <input type="hidden" id="resend-fc-invite" name="resend-fc-invite" value=""/>
                 <input type="hidden" id="organisation" name="organisation" value=""/>
@@ -545,7 +545,7 @@
             <p class="govuk-body">They will be resent an email inviting them to join the project.</p>
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" data-single-submit="">
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div>
                 <input type="hidden" id="resend-pm-invite" name="resend-pm-invite" value=""/>
                 <button class="govuk-button" type="submit">Resend</button>
@@ -564,7 +564,7 @@
             <p class="govuk-body">They will be reminded to accept their allocated role.</p>
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
-        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" data-single-submit="">
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div>
                 <input type="hidden" id="invite-id" name="inviteId" value="" />
                 <button class="govuk-button" type="submit">Resend</button>

@@ -97,7 +97,7 @@
                         </th:block>
                         <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                             <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
-                                enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
+                                enctype="multipart/form-data" novalidate="novalidate">
                                     <h2 class="govuk-heading-m">Respond to query</h2>
                                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
                                         <label class="govuk-label" for="response-1">
@@ -148,7 +148,7 @@
                                 <input type="hidden" id="action-1" value="postResponse">
                                 <div class="govuk-grid-row">
                                     <div class="govuk-grid-column-one-half">
-                                        <button class="govuk-button govuk-!-margin-0" data-content-on-submit="Please wait...">Post response</button>
+                                        <button class="govuk-button govuk-!-margin-0">Post response</button>
                                     </div>
                                     <div class="govuk-grid-column-one-half alignright">
                                         <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}" class="govuk-link">Cancel</a>
@@ -192,7 +192,7 @@
                         </th:block>
                         <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                             <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
-                                  enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
+                                  enctype="multipart/form-data" novalidate="novalidate">
                                 <h2 class="govuk-heading-m">Respond to query</h2>
                                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
                                     <label class="govuk-label" for="response-2">
@@ -243,7 +243,7 @@
                                 <input type="hidden" id="action-2" value="postResponse">
                                 <div class="govuk-grid-row">
                                     <div class="govuk-grid-column-one-half">
-                                        <button class="govuk-button govuk-!-margin-0" data-content-on-submit="Please wait...">Post response</button>
+                                        <button class="govuk-button govuk-!-margin-0">Post response</button>
                                     </div>
                                     <div class="govuk-grid-column-one-half alignright">
                                         <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}" class="govuk-link">Cancel</a>
@@ -285,7 +285,7 @@
                         </th:block>
                         <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                             <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
-                                  enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
+                                  enctype="multipart/form-data" novalidate="novalidate">
                                 <h2 class="govuk-heading-m">Respond to query</h2>
                                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('response')}? 'govuk-form-group--error'">
                                     <label class="govuk-label" for="response-3">
@@ -336,7 +336,7 @@
                                 <input type="hidden" id="action-3" value="postResponse">
                                 <div class="govuk-grid-row">
                                     <div class="govuk-grid-column-one-half">
-                                        <button class="govuk-button govuk-!-margin-0" data-content-on-submit="Please wait...">Post response</button>
+                                        <button class="govuk-button govuk-!-margin-0">Post response</button>
                                     </div>
                                     <div class="govuk-grid-column-one-half alignright">
                                         <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}" class="govuk-link">Cancel</a>

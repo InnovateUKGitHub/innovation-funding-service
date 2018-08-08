@@ -34,8 +34,6 @@
                         <a id="post-new-note" th:href="@{{baseUrl}/new-note(baseUrl=${baseUrl})}" class="govuk-button">Create a new note</a>
                     </div>
                 </div>
-
-
                 <ul>
                     <li th:each="note : ${model.getNotes()}">
                         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
@@ -63,7 +61,7 @@
                         <th:block th:if="${(model.noteId != null) and (note.id == model.noteId)}" th:with="baseUrl=@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl}, noteId=${model.noteId})}">
                             <h2 class="govuk-heading-m">Add your comment</h2>
                             <form class="govuk-!-margin-top-6" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}"
-                                  method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
+                                  method="post" enctype="multipart/form-data" novalidate="novalidate">
                                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('comment')} ? 'govuk-form-group--error'">
                                     <label class="govuk-label" for="comment">
                                         Comment
@@ -90,6 +88,7 @@
                                         </div>
                                     </div>
                                 </div>
+<<<<<<< HEAD
                                 <div class="upload-section">
                                     <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
                                         <h3 class="govuk-heading-s">Supporting documentation</h3>
@@ -113,7 +112,7 @@
                                 <input type="hidden" id="action" value="postComment">
                                 <div class="govuk-grid-row govuk-!-margin-top-6">
                                     <div class="govuk-grid-column-one-half">
-                                        <button class="govuk-button govuk-!-margin-0" data-content-on-submit="Please wait...">Save comment</button>
+                                        <button class="govuk-button govuk-!-margin-0">Save comment</button>
                                         <a class="button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
                                     </div>
                                 </div>
