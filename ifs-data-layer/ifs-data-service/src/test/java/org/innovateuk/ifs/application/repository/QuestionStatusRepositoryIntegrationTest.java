@@ -54,7 +54,7 @@ public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryInteg
     @Test
     public void findByApplicationIdAndAssigneeOrganisationId() {
         List<QuestionStatus> questionStatuses = repository.findByApplicationId(applicationId);
-        assertEquals(34, questionStatuses.size());
+        assertEquals(35, questionStatuses.size());
     }
 
     @Test
