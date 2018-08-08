@@ -11,7 +11,7 @@ import java.util.List;
 /**
  *
  */
-public interface CompanyHouseApiService {
+public interface CompaniesHouseApiService {
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "USE_COMPANIES_HOUSE_API", description = "The System Registration user can search for Organisations via the Companies House API on behalf of non-logged in users during the registration process",

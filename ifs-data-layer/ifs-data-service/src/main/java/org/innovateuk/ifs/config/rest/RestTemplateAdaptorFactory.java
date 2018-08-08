@@ -37,8 +37,8 @@ public class RestTemplateAdaptorFactory {
     }
 
     @Bean(autowire = Autowire.BY_TYPE)
-    @Qualifier("companyhouse_adaptor")
-    public AbstractRestTemplateAdaptor companyHouseAdaptor() {
+    @Qualifier("companieshouse_adaptor")
+    public AbstractRestTemplateAdaptor companiesHouseAdaptor() {
         return new AbstractRestTemplateAdaptor() {
             @Override
             public HttpHeaders getHeaders() {

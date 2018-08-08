@@ -25,10 +25,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CompanyHouseApiServiceImplTest {
+public class CompaniesHouseApiServiceImplTest {
 
 	@InjectMocks
-	private CompanyHouseApiServiceImpl service;
+	private CompaniesHouseApiServiceImpl service;
 	@Mock
 	private AbstractRestTemplateAdaptor adapter;
 

@@ -35,9 +35,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  */
 @Service
 @ConditionalOnProperty(name = "ifs.data.companies-house.lookup.enabled", havingValue = "", matchIfMissing = true)
-public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
+public class CompaniesHouseApiServiceImpl implements CompaniesHouseApiService {
 
-    private static final Log LOG = LogFactory.getLog(CompanyHouseApiServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(CompaniesHouseApiServiceImpl.class);
 
     @Value("${ifs.data.company-house.url}")
     private String companyHouseUrl = null;
@@ -51,7 +51,7 @@ public class CompanyHouseApiServiceImpl implements CompanyHouseApiService {
     private static final String ITEMS_PER_PAGE_KEY = "items_per_page";
 
     @Autowired
-    @Qualifier("companyhouse_adaptor")
+    @Qualifier("companieshouse_adaptor")
     private AbstractRestTemplateAdaptor adaptor;
 
     @Override

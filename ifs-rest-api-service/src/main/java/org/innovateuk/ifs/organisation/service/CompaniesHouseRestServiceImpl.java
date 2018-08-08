@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.org
 public class CompaniesHouseRestServiceImpl extends BaseRestService implements CompaniesHouseRestService {
     private static final Log log = LogFactory.getLog(CompaniesHouseRestServiceImpl.class);
 
-    private String companyHouseRestUrl = "/companyhouse";
+    private String companyHouseRestUrl = "/companies-house";
 
     @Override
     public RestResult<List<OrganisationSearchResult>> searchOrganisations(String searchText){
@@ -32,10 +32,11 @@ public class CompaniesHouseRestServiceImpl extends BaseRestService implements Co
             searchTextEncoded = searchText;
         }
 
-        return getWithRestResultAnonymous(companyHouseRestUrl + "/searchCompanyHouse/" + searchTextEncoded, organisationSearchResultListType());
+        return getWithRestResultAnonymous(companyHouseRestUrl + "/search/" + searchTextEncoded, organisationSearchResultListType());
     }
+
     @Override
     public RestResult<OrganisationSearchResult> getOrganisationById(String id){
-        return getWithRestResultAnonymous(companyHouseRestUrl + "/getCompanyHouse/" + id, OrganisationSearchResult.class);
+        return getWithRestResultAnonymous(companyHouseRestUrl + "/company/" + id, OrganisationSearchResult.class);
     }
 }

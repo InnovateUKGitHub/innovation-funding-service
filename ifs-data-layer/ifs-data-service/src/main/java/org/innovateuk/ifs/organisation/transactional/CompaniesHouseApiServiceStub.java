@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
 @ConditionalOnProperty(name = "ifs.data.companies-house.lookup.enabled", havingValue = "false")
-public class CompanyHouseApiServiceStub implements CompanyHouseApiService {
+public class CompaniesHouseApiServiceStub implements CompaniesHouseApiService {
 
     @Override
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
