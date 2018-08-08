@@ -46,8 +46,8 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvite> implements ApplicationInviteService {
 
-    private String newEmailField = "applicants[%s].email";
-    private String editEmailField = "stagedInvite.email";
+    private static final String NEW_EMAIL_FIELD = "applicants[%s].email";
+    private static final String EDIT_EMAIL_FIELD = "stagedInvite.email";
 
     enum Notifications {
         INVITE_COLLABORATOR
@@ -104,7 +104,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Override
     @Transactional
     public ServiceResult<Void> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
-        String errorField = applicationId.isPresent() ? editEmailField  : newEmailField;
+        String errorField = applicationId.isPresent() ? EDIT_EMAIL_FIELD  : NEW_EMAIL_FIELD;
         return validateInviteOrganisationResource(inviteOrganisationResource).andOnSuccess(() ->
                 validateUniqueEmails(inviteOrganisationResource.getInviteResources(), errorField)).andOnSuccess(() ->
                 findOrAssembleInviteOrganisationFromResource(inviteOrganisationResource, applicationId).andOnSuccess(inviteOrganisation -> {
@@ -131,7 +131,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Override
     @Transactional
     public ServiceResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources) {
-        return validateUniqueEmails(inviteResources, editEmailField).andOnSuccess(() -> {
+        return validateUniqueEmails(inviteResources, EDIT_EMAIL_FIELD).andOnSuccess(() -> {
             List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
             applicationInviteRepository.save(invites);
             return applicationInviteNotificationService.inviteCollaborators(invites);
