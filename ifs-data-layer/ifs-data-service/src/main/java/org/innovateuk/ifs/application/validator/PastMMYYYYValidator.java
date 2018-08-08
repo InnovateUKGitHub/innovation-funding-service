@@ -35,6 +35,8 @@ public class PastMMYYYYValidator extends BaseValidator {
         } else {
             try {
                 TemporalAccessor date = formatter.parse(responseValue); // This does not throw parse exceptions for invalid months.
+                date.get(MONTH_OF_YEAR); // This throws if it has an invalid month.
+
                 TemporalAccessor now = TimeZoneUtil.toUkTimeZone(ZonedDateTime.now());
                 if (date.get(YEAR) > now.get(YEAR) ||
                         (date.get(YEAR) == now.get(YEAR) && date.get(MONTH_OF_YEAR) > now.get(MONTH_OF_YEAR))) {
