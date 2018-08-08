@@ -146,7 +146,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
                                      @PathVariable("applicationId") long applicationId,
                                      @PathVariable("organisationId") long organisationId,
                                      UserResource loggedInUser,
-                                     @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
+                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
 
         return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
             List<Long> existingApplicantIds = teamManagementService.getInviteIds(applicationId, organisationId);
