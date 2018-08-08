@@ -810,6 +810,7 @@ IFS.core.formValidation = (function () {
 
       jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', false)
       jQuery(window).trigger('updateWysiwygPosition')
+      IFS.core.sortingErrors.sortList()
     },
     setValid: function (field, message, displayValidationMessages) {
       var validShowMessageValue = jQuery.inArray(displayValidationMessages, s.displaySettings) !== -1
