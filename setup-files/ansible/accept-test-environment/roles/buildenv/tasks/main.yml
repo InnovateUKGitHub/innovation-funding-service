@@ -1,0 +1,4 @@
+- name: build and deploy
+  become: true
+  become_user: devops
+  raw: cd /home/devops/innovation-funding-service/ && ./gradlew clean build deploy wait syncShib -Pinitialise=true -x test

@@ -9,5 +9,5 @@
     - andrewrothstein.openshift-origin-client-tools
     - mysql-cli
     - prebuild
-    - build
+    - buildenv
     - test

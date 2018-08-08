@@ -32,7 +32,7 @@ function clearDownFileRepository() {
     echo "***********Deleting any uploaded files***************"
     echo "storedFileFolder:   ${storedFileFolder}"
 
-    DATA_SERVICE_POD=$(oc get pods | grep data-service | awk '{ print $1 }')
+    DATA_SERVICE_POD=$(oc get pods | grep ^data-service | awk '{ print $1 }')
 
     oc rsh ${DATA_SERVICE_POD} rm -rf ${storedFileFolder}
 
@@ -52,7 +52,7 @@ function clearDownFileRepository() {
 function addTestFiles() {
     section "=> RESETTING FILE STORAGE STATE"
 
-    DATA_SERVICE_POD=$(oc get pods | grep data-service | awk '{ print $1 }')
+    DATA_SERVICE_POD=$(oc get pods | grep ^data-service | awk '{ print $1 }')
 
     oc rsh ${DATA_SERVICE_POD} apt-get update
     oc rsh ${DATA_SERVICE_POD} apt-get install -yq rsync mysql-client

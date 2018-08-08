@@ -1,4 +1,4 @@
-FROM ubuntu:17.04
+FROM ubuntu:18.04
 
 RUN apt-get update && \
     apt-get install -y mysql-client && \
@@ -28,4 +28,3 @@ COPY ./ ./
 
 CMD ["./os_run_tests.sh", "-q"]
 #CMD ["sleep", "10000000000000"]
-
