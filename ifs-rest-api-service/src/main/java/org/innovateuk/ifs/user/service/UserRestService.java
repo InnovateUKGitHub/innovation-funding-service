@@ -53,13 +53,13 @@ public interface UserRestService {
     RestResult<Void> resetPassword(String hash, String password);
 
     RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,
-                                                                                 String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId,
+                                                                                 String phoneNumber, Long organisationId,
                                                                                  Long competitionId, Boolean allowMarketingEmails);
 
     RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
-                                                                String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId, Boolean allowMarketingEmails);
+                                                                String phoneNumber, Long organisationId, Boolean allowMarketingEmails);
 
-    RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability, boolean allowMarketingEmails);
+    RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, boolean allowMarketingEmails);
 
     RestResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource internalUserRegistrationResource);
 

@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -154,8 +155,10 @@ public class MilestonesSectionUpdater extends AbstractSectionUpdater implements 
             }
         }
 
+        String fieldValidationError = milestone.getType().getMilestoneDescription();
+
         if (!competitionSetupMilestoneService.isMilestoneDateValid(day, month, year)) {
-            return asList(fieldError(fieldName, fieldName, "error.milestone.invalid"));
+            return singletonList(fieldError(fieldName, fieldName, "error.milestone.invalid", fieldValidationError));
         } else {
             milestone.setDate(TimeZoneUtil.fromUkTimeZone(year, month, day, hour));
         }
@@ -168,7 +171,7 @@ public class MilestonesSectionUpdater extends AbstractSectionUpdater implements 
     }
 
     private List<Error> makeErrorList() {
-        return asList(fieldError("", null, "error.milestone.autosave.unable"));
+        return singletonList(fieldError("", null, "error.milestone.autosave.unable"));
     }
 
     private String getMilestoneTypeFromFieldName(String fieldName) {

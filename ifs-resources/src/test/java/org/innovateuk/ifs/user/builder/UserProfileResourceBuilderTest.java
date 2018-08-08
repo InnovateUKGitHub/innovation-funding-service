@@ -1,17 +1,14 @@
 package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Title;
+import org.innovateuk.ifs.user.resource.UserProfileResource;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
-import static org.innovateuk.ifs.user.resource.Disability.NO;
-import static org.innovateuk.ifs.user.resource.Disability.YES;
-import static org.innovateuk.ifs.user.resource.Gender.*;
 import static org.innovateuk.ifs.user.resource.Title.Miss;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.junit.Assert.assertEquals;
@@ -25,9 +22,6 @@ public class UserProfileResourceBuilderTest {
         String expectedFirstName = "First";
         String expectedLastName = "Last";
         String expectedPhoneNumber = "01234 567890";
-        Gender expectedGender = NOT_STATED;
-        Disability expectedDisability = NO;
-        EthnicityResource expectedEthnicity = newEthnicityResource().build();
         AddressResource expectedAddress = newAddressResource().build();
         String expectedEmail = "tom@poly.io";
 
@@ -37,9 +31,6 @@ public class UserProfileResourceBuilderTest {
                 .withFirstName(expectedFirstName)
                 .withLastName(expectedLastName)
                 .withPhoneNumber(expectedPhoneNumber)
-                .withGender(expectedGender)
-                .withDisability(expectedDisability)
-                .withEthnicity(expectedEthnicity)
                 .withAddress(expectedAddress)
                 .withEmail(expectedEmail)
                 .build();
@@ -49,9 +40,6 @@ public class UserProfileResourceBuilderTest {
         assertEquals(expectedFirstName, userRegistrationResource.getFirstName());
         assertEquals(expectedLastName, userRegistrationResource.getLastName());
         assertEquals(expectedPhoneNumber, userRegistrationResource.getPhoneNumber());
-        assertEquals(expectedGender, userRegistrationResource.getGender());
-        assertEquals(expectedDisability, userRegistrationResource.getDisability());
-        assertEquals(expectedEthnicity, userRegistrationResource.getEthnicity());
         assertEquals(expectedAddress, userRegistrationResource.getAddress());
         assertEquals(expectedEmail, userRegistrationResource.getEmail());
     }
@@ -63,9 +51,6 @@ public class UserProfileResourceBuilderTest {
         String[] expectedFirstNames = {"James", "Sarah"};
         String[] expectedLastNames = {"Smith", "Smythe"};
         String[] expectedPhoneNumbers = {"01234 567890", "02345 678901"};
-        Gender[] expectedGenders = {MALE, FEMALE};
-        Disability[] expectedDisabilities = {YES, NO};
-        EthnicityResource[] expectedEthnicities = newEthnicityResource().buildArray(2, EthnicityResource.class);
         AddressResource[] expectedAddresses = newAddressResource().buildArray(2, AddressResource.class);
         String[] expectedEmails = {"tom@poly.io", "geoff@poly.io"};
 
@@ -75,9 +60,6 @@ public class UserProfileResourceBuilderTest {
                 .withFirstName(expectedFirstNames)
                 .withLastName(expectedLastNames)
                 .withPhoneNumber(expectedPhoneNumbers)
-                .withGender(expectedGenders)
-                .withDisability(expectedDisabilities)
-                .withEthnicity(expectedEthnicities)
                 .withAddress(expectedAddresses)
                 .withEmail(expectedEmails)
                 .build(2);
@@ -88,9 +70,6 @@ public class UserProfileResourceBuilderTest {
         assertEquals(expectedFirstNames[0], first.getFirstName());
         assertEquals(expectedLastNames[0], first.getLastName());
         assertEquals(expectedPhoneNumbers[0], first.getPhoneNumber());
-        assertEquals(expectedGenders[0], first.getGender());
-        assertEquals(expectedDisabilities[0], first.getDisability());
-        assertEquals(expectedEthnicities[0], first.getEthnicity());
         assertEquals(expectedAddresses[0], first.getAddress());
         assertEquals(expectedEmails[0], first.getEmail());
 
@@ -100,9 +79,6 @@ public class UserProfileResourceBuilderTest {
         assertEquals(expectedFirstNames[1], second.getFirstName());
         assertEquals(expectedLastNames[1], second.getLastName());
         assertEquals(expectedPhoneNumbers[1], second.getPhoneNumber());
-        assertEquals(expectedGenders[1], second.getGender());
-        assertEquals(expectedDisabilities[1], second.getDisability());
-        assertEquals(expectedEthnicities[1], second.getEthnicity());
         assertEquals(expectedAddresses[1], second.getAddress());
         assertEquals(expectedEmails[1], second.getEmail());
     }

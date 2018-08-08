@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.Affiliation;
-import org.innovateuk.ifs.user.domain.Ethnicity;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -141,14 +140,6 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
     private User createUserExpectations(Long userId, Profile profile) {
         return createLambdaMatcher(user -> {
             assertEquals(userId, user.getId());
-            assertEquals(profile, user.getProfileId());
-        });
-    }
-
-    private User createUserExpectations(Long userId, Ethnicity ethnicity, Profile profile) {
-        return createLambdaMatcher(user -> {
-            assertEquals(userId, user.getId());
-            assertEquals(ethnicity, user.getEthnicity());
             assertEquals(profile, user.getProfileId());
         });
     }
