@@ -39,7 +39,7 @@
             method="post"
             novalidate="novalidate">
         <div class="govuk-form-group" th:classappend="${#fields.hasErrors('durationInMonths')} ? 'govuk-form-group--error'" >
-          <label class="govuk-label" for="durationInMonths">
+          <label class="govuk-label govuk-label--s" for="durationInMonths">
             Duration
           </label>
           <th:block th:if="${#fields.hasErrors('durationInMonths')}">
@@ -56,7 +56,7 @@
                  data-prevent-input-regex="[^0-9]"
                  th:errorclass="govuk-input--error"
                  th:field="*{durationInMonths}" />
-          <span>months</span>
+          <span class="govuk-body">months</span>
         </div>
         <button type="submit" class="govuk-button">Save and return to finances</button>
       </form>

@@ -80,8 +80,7 @@ table {
   &:hover,
   &:focus {
     background-color: transparent;
-    color: #000;
-    text-decoration: none;
+    color: $govuk-link-hover-colour;
   }
 
   &.disabled,
@@ -92,8 +91,7 @@ table {
     &:hover,
     &:focus {
       background-color: transparent;
-      color: $govuk-secondary-text-colour;
-      text-decoration: none;
+      color: $govuk-link-hover-colour;
     }
   }
 
@@ -105,8 +103,7 @@ table {
     &:hover,
     &:focus {
       background-color: transparent;
-      color: #000;
-      text-decoration: none;
+      color: $govuk-link-hover-colour;
     }
   }
 
