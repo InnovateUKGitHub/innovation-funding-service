@@ -18,7 +18,7 @@
                        th:field="*{addressForm.postcodeInput}"
                        th:classappend="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch} ? 'govuk-input--error'"
                        type="text" />
-                <button type="submit" id="postcode-lookup" class="govuk-button govuk-!-margin-top-0" name="search-address">Find UK address</button>
+                <button type="submit" id="postcode-lookup" class="govuk-button govuk-!-margin-0" name="search-address">Find UK address</button>
                 <div th:if='${form.addressForm.postcodeInput != ""} and ${#lists.isEmpty(form.addressForm.postcodeOptions)}'>No results were found</div>
             </div>
 
@@ -38,7 +38,7 @@
                 </select>
                 <button type="submit" class="govuk-button govuk-!-margin-0" name="select-address">Use selected address</button>
             </div>
-            <button type="submit" class="button-clear" name="manual-address">Enter address manually</button>
+            <button type="submit" class="button-clear govuk-!-margin-top-6" name="manual-address">Enter address manually</button>
         </fieldset>
         <fieldset id="address-details" class="govuk-fieldset govuk-!-margin-top-6" th:if="${form.addressForm.selectedPostcodeIndex != null or form.addressForm.manualAddress}">
             <input type="hidden" th:field="*{addressForm.manualAddress}" />
