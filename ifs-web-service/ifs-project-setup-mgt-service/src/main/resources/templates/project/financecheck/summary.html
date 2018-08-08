@@ -30,7 +30,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-m">Project finances</h2>
-                <dl class="standard-definition-list">
+                <dl class="standard-definition-list govuk-!-margin-bottom-0">
                     <dt>Total project cost:</dt>
                     <dd>&pound;<th:block
                         th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalProjectCost,1,'DEFAULT')}"/>
@@ -46,12 +46,12 @@
                     <dt>Total percentage grant:</dt>
                     <dd th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalPercentageGrant,1,'NONE')+'%'}"></dd>
                 </dl>
-                <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-link">View
+                <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-body govuk-link">View
                     finances</a>
             </div>
             <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-m">Project details</h2>
-                <dl class="standard-definition-list">
+                <dl class="standard-definition-list govuk-!-margin-bottom-0">
                     <dt>Project title:</dt>
                     <dd th:text="${model.financeCheckSummaryResource.projectName}"></dd>
                     <dt>Start date:</dt>
@@ -61,7 +61,7 @@
                 </dl>
 
                 <th:block th:unless="${model.financeCheckSummaryResource.spendProfilesGenerated}">
-                    <a th:href="@{/competition/{competitionId}/project/{projectId}/duration(competitionId=${model.financeCheckSummaryResource.competitionId},projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-link">Edit</a>
+                    <a th:href="@{/competition/{competitionId}/project/{projectId}/duration(competitionId=${model.financeCheckSummaryResource.competitionId},projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-body govuk-link">Edit</a>
                 </th:block>
             </div>
         </div>
