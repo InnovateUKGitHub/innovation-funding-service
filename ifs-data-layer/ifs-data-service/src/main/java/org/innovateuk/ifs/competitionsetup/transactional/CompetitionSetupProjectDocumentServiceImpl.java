@@ -15,10 +15,11 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_SELECT_AT_LEAST_ONE_FILE_TYPE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * Service for operations around the usage and processing of Project Document
+ * Service for operations around the usage and processing of Project Documents
  */
 @Service
 public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactionalService implements CompetitionSetupProjectDocumentService {
@@ -43,7 +44,8 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     }
 
     private ServiceResult<Void> validateProjectDocument(ProjectDocumentResource projectDocumentResource) {
-        return projectDocumentResource.getFileTypes() != null && projectDocumentResource.getFileTypes().size() > 0 ? serviceSuccess() : serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
+        return projectDocumentResource.getFileTypes() != null && projectDocumentResource.getFileTypes().size() > 0 ?
+                serviceSuccess() : serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE);
     }
 
     @Override
@@ -61,9 +63,9 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
     }
 
     private ServiceResult<Void> validateProjectDocument(List<ProjectDocumentResource> projectDocumentResources) {
-        return projectDocumentResources
-                .stream()
-                .anyMatch(projectDocumentResource -> projectDocumentResource.getFileTypes() == null || projectDocumentResource.getFileTypes().size() <= 0) ?
+
+        return simpleAnyMatch(projectDocumentResources,
+                projectDocumentResource -> projectDocumentResource.getFileTypes() == null || projectDocumentResource.getFileTypes().size() <= 0) ?
                 serviceFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE) : serviceSuccess();
     }
 
