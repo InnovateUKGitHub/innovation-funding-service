@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.finance.viewmodel;
 
 import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
