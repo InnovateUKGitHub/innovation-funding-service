@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.invite.domain;
 
-import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 
 import java.util.Map;
