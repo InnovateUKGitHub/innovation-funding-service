@@ -3,7 +3,6 @@ package org.innovateuk.ifs.finance.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.util.List;

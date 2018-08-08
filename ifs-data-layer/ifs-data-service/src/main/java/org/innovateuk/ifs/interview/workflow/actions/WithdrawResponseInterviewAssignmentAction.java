@@ -3,7 +3,6 @@ package org.innovateuk.ifs.interview.workflow.actions;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentResponseOutcome;
-import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentResponseOutcomeRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentEvent;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;

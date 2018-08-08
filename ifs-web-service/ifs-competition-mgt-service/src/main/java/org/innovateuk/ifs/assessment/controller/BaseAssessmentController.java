@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import org.innovateuk.ifs.application.resource.AssessmentCountSummaryPageResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;

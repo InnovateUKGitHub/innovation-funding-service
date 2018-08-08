@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.survey;
 
 import org.innovateuk.ifs.identity.IdentifiableEnum;
-import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.stream.Stream;
 
