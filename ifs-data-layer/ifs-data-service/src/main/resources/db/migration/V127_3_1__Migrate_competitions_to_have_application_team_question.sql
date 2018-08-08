@@ -1,5 +1,19 @@
--- Note: Not bumping the priority of all the existing questions in the Project details section to to make space for the
--- Application team question as it appears a sufficient gap for priority=1 in the sequence already exists
+-- Bumping the priority of all the existing questions to make space for the Application team question
+UPDATE question
+SET priority = priority + 1
+WHERE competition_id IN (
+  SELECT cid
+  FROM (
+         SELECT c.id cid
+         FROM competition c
+           LEFT JOIN question q ON c.id = q.competition_id AND q.question_setup_type = 'APPLICATION_TEAM'
+         WHERE q.id IS NULL) cids)
+      AND (
+        section_id IN (SELECT s.id
+                       FROM section s
+                       WHERE s.section_type = 'GENERAL' AND s.name IN ('Project details', 'Application questions'))
+        OR short_name = 'Other funding'
+      );
 
 -- Create an Application Team question in the Project details section for all competitions that don't have one
 INSERT INTO question (competition_id, section_id, assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name, priority, question_number, assessor_maximum_score, question_type, question_setup_type)
