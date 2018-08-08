@@ -16,6 +16,9 @@
         <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
     </div>
 
+    <p th:if="${isLeadApplicant}" class="extra-margin">This organisation will lead the application.</p>
+    <p th:unless="${isLeadApplicant}" class="extra-margin">This is the organisation that you will join the application with.</p>
+
     <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, showOrgType=true" />
 
     <form method="post" th:action="@{/organisation/create/save-organisation}">

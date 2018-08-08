@@ -10,7 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your organisation',subTitle=${!model.collaboratorJourney ? 'Start new application' : 'Join application'},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.canSelectOrganisation() ? 'Select your organisation' : 'Your organisation'},subTitle=${!model.collaboratorJourney ? 'Start new application' : 'Join application'},size='heading-xlarge'" />
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
