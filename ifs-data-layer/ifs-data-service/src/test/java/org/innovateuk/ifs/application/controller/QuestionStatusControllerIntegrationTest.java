@@ -115,13 +115,13 @@ public class QuestionStatusControllerIntegrationTest extends BaseControllerInteg
         controller.markAsComplete(questionId, applicationId, userId);
         markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
         assertNotNull(markedAsComplete);
-        assertEquals(8, markedAsComplete.size());
+        assertEquals(9, markedAsComplete.size());
 
         // Mark section as incomplete again.
         controller.markAsInComplete(questionId, applicationId, userId);
         markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
         assertNotNull(markedAsComplete);
-        assertEquals(7, markedAsComplete.size());
+        assertEquals(8, markedAsComplete.size());
     }
 
     @Test
