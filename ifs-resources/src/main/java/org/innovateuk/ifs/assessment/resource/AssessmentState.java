@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.resource;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -11,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.google.common.collect.Sets.immutableEnumSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 public enum AssessmentState implements ProcessState, IdentifiableEnum<AssessmentState> {
@@ -43,7 +43,7 @@ public enum AssessmentState implements ProcessState, IdentifiableEnum<Assessment
         this.backingState = backingState;
     }
 
-    public static final ImmutableSet<AssessmentState> acceptedAssessmentStates = Sets.immutableEnumSet(
+    public static final ImmutableSet<AssessmentState> acceptedAssessmentStates = immutableEnumSet(
             ACCEPTED,
             OPEN,
             READY_TO_SUBMIT,
