@@ -37,7 +37,7 @@
               th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
                 <h2 class="govuk-heading-m">Post a new query</h2>
                 <div class="govuk-form-group govuk-!-width-one-half" th:classappend="${#fields.hasErrors('queryTitle')}? 'govuk-form-group--error'">
-                    <label class="govuk-label" for="queryTitle">
+                    <label class="govuk-label govuk-label--s" for="queryTitle">
                         Title
                     </label>
                     <th:block th:if="${#fields.hasErrors('queryTitle')}">
@@ -55,7 +55,7 @@
                                     data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
                 </div>
                 <div class="govuk-form-group govuk-!-width-one-half" th:classappend="${#fields.hasErrors('section')}? 'govuk-form-group--error'">
-                    <label class="govuk-label" for="section">
+                    <label class="govuk-label govuk-label--s" for="section">
                         Section
                     </label>
                     <th:block th:if="${#fields.hasErrors('section')}">
@@ -85,7 +85,7 @@
                     </select>
                 </div>
                 <div class="govuk-form-group govuk-!-width-one-half" th:classappend="${#fields.hasErrors('query')}? 'govuk-form-group--error'">
-                    <label class="govuk-label" for="query">
+                    <label class="govuk-label govuk-label--s" for="query">
                         Query
                     </label>
                     <th:block th:if="${#fields.hasErrors('query')}">
@@ -137,7 +137,7 @@
                         <button type="submit" id="post-query" data-content-on-submit="Please wait..." class="govuk-button govuk-!-margin-0">Post query</button>
                     </div>
                     <div class="govuk-grid-column-one-half alignright">
-                        <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-link">Cancel</a>
+                        <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}" class="govuk-body govuk-link">Cancel</a>
                     </div>
                 </div>
         </form>

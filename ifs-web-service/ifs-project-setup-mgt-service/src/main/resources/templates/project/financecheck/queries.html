@@ -77,8 +77,8 @@
                 </h2>
                 <div class="collapsible-content" th:classappend="${'query ' + querySection+'-section'}">
                     <h3 class="govuk-!-margin-0">
-                        <span class="govuk-heading-s">Section: </span>
-                        <span th:text="${#strings.capitalize(querySection)}">Section title</span>
+                        <span class="govuk-heading-s govuk-!-display-inline">Section: </span>
+                        <span th:text="${#strings.capitalize(querySection)}" class="govuk-body">Section title</span>
                     </h3>
                     <th:block th:each="(post, iteration : ${query.viewModelPosts})">
                         <div th:class="${iteration.index == 0} ? '' : 'panel'">
@@ -99,7 +99,7 @@
                         </div>
                     </th:block>
                     <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                        <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="govuk-!-margin-top-6 govuk-button">Respond</a>
+                        <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="govuk-!-margin-top-6 govuk-button">Respond</a><br />
                         <a class="button-clear govuk-!-padding-left-0"
                            data-js-modal="modal-confirm-mark-resolved"
                            th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}"
