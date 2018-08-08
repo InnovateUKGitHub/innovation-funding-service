@@ -484,4 +484,3 @@ the user should not see the error any more
 the user should see the group of errors
     the user should see a summary error    Please enter guidance for the applicant.
     the user should see a summary error    Please enter a title.
-#    the user should see a summary error    You need to select at least one file type.
