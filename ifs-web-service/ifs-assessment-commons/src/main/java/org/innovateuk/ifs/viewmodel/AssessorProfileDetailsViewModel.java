@@ -12,7 +12,7 @@ public class AssessorProfileDetailsViewModel {
     private AddressResource address;
     private String phoneNumber;
     private String email;
-    private BusinessType businessType;
+    private String businessType;
 
     public AssessorProfileDetailsViewModel(UserResource user, ProfileResource profile) {
         this.assessorId = user.getId();
@@ -21,7 +21,7 @@ public class AssessorProfileDetailsViewModel {
         this.address = profile.getAddress();
         this.phoneNumber = user.getPhoneNumber();
         this.email = user.getEmail();
-        this.businessType = profile.getBusinessType();
+        this.businessType = profile.getBusinessType().getDisplayName();
     }
 
     public long getAssessorId() {
@@ -48,7 +48,7 @@ public class AssessorProfileDetailsViewModel {
         return email;
     }
 
-    public BusinessType getBusinessType() {
+    public String getBusinessType() {
         return businessType;
     }
 }

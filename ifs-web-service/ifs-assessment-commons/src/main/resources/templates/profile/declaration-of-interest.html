@@ -43,6 +43,9 @@
 
         <dt>Email address</dt>
         <dd th:text="${model.assessorProfileDetailsViewModel.email}" />
+
+        <dt>Assessor type</dt>
+        <dd th:text="${model.assessorProfileDetailsViewModel.businessType}" />
     </dl>
 
     <div class="form-footer" th:if="${!model.compAdminUser}">
