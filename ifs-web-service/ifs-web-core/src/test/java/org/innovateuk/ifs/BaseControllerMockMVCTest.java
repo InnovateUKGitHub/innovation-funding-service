@@ -10,7 +10,6 @@ import org.innovateuk.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.formatter.RejectionReasonFormatter;
-import org.innovateuk.ifs.user.formatter.EthnicityFormatter;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -115,7 +114,6 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
         FormattingConversionService formattingConversionService = new DefaultFormattingConversionService();
         formattingConversionService.addFormatter(new RejectionReasonFormatter());
-        formattingConversionService.addFormatter(new EthnicityFormatter());
 
         MockMvc mockMvc = MockMvcBuilders
                 .standaloneSetup(controller)
