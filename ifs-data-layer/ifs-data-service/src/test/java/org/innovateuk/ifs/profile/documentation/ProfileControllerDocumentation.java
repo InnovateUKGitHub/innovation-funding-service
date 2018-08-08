@@ -122,7 +122,6 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("id").description("Identifier of the user associated with the profile being requested")
                         ),
                         responseFields(userProfileResourceFields)
-                                .andWithPrefix("ethnicity.", EthnicityResourceDocs.ethnicityResourceFields)
                                 .andWithPrefix("address.", AddressDocs.addressResourceFields)
                 ));
     }
@@ -143,7 +142,6 @@ public class ProfileControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("id").description("Identifier of the user to update the profile for")
                         ),
                         requestFields(userProfileResourceFields)
-                                .andWithPrefix("ethnicity.", EthnicityResourceDocs.ethnicityResourceFields)
                                 .andWithPrefix("address.", AddressDocs.addressResourceFields)
                 ));
     }

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.controller.ValidationHandlerMethodArgumentResolver;
 import org.innovateuk.ifs.interceptors.GoogleAnalyticsHandlerInterceptor;
 import org.innovateuk.ifs.interceptors.MenuLinksHandlerInterceptor;
 import org.innovateuk.ifs.invite.formatter.RejectionReasonFormatter;
-import org.innovateuk.ifs.user.formatter.EthnicityFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -64,7 +63,6 @@ public class IFSWebConfiguration implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(new RejectionReasonFormatter());
-        registry.addFormatter(new EthnicityFormatter());
     }
 
     public IfSThymeleafDialect getIfsThymeleafDialect() {

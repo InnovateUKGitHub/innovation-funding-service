@@ -6,7 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.Title;
+import org.innovateuk.ifs.user.resource.UserStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -48,16 +50,6 @@ public class User extends AuditableEntity implements Serializable {
     @ElementCollection(targetClass = Role.class)
     @Column(name = "role_id", nullable = false)
     private Set<Role> roles = new HashSet<>();
-
-    @Enumerated(STRING)
-    private Gender gender;
-
-    @Enumerated(STRING)
-    private Disability disability;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="ethnicity_id", referencedColumnName = "id")
-    private Ethnicity ethnicity;
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Affiliation> affiliations = new ArrayList<>();
@@ -208,30 +200,6 @@ public class User extends AuditableEntity implements Serializable {
 
     public void setStatus(UserStatus status) {
         this.status = status;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public Disability getDisability() {
-        return disability;
-    }
-
-    public void setDisability(Disability disability) {
-        this.disability = disability;
-    }
-
-    public Ethnicity getEthnicity() {
-        return ethnicity;
-    }
-
-    public void setEthnicity(Ethnicity ethnicity) {
-        this.ethnicity = ethnicity;
     }
 
     public Long getProfileId() {

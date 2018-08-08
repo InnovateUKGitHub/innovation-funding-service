@@ -27,7 +27,6 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
@@ -163,16 +162,12 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
         Long userId = user.getId();
 
         user.setPhoneNumber("12345678");
-        user.setDisability(Disability.NO);
         userRepository.save(user);
 
         UserProfileResource saveResponse = controller.getUserProfile(userId).getSuccess();
         assertEquals("12345678", saveResponse.getPhoneNumber());
-        assertEquals(Disability.NO, saveResponse.getDisability());
 
         UserProfileResource profileDetails = newUserProfileResource()
-                .withEthnicity(newEthnicityResource().build())
-                .withDisability(Disability.YES)
                 .withPhoneNumber("87654321")
                 .build();
 
@@ -181,7 +176,6 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
 
         UserProfileResource updateResponse = controller.getUserProfile(userId).getSuccess();
         assertEquals("87654321", updateResponse.getPhoneNumber());
-        assertEquals(Disability.YES, updateResponse.getDisability());
     }
 
     @Test

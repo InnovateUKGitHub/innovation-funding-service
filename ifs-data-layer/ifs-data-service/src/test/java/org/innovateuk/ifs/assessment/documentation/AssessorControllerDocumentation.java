@@ -56,7 +56,6 @@ public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<A
                                 parameterWithName("hash").description("hash of the invite being accepted")
                         ),
                         requestFields(userRegistrationResourceFields)
-                        .andWithPrefix("ethnicity.", EthnicityResourceDocs.ethnicityResourceFields)
                         .andWithPrefix("address.", AddressDocs.addressResourceFields)
                 ));
 

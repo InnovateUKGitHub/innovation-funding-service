@@ -14,7 +14,6 @@ import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -57,9 +56,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private PasswordPolicyValidator passwordPolicyValidator;
-
-    @Autowired
-    private EthnicityMapper ethnicityMapper;
 
     @Autowired
     private UserSurveyService userSurveyService;
@@ -227,9 +223,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         newUser.setEmail(userResource.getEmail());
         newUser.setTitle(userResource.getTitle());
         newUser.setPhoneNumber(userResource.getPhoneNumber());
-        newUser.setDisability(userResource.getDisability());
-        newUser.setGender(userResource.getGender());
-        newUser.setEthnicity(ethnicityMapper.mapIdToDomain(userResource.getEthnicity()));
         newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
         newUser.setRoles(new HashSet<>(userResource.getRoles()));
 
