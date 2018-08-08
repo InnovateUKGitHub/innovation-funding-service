@@ -25,7 +25,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Autowired
     private AddressRepository addressRepository;
 
-    private static final String companyHouseId = "0123456789";
+    private static final String companiesHouseId = "0123456789";
     private static final String companyName = "CompanyName1";
 
     @Before
@@ -77,7 +77,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
 
     private OrganisationResource createOrganisation(){
         OrganisationResource organisation = newOrganisationResource().
-                withName(companyName).withCompaniesHouseNumber(companyHouseId).build();
+                withName(companyName).withCompaniesHouseNumber(companiesHouseId).build();
         return controller.create(organisation).getSuccess();
     }
 
@@ -89,11 +89,11 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
 
         OrganisationResource organisationResource = createOrganisation();
 
-        assertEquals(companyHouseId, organisationResource.getCompaniesHouseNumber());
+        assertEquals(companiesHouseId, organisationResource.getCompaniesHouseNumber());
         assertEquals(companyName, organisationResource.getName());
 
         OrganisationResource org = controller.findById(organisationResource.getId()).getSuccess();
-        assertEquals(companyHouseId, org.getCompaniesHouseNumber());
+        assertEquals(companiesHouseId, org.getCompaniesHouseNumber());
         assertEquals(companyName, org.getName());
     }
 
@@ -104,18 +104,18 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         loginSystemRegistrationUser();
 
         OrganisationResource organisation = newOrganisationResource().
-                withName(companyName).withCompaniesHouseNumber(companyHouseId).
+                withName(companyName).withCompaniesHouseNumber(companiesHouseId).
                 build();
 
         OrganisationResource organisationResource = controller.create(organisation).getSuccess();
 
         flushAndClearSession();
 
-        assertEquals(companyHouseId, organisationResource.getCompaniesHouseNumber());
+        assertEquals(companiesHouseId, organisationResource.getCompaniesHouseNumber());
         assertEquals(companyName, organisationResource.getName());
 
         OrganisationResource org = controller.findById(organisationResource.getId()).getSuccess();
-        assertEquals(companyHouseId, org.getCompaniesHouseNumber());
+        assertEquals(companiesHouseId, org.getCompaniesHouseNumber());
         assertEquals(companyName, org.getName());
     }
 

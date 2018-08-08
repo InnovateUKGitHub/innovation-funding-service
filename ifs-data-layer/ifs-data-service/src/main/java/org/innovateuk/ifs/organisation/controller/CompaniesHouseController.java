@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * CompanyHouseController exposes CompanyHouse data and operations through a REST API.
+ * CompaniesHouseController exposes CompaniesHouse data and operations through a REST API.
  */
 @RestController
-@ZeroDowntime(description = "Remove /companyhouse", reference = "IFS-3195")
+@ZeroDowntime(description = "Remove /companyhouse mapping", reference = "IFS-3195")
 @RequestMapping({ "/companyhouse", "companies-house" })
 public class CompaniesHouseController {
 

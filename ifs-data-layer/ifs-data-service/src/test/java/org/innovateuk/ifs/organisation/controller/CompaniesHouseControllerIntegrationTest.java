@@ -30,14 +30,14 @@ public class CompaniesHouseControllerIntegrationTest extends BaseControllerInteg
     }
 
     @Test
-    public void testSearch_companyHouseName() {
+    public void search_companiesHouseName() {
         RestResult<List<OrganisationSearchResult>> companies = controller.search(COMPANY_NAME);
         assertTrue(companies.isSuccess());
         assertEquals(1, companies.getSuccess().size());
     }
 
     @Test
-    public void testSearch_companyHouseNumber() {
+    public void search_companiesHouseNumber() {
         RestResult<List<OrganisationSearchResult>> companies = controller.search(COMPANY_ID);
         assertTrue(companies.isSuccess());
         assertEquals(1, companies.getSuccess().size());
@@ -54,7 +54,7 @@ public class CompaniesHouseControllerIntegrationTest extends BaseControllerInteg
     }
 
     @Test
-    public void testGetCompany() {
+    public void getCompany() {
         RestResult<OrganisationSearchResult> companyResult = controller.getCompany(COMPANY_ID);
         assertTrue(companyResult.isSuccess());
         OrganisationSearchResult company = companyResult.getSuccess();
@@ -70,7 +70,7 @@ public class CompaniesHouseControllerIntegrationTest extends BaseControllerInteg
     }
 
     @Test
-    public void testGetCompany_notExists() {
+    public void getCompany_notExists() {
         RestResult<OrganisationSearchResult> company = controller.getCompany(String.valueOf(Integer.MAX_VALUE));
         assertTrue(company.isFailure());
     }

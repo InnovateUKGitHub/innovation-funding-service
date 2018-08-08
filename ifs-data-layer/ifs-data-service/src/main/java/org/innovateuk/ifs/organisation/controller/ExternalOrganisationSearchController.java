@@ -24,9 +24,7 @@ public class ExternalOrganisationSearchController {
     @Autowired
     private OrganisationService organisationService;
     @Autowired
-    private OrganisationTypeService organisationTypeService;
-    @Autowired
-    private CompaniesHouseApiService companyHouseService;
+    private CompaniesHouseApiService companiesHouseService;
 
     private static final int SEARCH_ITEMS_MAX = 10;
 
@@ -40,7 +38,7 @@ public class ExternalOrganisationSearchController {
             case BUSINESS:
             case RTO:
             case PUBLIC_SECTOR_OR_CHARITY:
-                return companyHouseService.searchOrganisations(organisationSearchText).toGetResponse();
+                return companiesHouseService.searchOrganisations(organisationSearchText).toGetResponse();
             case RESEARCH:
                 return organisationService.searchAcademic(organisationSearchText, SEARCH_ITEMS_MAX).toGetResponse();
             default:
@@ -57,7 +55,7 @@ public class ExternalOrganisationSearchController {
             case BUSINESS:
             case RTO:
             case PUBLIC_SECTOR_OR_CHARITY:
-                return companyHouseService.getOrganisationById(organisationSearchId).toGetResponse();
+                return companiesHouseService.getOrganisationById(organisationSearchId).toGetResponse();
             case RESEARCH:
                 return organisationService.getSearchOrganisation(Long.valueOf(organisationSearchId)).toGetResponse();
             default:

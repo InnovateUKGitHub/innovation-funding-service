@@ -40,7 +40,7 @@ public class CompaniesHouseApiServiceImplTest {
 	
 	@Before
 	public void setUp() {
-		service.setCompanyHouseUrl("baseurl/");
+		service.setCompaniesHouseUrl("baseurl/");
 
 		defaultSearchString  = "searchtext";
 
