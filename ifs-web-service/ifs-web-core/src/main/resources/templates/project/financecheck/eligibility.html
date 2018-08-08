@@ -194,7 +194,7 @@
             <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}" th:classappend="${summaryModel.isApproved() ? 'govuk-!-margin-top-9' : ''}">Return to finance checks</a>
         </form>
         <div class="govuk-!-margin-top-6" th:unless="${summaryModel.isExternalView()}">
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}" class="button-secondary">Queries</a>
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}" class="button-secondary govuk-!-margin-right-4">Queries</a>
             <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="button-secondary">Notes</a>
         </div>
 
