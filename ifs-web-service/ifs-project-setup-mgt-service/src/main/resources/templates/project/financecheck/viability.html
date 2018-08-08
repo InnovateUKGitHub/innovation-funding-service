@@ -70,7 +70,7 @@
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}">
 
-            <h2 class="govuk-heading-m">Credit report</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-top-6">Credit report</h2>
             <div class="govuk-form-group">
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
@@ -91,7 +91,7 @@
               <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="button-secondary">Notes</a>
           </div>
           <th:block th:unless="${model.isReadOnly()}">
-              <h2 class="govuk-heading-m">Approve viability</h2>
+              <h2 class="govuk-heading-m govuk-!-margin-top-6">Approve viability</h2>
               <p class="govuk-body">Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
               <p class="govuk-body">Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
               <div class="govuk-form-group">
