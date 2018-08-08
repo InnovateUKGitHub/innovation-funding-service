@@ -62,23 +62,23 @@ public class AssessorProfileControllerTest extends BaseControllerMockMVCTest<Ass
 
     @Spy
     @InjectMocks
-    AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
+    private AssessorProfileSkillsModelPopulator assessorProfileSkillsModelPopulator;
 
     @Spy
     @InjectMocks
-    AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
+    private AssessorProfileDeclarationModelPopulator assessorProfileDeclarationModelPopulator;
 
     @Mock
-    AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator;
+    private AssessorProfileDetailsModelPopulator assessorProfileDetailsModelPopulator;
 
     @Mock
-    ProfileRestService profileRestService;
+    private ProfileRestService profileRestService;
 
     @Mock
-    AssessorRestService assessorRestService;
+    private AssessorRestService assessorRestService;
 
     @Mock
-    AffiliationRestService affiliationRestService;
+    private AffiliationRestService affiliationRestService;
 
     @Override
     protected AssessorProfileController supplyControllerUnderTest() {

@@ -27,11 +27,11 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 /**
- * Controller to manage the Assessor Profile Skills page
+ * Controller to manage the editing of the Assessor Profile Skills page
  */
 @Controller
 @RequestMapping("/profile/skills")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileSkillsEditController.class)
+@SecuredBySpring(value = "Controller", description = "Assessors can edit their skills", securedType = AssessorProfileSkillsEditController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessorProfileSkillsEditController {
 

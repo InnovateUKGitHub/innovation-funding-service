@@ -58,6 +58,4 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
                 compAdminUser
         );
     }
-
-
 }

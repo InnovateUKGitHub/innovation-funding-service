@@ -37,7 +37,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
  */
 @Controller
 @RequestMapping("/profile/declaration")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileDeclarationEditController.class)
+@SecuredBySpring(value = "Controller", description = "Assessors can edit their own declaration of interest", securedType = AssessorProfileDeclarationEditController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessorProfileDeclarationEditController {
 
