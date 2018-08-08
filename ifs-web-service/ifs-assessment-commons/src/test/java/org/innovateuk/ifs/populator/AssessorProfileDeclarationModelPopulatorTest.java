@@ -123,7 +123,7 @@ public class AssessorProfileDeclarationModelPopulatorTest extends BaseUnitTest{
 
         assertEquals("Test Tester", assessorDetails.getName());
         assertEquals("012345", assessorDetails.getPhoneNumber());
-        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType());
+        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType().getDisplayName());
         assertEquals("test@test.com", assessorDetails.getEmail());
         assertEquals(expectedAddress, assessorDetails.getAddress());
         assertEquals(expectedAppointments, model.getAppointments());

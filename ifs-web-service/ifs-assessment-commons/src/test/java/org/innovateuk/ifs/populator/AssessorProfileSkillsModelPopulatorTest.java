@@ -97,7 +97,7 @@ public class AssessorProfileSkillsModelPopulatorTest extends BaseUnitTest{
         assertEquals("Test Tester", assessorDetails.getName());
         assertEquals("012345", assessorDetails.getPhoneNumber());
         assertEquals("A Skill", model.getSkillAreas());
-        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType());
+        assertEquals(ACADEMIC.getDisplayName(), assessorDetails.getBusinessType().getDisplayName());
         assertEquals("test@test.com", assessorDetails.getEmail());
         assertEquals(2, model.getInnovationAreas().size());
         assertEquals(expectedAddress, assessorDetails.getAddress());

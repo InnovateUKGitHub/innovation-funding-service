@@ -107,7 +107,7 @@ public class AssessorProfileSkillsModelPopulatorTest {
         assertEquals(expectedPhone, assessorDetails.getPhoneNumber());
         assertEquals(expectedSkills, viewModel.getSkillAreas());
         assertEquals(expectedAddress, assessorDetails.getAddress());
-        assertEquals(expectedBusinessType.getDisplayName(), assessorDetails.getBusinessType());
+        assertEquals(expectedBusinessType.getDisplayName(), assessorDetails.getBusinessType().getDisplayName());
         assertEquals(2, viewModel.getInnovationAreas().size());
     }
 }

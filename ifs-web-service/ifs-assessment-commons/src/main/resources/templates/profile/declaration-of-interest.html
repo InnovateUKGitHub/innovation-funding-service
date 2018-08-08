@@ -45,7 +45,7 @@
         <dd th:text="${model.assessorProfileDetailsViewModel.email}" />
 
         <dt>Assessor type</dt>
-        <dd th:text="${model.assessorProfileDetailsViewModel.businessType}" />
+        <dd th:text="${#strings.capitalize(#strings.toLowerCase(model.assessorProfileDetailsViewModel.businessType))}" />
     </dl>
 
     <div class="form-footer" th:if="${!model.compAdminUser}">
