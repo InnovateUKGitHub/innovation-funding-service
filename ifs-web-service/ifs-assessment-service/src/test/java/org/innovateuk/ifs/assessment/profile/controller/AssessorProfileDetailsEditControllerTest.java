@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileEditDetailsForm;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditDetailsModelPopulator;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.populator.AssessorProfileDetailsModelPopulator;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.UserProfileResource;

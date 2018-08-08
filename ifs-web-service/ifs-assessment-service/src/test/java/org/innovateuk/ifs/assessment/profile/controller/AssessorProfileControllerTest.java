@@ -108,6 +108,7 @@ public class AssessorProfileControllerTest extends BaseControllerMockMVCTest<Ass
         expectedInnovationAreas.put("Health and life sciences", asList("Biosciences", "Independent living and wellbeing"));
 
         ProfileResource profile = newProfileResource()
+                .withBusinessType(businessType)
                 .withInnovationAreas(innovationAreaResources)
                 .withSkillsAreas(skillAreas)
                 .withAddress(newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build())
@@ -139,7 +140,11 @@ public class AssessorProfileControllerTest extends BaseControllerMockMVCTest<Ass
     @Test
     public void getDeclaration() throws Exception {
         UserResource user = newUserResource().build();
-        ProfileResource profile = newProfileResource().build();
+        BusinessType businessType = BUSINESS;
+
+        ProfileResource profile = newProfileResource()
+                .withBusinessType(businessType)
+                .build();
         setLoggedInUser(user);
 
         String expectedPrincipalEmployer = "Big Name Corporation";
@@ -226,7 +231,11 @@ public class AssessorProfileControllerTest extends BaseControllerMockMVCTest<Ass
     @Test
     public void getDeclaration_notCompleted() throws Exception {
         UserResource user = newUserResource().build();
-        ProfileResource profile = newProfileResource().build();
+        BusinessType businessType = BUSINESS;
+
+        ProfileResource profile = newProfileResource()
+                .withBusinessType(businessType)
+                .build();
         setLoggedInUser(user);
 
         AssessorProfileDetailsViewModel assessorProfileDetailsViewModel = new AssessorProfileDetailsViewModel(user, profile);

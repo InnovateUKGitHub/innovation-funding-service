@@ -39,6 +39,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
+import static org.innovateuk.ifs.user.builder.AffiliationListResourceBuilder.newAffiliationListResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.*;
@@ -123,7 +124,18 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
         List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
         AssessorProfileResource expectedProfile = getAssessorProfile(expectedAddress, expectedInnovationAreas);
 
+        AffiliationListResource affiliationListResource = newAffiliationListResource()
+                .withAffiliationList(newAffiliationResource()
+                        .withId(null, null)
+                        .withAffiliationType(PROFESSIONAL, FAMILY_FINANCIAL)
+                        .withExists(true, true)
+                        .withUser(null, null)
+                        .build(2)
+                )
+                .build();
+
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
+        when(affiliationRestService.getUserAffiliations(anyLong())).thenReturn(restSuccess(affiliationListResource));
 
         mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}/declaration", competition.getId(), assessorId))
                 .andExpect(status().isOk())
