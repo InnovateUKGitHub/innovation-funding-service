@@ -205,7 +205,7 @@ the user accepts the invite to collaborate
     the user clicks the button/link                  jQuery=a:contains("Continue or sign in")
     the guest user inserts user email and password   ${user_name}  ${password}
     the guest user clicks the log-in button
-    the user clicks the button/link                  jQuery=a:contains("Confirm and accept invitation")
+    the user clicks the button/link                  css=.button[type="submit"]   #Save and continue
 
 the correct funding is displayed to academic user
     the user clicks the button/link   link=Your finances

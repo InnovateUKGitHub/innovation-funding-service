@@ -6,7 +6,7 @@ log in and create new application if there is not one already
     [Arguments]  ${application_name}
     Given the user logs-in in new browser  &{lead_applicant_credentials}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain  ${application_name}
-    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  ${orgType} AND  the user selects Research category  Industrial research
+    Run Keyword If    '${status}' == 'FAIL'    Run keywords  Create new application with the same user  ${application_name}  1  AND  the user selects Research category  Industrial research
 
 Login new application invite academic
     [Arguments]  ${recipient}  ${subject}  ${pattern}
@@ -82,9 +82,11 @@ Create new application with the same user
     the user navigates to the page             ${openCompetitionBusinessRTO_overview}
     the user clicks the button/link            jQuery=a:contains("Start new application")
     check if there is an existing application in progress for this competition
+    the user clicks the button/link            link=Apply with a different organisation.
     the user selects the radio button          organisationTypeId  ${orgType}
     the user clicks the button/link            jQuery = button:contains("Save and continue")
-    the user clicks the Not on company house link
+    the user clicks the button/link            jQuery=summary:contains("Enter details manually")
+    The user enters text to a text field       name=organisationName    org2
     the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
     the user clicks the button/link            jQuery = .button:contains("Find UK address")
     the user clicks the button/link            jQuery = .button:contains("Find UK address")

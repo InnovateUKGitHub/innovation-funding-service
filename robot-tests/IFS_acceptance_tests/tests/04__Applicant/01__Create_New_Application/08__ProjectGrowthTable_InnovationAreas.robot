@@ -311,7 +311,7 @@ Invite Collaborator in Application with Growth table
     Then the user reads his email and clicks the link  ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     When the user should see the element               jQuery=h2:contains("We have found an account with the invited email address")
     Then the user clicks the button/link               link=Continue or sign in
-    And the user clicks the button/link                link=Confirm and accept invitation
+    And the user clicks the button/link                css=.button[type="submit"]
 
 Non-lead can mark Organisation as complete
     [Documentation]    INFUND-8518 INFUND-8561
@@ -470,9 +470,10 @@ the user fills in the Open-All Initial details
 
 the logged in user should not be able to apply in a competition he has not right to
     [Arguments]  ${email}  ${competition}  ${applicationType}
-    log in as a different user       ${email}  ${short_password}
-    the user clicks the button/link  id=proposition-name
+    log in as a different user          ${email}  ${short_password}
+    the user clicks the button/link     id=proposition-name
     the user clicks the button/link in the paginated list  link=${competition}
-    the user clicks the button/link  link=Start new application
+    the user clicks the button/link     link=Start new application
+    the user clicks the button/link     link=Apply with a different organisation.
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")

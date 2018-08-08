@@ -63,8 +63,8 @@ Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]
     When the user clicks the button/link             link=Your project costs
-    Then the user should see the text in the page    Provide the project costs for '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}'
-    And the user should see the text in the page     '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}' Total project costs
+    Then the user should see the element        jQuery=h2:contains("Provide the project costs for 'org2'")          #text in the page    Provide the project costs for '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}'
+    And the user should see the element         jQuery=label:contains("'org2' Total project costs")          #text in the page     '${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}' Total project costs
 
 Guidance in the your project costs
     [Documentation]    INFUND-192

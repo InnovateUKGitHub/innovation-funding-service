@@ -27,19 +27,13 @@ The user clicks the login link
     When the user clicks the button/link                link=Continue or sign in
     And The guest user inserts user email and password  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
-    Then the user should see the text in the page       Confirm your organisation
-
-The user should see the correct content in the confirm page
-    [Documentation]    INFUND-1458
-    [Tags]    HappyPath
-    Then the user should see the text in the page  INNOVATE LTD
-    And the user should see the text in the page   BH2 5QY
-    And the user should see the element            link=email the lead applicant
+    Then the user should see the element                jQuery=h1:contains("Select organisation")
+    And the user should see the element                 jQuery=dt:contains("INNOVATE LTD")
 
 The continue button should redirect to the overview page
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
-    When the user clicks the button/link           jQuery=.button:contains("Confirm and accept invitation")
+    When the user clicks the button/link           css=.button[type="submit"]    #Save and continue
     Then the user should see the text in the page  Application overview
 
 The user edits the name this should be changed in the View team page
@@ -76,19 +70,9 @@ Existing user creates a new application and invites a user from the same organis
     the user clicks the button/link       jQuery=.button:contains("Continue")
     the user should see a field and summary error   Please select an option to continue.
     the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
-    the user clicks the button/link       jQuery=.button:contains("Continue")
-        the user selects the radio button      organisationTypeId  1
-        the user clicks the button/link            jQuery=.button:contains("Save and continue")
-        the user enters text to a text field       id = organisationSearchName    Innovate
-        the user clicks the button/link            id=org-search
-        the user clicks the button/link            link=INNOVATE LTD
-        the user clicks the button/link            jQuery=button:contains("Enter address manually")
-        the user enters text to a text field       id = addressForm.postcodeInput    BS14NT
-        the user clicks the button/link            jQuery = .button:contains("Find UK address")
-        the user clicks the button/link            css=#select-address-block > button
-        the user clicks the button/link            jQuery=.button:contains("Save and continue")
-        the user clicks the button/link            jQuery=.button:contains("Save and continue")
-    the user clicks the button/link       jQuery=a:contains("Update and add contributors from INNOVATE LTD")
+    the user clicks the button/link            jQuery=button:contains("Continue")
+    the user clicks the button/link            css=.button[type="submit"]    #Save and continue
+    the user clicks the button/link       link=Update and add contributors from INNOVATE LTD
     The user clicks the button/link       jQuery=button:contains("Add another contributor")
     The user enters text to a text field  name=stagedInvite.name    Olivier Giroud
     The user enters text to a text field  name=stagedInvite.email    ${test_mailbox_one}+invite2@gmail.com
@@ -108,5 +92,4 @@ The invited user should get a message to contact the helpdesk
     When the user clicks the button/link                link=Continue or sign in
     And The guest user inserts user email and password  ${recipient}  ${correct_password}
     And the guest user clicks the log-in button
-    Then the user should see the text in the page       Sorry, you are unable to accept this invitation
-    And the user should see the text in the page        If you want to remain in the same organisation but join a different application, please contact the helpdesk on 0300 321 4357
+    Then the user should see the element                jQuery=h1:contains("Confirm your organisation")

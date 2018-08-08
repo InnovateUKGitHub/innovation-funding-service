@@ -17,7 +17,6 @@ Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${compResearch}     Research can lead    # Of Generic competition Type
-${compPublic}       Public Sector can lead    # Of Generic competition Type
 ${researchLeadApp}  Research Leading Application
 ${publicLeadApp}    Public Sector leading Application
 ${collaborator}     ${test_mailbox_one}+amy@gmail.com
@@ -31,7 +30,6 @@ Comp Admin Creates Competitions where Research or Public sector can lead
     # In this test case we also check that we can remove the Project details questions in Comp Setup.
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
     Then The competition admin creates a competition for  ${ACADEMIC_TYPE_ID}  ${compResearch}  Research
-    And The competition admin creates a competition for   ${PUBLIC_SECTOR_TYPE_ID}  ${compPublic}  Public
 
 Requesting the id of this Competition
     [Documentation]  IFS-182
