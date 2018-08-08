@@ -2,6 +2,9 @@ package org.innovateuk.ifs.profile.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.user.resource.Disability;
+import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -26,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * This controller will handle all requests that are related to a user profile.
@@ -115,11 +120,11 @@ public class ProfileController {
                 loggedInUser.getEmail(),
                 userDetailsForm.getFirstName(),
                 userDetailsForm.getLastName(),
-                loggedInUser.getTitle().getDisplayName(),
+                ofNullable(loggedInUser.getTitle()).map(Title::getDisplayName).orElse(null),
                 userDetailsForm.getPhoneNumber(),
-                loggedInUser.getGender().getDisplayName(),
+                ofNullable(loggedInUser.getGender()).map(Gender::getDisplayName).orElse(null),
                 loggedInUser.getEthnicity(),
-                loggedInUser.getDisability().getDisplayName(),
+                ofNullable(loggedInUser.getDisability()).map(Disability::getDisplayName).orElse(null),
                 userDetailsForm.getAllowMarketingEmails());
     }
 
