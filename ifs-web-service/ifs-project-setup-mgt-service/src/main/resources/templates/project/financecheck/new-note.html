@@ -17,7 +17,7 @@
                 Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
             </p>
             <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post"
-                  enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
+                  enctype="multipart/form-data" novalidate="novalidate">
                 <h2 class="heading-medium">New note</h2>
                 <div class="form-group" th:classappend="${#fields.hasErrors('noteTitle')} ? 'form-group-error'">
                     <label for="noteTitle">
@@ -86,7 +86,7 @@
                 <input type="hidden" id="action" value="postNote">
                 <div class="grid-row extra-margin">
                     <div class="column-half">
-                        <button class="button button-large no-margin" data-content-on-submit="Please wait...">Save note</button>
+                        <button class="button button-large no-margin">Save note</button>
                         <a class="button button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
                     </div>
                 </div>

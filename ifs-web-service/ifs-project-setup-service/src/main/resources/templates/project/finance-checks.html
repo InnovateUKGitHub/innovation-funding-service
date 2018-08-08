@@ -95,7 +95,7 @@
                     </th:block>
                     <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                         <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
-                            enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
+                            enctype="multipart/form-data" novalidate="novalidate">
                                 <h2 class="heading-medium">Respond to query</h2>
                                 <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
                                     <label for="response-1">
@@ -146,7 +146,7 @@
                             <input type="hidden" id="action-1" value="postResponse">
                             <div class="grid-row">
                                 <div class="column-half">
-                                    <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
+                                    <button class="button button-large no-margin">Post response</button>
                                 </div>
                                 <div class="column-half alignright">
                                     <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}">Cancel</a>
@@ -190,7 +190,7 @@
                     </th:block>
                     <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                         <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
-                              enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
+                              enctype="multipart/form-data" novalidate="novalidate">
                             <h2 class="heading-medium">Respond to query</h2>
                             <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
                                 <label for="response-2">
@@ -241,7 +241,7 @@
                             <input type="hidden" id="action-2" value="postResponse">
                             <div class="grid-row">
                                 <div class="column-half">
-                                    <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
+                                    <button class="button button-large no-margin">Post response</button>
                                 </div>
                                 <div class="column-half alignright">
                                     <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}">Cancel</a>
@@ -283,7 +283,7 @@
                     </th:block>
                     <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                         <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
-                              enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
+                              enctype="multipart/form-data" novalidate="novalidate">
                             <h2 class="heading-medium">Respond to query</h2>
                             <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
                                 <label for="response-3">
@@ -334,7 +334,7 @@
                             <input type="hidden" id="action-3" value="postResponse">
                             <div class="grid-row">
                                 <div class="column-half">
-                                    <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
+                                    <button class="button button-large no-margin">Post response</button>
                                 </div>
                                 <div class="column-half alignright">
                                     <a th:href="@{{baseUrl}/cancel#title-query-__${query.id}__(baseUrl=${baseUrl})}">Cancel</a>
