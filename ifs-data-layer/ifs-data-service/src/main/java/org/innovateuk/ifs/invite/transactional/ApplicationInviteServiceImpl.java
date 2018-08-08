@@ -46,6 +46,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvite> implements ApplicationInviteService {
 
+    private static final String NEW_EMAIL_FIELD = "applicants[%s].email";
+    private static final String EDIT_EMAIL_FIELD = "stagedInvite.email";
+
     enum Notifications {
         INVITE_COLLABORATOR
     }
@@ -101,9 +104,9 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Override
     @Transactional
     public ServiceResult<Void> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
-
+        String errorField = applicationId.isPresent() ? EDIT_EMAIL_FIELD  : NEW_EMAIL_FIELD;
         return validateInviteOrganisationResource(inviteOrganisationResource).andOnSuccess(() ->
-                validateUniqueEmails(inviteOrganisationResource.getInviteResources())).andOnSuccess(() ->
+                validateUniqueEmails(inviteOrganisationResource.getInviteResources(), errorField)).andOnSuccess(() ->
                 findOrAssembleInviteOrganisationFromResource(inviteOrganisationResource, applicationId).andOnSuccess(inviteOrganisation -> {
                     List<ApplicationInvite> invites = saveInviteOrganisationWithInvites(inviteOrganisation, inviteOrganisationResource.getInviteResources());
                     return applicationInviteNotificationService.inviteCollaborators(invites);
@@ -128,7 +131,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Override
     @Transactional
     public ServiceResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources) {
-        return validateUniqueEmails(inviteResources).andOnSuccess(() -> {
+        return validateUniqueEmails(inviteResources, EDIT_EMAIL_FIELD).andOnSuccess(() -> {
             List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
             applicationInviteRepository.saveAll(invites);
             return applicationInviteNotificationService.inviteCollaborators(invites);
@@ -268,13 +271,13 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         return inviteResource.getApplication() != null && StringUtils.isNotBlank(inviteResource.getEmail()) && StringUtils.isNotBlank(inviteResource.getName());
     }
 
-    private ServiceResult<Void> validateUniqueEmails(List<ApplicationInviteResource> inviteResources) {
+    private ServiceResult<Void> validateUniqueEmails(List<ApplicationInviteResource> inviteResources, String errorField) {
         List<Error> failures = new ArrayList<>();
         long applicationId = inviteResources.get(0).getApplication();
         Set<String> uniqueEmails = getUniqueEmailAddressesForApplication(applicationId);
         forEachWithIndex(inviteResources, (index, invite) -> {
             if (!uniqueEmails.add(invite.getEmail())) {
-                failures.add(fieldError(format("stagedInvite.email", index), invite.getEmail(), "email.already.in.invite"));
+                failures.add(fieldError(format(errorField, index), invite.getEmail(), "email.already.in.invite"));
             }
         });
         return failures.isEmpty() ? serviceSuccess() : serviceFailure(failures);
