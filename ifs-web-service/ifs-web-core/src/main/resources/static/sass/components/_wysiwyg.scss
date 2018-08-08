@@ -90,6 +90,10 @@ button {
 }
 
 %wysiwyg-styles {
+  p {
+    margin-top: 0;
+  }
+
   b {
     font-weight:bold;
     font-style:inherit;
