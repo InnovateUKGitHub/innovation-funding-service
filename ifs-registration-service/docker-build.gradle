@@ -1,1 +1,2 @@
 ext.shibbolethApiKey=1234567890
+ext.LDAP_URL="ldaps://ldap:8389"
