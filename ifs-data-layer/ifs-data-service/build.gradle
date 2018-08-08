@@ -50,7 +50,7 @@ createContainer.portBindings = ['8086:8080','9006:8000']
 createContainer.networkAliases=["ifs-data-service"]
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
-ext.companyHouseKey = ext.get('ifs.company-house.key')
+ext.companiesHouseKey = ext.get('ifs.company-house.key')
 
 ext.companiesHouseLookupEnabled = ext.has('ifs.companies-house.enabled') ? ext.get('ifs.companies-house.enabled') : true
 
