@@ -89,7 +89,7 @@
             </table>
             <div class="govuk-grid-row govuk-!-margin-top-6" th:unless="${model.approved}">
                 <div class="govuk-grid-column-one-half">
-                    <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}" class="govuk-link">Change bank account details</a>
+                    <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details/change(id=${model.projectId}, orgId=${model.organisationId})}" class="govuk-body govuk-link">Change bank account details</a>
                 </div>
                 <div class="govuk-grid-column-one-half alignright">
                     <button data-js-modal="modal-partner-approve-bank-details" class="govuk-!-margin-right-0 govuk-button">Approve bank account details</button>

@@ -220,7 +220,7 @@
 
             <div class="govuk-grid-row govuk-!-margin-top-6">
                 <div class="govuk-grid-column-one-half">
-                    <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details(id=${model.projectId}, orgId=${model.organisationId})}" class="govuk-link">Cancel bank account changes</a>
+                    <a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details(id=${model.projectId}, orgId=${model.organisationId})}" class="govuk-body govuk-link">Cancel bank account changes</a>
                 </div>
                 <th:block th:insert="fragments/modals :: modal-partner-change-bank-details" />
                 <div class="govuk-grid-column-one-half alignright">
