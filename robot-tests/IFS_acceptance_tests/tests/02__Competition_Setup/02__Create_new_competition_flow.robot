@@ -106,8 +106,6 @@ Initial details - User enters valid values and marks as done
     [Documentation]    INFUND-2982, INFUND-3888, INFUND-2983, INFUND-6478, INFUND-6479
     [Tags]    HappyPath
     Given the user clicks the button/link                       link = Initial details
-    #And the user should see the option in the drop-down menu    Generic  id=competitionTypeId
-    #When the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user clicks the button/link                         jQuery = button:contains("+ add another innovation area")
     And the user enters valid data in the initial details
     And the user moves focus and waits for autosave
