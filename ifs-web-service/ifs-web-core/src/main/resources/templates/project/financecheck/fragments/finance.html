@@ -218,7 +218,7 @@
 
     <!-- ===========================Research Participation =========================== -->
     <th:block th:fragment="research_participation(researchParticipationPercentage,maxResearchPercentage)">
-        <div class="govuk-!-margin-bottom-6" th:class="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'eligibility warning' : 'eligibility'" >
+        <div class="eligibility govuk-!-margin-bottom-9" th:classappend="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'warning' : ''" >
             <dl class="list-eligibility">
                 <dt>Maximum research participation</dt>
                 <dd th:text="${maxResearchPercentage}+' %'"></dd>

@@ -40,7 +40,7 @@ table {
 .finance-checks-overview {
   thead {
     th {
-      @include govuk-font(14);
+      font-size: 0.8em;
     }
   }
 }
