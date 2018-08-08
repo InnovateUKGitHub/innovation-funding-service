@@ -114,14 +114,14 @@
 
         <div class="question">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="question.shortTitle">
+                <label class="govuk-label govuk-label--s" for="question.shortTitle">
                     Question heading
                 </label>
                 <th:block th:if="${#fields.hasErrors('question.shortTitle')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('question.shortTitle')}"
                               th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input govuk-input--width-30"
+                <input class="govuk-input govuk-!-width-two-thirds"
                        th:classappend="${#fields.hasErrors('question.shortTitle')} ? 'govuk-input--error'"
                        type="text"
                        required="required"
@@ -131,7 +131,7 @@
                        maxlength="255"/>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="question.title">
+                <label class="govuk-label govuk-label--s" for="question.title">
                     Question title
                 </label>
                 <th:block th:if="${#fields.hasErrors('question.title')}">
@@ -139,7 +139,7 @@
                               th:text="${err}"></span>
                 </th:block>
                 <input th:classappend="${#fields.hasErrors('question.title')} ? 'govuk-input--error'"
-                       class="govuk-input govuk-input--width-30"
+                       class="govuk-input govuk-!-width-two-thirds"
                        type="text"
                        required="required"
                        id="question.title"
@@ -148,7 +148,7 @@
                        maxlength="255"/>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="question.subTitle">
+                <label class="govuk-label govuk-label--s" for="question.subTitle">
                     Question subtitle
                 </label>
                 <th:block th:if="${#fields.hasErrors('question.subTitle')}">
@@ -156,7 +156,7 @@
                               th:text="${err}"></span>
                 </th:block>
                 <input th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-input--error'"
-                       class="govuk-input govuk-input--width-30"
+                       class="govuk-input govuk-!-width-two-thirds"
                        type="text"
                        id="question.subTitle"
                        th:name="question.subTitle"
@@ -165,7 +165,7 @@
             </div>
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="question.guidanceTitle">
+                <label class="govuk-label govuk-label--s" for="question.guidanceTitle">
                     Question guidance title
                 </label>
                 <th:block th:if="${#fields.hasErrors('question.guidanceTitle')}">
@@ -173,7 +173,7 @@
                               th:text="${err}"></span>
                 </th:block>
                 <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-input--error'"
-                       class="govuk-input govuk-input--width-30"
+                       class="govuk-input govuk-!-width-two-thirds"
                        type="text"
                        id="question.guidanceTitle"
                        required="required"
@@ -182,7 +182,7 @@
                        maxlength="255"/>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.guidance')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="question.guidance">
+                <label class="govuk-label govuk-label--s" for="question.guidance">
                     Question guidance
                 </label>
                 <th:block th:if="${#fields.hasErrors('question.guidance')}">
@@ -205,7 +205,7 @@
                 </div>
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="question.maxWords">
+                <label class="govuk-label govuk-label--s" for="question.maxWords">
                     Max word count
                 </label>
                 <th:block th:if="${#fields.hasErrors('question.maxWords')}">
@@ -293,7 +293,7 @@
                     </div>
                     <div class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'govuk-form-group--error'">
-                        <label class="govuk-label"
+                        <label class="govuk-label govuk-label--s"
                                for="question.appendixGuidance">
                             Appendix guidance
                         </label>
@@ -412,7 +412,7 @@
                     <div class="govuk-form-group"
                          th:classappend="${#fields.hasErrors('question.scoreTotal')} ? 'govuk-form-group--error'"
                          id="score-total">
-                        <label class="govuk-label" for="question.scoreTotal">
+                        <label class="govuk-label govuk-label--s" for="question.scoreTotal">
                             Out of
                         </label>
                         <th:block th:if="${#fields.hasErrors('question.scoreTotal')}">
@@ -507,7 +507,7 @@
                     <div class="js-hidden" id="scored-options">
                         <div class="govuk-form-group"
                              th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'govuk-form-group--error'">
-                            <label class="govuk-label" for="question.assessmentGuidanceTitle">
+                            <label class="govuk-label govuk-label--s" for="question.assessmentGuidanceTitle">
                                 Guidance title
                             </label>
                             <th:block th:if="${#fields.hasErrors('question.assessmentGuidanceTitle')}">
@@ -515,7 +515,7 @@
                                           th:each="err : ${#fields.errors('question.assessmentGuidanceTitle')}"
                                           th:text="${err}"></span>
                             </th:block>
-                            <input class="govuk-input govuk-input--width-30"
+                            <input class="govuk-input govuk-!-width-two-thirds"
                                    th:classappend="${#fields.hasErrors('question.assessmentGuidanceTitle')} ? 'govuk-input--error'"
                                    type="text"
                                    id="question.assessmentGuidanceTitle"
@@ -526,7 +526,7 @@
 
                         <div class="govuk-form-group"
                              th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'govuk-form-group--error'">
-                            <label class="govuk-label" for="question.assessmentGuidance">
+                            <label class="govuk-label govuk-label--s" for="question.assessmentGuidance">
                                 Guidance
                             </label>
                             <th:block th:if="${#fields.hasErrors('question.assessmentGuidance')}">
@@ -534,7 +534,7 @@
                                           th:each="err : ${#fields.errors('question.assessmentGuidance')}"
                                           th:text="${err}"></span>
                             </th:block>
-                            <input class="govuk-input govuk-input--width-30"
+                            <input class="govuk-input govuk-!-width-two-thirds"
                                    th:classappend="${#fields.hasErrors('question.assessmentGuidance')} ? 'govuk-input--error'"
                                    type="text"
                                    id="question.assessmentGuidance"
