@@ -47,7 +47,8 @@ public class ApplicationQuestionFeedbackController {
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                                       @PathVariable("questionId") long questionId,
                                                       UserResource user,
-                                                      @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin
+                                                      @RequestParam(value = "origin", defaultValue = "APPLICANT_DASHBOARD") String origin,
+                                                      @RequestParam MultiValueMap<String, String> queryParams
                                                       ) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
                 .getSuccess();
@@ -58,8 +59,7 @@ public class ApplicationQuestionFeedbackController {
             return "redirect:/application/" + applicationId + "/summary";
         }
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), params);
+        String originQuery = buildOriginQueryString(ApplicationSummaryOrigin.valueOf(origin), queryParams);
 
         model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId, originQuery));
         return "application-assessor-feedback";
