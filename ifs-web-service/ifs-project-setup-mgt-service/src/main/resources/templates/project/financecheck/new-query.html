@@ -32,7 +32,7 @@
     </p>
 
     <form class="extra-margin" id="post-new-query-form" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}"
-          th:object="${form}" method="post" enctype="multipart/form-data" data-single-submit="" novalidate="novalidate">
+          th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
             <h2 class="heading-medium">Post a new query</h2>
             <div class="form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'form-group-error'">
                 <label for="queryTitle">
@@ -130,7 +130,7 @@
             <input type="hidden" id="action" value="postQuery">
             <div class="grid-row">
                 <div class="column-half">
-                    <button type="submit" id="post-query" data-content-on-submit="Please wait..." class="button button-large no-margin">Post query</button>
+                    <button type="submit" id="post-query" class="button button-large no-margin">Post query</button>
                 </div>
                 <div class="column-half alignright">
                     <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>

@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.interview.model;
 
-import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
-import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsPageResource;
 import org.innovateuk.ifs.interview.resource.InterviewAcceptedAssessorsResource;
@@ -19,7 +17,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the allocate applications to assessors page
  */
 @Component
-public class InterviewAcceptedAssessorsModelPopulator extends BaseManageAssessmentsModelPopulator<AssessorCountSummaryResource, AssessorCountSummaryPageResource, InterviewAcceptedAssessorsViewModel> {
+public class InterviewAcceptedAssessorsModelPopulator extends BaseManageAssessmentsModelPopulator {
 
     private InterviewAllocationRestService interviewAllocationRestService;
 
