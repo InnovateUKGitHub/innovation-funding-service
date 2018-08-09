@@ -125,5 +125,4 @@ public class SummaryViewModel {
     public boolean isShowApplicationTeamLink() {
         return showApplicationTeamLink;
     }
-
 }
