@@ -23,8 +23,6 @@ import java.util.List;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.hamcrest.core.Is.is;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
@@ -49,7 +47,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class UserControllerTest extends BaseControllerMockMVCTest<UserController> {
-
 
     @Mock
     private UserService userServiceMock;
@@ -102,7 +99,6 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         final UserResource userResource = newUserResource().build();
         when(registrationServiceMock.createUser(userResource)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, empty(), of(organisationId))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
@@ -111,7 +107,6 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
 
         verify(registrationServiceMock, times(1)).createUser(userResource);
-        verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, empty(), of(organisationId));
         verifyNoMoreInteractions(registrationServiceMock);
     }
 
@@ -121,8 +116,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         final Long competitionId = 8888L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createUser(userResource)).thenReturn(serviceSuccess(userResource));
-        when(registrationServiceMock.sendUserVerificationEmail(userResource, of(competitionId), of(organisationId))).thenReturn(serviceSuccess());
+        when(registrationServiceMock.createUserWithCompetitionContext(competitionId, userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
@@ -130,8 +124,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .andExpect(status().isCreated())
                 .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
 
-        verify(registrationServiceMock, times(1)).createUser(userResource);
-        verify(registrationServiceMock, times(1)).sendUserVerificationEmail(userResource, of(competitionId), of(organisationId));
+        verify(registrationServiceMock, times(1)).createUserWithCompetitionContext(competitionId, userResource);
         verifyNoMoreInteractions(registrationServiceMock);
     }
 

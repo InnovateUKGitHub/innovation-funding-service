@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.registration.model;
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.populator.InviteAndUserOrganisationDifferentModelPopulator;

@@ -3,17 +3,15 @@ package org.innovateuk.ifs.profile;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.profile.form.UserDetailsForm;
 import org.innovateuk.ifs.profile.viewmodel.UserDetailsViewModel;
-import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +50,6 @@ public class ProfileController {
     private OrganisationService organisationService;
 
     @Autowired
-    private EthnicityRestService ethnicityRestService;
-
-    @Autowired
     private UserAuthenticationService userAuthenticationService;
 
     @GetMapping("/view")
@@ -62,7 +57,7 @@ public class ProfileController {
                                   UserResource userResource) {
         final OrganisationResource organisationResource = organisationService.getPrimaryForUser(userResource.getId());
 
-        model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccess()));
+        model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource));
         return "profile/user-profile";
     }
 
@@ -128,12 +123,7 @@ public class ProfileController {
     public String editUserProfile(UserResource user,
                                   HttpServletRequest request, Model model) {
         populateUserDetailsForm(model, user);
-        model.addAttribute("ethnicityOptions", getEthnicityOptions());
         return "profile/edit-user-profile";
-    }
-
-    private List<EthnicityResource> getEthnicityOptions() {
-        return ethnicityRestService.findAllActive().getSuccess();
     }
 
     private void setFormActionURL(UserDetailsForm userDetailsForm) {
@@ -148,9 +138,6 @@ public class ProfileController {
                 userDetailsForm.getLastName(),
                 userDetailsForm.getTitle(),
                 userDetailsForm.getPhoneNumber(),
-                userDetailsForm.getGender(),
-                Long.parseLong(userDetailsForm.getEthnicity()),
-                userDetailsForm.getDisability(),
                 userDetailsForm.getAllowMarketingEmails());
     }
 
