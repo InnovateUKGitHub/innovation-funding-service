@@ -23,7 +23,8 @@ import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
 @RequestMapping("/applicant")
 @SecuredBySpring(value = "Controller", description = "Each applicant has permission to view their own dashboard",
         securedType = ApplicantDashboardController.class)
-@PreAuthorize("hasAuthority('applicant')")
+//@PreAuthorize("hasAuthority('applicant')")
+@PreAuthorize("hasAnyAuthority('applicant', 'monitoring_officer')")
 public class ApplicantDashboardController {
 
     @Autowired
