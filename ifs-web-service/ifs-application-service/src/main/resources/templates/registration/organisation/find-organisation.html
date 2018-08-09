@@ -14,7 +14,7 @@
     <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkClass='link-back',linkUrl='/organisation/create/lead-organisation-type'" />
 
     <th:block th:with="orgTitle=${organisationType.name}">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter organisation details',subTitle='Start new application',size='heading-xlarge'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter organisation details',subTitle=${isLeadApplicant ? 'Start new application' : 'Join application'},size='heading-xlarge'" />
     </th:block>
 
     <th:block th:unless="${organisationForm.research}">
