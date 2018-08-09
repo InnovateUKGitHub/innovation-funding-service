@@ -2,10 +2,6 @@ package org.innovateuk.ifs.profile.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.user.resource.Title;
-import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -13,7 +9,11 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.profile.form.UserDetailsForm;
 import org.innovateuk.ifs.profile.populator.UserProfilePopulator;
+import org.innovateuk.ifs.user.resource.Disability;
+import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,20 +43,26 @@ import static java.util.Optional.ofNullable;
 public class ProfileController {
     private static final Log LOG = LogFactory.getLog(ProfileController.class);
 
-    @Autowired
     private UserService userService;
-    
-    @Autowired
+
     private OrganisationService organisationService;
 
-    @Autowired
     private EthnicityRestService ethnicityRestService;
 
-    @Autowired
     private UserAuthenticationService userAuthenticationService;
 
-    @Autowired
     private UserProfilePopulator userProfilePopulator;
+
+    ProfileController() {}
+
+    @Autowired
+    public ProfileController(UserService userService, OrganisationService organisationService, EthnicityRestService ethnicityRestService, UserAuthenticationService userAuthenticationService, UserProfilePopulator userProfilePopulator) {
+        this.userService = userService;
+        this.organisationService = organisationService;
+        this.ethnicityRestService = ethnicityRestService;
+        this.userAuthenticationService = userAuthenticationService;
+        this.userProfilePopulator = userProfilePopulator;
+    }
 
     @GetMapping("/view")
     public String viewUserProfile(Model model,

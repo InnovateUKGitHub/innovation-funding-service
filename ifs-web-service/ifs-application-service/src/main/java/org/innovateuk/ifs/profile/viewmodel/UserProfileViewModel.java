@@ -40,8 +40,4 @@ public class UserProfileViewModel {
         return organisations;
     }
 
-    /* view logic. */
-    private String ifEmptyReturnAText(String string) {
-        return string != null && !string.isEmpty() ? string : "None selected";
-    }
 }
