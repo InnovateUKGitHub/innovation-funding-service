@@ -170,7 +170,7 @@ ${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_A
 ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
 ${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
 ${assessment_declaration_url}    ${server}/assessment/profile/declaration
-${assessment_skills_url}    ${server}/assessment/profile/skills
+${assessment_skills_url}    ${assessment_details_url}/skills
 ${assessment_details_url}    ${server}/assessment/profile/details
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/117
 

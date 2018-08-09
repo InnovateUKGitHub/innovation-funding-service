@@ -33,7 +33,9 @@ Server-side validations when No selected at yes/no
     ...
     ...    INFUND-7060
     [Tags]    HappyPath
-    Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
+    Given the user clicks the button/link    link=your details
+    And the user clicks the button/link      link=DOI
+    When the user clicks the button/link     id=editDOI
     When the user clicks the button/link     jQuery=button:contains("Save and return to your declaration of interest")
     Then the user should see the proper validation messages triggered
 
