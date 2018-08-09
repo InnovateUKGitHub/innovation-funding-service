@@ -71,7 +71,7 @@
             </p>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('password')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="password">
+                <label class="govuk-label govuk-label--s" for="password">
                     Create password
                 </label>
                 <th:block th:if="${#fields.hasErrors('password')}">
