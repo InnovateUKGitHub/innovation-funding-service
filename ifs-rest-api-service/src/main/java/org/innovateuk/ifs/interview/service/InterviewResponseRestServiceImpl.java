@@ -14,29 +14,29 @@ import static java.lang.String.format;
 @Service
 public class InterviewResponseRestServiceImpl extends BaseRestService implements InterviewResponseRestService {
 
-    private static final String interviewResponseRestUrl = "/interview-response";
+    private static final String INTERVIEW_RESPONSE_REST_URL = "/interview-response";
 
     @Override
     public RestResult<Void> uploadResponse(long applicationId, String contentType, long size, String originalFilename, byte[] multipartFileBytes) {
-        String url = format("%s/%s?filename=%s", interviewResponseRestUrl, applicationId, originalFilename);
+        String url = format("%s/%s?filename=%s", INTERVIEW_RESPONSE_REST_URL, applicationId, originalFilename);
         return postWithRestResult(url, multipartFileBytes, createFileUploadHeader(contentType, size), Void.class);
     }
 
     @Override
     public RestResult<Void> deleteResponse(long applicationId) {
-        String url = format("%s/%s", interviewResponseRestUrl, applicationId);
+        String url = format("%s/%s", INTERVIEW_RESPONSE_REST_URL, applicationId);
         return deleteWithRestResult(url);
     }
 
     @Override
     public RestResult<ByteArrayResource> downloadResponse(long applicationId) {
-        String url = format("%s/%s", interviewResponseRestUrl, applicationId);
+        String url = format("%s/%s", INTERVIEW_RESPONSE_REST_URL, applicationId);
         return getWithRestResult(url, ByteArrayResource.class);
     }
 
     @Override
     public RestResult<FileEntryResource> findResponse(long applicationId) {
-        String url = format("%s/%s/%s", interviewResponseRestUrl, "details", applicationId);
+        String url = format("%s/%s/%s", INTERVIEW_RESPONSE_REST_URL, "details", applicationId);
         return getWithRestResult(url, FileEntryResource.class);
     }
 }

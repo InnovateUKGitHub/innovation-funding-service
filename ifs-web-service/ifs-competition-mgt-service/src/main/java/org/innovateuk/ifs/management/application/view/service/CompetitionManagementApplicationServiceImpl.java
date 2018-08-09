@@ -81,7 +81,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                         backUrl,
                         queryParam,
                         user,
-                        getAppendices(application.getId(), responses, model),
+                        getAppendices(application.getId(), responses),
                         form);
 
         model.addAttribute("model", viewModel);
@@ -130,7 +130,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         }
     }
 
-    private List<AppendixResource> getAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
+    private List<AppendixResource> getAppendices(Long applicationId, List<FormInputResponseResource> responses) {
         return responses.stream().filter(fir -> fir.getFileEntry() != null).
                 map(fir -> {
                     FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccess();

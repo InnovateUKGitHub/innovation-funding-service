@@ -80,6 +80,7 @@ public class ReviewParticipant extends CompetitionParticipant<ReviewInvite> {
         return this;
     }
 
+    @Override
     public void setStatus(ParticipantStatus status) {
         super.setStatus(status);
     }
