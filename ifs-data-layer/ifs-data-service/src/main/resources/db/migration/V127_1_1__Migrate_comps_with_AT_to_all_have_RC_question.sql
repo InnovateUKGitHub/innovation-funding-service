@@ -21,7 +21,9 @@ INSERT INTO competitions_with_team_but_not_research_question
 -- 3. Bump the priority of all the existing questions to to make space for the 'Research category' question at the top
 UPDATE question SET priority = priority + 1
     WHERE competition_id IN (SELECT * FROM competitions_with_team_but_not_research_question)
-    AND (question_type="GENERAL" OR short_name="Other funding")
+    AND section_id IN (
+        SELECT s.id FROM section s WHERE s.name IN ('Project details', 'Application questions')
+    )
 ;
 
 -- 4. Add the new research category question to the competitions
