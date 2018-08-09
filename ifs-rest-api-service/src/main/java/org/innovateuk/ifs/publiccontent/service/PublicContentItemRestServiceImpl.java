@@ -27,10 +27,10 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<PublicContentItemPageResource> getByFilterValues(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) {
-        String searchStringEncoded = null;
+
         try {
-            searchStringEncoded = UriUtils.encode(searchString.orElse(null), "UTF8");
-        } catch (Exception e) {
+            UriUtils.encode(searchString.orElse(null), "UTF8");
+        } catch (UnsupportedEncodingException e) {
             LOG.error("searchString can not be encoded", e);
         }
 

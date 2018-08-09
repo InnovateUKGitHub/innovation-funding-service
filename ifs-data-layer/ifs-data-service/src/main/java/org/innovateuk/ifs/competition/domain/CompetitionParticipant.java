@@ -125,6 +125,7 @@ public abstract class CompetitionParticipant<I extends Invite<Competition,I>> ex
         this.rejectionReasonComment = rejectionReasonComment;
     }
 
+    @Override
     protected void setStatus(ParticipantStatus status) {
         super.setStatus(status);
     }

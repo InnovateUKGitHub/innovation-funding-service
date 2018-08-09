@@ -17,8 +17,8 @@ public class ProjectDetailsAddressForm extends BaseBindingResultTarget {
     @Valid
     private AddressForm addressForm = new AddressForm();
 
-    // for spring form binding
     public ProjectDetailsAddressForm() {
+        // for spring form binding
     }
 
     public AddressForm getAddressForm() {

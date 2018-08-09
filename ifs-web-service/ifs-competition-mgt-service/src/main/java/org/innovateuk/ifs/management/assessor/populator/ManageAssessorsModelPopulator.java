@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSES
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
-public class ManageAssessorsModelPopulator extends BaseManageAssessmentsModelPopulator<AssessorCountSummaryResource, AssessorCountSummaryPageResource, ManageAssessorsViewModel> {
+public class ManageAssessorsModelPopulator extends BaseManageAssessmentsModelPopulator {
 
     @Autowired
     private CategoryRestService categoryRestService;

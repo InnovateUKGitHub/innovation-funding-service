@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
@@ -29,9 +28,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalService implements ApplicationInnovationAreaService {
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Autowired
     private ApplicationMapper applicationMapper;

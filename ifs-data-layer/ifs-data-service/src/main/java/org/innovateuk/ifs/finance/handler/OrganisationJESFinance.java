@@ -61,11 +61,11 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     @Override
-    public Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
+    public Map<FinanceRowType, List<ChangedFinanceRowPair>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
         return noChangesAsAcademicFinancesAreNotEditable();
     }
 
-    private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> noChangesAsAcademicFinancesAreNotEditable() {
+    private Map<FinanceRowType, List<ChangedFinanceRowPair>> noChangesAsAcademicFinancesAreNotEditable() {
         return emptyMap();
     }
 

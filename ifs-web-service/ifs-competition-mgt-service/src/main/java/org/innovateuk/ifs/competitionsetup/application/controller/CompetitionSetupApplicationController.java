@@ -55,7 +55,7 @@ public class CompetitionSetupApplicationController {
 
     private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);
     public static final String APPLICATION_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/application/landing-page";
-    private static final String questionView = "competition/setup/question";
+    private static final String QUESTION_VIEW = "competition/setup/question";
     private static final String MODEL = "model";
 
     @Autowired
@@ -406,7 +406,7 @@ public class CompetitionSetupApplicationController {
                     model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.of(questionId), setupSubsection, isEditable));
                     model.addAttribute(COMPETITION_SETUP_FORM_KEY, setupQuestionForm(competitionResource, Optional.of(questionId), setupSubsection, form));
 
-                    return questionView;
+                    return QUESTION_VIEW;
                 }).andOnFailure(() -> serviceSuccess("redirect:/non-ifs-competition/setup/" + questionId));
 
         return view.getSuccess();

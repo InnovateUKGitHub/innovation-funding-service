@@ -7,6 +7,7 @@ public class FinanceCheckResource {
     private CostGroupResource costGroup = new CostGroupResource();
 
     public FinanceCheckResource() {
+        // no-args constructor
     }
 
     public Long getId() {

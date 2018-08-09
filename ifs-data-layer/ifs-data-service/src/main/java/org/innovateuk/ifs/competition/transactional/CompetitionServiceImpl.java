@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -9,21 +8,17 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,16 +56,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class CompetitionServiceImpl extends BaseTransactionalService implements CompetitionService {
 
     @Autowired
-    private CompetitionRepository competitionRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private InnovationLeadRepository innovationLeadRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
@@ -83,9 +69,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private OrganisationTypeMapper organisationTypeMapper;
-
-    @Autowired
-    private ProjectRepository projectRepository;
 
     @Autowired
     private PublicContentService publicContentService;

@@ -97,7 +97,7 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
 
         Optional<FormInputResponse> existingResponse = application.getFormInputResponseByFormInputAndProcessRole(formInput, userAppRole);
 
-        return existingResponse != null && existingResponse.isPresent() ?
+        return existingResponse.isPresent() ?
                 serviceSuccess(existingResponse.get()) :
                 serviceSuccess(new FormInputResponse(ZonedDateTime.now(), "", userAppRole, formInput, application));
     }
