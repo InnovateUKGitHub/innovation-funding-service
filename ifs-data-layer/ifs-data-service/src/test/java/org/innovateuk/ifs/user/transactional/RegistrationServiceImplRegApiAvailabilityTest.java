@@ -97,7 +97,7 @@ public class RegistrationServiceImplRegApiAvailabilityTest extends BaseAuthentic
             databaseTestHelper.assertingNoDatabaseChangesOccur(() -> {
 
                 // assert that we got a failure indicating that the Registration API was not available
-                ServiceResult<UserResource> result = registrationService.createUserWithCompetitionContext(competition.getId(), registrationInfo);
+                ServiceResult<UserResource> result = registrationService.createUserWithCompetitionContext(competition.getId(), organisation.getId(), registrationInfo);
                 assertThat(result.isFailure()).isTrue();
                 assertThat(result.getFailure().is(new Error(GENERAL_UNEXPECTED_ERROR, SERVICE_UNAVAILABLE))).isTrue();
             });

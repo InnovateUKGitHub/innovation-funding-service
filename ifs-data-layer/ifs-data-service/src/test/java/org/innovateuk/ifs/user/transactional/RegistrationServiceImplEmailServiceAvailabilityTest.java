@@ -88,7 +88,7 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
                         build();
 
                 return databaseTestHelper.assertingNoDatabaseChangesOccur(() ->
-                        registrationService.createUserWithCompetitionContext(competition.getId(), registrationInfo));
+                        registrationService.createUserWithCompetitionContext(competition.getId(), organisation.getId(), registrationInfo));
             });
         });
     }

@@ -84,27 +84,27 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<UserResource> createUser(UserResource userResource) {
-        return createOrganisationUser(Optional.empty(), userResource);
+        return createOrganisationUser(Optional.empty(), Optional.empty(), userResource);
     }
 
     @Override
     @Transactional
-    public ServiceResult<UserResource> createUserWithCompetitionContext(long competitionId, UserResource userResource) {
-        return createOrganisationUser(Optional.of(competitionId), userResource);
+    public ServiceResult<UserResource> createUserWithCompetitionContext(long competitionId, long organisationId, UserResource userResource) {
+        return createOrganisationUser(Optional.of(competitionId), Optional.of(organisationId), userResource);
     }
 
-    private ServiceResult<UserResource> createOrganisationUser(Optional<Long> competitionId, UserResource userResource) {
+    private ServiceResult<UserResource> createOrganisationUser(Optional<Long> competitionId, Optional<Long> organisationId,  UserResource userResource) {
         return validateUser(userResource).
                 andOnSuccessReturn(validUser -> assembleUserFromResource(validUser)).
                 andOnSuccess(newUser -> addApplicantRoleToUserIfNoRolesAssigned(userResource, newUser)).
                 andOnSuccess(newUserWithRole -> markLatestSiteTermsAndConditionsAgreedToIfApplicant(newUserWithRole)).
                 andOnSuccess(newUserWithRole -> createUserWithUid(newUserWithRole, userResource.getPassword(), null)).
-                andOnSuccess(createdUser -> sendUserVerificationEmail(competitionId, createdUser));
+                andOnSuccess(createdUser -> sendUserVerificationEmail(competitionId, organisationId, createdUser));
     }
 
-    private ServiceResult<UserResource> sendUserVerificationEmail(Optional<Long> competitionId, UserResource createdUser) {
+    private ServiceResult<UserResource> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, UserResource createdUser) {
 
-        return registrationEmailService.sendUserVerificationEmail(createdUser, competitionId).
+        return registrationEmailService.sendUserVerificationEmail(createdUser, competitionId, organisationId).
                 andOnSuccessReturn(() -> createdUser);
     }
 

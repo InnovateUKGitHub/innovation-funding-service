@@ -249,14 +249,14 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(userMapperMock.mapToResource(savedUser)).thenReturn(savedUserResource);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
-        when(registrationEmailServiceMock.sendUserVerificationEmail(savedUserResource, Optional.empty())).thenReturn(serviceSuccess());
+        when(registrationEmailServiceMock.sendUserVerificationEmail(savedUserResource, Optional.empty(), Optional.empty())).thenReturn(serviceSuccess());
 
         UserResource result = service.createUser(userToCreate).getSuccess();
         assertEquals(savedUserResource, result);
 
         verify(userMapperMock).mapToResource(savedUser);
         verify(passwordPolicyValidatorMock).validatePassword("thepassword", userToCreate);
-        verify(registrationEmailServiceMock).sendUserVerificationEmail(savedUserResource, Optional.empty());
+        verify(registrationEmailServiceMock).sendUserVerificationEmail(savedUserResource, Optional.empty(), Optional.empty());
     }
 
     @Test
@@ -516,7 +516,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
-        when(registrationEmailServiceMock.sendUserVerificationEmail(userToCreate, Optional.empty())).thenReturn(serviceSuccess());
+        when(registrationEmailServiceMock.sendUserVerificationEmail(userToCreate, Optional.empty(), Optional.empty())).thenReturn(serviceSuccess());
 
         UserResource result = service.createUser(userToCreate).getSuccess();
 
@@ -524,7 +524,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         verify(userMapperMock).mapToResource(savedUser);
         verify(passwordPolicyValidatorMock).validatePassword("thepassword", userToCreate);
-        verify(registrationEmailServiceMock).sendUserVerificationEmail(userToCreate, Optional.empty());
+        verify(registrationEmailServiceMock).sendUserVerificationEmail(userToCreate, Optional.empty(), Optional.empty());
     }
 
     private void setUpUsersForEditInternalUserSuccess() {
