@@ -6,6 +6,8 @@ Documentation   IFS-1012 As a comp exec I am able to set Research and Public sec
 ...             IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 ...
 ...             IFS-2832 As a Portfolio manager I am able to remove the Project details questions
+...
+...             IFS-4046 Person to organisation acceptance test updates
 Suite Setup     Custom Suite Setup
 Suite Teardown  Close browser and delete emails
 Resource        ../../../resources/defaultResources.robot
@@ -24,7 +26,7 @@ ${compPublicPage}   ${server}/management/competition/${openCompetitionPublicSect
 ${customQuestion}   How innovative is your project?
 
 *** Test Cases ***
-Comp Admin Creates Competitions where Research or Public sector can lead
+Comp Admin Creates Competitions where Research can lead
     [Documentation]  IFS-1012 IFS-182 IFS-2832
     [Tags]  CompAdmin  HappyPath
     # In this test case we also check that we can remove the Project details questions in Comp Setup.
@@ -39,7 +41,7 @@ Requesting the id of this Competition
     Set suite variable  ${reseachCompId}
 
 The Applicant is able to apply to the competition once is Open and see the correct Questions
-    [Documentation]  IFS-182 IFS-2832
+    [Documentation]  IFS-182 IFS-2832  IFS-4046
     [Tags]  HappyPath  MySQL
     [Setup]  the competition moves to Open state  ${reseachCompId}
     Given log in as a different user              &{collaborator2_credentials}
@@ -50,7 +52,7 @@ The Applicant is able to apply to the competition once is Open and see the corre
     And the user should not see the element       jQuery=li:contains("Project summary")
 
 Applicant Applies to Research leading Competition
-    [Documentation]  IFS-1012  IFS-2879
+    [Documentation]  IFS-1012  IFS-2879  IFS-4046
     [Tags]  Applicant  HappyPath
     [Setup]  Log in as a different user                   antonio.jenkins@jabbertype.example.com  ${short_password}
     # This application is for competition Photonics for Research, which is Web test data.
@@ -66,7 +68,7 @@ Applicant Applies to Research leading Competition
     And collaborating is required to submit the application if Research participation is not 100pc   ${openCompetitionResearch_name}  ${researchLeadApp}  antonio.jenkins@jabbertype.example.com
 
 Applicant Applies to Public content leading Competition
-    [Documentation]  IFS-1012
+    [Documentation]  IFS-1012  IFS-4046
     [Tags]  Applicant  HappyPath  CompAdmin
     [Setup]  log in as a different user                   becky.mason@gmail.com  ${short_password}
     # This application is for competition Photonics for Public, which is Web test data.

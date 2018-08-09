@@ -70,8 +70,8 @@ Existing user creates a new application and invites a user from the same organis
     the user clicks the button/link       jQuery=.button:contains("Continue")
     the user should see a field and summary error   Please select an option to continue.
     the user selects the radio button     createNewApplication  true      #Yes, I want to create a new application.
-    the user clicks the button/link            jQuery=button:contains("Continue")
-    the user clicks the button/link            css=.button[type="submit"]    #Save and continue
+    the user clicks the button/link       jQuery=button:contains("Continue")
+    the user clicks the button/link       css=.button[type="submit"]    #Save and continue
     the user clicks the button/link       link=Update and add contributors from INNOVATE LTD
     The user clicks the button/link       jQuery=button:contains("Add another contributor")
     The user enters text to a text field  name=stagedInvite.name    Olivier Giroud

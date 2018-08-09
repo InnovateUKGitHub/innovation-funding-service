@@ -4,6 +4,8 @@ Documentation   Suite description
 ...             IFS-2192 As a Portfolio manager I am able to create an EOI competition
 ...
 ...             IFS-2196 As an applicant I am able to apply for an EOI competition
+...
+...             IFS-4046 Person to organisation acceptance test updates
 Suite Setup     custom suite setup
 Suite Teardown  Close browser and delete emails
 Force Tags      compAdmin  Applicant  Assessor
@@ -25,14 +27,14 @@ Comp Admin Creates EOI type competition
     Then The competition admin creates a EOI Comp     ${business_type_id}  ${comp_name}  EOI
 
 Applicant applies to newly created EOI competition
-    [Documentation]  IFS-2192  IFS-2196
+    [Documentation]  IFS-2192  IFS-2196  IFS-4046
     [Tags]  HappyPath  MySQL
-    When the competition is open                                 ${comp_name}
-    And Log in as a different user    &{lead_applicant_credentials}
-    Then logged in user applies to competition                  ${comp_name}  1
+    When the competition is open                 ${comp_name}
+    And Log in as a different user               &{assessor2_credentials}
+    Then logged in user applies to competition   ${comp_name}  1
 
 Applicant submits his application
-    [Documentation]  IFS-2196
+    [Documentation]  IFS-2196  IFS-4046
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${EOI_application}  ${tomorrowday}  ${month}  ${nextyear}
@@ -155,3 +157,13 @@ the assessor submits the assessment
     the user clicks the button/link               jQuery=button:contains("Yes I want to submit the assessments")
     the user should see the element               jQuery=li:contains("EOI Application") strong:contains("Recommended")   #
 
+logged in user applies to competition
+    [Arguments]  ${competition}  ${applicationType}
+    the user select the competition and starts application   ${competition}
+    the user selects the radio button    organisationTypeId  ${applicationType}
+    the user clicks the button/link      jQuery = button:contains("Save and continue")
+    the user clicks the Not on company house link
+    the user fills in the address details
+    the user selects the checkbox        agree
+    the user clicks the button/link      css=.button[type="submit"]    #Continue
+    the user clicks the button/link      id=application-question-save

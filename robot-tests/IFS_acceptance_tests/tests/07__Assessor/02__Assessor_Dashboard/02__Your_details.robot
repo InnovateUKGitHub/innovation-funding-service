@@ -56,6 +56,9 @@ Valid Profile Update
 *** Keywords ***
 Custom Suite Setup
    The user logs-in in new browser  &{assessor2_credentials}
+   ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=h1:contains("Sign in successful")
+   Run Keyword If   '${status}' == 'PASS'  Run keywords    the user selects the checkbox   selectedRole1
+   ...                              AND    the user clicks the button/link   css=.button[type="submit"]   #Continue
    User opens the edit details form
 
 the assessor updates profile details

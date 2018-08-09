@@ -40,7 +40,6 @@ ${application_name}    Invite robot test application
 ${newLeadApplicant}  kevin@worth.systems
 ${newCollaborator}   jerry@worth.systems
 ${organisation}   org2
-#TODO formularise the changes!!
 
 *** Test Cases ***
 Application team page
@@ -299,7 +298,7 @@ The lead applicant should have the correct status
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
 
 The lead applicant should have the correct org status
-    the user should see the element  jQuery=h2:contains("org2"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")   #forularise
+    the user should see the element  jQuery=h2:contains("org2"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")

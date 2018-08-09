@@ -350,38 +350,40 @@ navigate to next page if not found
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link=${competition}
     Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery=a:contains("Next")
 
-logged in user applies to competition research
-    [Arguments]  ${competition}  ${applicationType}
+the user select the competition and starts application
+    [Arguments]  ${competition}
     the user navigates to the page      ${frontDoor}
     navigate to next page if not found  ${competition}
     the user clicks the button/link     link=${competition}
     the user clicks the button/link     jQuery = a:contains("Start new application")
+
+the user search for organisation name on Company house
+    [Arguments]  ${org}  ${orgName}
+    the user enters text to a text field       id = organisationSearchName    ${org}
+    the user clicks the button/link            id=org-search
+    the user clicks the button/link            link=${orgName}
+    the user clicks the button/link            jQuery=button:contains("Enter address manually")
+
+logged in user applies to competition research
+    [Arguments]  ${competition}  ${applicationType}
+    the user select the competition and starts application   ${competition}
     the user clicks the button/link     link=Apply with a different organisation.
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user enters text to a text field       id = organisationSearchName    Bath
-    the user clicks the button/link            id=org-search
-    the user clicks the button/link            link=Bath Spa University
-    the user clicks the button/link            jQuery=button:contains("Enter address manually")
+    the user search for organisation name on Company house    Bath  Bath Spa University
     the user fills in the research address details
-    the user clicks the button/link            jQuery = button:contains("Save and continue")
-    the user clicks the button/link            jQuery = button:contains("Save and return to application overview")
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    the user clicks the button/link     jQuery = button:contains("Save and return to application overview")
 
 logged in user applies to competition public
     [Arguments]  ${competition}  ${applicationType}
-    the user navigates to the page      ${frontDoor}
-    navigate to next page if not found  ${competition}
-    the user clicks the button/link     link=${competition}
-    the user clicks the button/link     jQuery = a:contains("Start new application")
+    the user select the competition and starts application   ${competition}
     the user clicks the button/link     link=Apply with a different organisation.
     the user selects the radio button   organisationTypeId  ${applicationType}
     the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user enters text to a text field       id = organisationSearchName    Innovate
-    the user clicks the button/link            id=org-search
-    the user clicks the button/link            link=INNOVATE LTD
-    the user clicks the button/link            jQuery=button:contains("Enter address manually")
+    the user search for organisation name on Company house    Innovate  INNOVATE LTD
     the user fills in the public address details
-    the user clicks the button/link            jQuery = button:contains("Save and return to application overview")
+    the user clicks the button/link     jQuery = button:contains("Save and return to application overview")
 
 the user navigates to the eligibility of the competition
     [Arguments]  ${competition}
@@ -402,11 +404,11 @@ the user applies to competition and enters organisation type
 
 the user applies to competition and enters organisation type link
     [Arguments]  ${compId}  ${organisationType}
-    the user navigates to the page     ${server}/competition/${compId}/overview
-    the user clicks the button/link        link=Start new application
-    The user clicks the button/link        jQuery = a:contains("Continue without an account")
-    the user selects the radio button      organisationTypeId  ${organisationType}
-    the user clicks the button/link            jQuery = button:contains("Save and continue")
+    the user navigates to the page      ${server}/competition/${compId}/overview
+    the user clicks the button/link     link=Start new application
+    The user clicks the button/link     jQuery = a:contains("Continue without an account")
+    the user selects the radio button   organisationTypeId  ${organisationType}
+    the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user clicks the Not on company house link
     the user fills in the address details
 
@@ -426,7 +428,7 @@ the applicant completes Application Team
     the user should see the element  jQuery=li:contains("Application team") > .task-status-complete
 
 the user clicks the Not on company house link
-    the user clicks the button/link    jQuery=summary:contains("Enter details manually")
+    the user clicks the button/link       jQuery=summary:contains("Enter details manually")
     The user enters text to a text field  name=organisationName    org2
     the user clicks the button/link       jQuery=.button:contains("Continue")
 
