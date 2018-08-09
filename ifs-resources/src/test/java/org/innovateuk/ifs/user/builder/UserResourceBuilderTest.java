@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.user.builder;
 
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.Title;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Test;
 
 import java.util.LinkedHashSet;
@@ -9,10 +12,6 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Disability.NOT_STATED;
-import static org.innovateuk.ifs.user.resource.Disability.YES;
-import static org.innovateuk.ifs.user.resource.Gender.FEMALE;
-import static org.innovateuk.ifs.user.resource.Gender.MALE;
 import static org.innovateuk.ifs.user.resource.Title.Miss;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
@@ -34,9 +33,6 @@ public class UserResourceBuilderTest {
         String expectedUid = "Uid";
         String expectedEmail = "test@test.com";
         List<Role> expectedRoles = asList(Role.APPLICANT, Role.COLLABORATOR);
-        Gender expectedGender = FEMALE;
-        Disability expectedDisability = NOT_STATED;
-        Long expectedEthnicity = 1L;
         Long expectedProfileId = 1L;
         Set<Long> expectedTermsAndConditionsIds = new LinkedHashSet<>(asList(1L, 2L));
 
@@ -52,9 +48,6 @@ public class UserResourceBuilderTest {
                 .withUid(expectedUid)
                 .withEmail(expectedEmail)
                 .withRolesGlobal(expectedRoles)
-                .withGender(expectedGender)
-                .withDisability(expectedDisability)
-                .withEthnicity(expectedEthnicity)
                 .withProfile(expectedProfileId)
                 .withTermsAndConditionsIds(expectedTermsAndConditionsIds)
                 .build();
@@ -70,9 +63,6 @@ public class UserResourceBuilderTest {
         assertEquals(expectedUid, user.getUid());
         assertEquals(expectedEmail, user.getEmail());
         assertEquals(expectedRoles, user.getRoles());
-        assertEquals(expectedGender, user.getGender());
-        assertEquals(expectedDisability, user.getDisability());
-        assertEquals(expectedEthnicity, user.getEthnicity());
         assertEquals(expectedProfileId, user.getProfileId());
         assertEquals(expectedTermsAndConditionsIds, user.getTermsAndConditionsIds());
     }
@@ -90,9 +80,6 @@ public class UserResourceBuilderTest {
         String[] expectedUids = {"Uid1", "Uid2"};
         String[] expectedEmails = {"email1@test.com", "email2@test.com"};
         List<List<Role>> expectedRoles = asList( asList(Role.APPLICANT, Role.COLLABORATOR), asList(Role.PARTNER, Role.PROJECT_MANAGER) );
-        Gender[] expectedGenders = {FEMALE, MALE};
-        Disability[] expectedDisabilities = {NOT_STATED, YES};
-        Long[] expectedEthnicities = {1L, 2L};
         Long[] expectedProfileIds = {1L, 2L};
         Set<Long>[] expectedTermsAndConditionsIds = new Set[] {(new LinkedHashSet<>(asList(1L, 2L))), new
                 LinkedHashSet<>(asList(3L, 4L))
@@ -110,9 +97,6 @@ public class UserResourceBuilderTest {
                 .withUid(expectedUids)
                 .withEmail(expectedEmails)
                 .withRolesGlobal(expectedRoles.get(0), expectedRoles.get(1))
-                .withGender(expectedGenders)
-                .withDisability(expectedDisabilities)
-                .withEthnicity(expectedEthnicities)
                 .withProfile(expectedProfileIds)
                 .withTermsAndConditionsIds(expectedTermsAndConditionsIds)
                 .build(2);
@@ -130,9 +114,6 @@ public class UserResourceBuilderTest {
         assertEquals(expectedUids[0], first.getUid());
         assertEquals(expectedEmails[0], first.getEmail());
         assertEquals(expectedRoles.get(0), first.getRoles());
-        assertEquals(expectedGenders[0], first.getGender());
-        assertEquals(expectedDisabilities[0], first.getDisability());
-        assertEquals(expectedEthnicities[0], first.getEthnicity());
         assertEquals(expectedProfileIds[0], first.getProfileId());
         assertEquals(expectedTermsAndConditionsIds[0], first.getTermsAndConditionsIds());
 
@@ -149,9 +130,6 @@ public class UserResourceBuilderTest {
         assertEquals(expectedUids[1], second.getUid());
         assertEquals(expectedEmails[1], second.getEmail());
         assertEquals(expectedRoles.get(1), second.getRoles());
-        assertEquals(expectedGenders[1], second.getGender());
-        assertEquals(expectedDisabilities[1], second.getDisability());
-        assertEquals(expectedEthnicities[1], second.getEthnicity());
         assertEquals(expectedProfileIds[1], second.getProfileId());
         assertEquals(expectedTermsAndConditionsIds[1], second.getTermsAndConditionsIds());
     }
