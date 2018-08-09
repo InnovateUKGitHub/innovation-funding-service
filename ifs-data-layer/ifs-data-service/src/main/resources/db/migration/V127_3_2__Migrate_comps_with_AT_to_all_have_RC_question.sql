@@ -24,6 +24,7 @@ UPDATE question SET priority = priority + 1
     AND section_id IN (
         SELECT s.id FROM section s WHERE s.name IN ('Project details', 'Application questions')
     )
+    AND priority >= 3
 ;
 
 -- 4. Add the new research category question to the competitions
