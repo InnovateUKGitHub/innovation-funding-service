@@ -18,7 +18,7 @@ import static java.lang.String.format;
 @Service
 public class AssessorCountSummaryRestServiceImpl extends BaseRestService implements AssessorCountSummaryRestService {
 
-    private static final String assessorCountRestUrl = "/assessorCountSummary";
+    private static final String ASSESSOR_COUNT_REST_URL = "/assessorCountSummary";
 
     @Override
     public RestResult<AssessorCountSummaryPageResource> getAssessorCountSummariesByCompetitionId(
@@ -27,7 +27,7 @@ public class AssessorCountSummaryRestServiceImpl extends BaseRestService impleme
         innovationSectorId.ifPresent(i -> params.add("innovationSector", String.valueOf(i)));
         businessType.ifPresent(b -> params.add("businessType", b.name()));
 
-        String uriWithParams = buildPaginationUri(format("%s/findByCompetitionId/%s", assessorCountRestUrl, competitionId), pageIndex, pageSize, null, params);
+        String uriWithParams = buildPaginationUri(format("%s/findByCompetitionId/%s", ASSESSOR_COUNT_REST_URL, competitionId), pageIndex, pageSize, null, params);
         return getWithRestResult(uriWithParams, AssessorCountSummaryPageResource.class);
     }
 }
