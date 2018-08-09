@@ -11,8 +11,8 @@ CREATE TEMPORARY TABLE competitions_with_team_but_not_research_question (
 );
 
 -- 2. Fill it with the ids of competitions that were created after IFS-3088 but before IFS-2123
-INSERT INTO competitions_with_team_but_not_research_question SELECT
-competition_id FROM question
+INSERT INTO competitions_with_team_but_not_research_question 
+	SELECT competition_id FROM question
     WHERE question_setup_type="APPLICATION_TEAM"
     AND competition_id NOT IN
         (SELECT competition_id FROM question WHERE question_setup_type="RESEARCH_CATEGORY")
@@ -66,10 +66,10 @@ INSERT INTO question_status (assigned_date, marked_as_complete, notified, applic
         assigned_date, marked_as_complete, notified, application_id, assigned_by_id, assignee_id, marked_as_complete_by_id, research_question.id
     FROM question_status qs
         -- Join the question table twice to get to the corresponding research category question
-        JOIN question team_question ON (qs.question_id=team_question.id)
-        JOIN question research_question ON (team_question.competition_id=research_question.competition_id)
+        JOIN question details_question ON (qs.question_id=details_question.id)
+        JOIN question research_question ON (details_question.competition_id=research_question.competition_id)
             WHERE application_id IN (SELECT id FROM applications_with_category_set_and_details_complete)
-            AND team_question.question_setup_type="APPLICATION_TEAM"
+            AND details_question.question_setup_type="APPLICATION_DETAILS"
             AND research_question.question_setup_type="RESEARCH_CATEGORY"
 ;
 
