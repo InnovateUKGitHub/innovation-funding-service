@@ -82,10 +82,12 @@ public class AssessmentParticipant extends CompetitionParticipant<AssessmentInvi
         return this;
     }
 
+    @Override
     public void setStatus(ParticipantStatus status) {
         super.setStatus(status);
     }
 
+    @Override
     public void setRole(CompetitionParticipantRole role) {
         super.setRole(role);
     }

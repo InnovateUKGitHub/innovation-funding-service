@@ -11,7 +11,7 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
-public enum AssessmentState implements ProcessState, IdentifiableEnum<AssessmentState> {
+public enum AssessmentState implements ProcessState, IdentifiableEnum {
     CREATED(19, State.CREATED),
     PENDING(1, State.PENDING),
     WITHDRAWN(20, State.WITHDRAWN),
