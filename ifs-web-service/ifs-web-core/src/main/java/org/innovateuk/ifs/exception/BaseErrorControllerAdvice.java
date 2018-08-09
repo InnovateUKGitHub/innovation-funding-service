@@ -56,7 +56,7 @@ public abstract class BaseErrorControllerAdvice {
         String title = MessageUtil.getFromMessageBundle(messageSource, titleKey, "Unknown Error...", req.getLocale());
 
         String message;
-        if(messageKey == null) {
+        if (messageKey == null) {
             message = null;
         } else {
             message = MessageUtil.getFromMessageBundle(messageSource, messageKey, "Unknown Error...", null == arguments ? new Object[0] : arguments.toArray(), req.getLocale());
