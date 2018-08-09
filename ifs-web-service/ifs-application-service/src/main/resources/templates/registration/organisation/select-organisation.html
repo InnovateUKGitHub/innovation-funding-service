@@ -10,17 +10,15 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Select organisation',subTitle='Start new application',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.canSelectOrganisation() ? 'Select your organisation' : 'Your organisation'},subTitle=${!model.collaboratorJourney ? 'Start new application' : 'Join application'},size='heading-xlarge'" />
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(form)" />
     </div>
 
-    <p>These are the organisations you have previously applied with</p>
-
-    <p th:unless="${model.collaboratorJourney}">Please select one to lead this application.</p>
-    <p th:if="${model.collaboratorJourney}">Please select one to collaborate on this application.</p>
+    <p th:unless="${model.collaboratorJourney}">This is the organisation that will lead the application.</p>
+    <p th:if="${model.collaboratorJourney}">This is the organisation that you will join the application with.</p>
 
     <form th:object="${form}" th:action="@{/organisation/select}" method="POST">
         <th:block th:if="${model.canSelectOrganisation()}">
@@ -42,7 +40,10 @@
             <input name="selectedOrganisationId" th:value="${organisation.id}" type="hidden" />
         </th:block>
 
-        <p><a th:href="${model.newOrganisationUrl}">Apply with a different organisation.</a></p>
+        <p>
+            <a th:unless="${model.collaboratorJourney}" th:href="${model.newOrganisationUrl}">Apply with a different organisation.</a>
+            <a th:if="${model.collaboratorJourney}" th:href="${model.newOrganisationUrl}">Join with a different organisation.</a>
+        </p>
 
         <button type="submit" class="button extra-margin">Save and continue</button>
     </form>

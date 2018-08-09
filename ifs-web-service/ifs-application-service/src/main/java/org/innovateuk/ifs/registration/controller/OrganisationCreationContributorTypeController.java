@@ -9,7 +9,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationViewModel;
+import org.innovateuk.ifs.registration.viewmodel.ContributorOrganisationTypeViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -57,11 +57,11 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
                         .filter(t -> t.getParentOrganisationType() == null)
                         .collect(Collectors.toList());
             model.addAttribute("form", form);
-            model.addAttribute("model", new OrganisationCreationViewModel(types, invite.getSuccess()));
+            model.addAttribute("model", new ContributorOrganisationTypeViewModel(types));
         } else {
             return "redirect:/login";
         }
-        return TEMPLATE_PATH + "/organisation-type";
+        return TEMPLATE_PATH + "/contributor-organisation-type";
     }
 
     @PostMapping

@@ -9,13 +9,13 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose your organisation type',subTitle='Create your account',size='heading-xlarge'" />
-    <p>You are participating in this competition as part of the organisation
-        <strong>
-            <span th:if="${model.inviteOrganisationNameConfirmed}" th:text="${model.inviteOrganisationNameConfirmed}"></span>
-            <span th:unless="${model.inviteOrganisationNameConfirmed}" th:text="${model.inviteOrganisationName}"></span>
-        </strong>
-    </p>
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose your organisation type',subTitle='Join application',size='heading-xlarge'" />
+
+    <div class="message-alert extra-margin-bottom">
+        <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+    </div>
+    
+    <p class="extra-margin">This is the organisation that you will join the application with.</p>
 
     <h2 class="heading-medium">Choose your organisation type</h2>
 
