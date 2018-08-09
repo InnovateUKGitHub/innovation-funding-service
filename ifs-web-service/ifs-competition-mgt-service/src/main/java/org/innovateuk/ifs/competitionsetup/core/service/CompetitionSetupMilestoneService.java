@@ -22,5 +22,5 @@ public interface CompetitionSetupMilestoneService {
 
 	void sortMilestones(MilestonesForm MilestoneForm);
 
-	Boolean isMilestoneDateValid(Integer day, Integer month, Integer year);
+	boolean isMilestoneDateValid(Integer day, Integer month, Integer year);
 }

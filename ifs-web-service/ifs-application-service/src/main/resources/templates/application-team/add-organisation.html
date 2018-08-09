@@ -84,7 +84,8 @@
                                        th:errorclass="form-control-error"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.invite.email.required},
-                                                data-email-errormessage=#{validation.standard.email.format}" />
+                                                data-email-errormessage=#{validation.standard.email.format},
+                                                data-email-duplication-errormessage=#{email.already.in.invite}" />
                             </td>
                             <td class="alignright"><button class="remove-another-row buttonlink" th:value="${applicantStat.index}" name="removeApplicant" type="submit">Remove</button></td>
                         </tr>

@@ -13,19 +13,16 @@ import org.innovateuk.ifs.competitionsetup.core.form.MilestoneTime;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestonesForm;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 import java.util.stream.Stream;
 
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 
 @Service
 public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMilestoneService {
@@ -74,14 +71,15 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             Integer day = milestone.getDay();
             Integer month = milestone.getMonth();
             Integer year = milestone.getYear();
-
-            if(!validTimeOfMiddayMilestone(milestone) && errors.isEmpty()) {
-                errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
+            String fieldName = "milestone-" + milestone.getMilestoneNameType().toUpperCase();
+            String fieldValidationError = milestone.getMilestoneType().getMilestoneDescription();
+            if(!validTimeOfMiddayMilestone(milestone)) {
+                errors.add(fieldError(fieldName, "", "error.milestone.invalid", fieldValidationError));
             }
 
             boolean dateFieldsIncludeNull = (day == null || month == null || year == null);
-            if((dateFieldsIncludeNull || !isMilestoneDateValid(day, month, year)) && errors.isEmpty()) {
-                errors.add(new Error("error.milestone.invalid", HttpStatus.BAD_REQUEST));
+            if((dateFieldsIncludeNull || !isMilestoneDateValid(day, month, year))) {
+                errors.add(fieldError(fieldName, "", "error.milestone.invalid", fieldValidationError));
             }
         });
         return errors;
@@ -95,7 +93,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     }
 
     @Override
-    public Boolean isMilestoneDateValid(Integer day, Integer month, Integer year) {
+    public boolean isMilestoneDateValid(Integer day, Integer month, Integer year) {
         try{
             TimeZoneUtil.fromUkTimeZone(year, month, day);
             return year <= 9999;
@@ -112,9 +110,9 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     }
 
     private LinkedMap<String, GenericMilestoneRowForm> sortMilestoneEntries(Collection<GenericMilestoneRowForm> milestones) {
-        List<GenericMilestoneRowForm> sortedMilestones = milestones.stream()
-                .sorted((o1, o2) -> o1.getMilestoneType().ordinal() - o2.getMilestoneType().ordinal())
-                .collect(Collectors.toList());
+        List<GenericMilestoneRowForm> sortedMilestones =
+                sort(milestones,
+                     Comparator.comparingInt(o -> o.getMilestoneType().ordinal()));
 
         LinkedMap<String, GenericMilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
         sortedMilestones.stream().forEachOrdered(milestone ->

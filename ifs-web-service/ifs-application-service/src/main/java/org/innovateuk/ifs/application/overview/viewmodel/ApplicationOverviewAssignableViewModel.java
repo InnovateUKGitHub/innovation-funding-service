@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -35,7 +36,7 @@ public class ApplicationOverviewAssignableViewModel {
             return assignableUsers.get();
         }
 
-        return null;
+        return Collections.emptyList();
     }
 
     public List<ApplicationInviteResource> getPendingAssignableUsers() {

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
+import opennlp.tools.coref.sim.Gender;
 import org.hibernate.Hibernate;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -8,7 +9,6 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.sil.AbstractEmailServiceAvailabilityIntegrationTest;
 import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.testutil.DatabaseTestHelper;
-import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -55,7 +55,6 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
                         withFirstName("Bob").
                         withLastName("Spiggot").
                         withEmail("thebspig@example.com").
-                        withGender(Gender.MALE).
                         withPassword("thebspig").
                         build();
 
@@ -85,7 +84,6 @@ public class RegistrationServiceImplEmailServiceAvailabilityTest extends Abstrac
                         withFirstName("Bob").
                         withLastName("Spiggot").
                         withEmail("thebspig@example.com").
-                        withGender(Gender.MALE).
                         withPassword("thebspig").
                         build();
 

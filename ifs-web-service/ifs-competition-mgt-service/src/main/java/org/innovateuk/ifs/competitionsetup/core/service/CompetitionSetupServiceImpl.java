@@ -260,10 +260,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     private void checkIfInitialDetailsFieldIsRestricted(CompetitionResource competitionResource, CompetitionSetupSection competitionSetupSection, String fieldName) {
         if (isInitialDetailsCompleteOrTouched(competitionResource.getId()) &&
-                competitionSetupSection == CompetitionSetupSection.INITIAL_DETAILS) {
-            if ("competitionTypeId".equals(fieldName) || "openingDate".equals(fieldName)) {
-                throw new IllegalStateException("Cannot update an initial details field that is disabled");
-            }
+                competitionSetupSection == CompetitionSetupSection.INITIAL_DETAILS &&
+                ("competitionTypeId".equals(fieldName) || "openingDate".equals(fieldName))) {
+            throw new IllegalStateException("Cannot update an initial details field that is disabled");
         }
     }
 

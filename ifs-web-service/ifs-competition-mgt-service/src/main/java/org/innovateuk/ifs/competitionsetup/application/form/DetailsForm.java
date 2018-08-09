@@ -65,16 +65,12 @@ public class DetailsForm extends CompetitionSetupForm {
     }
 
     public static class MaxBeneathMinPredicateProvider implements BiPredicateProvider<BigDecimal, BigDecimal> {
-        public MaxBeneathMinPredicateProvider() { }
-
         public BiPredicate<BigDecimal, BigDecimal> predicate() {
             return (max, min) -> max.compareTo(min) >= 0;
         }
     }
 
     public static class MinExceedsMaxPredicateProvider implements BiPredicateProvider<BigDecimal, BigDecimal> {
-        public MinExceedsMaxPredicateProvider() { }
-
         public BiPredicate<BigDecimal, BigDecimal> predicate() {
             return (min, max) -> min.compareTo(max) <= 0;
         }

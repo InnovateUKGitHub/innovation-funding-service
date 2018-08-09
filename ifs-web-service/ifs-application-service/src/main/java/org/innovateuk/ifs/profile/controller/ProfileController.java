@@ -6,11 +6,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.profile.form.UserDetailsForm;
 import org.innovateuk.ifs.profile.populator.UserProfilePopulator;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationService;
@@ -47,8 +44,6 @@ public class ProfileController {
 
     private OrganisationService organisationService;
 
-    private EthnicityRestService ethnicityRestService;
-
     private UserAuthenticationService userAuthenticationService;
 
     private UserProfilePopulator userProfilePopulator;
@@ -56,10 +51,9 @@ public class ProfileController {
     ProfileController() {}
 
     @Autowired
-    public ProfileController(UserService userService, OrganisationService organisationService, EthnicityRestService ethnicityRestService, UserAuthenticationService userAuthenticationService, UserProfilePopulator userProfilePopulator) {
+    public ProfileController(UserService userService, OrganisationService organisationService, UserAuthenticationService userAuthenticationService, UserProfilePopulator userProfilePopulator) {
         this.userService = userService;
         this.organisationService = organisationService;
-        this.ethnicityRestService = ethnicityRestService;
         this.userAuthenticationService = userAuthenticationService;
         this.userProfilePopulator = userProfilePopulator;
     }
@@ -128,9 +122,6 @@ public class ProfileController {
                 userDetailsForm.getLastName(),
                 ofNullable(loggedInUser.getTitle()).map(Title::getDisplayName).orElse(null),
                 userDetailsForm.getPhoneNumber(),
-                ofNullable(loggedInUser.getGender()).map(Gender::getDisplayName).orElse(null),
-                loggedInUser.getEthnicity(),
-                ofNullable(loggedInUser.getDisability()).map(Disability::getDisplayName).orElse(null),
                 userDetailsForm.getAllowMarketingEmails());
     }
 

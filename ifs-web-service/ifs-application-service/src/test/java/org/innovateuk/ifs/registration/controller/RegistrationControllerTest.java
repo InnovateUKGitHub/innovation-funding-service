@@ -8,12 +8,8 @@ import org.innovateuk.ifs.commons.exception.InvalidURLException;
 import org.innovateuk.ifs.commons.exception.RegistrationTokenExpiredException;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.user.builder.EthnicityResourceBuilder;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -71,9 +67,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Mock
-    private EthnicityRestService ethnicityRestService;
-
-    @Mock
     private RegistrationCookieService registrationCookieService;
 
     @Mock
@@ -109,7 +102,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
 
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.of(new UserResource()));
         when(userService.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean())).thenReturn(serviceSuccess(new UserResource()));
-        when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(EthnicityResourceBuilder.newEthnicityResource().withId(1L).withDescription("Nerdy People").withName("IFS programmer").withPriority(1).build())));
 
         inviteHashCookie = new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
         usedInviteHashCookie = new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(ACCEPTED_INVITE_HASH));
@@ -353,7 +345,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.empty());
 
         Error error = Error.fieldError("password", "INVALID_PASSWORD", BAD_REQUEST.getReasonPhrase());
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyString(), anyLong(), anyLong(), anyBoolean())).thenReturn(serviceFailure(error));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean())).thenReturn(serviceFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -365,9 +357,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .param("phoneNumber", "012345678")
                 .param("termsAndConditions", "1")
                 .param("password", "Password123")
-                .param("gender", Gender.MALE.toString())
-                .param("ethnicity", "3")
-                .param("disability", Disability.NO.toString())
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/register"))
@@ -402,9 +391,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .withPhoneNumber("0123456789")
                 .withEmail("test@test.test")
                 .withId(1L)
-                .withEthnicity(2L)
-                .withDisability(Disability.NO)
-                .withGender(Gender.FEMALE)
                 .build();
 
 
@@ -415,9 +401,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 eq(userResource.getEmail()),
                 anyString(),
                 eq(userResource.getPhoneNumber()),
-                anyString(),
-                anyLong(),
-                anyString(),
                 eq(1L),
                 eq(1L),
                 anyBoolean())).thenReturn(serviceSuccess(userResource));
@@ -433,9 +416,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .param("lastName", userResource.getLastName())
                 .param("phoneNumber", userResource.getPhoneNumber())
                 .param("termsAndConditions", "1")
-                .param("gender", userResource.getGender().toString())
-                .param("ethnicity", userResource.getEthnicity().toString())
-                .param("disability", userResource.getDisability().toString())
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/registration/success"));
@@ -455,9 +435,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .withPhoneNumber("0123456789")
                 .withEmail("invited@email.com")
                 .withId(1L)
-                .withGender(Gender.MALE)
-                .withDisability(Disability.NOT_STATED)
-                .withEthnicity(2L)
                 .build();
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
@@ -467,9 +444,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 eq(userResource.getEmail()),
                 anyString(),
                 eq(userResource.getPhoneNumber()),
-                anyString(),
-                anyLong(),
-                anyString(),
                 eq(1L),
                 eq(1L),
                 anyBoolean())).thenReturn(serviceSuccess(userResource));
@@ -485,9 +459,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .param("lastName", userResource.getLastName())
                 .param("phoneNumber", userResource.getPhoneNumber())
                 .param("termsAndConditions", "1")
-                .param("ethnicity", userResource.getEthnicity().toString())
-                .param("disability", userResource.getDisability().toString())
-                .param("gender", userResource.getGender().toString())
         )
                 .andExpect(view().name("redirect:/registration/success"))
                 .andExpect(status().is3xxRedirection());
@@ -558,9 +529,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 userResource.getEmail(),
                 userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : null,
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 1L, 1L, userResource.getAllowMarketingEmails())).thenReturn(serviceFailure(error));
 
         mockMvc.perform(post("/registration/register")

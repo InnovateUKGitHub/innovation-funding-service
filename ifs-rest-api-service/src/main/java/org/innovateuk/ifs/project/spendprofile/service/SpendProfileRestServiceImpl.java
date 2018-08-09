@@ -10,59 +10,59 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SpendProfileRestServiceImpl extends BaseRestService implements SpendProfileRestService {
-    private static final String projectRestURL = "/project";
+    private static final String PROJECT_REST_URL = "/project";
 
     @Override
     public RestResult<Void> generateSpendProfile(Long projectId) {
-        String url = projectRestURL + "/" + projectId + "/spend-profile/generate";
+        String url = PROJECT_REST_URL + "/" + projectId + "/spend-profile/generate";
         return postWithRestResult(url, Void.class);
     }
 
     @Override
     public RestResult<Void> acceptOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/spend-profile/approval/" + approvalType, Void.class);
+        return postWithRestResult(PROJECT_REST_URL + "/" + projectId + "/spend-profile/approval/" + approvalType, Void.class);
     }
 
     @Override
     public RestResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/spend-profile/approval", ApprovalType.class);
+        return getWithRestResult(PROJECT_REST_URL + "/" + projectId + "/spend-profile/approval", ApprovalType.class);
     }
 
     @Override
     public RestResult<SpendProfileTableResource> getSpendProfileTable(Long projectId, Long organisationId) {
-        String url = projectRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile-table";
+        String url = PROJECT_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile-table";
         return getWithRestResult(url, SpendProfileTableResource.class);
     }
 
     @Override
     public RestResult<SpendProfileCSVResource> getSpendProfileCSV(Long projectId, Long organisationId) {
-        String url = projectRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile-csv";
+        String url = PROJECT_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile-csv";
         return getWithRestResult(url, SpendProfileCSVResource.class);
     }
 
     @Override
     public RestResult<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId) {
-        String url = projectRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
+        String url = PROJECT_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
         return getWithRestResult(url, SpendProfileResource.class);
     }
 
     @Override
     public RestResult<Void> saveSpendProfile(Long projectId, Long organisationId, SpendProfileTableResource table) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", table, Void.class);
+        return postWithRestResult(PROJECT_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", table, Void.class);
     }
 
     @Override
     public RestResult<Void> markSpendProfileComplete(Long projectId, Long organisationId) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete", Void.class);
+        return postWithRestResult(PROJECT_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/complete", Void.class);
     }
 
     @Override
     public RestResult<Void> markSpendProfileIncomplete(Long projectId, Long organisationId) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/incomplete", Void.class);
+        return postWithRestResult(PROJECT_REST_URL + "/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/incomplete", Void.class);
     }
 
     @Override
     public RestResult<Void> completeSpendProfilesReview(Long projectId) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/complete-spend-profiles-review/", Void.class);
+        return postWithRestResult(PROJECT_REST_URL + "/" + projectId + "/complete-spend-profiles-review/", Void.class);
     }
 }
