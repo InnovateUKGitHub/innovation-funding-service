@@ -104,7 +104,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
 
         CompletedPercentageResource response2  = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccess();
         BigDecimal completedPercentage2 = response2.getCompletedPercentage();
-        assertEquals(33.33, completedPercentage2.doubleValue(), delta); //Changed after enabling mark as complete on
+        assertEquals(34.38, completedPercentage2.doubleValue(), delta); //Changed after enabling mark as complete on
         // some more questions for INFUND-446
     }
 
