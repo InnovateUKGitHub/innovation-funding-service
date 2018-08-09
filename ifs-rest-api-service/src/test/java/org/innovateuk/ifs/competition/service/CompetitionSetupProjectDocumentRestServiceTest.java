@@ -74,7 +74,7 @@ public class CompetitionSetupProjectDocumentRestServiceTest extends BaseRestServ
 
         List<ProjectDocumentResource> responseBody = ProjectDocumentResourceBuilder.newProjectDocumentResource().build(2);
 
-        setupGetWithRestResultExpectations(String.format("%s/findByCompetitionId/%s", competitionSetupProjectDocumentRestURL, competitionId), projectDocumentResourceListType(), responseBody);
+        setupGetWithRestResultExpectations(String.format("%s/find-by-competition-id/%s", competitionSetupProjectDocumentRestURL, competitionId), projectDocumentResourceListType(), responseBody);
 
         List<ProjectDocumentResource> response = service.findByCompetitionId(competitionId).getSuccess();
         assertNotNull(response);

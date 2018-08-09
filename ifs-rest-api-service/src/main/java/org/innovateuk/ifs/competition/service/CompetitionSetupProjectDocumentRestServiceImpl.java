@@ -34,7 +34,7 @@ public class CompetitionSetupProjectDocumentRestServiceImpl extends BaseRestServ
 
     @Override
     public RestResult<List<ProjectDocumentResource>> findByCompetitionId(long competitionId) {
-        return getWithRestResult(competitionSetupProjectDocumentRestURL + "/findByCompetitionId/" + competitionId, projectDocumentResourceListType());
+        return getWithRestResult(competitionSetupProjectDocumentRestURL + "/find-by-competition-id/" + competitionId, projectDocumentResourceListType());
     }
 
     @Override

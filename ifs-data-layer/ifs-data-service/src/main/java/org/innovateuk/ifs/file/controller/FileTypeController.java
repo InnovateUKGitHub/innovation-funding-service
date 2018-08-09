@@ -21,7 +21,7 @@ public class FileTypeController {
         return fileTypeService.findOne(id).toGetResponse();
     }
 
-    @GetMapping("/findByName/{name}")
+    @GetMapping("/find-by-name/{name}")
     public RestResult<FileTypeResource> findByName(@PathVariable("name") final String name) {
         return fileTypeService.findByName(name).toGetResponse();
     }

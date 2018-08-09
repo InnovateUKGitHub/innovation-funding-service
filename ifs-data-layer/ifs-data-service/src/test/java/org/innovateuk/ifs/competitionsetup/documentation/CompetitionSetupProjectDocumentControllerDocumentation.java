@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder;
 import org.innovateuk.ifs.competition.resource.ProjectDocumentResource;
 import org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupProjectDocumentController;
 import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupProjectDocumentService;
@@ -13,6 +12,7 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.ProjectDocumentResourceBuilder.*;
 import static org.innovateuk.ifs.documentation.ProjectDocumentResourceDocs.projectDocumentResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.only;
@@ -43,7 +43,7 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
     @Test
     public void save() throws Exception {
 
-        ProjectDocumentResource projectDocumentResource = ProjectDocumentResourceBuilder.newProjectDocumentResource()
+        ProjectDocumentResource projectDocumentResource = newProjectDocumentResource()
                 .withId(1L)
                 .withCompetition(2L)
                 .withTitle("Title")
@@ -71,7 +71,7 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
     @Test
     public void saveAll() throws Exception {
 
-        List<ProjectDocumentResource> projectDocumentResources = ProjectDocumentResourceBuilder.newProjectDocumentResource()
+        List<ProjectDocumentResource> projectDocumentResources = newProjectDocumentResource()
                 .withId(1L)
                 .withCompetition(12L)
                 .withTitle("Title")
@@ -105,7 +105,7 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
 
         long projectDocumentId = 1L;
 
-        ProjectDocumentResource projectDocumentResource = ProjectDocumentResourceBuilder.newProjectDocumentResource().build();
+        ProjectDocumentResource projectDocumentResource = newProjectDocumentResource().build();
 
         when(competitionSetupProjectDocumentServiceMock.findOne(projectDocumentId)).thenReturn(serviceSuccess(projectDocumentResource));
 
@@ -128,11 +128,11 @@ public class CompetitionSetupProjectDocumentControllerDocumentation extends Base
 
         long competitionId = 1L;
 
-        List<ProjectDocumentResource> projectDocumentResources = ProjectDocumentResourceBuilder.newProjectDocumentResource().build(2);
+        List<ProjectDocumentResource> projectDocumentResources = newProjectDocumentResource().build(2);
 
         when(competitionSetupProjectDocumentServiceMock.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(projectDocumentResources));
 
-        mockMvc.perform(get("/competition/setup/project-document/findByCompetitionId/{competitionId}", competitionId)
+        mockMvc.perform(get("/competition/setup/project-document/find-by-competition-id/{competitionId}", competitionId)
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(projectDocumentResources)))

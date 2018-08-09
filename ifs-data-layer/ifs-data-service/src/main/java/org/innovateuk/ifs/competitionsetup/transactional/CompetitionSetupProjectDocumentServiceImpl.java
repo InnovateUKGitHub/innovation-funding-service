@@ -38,8 +38,8 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
 
             ProjectDocument projectDocument = projectDocumentMapper.mapToDomain(projectDocumentResource);
 
-            projectDocument = projectDocumentRepository.save(projectDocument);
-            return serviceSuccess(projectDocumentMapper.mapToResource(projectDocument));
+            ProjectDocument savedProjectDocument = projectDocumentRepository.save(projectDocument);
+            return serviceSuccess(projectDocumentMapper.mapToResource(savedProjectDocument));
         });
     }
 
@@ -57,8 +57,8 @@ public class CompetitionSetupProjectDocumentServiceImpl extends BaseTransactiona
             List<ProjectDocument> projectDocuments = simpleMap(projectDocumentResources,
                     projectDocumentResource -> projectDocumentMapper.mapToDomain(projectDocumentResource));
 
-            projectDocuments = (List<ProjectDocument>) projectDocumentRepository.save(projectDocuments);
-            return serviceSuccess(simpleMap(projectDocuments, projectDocument -> projectDocumentMapper.mapToResource(projectDocument)));
+            List<ProjectDocument> savedProjectDocuments = (List<ProjectDocument>) projectDocumentRepository.save(projectDocuments);
+            return serviceSuccess(simpleMap(savedProjectDocuments, savedProjectDocument -> projectDocumentMapper.mapToResource(savedProjectDocument)));
         });
     }
 

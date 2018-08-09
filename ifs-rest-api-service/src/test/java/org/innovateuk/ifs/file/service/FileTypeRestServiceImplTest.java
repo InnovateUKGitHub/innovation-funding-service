@@ -38,13 +38,13 @@ public class FileTypeRestServiceImplTest extends BaseRestServiceUnitTest<FileTyp
 
         FileTypeResource responseBody = new FileTypeResource();
 
-        setupGetWithRestResultExpectations(String.format("%s/findByName/%s", fileTypeRestURL, name), FileTypeResource.class, responseBody);
+        setupGetWithRestResultExpectations(String.format("%s/find-by-name/%s", fileTypeRestURL, name), FileTypeResource.class, responseBody);
 
         FileTypeResource response = service.findByName(name).getSuccess();
         assertNotNull(response);
         assertEquals(responseBody, response);
 
-        setupGetWithRestResultVerifications(String.format("%s/findByName/%s", fileTypeRestURL, name), null, FileTypeResource.class);
+        setupGetWithRestResultVerifications(String.format("%s/find-by-name/%s", fileTypeRestURL, name), null, FileTypeResource.class);
     }
 }
 

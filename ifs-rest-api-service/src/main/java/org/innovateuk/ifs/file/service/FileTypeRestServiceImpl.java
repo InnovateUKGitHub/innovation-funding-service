@@ -20,7 +20,7 @@ public class FileTypeRestServiceImpl extends BaseRestService implements FileType
 
     @Override
     public RestResult<FileTypeResource> findByName(String name) {
-        return getWithRestResult(fileTypeRestURL + "/findByName/" + name, FileTypeResource.class);
+        return getWithRestResult(fileTypeRestURL + "/find-by-name/" + name, FileTypeResource.class);
     }
 }
 

@@ -2,7 +2,7 @@
 -- Create new file types for Project Setup documents
 
 INSERT INTO file_type
-VALUES (1,"Pdf", ".pdf");
+VALUES (1,"PDF", ".pdf");
 
 INSERT INTO file_type
 VALUES (2,"Spreadsheet", ".xls, .xslx");

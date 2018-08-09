@@ -34,7 +34,7 @@ public class CompetitionSetupProjectDocumentController {
         return competitionSetupProjectDocumentService.findOne(id).toGetResponse();
     }
 
-    @GetMapping("/findByCompetitionId/{competitionId}")
+    @GetMapping("/find-by-competition-id/{competitionId}")
     public RestResult<List<ProjectDocumentResource>> findByCompetitionId(@PathVariable("competitionId") final long competitionId) {
         return competitionSetupProjectDocumentService.findByCompetitionId(competitionId).toGetResponse();
     }
