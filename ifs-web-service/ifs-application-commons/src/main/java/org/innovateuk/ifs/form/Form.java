@@ -34,9 +34,9 @@ public class Form extends BaseBindingResultTarget {
     }
 
     public void addFormInput(String key, LocalDate value){
-        this.formInput.put(key + "_day", value != null ? value.getDayOfMonth() + "" : "");
-        this.formInput.put(key + "_month", value != null ? value.getMonthValue() + "" : "");
-        this.formInput.put(key + "_year", value != null ? value.getYear() + "" : "");
+        this.formInput.put(key + "_day", value != null ? Integer.toString(value.getDayOfMonth()) : "");
+        this.formInput.put(key + "_month", value != null ? Integer.toString(value.getMonthValue()) : "");
+        this.formInput.put(key + "_year", value != null ? Integer.toString(value.getYear()) : "");
     }
 
     public String getFormInput(String key){
