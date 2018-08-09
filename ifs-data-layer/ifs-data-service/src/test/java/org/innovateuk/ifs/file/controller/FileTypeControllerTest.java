@@ -57,7 +57,7 @@ public class FileTypeControllerTest extends BaseControllerMockMVCTest<FileTypeCo
 
         when(fileTypeServiceMock.findByName(name)).thenReturn(serviceSuccess(fileTypeResource));
 
-        mockMvc.perform(get("/file/file-type/findByName/{name}", name)
+        mockMvc.perform(get("/file/file-type/find-by-name/{name}", name)
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(fileTypeResource)));
