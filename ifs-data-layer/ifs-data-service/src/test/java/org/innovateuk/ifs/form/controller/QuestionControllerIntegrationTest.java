@@ -145,7 +145,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
         List<QuestionResource> questions = questionService.getQuestionsByAssessmentId(assessmentId).getSuccess();
         // Since the assessment is for an application of competition 1, expect all of the questions of this competition that are visible for assessment
-        assertEquals(asList(9L, 248L, 11L, 12L, 13L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 15L, 16L),
+        assertEquals(asList(248L, 9L, 11L, 12L, 13L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 15L, 16L),
                 simpleMap(questions, QuestionResource::getId));
     }
 

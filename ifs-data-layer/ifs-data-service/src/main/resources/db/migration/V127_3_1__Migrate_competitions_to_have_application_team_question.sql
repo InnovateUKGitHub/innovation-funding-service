@@ -8,11 +8,9 @@ WHERE competition_id IN (
          FROM competition c
            LEFT JOIN question q ON c.id = q.competition_id AND q.question_setup_type = 'APPLICATION_TEAM'
          WHERE q.id IS NULL) cids)
-      AND (
-        section_id IN (SELECT s.id
+      AND section_id IN (SELECT s.id
                        FROM section s
-                       WHERE s.section_type = 'GENERAL' AND s.name IN ('Project details', 'Application questions'))
-        OR short_name = 'Other funding'
+                       WHERE s.name IN ('Project details', 'Application questions')
       );
 
 -- Create an Application Team question in the Project details section for all competitions that don't have one
