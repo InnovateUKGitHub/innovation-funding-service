@@ -74,18 +74,6 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
         return withArray((uid, user) -> setField("uid", uid, user), uids);
     }
 
-    public UserResourceBuilder withDisability(Disability... disabilities) {
-        return withArray((disability, user) -> setField("disability", disability, user), disabilities);
-    }
-
-    public UserResourceBuilder withEthnicity(Long... ethnicities) {
-        return withArray((ethnicity, user) -> setField("ethnicity", ethnicity, user), ethnicities);
-    }
-
-    public UserResourceBuilder withGender(Gender... genders) {
-        return withArray((gender, user) -> setField("gender", gender, user), genders);
-    }
-
     public UserResourceBuilder withPhoneNumber(String... phoneNumbers) {
         return withArray((phoneNumber, user) -> setField("phoneNumber", phoneNumber, user), phoneNumbers);
     }

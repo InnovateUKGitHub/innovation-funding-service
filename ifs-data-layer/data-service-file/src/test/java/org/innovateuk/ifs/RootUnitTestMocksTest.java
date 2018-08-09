@@ -8,10 +8,8 @@ import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
-import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.EthnicityRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.FinanceUtil;
 import org.junit.Before;
@@ -48,12 +46,6 @@ public abstract class RootUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FileEntryMapper fileEntryMapperMock;
-
-    @Mock
-    protected EthnicityRepository ethnicityRepositoryMock;
-
-    @Mock
-    protected EthnicityMapper ethnicityMapperMock;
 
     @Mock
     protected FileTemplateRenderer rendererMock;
