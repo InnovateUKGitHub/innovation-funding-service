@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.management.application.view.service;
 
-import org.innovateuk.ifs.application.common.populator.SummaryViewModelFragmentPopulator;
-import org.innovateuk.ifs.application.common.viewmodel.SummaryViewModel;
 import org.innovateuk.ifs.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -17,8 +15,7 @@ import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
-import org.innovateuk.ifs.management.application.view.populator.ApplicationOverviewIneligibilityModelPopulator;
-import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverviewIneligibilityViewModel;
+import org.innovateuk.ifs.management.application.view.populator.ManageApplicationModelPopulator;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManageApplicationViewModel;
 import org.innovateuk.ifs.management.navigation.NavigationOrigin;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -35,8 +32,6 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildBackUrl;
 import static org.innovateuk.ifs.origin.BackLinkUtil.buildOriginQueryString;
-import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 
 /**
  * Implementation of {@link CompetitionManagementApplicationService}
@@ -51,9 +46,6 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     private ApplicationService applicationService;
 
     @Autowired
-    private ApplicationOverviewIneligibilityModelPopulator applicationOverviewIneligibilityModelPopulator;
-
-    @Autowired
     private FormInputResponseRestService formInputResponseRestService;
 
     @Autowired
@@ -63,7 +55,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     private FileEntryRestService fileEntryRestService;
 
     @Autowired
-    private SummaryViewModelFragmentPopulator summaryPopulator;
+    private ManageApplicationModelPopulator manageApplicationModelPopulator;
 
     @Override
     public String displayApplicationOverview(UserResource user,
@@ -79,20 +71,20 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        boolean readOnly = user.hasRole(SUPPORT);
-        boolean canReinstate = !(user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD));
-
-        ApplicationOverviewIneligibilityViewModel ineligibility = applicationOverviewIneligibilityModelPopulator.populateModel(application, competition);
-
         String queryParam = buildOriginQueryString(NavigationOrigin.valueOf(origin), queryParams);
         queryParams.put("competitionId", asList(String.valueOf(competitionId)));
         queryParams.put("applicationId", asList(String.valueOf(application.getId())));
         String backUrl = buildBackUrl(NavigationOrigin.valueOf(origin), queryParams, "assessorId", "applicationId", "competitionId");
 
-        SummaryViewModel viewModel = summaryPopulator.populate(application.getId(), user, form);
+        ManageApplicationViewModel viewModel = manageApplicationModelPopulator.populate(application,
+                        competition,
+                        backUrl,
+                        queryParam,
+                        user,
+                        getAppendices(application.getId(), responses, model),
+                        form);
 
-        model.addAttribute("model", new ManageApplicationViewModel(viewModel, backUrl, queryParam,
-                readOnly, canReinstate, ineligibility,  getAppendices(application.getId(), responses, model)));
+        model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
         return "competition-mgt-application-overview";
     }
